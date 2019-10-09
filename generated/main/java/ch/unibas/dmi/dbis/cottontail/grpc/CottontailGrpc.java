@@ -19,7 +19,7 @@ public final class CottontailGrpc {
    * The basic data types supported by Cottontail DB. 
    * </pre>
    *
-   * Protobuf enum {@code Type}
+   * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.Type}
    */
   public enum Type
       implements com.google.protobuf.ProtocolMessageEnum {
@@ -72,9 +72,13 @@ public final class CottontailGrpc {
      */
     INT_VEC(11),
     /**
-     * <code>BLOB = 12;</code>
+     * <code>BOOL_VEC = 12;</code>
      */
-    BLOB(12),
+    BOOL_VEC(12),
+    /**
+     * <code>BLOB = 13;</code>
+     */
+    BLOB(13),
     UNRECOGNIZED(-1),
     ;
 
@@ -127,9 +131,13 @@ public final class CottontailGrpc {
      */
     public static final int INT_VEC_VALUE = 11;
     /**
-     * <code>BLOB = 12;</code>
+     * <code>BOOL_VEC = 12;</code>
      */
-    public static final int BLOB_VALUE = 12;
+    public static final int BOOL_VEC_VALUE = 12;
+    /**
+     * <code>BLOB = 13;</code>
+     */
+    public static final int BLOB_VALUE = 13;
 
 
     public final int getNumber() {
@@ -162,7 +170,8 @@ public final class CottontailGrpc {
         case 9: return FLOAT_VEC;
         case 10: return LONG_VEC;
         case 11: return INT_VEC;
-        case 12: return BLOB;
+        case 12: return BOOL_VEC;
+        case 13: return BLOB;
         default: return null;
       }
     }
@@ -212,11 +221,395 @@ public final class CottontailGrpc {
       this.value = value;
     }
 
-    // @@protoc_insertion_point(enum_scope:Type)
+    // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.Type)
+  }
+
+  public interface EmptyOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Empty)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Empty}
+   */
+  public  static final class Empty extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Empty)
+      EmptyOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Empty.newBuilder() to construct.
+    private Empty(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Empty() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Empty(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty)) {
+        return super.equals(obj);
+      }
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty other = (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Empty}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Empty)
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EmptyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty build() {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty buildPartial() {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty result = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty) {
+          return mergeFrom((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty other) {
+        if (other == ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Empty)
+    }
+
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Empty)
+    private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty();
+    }
+
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Empty>
+        PARSER = new com.google.protobuf.AbstractParser<Empty>() {
+      public Empty parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Empty(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Empty> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Empty> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface SchemaOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Schema)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Schema)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -234,11 +627,11 @@ public final class CottontailGrpc {
    ** Identifier for a single schema.  
    * </pre>
    *
-   * Protobuf type {@code Schema}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Schema}
    */
   public  static final class Schema extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Schema)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Schema)
       SchemaOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Schema.newBuilder() to construct.
@@ -297,12 +690,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Schema_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Schema_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder.class);
     }
@@ -496,20 +889,20 @@ public final class CottontailGrpc {
      ** Identifier for a single schema.  
      * </pre>
      *
-     * Protobuf type {@code Schema}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Schema}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Schema)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Schema)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Schema_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Schema_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder.class);
       }
@@ -538,7 +931,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Schema_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema getDefaultInstanceForType() {
@@ -707,10 +1100,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Schema)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Schema)
     }
 
-    // @@protoc_insertion_point(class_scope:Schema)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Schema)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema();
@@ -746,19 +1139,19 @@ public final class CottontailGrpc {
   }
 
   public interface EntityOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Entity)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Entity)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     boolean hasSchema();
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema getSchema();
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder getSchemaOrBuilder();
 
@@ -777,11 +1170,11 @@ public final class CottontailGrpc {
    ** Identifier for a single entity. 
    * </pre>
    *
-   * Protobuf type {@code Entity}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Entity}
    */
   public  static final class Entity extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Entity)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Entity)
       EntityOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Entity.newBuilder() to construct.
@@ -853,12 +1246,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Entity_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Entity_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder.class);
     }
@@ -866,19 +1259,19 @@ public final class CottontailGrpc {
     public static final int SCHEMA_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema schema_;
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     public boolean hasSchema() {
       return schema_ != null;
     }
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema getSchema() {
       return schema_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.getDefaultInstance() : schema_;
     }
     /**
-     * <code>.Schema schema = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder getSchemaOrBuilder() {
       return getSchema();
@@ -1089,20 +1482,20 @@ public final class CottontailGrpc {
      ** Identifier for a single entity. 
      * </pre>
      *
-     * Protobuf type {@code Entity}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Entity}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Entity)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Entity)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Entity_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Entity_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder.class);
       }
@@ -1137,7 +1530,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Entity_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getDefaultInstanceForType() {
@@ -1239,13 +1632,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder> schemaBuilder_;
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public boolean hasSchema() {
         return schemaBuilder_ != null || schema_ != null;
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema getSchema() {
         if (schemaBuilder_ == null) {
@@ -1255,7 +1648,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public Builder setSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema value) {
         if (schemaBuilder_ == null) {
@@ -1271,7 +1664,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public Builder setSchema(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder builderForValue) {
@@ -1285,7 +1678,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public Builder mergeSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema value) {
         if (schemaBuilder_ == null) {
@@ -1303,7 +1696,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public Builder clearSchema() {
         if (schemaBuilder_ == null) {
@@ -1317,7 +1710,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder getSchemaBuilder() {
         
@@ -1325,7 +1718,7 @@ public final class CottontailGrpc {
         return getSchemaFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder getSchemaOrBuilder() {
         if (schemaBuilder_ != null) {
@@ -1336,7 +1729,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Schema schema = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Schema schema = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SchemaOrBuilder> 
@@ -1431,10 +1824,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Entity)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Entity)
     }
 
-    // @@protoc_insertion_point(class_scope:Entity)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Entity)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity();
@@ -1470,19 +1863,19 @@ public final class CottontailGrpc {
   }
 
   public interface IndexOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Index)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Index)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     boolean hasEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder();
 
@@ -1497,11 +1890,11 @@ public final class CottontailGrpc {
         getNameBytes();
 
     /**
-     * <code>.Index.IndexType type = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
      */
     int getTypeValue();
     /**
-     * <code>.Index.IndexType type = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType getType();
   }
@@ -1510,11 +1903,11 @@ public final class CottontailGrpc {
    ** Identifier for a single index. 
    * </pre>
    *
-   * Protobuf type {@code Index}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Index}
    */
   public  static final class Index extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Index)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Index)
       IndexOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Index.newBuilder() to construct.
@@ -1593,18 +1986,18 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Index_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Index_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code Index.IndexType}
+     * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType}
      */
     public enum IndexType
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -1734,25 +2127,25 @@ public final class CottontailGrpc {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:Index.IndexType)
+      // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType)
     }
 
     public static final int ENTITY_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity entity_;
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public boolean hasEntity() {
       return entity_ != null;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
       return entity_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance() : entity_;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
       return getEntity();
@@ -1795,13 +2188,13 @@ public final class CottontailGrpc {
     public static final int TYPE_FIELD_NUMBER = 3;
     private int type_;
     /**
-     * <code>.Index.IndexType type = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
      */
     public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>.Index.IndexType type = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType getType() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType.valueOf(type_);
@@ -1989,20 +2382,20 @@ public final class CottontailGrpc {
      ** Identifier for a single index. 
      * </pre>
      *
-     * Protobuf type {@code Index}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Index}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Index)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Index)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Index_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Index_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder.class);
       }
@@ -2039,7 +2432,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Index_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getDefaultInstanceForType() {
@@ -2145,13 +2538,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> entityBuilder_;
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public boolean hasEntity() {
         return entityBuilder_ != null || entity_ != null;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
         if (entityBuilder_ == null) {
@@ -2161,7 +2554,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -2177,7 +2570,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder builderForValue) {
@@ -2191,7 +2584,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder mergeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -2209,7 +2602,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder clearEntity() {
         if (entityBuilder_ == null) {
@@ -2223,7 +2616,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder getEntityBuilder() {
         
@@ -2231,7 +2624,7 @@ public final class CottontailGrpc {
         return getEntityFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
         if (entityBuilder_ != null) {
@@ -2242,7 +2635,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> 
@@ -2329,13 +2722,13 @@ public final class CottontailGrpc {
 
       private int type_ = 0;
       /**
-       * <code>.Index.IndexType type = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
        */
       public int getTypeValue() {
         return type_;
       }
       /**
-       * <code>.Index.IndexType type = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
        */
       public Builder setTypeValue(int value) {
         type_ = value;
@@ -2343,14 +2736,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index.IndexType type = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType getType() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType.valueOf(type_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Index.IndexType type = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
        */
       public Builder setType(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType value) {
         if (value == null) {
@@ -2362,7 +2755,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index.IndexType type = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index.IndexType type = 3;</code>
        */
       public Builder clearType() {
         
@@ -2381,10 +2774,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Index)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Index)
     }
 
-    // @@protoc_insertion_point(class_scope:Index)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Index)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index();
@@ -2420,7 +2813,7 @@ public final class CottontailGrpc {
   }
 
   public interface SuccessStatusOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SuccessStatus)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -2433,11 +2826,11 @@ public final class CottontailGrpc {
    ** A status as returned by Cottontail DB in response to a successful action that has no dedicated return type. 
    * </pre>
    *
-   * Protobuf type {@code SuccessStatus}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus}
    */
   public  static final class SuccessStatus extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:SuccessStatus)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus)
       SuccessStatusOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use SuccessStatus.newBuilder() to construct.
@@ -2495,12 +2888,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_SuccessStatus_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_SuccessStatus_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.Builder.class);
     }
@@ -2671,20 +3064,20 @@ public final class CottontailGrpc {
      ** A status as returned by Cottontail DB in response to a successful action that has no dedicated return type. 
      * </pre>
      *
-     * Protobuf type {@code SuccessStatus}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SuccessStatus)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatusOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_SuccessStatus_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_SuccessStatus_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.Builder.class);
       }
@@ -2713,7 +3106,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_SuccessStatus_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus getDefaultInstanceForType() {
@@ -2838,10 +3231,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:SuccessStatus)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus)
     }
 
-    // @@protoc_insertion_point(class_scope:SuccessStatus)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.SuccessStatus)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus();
@@ -2877,7 +3270,7 @@ public final class CottontailGrpc {
   }
 
   public interface InsertStatusOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:InsertStatus)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -2895,11 +3288,11 @@ public final class CottontailGrpc {
    ** A status as returned by Cottontail DB in response to an insert action. 
    * </pre>
    *
-   * Protobuf type {@code InsertStatus}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus}
    */
   public  static final class InsertStatus extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:InsertStatus)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus)
       InsertStatusOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use InsertStatus.newBuilder() to construct.
@@ -2963,12 +3356,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertStatus_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertStatus_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus.Builder.class);
     }
@@ -3160,20 +3553,20 @@ public final class CottontailGrpc {
      ** A status as returned by Cottontail DB in response to an insert action. 
      * </pre>
      *
-     * Protobuf type {@code InsertStatus}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:InsertStatus)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatusOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertStatus_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertStatus_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus.Builder.class);
       }
@@ -3204,7 +3597,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertStatus_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus getDefaultInstanceForType() {
@@ -3359,10 +3752,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:InsertStatus)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus)
     }
 
-    // @@protoc_insertion_point(class_scope:InsertStatus)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.InsertStatus)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus();
@@ -3398,15 +3791,15 @@ public final class CottontailGrpc {
   }
 
   public interface TupleOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Tuple)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Tuple)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
     int getDataCount();
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
     boolean containsData(
         java.lang.String key);
@@ -3417,19 +3810,19 @@ public final class CottontailGrpc {
     java.util.Map<java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data>
     getData();
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
     java.util.Map<java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data>
     getDataMap();
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrDefault(
         java.lang.String key,
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data defaultValue);
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrThrow(
@@ -3440,11 +3833,11 @@ public final class CottontailGrpc {
    ** A basic tuple as used in insert or update statements OR results. 
    * </pre>
    *
-   * Protobuf type {@code Tuple}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Tuple}
    */
   public  static final class Tuple extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Tuple)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Tuple)
       TupleOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Tuple.newBuilder() to construct.
@@ -3509,7 +3902,7 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -3525,7 +3918,7 @@ public final class CottontailGrpc {
     }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder.class);
     }
@@ -3536,7 +3929,7 @@ public final class CottontailGrpc {
           java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data>newDefaultInstance(
-                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_DataEntry_descriptor, 
+                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.MESSAGE,
@@ -3557,7 +3950,7 @@ public final class CottontailGrpc {
       return internalGetData().getMap().size();
     }
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     public boolean containsData(
@@ -3573,14 +3966,14 @@ public final class CottontailGrpc {
       return getDataMap();
     }
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> getDataMap() {
       return internalGetData().getMap();
     }
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrDefault(
@@ -3592,7 +3985,7 @@ public final class CottontailGrpc {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .Data&gt; data = 1;</code>
+     * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
      */
 
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrThrow(
@@ -3773,15 +4166,15 @@ public final class CottontailGrpc {
      ** A basic tuple as used in insert or update statements OR results. 
      * </pre>
      *
-     * Protobuf type {@code Tuple}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Tuple}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Tuple)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Tuple)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -3808,7 +4201,7 @@ public final class CottontailGrpc {
       }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder.class);
       }
@@ -3836,7 +4229,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Tuple_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getDefaultInstanceForType() {
@@ -3954,7 +4347,7 @@ public final class CottontailGrpc {
         return internalGetData().getMap().size();
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public boolean containsData(
@@ -3970,14 +4363,14 @@ public final class CottontailGrpc {
         return getDataMap();
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> getDataMap() {
         return internalGetData().getMap();
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrDefault(
@@ -3989,7 +4382,7 @@ public final class CottontailGrpc {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDataOrThrow(
@@ -4009,7 +4402,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public Builder removeData(
@@ -4028,7 +4421,7 @@ public final class CottontailGrpc {
         return internalGetMutableData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
       public Builder putData(
           java.lang.String key,
@@ -4040,7 +4433,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>map&lt;string, .Data&gt; data = 1;</code>
+       * <code>map&lt;string, .ch.unibas.dmi.dbis.cottontail.grpc.Data&gt; data = 1;</code>
        */
 
       public Builder putAllData(
@@ -4060,10 +4453,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Tuple)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Tuple)
     }
 
-    // @@protoc_insertion_point(class_scope:Tuple)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Tuple)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple();
@@ -4099,7 +4492,7 @@ public final class CottontailGrpc {
   }
 
   public interface DataOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Data)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Data)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -4138,28 +4531,28 @@ public final class CottontailGrpc {
         getStringDataBytes();
 
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     boolean hasVectorData();
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getVectorData();
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getVectorDataOrBuilder();
 
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     boolean hasNullData();
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData();
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder();
 
@@ -4170,11 +4563,11 @@ public final class CottontailGrpc {
    ** The data payload that can be contained in a tuple. 
    * </pre>
    *
-   * Protobuf type {@code Data}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Data}
    */
   public  static final class Data extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Data)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Data)
       DataOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Data.newBuilder() to construct.
@@ -4285,12 +4678,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Data_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Data_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder.class);
     }
@@ -4445,13 +4838,13 @@ public final class CottontailGrpc {
 
     public static final int VECTORDATA_FIELD_NUMBER = 7;
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     public boolean hasVectorData() {
       return dataCase_ == 7;
     }
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getVectorData() {
       if (dataCase_ == 7) {
@@ -4460,7 +4853,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance();
     }
     /**
-     * <code>.Vector vectorData = 7;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getVectorDataOrBuilder() {
       if (dataCase_ == 7) {
@@ -4471,13 +4864,13 @@ public final class CottontailGrpc {
 
     public static final int NULLDATA_FIELD_NUMBER = 8;
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     public boolean hasNullData() {
       return dataCase_ == 8;
     }
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData() {
       if (dataCase_ == 8) {
@@ -4486,7 +4879,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
     }
     /**
-     * <code>.Null nullData = 8;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder() {
       if (dataCase_ == 8) {
@@ -4788,20 +5181,20 @@ public final class CottontailGrpc {
      ** The data payload that can be contained in a tuple. 
      * </pre>
      *
-     * Protobuf type {@code Data}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Data}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Data)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Data)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Data_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Data_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder.class);
       }
@@ -4830,7 +5223,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Data_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getDefaultInstanceForType() {
@@ -5235,13 +5628,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> vectorDataBuilder_;
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public boolean hasVectorData() {
         return dataCase_ == 7;
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getVectorData() {
         if (vectorDataBuilder_ == null) {
@@ -5257,7 +5650,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public Builder setVectorData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (vectorDataBuilder_ == null) {
@@ -5273,7 +5666,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public Builder setVectorData(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -5287,7 +5680,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public Builder mergeVectorData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (vectorDataBuilder_ == null) {
@@ -5309,7 +5702,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public Builder clearVectorData() {
         if (vectorDataBuilder_ == null) {
@@ -5328,13 +5721,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getVectorDataBuilder() {
         return getVectorDataFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getVectorDataOrBuilder() {
         if ((dataCase_ == 7) && (vectorDataBuilder_ != null)) {
@@ -5347,7 +5740,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Vector vectorData = 7;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Vector vectorData = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
@@ -5371,13 +5764,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder> nullDataBuilder_;
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public boolean hasNullData() {
         return dataCase_ == 8;
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData() {
         if (nullDataBuilder_ == null) {
@@ -5393,7 +5786,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public Builder setNullData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null value) {
         if (nullDataBuilder_ == null) {
@@ -5409,7 +5802,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public Builder setNullData(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder builderForValue) {
@@ -5423,7 +5816,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public Builder mergeNullData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null value) {
         if (nullDataBuilder_ == null) {
@@ -5445,7 +5838,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public Builder clearNullData() {
         if (nullDataBuilder_ == null) {
@@ -5464,13 +5857,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder getNullDataBuilder() {
         return getNullDataFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder() {
         if ((dataCase_ == 8) && (nullDataBuilder_ != null)) {
@@ -5483,7 +5876,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Null nullData = 8;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Null nullData = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder> 
@@ -5514,10 +5907,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Data)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Data)
     }
 
-    // @@protoc_insertion_point(class_scope:Data)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Data)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data();
@@ -5553,60 +5946,73 @@ public final class CottontailGrpc {
   }
 
   public interface VectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Vector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Vector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     boolean hasFloatVector();
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector getFloatVector();
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder getFloatVectorOrBuilder();
 
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     boolean hasDoubleVector();
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector getDoubleVector();
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder getDoubleVectorOrBuilder();
 
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     boolean hasIntVector();
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector getIntVector();
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder getIntVectorOrBuilder();
 
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     boolean hasLongVector();
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector getLongVector();
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder getLongVectorOrBuilder();
+
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    boolean hasBoolVector();
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector getBoolVector();
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder getBoolVectorOrBuilder();
 
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.VectorDataCase getVectorDataCase();
   }
@@ -5615,11 +6021,11 @@ public final class CottontailGrpc {
    ** Vector data (as opposed to scalar data). 
    * </pre>
    *
-   * Protobuf type {@code Vector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Vector}
    */
   public  static final class Vector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Vector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Vector)
       VectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Vector.newBuilder() to construct.
@@ -5713,6 +6119,20 @@ public final class CottontailGrpc {
               vectorDataCase_ = 4;
               break;
             }
+            case 42: {
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder subBuilder = null;
+              if (vectorDataCase_ == 5) {
+                subBuilder = ((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_).toBuilder();
+              }
+              vectorData_ =
+                  input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_);
+                vectorData_ = subBuilder.buildPartial();
+              }
+              vectorDataCase_ = 5;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -5727,12 +6147,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Vector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Vector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder.class);
     }
@@ -5745,6 +6165,7 @@ public final class CottontailGrpc {
       DOUBLEVECTOR(2),
       INTVECTOR(3),
       LONGVECTOR(4),
+      BOOLVECTOR(5),
       VECTORDATA_NOT_SET(0);
       private final int value;
       private VectorDataCase(int value) {
@@ -5764,6 +6185,7 @@ public final class CottontailGrpc {
           case 2: return DOUBLEVECTOR;
           case 3: return INTVECTOR;
           case 4: return LONGVECTOR;
+          case 5: return BOOLVECTOR;
           case 0: return VECTORDATA_NOT_SET;
           default: return null;
         }
@@ -5781,13 +6203,13 @@ public final class CottontailGrpc {
 
     public static final int FLOATVECTOR_FIELD_NUMBER = 1;
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     public boolean hasFloatVector() {
       return vectorDataCase_ == 1;
     }
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector getFloatVector() {
       if (vectorDataCase_ == 1) {
@@ -5796,7 +6218,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.getDefaultInstance();
     }
     /**
-     * <code>.FloatVector floatVector = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder getFloatVectorOrBuilder() {
       if (vectorDataCase_ == 1) {
@@ -5807,13 +6229,13 @@ public final class CottontailGrpc {
 
     public static final int DOUBLEVECTOR_FIELD_NUMBER = 2;
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     public boolean hasDoubleVector() {
       return vectorDataCase_ == 2;
     }
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector getDoubleVector() {
       if (vectorDataCase_ == 2) {
@@ -5822,7 +6244,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.getDefaultInstance();
     }
     /**
-     * <code>.DoubleVector doubleVector = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder getDoubleVectorOrBuilder() {
       if (vectorDataCase_ == 2) {
@@ -5833,13 +6255,13 @@ public final class CottontailGrpc {
 
     public static final int INTVECTOR_FIELD_NUMBER = 3;
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     public boolean hasIntVector() {
       return vectorDataCase_ == 3;
     }
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector getIntVector() {
       if (vectorDataCase_ == 3) {
@@ -5848,7 +6270,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.getDefaultInstance();
     }
     /**
-     * <code>.IntVector intVector = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder getIntVectorOrBuilder() {
       if (vectorDataCase_ == 3) {
@@ -5859,13 +6281,13 @@ public final class CottontailGrpc {
 
     public static final int LONGVECTOR_FIELD_NUMBER = 4;
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     public boolean hasLongVector() {
       return vectorDataCase_ == 4;
     }
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector getLongVector() {
       if (vectorDataCase_ == 4) {
@@ -5874,13 +6296,39 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.getDefaultInstance();
     }
     /**
-     * <code>.LongVector longVector = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder getLongVectorOrBuilder() {
       if (vectorDataCase_ == 4) {
          return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector) vectorData_;
       }
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.getDefaultInstance();
+    }
+
+    public static final int BOOLVECTOR_FIELD_NUMBER = 5;
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    public boolean hasBoolVector() {
+      return vectorDataCase_ == 5;
+    }
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector getBoolVector() {
+      if (vectorDataCase_ == 5) {
+         return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_;
+      }
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
+    }
+    /**
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder getBoolVectorOrBuilder() {
+      if (vectorDataCase_ == 5) {
+         return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_;
+      }
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -5907,6 +6355,9 @@ public final class CottontailGrpc {
       if (vectorDataCase_ == 4) {
         output.writeMessage(4, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector) vectorData_);
       }
+      if (vectorDataCase_ == 5) {
+        output.writeMessage(5, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -5930,6 +6381,10 @@ public final class CottontailGrpc {
       if (vectorDataCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector) vectorData_);
+      }
+      if (vectorDataCase_ == 5) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5967,6 +6422,10 @@ public final class CottontailGrpc {
           result = result && getLongVector()
               .equals(other.getLongVector());
           break;
+        case 5:
+          result = result && getBoolVector()
+              .equals(other.getBoolVector());
+          break;
         case 0:
         default:
       }
@@ -5997,6 +6456,10 @@ public final class CottontailGrpc {
         case 4:
           hash = (37 * hash) + LONGVECTOR_FIELD_NUMBER;
           hash = (53 * hash) + getLongVector().hashCode();
+          break;
+        case 5:
+          hash = (37 * hash) + BOOLVECTOR_FIELD_NUMBER;
+          hash = (53 * hash) + getBoolVector().hashCode();
           break;
         case 0:
         default:
@@ -6099,20 +6562,20 @@ public final class CottontailGrpc {
      ** Vector data (as opposed to scalar data). 
      * </pre>
      *
-     * Protobuf type {@code Vector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Vector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Vector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Vector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Vector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Vector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder.class);
       }
@@ -6141,7 +6604,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Vector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getDefaultInstanceForType() {
@@ -6184,6 +6647,13 @@ public final class CottontailGrpc {
             result.vectorData_ = vectorData_;
           } else {
             result.vectorData_ = longVectorBuilder_.build();
+          }
+        }
+        if (vectorDataCase_ == 5) {
+          if (boolVectorBuilder_ == null) {
+            result.vectorData_ = vectorData_;
+          } else {
+            result.vectorData_ = boolVectorBuilder_.build();
           }
         }
         result.vectorDataCase_ = vectorDataCase_;
@@ -6245,6 +6715,10 @@ public final class CottontailGrpc {
             mergeLongVector(other.getLongVector());
             break;
           }
+          case BOOLVECTOR: {
+            mergeBoolVector(other.getBoolVector());
+            break;
+          }
           case VECTORDATA_NOT_SET: {
             break;
           }
@@ -6294,13 +6768,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder> floatVectorBuilder_;
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public boolean hasFloatVector() {
         return vectorDataCase_ == 1;
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector getFloatVector() {
         if (floatVectorBuilder_ == null) {
@@ -6316,7 +6790,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public Builder setFloatVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector value) {
         if (floatVectorBuilder_ == null) {
@@ -6332,7 +6806,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public Builder setFloatVector(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder builderForValue) {
@@ -6346,7 +6820,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public Builder mergeFloatVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector value) {
         if (floatVectorBuilder_ == null) {
@@ -6368,7 +6842,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public Builder clearFloatVector() {
         if (floatVectorBuilder_ == null) {
@@ -6387,13 +6861,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder getFloatVectorBuilder() {
         return getFloatVectorFieldBuilder().getBuilder();
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder getFloatVectorOrBuilder() {
         if ((vectorDataCase_ == 1) && (floatVectorBuilder_ != null)) {
@@ -6406,7 +6880,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.FloatVector floatVector = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.FloatVector floatVector = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder> 
@@ -6430,13 +6904,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder> doubleVectorBuilder_;
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public boolean hasDoubleVector() {
         return vectorDataCase_ == 2;
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector getDoubleVector() {
         if (doubleVectorBuilder_ == null) {
@@ -6452,7 +6926,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public Builder setDoubleVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector value) {
         if (doubleVectorBuilder_ == null) {
@@ -6468,7 +6942,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public Builder setDoubleVector(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder builderForValue) {
@@ -6482,7 +6956,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public Builder mergeDoubleVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector value) {
         if (doubleVectorBuilder_ == null) {
@@ -6504,7 +6978,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public Builder clearDoubleVector() {
         if (doubleVectorBuilder_ == null) {
@@ -6523,13 +6997,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder getDoubleVectorBuilder() {
         return getDoubleVectorFieldBuilder().getBuilder();
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder getDoubleVectorOrBuilder() {
         if ((vectorDataCase_ == 2) && (doubleVectorBuilder_ != null)) {
@@ -6542,7 +7016,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.DoubleVector doubleVector = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector doubleVector = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder> 
@@ -6566,13 +7040,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder> intVectorBuilder_;
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public boolean hasIntVector() {
         return vectorDataCase_ == 3;
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector getIntVector() {
         if (intVectorBuilder_ == null) {
@@ -6588,7 +7062,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public Builder setIntVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector value) {
         if (intVectorBuilder_ == null) {
@@ -6604,7 +7078,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public Builder setIntVector(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder builderForValue) {
@@ -6618,7 +7092,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public Builder mergeIntVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector value) {
         if (intVectorBuilder_ == null) {
@@ -6640,7 +7114,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public Builder clearIntVector() {
         if (intVectorBuilder_ == null) {
@@ -6659,13 +7133,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder getIntVectorBuilder() {
         return getIntVectorFieldBuilder().getBuilder();
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder getIntVectorOrBuilder() {
         if ((vectorDataCase_ == 3) && (intVectorBuilder_ != null)) {
@@ -6678,7 +7152,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.IntVector intVector = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.IntVector intVector = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder> 
@@ -6702,13 +7176,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder> longVectorBuilder_;
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public boolean hasLongVector() {
         return vectorDataCase_ == 4;
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector getLongVector() {
         if (longVectorBuilder_ == null) {
@@ -6724,7 +7198,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public Builder setLongVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector value) {
         if (longVectorBuilder_ == null) {
@@ -6740,7 +7214,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public Builder setLongVector(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder builderForValue) {
@@ -6754,7 +7228,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public Builder mergeLongVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector value) {
         if (longVectorBuilder_ == null) {
@@ -6776,7 +7250,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public Builder clearLongVector() {
         if (longVectorBuilder_ == null) {
@@ -6795,13 +7269,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder getLongVectorBuilder() {
         return getLongVectorFieldBuilder().getBuilder();
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder getLongVectorOrBuilder() {
         if ((vectorDataCase_ == 4) && (longVectorBuilder_ != null)) {
@@ -6814,7 +7288,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.LongVector longVector = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.LongVector longVector = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder> 
@@ -6834,6 +7308,142 @@ public final class CottontailGrpc {
         onChanged();;
         return longVectorBuilder_;
       }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder> boolVectorBuilder_;
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public boolean hasBoolVector() {
+        return vectorDataCase_ == 5;
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector getBoolVector() {
+        if (boolVectorBuilder_ == null) {
+          if (vectorDataCase_ == 5) {
+            return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_;
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
+        } else {
+          if (vectorDataCase_ == 5) {
+            return boolVectorBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public Builder setBoolVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector value) {
+        if (boolVectorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          vectorData_ = value;
+          onChanged();
+        } else {
+          boolVectorBuilder_.setMessage(value);
+        }
+        vectorDataCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public Builder setBoolVector(
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder builderForValue) {
+        if (boolVectorBuilder_ == null) {
+          vectorData_ = builderForValue.build();
+          onChanged();
+        } else {
+          boolVectorBuilder_.setMessage(builderForValue.build());
+        }
+        vectorDataCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public Builder mergeBoolVector(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector value) {
+        if (boolVectorBuilder_ == null) {
+          if (vectorDataCase_ == 5 &&
+              vectorData_ != ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance()) {
+            vectorData_ = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.newBuilder((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            vectorData_ = value;
+          }
+          onChanged();
+        } else {
+          if (vectorDataCase_ == 5) {
+            boolVectorBuilder_.mergeFrom(value);
+          }
+          boolVectorBuilder_.setMessage(value);
+        }
+        vectorDataCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public Builder clearBoolVector() {
+        if (boolVectorBuilder_ == null) {
+          if (vectorDataCase_ == 5) {
+            vectorDataCase_ = 0;
+            vectorData_ = null;
+            onChanged();
+          }
+        } else {
+          if (vectorDataCase_ == 5) {
+            vectorDataCase_ = 0;
+            vectorData_ = null;
+          }
+          boolVectorBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder getBoolVectorBuilder() {
+        return getBoolVectorFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder getBoolVectorOrBuilder() {
+        if ((vectorDataCase_ == 5) && (boolVectorBuilder_ != null)) {
+          return boolVectorBuilder_.getMessageOrBuilder();
+        } else {
+          if (vectorDataCase_ == 5) {
+            return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_;
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.BoolVector boolVector = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder> 
+          getBoolVectorFieldBuilder() {
+        if (boolVectorBuilder_ == null) {
+          if (!(vectorDataCase_ == 5)) {
+            vectorData_ = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.getDefaultInstance();
+          }
+          boolVectorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder>(
+                  (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector) vectorData_,
+                  getParentForChildren(),
+                  isClean());
+          vectorData_ = null;
+        }
+        vectorDataCase_ = 5;
+        onChanged();;
+        return boolVectorBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -6845,10 +7455,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Vector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Vector)
     }
 
-    // @@protoc_insertion_point(class_scope:Vector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Vector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector();
@@ -6884,7 +7494,7 @@ public final class CottontailGrpc {
   }
 
   public interface NullOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Null)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Null)
       com.google.protobuf.MessageOrBuilder {
   }
   /**
@@ -6892,11 +7502,11 @@ public final class CottontailGrpc {
    ** A null entry.
    * </pre>
    *
-   * Protobuf type {@code Null}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Null}
    */
   public  static final class Null extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Null)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Null)
       NullOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Null.newBuilder() to construct.
@@ -6947,12 +7557,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder.class);
     }
@@ -7102,20 +7712,20 @@ public final class CottontailGrpc {
      ** A null entry.
      * </pre>
      *
-     * Protobuf type {@code Null}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Null}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Null)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Null)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder.class);
       }
@@ -7142,7 +7752,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getDefaultInstanceForType() {
@@ -7237,10 +7847,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Null)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Null)
     }
 
-    // @@protoc_insertion_point(class_scope:Null)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Null)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null();
@@ -7276,7 +7886,7 @@ public final class CottontailGrpc {
   }
 
   public interface FloatVectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:FloatVector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.FloatVector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -7297,11 +7907,11 @@ public final class CottontailGrpc {
    ** A float vector. 
    * </pre>
    *
-   * Protobuf type {@code FloatVector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.FloatVector}
    */
   public  static final class FloatVector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:FloatVector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.FloatVector)
       FloatVectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use FloatVector.newBuilder() to construct.
@@ -7378,12 +7988,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_FloatVector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_FloatVector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder.class);
     }
@@ -7581,20 +8191,20 @@ public final class CottontailGrpc {
      ** A float vector. 
      * </pre>
      *
-     * Protobuf type {@code FloatVector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.FloatVector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:FloatVector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.FloatVector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_FloatVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_FloatVector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector.Builder.class);
       }
@@ -7623,7 +8233,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_FloatVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector getDefaultInstanceForType() {
@@ -7801,10 +8411,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:FloatVector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.FloatVector)
     }
 
-    // @@protoc_insertion_point(class_scope:FloatVector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.FloatVector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector();
@@ -7840,7 +8450,7 @@ public final class CottontailGrpc {
   }
 
   public interface DoubleVectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:DoubleVector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -7861,11 +8471,11 @@ public final class CottontailGrpc {
    ** A double vector. 
    * </pre>
    *
-   * Protobuf type {@code DoubleVector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector}
    */
   public  static final class DoubleVector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:DoubleVector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector)
       DoubleVectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use DoubleVector.newBuilder() to construct.
@@ -7942,12 +8552,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DoubleVector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DoubleVector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder.class);
     }
@@ -8145,20 +8755,20 @@ public final class CottontailGrpc {
      ** A double vector. 
      * </pre>
      *
-     * Protobuf type {@code DoubleVector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:DoubleVector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DoubleVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DoubleVector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector.Builder.class);
       }
@@ -8187,7 +8797,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DoubleVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector getDefaultInstanceForType() {
@@ -8365,10 +8975,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:DoubleVector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector)
     }
 
-    // @@protoc_insertion_point(class_scope:DoubleVector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.DoubleVector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector();
@@ -8404,7 +9014,7 @@ public final class CottontailGrpc {
   }
 
   public interface IntVectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:IntVector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.IntVector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -8425,11 +9035,11 @@ public final class CottontailGrpc {
    ** A int vector. 
    * </pre>
    *
-   * Protobuf type {@code IntVector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.IntVector}
    */
   public  static final class IntVector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:IntVector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.IntVector)
       IntVectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use IntVector.newBuilder() to construct.
@@ -8506,12 +9116,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_IntVector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_IntVector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder.class);
     }
@@ -8712,20 +9322,20 @@ public final class CottontailGrpc {
      ** A int vector. 
      * </pre>
      *
-     * Protobuf type {@code IntVector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.IntVector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:IntVector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.IntVector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_IntVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_IntVector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector.Builder.class);
       }
@@ -8754,7 +9364,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_IntVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector getDefaultInstanceForType() {
@@ -8932,10 +9542,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:IntVector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.IntVector)
     }
 
-    // @@protoc_insertion_point(class_scope:IntVector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.IntVector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector();
@@ -8971,7 +9581,7 @@ public final class CottontailGrpc {
   }
 
   public interface LongVectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:LongVector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.LongVector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -8992,11 +9602,11 @@ public final class CottontailGrpc {
    ** A long vector. 
    * </pre>
    *
-   * Protobuf type {@code LongVector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.LongVector}
    */
   public  static final class LongVector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:LongVector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.LongVector)
       LongVectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use LongVector.newBuilder() to construct.
@@ -9073,12 +9683,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_LongVector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_LongVector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder.class);
     }
@@ -9279,20 +9889,20 @@ public final class CottontailGrpc {
      ** A long vector. 
      * </pre>
      *
-     * Protobuf type {@code LongVector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.LongVector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:LongVector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.LongVector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_LongVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_LongVector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector.Builder.class);
       }
@@ -9321,7 +9931,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_LongVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector getDefaultInstanceForType() {
@@ -9499,10 +10109,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:LongVector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.LongVector)
     }
 
-    // @@protoc_insertion_point(class_scope:LongVector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.LongVector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector();
@@ -9538,7 +10148,7 @@ public final class CottontailGrpc {
   }
 
   public interface BoolVectorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:BoolVector)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.BoolVector)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -9559,11 +10169,11 @@ public final class CottontailGrpc {
    ** A boolean vector. 
    * </pre>
    *
-   * Protobuf type {@code BoolVector}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.BoolVector}
    */
   public  static final class BoolVector extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:BoolVector)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.BoolVector)
       BoolVectorOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use BoolVector.newBuilder() to construct.
@@ -9640,12 +10250,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BoolVector_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BoolVector_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder.class);
     }
@@ -9843,20 +10453,20 @@ public final class CottontailGrpc {
      ** A boolean vector. 
      * </pre>
      *
-     * Protobuf type {@code BoolVector}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.BoolVector}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:BoolVector)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.BoolVector)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVectorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BoolVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BoolVector_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector.Builder.class);
       }
@@ -9885,7 +10495,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BoolVector_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector getDefaultInstanceForType() {
@@ -10063,10 +10673,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:BoolVector)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.BoolVector)
     }
 
-    // @@protoc_insertion_point(class_scope:BoolVector)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.BoolVector)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector();
@@ -10102,7 +10712,7 @@ public final class CottontailGrpc {
   }
 
   public interface ColumnDefinitionOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ColumnDefinition)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -10116,11 +10726,11 @@ public final class CottontailGrpc {
         getNameBytes();
 
     /**
-     * <code>.Type type = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
      */
     int getTypeValue();
     /**
-     * <code>.Type type = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type getType();
 
@@ -10144,11 +10754,11 @@ public final class CottontailGrpc {
    ** Definition of a column in Cottontail DB. 
    * </pre>
    *
-   * Protobuf type {@code ColumnDefinition}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition}
    */
   public  static final class ColumnDefinition extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ColumnDefinition)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition)
       ColumnDefinitionOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ColumnDefinition.newBuilder() to construct.
@@ -10232,12 +10842,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ColumnDefinition_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ColumnDefinition_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder.class);
     }
@@ -10279,13 +10889,13 @@ public final class CottontailGrpc {
     public static final int TYPE_FIELD_NUMBER = 2;
     private int type_;
     /**
-     * <code>.Type type = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
      */
     public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>.Type type = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type getType() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type.valueOf(type_);
@@ -10519,20 +11129,20 @@ public final class CottontailGrpc {
      ** Definition of a column in Cottontail DB. 
      * </pre>
      *
-     * Protobuf type {@code ColumnDefinition}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ColumnDefinition)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ColumnDefinition_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ColumnDefinition_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder.class);
       }
@@ -10569,7 +11179,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ColumnDefinition_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition getDefaultInstanceForType() {
@@ -10746,13 +11356,13 @@ public final class CottontailGrpc {
 
       private int type_ = 0;
       /**
-       * <code>.Type type = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
        */
       public int getTypeValue() {
         return type_;
       }
       /**
-       * <code>.Type type = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
        */
       public Builder setTypeValue(int value) {
         type_ = value;
@@ -10760,14 +11370,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Type type = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type getType() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type.valueOf(type_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Type type = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
        */
       public Builder setType(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type value) {
         if (value == null) {
@@ -10779,7 +11389,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Type type = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Type type = 2;</code>
        */
       public Builder clearType() {
         
@@ -10876,10 +11486,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ColumnDefinition)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition)
     }
 
-    // @@protoc_insertion_point(class_scope:ColumnDefinition)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition();
@@ -10915,42 +11525,42 @@ public final class CottontailGrpc {
   }
 
   public interface CreateEntityMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:CreateEntityMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     boolean hasEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder();
 
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition> 
         getColumnsList();
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition getColumns(int index);
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     int getColumnsCount();
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder> 
         getColumnsOrBuilderList();
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder getColumnsOrBuilder(
         int index);
@@ -10960,11 +11570,11 @@ public final class CottontailGrpc {
    ** Message for creating an entity. 
    * </pre>
    *
-   * Protobuf type {@code CreateEntityMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage}
    */
   public  static final class CreateEntityMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:CreateEntityMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage)
       CreateEntityMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use CreateEntityMessage.newBuilder() to construct.
@@ -11042,12 +11652,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateEntityMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateEntityMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage.Builder.class);
     }
@@ -11056,19 +11666,19 @@ public final class CottontailGrpc {
     public static final int ENTITY_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity entity_;
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public boolean hasEntity() {
       return entity_ != null;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
       return entity_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance() : entity_;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
       return getEntity();
@@ -11077,32 +11687,32 @@ public final class CottontailGrpc {
     public static final int COLUMNS_FIELD_NUMBER = 2;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition> columns_;
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition> getColumnsList() {
       return columns_;
     }
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder> 
         getColumnsOrBuilderList() {
       return columns_;
     }
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     public int getColumnsCount() {
       return columns_.size();
     }
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition getColumns(int index) {
       return columns_.get(index);
     }
     /**
-     * <code>repeated .ColumnDefinition columns = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder getColumnsOrBuilder(
         int index) {
@@ -11283,20 +11893,20 @@ public final class CottontailGrpc {
      ** Message for creating an entity. 
      * </pre>
      *
-     * Protobuf type {@code CreateEntityMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:CreateEntityMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateEntityMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage.Builder.class);
       }
@@ -11336,7 +11946,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage getDefaultInstanceForType() {
@@ -11472,13 +12082,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> entityBuilder_;
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public boolean hasEntity() {
         return entityBuilder_ != null || entity_ != null;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
         if (entityBuilder_ == null) {
@@ -11488,7 +12098,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -11504,7 +12114,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder builderForValue) {
@@ -11518,7 +12128,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder mergeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -11536,7 +12146,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder clearEntity() {
         if (entityBuilder_ == null) {
@@ -11550,7 +12160,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder getEntityBuilder() {
         
@@ -11558,7 +12168,7 @@ public final class CottontailGrpc {
         return getEntityFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
         if (entityBuilder_ != null) {
@@ -11569,7 +12179,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> 
@@ -11598,7 +12208,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder> columnsBuilder_;
 
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition> getColumnsList() {
         if (columnsBuilder_ == null) {
@@ -11608,7 +12218,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public int getColumnsCount() {
         if (columnsBuilder_ == null) {
@@ -11618,7 +12228,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition getColumns(int index) {
         if (columnsBuilder_ == null) {
@@ -11628,7 +12238,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder setColumns(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition value) {
@@ -11645,7 +12255,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder setColumns(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder builderForValue) {
@@ -11659,7 +12269,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder addColumns(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition value) {
         if (columnsBuilder_ == null) {
@@ -11675,7 +12285,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder addColumns(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition value) {
@@ -11692,7 +12302,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder addColumns(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder builderForValue) {
@@ -11706,7 +12316,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder addColumns(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder builderForValue) {
@@ -11720,7 +12330,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder addAllColumns(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition> values) {
@@ -11735,7 +12345,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder clearColumns() {
         if (columnsBuilder_ == null) {
@@ -11748,7 +12358,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public Builder removeColumns(int index) {
         if (columnsBuilder_ == null) {
@@ -11761,14 +12371,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder getColumnsBuilder(
           int index) {
         return getColumnsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder getColumnsOrBuilder(
           int index) {
@@ -11778,7 +12388,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinitionOrBuilder> 
            getColumnsOrBuilderList() {
@@ -11789,14 +12399,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder addColumnsBuilder() {
         return getColumnsFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.getDefaultInstance());
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder addColumnsBuilder(
           int index) {
@@ -11804,7 +12414,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.getDefaultInstance());
       }
       /**
-       * <code>repeated .ColumnDefinition columns = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.ColumnDefinition columns = 2;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition.Builder> 
            getColumnsBuilderList() {
@@ -11835,10 +12445,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:CreateEntityMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:CreateEntityMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.CreateEntityMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage();
@@ -11874,19 +12484,19 @@ public final class CottontailGrpc {
   }
 
   public interface CreateIndexMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:CreateIndexMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     boolean hasIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder();
 
@@ -11948,11 +12558,11 @@ public final class CottontailGrpc {
    ** Message for creating an index. 
    * </pre>
    *
-   * Protobuf type {@code CreateIndexMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage}
    */
   public  static final class CreateIndexMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:CreateIndexMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage)
       CreateIndexMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use CreateIndexMessage.newBuilder() to construct.
@@ -12043,7 +12653,7 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -12059,7 +12669,7 @@ public final class CottontailGrpc {
     }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage.Builder.class);
     }
@@ -12068,19 +12678,19 @@ public final class CottontailGrpc {
     public static final int INDEX_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index index_;
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public boolean hasIndex() {
       return index_ != null;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
       return index_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.getDefaultInstance() : index_;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
       return getIndex();
@@ -12121,7 +12731,7 @@ public final class CottontailGrpc {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_ParamsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -12391,15 +13001,15 @@ public final class CottontailGrpc {
      ** Message for creating an index. 
      * </pre>
      *
-     * Protobuf type {@code CreateIndexMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:CreateIndexMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -12426,7 +13036,7 @@ public final class CottontailGrpc {
       }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage.Builder.class);
       }
@@ -12462,7 +13072,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CreateIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage getDefaultInstanceForType() {
@@ -12582,13 +13192,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> indexBuilder_;
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public boolean hasIndex() {
         return indexBuilder_ != null || index_ != null;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
         if (indexBuilder_ == null) {
@@ -12598,7 +13208,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -12614,7 +13224,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder builderForValue) {
@@ -12628,7 +13238,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder mergeIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -12646,7 +13256,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder clearIndex() {
         if (indexBuilder_ == null) {
@@ -12660,7 +13270,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder getIndexBuilder() {
         
@@ -12668,7 +13278,7 @@ public final class CottontailGrpc {
         return getIndexFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
         if (indexBuilder_ != null) {
@@ -12679,7 +13289,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> 
@@ -12922,10 +13532,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:CreateIndexMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:CreateIndexMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.CreateIndexMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage();
@@ -12961,19 +13571,19 @@ public final class CottontailGrpc {
   }
 
   public interface DropIndexMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:DropIndexMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     boolean hasIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder();
   }
@@ -12982,11 +13592,11 @@ public final class CottontailGrpc {
    ** Message for dropping an index. 
    * </pre>
    *
-   * Protobuf type {@code DropIndexMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage}
    */
   public  static final class DropIndexMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:DropIndexMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage)
       DropIndexMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use DropIndexMessage.newBuilder() to construct.
@@ -13051,12 +13661,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DropIndexMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DropIndexMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage.Builder.class);
     }
@@ -13064,19 +13674,19 @@ public final class CottontailGrpc {
     public static final int INDEX_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index index_;
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public boolean hasIndex() {
       return index_ != null;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
       return index_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.getDefaultInstance() : index_;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
       return getIndex();
@@ -13243,20 +13853,20 @@ public final class CottontailGrpc {
      ** Message for dropping an index. 
      * </pre>
      *
-     * Protobuf type {@code DropIndexMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:DropIndexMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DropIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DropIndexMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage.Builder.class);
       }
@@ -13289,7 +13899,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_DropIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage getDefaultInstanceForType() {
@@ -13386,13 +13996,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> indexBuilder_;
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public boolean hasIndex() {
         return indexBuilder_ != null || index_ != null;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
         if (indexBuilder_ == null) {
@@ -13402,7 +14012,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -13418,7 +14028,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder builderForValue) {
@@ -13432,7 +14042,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder mergeIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -13450,7 +14060,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder clearIndex() {
         if (indexBuilder_ == null) {
@@ -13464,7 +14074,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder getIndexBuilder() {
         
@@ -13472,7 +14082,7 @@ public final class CottontailGrpc {
         return getIndexFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
         if (indexBuilder_ != null) {
@@ -13483,7 +14093,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> 
@@ -13509,10 +14119,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:DropIndexMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:DropIndexMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.DropIndexMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage();
@@ -13548,19 +14158,19 @@ public final class CottontailGrpc {
   }
 
   public interface RebuildIndexMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:RebuildIndexMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     boolean hasIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex();
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder();
   }
@@ -13569,11 +14179,11 @@ public final class CottontailGrpc {
    ** Message for rebuilding an index. 
    * </pre>
    *
-   * Protobuf type {@code RebuildIndexMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage}
    */
   public  static final class RebuildIndexMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:RebuildIndexMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage)
       RebuildIndexMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use RebuildIndexMessage.newBuilder() to construct.
@@ -13638,12 +14248,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_RebuildIndexMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_RebuildIndexMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage.Builder.class);
     }
@@ -13651,19 +14261,19 @@ public final class CottontailGrpc {
     public static final int INDEX_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index index_;
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public boolean hasIndex() {
       return index_ != null;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
       return index_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.getDefaultInstance() : index_;
     }
     /**
-     * <code>.Index index = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
       return getIndex();
@@ -13830,20 +14440,20 @@ public final class CottontailGrpc {
      ** Message for rebuilding an index. 
      * </pre>
      *
-     * Protobuf type {@code RebuildIndexMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:RebuildIndexMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_RebuildIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_RebuildIndexMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage.Builder.class);
       }
@@ -13876,7 +14486,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_RebuildIndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage getDefaultInstanceForType() {
@@ -13973,13 +14583,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> indexBuilder_;
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public boolean hasIndex() {
         return indexBuilder_ != null || index_ != null;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index getIndex() {
         if (indexBuilder_ == null) {
@@ -13989,7 +14599,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -14005,7 +14615,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder setIndex(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder builderForValue) {
@@ -14019,7 +14629,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder mergeIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index value) {
         if (indexBuilder_ == null) {
@@ -14037,7 +14647,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public Builder clearIndex() {
         if (indexBuilder_ == null) {
@@ -14051,7 +14661,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder getIndexBuilder() {
         
@@ -14059,7 +14669,7 @@ public final class CottontailGrpc {
         return getIndexFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder getIndexOrBuilder() {
         if (indexBuilder_ != null) {
@@ -14070,7 +14680,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Index index = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Index index = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IndexOrBuilder> 
@@ -14096,10 +14706,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:RebuildIndexMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:RebuildIndexMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.RebuildIndexMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage();
@@ -14135,42 +14745,42 @@ public final class CottontailGrpc {
   }
 
   public interface InsertMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:InsertMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     boolean hasEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder();
 
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> 
         getTupleList();
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getTuple(int index);
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     int getTupleCount();
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
         getTupleOrBuilderList();
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getTupleOrBuilder(
         int index);
@@ -14180,11 +14790,11 @@ public final class CottontailGrpc {
    ** Message for inserting data into an entity. 
    * </pre>
    *
-   * Protobuf type {@code InsertMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage}
    */
   public  static final class InsertMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:InsertMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage)
       InsertMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use InsertMessage.newBuilder() to construct.
@@ -14262,12 +14872,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.Builder.class);
     }
@@ -14276,19 +14886,19 @@ public final class CottontailGrpc {
     public static final int ENTITY_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity entity_;
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public boolean hasEntity() {
       return entity_ != null;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
       return entity_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance() : entity_;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
       return getEntity();
@@ -14297,32 +14907,32 @@ public final class CottontailGrpc {
     public static final int TUPLE_FIELD_NUMBER = 2;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> tuple_;
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> getTupleList() {
       return tuple_;
     }
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
         getTupleOrBuilderList() {
       return tuple_;
     }
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     public int getTupleCount() {
       return tuple_.size();
     }
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getTuple(int index) {
       return tuple_.get(index);
     }
     /**
-     * <code>repeated .Tuple tuple = 2;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getTupleOrBuilder(
         int index) {
@@ -14503,20 +15113,20 @@ public final class CottontailGrpc {
      ** Message for inserting data into an entity. 
      * </pre>
      *
-     * Protobuf type {@code InsertMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:InsertMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.Builder.class);
       }
@@ -14556,7 +15166,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_InsertMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage getDefaultInstanceForType() {
@@ -14692,13 +15302,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> entityBuilder_;
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public boolean hasEntity() {
         return entityBuilder_ != null || entity_ != null;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
         if (entityBuilder_ == null) {
@@ -14708,7 +15318,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -14724,7 +15334,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder builderForValue) {
@@ -14738,7 +15348,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder mergeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -14756,7 +15366,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder clearEntity() {
         if (entityBuilder_ == null) {
@@ -14770,7 +15380,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder getEntityBuilder() {
         
@@ -14778,7 +15388,7 @@ public final class CottontailGrpc {
         return getEntityFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
         if (entityBuilder_ != null) {
@@ -14789,7 +15399,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> 
@@ -14818,7 +15428,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> tupleBuilder_;
 
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> getTupleList() {
         if (tupleBuilder_ == null) {
@@ -14828,7 +15438,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public int getTupleCount() {
         if (tupleBuilder_ == null) {
@@ -14838,7 +15448,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getTuple(int index) {
         if (tupleBuilder_ == null) {
@@ -14848,7 +15458,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder setTuple(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
@@ -14865,7 +15475,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder setTuple(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -14879,7 +15489,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder addTuple(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
         if (tupleBuilder_ == null) {
@@ -14895,7 +15505,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder addTuple(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
@@ -14912,7 +15522,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder addTuple(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -14926,7 +15536,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder addTuple(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -14940,7 +15550,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder addAllTuple(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> values) {
@@ -14955,7 +15565,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder clearTuple() {
         if (tupleBuilder_ == null) {
@@ -14968,7 +15578,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public Builder removeTuple(int index) {
         if (tupleBuilder_ == null) {
@@ -14981,14 +15591,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder getTupleBuilder(
           int index) {
         return getTupleFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getTupleOrBuilder(
           int index) {
@@ -14998,7 +15608,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
            getTupleOrBuilderList() {
@@ -15009,14 +15619,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder addTupleBuilder() {
         return getTupleFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.getDefaultInstance());
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder addTupleBuilder(
           int index) {
@@ -15024,7 +15634,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.getDefaultInstance());
       }
       /**
-       * <code>repeated .Tuple tuple = 2;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple tuple = 2;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder> 
            getTupleBuilderList() {
@@ -15055,10 +15665,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:InsertMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:InsertMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.InsertMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage();
@@ -15094,58 +15704,58 @@ public final class CottontailGrpc {
   }
 
   public interface QueryOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Query)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Query)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     boolean hasFrom();
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From getFrom();
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder getFromOrBuilder();
 
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     boolean hasProjection();
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection getProjection();
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder getProjectionOrBuilder();
 
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     boolean hasWhere();
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where getWhere();
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder getWhereOrBuilder();
 
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     boolean hasKnn();
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn getKnn();
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder getKnnOrBuilder();
 
@@ -15172,11 +15782,11 @@ public final class CottontailGrpc {
    * A simple query. 
    * </pre>
    *
-   * Protobuf type {@code Query}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Query}
    */
   public  static final class Query extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Query)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Query)
       QueryOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Query.newBuilder() to construct.
@@ -15292,12 +15902,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Query_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Query_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder.class);
     }
@@ -15305,19 +15915,19 @@ public final class CottontailGrpc {
     public static final int FROM_FIELD_NUMBER = 1;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From from_;
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     public boolean hasFrom() {
       return from_ != null;
     }
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From getFrom() {
       return from_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.getDefaultInstance() : from_;
     }
     /**
-     * <code>.From from = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder getFromOrBuilder() {
       return getFrom();
@@ -15326,19 +15936,19 @@ public final class CottontailGrpc {
     public static final int PROJECTION_FIELD_NUMBER = 2;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection projection_;
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     public boolean hasProjection() {
       return projection_ != null;
     }
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection getProjection() {
       return projection_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.getDefaultInstance() : projection_;
     }
     /**
-     * <code>.Projection projection = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder getProjectionOrBuilder() {
       return getProjection();
@@ -15347,19 +15957,19 @@ public final class CottontailGrpc {
     public static final int WHERE_FIELD_NUMBER = 3;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where where_;
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     public boolean hasWhere() {
       return where_ != null;
     }
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where getWhere() {
       return where_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.getDefaultInstance() : where_;
     }
     /**
-     * <code>.Where where = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder getWhereOrBuilder() {
       return getWhere();
@@ -15368,19 +15978,19 @@ public final class CottontailGrpc {
     public static final int KNN_FIELD_NUMBER = 4;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn knn_;
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     public boolean hasKnn() {
       return knn_ != null;
     }
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn getKnn() {
       return knn_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.getDefaultInstance() : knn_;
     }
     /**
-     * <code>.Knn knn = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder getKnnOrBuilder() {
       return getKnn();
@@ -15645,20 +16255,20 @@ public final class CottontailGrpc {
      * A simple query. 
      * </pre>
      *
-     * Protobuf type {@code Query}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Query}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Query)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Query)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Query_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Query_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder.class);
       }
@@ -15713,7 +16323,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Query_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getDefaultInstanceForType() {
@@ -15842,13 +16452,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder> fromBuilder_;
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public boolean hasFrom() {
         return fromBuilder_ != null || from_ != null;
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From getFrom() {
         if (fromBuilder_ == null) {
@@ -15858,7 +16468,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public Builder setFrom(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From value) {
         if (fromBuilder_ == null) {
@@ -15874,7 +16484,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public Builder setFrom(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder builderForValue) {
@@ -15888,7 +16498,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public Builder mergeFrom(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From value) {
         if (fromBuilder_ == null) {
@@ -15906,7 +16516,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public Builder clearFrom() {
         if (fromBuilder_ == null) {
@@ -15920,7 +16530,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder getFromBuilder() {
         
@@ -15928,7 +16538,7 @@ public final class CottontailGrpc {
         return getFromFieldBuilder().getBuilder();
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder getFromOrBuilder() {
         if (fromBuilder_ != null) {
@@ -15939,7 +16549,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.From from = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.From from = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder> 
@@ -15959,13 +16569,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder> projectionBuilder_;
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public boolean hasProjection() {
         return projectionBuilder_ != null || projection_ != null;
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection getProjection() {
         if (projectionBuilder_ == null) {
@@ -15975,7 +16585,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public Builder setProjection(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection value) {
         if (projectionBuilder_ == null) {
@@ -15991,7 +16601,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public Builder setProjection(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder builderForValue) {
@@ -16005,7 +16615,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public Builder mergeProjection(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection value) {
         if (projectionBuilder_ == null) {
@@ -16023,7 +16633,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public Builder clearProjection() {
         if (projectionBuilder_ == null) {
@@ -16037,7 +16647,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder getProjectionBuilder() {
         
@@ -16045,7 +16655,7 @@ public final class CottontailGrpc {
         return getProjectionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder getProjectionOrBuilder() {
         if (projectionBuilder_ != null) {
@@ -16056,7 +16666,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Projection projection = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection projection = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder> 
@@ -16076,13 +16686,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder> whereBuilder_;
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public boolean hasWhere() {
         return whereBuilder_ != null || where_ != null;
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where getWhere() {
         if (whereBuilder_ == null) {
@@ -16092,7 +16702,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public Builder setWhere(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where value) {
         if (whereBuilder_ == null) {
@@ -16108,7 +16718,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public Builder setWhere(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder builderForValue) {
@@ -16122,7 +16732,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public Builder mergeWhere(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where value) {
         if (whereBuilder_ == null) {
@@ -16140,7 +16750,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public Builder clearWhere() {
         if (whereBuilder_ == null) {
@@ -16154,7 +16764,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder getWhereBuilder() {
         
@@ -16162,7 +16772,7 @@ public final class CottontailGrpc {
         return getWhereFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder getWhereOrBuilder() {
         if (whereBuilder_ != null) {
@@ -16173,7 +16783,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Where where = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Where where = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder> 
@@ -16193,13 +16803,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder> knnBuilder_;
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public boolean hasKnn() {
         return knnBuilder_ != null || knn_ != null;
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn getKnn() {
         if (knnBuilder_ == null) {
@@ -16209,7 +16819,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public Builder setKnn(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn value) {
         if (knnBuilder_ == null) {
@@ -16225,7 +16835,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public Builder setKnn(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder builderForValue) {
@@ -16239,7 +16849,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public Builder mergeKnn(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn value) {
         if (knnBuilder_ == null) {
@@ -16257,7 +16867,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public Builder clearKnn() {
         if (knnBuilder_ == null) {
@@ -16271,7 +16881,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder getKnnBuilder() {
         
@@ -16279,7 +16889,7 @@ public final class CottontailGrpc {
         return getKnnFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder getKnnOrBuilder() {
         if (knnBuilder_ != null) {
@@ -16290,7 +16900,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Knn knn = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn knn = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder> 
@@ -16392,10 +17002,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Query)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Query)
     }
 
-    // @@protoc_insertion_point(class_scope:Query)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Query)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query();
@@ -16431,29 +17041,29 @@ public final class CottontailGrpc {
   }
 
   public interface BatchedQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:BatchedQueryMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query> 
         getQueriesList();
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQueries(int index);
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     int getQueriesCount();
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> 
         getQueriesOrBuilderList();
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueriesOrBuilder(
         int index);
@@ -16463,11 +17073,11 @@ public final class CottontailGrpc {
    * A batch of queries that should be executed. The individual queries will return under a single query ID. 
    * </pre>
    *
-   * Protobuf type {@code BatchedQueryMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage}
    */
   public  static final class BatchedQueryMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:BatchedQueryMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage)
       BatchedQueryMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use BatchedQueryMessage.newBuilder() to construct.
@@ -16532,12 +17142,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BatchedQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BatchedQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage.Builder.class);
     }
@@ -16545,32 +17155,32 @@ public final class CottontailGrpc {
     public static final int QUERIES_FIELD_NUMBER = 1;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query> queries_;
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query> getQueriesList() {
       return queries_;
     }
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> 
         getQueriesOrBuilderList() {
       return queries_;
     }
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     public int getQueriesCount() {
       return queries_.size();
     }
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQueries(int index) {
       return queries_.get(index);
     }
     /**
-     * <code>repeated .Query queries = 1;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueriesOrBuilder(
         int index) {
@@ -16735,20 +17345,20 @@ public final class CottontailGrpc {
      * A batch of queries that should be executed. The individual queries will return under a single query ID. 
      * </pre>
      *
-     * Protobuf type {@code BatchedQueryMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:BatchedQueryMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BatchedQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BatchedQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage.Builder.class);
       }
@@ -16782,7 +17392,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_BatchedQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage getDefaultInstanceForType() {
@@ -16917,7 +17527,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> queriesBuilder_;
 
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query> getQueriesList() {
         if (queriesBuilder_ == null) {
@@ -16927,7 +17537,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public int getQueriesCount() {
         if (queriesBuilder_ == null) {
@@ -16937,7 +17547,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQueries(int index) {
         if (queriesBuilder_ == null) {
@@ -16947,7 +17557,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder setQueries(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query value) {
@@ -16964,7 +17574,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder setQueries(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder builderForValue) {
@@ -16978,7 +17588,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder addQueries(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query value) {
         if (queriesBuilder_ == null) {
@@ -16994,7 +17604,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder addQueries(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query value) {
@@ -17011,7 +17621,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder addQueries(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder builderForValue) {
@@ -17025,7 +17635,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder addQueries(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder builderForValue) {
@@ -17039,7 +17649,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder addAllQueries(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query> values) {
@@ -17054,7 +17664,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder clearQueries() {
         if (queriesBuilder_ == null) {
@@ -17067,7 +17677,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public Builder removeQueries(int index) {
         if (queriesBuilder_ == null) {
@@ -17080,14 +17690,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder getQueriesBuilder(
           int index) {
         return getQueriesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueriesOrBuilder(
           int index) {
@@ -17097,7 +17707,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> 
            getQueriesOrBuilderList() {
@@ -17108,14 +17718,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder addQueriesBuilder() {
         return getQueriesFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.getDefaultInstance());
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder addQueriesBuilder(
           int index) {
@@ -17123,7 +17733,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.getDefaultInstance());
       }
       /**
-       * <code>repeated .Query queries = 1;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Query queries = 1;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder> 
            getQueriesBuilderList() {
@@ -17154,10 +17764,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:BatchedQueryMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:BatchedQueryMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.BatchedQueryMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage();
@@ -17193,7 +17803,7 @@ public final class CottontailGrpc {
   }
 
   public interface QueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:QueryMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -17207,15 +17817,15 @@ public final class CottontailGrpc {
         getQueryIdBytes();
 
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     boolean hasQuery();
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQuery();
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueryOrBuilder();
   }
@@ -17224,11 +17834,11 @@ public final class CottontailGrpc {
    * A single query that should be executed. 
    * </pre>
    *
-   * Protobuf type {@code QueryMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage}
    */
   public  static final class QueryMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:QueryMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage)
       QueryMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use QueryMessage.newBuilder() to construct.
@@ -17300,12 +17910,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage.Builder.class);
     }
@@ -17347,19 +17957,19 @@ public final class CottontailGrpc {
     public static final int QUERY_FIELD_NUMBER = 2;
     private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query query_;
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     public boolean hasQuery() {
       return query_ != null;
     }
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQuery() {
       return query_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.getDefaultInstance() : query_;
     }
     /**
-     * <code>.Query query = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueryOrBuilder() {
       return getQuery();
@@ -17536,20 +18146,20 @@ public final class CottontailGrpc {
      * A single query that should be executed. 
      * </pre>
      *
-     * Protobuf type {@code QueryMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:QueryMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage.Builder.class);
       }
@@ -17584,7 +18194,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage getDefaultInstanceForType() {
@@ -17755,13 +18365,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> queryBuilder_;
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public boolean hasQuery() {
         return queryBuilder_ != null || query_ != null;
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query getQuery() {
         if (queryBuilder_ == null) {
@@ -17771,7 +18381,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public Builder setQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query value) {
         if (queryBuilder_ == null) {
@@ -17787,7 +18397,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public Builder setQuery(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder builderForValue) {
@@ -17801,7 +18411,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public Builder mergeQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query value) {
         if (queryBuilder_ == null) {
@@ -17819,7 +18429,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public Builder clearQuery() {
         if (queryBuilder_ == null) {
@@ -17833,7 +18443,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder getQueryBuilder() {
         
@@ -17841,7 +18451,7 @@ public final class CottontailGrpc {
         return getQueryFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder getQueryOrBuilder() {
         if (queryBuilder_ != null) {
@@ -17852,7 +18462,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Query query = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Query query = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryOrBuilder> 
@@ -17878,10 +18488,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:QueryMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:QueryMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.QueryMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage();
@@ -17917,7 +18527,7 @@ public final class CottontailGrpc {
   }
 
   public interface QueryResponseMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:QueryResponseMessage)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -17956,25 +18566,25 @@ public final class CottontailGrpc {
     int getTotalHits();
 
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> 
         getResultsList();
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getResults(int index);
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     int getResultsCount();
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
         getResultsOrBuilderList();
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getResultsOrBuilder(
         int index);
@@ -17984,11 +18594,11 @@ public final class CottontailGrpc {
    * A query response message. 
    * </pre>
    *
-   * Protobuf type {@code QueryResponseMessage}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage}
    */
   public  static final class QueryResponseMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:QueryResponseMessage)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage)
       QueryResponseMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use QueryResponseMessage.newBuilder() to construct.
@@ -18090,12 +18700,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryResponseMessage_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryResponseMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Builder.class);
     }
@@ -18183,32 +18793,32 @@ public final class CottontailGrpc {
     public static final int RESULTS_FIELD_NUMBER = 7;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> results_;
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> getResultsList() {
       return results_;
     }
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
         getResultsOrBuilderList() {
       return results_;
     }
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     public int getResultsCount() {
       return results_.size();
     }
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getResults(int index) {
       return results_.get(index);
     }
     /**
-     * <code>repeated .Tuple results = 7;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getResultsOrBuilder(
         int index) {
@@ -18439,20 +19049,20 @@ public final class CottontailGrpc {
      * A query response message. 
      * </pre>
      *
-     * Protobuf type {@code QueryResponseMessage}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:QueryResponseMessage)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryResponseMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryResponseMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Builder.class);
       }
@@ -18498,7 +19108,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_QueryResponseMessage_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage getDefaultInstanceForType() {
@@ -18859,7 +19469,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> resultsBuilder_;
 
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> getResultsList() {
         if (resultsBuilder_ == null) {
@@ -18869,7 +19479,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public int getResultsCount() {
         if (resultsBuilder_ == null) {
@@ -18879,7 +19489,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple getResults(int index) {
         if (resultsBuilder_ == null) {
@@ -18889,7 +19499,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder setResults(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
@@ -18906,7 +19516,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder setResults(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -18920,7 +19530,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder addResults(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
         if (resultsBuilder_ == null) {
@@ -18936,7 +19546,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder addResults(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple value) {
@@ -18953,7 +19563,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder addResults(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -18967,7 +19577,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder addResults(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder builderForValue) {
@@ -18981,7 +19591,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder addAllResults(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple> values) {
@@ -18996,7 +19606,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder clearResults() {
         if (resultsBuilder_ == null) {
@@ -19009,7 +19619,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public Builder removeResults(int index) {
         if (resultsBuilder_ == null) {
@@ -19022,14 +19632,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder getResultsBuilder(
           int index) {
         return getResultsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder getResultsOrBuilder(
           int index) {
@@ -19039,7 +19649,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.TupleOrBuilder> 
            getResultsOrBuilderList() {
@@ -19050,14 +19660,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder addResultsBuilder() {
         return getResultsFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.getDefaultInstance());
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder addResultsBuilder(
           int index) {
@@ -19065,7 +19675,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.getDefaultInstance());
       }
       /**
-       * <code>repeated .Tuple results = 7;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Tuple results = 7;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple.Builder> 
            getResultsBuilderList() {
@@ -19096,10 +19706,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:QueryResponseMessage)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:QueryResponseMessage)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.QueryResponseMessage)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage();
@@ -19135,19 +19745,19 @@ public final class CottontailGrpc {
   }
 
   public interface FromOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:From)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.From)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     boolean hasEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity();
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder();
 
@@ -19158,11 +19768,11 @@ public final class CottontailGrpc {
    * The from part for a query. 
    * </pre>
    *
-   * Protobuf type {@code From}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.From}
    */
   public  static final class From extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:From)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.From)
       FromOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use From.newBuilder() to construct.
@@ -19228,12 +19838,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_From_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_From_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder.class);
     }
@@ -19276,13 +19886,13 @@ public final class CottontailGrpc {
 
     public static final int ENTITY_FIELD_NUMBER = 1;
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public boolean hasEntity() {
       return fromCase_ == 1;
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
       if (fromCase_ == 1) {
@@ -19291,7 +19901,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance();
     }
     /**
-     * <code>.Entity entity = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
       if (fromCase_ == 1) {
@@ -19471,20 +20081,20 @@ public final class CottontailGrpc {
      * The from part for a query. 
      * </pre>
      *
-     * Protobuf type {@code From}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.From}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:From)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.From)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FromOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_From_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_From_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From.Builder.class);
       }
@@ -19513,7 +20123,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_From_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From getDefaultInstanceForType() {
@@ -19633,13 +20243,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> entityBuilder_;
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public boolean hasEntity() {
         return fromCase_ == 1;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity getEntity() {
         if (entityBuilder_ == null) {
@@ -19655,7 +20265,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -19671,7 +20281,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder setEntity(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder builderForValue) {
@@ -19685,7 +20295,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder mergeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity value) {
         if (entityBuilder_ == null) {
@@ -19707,7 +20317,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public Builder clearEntity() {
         if (entityBuilder_ == null) {
@@ -19726,13 +20336,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder getEntityBuilder() {
         return getEntityFieldBuilder().getBuilder();
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder getEntityOrBuilder() {
         if ((fromCase_ == 1) && (entityBuilder_ != null)) {
@@ -19745,7 +20355,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.Entity entity = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Entity entity = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.EntityOrBuilder> 
@@ -19776,10 +20386,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:From)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.From)
     }
 
-    // @@protoc_insertion_point(class_scope:From)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.From)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From();
@@ -19815,15 +20425,15 @@ public final class CottontailGrpc {
   }
 
   public interface ProjectionOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Projection)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Projection)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.Projection.Operation op = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
      */
     int getOpValue();
     /**
-     * <code>.Projection.Operation op = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation getOp();
 
@@ -19866,11 +20476,11 @@ public final class CottontailGrpc {
    * The projection part of a query (select + attributes / count / exists) . 
    * </pre>
    *
-   * Protobuf type {@code Projection}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Projection}
    */
   public  static final class Projection extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Projection)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Projection)
       ProjectionOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Projection.newBuilder() to construct.
@@ -19942,7 +20552,7 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -19958,13 +20568,13 @@ public final class CottontailGrpc {
     }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code Projection.Operation}
+     * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation}
      */
     public enum Operation
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -20112,20 +20722,20 @@ public final class CottontailGrpc {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:Projection.Operation)
+      // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation)
     }
 
     private int bitField0_;
     public static final int OP_FIELD_NUMBER = 1;
     private int op_;
     /**
-     * <code>.Projection.Operation op = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
      */
     public int getOpValue() {
       return op_;
     }
     /**
-     * <code>.Projection.Operation op = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation getOp() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation.valueOf(op_);
@@ -20138,7 +20748,7 @@ public final class CottontailGrpc {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_AttributesEntry_descriptor, 
+                  ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -20385,15 +20995,15 @@ public final class CottontailGrpc {
      * The projection part of a query (select + attributes / count / exists) . 
      * </pre>
      *
-     * Protobuf type {@code Projection}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Projection}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Projection)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Projection)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ProjectionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -20420,7 +21030,7 @@ public final class CottontailGrpc {
       }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Builder.class);
       }
@@ -20450,7 +21060,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Projection_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection getDefaultInstanceForType() {
@@ -20549,13 +21159,13 @@ public final class CottontailGrpc {
 
       private int op_ = 0;
       /**
-       * <code>.Projection.Operation op = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
        */
       public int getOpValue() {
         return op_;
       }
       /**
-       * <code>.Projection.Operation op = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
        */
       public Builder setOpValue(int value) {
         op_ = value;
@@ -20563,14 +21173,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection.Operation op = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation getOp() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation.valueOf(op_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Projection.Operation op = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
        */
       public Builder setOp(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation value) {
         if (value == null) {
@@ -20582,7 +21192,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Projection.Operation op = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Projection.Operation op = 1;</code>
        */
       public Builder clearOp() {
         
@@ -20724,10 +21334,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Projection)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Projection)
     }
 
-    // @@protoc_insertion_point(class_scope:Projection)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Projection)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection();
@@ -20763,7 +21373,7 @@ public final class CottontailGrpc {
   }
 
   public interface KnnOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Knn)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Knn)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -20782,58 +21392,58 @@ public final class CottontailGrpc {
     int getK();
 
     /**
-     * <code>.Knn.Distance distance = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
      */
     int getDistanceValue();
     /**
-     * <code>.Knn.Distance distance = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance getDistance();
 
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> 
         getQueryList();
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index);
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     int getQueryCount();
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
         getQueryOrBuilderList();
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
         int index);
 
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> 
         getWeightsList();
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index);
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     int getWeightsCount();
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
         getWeightsOrBuilderList();
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
         int index);
@@ -20844,11 +21454,11 @@ public final class CottontailGrpc {
    * The kNN part of a QueryMessage.
    * </pre>
    *
-   * Protobuf type {@code Knn}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Knn}
    */
   public  static final class Knn extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Knn)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Knn)
       KnnOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Knn.newBuilder() to construct.
@@ -20946,18 +21556,18 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Knn_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Knn_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code Knn.Distance}
+     * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance}
      */
     public enum Distance
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -20977,6 +21587,18 @@ public final class CottontailGrpc {
        * <code>CHISQUARED = 3;</code>
        */
       CHISQUARED(3),
+      /**
+       * <code>HAMMING = 4;</code>
+       */
+      HAMMING(4),
+      /**
+       * <code>COSINE = 5;</code>
+       */
+      COSINE(5),
+      /**
+       * <code>HAVERSINE = 10;</code>
+       */
+      HAVERSINE(10),
       UNRECOGNIZED(-1),
       ;
 
@@ -20996,6 +21618,18 @@ public final class CottontailGrpc {
        * <code>CHISQUARED = 3;</code>
        */
       public static final int CHISQUARED_VALUE = 3;
+      /**
+       * <code>HAMMING = 4;</code>
+       */
+      public static final int HAMMING_VALUE = 4;
+      /**
+       * <code>COSINE = 5;</code>
+       */
+      public static final int COSINE_VALUE = 5;
+      /**
+       * <code>HAVERSINE = 10;</code>
+       */
+      public static final int HAVERSINE_VALUE = 10;
 
 
       public final int getNumber() {
@@ -21020,6 +21654,9 @@ public final class CottontailGrpc {
           case 1: return L2;
           case 2: return L2SQUARED;
           case 3: return CHISQUARED;
+          case 4: return HAMMING;
+          case 5: return COSINE;
+          case 10: return HAVERSINE;
           default: return null;
         }
       }
@@ -21069,7 +21706,7 @@ public final class CottontailGrpc {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:Knn.Distance)
+      // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance)
     }
 
     private int bitField0_;
@@ -21119,13 +21756,13 @@ public final class CottontailGrpc {
     public static final int DISTANCE_FIELD_NUMBER = 3;
     private int distance_;
     /**
-     * <code>.Knn.Distance distance = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
      */
     public int getDistanceValue() {
       return distance_;
     }
     /**
-     * <code>.Knn.Distance distance = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance getDistance() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance.valueOf(distance_);
@@ -21135,32 +21772,32 @@ public final class CottontailGrpc {
     public static final int QUERY_FIELD_NUMBER = 4;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> query_;
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getQueryList() {
       return query_;
     }
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
         getQueryOrBuilderList() {
       return query_;
     }
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     public int getQueryCount() {
       return query_.size();
     }
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index) {
       return query_.get(index);
     }
     /**
-     * <code>repeated .Vector query = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
         int index) {
@@ -21170,32 +21807,32 @@ public final class CottontailGrpc {
     public static final int WEIGHTS_FIELD_NUMBER = 5;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> weights_;
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getWeightsList() {
       return weights_;
     }
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
         getWeightsOrBuilderList() {
       return weights_;
     }
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     public int getWeightsCount() {
       return weights_.size();
     }
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index) {
       return weights_.get(index);
     }
     /**
-     * <code>repeated .Vector weights = 5;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
         int index) {
@@ -21405,20 +22042,20 @@ public final class CottontailGrpc {
      * The kNN part of a QueryMessage.
      * </pre>
      *
-     * Protobuf type {@code Knn}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Knn}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Knn)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Knn)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.KnnOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Knn_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Knn_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Builder.class);
       }
@@ -21465,7 +22102,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Knn_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn getDefaultInstanceForType() {
@@ -21734,13 +22371,13 @@ public final class CottontailGrpc {
 
       private int distance_ = 0;
       /**
-       * <code>.Knn.Distance distance = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
        */
       public int getDistanceValue() {
         return distance_;
       }
       /**
-       * <code>.Knn.Distance distance = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
        */
       public Builder setDistanceValue(int value) {
         distance_ = value;
@@ -21748,14 +22385,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn.Distance distance = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance getDistance() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance.valueOf(distance_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Knn.Distance distance = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
        */
       public Builder setDistance(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance value) {
         if (value == null) {
@@ -21767,7 +22404,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.Knn.Distance distance = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.Knn.Distance distance = 3;</code>
        */
       public Builder clearDistance() {
         
@@ -21789,7 +22426,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> queryBuilder_;
 
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getQueryList() {
         if (queryBuilder_ == null) {
@@ -21799,7 +22436,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public int getQueryCount() {
         if (queryBuilder_ == null) {
@@ -21809,7 +22446,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index) {
         if (queryBuilder_ == null) {
@@ -21819,7 +22456,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder setQuery(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
@@ -21836,7 +22473,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder setQuery(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -21850,7 +22487,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder addQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (queryBuilder_ == null) {
@@ -21866,7 +22503,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder addQuery(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
@@ -21883,7 +22520,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder addQuery(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -21897,7 +22534,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder addQuery(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -21911,7 +22548,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder addAllQuery(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> values) {
@@ -21926,7 +22563,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder clearQuery() {
         if (queryBuilder_ == null) {
@@ -21939,7 +22576,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public Builder removeQuery(int index) {
         if (queryBuilder_ == null) {
@@ -21952,14 +22589,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getQueryBuilder(
           int index) {
         return getQueryFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
           int index) {
@@ -21969,7 +22606,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
            getQueryOrBuilderList() {
@@ -21980,14 +22617,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addQueryBuilder() {
         return getQueryFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addQueryBuilder(
           int index) {
@@ -21995,7 +22632,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
       }
       /**
-       * <code>repeated .Vector query = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector query = 4;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder> 
            getQueryBuilderList() {
@@ -22029,7 +22666,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> weightsBuilder_;
 
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getWeightsList() {
         if (weightsBuilder_ == null) {
@@ -22039,7 +22676,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public int getWeightsCount() {
         if (weightsBuilder_ == null) {
@@ -22049,7 +22686,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index) {
         if (weightsBuilder_ == null) {
@@ -22059,7 +22696,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder setWeights(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
@@ -22076,7 +22713,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder setWeights(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -22090,7 +22727,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder addWeights(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (weightsBuilder_ == null) {
@@ -22106,7 +22743,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder addWeights(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
@@ -22123,7 +22760,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder addWeights(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -22137,7 +22774,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder addWeights(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
@@ -22151,7 +22788,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder addAllWeights(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> values) {
@@ -22166,7 +22803,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder clearWeights() {
         if (weightsBuilder_ == null) {
@@ -22179,7 +22816,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public Builder removeWeights(int index) {
         if (weightsBuilder_ == null) {
@@ -22192,14 +22829,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getWeightsBuilder(
           int index) {
         return getWeightsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
           int index) {
@@ -22209,7 +22846,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
            getWeightsOrBuilderList() {
@@ -22220,14 +22857,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addWeightsBuilder() {
         return getWeightsFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addWeightsBuilder(
           int index) {
@@ -22235,7 +22872,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
       }
       /**
-       * <code>repeated .Vector weights = 5;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Vector weights = 5;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder> 
            getWeightsBuilderList() {
@@ -22266,10 +22903,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Knn)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Knn)
     }
 
-    // @@protoc_insertion_point(class_scope:Knn)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Knn)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn();
@@ -22305,32 +22942,32 @@ public final class CottontailGrpc {
   }
 
   public interface WhereOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Where)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.Where)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     boolean hasAtomic();
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAtomic();
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAtomicOrBuilder();
 
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     boolean hasCompound();
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCompound();
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCompoundOrBuilder();
 
@@ -22342,11 +22979,11 @@ public final class CottontailGrpc {
    * The 'WHERE' part of a QueryMessage.
    * </pre>
    *
-   * Protobuf type {@code Where}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Where}
    */
   public  static final class Where extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Where)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.Where)
       WhereOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use Where.newBuilder() to construct.
@@ -22426,12 +23063,12 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Where_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Where_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder.class);
     }
@@ -22476,13 +23113,13 @@ public final class CottontailGrpc {
 
     public static final int ATOMIC_FIELD_NUMBER = 1;
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     public boolean hasAtomic() {
       return predicateCase_ == 1;
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAtomic() {
       if (predicateCase_ == 1) {
@@ -22491,7 +23128,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAtomicOrBuilder() {
       if (predicateCase_ == 1) {
@@ -22502,13 +23139,13 @@ public final class CottontailGrpc {
 
     public static final int COMPOUND_FIELD_NUMBER = 2;
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     public boolean hasCompound() {
       return predicateCase_ == 2;
     }
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCompound() {
       if (predicateCase_ == 2) {
@@ -22517,7 +23154,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.CompoundBooleanPredicate compound = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCompoundOrBuilder() {
       if (predicateCase_ == 2) {
@@ -22713,20 +23350,20 @@ public final class CottontailGrpc {
      * The 'WHERE' part of a QueryMessage.
      * </pre>
      *
-     * Protobuf type {@code Where}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.Where}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Where)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.Where)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.WhereOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Where_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Where_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.Builder.class);
       }
@@ -22755,7 +23392,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Where_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where getDefaultInstanceForType() {
@@ -22886,13 +23523,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> atomicBuilder_;
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public boolean hasAtomic() {
         return predicateCase_ == 1;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAtomic() {
         if (atomicBuilder_ == null) {
@@ -22908,7 +23545,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public Builder setAtomic(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (atomicBuilder_ == null) {
@@ -22924,7 +23561,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public Builder setAtomic(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder builderForValue) {
@@ -22938,7 +23575,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public Builder mergeAtomic(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (atomicBuilder_ == null) {
@@ -22960,7 +23597,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public Builder clearAtomic() {
         if (atomicBuilder_ == null) {
@@ -22979,13 +23616,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder getAtomicBuilder() {
         return getAtomicFieldBuilder().getBuilder();
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAtomicOrBuilder() {
         if ((predicateCase_ == 1) && (atomicBuilder_ != null)) {
@@ -22998,7 +23635,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate atomic = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate atomic = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> 
@@ -23022,13 +23659,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> compoundBuilder_;
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public boolean hasCompound() {
         return predicateCase_ == 2;
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCompound() {
         if (compoundBuilder_ == null) {
@@ -23044,7 +23681,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public Builder setCompound(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (compoundBuilder_ == null) {
@@ -23060,7 +23697,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public Builder setCompound(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder builderForValue) {
@@ -23074,7 +23711,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public Builder mergeCompound(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (compoundBuilder_ == null) {
@@ -23096,7 +23733,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public Builder clearCompound() {
         if (compoundBuilder_ == null) {
@@ -23115,13 +23752,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder getCompoundBuilder() {
         return getCompoundFieldBuilder().getBuilder();
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCompoundOrBuilder() {
         if ((predicateCase_ == 2) && (compoundBuilder_ != null)) {
@@ -23134,7 +23771,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate compound = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate compound = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> 
@@ -23165,10 +23802,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Where)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.Where)
     }
 
-    // @@protoc_insertion_point(class_scope:Where)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.Where)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where();
@@ -23204,7 +23841,7 @@ public final class CottontailGrpc {
   }
 
   public interface AtomicLiteralBooleanPredicateOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:AtomicLiteralBooleanPredicate)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -23223,34 +23860,34 @@ public final class CottontailGrpc {
     boolean getNot();
 
     /**
-     * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
      */
     int getOpValue();
     /**
-     * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator getOp();
 
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> 
         getDataList();
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getData(int index);
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     int getDataCount();
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder> 
         getDataOrBuilderList();
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder getDataOrBuilder(
         int index);
@@ -23261,11 +23898,11 @@ public final class CottontailGrpc {
    * The boolean query part for a query message.
    * </pre>
    *
-   * Protobuf type {@code AtomicLiteralBooleanPredicate}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate}
    */
   public  static final class AtomicLiteralBooleanPredicate extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:AtomicLiteralBooleanPredicate)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate)
       AtomicLiteralBooleanPredicateOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use AtomicLiteralBooleanPredicate.newBuilder() to construct.
@@ -23350,18 +23987,18 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_AtomicLiteralBooleanPredicate_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_AtomicLiteralBooleanPredicate_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code AtomicLiteralBooleanPredicate.Operator}
+     * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator}
      */
     public enum Operator
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -23527,7 +24164,7 @@ public final class CottontailGrpc {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:AtomicLiteralBooleanPredicate.Operator)
+      // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator)
     }
 
     private int bitField0_;
@@ -23577,13 +24214,13 @@ public final class CottontailGrpc {
     public static final int OP_FIELD_NUMBER = 3;
     private int op_;
     /**
-     * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
      */
     public int getOpValue() {
       return op_;
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator getOp() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator.valueOf(op_);
@@ -23593,32 +24230,32 @@ public final class CottontailGrpc {
     public static final int DATA_FIELD_NUMBER = 4;
     private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> data_;
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> getDataList() {
       return data_;
     }
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder> 
         getDataOrBuilderList() {
       return data_;
     }
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     public int getDataCount() {
       return data_.size();
     }
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getData(int index) {
       return data_.get(index);
     }
     /**
-     * <code>repeated .Data data = 4;</code>
+     * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder getDataOrBuilder(
         int index) {
@@ -23816,20 +24453,20 @@ public final class CottontailGrpc {
      * The boolean query part for a query message.
      * </pre>
      *
-     * Protobuf type {@code AtomicLiteralBooleanPredicate}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:AtomicLiteralBooleanPredicate)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_AtomicLiteralBooleanPredicate_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_AtomicLiteralBooleanPredicate_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder.class);
       }
@@ -23869,7 +24506,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_AtomicLiteralBooleanPredicate_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getDefaultInstanceForType() {
@@ -24103,13 +24740,13 @@ public final class CottontailGrpc {
 
       private int op_ = 0;
       /**
-       * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
        */
       public int getOpValue() {
         return op_;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
        */
       public Builder setOpValue(int value) {
         op_ = value;
@@ -24117,14 +24754,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator getOp() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator.valueOf(op_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator.UNRECOGNIZED : result;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
        */
       public Builder setOp(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator value) {
         if (value == null) {
@@ -24136,7 +24773,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate.Operator op = 3;</code>
        */
       public Builder clearOp() {
         
@@ -24158,7 +24795,7 @@ public final class CottontailGrpc {
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder> dataBuilder_;
 
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> getDataList() {
         if (dataBuilder_ == null) {
@@ -24168,7 +24805,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public int getDataCount() {
         if (dataBuilder_ == null) {
@@ -24178,7 +24815,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data getData(int index) {
         if (dataBuilder_ == null) {
@@ -24188,7 +24825,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder setData(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data value) {
@@ -24205,7 +24842,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder setData(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder builderForValue) {
@@ -24219,7 +24856,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder addData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data value) {
         if (dataBuilder_ == null) {
@@ -24235,7 +24872,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder addData(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data value) {
@@ -24252,7 +24889,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder addData(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder builderForValue) {
@@ -24266,7 +24903,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder addData(
           int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder builderForValue) {
@@ -24280,7 +24917,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder addAllData(
           java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data> values) {
@@ -24295,7 +24932,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder clearData() {
         if (dataBuilder_ == null) {
@@ -24308,7 +24945,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public Builder removeData(int index) {
         if (dataBuilder_ == null) {
@@ -24321,14 +24958,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder getDataBuilder(
           int index) {
         return getDataFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder getDataOrBuilder(
           int index) {
@@ -24338,7 +24975,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DataOrBuilder> 
            getDataOrBuilderList() {
@@ -24349,14 +24986,14 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder addDataBuilder() {
         return getDataFieldBuilder().addBuilder(
             ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.getDefaultInstance());
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder addDataBuilder(
           int index) {
@@ -24364,7 +25001,7 @@ public final class CottontailGrpc {
             index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.getDefaultInstance());
       }
       /**
-       * <code>repeated .Data data = 4;</code>
+       * <code>repeated .ch.unibas.dmi.dbis.cottontail.grpc.Data data = 4;</code>
        */
       public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.Builder> 
            getDataBuilderList() {
@@ -24395,10 +25032,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:AtomicLiteralBooleanPredicate)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate)
     }
 
-    // @@protoc_insertion_point(class_scope:AtomicLiteralBooleanPredicate)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate();
@@ -24434,67 +25071,67 @@ public final class CottontailGrpc {
   }
 
   public interface CompoundBooleanPredicateOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:CompoundBooleanPredicate)
+      // @@protoc_insertion_point(interface_extends:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     boolean hasAleft();
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAleft();
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAleftOrBuilder();
 
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     boolean hasCleft();
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCleft();
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCleftOrBuilder();
 
     /**
-     * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
      */
     int getOpValue();
     /**
-     * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator getOp();
 
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     boolean hasAright();
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAright();
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getArightOrBuilder();
 
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     boolean hasCright();
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCright();
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCrightOrBuilder();
 
@@ -24508,11 +25145,11 @@ public final class CottontailGrpc {
    * The boolean query part for a query message.
    * </pre>
    *
-   * Protobuf type {@code CompoundBooleanPredicate}
+   * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate}
    */
   public  static final class CompoundBooleanPredicate extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:CompoundBooleanPredicate)
+      // @@protoc_insertion_point(message_implements:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate)
       CompoundBooleanPredicateOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use CompoundBooleanPredicate.newBuilder() to construct.
@@ -24627,18 +25264,18 @@ public final class CottontailGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CompoundBooleanPredicate_descriptor;
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CompoundBooleanPredicate_fieldAccessorTable
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code CompoundBooleanPredicate.Operator}
+     * Protobuf enum {@code ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator}
      */
     public enum Operator
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -24732,7 +25369,7 @@ public final class CottontailGrpc {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:CompoundBooleanPredicate.Operator)
+      // @@protoc_insertion_point(enum_scope:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator)
     }
 
     private int leftCase_ = 0;
@@ -24813,13 +25450,13 @@ public final class CottontailGrpc {
 
     public static final int ALEFT_FIELD_NUMBER = 1;
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     public boolean hasAleft() {
       return leftCase_ == 1;
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAleft() {
       if (leftCase_ == 1) {
@@ -24828,7 +25465,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAleftOrBuilder() {
       if (leftCase_ == 1) {
@@ -24839,13 +25476,13 @@ public final class CottontailGrpc {
 
     public static final int CLEFT_FIELD_NUMBER = 2;
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     public boolean hasCleft() {
       return leftCase_ == 2;
     }
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCleft() {
       if (leftCase_ == 2) {
@@ -24854,7 +25491,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.CompoundBooleanPredicate cleft = 2;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCleftOrBuilder() {
       if (leftCase_ == 2) {
@@ -24866,13 +25503,13 @@ public final class CottontailGrpc {
     public static final int OP_FIELD_NUMBER = 3;
     private int op_;
     /**
-     * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
      */
     public int getOpValue() {
       return op_;
     }
     /**
-     * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator getOp() {
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator.valueOf(op_);
@@ -24881,13 +25518,13 @@ public final class CottontailGrpc {
 
     public static final int ARIGHT_FIELD_NUMBER = 4;
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     public boolean hasAright() {
       return rightCase_ == 4;
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAright() {
       if (rightCase_ == 4) {
@@ -24896,7 +25533,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getArightOrBuilder() {
       if (rightCase_ == 4) {
@@ -24907,13 +25544,13 @@ public final class CottontailGrpc {
 
     public static final int CRIGHT_FIELD_NUMBER = 5;
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     public boolean hasCright() {
       return rightCase_ == 5;
     }
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCright() {
       if (rightCase_ == 5) {
@@ -24922,7 +25559,7 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.getDefaultInstance();
     }
     /**
-     * <code>.CompoundBooleanPredicate cright = 5;</code>
+     * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCrightOrBuilder() {
       if (rightCase_ == 5) {
@@ -25169,20 +25806,20 @@ public final class CottontailGrpc {
      * The boolean query part for a query message.
      * </pre>
      *
-     * Protobuf type {@code CompoundBooleanPredicate}
+     * Protobuf type {@code ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:CompoundBooleanPredicate)
+        // @@protoc_insertion_point(builder_implements:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate)
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CompoundBooleanPredicate_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CompoundBooleanPredicate_fieldAccessorTable
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder.class);
       }
@@ -25215,7 +25852,7 @@ public final class CottontailGrpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_CompoundBooleanPredicate_descriptor;
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor;
       }
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getDefaultInstanceForType() {
@@ -25393,13 +26030,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> aleftBuilder_;
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public boolean hasAleft() {
         return leftCase_ == 1;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAleft() {
         if (aleftBuilder_ == null) {
@@ -25415,7 +26052,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public Builder setAleft(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (aleftBuilder_ == null) {
@@ -25431,7 +26068,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public Builder setAleft(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder builderForValue) {
@@ -25445,7 +26082,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public Builder mergeAleft(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (aleftBuilder_ == null) {
@@ -25467,7 +26104,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public Builder clearAleft() {
         if (aleftBuilder_ == null) {
@@ -25486,13 +26123,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder getAleftBuilder() {
         return getAleftFieldBuilder().getBuilder();
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getAleftOrBuilder() {
         if ((leftCase_ == 1) && (aleftBuilder_ != null)) {
@@ -25505,7 +26142,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aleft = 1;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aleft = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> 
@@ -25529,13 +26166,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> cleftBuilder_;
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public boolean hasCleft() {
         return leftCase_ == 2;
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCleft() {
         if (cleftBuilder_ == null) {
@@ -25551,7 +26188,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public Builder setCleft(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (cleftBuilder_ == null) {
@@ -25567,7 +26204,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public Builder setCleft(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder builderForValue) {
@@ -25581,7 +26218,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public Builder mergeCleft(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (cleftBuilder_ == null) {
@@ -25603,7 +26240,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public Builder clearCleft() {
         if (cleftBuilder_ == null) {
@@ -25622,13 +26259,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder getCleftBuilder() {
         return getCleftFieldBuilder().getBuilder();
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCleftOrBuilder() {
         if ((leftCase_ == 2) && (cleftBuilder_ != null)) {
@@ -25641,7 +26278,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate cleft = 2;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cleft = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> 
@@ -25664,13 +26301,13 @@ public final class CottontailGrpc {
 
       private int op_ = 0;
       /**
-       * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
        */
       public int getOpValue() {
         return op_;
       }
       /**
-       * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
        */
       public Builder setOpValue(int value) {
         op_ = value;
@@ -25678,14 +26315,14 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator getOp() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator result = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator.valueOf(op_);
         return result == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator.UNRECOGNIZED : result;
       }
       /**
-       * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
        */
       public Builder setOp(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator value) {
         if (value == null) {
@@ -25697,7 +26334,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate.Operator op = 3;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate.Operator op = 3;</code>
        */
       public Builder clearOp() {
         
@@ -25709,13 +26346,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> arightBuilder_;
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public boolean hasAright() {
         return rightCase_ == 4;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate getAright() {
         if (arightBuilder_ == null) {
@@ -25731,7 +26368,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public Builder setAright(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (arightBuilder_ == null) {
@@ -25747,7 +26384,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public Builder setAright(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder builderForValue) {
@@ -25761,7 +26398,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public Builder mergeAright(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate value) {
         if (arightBuilder_ == null) {
@@ -25783,7 +26420,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public Builder clearAright() {
         if (arightBuilder_ == null) {
@@ -25802,13 +26439,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder getArightBuilder() {
         return getArightFieldBuilder().getBuilder();
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder getArightOrBuilder() {
         if ((rightCase_ == 4) && (arightBuilder_ != null)) {
@@ -25821,7 +26458,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.AtomicLiteralBooleanPredicate aright = 4;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.AtomicLiteralBooleanPredicate aright = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicateOrBuilder> 
@@ -25845,13 +26482,13 @@ public final class CottontailGrpc {
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> crightBuilder_;
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public boolean hasCright() {
         return rightCase_ == 5;
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate getCright() {
         if (crightBuilder_ == null) {
@@ -25867,7 +26504,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public Builder setCright(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (crightBuilder_ == null) {
@@ -25883,7 +26520,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public Builder setCright(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder builderForValue) {
@@ -25897,7 +26534,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public Builder mergeCright(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate value) {
         if (crightBuilder_ == null) {
@@ -25919,7 +26556,7 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public Builder clearCright() {
         if (crightBuilder_ == null) {
@@ -25938,13 +26575,13 @@ public final class CottontailGrpc {
         return this;
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder getCrightBuilder() {
         return getCrightFieldBuilder().getBuilder();
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder getCrightOrBuilder() {
         if ((rightCase_ == 5) && (crightBuilder_ != null)) {
@@ -25957,7 +26594,7 @@ public final class CottontailGrpc {
         }
       }
       /**
-       * <code>.CompoundBooleanPredicate cright = 5;</code>
+       * <code>.ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate cright = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicateOrBuilder> 
@@ -25988,10 +26625,10 @@ public final class CottontailGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:CompoundBooleanPredicate)
+      // @@protoc_insertion_point(builder_scope:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate)
     }
 
-    // @@protoc_insertion_point(class_scope:CompoundBooleanPredicate)
+    // @@protoc_insertion_point(class_scope:ch.unibas.dmi.dbis.cottontail.grpc.CompoundBooleanPredicate)
     private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate();
@@ -26027,170 +26664,175 @@ public final class CottontailGrpc {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Schema_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Schema_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Entity_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Entity_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Index_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Index_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_SuccessStatus_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_SuccessStatus_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_InsertStatus_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_InsertStatus_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Tuple_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Tuple_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Tuple_DataEntry_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Tuple_DataEntry_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Data_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Data_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Vector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Vector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Null_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Null_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_FloatVector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_FloatVector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_DoubleVector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_DoubleVector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_IntVector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_IntVector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_LongVector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_LongVector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_BoolVector_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_BoolVector_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ColumnDefinition_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ColumnDefinition_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CreateEntityMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CreateEntityMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CreateIndexMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CreateIndexMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CreateIndexMessage_ParamsEntry_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CreateIndexMessage_ParamsEntry_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_DropIndexMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_DropIndexMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_RebuildIndexMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_RebuildIndexMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_InsertMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_InsertMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Query_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Query_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_BatchedQueryMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_BatchedQueryMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_QueryMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_QueryMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_QueryResponseMessage_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_QueryResponseMessage_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_From_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_From_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Projection_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Projection_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Projection_AttributesEntry_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Projection_AttributesEntry_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Knn_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Knn_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Where_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Where_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_AtomicLiteralBooleanPredicate_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_AtomicLiteralBooleanPredicate_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CompoundBooleanPredicate_descriptor;
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CompoundBooleanPredicate_fieldAccessorTable;
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -26200,109 +26842,176 @@ public final class CottontailGrpc {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020cottontail.proto\032\033google/protobuf/empt" +
-      "y.proto\"\026\n\006Schema\022\014\n\004name\030\001 \001(\t\"/\n\006Entit" +
-      "y\022\027\n\006schema\030\001 \001(\0132\007.Schema\022\014\n\004name\030\002 \001(\t" +
-      "\"\232\001\n\005Index\022\027\n\006entity\030\001 \001(\0132\007.Entity\022\014\n\004n" +
-      "ame\030\002 \001(\t\022\036\n\004type\030\003 \001(\0162\020.Index.IndexTyp" +
-      "e\"J\n\tIndexType\022\010\n\004HASH\020\000\022\013\n\007HASH_UQ\020\001\022\t\n" +
-      "\005BTREE\020\002\022\n\n\006LUCENE\020\003\022\007\n\003VAF\020\004\022\006\n\002PQ\020\005\"\"\n" +
-      "\rSuccessStatus\022\021\n\ttimestamp\030\001 \001(\003\"2\n\014Ins" +
-      "ertStatus\022\017\n\007success\030\001 \001(\010\022\021\n\ttimestamp\030" +
-      "\002 \001(\003\"[\n\005Tuple\022\036\n\004data\030\001 \003(\0132\020.Tuple.Dat",
-      "aEntry\0322\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\024\n\005valu" +
-      "e\030\002 \001(\0132\005.Data:\0028\001\"\307\001\n\004Data\022\025\n\013booleanDa" +
-      "ta\030\001 \001(\010H\000\022\021\n\007intData\030\002 \001(\005H\000\022\022\n\010longDat" +
-      "a\030\003 \001(\003H\000\022\023\n\tfloatData\030\004 \001(\002H\000\022\024\n\ndouble" +
-      "Data\030\005 \001(\001H\000\022\024\n\nstringData\030\006 \001(\tH\000\022\035\n\nve" +
-      "ctorData\030\007 \001(\0132\007.VectorH\000\022\031\n\010nullData\030\010 " +
-      "\001(\0132\005.NullH\000B\006\n\004data\"\246\001\n\006Vector\022#\n\013float" +
-      "Vector\030\001 \001(\0132\014.FloatVectorH\000\022%\n\014doubleVe" +
-      "ctor\030\002 \001(\0132\r.DoubleVectorH\000\022\037\n\tintVector" +
-      "\030\003 \001(\0132\n.IntVectorH\000\022!\n\nlongVector\030\004 \001(\013",
-      "2\013.LongVectorH\000B\014\n\nvectorData\"\006\n\004Null\"\035\n" +
-      "\013FloatVector\022\016\n\006vector\030\001 \003(\002\"\036\n\014DoubleVe" +
-      "ctor\022\016\n\006vector\030\001 \003(\001\"\033\n\tIntVector\022\016\n\006vec" +
-      "tor\030\001 \003(\005\"\034\n\nLongVector\022\016\n\006vector\030\001 \003(\003\"" +
-      "\034\n\nBoolVector\022\016\n\006vector\030\001 \003(\010\"g\n\020ColumnD" +
-      "efinition\022\014\n\004name\030\001 \001(\t\022\023\n\004type\030\002 \001(\0162\005." +
-      "Type\022\016\n\006length\030\003 \001(\r\022\016\n\006unique\030\004 \001(\010\022\020\n\010" +
-      "nullable\030\005 \001(\010\"R\n\023CreateEntityMessage\022\027\n" +
-      "\006entity\030\001 \001(\0132\007.Entity\022\"\n\007columns\030\002 \003(\0132" +
-      "\021.ColumnDefinition\"\234\001\n\022CreateIndexMessag",
-      "e\022\025\n\005index\030\001 \001(\0132\006.Index\022\017\n\007columns\030\002 \003(" +
-      "\t\022/\n\006params\030\003 \003(\0132\037.CreateIndexMessage.P" +
-      "aramsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
-      "\n\005value\030\002 \001(\t:\0028\001\")\n\020DropIndexMessage\022\025\n" +
-      "\005index\030\001 \001(\0132\006.Index\",\n\023RebuildIndexMess" +
-      "age\022\025\n\005index\030\001 \001(\0132\006.Index\"?\n\rInsertMess" +
-      "age\022\027\n\006entity\030\001 \001(\0132\007.Entity\022\025\n\005tuple\030\002 " +
-      "\003(\0132\006.Tuple\"\204\001\n\005Query\022\023\n\004from\030\001 \001(\0132\005.Fr" +
-      "om\022\037\n\nprojection\030\002 \001(\0132\013.Projection\022\025\n\005w" +
-      "here\030\003 \001(\0132\006.Where\022\021\n\003knn\030\004 \001(\0132\004.Knn\022\r\n",
-      "\005limit\030\005 \001(\004\022\014\n\004skip\030\006 \001(\004\".\n\023BatchedQue" +
-      "ryMessage\022\027\n\007queries\030\001 \003(\0132\006.Query\"6\n\014Qu" +
-      "eryMessage\022\017\n\007queryId\030\001 \001(\t\022\025\n\005query\030\002 \001" +
-      "(\0132\006.Query\"\223\001\n\024QueryResponseMessage\022\017\n\007q" +
-      "ueryId\030\001 \001(\t\022\r\n\005start\030\002 \001(\010\022\014\n\004page\030\003 \001(" +
+      "\n\020cottontail.proto\022\"ch.unibas.dmi.dbis.c" +
+      "ottontail.grpc\"\007\n\005Empty\"\026\n\006Schema\022\014\n\004nam" +
+      "e\030\001 \001(\t\"R\n\006Entity\022:\n\006schema\030\001 \001(\0132*.ch.u" +
+      "nibas.dmi.dbis.cottontail.grpc.Schema\022\014\n" +
+      "\004name\030\002 \001(\t\"\340\001\n\005Index\022:\n\006entity\030\001 \001(\0132*." +
+      "ch.unibas.dmi.dbis.cottontail.grpc.Entit" +
+      "y\022\014\n\004name\030\002 \001(\t\022A\n\004type\030\003 \001(\01623.ch.uniba" +
+      "s.dmi.dbis.cottontail.grpc.Index.IndexTy" +
+      "pe\"J\n\tIndexType\022\010\n\004HASH\020\000\022\013\n\007HASH_UQ\020\001\022\t" +
+      "\n\005BTREE\020\002\022\n\n\006LUCENE\020\003\022\007\n\003VAF\020\004\022\006\n\002PQ\020\005\"\"",
+      "\n\rSuccessStatus\022\021\n\ttimestamp\030\001 \001(\003\"2\n\014In" +
+      "sertStatus\022\017\n\007success\030\001 \001(\010\022\021\n\ttimestamp" +
+      "\030\002 \001(\003\"\241\001\n\005Tuple\022A\n\004data\030\001 \003(\01323.ch.unib" +
+      "as.dmi.dbis.cottontail.grpc.Tuple.DataEn" +
+      "try\032U\n\tDataEntry\022\013\n\003key\030\001 \001(\t\0227\n\005value\030\002" +
+      " \001(\0132(.ch.unibas.dmi.dbis.cottontail.grp" +
+      "c.Data:\0028\001\"\215\002\n\004Data\022\025\n\013booleanData\030\001 \001(\010" +
+      "H\000\022\021\n\007intData\030\002 \001(\005H\000\022\022\n\010longData\030\003 \001(\003H" +
+      "\000\022\023\n\tfloatData\030\004 \001(\002H\000\022\024\n\ndoubleData\030\005 \001" +
+      "(\001H\000\022\024\n\nstringData\030\006 \001(\tH\000\022@\n\nvectorData",
+      "\030\007 \001(\0132*.ch.unibas.dmi.dbis.cottontail.g" +
+      "rpc.VectorH\000\022<\n\010nullData\030\010 \001(\0132(.ch.unib" +
+      "as.dmi.dbis.cottontail.grpc.NullH\000B\006\n\004da" +
+      "ta\"\370\002\n\006Vector\022F\n\013floatVector\030\001 \001(\0132/.ch." +
+      "unibas.dmi.dbis.cottontail.grpc.FloatVec" +
+      "torH\000\022H\n\014doubleVector\030\002 \001(\01320.ch.unibas." +
+      "dmi.dbis.cottontail.grpc.DoubleVectorH\000\022" +
+      "B\n\tintVector\030\003 \001(\0132-.ch.unibas.dmi.dbis." +
+      "cottontail.grpc.IntVectorH\000\022D\n\nlongVecto" +
+      "r\030\004 \001(\0132..ch.unibas.dmi.dbis.cottontail.",
+      "grpc.LongVectorH\000\022D\n\nboolVector\030\005 \001(\0132.." +
+      "ch.unibas.dmi.dbis.cottontail.grpc.BoolV" +
+      "ectorH\000B\014\n\nvectorData\"\006\n\004Null\"\035\n\013FloatVe" +
+      "ctor\022\016\n\006vector\030\001 \003(\002\"\036\n\014DoubleVector\022\016\n\006" +
+      "vector\030\001 \003(\001\"\033\n\tIntVector\022\016\n\006vector\030\001 \003(" +
+      "\005\"\034\n\nLongVector\022\016\n\006vector\030\001 \003(\003\"\034\n\nBoolV" +
+      "ector\022\016\n\006vector\030\001 \003(\010\"\212\001\n\020ColumnDefiniti" +
+      "on\022\014\n\004name\030\001 \001(\t\0226\n\004type\030\002 \001(\0162(.ch.unib" +
+      "as.dmi.dbis.cottontail.grpc.Type\022\016\n\006leng" +
+      "th\030\003 \001(\r\022\016\n\006unique\030\004 \001(\010\022\020\n\010nullable\030\005 \001",
+      "(\010\"\230\001\n\023CreateEntityMessage\022:\n\006entity\030\001 \001" +
+      "(\0132*.ch.unibas.dmi.dbis.cottontail.grpc." +
+      "Entity\022E\n\007columns\030\002 \003(\01324.ch.unibas.dmi." +
+      "dbis.cottontail.grpc.ColumnDefinition\"\342\001" +
+      "\n\022CreateIndexMessage\0228\n\005index\030\001 \001(\0132).ch" +
+      ".unibas.dmi.dbis.cottontail.grpc.Index\022\017" +
+      "\n\007columns\030\002 \003(\t\022R\n\006params\030\003 \003(\0132B.ch.uni" +
+      "bas.dmi.dbis.cottontail.grpc.CreateIndex" +
+      "Message.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"L\n\020DropIndexM",
+      "essage\0228\n\005index\030\001 \001(\0132).ch.unibas.dmi.db" +
+      "is.cottontail.grpc.Index\"O\n\023RebuildIndex" +
+      "Message\0228\n\005index\030\001 \001(\0132).ch.unibas.dmi.d" +
+      "bis.cottontail.grpc.Index\"\205\001\n\rInsertMess" +
+      "age\022:\n\006entity\030\001 \001(\0132*.ch.unibas.dmi.dbis" +
+      ".cottontail.grpc.Entity\0228\n\005tuple\030\002 \003(\0132)" +
+      ".ch.unibas.dmi.dbis.cottontail.grpc.Tupl" +
+      "e\"\220\002\n\005Query\0226\n\004from\030\001 \001(\0132(.ch.unibas.dm" +
+      "i.dbis.cottontail.grpc.From\022B\n\nprojectio" +
+      "n\030\002 \001(\0132..ch.unibas.dmi.dbis.cottontail.",
+      "grpc.Projection\0228\n\005where\030\003 \001(\0132).ch.unib" +
+      "as.dmi.dbis.cottontail.grpc.Where\0224\n\003knn" +
+      "\030\004 \001(\0132\'.ch.unibas.dmi.dbis.cottontail.g" +
+      "rpc.Knn\022\r\n\005limit\030\005 \001(\004\022\014\n\004skip\030\006 \001(\004\"Q\n\023" +
+      "BatchedQueryMessage\022:\n\007queries\030\001 \003(\0132).c" +
+      "h.unibas.dmi.dbis.cottontail.grpc.Query\"" +
+      "Y\n\014QueryMessage\022\017\n\007queryId\030\001 \001(\t\0228\n\005quer" +
+      "y\030\002 \001(\0132).ch.unibas.dmi.dbis.cottontail." +
+      "grpc.Query\"\266\001\n\024QueryResponseMessage\022\017\n\007q" +
+      "ueryId\030\001 \001(\t\022\r\n\005start\030\002 \001(\010\022\014\n\004page\030\003 \001(",
       "\r\022\020\n\010pageSize\030\004 \001(\r\022\017\n\007maxPage\030\005 \001(\r\022\021\n\t" +
-      "totalHits\030\006 \001(\r\022\027\n\007results\030\007 \003(\0132\006.Tuple" +
-      "\")\n\004From\022\031\n\006entity\030\001 \001(\0132\007.EntityH\000B\006\n\004f" +
-      "rom\"\374\001\n\nProjection\022!\n\002op\030\001 \001(\0162\025.Project" +
-      "ion.Operation\022/\n\nattributes\030\002 \003(\0132\033.Proj",
-      "ection.AttributesEntry\0321\n\017AttributesEntr" +
-      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"g\n\tOpe" +
-      "ration\022\n\n\006SELECT\020\000\022\t\n\005COUNT\020\001\022\022\n\016COUNT_D" +
-      "ISTINCT\020\002\022\n\n\006EXISTS\020\003\022\007\n\003SUM\020\004\022\007\n\003MAX\020\005\022" +
-      "\007\n\003MIN\020\006\022\010\n\004MEAN\020\007\"\261\001\n\003Knn\022\021\n\tattribute\030" +
-      "\001 \001(\t\022\t\n\001k\030\002 \001(\r\022\037\n\010distance\030\003 \001(\0162\r.Knn" +
-      ".Distance\022\026\n\005query\030\004 \003(\0132\007.Vector\022\030\n\007wei" +
-      "ghts\030\005 \003(\0132\007.Vector\"9\n\010Distance\022\006\n\002L1\020\000\022" +
-      "\006\n\002L2\020\001\022\r\n\tL2SQUARED\020\002\022\016\n\nCHISQUARED\020\003\"u" +
-      "\n\005Where\0220\n\006atomic\030\001 \001(\0132\036.AtomicLiteralB",
-      "ooleanPredicateH\000\022-\n\010compound\030\002 \001(\0132\031.Co" +
-      "mpoundBooleanPredicateH\000B\013\n\tpredicate\"\211\002" +
-      "\n\035AtomicLiteralBooleanPredicate\022\021\n\tattri" +
-      "bute\030\001 \001(\t\022\013\n\003not\030\002 \001(\010\0223\n\002op\030\003 \001(\0162\'.At" +
-      "omicLiteralBooleanPredicate.Operator\022\023\n\004" +
-      "data\030\004 \003(\0132\005.Data\"~\n\010Operator\022\t\n\005EQUAL\020\000" +
-      "\022\013\n\007GREATER\020\001\022\010\n\004LESS\020\002\022\n\n\006GEQUAL\020\003\022\n\n\006L" +
-      "EQUAL\020\004\022\006\n\002IN\020\005\022\013\n\007BETWEEN\020\006\022\n\n\006ISNULL\020\007" +
-      "\022\r\n\tISNOTNULL\020\010\022\010\n\004LIKE\020\t\"\264\002\n\030CompoundBo" +
-      "oleanPredicate\022/\n\005aleft\030\001 \001(\0132\036.AtomicLi",
-      "teralBooleanPredicateH\000\022*\n\005cleft\030\002 \001(\0132\031" +
-      ".CompoundBooleanPredicateH\000\022.\n\002op\030\003 \001(\0162" +
-      "\".CompoundBooleanPredicate.Operator\0220\n\006a" +
-      "right\030\004 \001(\0132\036.AtomicLiteralBooleanPredic" +
-      "ateH\001\022+\n\006cright\030\005 \001(\0132\031.CompoundBooleanP" +
-      "redicateH\001\"\033\n\010Operator\022\007\n\003AND\020\000\022\006\n\002OR\020\001B" +
-      "\006\n\004leftB\007\n\005right*\246\001\n\004Type\022\013\n\007BOOLEAN\020\000\022\010" +
-      "\n\004BYTE\020\001\022\t\n\005SHORT\020\002\022\013\n\007INTEGER\020\003\022\010\n\004LONG" +
-      "\020\004\022\t\n\005FLOAT\020\005\022\n\n\006DOUBLE\020\006\022\n\n\006STRING\020\007\022\016\n" +
-      "\nDOUBLE_VEC\020\010\022\r\n\tFLOAT_VEC\020\t\022\014\n\010LONG_VEC",
-      "\020\n\022\013\n\007INT_VEC\020\013\022\010\n\004BLOB\020\0142\376\003\n\tCottonDDL\022" +
-      "0\n\013ListSchemas\022\026.google.protobuf.Empty\032\007" +
-      ".Schema0\001\022\'\n\014CreateSchema\022\007.Schema\032\016.Suc" +
-      "cessStatus\022%\n\nDropSchema\022\007.Schema\032\016.Succ" +
-      "essStatus\022\"\n\014ListEntities\022\007.Schema\032\007.Ent" +
-      "ity0\001\0224\n\014CreateEntity\022\024.CreateEntityMess" +
-      "age\032\016.SuccessStatus\022%\n\nDropEntity\022\007.Enti" +
-      "ty\032\016.SuccessStatus\0222\n\013CreateIndex\022\023.Crea" +
-      "teIndexMessage\032\016.SuccessStatus\022.\n\tDropIn" +
-      "dex\022\021.DropIndexMessage\032\016.SuccessStatus\0224",
-      "\n\014RebuildIndex\022\024.RebuildIndexMessage\032\016.S" +
-      "uccessStatus\022)\n\016OptimizeEntity\022\007.Entity\032" +
-      "\016.SuccessStatus\022)\n\016TruncateEntity\022\007.Enti" +
-      "ty\032\016.SuccessStatus2g\n\tCottonDML\022\'\n\006Inser" +
-      "t\022\016.InsertMessage\032\r.InsertStatus\0221\n\014Inse" +
-      "rtStream\022\016.InsertMessage\032\r.InsertStatus(" +
-      "\0010\0012\255\001\n\tCottonDQL\022/\n\005Query\022\r.QueryMessag" +
-      "e\032\025.QueryResponseMessage0\001\022=\n\014BatchedQue" +
-      "ry\022\024.BatchedQueryMessage\032\025.QueryResponse" +
-      "Message0\001\0220\n\004Ping\022\026.google.protobuf.Empt",
-      "y\032\016.SuccessStatus\"\000B4\n\"ch.unibas.dmi.dbi" +
-      "s.cottontail.grpcB\016CottontailGrpcb\006proto" +
-      "3"
+      "totalHits\030\006 \001(\r\022:\n\007results\030\007 \003(\0132).ch.un" +
+      "ibas.dmi.dbis.cottontail.grpc.Tuple\"L\n\004F" +
+      "rom\022<\n\006entity\030\001 \001(\0132*.ch.unibas.dmi.dbis" +
+      ".cottontail.grpc.EntityH\000B\006\n\004from\"\302\002\n\nPr" +
+      "ojection\022D\n\002op\030\001 \001(\01628.ch.unibas.dmi.dbi" +
+      "s.cottontail.grpc.Projection.Operation\022R" +
+      "\n\nattributes\030\002 \003(\0132>.ch.unibas.dmi.dbis." +
+      "cottontail.grpc.Projection.AttributesEnt" +
+      "ry\0321\n\017AttributesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va",
+      "lue\030\002 \001(\t:\0028\001\"g\n\tOperation\022\n\n\006SELECT\020\000\022\t" +
+      "\n\005COUNT\020\001\022\022\n\016COUNT_DISTINCT\020\002\022\n\n\006EXISTS\020" +
+      "\003\022\007\n\003SUM\020\004\022\007\n\003MAX\020\005\022\007\n\003MIN\020\006\022\010\n\004MEAN\020\007\"\302" +
+      "\002\n\003Knn\022\021\n\tattribute\030\001 \001(\t\022\t\n\001k\030\002 \001(\r\022B\n\010" +
+      "distance\030\003 \001(\01620.ch.unibas.dmi.dbis.cott" +
+      "ontail.grpc.Knn.Distance\0229\n\005query\030\004 \003(\0132" +
+      "*.ch.unibas.dmi.dbis.cottontail.grpc.Vec" +
+      "tor\022;\n\007weights\030\005 \003(\0132*.ch.unibas.dmi.dbi" +
+      "s.cottontail.grpc.Vector\"a\n\010Distance\022\006\n\002" +
+      "L1\020\000\022\006\n\002L2\020\001\022\r\n\tL2SQUARED\020\002\022\016\n\nCHISQUARE",
+      "D\020\003\022\013\n\007HAMMING\020\004\022\n\n\006COSINE\020\005\022\r\n\tHAVERSIN" +
+      "E\020\n\"\273\001\n\005Where\022S\n\006atomic\030\001 \001(\0132A.ch.uniba" +
+      "s.dmi.dbis.cottontail.grpc.AtomicLiteral" +
+      "BooleanPredicateH\000\022P\n\010compound\030\002 \001(\0132<.c" +
+      "h.unibas.dmi.dbis.cottontail.grpc.Compou" +
+      "ndBooleanPredicateH\000B\013\n\tpredicate\"\317\002\n\035At" +
+      "omicLiteralBooleanPredicate\022\021\n\tattribute" +
+      "\030\001 \001(\t\022\013\n\003not\030\002 \001(\010\022V\n\002op\030\003 \001(\0162J.ch.uni" +
+      "bas.dmi.dbis.cottontail.grpc.AtomicLiter" +
+      "alBooleanPredicate.Operator\0226\n\004data\030\004 \003(",
+      "\0132(.ch.unibas.dmi.dbis.cottontail.grpc.D" +
+      "ata\"~\n\010Operator\022\t\n\005EQUAL\020\000\022\013\n\007GREATER\020\001\022" +
+      "\010\n\004LESS\020\002\022\n\n\006GEQUAL\020\003\022\n\n\006LEQUAL\020\004\022\006\n\002IN\020" +
+      "\005\022\013\n\007BETWEEN\020\006\022\n\n\006ISNULL\020\007\022\r\n\tISNOTNULL\020" +
+      "\010\022\010\n\004LIKE\020\t\"\343\003\n\030CompoundBooleanPredicate" +
+      "\022R\n\005aleft\030\001 \001(\0132A.ch.unibas.dmi.dbis.cot" +
+      "tontail.grpc.AtomicLiteralBooleanPredica" +
+      "teH\000\022M\n\005cleft\030\002 \001(\0132<.ch.unibas.dmi.dbis" +
+      ".cottontail.grpc.CompoundBooleanPredicat" +
+      "eH\000\022Q\n\002op\030\003 \001(\0162E.ch.unibas.dmi.dbis.cot",
+      "tontail.grpc.CompoundBooleanPredicate.Op" +
+      "erator\022S\n\006aright\030\004 \001(\0132A.ch.unibas.dmi.d" +
+      "bis.cottontail.grpc.AtomicLiteralBoolean" +
+      "PredicateH\001\022N\n\006cright\030\005 \001(\0132<.ch.unibas." +
+      "dmi.dbis.cottontail.grpc.CompoundBoolean" +
+      "PredicateH\001\"\033\n\010Operator\022\007\n\003AND\020\000\022\006\n\002OR\020\001" +
+      "B\006\n\004leftB\007\n\005right*\264\001\n\004Type\022\013\n\007BOOLEAN\020\000\022" +
+      "\010\n\004BYTE\020\001\022\t\n\005SHORT\020\002\022\013\n\007INTEGER\020\003\022\010\n\004LON" +
+      "G\020\004\022\t\n\005FLOAT\020\005\022\n\n\006DOUBLE\020\006\022\n\n\006STRING\020\007\022\016" +
+      "\n\nDOUBLE_VEC\020\010\022\r\n\tFLOAT_VEC\020\t\022\014\n\010LONG_VE",
+      "C\020\n\022\013\n\007INT_VEC\020\013\022\014\n\010BOOL_VEC\020\014\022\010\n\004BLOB\020\r" +
+      "2\360\t\n\tCottonDDL\022f\n\013ListSchemas\022).ch.uniba" +
+      "s.dmi.dbis.cottontail.grpc.Empty\032*.ch.un" +
+      "ibas.dmi.dbis.cottontail.grpc.Schema0\001\022m" +
+      "\n\014CreateSchema\022*.ch.unibas.dmi.dbis.cott" +
+      "ontail.grpc.Schema\0321.ch.unibas.dmi.dbis." +
+      "cottontail.grpc.SuccessStatus\022k\n\nDropSch" +
+      "ema\022*.ch.unibas.dmi.dbis.cottontail.grpc" +
+      ".Schema\0321.ch.unibas.dmi.dbis.cottontail." +
+      "grpc.SuccessStatus\022h\n\014ListEntities\022*.ch.",
+      "unibas.dmi.dbis.cottontail.grpc.Schema\032*" +
+      ".ch.unibas.dmi.dbis.cottontail.grpc.Enti" +
+      "ty0\001\022z\n\014CreateEntity\0227.ch.unibas.dmi.dbi" +
+      "s.cottontail.grpc.CreateEntityMessage\0321." +
+      "ch.unibas.dmi.dbis.cottontail.grpc.Succe" +
+      "ssStatus\022k\n\nDropEntity\022*.ch.unibas.dmi.d" +
+      "bis.cottontail.grpc.Entity\0321.ch.unibas.d" +
+      "mi.dbis.cottontail.grpc.SuccessStatus\022x\n" +
+      "\013CreateIndex\0226.ch.unibas.dmi.dbis.cotton" +
+      "tail.grpc.CreateIndexMessage\0321.ch.unibas",
+      ".dmi.dbis.cottontail.grpc.SuccessStatus\022" +
+      "t\n\tDropIndex\0224.ch.unibas.dmi.dbis.cotton" +
+      "tail.grpc.DropIndexMessage\0321.ch.unibas.d" +
+      "mi.dbis.cottontail.grpc.SuccessStatus\022z\n" +
+      "\014RebuildIndex\0227.ch.unibas.dmi.dbis.cotto" +
+      "ntail.grpc.RebuildIndexMessage\0321.ch.unib" +
+      "as.dmi.dbis.cottontail.grpc.SuccessStatu" +
+      "s\022o\n\016OptimizeEntity\022*.ch.unibas.dmi.dbis" +
+      ".cottontail.grpc.Entity\0321.ch.unibas.dmi." +
+      "dbis.cottontail.grpc.SuccessStatus\022o\n\016Tr",
+      "uncateEntity\022*.ch.unibas.dmi.dbis.cotton" +
+      "tail.grpc.Entity\0321.ch.unibas.dmi.dbis.co" +
+      "ttontail.grpc.SuccessStatus2\363\001\n\tCottonDM" +
+      "L\022m\n\006Insert\0221.ch.unibas.dmi.dbis.cottont" +
+      "ail.grpc.InsertMessage\0320.ch.unibas.dmi.d" +
+      "bis.cottontail.grpc.InsertStatus\022w\n\014Inse" +
+      "rtStream\0221.ch.unibas.dmi.dbis.cottontail" +
+      ".grpc.InsertMessage\0320.ch.unibas.dmi.dbis" +
+      ".cottontail.grpc.InsertStatus(\0010\0012\360\002\n\tCo" +
+      "ttonDQL\022u\n\005Query\0220.ch.unibas.dmi.dbis.co",
+      "ttontail.grpc.QueryMessage\0328.ch.unibas.d" +
+      "mi.dbis.cottontail.grpc.QueryResponseMes" +
+      "sage0\001\022\203\001\n\014BatchedQuery\0227.ch.unibas.dmi." +
+      "dbis.cottontail.grpc.BatchedQueryMessage" +
+      "\0328.ch.unibas.dmi.dbis.cottontail.grpc.Qu" +
+      "eryResponseMessage0\001\022f\n\004Ping\022).ch.unibas" +
+      ".dmi.dbis.cottontail.grpc.Empty\0321.ch.uni" +
+      "bas.dmi.dbis.cottontail.grpc.SuccessStat" +
+      "us\"\000B4\n\"ch.unibas.dmi.dbis.cottontail.gr" +
+      "pcB\016CottontailGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -26315,207 +27024,211 @@ public final class CottontailGrpc {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.EmptyProto.getDescriptor(),
         }, assigner);
-    internal_static_Schema_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_Schema_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Schema_descriptor,
-        new java.lang.String[] { "Name", });
-    internal_static_Entity_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_Entity_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Entity_descriptor,
-        new java.lang.String[] { "Schema", "Name", });
-    internal_static_Index_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_Index_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Index_descriptor,
-        new java.lang.String[] { "Entity", "Name", "Type", });
-    internal_static_SuccessStatus_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_SuccessStatus_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_SuccessStatus_descriptor,
-        new java.lang.String[] { "Timestamp", });
-    internal_static_InsertStatus_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_InsertStatus_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_InsertStatus_descriptor,
-        new java.lang.String[] { "Success", "Timestamp", });
-    internal_static_Tuple_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_Tuple_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Tuple_descriptor,
-        new java.lang.String[] { "Data", });
-    internal_static_Tuple_DataEntry_descriptor =
-      internal_static_Tuple_descriptor.getNestedTypes().get(0);
-    internal_static_Tuple_DataEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Tuple_DataEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_Data_descriptor =
-      getDescriptor().getMessageTypes().get(6);
-    internal_static_Data_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Data_descriptor,
-        new java.lang.String[] { "BooleanData", "IntData", "LongData", "FloatData", "DoubleData", "StringData", "VectorData", "NullData", "Data", });
-    internal_static_Vector_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_Vector_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Vector_descriptor,
-        new java.lang.String[] { "FloatVector", "DoubleVector", "IntVector", "LongVector", "VectorData", });
-    internal_static_Null_descriptor =
-      getDescriptor().getMessageTypes().get(8);
-    internal_static_Null_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Null_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Empty_descriptor,
         new java.lang.String[] { });
-    internal_static_FloatVector_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Schema_descriptor,
+        new java.lang.String[] { "Name", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Entity_descriptor,
+        new java.lang.String[] { "Schema", "Name", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Index_descriptor,
+        new java.lang.String[] { "Entity", "Name", "Type", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_SuccessStatus_descriptor,
+        new java.lang.String[] { "Timestamp", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertStatus_descriptor,
+        new java.lang.String[] { "Success", "Timestamp", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_descriptor =
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_descriptor.getNestedTypes().get(0);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Tuple_DataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Data_descriptor,
+        new java.lang.String[] { "BooleanData", "IntData", "LongData", "FloatData", "DoubleData", "StringData", "VectorData", "NullData", "Data", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Vector_descriptor,
+        new java.lang.String[] { "FloatVector", "DoubleVector", "IntVector", "LongVector", "BoolVector", "VectorData", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor =
       getDescriptor().getMessageTypes().get(9);
-    internal_static_FloatVector_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_FloatVector_descriptor,
-        new java.lang.String[] { "Vector", });
-    internal_static_DoubleVector_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Null_descriptor,
+        new java.lang.String[] { });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor =
       getDescriptor().getMessageTypes().get(10);
-    internal_static_DoubleVector_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_DoubleVector_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_FloatVector_descriptor,
         new java.lang.String[] { "Vector", });
-    internal_static_IntVector_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor =
       getDescriptor().getMessageTypes().get(11);
-    internal_static_IntVector_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_IntVector_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DoubleVector_descriptor,
         new java.lang.String[] { "Vector", });
-    internal_static_LongVector_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor =
       getDescriptor().getMessageTypes().get(12);
-    internal_static_LongVector_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_LongVector_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_IntVector_descriptor,
         new java.lang.String[] { "Vector", });
-    internal_static_BoolVector_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor =
       getDescriptor().getMessageTypes().get(13);
-    internal_static_BoolVector_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_BoolVector_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_LongVector_descriptor,
         new java.lang.String[] { "Vector", });
-    internal_static_ColumnDefinition_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor =
       getDescriptor().getMessageTypes().get(14);
-    internal_static_ColumnDefinition_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ColumnDefinition_descriptor,
-        new java.lang.String[] { "Name", "Type", "Length", "Unique", "Nullable", });
-    internal_static_CreateEntityMessage_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BoolVector_descriptor,
+        new java.lang.String[] { "Vector", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor =
       getDescriptor().getMessageTypes().get(15);
-    internal_static_CreateEntityMessage_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CreateEntityMessage_descriptor,
-        new java.lang.String[] { "Entity", "Columns", });
-    internal_static_CreateIndexMessage_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_ColumnDefinition_descriptor,
+        new java.lang.String[] { "Name", "Type", "Length", "Unique", "Nullable", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor =
       getDescriptor().getMessageTypes().get(16);
-    internal_static_CreateIndexMessage_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CreateIndexMessage_descriptor,
-        new java.lang.String[] { "Index", "Columns", "Params", });
-    internal_static_CreateIndexMessage_ParamsEntry_descriptor =
-      internal_static_CreateIndexMessage_descriptor.getNestedTypes().get(0);
-    internal_static_CreateIndexMessage_ParamsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CreateIndexMessage_ParamsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_DropIndexMessage_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateEntityMessage_descriptor,
+        new java.lang.String[] { "Entity", "Columns", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor =
       getDescriptor().getMessageTypes().get(17);
-    internal_static_DropIndexMessage_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_DropIndexMessage_descriptor,
-        new java.lang.String[] { "Index", });
-    internal_static_RebuildIndexMessage_descriptor =
-      getDescriptor().getMessageTypes().get(18);
-    internal_static_RebuildIndexMessage_fieldAccessorTable = new
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor,
+        new java.lang.String[] { "Index", "Columns", "Params", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_descriptor =
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_descriptor.getNestedTypes().get(0);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_RebuildIndexMessage_descriptor,
-        new java.lang.String[] { "Index", });
-    internal_static_InsertMessage_descriptor =
-      getDescriptor().getMessageTypes().get(19);
-    internal_static_InsertMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_InsertMessage_descriptor,
-        new java.lang.String[] { "Entity", "Tuple", });
-    internal_static_Query_descriptor =
-      getDescriptor().getMessageTypes().get(20);
-    internal_static_Query_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Query_descriptor,
-        new java.lang.String[] { "From", "Projection", "Where", "Knn", "Limit", "Skip", });
-    internal_static_BatchedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
-    internal_static_BatchedQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_BatchedQueryMessage_descriptor,
-        new java.lang.String[] { "Queries", });
-    internal_static_QueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
-    internal_static_QueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_QueryMessage_descriptor,
-        new java.lang.String[] { "QueryId", "Query", });
-    internal_static_QueryResponseMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
-    internal_static_QueryResponseMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_QueryResponseMessage_descriptor,
-        new java.lang.String[] { "QueryId", "Start", "Page", "PageSize", "MaxPage", "TotalHits", "Results", });
-    internal_static_From_descriptor =
-      getDescriptor().getMessageTypes().get(24);
-    internal_static_From_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_From_descriptor,
-        new java.lang.String[] { "Entity", "From", });
-    internal_static_Projection_descriptor =
-      getDescriptor().getMessageTypes().get(25);
-    internal_static_Projection_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Projection_descriptor,
-        new java.lang.String[] { "Op", "Attributes", });
-    internal_static_Projection_AttributesEntry_descriptor =
-      internal_static_Projection_descriptor.getNestedTypes().get(0);
-    internal_static_Projection_AttributesEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Projection_AttributesEntry_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CreateIndexMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_Knn_descriptor =
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_DropIndexMessage_descriptor,
+        new java.lang.String[] { "Index", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_RebuildIndexMessage_descriptor,
+        new java.lang.String[] { "Index", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_InsertMessage_descriptor,
+        new java.lang.String[] { "Entity", "Tuple", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor =
+      getDescriptor().getMessageTypes().get(21);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Query_descriptor,
+        new java.lang.String[] { "From", "Projection", "Where", "Knn", "Limit", "Skip", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_BatchedQueryMessage_descriptor,
+        new java.lang.String[] { "Queries", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor =
+      getDescriptor().getMessageTypes().get(23);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryMessage_descriptor,
+        new java.lang.String[] { "QueryId", "Query", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_QueryResponseMessage_descriptor,
+        new java.lang.String[] { "QueryId", "Start", "Page", "PageSize", "MaxPage", "TotalHits", "Results", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_From_descriptor,
+        new java.lang.String[] { "Entity", "From", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor =
       getDescriptor().getMessageTypes().get(26);
-    internal_static_Knn_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Knn_descriptor,
-        new java.lang.String[] { "Attribute", "K", "Distance", "Query", "Weights", });
-    internal_static_Where_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor,
+        new java.lang.String[] { "Op", "Attributes", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_descriptor =
+      internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_descriptor.getNestedTypes().get(0);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Projection_AttributesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor =
       getDescriptor().getMessageTypes().get(27);
-    internal_static_Where_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Where_descriptor,
-        new java.lang.String[] { "Atomic", "Compound", "Predicate", });
-    internal_static_AtomicLiteralBooleanPredicate_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Knn_descriptor,
+        new java.lang.String[] { "Attribute", "K", "Distance", "Query", "Weights", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor =
       getDescriptor().getMessageTypes().get(28);
-    internal_static_AtomicLiteralBooleanPredicate_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_AtomicLiteralBooleanPredicate_descriptor,
-        new java.lang.String[] { "Attribute", "Not", "Op", "Data", });
-    internal_static_CompoundBooleanPredicate_descriptor =
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_Where_descriptor,
+        new java.lang.String[] { "Atomic", "Compound", "Predicate", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor =
       getDescriptor().getMessageTypes().get(29);
-    internal_static_CompoundBooleanPredicate_fieldAccessorTable = new
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CompoundBooleanPredicate_descriptor,
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_AtomicLiteralBooleanPredicate_descriptor,
+        new java.lang.String[] { "Attribute", "Not", "Op", "Data", });
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor =
+      getDescriptor().getMessageTypes().get(30);
+    internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ch_unibas_dmi_dbis_cottontail_grpc_CompoundBooleanPredicate_descriptor,
         new java.lang.String[] { "Aleft", "Cleft", "Op", "Aright", "Cright", "Left", "Right", });
-    com.google.protobuf.EmptyProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

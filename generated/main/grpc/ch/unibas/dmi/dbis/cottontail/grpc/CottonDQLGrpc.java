@@ -24,7 +24,7 @@ public final class CottonDQLGrpc {
 
   private CottonDQLGrpc() {}
 
-  public static final String SERVICE_NAME = "CottonDQL";
+  public static final String SERVICE_NAME = "ch.unibas.dmi.dbis.cottontail.grpc.CottonDQL";
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
@@ -33,7 +33,7 @@ public final class CottonDQLGrpc {
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
           .setFullMethodName(generateFullMethodName(
-              "CottonDQL", "Query"))
+              "ch.unibas.dmi.dbis.cottontail.grpc.CottonDQL", "Query"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -46,7 +46,7 @@ public final class CottonDQLGrpc {
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
           .setFullMethodName(generateFullMethodName(
-              "CottonDQL", "BatchedQuery"))
+              "ch.unibas.dmi.dbis.cottontail.grpc.CottonDQL", "BatchedQuery"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -54,14 +54,14 @@ public final class CottonDQLGrpc {
           .setSchemaDescriptor(new CottonDQLMethodDescriptorSupplier("BatchedQuery"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<com.google.protobuf.Empty,
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty,
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_PING =
-      io.grpc.MethodDescriptor.<com.google.protobuf.Empty, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
-              "CottonDQL", "Ping"))
+              "ch.unibas.dmi.dbis.cottontail.grpc.CottonDQL", "Ping"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDQLMethodDescriptorSupplier("Ping"))
@@ -110,7 +110,7 @@ public final class CottonDQLGrpc {
 
     /**
      */
-    public void ping(com.google.protobuf.Empty request,
+    public void ping(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
     }
@@ -135,7 +135,7 @@ public final class CottonDQLGrpc {
             METHOD_PING,
             asyncUnaryCall(
               new MethodHandlers<
-                com.google.protobuf.Empty,
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty,
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_PING)))
           .build();
@@ -178,7 +178,7 @@ public final class CottonDQLGrpc {
 
     /**
      */
-    public void ping(com.google.protobuf.Empty request,
+    public void ping(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
@@ -221,7 +221,7 @@ public final class CottonDQLGrpc {
 
     /**
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus ping(com.google.protobuf.Empty request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus ping(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty request) {
       return blockingUnaryCall(
           getChannel(), METHOD_PING, getCallOptions(), request);
     }
@@ -248,7 +248,7 @@ public final class CottonDQLGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> ping(
-        com.google.protobuf.Empty request) {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_PING, getCallOptions()), request);
     }
@@ -284,7 +284,7 @@ public final class CottonDQLGrpc {
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage>) responseObserver);
           break;
         case METHODID_PING:
-          serviceImpl.ping((com.google.protobuf.Empty) request,
+          serviceImpl.ping((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         default:

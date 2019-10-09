@@ -24,7 +24,7 @@ public final class CottonDMLGrpc {
 
   private CottonDMLGrpc() {}
 
-  public static final String SERVICE_NAME = "CottonDML";
+  public static final String SERVICE_NAME = "ch.unibas.dmi.dbis.cottontail.grpc.CottonDML";
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
@@ -33,7 +33,7 @@ public final class CottonDMLGrpc {
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
-              "CottonDML", "Insert"))
+              "ch.unibas.dmi.dbis.cottontail.grpc.CottonDML", "Insert"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -46,7 +46,7 @@ public final class CottonDMLGrpc {
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
           .setFullMethodName(generateFullMethodName(
-              "CottonDML", "InsertStream"))
+              "ch.unibas.dmi.dbis.cottontail.grpc.CottonDML", "InsertStream"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
