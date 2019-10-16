@@ -1,225 +1,219 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.*;
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.LinkedList;
+import java.util.Queue;
 
+import static java.lang.StrictMath.sin;
+import static org.bytedeco.javacpp.avcodec.*;
+import static org.bytedeco.javacpp.avformat.*;
+import static org.bytedeco.javacpp.avutil.*;
+
+/**
+ *
+ * based on
+ * https://github.com/FFmpeg/FFmpeg/blob/master/doc/examples/muxing.c
+ *
+ * */
 public class FFMpegVideoEncoder {
 
-    private static final byte[] endcode = { 0, 0, 1, (byte) 0xb7};
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static AVRational one = new AVRational();
 
-    private final OutputStream out;
+    static {
+        one.num(1);
+        one.den(1);
+    }
 
-    private avcodec.AVCodec codec;
-    private avcodec.AVCodecContext c;
-    private avutil.AVFrame outFrame, rgbFrame;
-    private avcodec.AVPacket pkt;
-    private swscale.SwsContext sws_ctx;
-    private int frameCounter = 0, packetCounter = 0;
+    private static  float t, tincr, tincr2;
+    private static AudioFrame generateDummyAudioFrame(int samples){
+        short v;
 
-    public FFMpegVideoEncoder(int width, int height, OutputStream out){
-        this.out = out;
+        int q = 0;
 
-        int fps = 25;
-
-        String codecName = "libx264";
-
-        codec = avcodec.avcodec_find_encoder_by_name(codecName);
-
-        if (codec == null){
-            LOGGER.error("Codec not found");
-            return;
+        short[] buffer = new short[samples * 2];
+        for (int j = 0; j < samples; j++) {
+            v = (short)(sin(t) * 10000);
+            for (int i = 0; i < 2; i++){
+                buffer[q++] = v;
+            }
+            t     += tincr;
+            tincr += tincr2;
         }
 
-        c = avcodec.avcodec_alloc_context3(codec);
-
-        if (c == null){
-            LOGGER.error("Could not allocate video codec context");
-            return;
+        ByteBuffer byteBuf = ByteBuffer.allocate(2*buffer.length);
+        for (int i = 0; i < buffer.length; ++i) {
+            short s = buffer[i];
+            byteBuf.put((byte)((s) & 0xff));
+            byteBuf.put((byte)((s >> 8) & 0xff));
         }
 
-        pkt = avcodec.av_packet_alloc();
-
-        if (pkt == null){
-            LOGGER.error("Could not allocate packet");
-            return;
-        }
-
-        c.bit_rate(1_000_000); //TODO
-        c.width(width);
-        c.height(height);
-
-        avutil.AVRational timeBase = new avutil.AVRational();
-        timeBase.num(1);
-        timeBase.den(fps);
-        c.time_base(timeBase);
-
-        avutil.AVRational frameRate = new avutil.AVRational();
-        frameRate.num(fps);
-        frameRate.den(1);
-        c.framerate(frameRate);
-
-        c.gop_size(10);
-        c.max_b_frames(1);
-        c.pix_fmt(avutil.AV_PIX_FMT_YUV420P);
-
-        if (codec.id() == avcodec.AV_CODEC_ID_H264) {
-            avutil.av_opt_set(c.priv_data(), "preset", "slow", 0);
-        }
-
-        int ret = avcodec.avcodec_open2(c, codec, (PointerPointer) null);
-        if (ret < 0) {
-            LOGGER.error("Could not open codec: " + ret);
-            return;
-        }
-
-        outFrame = avutil.av_frame_alloc();
-        if (outFrame == null) {
-            LOGGER.error("Could not allocate frame");
-            return;
-        }
-
-        outFrame.format(c.pix_fmt());
-        outFrame.width(c.width());
-        outFrame.height(c.height());
-
-        ret = avutil.av_frame_get_buffer(outFrame, 32);
-        if (ret < 0) {
-            LOGGER.error("Could not allocate video frame data");
-            return;
-        }
-
-        rgbFrame = avutil.av_frame_alloc();
-        if (rgbFrame == null) {
-            LOGGER.error("Could not allocate frame");
-            return;
-        }
-
-        rgbFrame.format(avutil.AV_PIX_FMT_RGB24);
-        rgbFrame.width(c.width());
-        rgbFrame.height(c.height());
-
-        ret = avutil.av_frame_get_buffer(rgbFrame, 32);
-        if (ret < 0) {
-            LOGGER.error("Could not allocate video frame data");
-            return;
-        }
-
-        sws_ctx = swscale.sws_getContext(c.width(), c.height(), avutil.AV_PIX_FMT_RGB24, c.width(), c.height(), c.pix_fmt(), swscale.SWS_BILINEAR, null, null, (DoublePointer)null);
+        return new AudioFrame(0, 0, byteBuf.array(), new AudioDescriptor(44100, 2, samples / 44100));
 
     }
 
-    public void addFrame(MultiImage img){
+    private VideoOutputStreamContainer video_st = null;
+    private AudioOutputStreamContainer audio_st = null;
+    private avformat.AVOutputFormat fmt;
+    private avformat.AVFormatContext oc = new avformat.AVFormatContext();
 
-        int ret = avutil.av_frame_make_writable(outFrame);
-        if (ret < 0) {
+    private Queue<MultiImage> imageQueue = new LinkedList<>();
+    private Queue<AudioFrame> audioQueue = new LinkedList<>();
+
+    public FFMpegVideoEncoder(int width, int height, String filename){
+
+        AVDictionary opt = new AVDictionary();
+
+
+        /* allocate the output media context */
+        avformat_alloc_output_context2(oc, null, null, filename);
+        if (oc.isNull()) {
+            System.err.println("Could not deduce output format from file extension: using MPEG.");
+            avformat_alloc_output_context2(oc, null, "mpeg", filename);
+        }
+        if (oc.isNull()){
             return;
         }
 
-        ret = avutil.av_frame_make_writable(rgbFrame);
-        if (ret < 0) {
-            return;
+        fmt = oc.oformat();
+
+        if (fmt.video_codec() != AV_CODEC_ID_NONE) {
+            video_st  = new VideoOutputStreamContainer(width, height, 400000, 25, oc, fmt.video_codec(), opt);
         }
 
-        int[] pixels = img.getColors();
-        for(int i = 0; i < pixels.length; ++i) {
-            rgbFrame.data(0).put(3 * i, (byte) (((pixels[i]) >> 16) & 0xff));
-            rgbFrame.data(0).put(3 * i + 1, (byte) (((pixels[i]) >> 8) & 0xff));
-            rgbFrame.data(0).put(3 * i + 2, (byte) ((pixels[i]) & 0xff));
+        if (fmt.audio_codec() != AV_CODEC_ID_NONE) {
+            audio_st = new AudioOutputStreamContainer(oc, fmt.audio_codec(), opt);
         }
 
-        swscale.sws_scale(sws_ctx, rgbFrame.data(), rgbFrame.linesize(), 0, outFrame.height(), outFrame.data(), outFrame.linesize());
+        av_dump_format(oc, 0, filename, 1);
 
-        outFrame.pts(this.frameCounter++);
-        encode(c, outFrame, pkt, out);
-    }
+        int ret;
 
-    public void close() {
-        encode(c, null, pkt, out);
-
-        if (codec.id() == avcodec.AV_CODEC_ID_MPEG1VIDEO || codec.id() == avcodec.AV_CODEC_ID_MPEG2VIDEO) {
-            try {
-                out.write(endcode);
-            } catch (IOException e) {
-                e.printStackTrace();
+        /* open the output file, if needed */
+        if ((fmt.flags() & AVFMT_NOFILE) == 0) {
+            AVIOContext pb = new AVIOContext(null);
+            ret = avio_open(pb, filename, AVIO_FLAG_WRITE);
+            oc.pb(pb);
+            if (ret < 0) {
+                System.err.println("Could not open " + filename + " : " + ret);
+                return;
             }
         }
 
-        avcodec.avcodec_free_context(c);
-        avutil.av_frame_free(outFrame);
-        avutil.av_frame_free(rgbFrame);
-        avcodec.av_packet_free(pkt);
-
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        /* Write the stream header, if any. */
+        ret = avformat_write_header(oc, opt);
+        if (ret < 0) {
+            System.err.println("Error occurred when opening output file: " + ret);
         }
 
     }
 
-    public static void main(String[] args) throws IOException {
+    private void encode(){
 
-        OutputStream out = new FileOutputStream(new File("video.m4v"));
+        while (!this.imageQueue.isEmpty() || !this.audioQueue.isEmpty()) {
+            boolean writtenPacket = false;
+            /* select the stream to encode */
+            if ((av_compare_ts(video_st.frameCounter, video_st.c.time_base(), audio_st.next_pts, audio_st.enc.time_base()) <= 0)) {
+                if (!this.imageQueue.isEmpty()){
+                    video_st.addFrame(this.imageQueue.poll());
+                    writtenPacket = true;
+                }
+            } else {
+                if (!this.audioQueue.isEmpty()){
+                    audio_st.write_audio_frame(this.audioQueue.poll());
+                    writtenPacket = true;
+                }
+            }
+
+            if (!writtenPacket){
+                break;
+            }
+        }
+    }
+
+    public void add(MultiImage img){
+        this.imageQueue.add(img);
+        encode();
+    }
+
+    public void add(AudioFrame frame){
+        this.audioQueue.add(frame);
+        encode();
+    }
+
+    public void add(VideoFrame frame){
+        this.imageQueue.add(frame.getImage());
+        if(frame.getAudio().isPresent()){
+            this.audioQueue.add(frame.getAudio().get());
+        }
+        encode();
+    }
+
+    public void close(){
+
+        encode();
+
+        av_write_trailer(oc);
+
+        /* Close each codec. */
+        if (video_st != null){
+            video_st.close();
+        }
+        if (audio_st != null){
+            audio_st.close();
+        }
+
+        if ((fmt.flags() & AVFMT_NOFILE) == 0)
+            /* Close the output file. */
+            avio_closep(oc.pb());
+
+        /* free the stream */
+        avformat_free_context(oc);
+
+    }
+
+    //Test stuff
+    public static void main(String[] args) throws IOException {
 
         BufferedImage testImg = ImageIO.read(new File("img.jpg"));
 
         MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
 
-        FFMpegVideoEncoder encoder = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), out);
+        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), "out.mp4");
 
-        for (int i = 0; i < 250; ++i){
 
-            encoder.addFrame(img);
+            /* init signal generator */
+            t = 0;
+            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.enc.sample_rate());
+            /* increment frequency by 110 Hz per second */
+            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.enc.sample_rate() / mux.audio_st.enc.sample_rate());
+
+
+        int i = 0;
+        while (i < 250) {
+            ++i;
+
+            mux.add(img);
+
+            while(mux.audioQueue.isEmpty()){
+                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
+            }
 
         }
 
-        encoder.close();
+        mux.close();
 
     }
 
-    private void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt, OutputStream out) {
-
-//        if (frame != null) {
-//            System.out.println("Send frame " + frame.pts());
-//        }
-
-        int ret = avcodec.avcodec_send_frame(enc_ctx, frame);
-        if (ret < 0) {
-            LOGGER.error("Error sending a frame for encoding");
-            return;
-        }
-
-        while (ret >= 0) {
-            ret = avcodec.avcodec_receive_packet(enc_ctx, pkt);
-            if (ret == avutil.AVERROR_EAGAIN()
-                    ||
-            ret == avutil.AVERROR_EOF()) {
-                return;
-            } else if (ret < 0) {
-                LOGGER.error("Error during encoding");
-            }
-            //System.out.println("Write packet " + pkt.pts() + " size: " + pkt.size());
-
-            pkt.pts(packetCounter++);
-            byte[] arr = new byte[pkt.size()];
-            pkt.data().position(0).get(arr);
-
-            try {
-                out.write(arr);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            avcodec.av_packet_unref(pkt);
-        }
-    }
 }
