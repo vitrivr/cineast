@@ -71,7 +71,11 @@ public class FFMpegVideoEncoder {
     private Queue<MultiImage> imageQueue = new LinkedList<>();
     private Queue<AudioFrame> audioQueue = new LinkedList<>();
 
-    public FFMpegVideoEncoder(int width, int height, String filename){
+    private boolean useAudio = false;
+
+    public FFMpegVideoEncoder(int width, int height, int frameRate, String filename, boolean useAudio){
+
+        this.useAudio = useAudio;
 
         AVDictionary opt = new AVDictionary();
 
@@ -89,10 +93,10 @@ public class FFMpegVideoEncoder {
         fmt = oc.oformat();
 
         if (fmt.video_codec() != AV_CODEC_ID_NONE) {
-            video_st  = new VideoOutputStreamContainer(width, height, 400000, 25, oc, fmt.video_codec(), opt);
+            video_st  = new VideoOutputStreamContainer(width, height, 400000, frameRate, oc, fmt.video_codec(), opt);
         }
 
-        if (fmt.audio_codec() != AV_CODEC_ID_NONE) {
+        if (fmt.audio_codec() != AV_CODEC_ID_NONE && useAudio) {
             audio_st = new AudioOutputStreamContainer(oc, fmt.audio_codec(), opt);
         }
 
@@ -124,7 +128,7 @@ public class FFMpegVideoEncoder {
         while (!this.imageQueue.isEmpty() || !this.audioQueue.isEmpty()) {
             boolean writtenPacket = false;
             /* select the stream to encode */
-            if ((av_compare_ts(video_st.frameCounter, video_st.c.time_base(), audio_st.next_pts, audio_st.enc.time_base()) <= 0)) {
+            if (!useAudio || (av_compare_ts(video_st.frameCounter, video_st.c.time_base(), audio_st.next_pts, audio_st.c.time_base()) <= 0)) {
                 if (!this.imageQueue.isEmpty()){
                     video_st.addFrame(this.imageQueue.poll());
                     writtenPacket = true;
@@ -190,23 +194,23 @@ public class FFMpegVideoEncoder {
 
         MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
 
-        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), "out.mp4");
+        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
 
 
+        if(mux.useAudio) {
             /* init signal generator */
             t = 0;
-            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.enc.sample_rate());
+            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
             /* increment frequency by 110 Hz per second */
-            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.enc.sample_rate() / mux.audio_st.enc.sample_rate());
+            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
+        }
 
+        for (int i = 0; i < 250; ++i){
 
-        int i = 0;
-        while (i < 250) {
-            ++i;
 
             mux.add(img);
 
-            while(mux.audioQueue.isEmpty()){
+            while(mux.useAudio && mux.audioQueue.isEmpty()){
                 mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
             }
 

@@ -5,68 +5,39 @@ import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.*;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
-
 import static org.bytedeco.javacpp.avcodec.*;
 import static org.bytedeco.javacpp.avutil.*;
 import static org.bytedeco.javacpp.swscale.sws_freeContext;
 
-class VideoOutputStreamContainer {
-
-    private avformat.AVStream st;
-    AVCodecContext c;
-    private AVFrame rgbFrame, outFrame;
-    private swscale.SwsContext sws_ctx;
-    private avformat.AVFormatContext oc;
-    private avcodec.AVPacket pkt;
-
-    int frameCounter = 0;
+class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
     private static final Logger LOGGER = LogManager.getLogger();
+    int frameCounter = 0;
+    private AVFrame rgbFrame, outFrame;
+    private swscale.SwsContext sws_ctx;
 
     VideoOutputStreamContainer(int width, int height, int bitRate, int frameRate, avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
-        this.oc = oc;
-
-        AVCodec codec = avcodec.avcodec_find_encoder(codec_id);
-        if (codec == null) {
-            System.err.println("Could not find codec for id " + codec_id);
-            return;
-        }
-
-        st = avformat.avformat_new_stream(oc, null);
-        if (st == null) {
-            System.err.println("Could not allocate stream");
-            return;
-        }
-
-        st.id(oc.nb_streams() - 1);
-        c = avcodec.avcodec_alloc_context3(codec);
-        if (c == null) {
-            System.err.println("Could not alloc an encoding context");
-            return;
-        }
+        super(oc, codec_id);
 
         if (codec.type() != avutil.AVMEDIA_TYPE_VIDEO) {
-            System.err.println("Not a video codec");
+            LOGGER.error("Not a video codec");
             return;
         }
 
-        pkt = avcodec.av_packet_alloc();
-
-        c.codec_id(codec_id);
 
         c.bit_rate(bitRate);
         c.width(width);
         c.height(height);
+
+        c.gop_size(10);
+        c.max_b_frames(1);
+        c.pix_fmt(avutil.AV_PIX_FMT_YUV420P);
 
         AVRational timeBase = new AVRational();
         timeBase.num(1);
         timeBase.den(frameRate);
         st.time_base(timeBase);
         c.time_base(st.time_base());
-
-        c.gop_size(10);
-        c.max_b_frames(1);
-        c.pix_fmt(avutil.AV_PIX_FMT_YUV420P);
 
         if (c.codec_id() == avcodec.AV_CODEC_ID_MPEG2VIDEO) {
             c.max_b_frames(2);
@@ -91,7 +62,7 @@ class VideoOutputStreamContainer {
         int ret = avcodec_open2(c, codec, topt);
         av_dict_free(topt);
         if (ret < 0) {
-            System.err.println("Could not open video codec: " + ret);
+            LOGGER.error("Could not open video codec: {}", ret);
             return;
         }
 
@@ -130,17 +101,16 @@ class VideoOutputStreamContainer {
         /* copy the stream parameters to the muxer */
         ret = avcodec_parameters_from_context(st.codecpar(), c);
         if (ret < 0) {
-            System.err.println("Could not copy the stream parameters");
+            LOGGER.error("Could not copy the stream parameters");
             return;
         }
 
-        sws_ctx = swscale.sws_getContext(c.width(), c.height(), avutil.AV_PIX_FMT_RGB24, c.width(), c.height(), c.pix_fmt(), swscale.SWS_BILINEAR, null, null, (DoublePointer)null);
-
+        sws_ctx = swscale.sws_getContext(c.width(), c.height(), avutil.AV_PIX_FMT_RGB24, c.width(), c.height(), c.pix_fmt(), swscale.SWS_BILINEAR, null, null, (DoublePointer) null);
 
     }
 
 
-    void addFrame(MultiImage img){
+    void addFrame(MultiImage img) {
 
         int ret = avutil.av_frame_make_writable(outFrame);
         if (ret < 0) {
@@ -153,7 +123,7 @@ class VideoOutputStreamContainer {
         }
 
         int[] pixels = img.getColors();
-        for(int i = 0; i < pixels.length; ++i) {
+        for (int i = 0; i < pixels.length; ++i) {
             rgbFrame.data(0).put(3 * i, (byte) (((pixels[i]) >> 16) & 0xff));
             rgbFrame.data(0).put(3 * i + 1, (byte) (((pixels[i]) >> 8) & 0xff));
             rgbFrame.data(0).put(3 * i + 2, (byte) ((pixels[i]) & 0xff));
@@ -179,36 +149,6 @@ class VideoOutputStreamContainer {
             sws_freeContext(sws_ctx);
         }
 
-    }
-
-
-    private void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt) {
-
-
-        int ret = avcodec.avcodec_send_frame(enc_ctx, frame);
-        if (ret < 0) {
-            LOGGER.error("Error sending a frame for encoding");
-            return;
-        }
-
-        while (ret >= 0) {
-            ret = avcodec.avcodec_receive_packet(enc_ctx, pkt);
-            if (ret == avutil.AVERROR_EAGAIN()
-                    ||
-                    ret == avutil.AVERROR_EOF()) {
-                return;
-            } else if (ret < 0) {
-                LOGGER.error("Error during encoding");
-            }
-
-            avcodec.av_packet_rescale_ts(pkt, c.time_base(), st.time_base());
-            pkt.stream_index(st.index());
-
-            /* Write the compressed frame to the media file. */
-            avformat.av_interleaved_write_frame(oc, pkt);
-
-            avcodec.av_packet_unref(pkt);
-        }
     }
 
 }
