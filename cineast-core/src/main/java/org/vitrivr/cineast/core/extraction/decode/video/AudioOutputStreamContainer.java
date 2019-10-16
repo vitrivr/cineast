@@ -22,8 +22,14 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
     private swresample.SwrContext swr_ctx;
     private AVRational rat = new AVRational();
 
-    AudioOutputStreamContainer(avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
+    private final int channels = 1;
+    private final int sampleRate;
+
+    AudioOutputStreamContainer(avformat.AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
         super(oc, codec_id);
+
+        long channellayout = avutil.av_get_default_channel_layout(channels);
+        this.sampleRate = sampleRate;
 
         if (codec.type() != avutil.AVMEDIA_TYPE_AUDIO) {
             LOGGER.error("Not an audio codec");
@@ -32,23 +38,25 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
         c.sample_fmt(!codec.sample_fmts().isNull() ?
                 codec.sample_fmts().get(0) : AV_SAMPLE_FMT_FLTP);
-        c.bit_rate(64000);
-        c.sample_rate(44100);
+        c.bit_rate(bitRate);
+        c.sample_rate(sampleRate);
         if (!codec.supported_samplerates().isNull()) {
             c.sample_rate(codec.supported_samplerates().get(0));
             for (int i = 0; i < codec.supported_samplerates().limit(); i++) {
-                if (codec.supported_samplerates().get(i) == 44100) {
-                    c.sample_rate(44100);
+                if (codec.supported_samplerates().get(i) == sampleRate) {
+                    c.sample_rate(sampleRate);
                 }
             }
         }
+        
+        c.channel_layout(channellayout);
         c.channels(avutil.av_get_channel_layout_nb_channels(c.channel_layout()));
-        c.channel_layout(AV_CH_LAYOUT_STEREO);
+        
         if (codec.channel_layouts() != null) {
             c.channel_layout(codec.channel_layouts().get(0));
             for (int i = 0; i < codec.channel_layouts().limit(); i++) {
-                if (codec.channel_layouts().get(i) == AV_CH_LAYOUT_STEREO) {
-                    c.channel_layout(AV_CH_LAYOUT_STEREO);
+                if (codec.channel_layouts().get(i) == channellayout) {
+                    c.channel_layout(channellayout);
                 }
             }
         }
@@ -72,7 +80,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         avutil.av_dict_free(topt);
 
         if (ret < 0) {
-            LOGGER.error("Could not open audio codec: " + ret);
+            LOGGER.error("Could not open audio codec: {}", ret);
             return;
         }
 
@@ -158,7 +166,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
     }
 
 
-    void write_audio_frame(AudioFrame av) {
+    void addFrame(AudioFrame av) {
         AVFrame inputFrame = tmp_frame;
         int ret;
         int dst_nb_samples;

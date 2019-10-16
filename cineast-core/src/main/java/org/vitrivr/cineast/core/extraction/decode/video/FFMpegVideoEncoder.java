@@ -1,17 +1,16 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
 import org.bytedeco.javacpp.*;
+import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -28,6 +27,7 @@ import static org.bytedeco.javacpp.avutil.*;
  * */
 public class FFMpegVideoEncoder {
 
+    private AudioFrame tmpFrame = null;
 
     private static AVRational one = new AVRational();
 
@@ -73,7 +73,7 @@ public class FFMpegVideoEncoder {
 
     private boolean useAudio = false;
 
-    public FFMpegVideoEncoder(int width, int height, int frameRate, String filename, boolean useAudio){
+    public FFMpegVideoEncoder(int width, int height, int frameRate, int sampleRate, String filename, boolean useAudio){
 
         this.useAudio = useAudio;
 
@@ -93,11 +93,11 @@ public class FFMpegVideoEncoder {
         fmt = oc.oformat();
 
         if (fmt.video_codec() != AV_CODEC_ID_NONE) {
-            video_st  = new VideoOutputStreamContainer(width, height, 400000, frameRate, oc, fmt.video_codec(), opt);
+            video_st  = new VideoOutputStreamContainer(width, height, 2_000_000, frameRate, oc, fmt.video_codec(), opt);
         }
 
         if (fmt.audio_codec() != AV_CODEC_ID_NONE && useAudio) {
-            audio_st = new AudioOutputStreamContainer(oc, fmt.audio_codec(), opt);
+            audio_st = new AudioOutputStreamContainer(oc, fmt.audio_codec(), sampleRate, 128_000, opt);
         }
 
         av_dump_format(oc, 0, filename, 1);
@@ -135,7 +135,7 @@ public class FFMpegVideoEncoder {
                 }
             } else {
                 if (!this.audioQueue.isEmpty()){
-                    audio_st.write_audio_frame(this.audioQueue.poll());
+                    audio_st.addFrame(this.audioQueue.poll());
                     writtenPacket = true;
                 }
             }
@@ -152,14 +152,25 @@ public class FFMpegVideoEncoder {
     }
 
     public void add(AudioFrame frame){
-        this.audioQueue.add(frame);
+
+        int samples = audio_st.tmp_frame.nb_samples();
+
+        if (tmpFrame == null){
+            tmpFrame = new AudioFrame(frame);
+        } else {
+            tmpFrame.append(frame);
+        }
+        while (tmpFrame.numberOfSamples() > samples){
+            this.audioQueue.add(tmpFrame.split(samples));
+        }
+
         encode();
     }
 
     public void add(VideoFrame frame){
         this.imageQueue.add(frame.getImage());
         if(frame.getAudio().isPresent()){
-            this.audioQueue.add(frame.getAudio().get());
+            this.add(frame.getAudio().get());
         }
         encode();
     }
@@ -189,33 +200,65 @@ public class FFMpegVideoEncoder {
 
     //Test stuff
     public static void main(String[] args) throws IOException {
+//
+//        BufferedImage testImg = ImageIO.read(new File("img.jpg"));
+//
+//        MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
+//
+//        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
+//
+//
+//        if(mux.useAudio) {
+//            /* init signal generator */
+//            t = 0;
+//            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
+//            /* increment frequency by 110 Hz per second */
+//            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
+//        }
+//
+//        for (int i = 0; i < 250; ++i){
+//
+//
+//            mux.add(img);
+//
+//            while(mux.useAudio && mux.audioQueue.isEmpty()){
+//                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
+//            }
+//
+//        }
+//
+//        mux.close();
 
-        BufferedImage testImg = ImageIO.read(new File("img.jpg"));
+        FFMpegVideoDecoder decoder = new FFMpegVideoDecoder();
+        decoder.init(Path.of("bbb.mp4"), new DecoderConfig(), new CacheConfig());
 
-        MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
+        Queue<VideoFrame> tmpFrames = new LinkedList<>();
+        AudioFrame firstAudioFrame = null;
+        VideoFrame frame = null;
+        while(firstAudioFrame == null){
+            frame = decoder.getNext();
+            tmpFrames.add(frame);
 
-        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
-
-
-        if(mux.useAudio) {
-            /* init signal generator */
-            t = 0;
-            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
-            /* increment frequency by 110 Hz per second */
-            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
-        }
-
-        for (int i = 0; i < 250; ++i){
-
-
-            mux.add(img);
-
-            while(mux.useAudio && mux.audioQueue.isEmpty()){
-                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
+            if (frame.getAudio().isPresent()){
+                firstAudioFrame = frame.getAudio().get();
             }
-
         }
 
+        frame = tmpFrames.peek();
+
+        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(frame.getImage().getWidth(), frame.getImage().getHeight(), (int)frame.getDescriptor().getFps(), (int)firstAudioFrame.getSamplingrate() / 2,"out.mp4", true);
+
+        while (!tmpFrames.isEmpty()){
+            mux.add(tmpFrames.poll());
+        }
+
+        for (int i = 0; i < 1200; ++i){
+            frame = decoder.getNext();
+            mux.add(frame);
+            System.out.println(i);
+        }
+
+        decoder.close();
         mux.close();
 
     }
