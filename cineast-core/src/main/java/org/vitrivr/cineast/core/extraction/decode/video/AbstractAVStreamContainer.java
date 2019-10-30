@@ -9,13 +9,13 @@ import org.bytedeco.javacpp.avutil;
 public abstract class AbstractAVStreamContainer {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    protected avcodec.AVPacket pkt;
+    avcodec.AVPacket pkt;
     protected avformat.AVStream st;
     protected avcodec.AVCodec codec;
     avcodec.AVCodecContext c;
     private avformat.AVFormatContext oc;
 
-    protected AbstractAVStreamContainer(avformat.AVFormatContext oc, int codec_id) {
+    AbstractAVStreamContainer(avformat.AVFormatContext oc, int codec_id) {
         this.oc = oc;
         st = avformat.avformat_new_stream(oc, null);
         if (st == null) {
@@ -42,7 +42,7 @@ public abstract class AbstractAVStreamContainer {
     }
 
 
-    protected void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt) {
+    void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt) {
 
         int ret = avcodec.avcodec_send_frame(enc_ctx, frame);
         if (ret < 0) {

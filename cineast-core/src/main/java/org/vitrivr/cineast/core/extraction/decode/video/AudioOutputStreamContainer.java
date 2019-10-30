@@ -23,13 +23,11 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
     private AVRational rat = new AVRational();
 
     private final int channels = 1;
-    private final int sampleRate;
 
     AudioOutputStreamContainer(avformat.AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
         super(oc, codec_id);
 
         long channellayout = avutil.av_get_default_channel_layout(channels);
-        this.sampleRate = sampleRate;
 
         if (codec.type() != avutil.AVMEDIA_TYPE_AUDIO) {
             LOGGER.error("Not an audio codec");
@@ -42,9 +40,12 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         c.sample_rate(sampleRate);
         if (!codec.supported_samplerates().isNull()) {
             c.sample_rate(codec.supported_samplerates().get(0));
-            for (int i = 0; i < codec.supported_samplerates().limit(); i++) {
-                if (codec.supported_samplerates().get(i) == sampleRate) {
+            int i = 0;
+            int lastSampleRate;
+            while ((lastSampleRate = codec.supported_samplerates().get(++i)) > 0){
+                if (lastSampleRate == sampleRate) {
                     c.sample_rate(sampleRate);
+                    break;
                 }
             }
         }
@@ -54,9 +55,12 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         
         if (codec.channel_layouts() != null) {
             c.channel_layout(codec.channel_layouts().get(0));
-            for (int i = 0; i < codec.channel_layouts().limit(); i++) {
-                if (codec.channel_layouts().get(i) == channellayout) {
+            int i = 0;
+            long lastChannelLayout;
+            while ((lastChannelLayout = codec.channel_layouts().get(++i)) > 0){
+                if (lastChannelLayout == channellayout){
                     c.channel_layout(channellayout);
+                    break;
                 }
             }
         }
@@ -91,7 +95,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
             nb_samples = c.frame_size();
 
         frame = alloc_audio_frame(c.sample_fmt(), c.channel_layout(), c.sample_rate(), nb_samples);
-        tmp_frame = alloc_audio_frame(AV_SAMPLE_FMT_S16, c.channel_layout(), c.sample_rate(), nb_samples);
+        tmp_frame = alloc_audio_frame(AV_SAMPLE_FMT_S16, channellayout, sampleRate, nb_samples);
 
         /* copy the stream parameters to the muxer */
         ret = avcodec_parameters_from_context(st.codecpar(), c);
@@ -109,7 +113,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
         /* set options */
         av_opt_set_int(swr_ctx, "in_channel_count", c.channels(), 0);
-        av_opt_set_int(swr_ctx, "in_sample_rate", c.sample_rate(), 0);
+        av_opt_set_int(swr_ctx, "in_sample_rate", c.sample_rate(), 0); //this should use input rather than output sampling rate, but doing so crashes the application...
         av_opt_set_sample_fmt(swr_ctx, "in_sample_fmt", AV_SAMPLE_FMT_S16, 0);
         av_opt_set_int(swr_ctx, "out_channel_count", c.channels(), 0);
         av_opt_set_int(swr_ctx, "out_sample_rate", c.sample_rate(), 0);
@@ -119,9 +123,6 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         if ((swr_init(swr_ctx)) < 0) {
             LOGGER.error("Failed to initialize the resampling context");
         }
-
-        rat.num(1);
-        rat.den(c.sample_rate());
 
     }
 
@@ -201,6 +202,8 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
             return;
         }
 
+        rat.num(1);
+        rat.den(c.sample_rate());
 
         frame.pts(av_rescale_q(samples_count, rat, c.time_base()));
         samples_count += dst_nb_samples;

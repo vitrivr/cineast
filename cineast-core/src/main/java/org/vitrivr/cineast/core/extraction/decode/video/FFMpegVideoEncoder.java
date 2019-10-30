@@ -1,23 +1,23 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import org.bytedeco.javacpp.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.avformat;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static java.lang.StrictMath.sin;
-import static org.bytedeco.javacpp.avcodec.*;
+import static org.bytedeco.javacpp.avcodec.AV_CODEC_ID_NONE;
 import static org.bytedeco.javacpp.avformat.*;
-import static org.bytedeco.javacpp.avutil.*;
+import static org.bytedeco.javacpp.avutil.AVDictionary;
+import static org.bytedeco.javacpp.avutil.av_compare_ts;
 
 /**
  *
@@ -27,41 +27,9 @@ import static org.bytedeco.javacpp.avutil.*;
  * */
 public class FFMpegVideoEncoder {
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private AudioFrame tmpFrame = null;
-
-    private static AVRational one = new AVRational();
-
-    static {
-        one.num(1);
-        one.den(1);
-    }
-
-    private static  float t, tincr, tincr2;
-    private static AudioFrame generateDummyAudioFrame(int samples){
-        short v;
-
-        int q = 0;
-
-        short[] buffer = new short[samples * 2];
-        for (int j = 0; j < samples; j++) {
-            v = (short)(sin(t) * 10000);
-            for (int i = 0; i < 2; i++){
-                buffer[q++] = v;
-            }
-            t     += tincr;
-            tincr += tincr2;
-        }
-
-        ByteBuffer byteBuf = ByteBuffer.allocate(2*buffer.length);
-        for (int i = 0; i < buffer.length; ++i) {
-            short s = buffer[i];
-            byteBuf.put((byte)((s) & 0xff));
-            byteBuf.put((byte)((s >> 8) & 0xff));
-        }
-
-        return new AudioFrame(0, 0, byteBuf.array(), new AudioDescriptor(44100, 2, samples / 44100));
-
-    }
 
     private VideoOutputStreamContainer video_st = null;
     private AudioOutputStreamContainer audio_st = null;
@@ -83,7 +51,7 @@ public class FFMpegVideoEncoder {
         /* allocate the output media context */
         avformat_alloc_output_context2(oc, null, null, filename);
         if (oc.isNull()) {
-            System.err.println("Could not deduce output format from file extension: using MPEG.");
+            LOGGER.error("Could not deduce output format from file extension: using MPEG.");
             avformat_alloc_output_context2(oc, null, "mpeg", filename);
         }
         if (oc.isNull()){
@@ -110,7 +78,7 @@ public class FFMpegVideoEncoder {
             ret = avio_open(pb, filename, AVIO_FLAG_WRITE);
             oc.pb(pb);
             if (ret < 0) {
-                System.err.println("Could not open " + filename + " : " + ret);
+                LOGGER.error("Could not open '{}': {}", filename, ret);
                 return;
             }
         }
@@ -118,7 +86,7 @@ public class FFMpegVideoEncoder {
         /* Write the stream header, if any. */
         ret = avformat_write_header(oc, opt);
         if (ret < 0) {
-            System.err.println("Error occurred when opening output file: " + ret);
+            LOGGER.error("Error occurred when opening output file: {}", ret);
         }
 
     }
@@ -198,69 +166,69 @@ public class FFMpegVideoEncoder {
 
     }
 
-    //Test stuff
-    public static void main(String[] args) throws IOException {
+//    //Test stuff
+//    public static void main(String[] args) throws IOException {
+////
+////        BufferedImage testImg = ImageIO.read(new File("img.jpg"));
+////
+////        MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
+////
+////        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
+////
+////
+////        if(mux.useAudio) {
+////            /* init signal generator */
+////            t = 0;
+////            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
+////            /* increment frequency by 110 Hz per second */
+////            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
+////        }
+////
+////        for (int i = 0; i < 250; ++i){
+////
+////
+////            mux.add(img);
+////
+////            while(mux.useAudio && mux.audioQueue.isEmpty()){
+////                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
+////            }
+////
+////        }
+////
+////        mux.close();
 //
-//        BufferedImage testImg = ImageIO.read(new File("img.jpg"));
+//        FFMpegVideoDecoder decoder = new FFMpegVideoDecoder();
+//        decoder.init(Path.of("bbb.mp4"), new DecoderConfig(), new CacheConfig());
 //
-//        MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
+//        Queue<VideoFrame> tmpFrames = new LinkedList<>();
+//        AudioFrame firstAudioFrame = null;
+//        VideoFrame frame = null;
+//        while(firstAudioFrame == null){
+//            frame = decoder.getNext();
+//            tmpFrames.add(frame);
 //
-//        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
-//
-//
-//        if(mux.useAudio) {
-//            /* init signal generator */
-//            t = 0;
-//            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
-//            /* increment frequency by 110 Hz per second */
-//            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
-//        }
-//
-//        for (int i = 0; i < 250; ++i){
-//
-//
-//            mux.add(img);
-//
-//            while(mux.useAudio && mux.audioQueue.isEmpty()){
-//                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
+//            if (frame.getAudio().isPresent()){
+//                firstAudioFrame = frame.getAudio().get();
 //            }
-//
 //        }
 //
+//        frame = tmpFrames.peek();
+//
+//        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(frame.getImage().getWidth(), frame.getImage().getHeight(), (int)frame.getDescriptor().getFps(), (int)firstAudioFrame.getSamplingrate(),"out.mp4", true);
+//
+//        while (!tmpFrames.isEmpty()){
+//            mux.add(tmpFrames.poll());
+//        }
+//
+//        for (int i = 0; i < 242; ++i){
+//            frame = decoder.getNext();
+//            mux.add(frame);
+//            System.out.println(i);
+//        }
+//
+//        decoder.close();
 //        mux.close();
-
-        FFMpegVideoDecoder decoder = new FFMpegVideoDecoder();
-        decoder.init(Path.of("bbb.mp4"), new DecoderConfig(), new CacheConfig());
-
-        Queue<VideoFrame> tmpFrames = new LinkedList<>();
-        AudioFrame firstAudioFrame = null;
-        VideoFrame frame = null;
-        while(firstAudioFrame == null){
-            frame = decoder.getNext();
-            tmpFrames.add(frame);
-
-            if (frame.getAudio().isPresent()){
-                firstAudioFrame = frame.getAudio().get();
-            }
-        }
-
-        frame = tmpFrames.peek();
-
-        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(frame.getImage().getWidth(), frame.getImage().getHeight(), (int)frame.getDescriptor().getFps(), (int)firstAudioFrame.getSamplingrate() / 2,"out.mp4", true);
-
-        while (!tmpFrames.isEmpty()){
-            mux.add(tmpFrames.poll());
-        }
-
-        for (int i = 0; i < 1200; ++i){
-            frame = decoder.getNext();
-            mux.add(frame);
-            System.out.println(i);
-        }
-
-        decoder.close();
-        mux.close();
-
-    }
+//
+//    }
 
 }

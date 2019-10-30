@@ -39,6 +39,11 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
         st.time_base(timeBase);
         c.time_base(st.time_base());
 
+        AVRational fps = new AVRational();
+        fps.den(1);
+        fps.num(frameRate);
+        c.framerate(fps);
+
         if (c.codec_id() == avcodec.AV_CODEC_ID_MPEG2VIDEO) {
             c.max_b_frames(2);
         }
