@@ -74,14 +74,23 @@
         {"feature": "SURFMirflickr25K256", "weight": 1.75},
         {"feature": "HOGMirflickr25K256", "weight": 1.0}
       ],
-      "audio": [
+      "audiofingerprint": [
         {"feature": "HPCP12Shingle", "weight": 1.0}
       ],
       "tagsft": [
+        {"feature": "TagsFtSearch", "weight": 1.0}
+      ],
+      "tags": [
         {"feature": "SegmentTags", "weight": 1.0}
       ],
       "ocr": [
         {"feature": "OCRSearch", "weight": 1.0}
+      ],
+      "asr": [
+        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
+      ],
+      "scenecaption": [
+        {"feature":  "DescriptionTextSearch", "weight":  1.0}
       ]
     }
   },
@@ -114,11 +123,6 @@
     "outputLocation": "out"
   },
 
-  "imagecache": {
-    "softMemoryLimit": 2048,
-    "hardMemoryLimit": 1024
-  },
-
   "api": {
     "enableCLI": true,
     "enableWebsocket": true,
@@ -136,11 +140,6 @@
     "uiLocation": "dist",
     "thumbnailLocation": "thumbnails",
     "objectLocation": "objects"
-  },
-
-  "visualization": {
-    "cacheEnabled": false,
-    "cachePath": "cache/art/"
   },
 
   "monitoring":{

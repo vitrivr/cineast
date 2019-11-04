@@ -1,0 +1,17 @@
+POST http://127.0.0.1:4567/api/v1/find/segments/similar
+Content-Type: application/json
+
+{
+    "types": ["IMAGE"],
+    "containers": [{
+        "terms": [
+            {
+                "categories": ["boolean"],
+                "type": "BOOLEAN",
+                "data": "data:application/json;base64,Wwp7ImF0dHJpYnV0ZSI6ICJmZWF0dXJlc193c2RtdGlhbm5vdGF0aW9ucy5hbm5vdGF0aW9uIiwib3BlcmF0b3IiOiAiRVEiLCJ2YWx1ZXMiOiAid2F0Y2hpbmcgVFYifQpd"
+            }
+        ]
+    }]
+}
+
+###

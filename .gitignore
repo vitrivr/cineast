@@ -49,3 +49,5 @@ index*
 
 ##JSON
 /db/**/*.json
+
+/benchmark-default.csv

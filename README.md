@@ -2,23 +2,22 @@
 
 # Cineast
 Cineast is a multi-feature content-based mulitmedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
-Cineast is written in Java and uses [ADAMpro](https://github.com/vitrivr/ADAMpro) as a storage backend.
+Cineast is written in Java and uses [CottontailDB](https://github.com/https://github.com/ppanopticon/cottontaildb) as a storage backend.
 
 ## Building Cineast
 Cineast can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
 ```
  git clone --recursive https://github.com/vitrivr/cineast.git cineast
  cd cineast
- ./gradlew deploy
- cd build/libs
- java -jar cineast.jar
+ ./gradlew :cineast-core:generateProto
+ ./gradlew cineast-runtime:fatJar
+ java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
 
 ## Prerequisites
 ### System dependencies
 * git
 * JDK 8 or higher
-* Optionally: You should install [Docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) which you can use for ADAMpro.
 
 ### 3D rendering
 For 3D rendering (required in order to support 3D models) you either need a video card or Mesa 3D. The JOGL library supports both. Rendering on Headless devices has been successfully tested with Xvfb. The following steps are required to enable
@@ -46,3 +45,19 @@ For 3D rendering (required in order to support 3D models) you either need a vide
 The -3d option will perform a 3D test. If it succeeds, cineast should generate a PNG image depicting two coloured
 triangles on a black background.
 
+## Contribution
+
+> Contributions are always welcome.
+
+### Versioning
+
+Cineast uses [semantic versioning](https://semver.org). See [the releases page](https://github.com/vitrivr/cineast/releases).
+
+### Code Style
+
+Cineast primarily uses the [Google Java Styleguide](https://google.github.io/styleguide/javaguide.html).
+Please use the file supplied in the `docs/` folder
+
+To automatically apply the styleguide in [IntelliJ IDEA](https://www.jetbrains.com/idea/) go to_File_ -> _Settings_ -> _Editor_ -> _Code Style_ -> _Java_ and import the supplied file via the gear icon.
+
+You can also use [Eclipse](https://www.eclipse.org/) for development and use Google's [styleguide for eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).

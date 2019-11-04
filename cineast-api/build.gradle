@@ -1,0 +1,67 @@
+plugins {
+    id 'application'
+    id "com.google.protobuf" version "0.8.2"
+}
+
+
+application {
+    mainClassName = 'org.vitrivr.cineast.api.Main'
+    applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
+}
+
+distributions {
+    main {
+        contents {
+            from('../cineast.json') {
+                into 'bin'
+            }
+        }
+    }
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/build/generated/"
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += "$projectDir/build/generated/main/grpc"
+            srcDirs += "$projectDir/build/generated/main/java"
+        }
+        proto {
+            srcDirs += "cineast-proto/src/main/protobuf"
+        }
+    }
+}
+
+
+task fatJar(type: Jar) {
+    archiveClassifier = 'full'
+    manifest {
+        attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
+        attributes 'Multi-Release': 'true'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+dependencies {
+    compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
+    compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
+}
