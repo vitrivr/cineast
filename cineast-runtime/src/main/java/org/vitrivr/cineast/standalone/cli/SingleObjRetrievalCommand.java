@@ -22,29 +22,43 @@ import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
 @Command(name = "retrieve-single", description = "Retrieves all information from the database for a given segment / object.")
 public class SingleObjRetrievalCommand implements Runnable {
 
-  @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
+  @Option(name = {"--segmentid"}, title = "Segment ID", description = "The ID of the segment for which to retrieve detailed information.")
   private String segmentId;
+
+  @Option(name = {"--objectid"}, title = "Object ID", description = "The ID of the object for which to retrieve detailed information.")
+  private String objectId;
 
   public void run() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+    if (segmentId != null) {
+      printInfoForSegment(segmentId, selector);
+    }
+    if (objectId != null) {
+      printInfoForObject(objectId, selector);
+    }
+  }
 
-    System.out.println("= Retrieving segment information =");
+  public static void printInfoForObject(String objectId, DBSelector selector) {
+    System.out.println("= Retrieving object information for " + objectId + " =");
+    MediaObjectReader objectReader = new MediaObjectReader(selector);
+    System.out.println(objectReader.lookUpObjectById(objectId));
+
+    System.out.println("= Retrieving object metadata for =");
+    MediaObjectMetadataReader reader = new MediaObjectMetadataReader(selector);
+    List<MediaObjectMetadataDescriptor> metadataDescriptors = reader.lookupMultimediaMetadata(objectId);
+    metadataDescriptors.forEach(System.out::println);
+  }
+
+  public static void printInfoForSegment(String segmentId, DBSelector selector) {
+
+    System.out.println("= Retrieving segment information for " + segmentId + "=");
     MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
     Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
     segmentDescriptor.ifPresent(System.out::println);
 
-    System.out.println("= Retrieving corresponding object information if it exists");
-    MediaObjectReader objectReader = new MediaObjectReader(selector);
-    segmentDescriptor.ifPresent(descriptor -> System.out.println(objectReader.lookUpObjectById(descriptor.getObjectId())));
+    segmentDescriptor.ifPresent(descriptor -> printInfoForObject(descriptor.getObjectId(), selector));
 
-    segmentDescriptor.ifPresent(descriptor -> {
-      System.out.println("= Retrieving corresponding object metadata");
-      MediaObjectMetadataReader reader = new MediaObjectMetadataReader(selector);
-      List<MediaObjectMetadataDescriptor> metadataDescriptors = reader.lookupMultimediaMetadata(descriptor.getObjectId());
-      metadataDescriptors.forEach(System.out::println);
-    });
-
-    System.out.println("= Retrieving metadata =");
+    System.out.println("= Retrieving segment metadata =");
     MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
     reader.lookupMultimediaMetadata(segmentId).forEach(System.out::println);
 
