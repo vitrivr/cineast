@@ -51,10 +51,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private static final String CONFIG_SUBTITLE_PROPERTY= "subtitles";
 
     /** Configuration property default for the FFMpegVideoDecoder: max width of the converted video. */
-    private final static int CONFIG_MAXWIDTH_DEFAULT = 640;
+    private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
 
     /** Configuration property default for the FFMpegVideoDecoder: max height of the converted video. */
-    private final static int CONFIG_MAXHEIGHT_DEFAULT = 480;
+    private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
 
     /** Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio. */
     private static final int CONFIG_CHANNELS_DEFAULT = 1;
