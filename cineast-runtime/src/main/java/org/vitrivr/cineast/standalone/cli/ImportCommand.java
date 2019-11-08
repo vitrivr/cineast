@@ -18,8 +18,8 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandl
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImporter;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
@@ -86,21 +86,32 @@ public class ImportCommand implements Runnable {
       case VBS2020:
         AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(this.threads, 15_000);
         audioHandler.doImport(path.resolve("audiomerge.json"));
+        System.out.println("Audio import done, starting with captions");
         CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(this.threads, 25_000);
         captionHandler.doImport(path.resolve("captions.json"));
+        System.out.println("Caption import done, starting with merged google vision");
         doVisionImport(path.resolve("gvision.json"));
+        System.out.println("Google Vision import done, starting with merged metadata");
         ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(this.threads, 25_000);
         metaHandler.doImport(path.resolve("metamerge.json"));
+        System.out.println("Metadata import done, starting with tags");
         TagImportHandler tagHandler = new TagImportHandler(this.threads, 35_000);
         tagHandler.doImport(path.resolve("tags.json"));
+        System.out.println("Tag import done, starting with V3C1 Classifications");
         ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, 25_000);
         classificationsImportHandler.doImport(path.resolve("V3C1Analysis"));
+        System.out.println("Classification import done, starting with V3C1 Colorlabels");
+        ColorlabelImportHandler colorImportHandler = new ColorlabelImportHandler(this.threads, 25_000);
+        colorImportHandler.doImport(path.resolve("V3C1Analysis"));
+        System.out.println("Colorlabel import done, starting with V3C1 Faces");
         FacesImportHandler facesImportHandler = new FacesImportHandler(this.threads, 25_000);
         facesImportHandler.doImport(path.resolve("V3C1Analysis/faces"));
         break;
       case V3C1ANALYSIS:
         handler = new ClassificationsImportHandler(this.threads, 25_000);
         handler.doImport(path.resolve("V3C1Analysis"));
+        ColorlabelImportHandler three = new ColorlabelImportHandler(this.threads, 25_000);
+        three.doImport(path.resolve("V3C1Analysis"));
         FacesImportHandler two = new FacesImportHandler(this.threads, 25_000);
         two.doImport(path.resolve("V3C1Analysis/faces"));
         break;
