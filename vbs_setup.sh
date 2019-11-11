@@ -4,6 +4,7 @@
 ./gradlew cineast-api:fatJar
 
 restart_cottontail () {
+  echo "restating cottontail"
   kill $(pgrep --full cottontail)
   cd ..
   cd cottontaildb
@@ -18,14 +19,23 @@ threads=$2
 sleep=5
 restart_cottontail
 sleep $sleep
+echo "setting up"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json setup --clean >> vbs_setup.log
+echo "importing proto files"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type PROTO --input $base/extracted_combined/ --threads $threads >> proto_import.log
-java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type VBS2020 --input $base/text/ --threads $threads >> text_import.log
-
-
+echo "importing text & metadata"
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type AUDIOTRANSCRIPTION --input $base/text/audiomerge.json --threads $threads --batchsize 15000 >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type CAPTIONING --input $base/text/captions.json --threads $threads >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type GOOGLEVISION --input $base/text/gvision.json --threads $threads >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type METADATA --input $base/text/metamerge.json --threads $threads --batchsize 25000 >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type TAGS --input $base/text/tags.json --threads $threads --batchsize 35000 >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1CLASSIFICATIONS --input $base/text/V3C1Analysis --threads $threads --batchsize 25000 >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1COLORLABELS --input $base/text/V3C1Analysis --threads $threads --batchsize 25000 >> text_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1FACES --input $base/text/V3C1Analysis/faces --threads $threads --batchsize 25000 >> text_import.log
 
 restart_cottontail
 sleep $sleep
+echo "optimizing"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json optimize >> vbs_optimize.log
 restart_cottontail
 sleep $sleep

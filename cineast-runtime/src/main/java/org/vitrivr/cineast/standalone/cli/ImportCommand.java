@@ -83,37 +83,28 @@ public class ImportCommand implements Runnable {
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case VBS2020:
+      case AUDIOTRANSCRIPTION:
         AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(this.threads, 15_000);
-        audioHandler.doImport(path.resolve("audiomerge.json"));
-        System.out.println("Audio import done, starting with captions");
-        CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(this.threads, 25_000);
-        captionHandler.doImport(path.resolve("captions.json"));
-        System.out.println("Caption import done, starting with merged google vision");
-        doVisionImport(path.resolve("gvision.json"));
-        System.out.println("Google Vision import done, starting with merged metadata");
-        ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(this.threads, 25_000);
-        metaHandler.doImport(path.resolve("metamerge.json"));
-        System.out.println("Metadata import done, starting with tags");
-        TagImportHandler tagHandler = new TagImportHandler(this.threads, 35_000);
-        tagHandler.doImport(path.resolve("tags.json"));
-        System.out.println("Tag import done, starting with V3C1 Classifications");
-        ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, 25_000);
-        classificationsImportHandler.doImport(path.resolve("V3C1Analysis"));
-        System.out.println("Classification import done, starting with V3C1 Colorlabels");
-        ColorlabelImportHandler colorImportHandler = new ColorlabelImportHandler(this.threads, 25_000);
-        colorImportHandler.doImport(path.resolve("V3C1Analysis"));
-        System.out.println("Colorlabel import done, starting with V3C1 Faces");
-        FacesImportHandler facesImportHandler = new FacesImportHandler(this.threads, 25_000);
-        facesImportHandler.doImport(path.resolve("V3C1Analysis/faces"));
+        audioHandler.doImport(path);
         break;
-      case V3C1ANALYSIS:
-        handler = new ClassificationsImportHandler(this.threads, 25_000);
-        handler.doImport(path.resolve("V3C1Analysis"));
-        ColorlabelImportHandler three = new ColorlabelImportHandler(this.threads, 25_000);
-        three.doImport(path.resolve("V3C1Analysis"));
-        FacesImportHandler two = new FacesImportHandler(this.threads, 25_000);
-        two.doImport(path.resolve("V3C1Analysis/faces"));
+      case CAPTIONING:
+        CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(this.threads, this.batchsize);
+        captionHandler.doImport(path);
+        break;
+      case GOOGLEVISION:
+        doVisionImport(path);
+        break;
+      case V3C1CLASSIFICATIONS:
+        ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, this.batchsize);
+        classificationsImportHandler.doImport(path);
+        break;
+      case V3C1COLORLABELS:
+        ColorlabelImportHandler colorImportHandler = new ColorlabelImportHandler(this.threads, this.batchsize);
+        colorImportHandler.doImport(path);
+        break;
+      case V3C1FACES:
+        FacesImportHandler facesImportHandler = new FacesImportHandler(this.threads, this.batchsize);
+        facesImportHandler.doImport(path);
         break;
     }
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
@@ -138,6 +129,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VISION, VBS2020, METADATA, V3C1ANALYSIS
+    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VISION, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS
   }
 }

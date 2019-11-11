@@ -231,6 +231,7 @@ public class CottontailWrapper implements AutoCloseable {
     @Override
     public void close() {
         if(closeWrapper){
+            LOGGER.info("Closing connection to cottontail");
             this.channel.shutdown();
         }
     }

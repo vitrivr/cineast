@@ -21,12 +21,14 @@ public class FacesImporter implements Importer<Map<String, PrimitiveTypeProvider
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final LineIterator lineIterator;
+  private final SequenceIdLookupService lookupService;
   private final int noFaces;
 
 
-  public FacesImporter(Path input, int noFaces) throws IOException {
+  public FacesImporter(Path input, int noFaces, SequenceIdLookupService lookupService) throws IOException {
     this.noFaces = noFaces;
     lineIterator = FileUtils.lineIterator(input.toFile());
+    this.lookupService = lookupService;
     if (!lineIterator.hasNext()) {
       throw new IOException("Empty file");
     }
@@ -40,7 +42,8 @@ public class FacesImporter implements Importer<Map<String, PrimitiveTypeProvider
     }
     String id = lineIterator.next();
     String videoID = id.split("/")[0];
-    int segmentID = Integer.parseInt(id.split("_")[1]);
+    int frameNo = Integer.parseInt(id.split("_")[1]);
+    int segmentID = lookupService.getSequenceNumber(videoID, frameNo);
     Map<String, PrimitiveTypeProvider> _return = new HashMap<>();
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject("v_" + videoID + "_" + segmentID));
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject("v3c1"));
