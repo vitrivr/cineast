@@ -38,7 +38,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean close() {
-        //this.cottontail.close();
+        this.cottontail.close();
         return true;
     }
 

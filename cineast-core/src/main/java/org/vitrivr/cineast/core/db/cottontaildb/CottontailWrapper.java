@@ -8,7 +8,6 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
@@ -48,8 +47,10 @@ public class CottontailWrapper implements AutoCloseable {
     private static final int maxMessageSize = 10_000_000;
     private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
     private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
+    private final boolean closeWrapper;
 
-    public CottontailWrapper(DatabaseConfig config) {
+    public CottontailWrapper(DatabaseConfig config, boolean closeWrapper) {
+        this.closeWrapper = closeWrapper;
         NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxInboundMessageSize(maxMessageSize);
         if (config.getPlaintext()) {
             builder = builder.usePlaintext();
@@ -229,6 +230,8 @@ public class CottontailWrapper implements AutoCloseable {
      */
     @Override
     public void close() {
-        this.channel.shutdown();
+        if(closeWrapper){
+            this.channel.shutdown();
+        }
     }
 }

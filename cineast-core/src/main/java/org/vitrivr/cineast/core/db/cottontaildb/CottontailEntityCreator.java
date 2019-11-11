@@ -26,7 +26,7 @@ public class CottontailEntityCreator implements EntityCreator {
 
 
   public CottontailEntityCreator(DatabaseConfig config){
-    this.cottontail = new CottontailWrapper(config);
+    this.cottontail = new CottontailWrapper(config, true);
     init();
   }
 
