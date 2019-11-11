@@ -4,7 +4,7 @@
 ./gradlew cineast-api:fatJar
 
 restart_cottontail () {
-  echo "restating cottontail"
+  echo "restarting cottontail"
   kill $(pgrep --full cottontail)
   cd ..
   cd cottontaildb
