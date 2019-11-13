@@ -129,7 +129,7 @@ public class InMemoryStore {
    * @author Ralph Gasser
    * @version 1.0
    */
-  class Entity implements Iterable<PersistentTuple> {
+  public class Entity implements Iterable<PersistentTuple> {
 
     /** The {@link java.util.Map} that holds all the data stored in this {@link org.vitrivr.cineast.core.db.memory.InMemoryStore.Entity}. */
     private final Map<String, PersistentTuple> store = new TreeMap<>();
