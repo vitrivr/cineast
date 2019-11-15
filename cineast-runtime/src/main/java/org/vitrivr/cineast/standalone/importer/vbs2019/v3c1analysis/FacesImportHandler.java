@@ -19,12 +19,13 @@ public class FacesImportHandler extends DataImportHandler {
   public void doImport(Path root) {
     LOGGER.info("Starting data import for face files in: {} with {} threads and {} batchsize", root.toString(), this.numberOfThreads, this.batchsize);
     try {
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("1face.txt"), 1), MediaSegmentMetadataDescriptor.ENTITY, "importing for one face")));
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("2faces.txt"), 2), MediaSegmentMetadataDescriptor.ENTITY, "importing for two faces")));
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("3faces.txt"), 3), MediaSegmentMetadataDescriptor.ENTITY, "importing for three faces")));
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("4faces.txt"), 4), MediaSegmentMetadataDescriptor.ENTITY, "importing for four faces")));
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("manyfaces.txt"), 5), MediaSegmentMetadataDescriptor.ENTITY, "importing for many faces")));
-      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("nofaces.txt"), 0), MediaSegmentMetadataDescriptor.ENTITY, "importing for zero faces")));
+      SequenceIdLookupService lookupService = new SequenceIdLookupService(root.resolve("msb-allshots.txt"));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("1face.txt"), 1, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for one face")));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("2faces.txt"), 2, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for two faces")));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("3faces.txt"), 3, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for three faces")));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("4faces.txt"), 4, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for four faces")));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("manyfaces.txt"), 5, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for many faces")));
+      this.futures.add(this.service.submit(new DataImportRunner(new FacesImporter(root.resolve("nofaces.txt"), 0, lookupService), MediaSegmentMetadataDescriptor.ENTITY, "importing for zero faces")));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

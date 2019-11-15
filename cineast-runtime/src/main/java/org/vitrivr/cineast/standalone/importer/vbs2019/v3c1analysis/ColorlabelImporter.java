@@ -1,9 +1,19 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
@@ -11,29 +21,28 @@ import org.apache.commons.io.LineIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.importer.Importer;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImporter.ClassificationTuple;
 
 /**
- * Imports the faces as given by the https://github.com/klschoef/V3C1Analysis repo. File is expected to have a meaningless header
+ * Imports the colorlabels as given by the https://github.com/klschoef/V3C1Analysis repo. File is expected to be in format:
+ *
+ * every line contains the segmentid formatted xxxxx_yyyy, where before the _ is 0-padded to length 5 the movie id and behind the _ the non-0 padded segmentID
  */
-public class FacesImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
+public class ColorlabelImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-  private final LineIterator lineIterator;
-  private final SequenceIdLookupService lookupService;
-  private final int noFaces;
+  private final String label;
+  private LineIterator lineIterator = null;
 
 
-  public FacesImporter(Path input, int noFaces, SequenceIdLookupService lookupService) throws IOException {
-    this.noFaces = noFaces;
+  public ColorlabelImporter(Path input, String label) throws IOException {
+    this.label = label;
     lineIterator = FileUtils.lineIterator(input.toFile());
-    this.lookupService = lookupService;
     if (!lineIterator.hasNext()) {
       throw new IOException("Empty file");
     }
-    // skip header
-    String header = lineIterator.next();
   }
 
   private synchronized Optional<Map<String, PrimitiveTypeProvider>> nextPair() {
@@ -41,14 +50,11 @@ public class FacesImporter implements Importer<Map<String, PrimitiveTypeProvider
       return Optional.empty();
     }
     String id = lineIterator.next();
-    String videoID = id.split("/")[0];
-    int frameNo = Integer.parseInt(id.split("_")[1]);
-    int segmentID = lookupService.getSequenceNumber(videoID, frameNo);
     Map<String, PrimitiveTypeProvider> _return = new HashMap<>();
-    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject("v_" + videoID + "_" + segmentID));
+    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject("v_"+id));
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject("v3c1"));
-    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject("faces"));
-    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(noFaces));
+    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject("colorlabels"));
+    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(this.label));
     return Optional.of(_return);
   }
 

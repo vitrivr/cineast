@@ -26,8 +26,10 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionTuple
 
 public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
-  private final JsonParser parser;
-  private final ObjectMapper mapper;
+  private JsonParser parser;
+  private ObjectMapper mapper;
+  private final String fileName;
+  private final Path input;
   private Iterator<Entry<String, JsonNode>> _segments;
   private Iterator<Entry<String, JsonNode>> _categories;
   private static final Logger LOGGER = LogManager.getLogger();
@@ -36,28 +38,17 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private Iterator<JsonNode> _categoryValues;
   private GoogleVisionCategory _category;
   private final boolean importTagsFt;
+  private boolean initialized = false;
 
   /**
    * @param importTagsFt whether tags should be imported into {@link TagsFtSearch} or {@link GoogleVisionCategory#tableName}
    * @param targetCategory only tuples of this kind are imported
    */
   public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTagsFt) throws IOException {
+    this.input = input;
+    this.fileName = input.getFileName().toString();
     this.importTagsFt = importTagsFt;
-    LOGGER.info("Starting Importer for path {}, category {} and importTags {}", input, targetCategory, importTagsFt);
     this.targetCategory = targetCategory;
-    mapper = new ObjectMapper();
-    parser = mapper.getFactory().createParser(input.toFile());
-    if (parser.nextToken() == JsonToken.START_ARRAY) {
-      if (parser.nextToken() == JsonToken.START_OBJECT) {
-        ObjectNode node = mapper.readTree(parser);
-        _segments = node.fields();
-      }
-      if (_segments == null) {
-        throw new IOException("Empty file");
-      }
-    } else {
-      throw new IOException("Empty file");
-    }
   }
 
   /**
@@ -143,7 +134,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
             return tuple;
           }
         } else {
-          LOGGER.info("File done");
+          LOGGER.info("File {} done", this.fileName);
           return Optional.empty();
         }
       } catch (IOException e) {
@@ -152,24 +143,51 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     } while (true);
   }
 
+  private synchronized void init() throws IOException {
+    if (initialized) {
+      LOGGER.warn("Importer for path {} was already initalized", input);
+      return;
+    }
+    initialized = true;
+    LOGGER.info("Starting Importer for path {}, category {} and importTags {}", input, targetCategory, importTagsFt);
+    mapper = new ObjectMapper();
+    parser = mapper.getFactory().createParser(input.toFile());
+    if (parser.nextToken() == JsonToken.START_ARRAY) {
+      if (parser.nextToken() == JsonToken.START_OBJECT) {
+        ObjectNode node = mapper.readTree(parser);
+        _segments = node.fields();
+      }
+      if (_segments == null) {
+        throw new IOException("Empty file");
+      }
+    } else {
+      throw new IOException("Empty file");
+    }
+  }
+
   /**
    * @return Pair mapping a segmentID to a List of Descriptions
    */
   @Override
   public GoogleVisionTuple readNext() {
     try {
+      if (!initialized) {
+        init();
+      }
       Optional<GoogleVisionTuple> node = nextTuple();
       if (!node.isPresent()) {
         return null;
       }
       return node.get();
-    } catch (NoSuchElementException e) {
+    } catch (NoSuchElementException | IOException e) {
       e.printStackTrace();
       return null;
     }
   }
+
   /**
    * Converts the given {@link GoogleVisionTuple} to a representation appropriate to the given feature.
+   *
    * @param data the tuple to be converted to a tuple in the feature table
    * @return a map where the key corresponds to the column-name and the value to the value to be inserted in that column for the given tuple
    */
@@ -182,10 +200,10 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       case PARTIALLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case WEB:
-        if(importTagsFt){
+        if (importTagsFt) {
           map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], id);
           map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.web.get().description));
-        }else {
+        } else {
           map.put("id", id);
           map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
           map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.web.get().score)));
@@ -201,14 +219,14 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       case FULLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case LABELS:
-        if(importTagsFt){
+        if (importTagsFt) {
           map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], id);
           map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.label.get().description));
-        }else {
+        } else {
           map.put("id", id);
           map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
           map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
-            tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
+          tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
         }
         break;
       case OCR:

@@ -131,7 +131,6 @@
     "enableRest": true,
     "enableRestSecure": false,
     "enableLegacy": false,
-    "maxMessageSize": 40960000,
     "httpPort": 4567,
     "httpsPort": 4568,
     "legacyPort": 12345,
