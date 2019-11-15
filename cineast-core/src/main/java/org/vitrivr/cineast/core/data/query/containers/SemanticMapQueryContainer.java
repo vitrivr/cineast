@@ -29,6 +29,10 @@ public class SemanticMapQueryContainer extends QueryContainer {
     /** The {@link SemanticMap} that is used internally. */
     private final SemanticMap map;
 
+    public SemanticMapQueryContainer(SemanticMap map){
+        this.map = map;
+    }
+
     /**
      * Constructor for {@link SemanticMapQueryContainer}
      *

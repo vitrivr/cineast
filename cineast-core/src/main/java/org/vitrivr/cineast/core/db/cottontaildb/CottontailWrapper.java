@@ -8,19 +8,19 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -190,7 +190,7 @@ public class CottontailWrapper implements AutoCloseable {
     public boolean ping() {
         final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
         try {
-            final SuccessStatus status = stub.ping(Empty.newBuilder().build());
+            final SuccessStatus status = stub.ping(Empty.getDefaultInstance());
             return true;
         } catch (StatusRuntimeException e) {
             if (e.getStatus() == Status.DEADLINE_EXCEEDED) {

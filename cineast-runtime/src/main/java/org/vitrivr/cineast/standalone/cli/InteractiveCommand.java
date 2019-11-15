@@ -35,7 +35,7 @@ public class InteractiveCommand implements Runnable {
           com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(Main.class);
           final Runnable command = cli.parse(line.split(" "));
           command.run();
-        } catch (ParseRestrictionViolatedException e) {
+        } catch (Exception e) {
           System.err.println(e.getMessage());
         }
       }

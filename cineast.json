@@ -74,7 +74,7 @@
         {"feature": "SURFMirflickr25K256", "weight": 1.75},
         {"feature": "HOGMirflickr25K256", "weight": 1.0}
       ],
-      "audio": [
+      "audiofingerprint": [
         {"feature": "HPCP12Shingle", "weight": 1.0}
       ],
       "tagsft": [

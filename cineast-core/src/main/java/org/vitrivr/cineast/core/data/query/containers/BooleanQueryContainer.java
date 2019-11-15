@@ -9,6 +9,7 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class BooleanQueryContainer extends QueryContainer {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private ArrayList<BooleanExpression> expressions = new ArrayList<>();
+
+  public BooleanQueryContainer(Collection<BooleanExpression> expressions) {
+    this.expressions.addAll(expressions);
+  }
 
   public BooleanQueryContainer(String data) {
     this(DataURLParser.dataURLtoJsonNode(data).orElseThrow(() -> new IllegalArgumentException("Failed to parse the provided Boolean expression data.")));

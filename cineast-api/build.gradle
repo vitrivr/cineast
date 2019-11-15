@@ -1,6 +1,8 @@
 plugins {
     id 'application'
+    id "com.google.protobuf" version "0.8.2"
 }
+
 
 application {
     mainClassName = 'org.vitrivr.cineast.api.Main'
@@ -17,6 +19,35 @@ distributions {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/build/generated/"
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += "$projectDir/build/generated/main/grpc"
+            srcDirs += "$projectDir/build/generated/main/java"
+        }
+        proto {
+            srcDirs += "cineast-proto/src/main/protobuf"
+        }
+    }
+}
+
 configurations.all {
     // Check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
@@ -27,7 +58,7 @@ repositories {
         url "https://packagecloud.io/manusant/beerRepo/maven2"
     }
     maven {
-        // DBIS Nexus
+        // DBIS Nexus // TODO Replace with official, at some point in the future
         url "https://dbis-nexus.dmi.unibas.ch/repository/maven2/"
     }
 }

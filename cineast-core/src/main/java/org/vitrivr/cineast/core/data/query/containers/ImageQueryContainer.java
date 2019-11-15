@@ -30,8 +30,15 @@ public class ImageQueryContainer extends QueryContainer {
 	 * @param factory The {@link CachedDataFactory} that should be used to generate the {@link MultiImage}.
 	 */
 	public ImageQueryContainer(String data, CachedDataFactory factory) {
-		final BufferedImage image = ImageParser.dataURLtoBufferedImage(data);
+		this(ImageParser.dataURLtoBufferedImage(data), factory);
+	}
+
+	public ImageQueryContainer(BufferedImage image, CachedDataFactory factory) {
 		this.img = factory.newInMemoryMultiImage(image);
+	}
+
+	public ImageQueryContainer(BufferedImage image) {
+		this(image, CachedDataFactory.DEFAULT_INSTANCE);
 	}
 
 	public ImageQueryContainer(String data){

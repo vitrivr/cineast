@@ -15,7 +15,6 @@ import java.nio.ByteOrder;
  *
  * @author rgasser
  * @version 1.0
- * @created 30.11.16
  */
 public class AudioFrame {
     /** Default empty frames frame. Encodes a single, mute sample for one channel. */
@@ -52,6 +51,10 @@ public class AudioFrame {
         this.descriptor = descriptor;
         this.timestamp = timestamp;
         this.setData(data);
+    }
+
+    public AudioFrame(AudioFrame other){
+        this(other.idx, other.timestamp, other.data.array(), new AudioDescriptor(other.descriptor.getSamplingrate(), other.descriptor.getChannels(), other.descriptor.getDuration()));
     }
 
     /**
@@ -257,6 +260,24 @@ public class AudioFrame {
      */
     public boolean append(AudioFrame that) {
         return this.append(that, that.numberOfSamples);
+    }
+
+    public AudioFrame split(int numberOfSamples){
+
+        if (numberOfSamples > this.numberOfSamples){
+            return this;
+        }
+
+        int bytesToCut = this.descriptor.getChannels() * numberOfSamples * (BITS_PER_SAMPLE/8);
+        byte[] cutBytes = new byte[bytesToCut];
+        byte[] remaining = new byte[this.data.capacity() - bytesToCut];
+
+        System.arraycopy(this.data.array(), 0, cutBytes, 0, bytesToCut);
+        System.arraycopy(this.data.array(), bytesToCut, remaining, 0, remaining.length);
+
+        setData(remaining);
+
+        return new AudioFrame(idx, timestamp, cutBytes, new AudioDescriptor(descriptor.getSamplingrate(), descriptor.getChannels(), (long) (numberOfSamples/descriptor.getSamplingrate())));
     }
 
     /**

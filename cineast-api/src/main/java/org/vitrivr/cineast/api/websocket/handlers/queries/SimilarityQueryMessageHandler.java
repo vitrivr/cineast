@@ -59,7 +59,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                 ScoreElement.mergeWithScoreMap(continuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
             }
             /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
-            final int max = Config.sharedConfig().getRetriever().getMaxResults();
+            final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
             final List<StringDoublePair> results = map.keySet().stream()
                 .map(key -> new StringDoublePair(key, map.get(key)))
                 .filter(p -> p.value > 0.0)
