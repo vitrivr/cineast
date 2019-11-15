@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <logger name="org.vitrivr.cineast" level="DEBUG" />
+        <logger name="org.vitrivr.cineast" level="TRACE" />
         <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>

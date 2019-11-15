@@ -65,6 +65,7 @@ public class MoreLikeThisQuery extends Query {
     public MessageType getMessageType() {
         return MessageType.Q_MLT;
     }
+
 }
 
 

@@ -25,6 +25,11 @@ public abstract class QueryContainer implements SegmentContainer {
     this.weight = MathHelper.limit(weight, -1f, 1f);
   }
 
+  /**
+   * Online: Id of the original query "box" (i.e. to which part of the query this container relates to).
+   * Offline (i.e. Extraction): No clue, it does something...
+   * @return
+   */
   @Override
   public String getId() {
     return this.id == null ? "" : this.id;
@@ -39,11 +44,16 @@ public abstract class QueryContainer implements SegmentContainer {
     return this.id != null;
   }
 
+
   @Override
   public void setSuperId(String id) {
     this.superId = id;
   }
 
+  /**
+   * Online: The parental query id, i.e. the id of the query to which this container belongs to
+   * Offline (i.e. Extraction): No clue, it does something...
+   */
   @Override
   public String getSuperId() {
     return this.superId;

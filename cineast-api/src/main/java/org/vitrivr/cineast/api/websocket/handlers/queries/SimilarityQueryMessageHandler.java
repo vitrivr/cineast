@@ -1,11 +1,17 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.vitrivr.cineast.api.messages.result.ExtendedSimilarityQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.StringDoubleTriple;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
@@ -13,6 +19,7 @@ import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -27,6 +34,9 @@ import java.util.stream.Collectors;
  * @created 12.01.17
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {
+
+    private static final Logger LOGGER = LogManager.getLogger(SimilarityQueryMessageHandler.class);
+    private static final ObjectMapper DEBUG_OBJECT_MAPPER = new ObjectMapper();
 
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
@@ -47,23 +57,33 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         /* Prepare QueryConfig (so as to obtain a QueryId). */
         final String uuid = qconf.getQueryId().toString();
 
+
+        LOGGER.debug("Received SimilarityQuery: {}", DEBUG_OBJECT_MAPPER.writeValueAsString(message));
+
         /*  Prepare map that maps category  to QueryTerm components. */
         final HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryComponent.toCategoryMap(message.getComponents());
+        /* Add query id to each querycontainer, so that "superid" is used */
+        categoryMap.values().stream().forEach(list -> {
+            list.forEach(qc -> qc.setSuperId(uuid));
+        });
 
         /*  Execute similarity queries for all Category -> QueryContainer combinations in the map. */
         for (String category : categoryMap.keySet()) {
-            final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+            final TObjectDoubleHashMap<Pair<String,String>> map = new TObjectDoubleHashMap<>();
             for (QueryContainer qc : categoryMap.get(category)) {
                 /* Merge partial results with score-map. */
                 float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
-                ScoreElement.mergeWithScoreMap(continuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
+                List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, qconf);
+                scores.forEach(element -> element.setQueryContainerId(qc.getId()));
+                // TODO map scores that are merged in the map to the query container ids
+                ScoreElement.mergeWithSegmentScoreMap(scores, map, weight);
             }
             /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
             final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-            final List<StringDoublePair> results = map.keySet().stream()
-                .map(key -> new StringDoublePair(key, map.get(key)))
+            final List<StringDoubleTriple> results = map.keySet().stream()
+                .map(key -> new StringDoubleTriple(key.first, map.get(key), key.second))
                 .filter(p -> p.value > 0.0)
-                .sorted(StringDoublePair.COMPARATOR)
+                .sorted(StringDoubleTriple.COMPARATOR)
                 .limit(max)
                 .collect(Collectors.toList());
 
@@ -82,10 +102,10 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * @param category Name of the query category.
      * @param raw List of raw per-category results (segmentId -> score).
      */
-    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
+    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoubleTriple> raw) {
         final int stride = 1000;
         for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
-            final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
+            final List<StringDoubleTriple> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
             final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
             /* Load segment & object information. */
@@ -99,7 +119,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             /* Write segments, objects and similarity search data to stream. */
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
-            this.write(session, new SimilarityQueryResult(queryId, category, sub));
+            this.write(session, new ExtendedSimilarityQueryResult(queryId, category, sub));
 
             /* Load and transmit segment & object metadata. */
             this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
