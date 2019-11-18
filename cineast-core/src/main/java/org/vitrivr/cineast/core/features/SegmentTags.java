@@ -149,9 +149,9 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
     this.phandler = phandlerSupply.get();
-    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, 10);
+    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
   }
 
   @Override

@@ -53,7 +53,7 @@ public class FrameExporter implements Extractor {
 
 	
 	@Override
-	public void init(PersistencyWriterSupplier phandlerSupply) {
+	public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}

@@ -39,7 +39,6 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     implements MetadataFeatureExtractor<T>, Retriever {
   private static final String ID_COLUMN_NAME = "id"; // Constant used in ADAMproEntityCreator
   private static final String FEATURE_COLUMN_NAME = "feature";
-  private static final int WRITER_BATCHSIZE = 10; // Taken from AbstractFeatureModule
 
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;
@@ -80,11 +79,10 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     supply.get().dropEntity(this.featureEntityName());
   }
 
-  public void init(PersistencyWriterSupplier supply) {
+  public void init(PersistencyWriterSupplier supply, int batchSize) {
     init(); //from MetadataFeatureExtractor
     PersistencyWriter<?> writer = supply.get();
-    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(),
-        WRITER_BATCHSIZE);
+    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(), batchSize);
     this.featureWriter.init();
   }
 

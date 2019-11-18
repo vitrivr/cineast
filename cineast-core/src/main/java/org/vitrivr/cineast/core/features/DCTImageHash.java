@@ -124,9 +124,9 @@ public class DCTImageHash extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleBitSetWriter(this.phandler, 10, this.tableName);
+    this.writer = new SimpleBitSetWriter(this.phandler, batchSize, this.tableName);
   }
 
   @Override
