@@ -59,19 +59,12 @@
         {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
       ],
       "quantized": [
-        {"feature": "AverageColorGrid8Reduced11", "weight": 1.0},
-        {"feature": "AverageColorGrid8Reduced15", "weight": 1.0},
-        {"feature": "AverageColorRasterReduced11", "weight": 1.0},
-        {"feature": "AverageColorRasterReduced15", "weight": 1.0},
-        {"feature": "CLDReduced11", "weight": 1.0},
-        {"feature": "CLDReduced15", "weight": 1.0}
+
       ],
       "localfeatures": [
-        {"feature": "SURFMirflickr25K512", "weight": 1.75},
         {"feature": "HOGMirflickr25K512", "weight": 1.0}
       ],
       "localfeatures_fast": [
-        {"feature": "SURFMirflickr25K256", "weight": 1.75},
         {"feature": "HOGMirflickr25K256", "weight": 1.0}
       ],
       "audiofingerprint": [
