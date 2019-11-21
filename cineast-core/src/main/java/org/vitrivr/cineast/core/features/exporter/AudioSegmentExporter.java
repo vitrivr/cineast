@@ -127,22 +127,14 @@ public class AudioSegmentExporter implements Extractor {
 
 
     @Override
-    public void init(PersistencyWriterSupplier phandlerSupply) {
-
-    }
+    public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) { /* Nothing to init. */ }
 
     @Override
-    public void finish() {
-
-    }
+    public void finish() {  /* Nothing to finish. */}
 
     @Override
-    public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-
-    }
+    public void initalizePersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to init. */ }
 
     @Override
-    public void dropPersistentLayer(Supplier<EntityCreator> supply) {
-
-    }
+    public void dropPersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to drop. */}
 }

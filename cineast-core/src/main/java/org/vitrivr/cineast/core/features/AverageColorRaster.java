@@ -41,8 +41,8 @@ public class AverageColorRaster extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply) {
-    super.init(supply);
+  public void init(PersistencyWriterSupplier supply, int batchSize) {
+    super.init(supply, batchSize);
     this.phandler.setFieldNames("id", "hist", "raster");
   }
 

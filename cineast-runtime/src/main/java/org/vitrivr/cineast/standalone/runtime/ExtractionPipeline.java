@@ -7,7 +7,6 @@ import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusExtractionTaskMonitor;
@@ -40,9 +39,6 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
     /** ExtractionContextProvider used to setup the Pipeline. It contains information about the Extractors. */
     private final ExtractionContextProvider context;
-
-    /** Initializer for the extractors. */
-    private final ExtractorInitializer initializer;
     
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
@@ -52,11 +48,10 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
      *
      * @param context ExtractionContextProvider used to setup the pipeline.
      */
-    public ExtractionPipeline(ExtractionContextProvider context, ExtractorInitializer initializer) {
+    public ExtractionPipeline(ExtractionContextProvider context) {
         /* Store context for further reference. */
         this.context = context;
-        this.initializer = initializer;
-       
+
         /* Start the extraction pipeline. */
         this.startup();
 
@@ -177,12 +172,12 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         LOGGER.info("Warming up extraction pipeline....");
 
         for (Extractor extractor : this.context.extractors()) {
-            this.initializer.initialize(extractor);
+            extractor.init(this.context.persistencyWriter(), this.context.batchSize());
             this.extractors.add(extractor);
         }
 
         for (Extractor exporter : this.context.exporters()) {
-            this.initializer.initialize(exporter);
+            exporter.init(this.context.persistencyWriter(), this.context.batchSize());
             this.extractors.add(exporter);
         }
         
@@ -235,9 +230,5 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             return (long) this.timeMap.get(className).getMean();
         }
         return 0;
-    }
-
-    public ExtractorInitializer getInitializer() {
-      return this.initializer;
     }
 }

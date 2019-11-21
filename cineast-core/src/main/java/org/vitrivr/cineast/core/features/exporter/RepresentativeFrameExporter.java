@@ -50,7 +50,7 @@ public class RepresentativeFrameExporter implements Extractor {
 	}
 
 	@Override
-	public void init(PersistencyWriterSupplier supply) {
+	public void init(PersistencyWriterSupplier supply, int batchSize) {
 		this.phandler = supply.get();
 		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");

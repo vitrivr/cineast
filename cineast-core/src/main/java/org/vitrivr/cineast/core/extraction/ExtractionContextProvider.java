@@ -173,7 +173,7 @@ public interface ExtractionContextProvider {
    *
    * @return Batch size.
    */
-  Integer getBatchsize();
+  Integer batchSize();
 
   /**
    * The {@link CacheConfig} instance used with this {@link ExtractionContextProvider}.

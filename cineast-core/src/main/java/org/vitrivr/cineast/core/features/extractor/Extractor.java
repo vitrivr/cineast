@@ -5,9 +5,8 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 
 public interface Extractor extends PersistentOperator {
+	void init(PersistencyWriterSupplier phandlerSupply, int batchSize);
 
-	void init(PersistencyWriterSupplier phandlerSupply);
-	
 	void processSegment(SegmentContainer shot);
 		
 	void finish();

@@ -66,8 +66,8 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
-    super.init(phandlerSupply);
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+    super.init(phandlerSupply, batchSize);
     this.phandler.setFieldNames("id", "frame", "bbox");
   }
 }

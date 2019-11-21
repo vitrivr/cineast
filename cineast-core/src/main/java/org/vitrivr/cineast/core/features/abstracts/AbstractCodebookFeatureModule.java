@@ -51,8 +51,8 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      * @param phandlerSupply
      */
     @Override
-    public final void init(PersistencyWriterSupplier phandlerSupply) {
-        super.init(phandlerSupply);
+    public final void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+        super.init(phandlerSupply, batchSize);
 
         /* Load the Codebook. */
         this.assignment = UtilIO.load(CODEBOOK_FOLDER + this.codebook());
