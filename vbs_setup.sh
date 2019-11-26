@@ -30,7 +30,6 @@ java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json impor
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type METADATA --input $base/text/metamerge.json --threads $threads --batchsize 25000 >> text_import.log
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type TAGS --input $base/text/tags.json --threads $threads --batchsize 35000 >> text_import.log
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1CLASSIFICATIONS --input $base/text/V3C1Analysis --threads $threads --batchsize 25000 >> text_import.log
-java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1COLORLABELS --input $base/text/V3C1Analysis --threads $threads --batchsize 25000 >> text_import.log
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1FACES --input $base/text/V3C1Analysis/faces --threads $threads --batchsize 25000 >> text_import.log
 
 restart_cottontail
