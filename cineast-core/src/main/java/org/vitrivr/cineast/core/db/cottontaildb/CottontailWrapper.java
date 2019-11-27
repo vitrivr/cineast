@@ -138,7 +138,7 @@ public class CottontailWrapper implements AutoCloseable {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in insertBlocking: {}", LogHelper.getStackTrace(e));
+            LOGGER.error("error in insertBlocking on entity {} (msg size {} KB): {}",message.getEntity(), message.getSerializedSize()/1_000, LogHelper.getStackTrace(e));
             return INTERRUPTED_INSERT;
         }
     }

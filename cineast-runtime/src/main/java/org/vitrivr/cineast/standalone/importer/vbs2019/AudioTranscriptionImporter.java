@@ -55,7 +55,7 @@ public class AudioTranscriptionImporter implements Importer<Pair<String, String>
             }
             elements = nextMovie.fields();
           } else {
-            LOGGER.error("File done");
+            LOGGER.info("File done");
             return Optional.empty();
           }
         } catch (IOException e) {
