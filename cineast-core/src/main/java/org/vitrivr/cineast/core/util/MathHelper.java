@@ -207,9 +207,7 @@ public class MathHelper {
 		}
 
 		if (Double.isNaN(sum) || sum < 0) {
-			for (int i=0; i<params.length; i++) {
-				params[i] = 1.0 / params.length;
-			}
+			Arrays.fill(params, 1.0 / params.length);
 		} else {
 			for (int i=0; i<params.length; i++) {
 				params[i] = params[i] / sum;
@@ -247,5 +245,31 @@ public class MathHelper {
 		public double getMaxValue() {
 			return maxValue;
 		}
+	}
+
+	//based on https://jonisalonen.com/2012/converting-decimal-numbers-to-ratios/
+	public static int[] toFraction(double d){
+		if (d < 0){
+			int[] fraction = toFraction(-d);
+			fraction[0] *= -1;
+			return fraction;
+		}
+
+		final double tolerance = 1.0E-6;
+		double h1 = 1d, h2 = 0d;
+		double k1 = 0d, k2 = 1d;
+		double b = d;
+		do {
+			double a = Math.floor(b);
+			double aux = h1;
+			h1 = a * h1 + h2;
+			h2 = aux;
+			aux = k1;
+			k1 = a * k1 + k2;
+			k2 = aux;
+			b = 1d / (b - a);
+		} while (Math.abs(d - h1 / k1) > d * tolerance);
+
+		return new int[]{(int) h1, (int) k1};
 	}
 }
