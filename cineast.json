@@ -12,8 +12,8 @@
   },
   "retriever": {
     "threadPoolSize": 2,
-    "maxResults": 200,
-    "resultsPerModule": 250,
+    "maxResults": 1000,
+    "resultsPerModule": 1500,
     "features": {
       "boolean" : [
         {"feature":  "DailyRangeBooleanRetriever", "weight": 1.0},
@@ -27,27 +27,21 @@
         {"feature": "AverageColor",  "weight": 2.3},
         {"feature": "MedianColor", "weight": 1.2},
         {"feature": "AverageFuzzyHist", "weight": 0.7},
-        {"feature": "AverageFuzzyHistNormalized", "weight": 0.7},
         {"feature": "HueHistogram", "weight": 0.7},
         {"feature": "MedianFuzzyHist",   "weight": 1.3 }
       ],
       "localcolor": [
         {"feature": "AverageColorARP44", "weight": 0.5},
         {"feature": "AverageColorARP44Normalized", "weight": 0.5},
-        {"feature": "SubDivAverageFuzzyColor", "weight": 0.5},
         {"feature": "SubDivMedianFuzzyColor", "weight": 0.85},
         {"feature": "AverageColorGrid8", "weight": 1.8},
         {"feature": "AverageColorGrid8Normalized", "weight": 1.8},
-        {"feature": "AverageColorCLD", "weight": 1.4},
-        {"feature": "AverageColorCLDNormalized", "weight": 1.4},
         {"feature": "CLD", "weight": 1.3},
         {"feature": "CLDNormalized", "weight": 1.3},
         {"feature": "MedianColorGrid8", "weight": 1.7},
         {"feature": "AverageColorRaster", "weight": 1.0}
       ],
       "edge": [
-        {"feature": "EdgeARP88", "weight": 0.85},
-        {"feature": "EdgeGrid16", "weight": 1.15},
         {"feature": "EHD", "weight": 0.7},
         {"feature": "DominantEdgeGrid16", "weight": 1.4},
         {"feature": "DominantEdgeGrid8", "weight": 1.4}
