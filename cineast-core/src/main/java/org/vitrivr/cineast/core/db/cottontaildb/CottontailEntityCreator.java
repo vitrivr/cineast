@@ -3,12 +3,15 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType;
+import javax.print.attribute.standard.Media;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 import java.util.ArrayList;
@@ -23,10 +26,8 @@ public class CottontailEntityCreator implements EntityCreator {
 
   private final CottontailWrapper cottontail;
 
-
-
   public CottontailEntityCreator(DatabaseConfig config){
-    this.cottontail = new CottontailWrapper(config);
+    this.cottontail = new CottontailWrapper(config, false);
     init();
   }
 
@@ -39,6 +40,26 @@ public class CottontailEntityCreator implements EntityCreator {
     cottontail.createSchema("cineast");
   }
 
+  @Override
+  public boolean createTagEntity(){
+    ArrayList<ColumnDefinition> columns = new ArrayList<>(4);
+    ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
+
+    columns.add(builder.clear().setName("id").setType(Type.STRING).build());
+    columns.add(builder.clear().setName(TagReader.TAG_NAME_COLUMNNAME).setType(Type.STRING).build());
+    columns.add(builder.clear().setName(TagReader.TAG_DESCRIPTION_COLUMNNAME).setType(Type.STRING).build());
+
+    CreateEntityMessage message = CreateEntityMessage.newBuilder()
+        .setEntity(CottontailMessageBuilder.entity(TagReader.TAG_ENTITY_NAME))
+        .addAllColumns(columns).build();
+
+    cottontail.createEntityBlocking(message);
+
+    this.createIndex(TagReader.TAG_ENTITY_NAME, "id", IndexType.HASH_UQ);
+    this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH);
+
+    return true;
+  }
 
   @Override
   public boolean createMultiMediaObjectsEntity() {
@@ -56,6 +77,8 @@ public class CottontailEntityCreator implements EntityCreator {
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
+
+    this.createIndex(MediaObjectDescriptor.ENTITY, MediaObjectDescriptor.FIELDNAMES[0], IndexType.HASH_UQ);
 
     return true;
   }
@@ -77,6 +100,8 @@ public class CottontailEntityCreator implements EntityCreator {
 
     cottontail.createEntityBlocking(message);
 
+    this.createIndex(MediaObjectMetadataDescriptor.ENTITY, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.HASH);
+
     return true;
   }
 
@@ -95,8 +120,18 @@ public class CottontailEntityCreator implements EntityCreator {
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
-
+    this.createIndex(MediaSegmentMetadataDescriptor.ENTITY, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.HASH);
     return true;
+  }
+
+  public void createIndex(String entityName, String attribute, IndexType type){
+    Entity entity = CottontailMessageBuilder.entity(entityName);
+    Index index = Index.newBuilder().setEntity(entity)
+        .setName("index-"+type.name().toLowerCase()+"-" + entity.getSchema().getName() + "_" + entity.getName() + "_"+attribute)
+        .setType(type).build();
+    /* Cottontail ignores index params as of july 19 */
+    CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute).build();
+    cottontail.createIndexBlocking(idxMessage);
   }
 
   @Override
@@ -117,6 +152,9 @@ public class CottontailEntityCreator implements EntityCreator {
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
+
+    this.createIndex(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[0], IndexType.HASH_UQ);
+    this.createIndex(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[1], IndexType.HASH);
 
     return true;
   }
@@ -171,10 +209,7 @@ public class CottontailEntityCreator implements EntityCreator {
 
     for (AttributeDefinition attribute : attributes) {
       if (attribute.getType() == TEXT) {
-        Index index = Index.newBuilder().setEntity(entity).setName("index-lucene-" + entity.getSchema().getName() + "_" + entityName + "_" + attribute.getName()).setType(IndexType.LUCENE).build();
-        /* Cottontail ignores index params as of july 19 */
-        CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute.getName()).build();
-        cottontail.createIndexBlocking(idxMessage);
+        this.createIndex(entityName, attribute.getName(), IndexType.LUCENE);
       }
     }
 
