@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.*;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 import static org.bytedeco.javacpp.avcodec.*;
 import static org.bytedeco.javacpp.avutil.*;
@@ -16,7 +17,7 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
     private AVFrame rgbFrame, outFrame;
     private swscale.SwsContext sws_ctx;
 
-    VideoOutputStreamContainer(int width, int height, int bitRate, int frameRate, avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
+    VideoOutputStreamContainer(int width, int height, int bitRate, float frameRate, avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
         super(oc, codec_id);
 
         if (codec.type() != avutil.AVMEDIA_TYPE_VIDEO) {
@@ -24,6 +25,7 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
             return;
         }
 
+        int[] frameRateFraction = MathHelper.toFraction(frameRate);
 
         c.bit_rate(bitRate);
         c.width(width);
@@ -34,14 +36,14 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
         c.pix_fmt(avutil.AV_PIX_FMT_YUV420P);
 
         AVRational timeBase = new AVRational();
-        timeBase.num(1);
-        timeBase.den(frameRate);
+        timeBase.num(frameRateFraction[1]);
+        timeBase.den(frameRateFraction[0]);
         st.time_base(timeBase);
         c.time_base(st.time_base());
 
         AVRational fps = new AVRational();
-        fps.den(1);
-        fps.num(frameRate);
+        fps.den(frameRateFraction[1]);
+        fps.num(frameRateFraction[0]);
         c.framerate(fps);
 
         if (c.codec_id() == avcodec.AV_CODEC_ID_MPEG2VIDEO) {

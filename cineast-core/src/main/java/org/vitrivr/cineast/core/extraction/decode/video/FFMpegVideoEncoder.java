@@ -3,14 +3,10 @@ package org.vitrivr.cineast.core.extraction.decode.video;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.avformat;
-import org.vitrivr.cineast.core.config.CacheConfig;
-import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -41,7 +37,7 @@ public class FFMpegVideoEncoder {
 
     private boolean useAudio = false;
 
-    public FFMpegVideoEncoder(int width, int height, int frameRate, int sampleRate, String filename, boolean useAudio){
+    public FFMpegVideoEncoder(int width, int height, float frameRate, int sampleRate, String filename, boolean useAudio){
 
         this.useAudio = useAudio;
 
@@ -166,69 +162,5 @@ public class FFMpegVideoEncoder {
 
     }
 
-//    //Test stuff
-//    public static void main(String[] args) throws IOException {
-////
-////        BufferedImage testImg = ImageIO.read(new File("img.jpg"));
-////
-////        MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
-////
-////        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), 25,"out.mp4", true);
-////
-////
-////        if(mux.useAudio) {
-////            /* init signal generator */
-////            t = 0;
-////            tincr = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate());
-////            /* increment frequency by 110 Hz per second */
-////            tincr2 = (float) (2 * M_PI * 110.0 / mux.audio_st.c.sample_rate() / mux.audio_st.c.sample_rate());
-////        }
-////
-////        for (int i = 0; i < 250; ++i){
-////
-////
-////            mux.add(img);
-////
-////            while(mux.useAudio && mux.audioQueue.isEmpty()){
-////                mux.add(generateDummyAudioFrame(mux.audio_st.tmp_frame.nb_samples()));
-////            }
-////
-////        }
-////
-////        mux.close();
-//
-//        FFMpegVideoDecoder decoder = new FFMpegVideoDecoder();
-//        decoder.init(Path.of("bbb.mp4"), new DecoderConfig(), new CacheConfig());
-//
-//        Queue<VideoFrame> tmpFrames = new LinkedList<>();
-//        AudioFrame firstAudioFrame = null;
-//        VideoFrame frame = null;
-//        while(firstAudioFrame == null){
-//            frame = decoder.getNext();
-//            tmpFrames.add(frame);
-//
-//            if (frame.getAudio().isPresent()){
-//                firstAudioFrame = frame.getAudio().get();
-//            }
-//        }
-//
-//        frame = tmpFrames.peek();
-//
-//        FFMpegVideoEncoder mux = new FFMpegVideoEncoder(frame.getImage().getWidth(), frame.getImage().getHeight(), (int)frame.getDescriptor().getFps(), (int)firstAudioFrame.getSamplingrate(),"out.mp4", true);
-//
-//        while (!tmpFrames.isEmpty()){
-//            mux.add(tmpFrames.poll());
-//        }
-//
-//        for (int i = 0; i < 242; ++i){
-//            frame = decoder.getNext();
-//            mux.add(frame);
-//            System.out.println(i);
-//        }
-//
-//        decoder.close();
-//        mux.close();
-//
-//    }
 
 }
