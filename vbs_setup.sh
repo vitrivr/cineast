@@ -22,7 +22,7 @@ sleep $sleep
 echo "setting up"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json setup --clean >> vbs_setup.log
 echo "importing proto files"
-java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type PROTO --input $base/extracted_combined/ --threads $threads >> proto_import.log
+java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type PROTO --input $base/extracted_combined/ --batchsize 400 --threads $threads >> proto_import.log
 echo "importing text & metadata"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type AUDIOTRANSCRIPTION --input $base/text/audiomerge.json --threads $threads --batchsize 15000 >> text_import.log
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type CAPTIONING --input $base/text/captions.json --threads $threads >> text_import.log
@@ -38,4 +38,4 @@ echo "optimizing"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json optimize >> vbs_optimize.log
 restart_cottontail
 sleep $sleep
-tmux new-window -d -n cineast "java -jar cineast-runtime/build/libs/cineast-api-2.5-full.jar vbs.json"
+tmux new-window -d -n cineast "java -jar cineast-api/build/libs/cineast-api-2.5-full.jar vbs.json"
