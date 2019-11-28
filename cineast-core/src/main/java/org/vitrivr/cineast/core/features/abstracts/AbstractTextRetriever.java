@@ -20,6 +20,8 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is a proof of concept class and will probably be replaced by a more general solution to text
@@ -128,8 +130,21 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Generate a query term which will then be used for retrieval.
    */
+  private final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return sc.getText().split(" ");
+
+    Matcher m = regex.matcher(sc.getText());
+    ArrayList<String> matches = new ArrayList<>();
+
+    while (m.find()){
+      String match = m.group(1).replace("\"", "").trim();
+      if (!match.isEmpty()){
+        matches.add(match);
+      }
+    }
+
+    return matches.toArray(new String[matches.size()]);
   }
   /**
    * Convenience-Method for implementing classes once they have generated their query terms
