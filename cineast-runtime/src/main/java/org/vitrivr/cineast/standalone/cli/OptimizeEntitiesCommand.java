@@ -12,8 +12,12 @@ public class OptimizeEntitiesCommand implements Runnable {
 
   @Override
   public void run() {
+    optimizeAllCottontailEntities();
+  }
+
+  public static void optimizeAllCottontailEntities() {
     if (Config.sharedConfig().getDatabase().getSelector() != Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != Writer.COTTONTAIL) {
-      System.out.println("Cottontail is not both selector & writer in the config. exiting");
+      System.err.println("Cottontail is not both selector & writer in the config. exiting");
       return;
     }
     System.out.println("Optimizing all entities for schema cineast in Cottontail");

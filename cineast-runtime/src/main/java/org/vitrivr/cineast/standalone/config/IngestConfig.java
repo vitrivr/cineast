@@ -330,6 +330,18 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
+     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
+     * memory until the batchsize limit is hit at which point they will be persisted.
+     *
+     * @return Batch size.
+     */
+    @Override
+    public Integer batchSize() {
+        return this.database.getBatchsize();
+    }
+
+
+    /**
      * Returns the DBSelectorSupplier that can be used during the extraction run to obtain
      * a DBSelector instance.
      *
@@ -376,17 +388,6 @@ public final class IngestConfig implements ExtractionContextProvider {
     @Override
     public Integer segmentQueueSize() {
         return this.pipeline.getShotQueueSize();
-    }
-
-    /**
-     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
-     * memory until the batchsize limit is hit at which point they will be persisted.
-     *
-     * @return Batch size.
-     */
-    @Override
-    public Integer getBatchsize() {
-        return this.database.getBatchsize();
     }
 
     /**

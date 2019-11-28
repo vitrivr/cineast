@@ -13,6 +13,8 @@ import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWriter;
 import org.vitrivr.cineast.core.db.json.JsonFileWriter;
 import org.vitrivr.cineast.core.db.json.JsonSelector;
+import org.vitrivr.cineast.core.db.memory.InMemoryEntityCreator;
+import org.vitrivr.cineast.core.db.memory.InMemoryWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.NoEntityCreator;
 
@@ -50,7 +52,8 @@ public final class DatabaseConfig {
     NONE,
     JSON,
     ADAMPRO,
-    COTTONTAIL
+    COTTONTAIL,
+    INMEMORY
   }
 
   public enum Selector {
@@ -58,7 +61,8 @@ public final class DatabaseConfig {
     JSON,
     ADAMPRO,
     ADAMPROSTREAM,
-    COTTONTAIL
+    COTTONTAIL,
+    INMEMORY
   }
 
   private ADAMproWrapper adaMproWrapper = null;
@@ -163,8 +167,11 @@ public final class DatabaseConfig {
           }
           return () -> new CottontailWriter(new CottontailWrapper(this, true));
       }
+      case INMEMORY: {
+        return InMemoryWriter::new;
+      }
       default:
-        throw new IllegalStateException("no supplier for writer " + this.writer);
+        throw new IllegalStateException("No supplier for writer " + this.writer);
 
     }
   }
@@ -198,7 +205,7 @@ public final class DatabaseConfig {
           return () -> new CottontailSelector(new CottontailWrapper(this, true));
       }
       default:
-        throw new IllegalStateException("no supplier for selector " + this.selector);
+        throw new IllegalStateException("No supplier for selector " + this.selector);
 
     }
   }
@@ -222,8 +229,10 @@ public final class DatabaseConfig {
           }
           return () -> new CottontailEntityCreator(new CottontailWrapper(this, true));
       }
+      case INMEMORY:
+        return InMemoryEntityCreator::new;
       default:
-        throw new IllegalStateException("no supplier for EntityCreator " + this.selector);
+        throw new IllegalStateException("No supplier for EntityCreator " + this.selector);
     }
   }
 }

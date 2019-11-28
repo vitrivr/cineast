@@ -3,6 +3,7 @@ cineast_cache*
 
 *.orig
 *.class
+*.log
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

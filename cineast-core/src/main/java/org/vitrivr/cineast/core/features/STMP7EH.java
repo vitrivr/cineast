@@ -20,7 +20,7 @@ public class STMP7EH extends EHD {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply) {
+  public void init(PersistencyWriterSupplier supply, int batchSize) {
     this.phandler = supply.get();
     this.phandler.open("features_STMP7EH");
   }

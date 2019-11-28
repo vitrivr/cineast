@@ -66,9 +66,8 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
-    this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName,
-        10);
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+    this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName, batchSize);
   }
 
   @Override

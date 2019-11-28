@@ -99,6 +99,7 @@ public class ImportCommand implements Runnable {
         classificationsImportHandler.doImport(path);
         break;
       case V3C1COLORLABELS:
+        /* Be aware that this is metadata which might already be comprised in merged vbs metadata*/
         ColorlabelImportHandler colorImportHandler = new ColorlabelImportHandler(this.threads, this.batchsize);
         colorImportHandler.doImport(path);
         break;

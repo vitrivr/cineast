@@ -27,6 +27,9 @@ subprojects {
 
     apply plugin: "java"
 
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     repositories {
         jcenter()
         mavenCentral()
@@ -39,9 +42,6 @@ subprojects {
         options.compilerArgs += enabledWarnings
     }
     compileTestJava.options.compilerArgs += enabledWarnings
-
-
-
 
     dependencies {
         /** Log4j 2 */

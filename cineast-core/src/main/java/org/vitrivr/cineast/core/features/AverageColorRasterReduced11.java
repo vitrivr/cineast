@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 public class AverageColorRasterReduced11 extends AverageColorRaster {
 
 	@Override
-	public void init(PersistencyWriterSupplier supply) {
+	public void init(PersistencyWriterSupplier supply, int batchSize) {
+		/* TODO: Respect batchSize. */
 		this.phandler = supply.get();
 		this.phandler.open("features_AverageColorRasterReduced11");
 		this.phandler.setFieldNames("id", "raster", "hist");

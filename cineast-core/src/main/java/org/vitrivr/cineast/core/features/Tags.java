@@ -139,7 +139,7 @@ public class Tags implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
     this.phandler = phandlerSupply.get();
     this.phandler.setFieldNames("id", "tag", "score");
   }

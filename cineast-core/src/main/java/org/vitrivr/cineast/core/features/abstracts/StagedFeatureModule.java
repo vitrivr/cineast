@@ -41,9 +41,11 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     private final BenchmarkEngine benchmark_engine = BenchmarkManager.getInstance().getDefaultEngine();
 
     /**
+     * Constructor
      *
-     * @param tableName
-     * @param maxDist
+     * @param tableName Name of the entity / table to persist data with and read data from.
+     * @param maxDist Maximum distance value (for normalization).
+     * @param vectorLength Dimensionality of the feature vector.
      */
     protected StagedFeatureModule(String tableName, float maxDist, int vectorLength) {
         super(tableName, maxDist, vectorLength);
