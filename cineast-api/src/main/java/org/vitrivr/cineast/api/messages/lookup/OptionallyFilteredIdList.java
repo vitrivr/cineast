@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
@@ -60,5 +62,13 @@ public class OptionallyFilteredIdList implements Message {
 
   public List<AbstractMetadataFilterDescriptor> getFilterList(){
     return Arrays.asList(this.filters);
+  }
+
+  @Override
+  public String toString() {
+    return "OptionallyFilteredIdList{" +
+            "filters=" + Arrays.toString(filters) +
+            ", ids=" + Arrays.toString(ids) +
+            '}';
   }
 }

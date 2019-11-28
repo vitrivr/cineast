@@ -34,4 +34,11 @@ public class Ping implements Message {
     public MessageType getMessageType() {
         return MessageType.PING;
     }
+
+    @Override
+    public String toString() {
+        return "Ping{" +
+                "status=" + status +
+                '}';
+    }
 }

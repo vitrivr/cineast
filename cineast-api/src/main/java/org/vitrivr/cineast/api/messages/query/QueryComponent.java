@@ -25,14 +25,20 @@ public class QueryComponent {
    */
   private final List<QueryTerm> terms;
 
+  /**
+   * The client-generated uuid for this container for reference purposes
+   */
+  private final String containerId;
+
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Constructor for QueryComponent.
    */
   @JsonCreator
-  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms) {
+  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms, @JsonProperty("containerId") String containerId) {
     this.terms = terms;
+    this.containerId = containerId;
   }
 
   /**
@@ -70,6 +76,7 @@ public class QueryComponent {
           }
           final QueryContainer container = term.toContainer();
           if (container != null) {
+            container.setId(component.containerId);
             categoryMap.get(category).add(container);
           } else {
             LOGGER.warn("Null container generated for term {}", term);

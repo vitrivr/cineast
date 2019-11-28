@@ -20,4 +20,11 @@ public class AnyMessage implements Message {
     public void setMessagetype(MessageType messageType) {
         this.messageType = messageType;
     }
+
+    @Override
+    public String toString() {
+        return "AnyMessage{" +
+                "messageType=" + messageType +
+                '}';
+    }
 }

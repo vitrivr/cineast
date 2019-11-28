@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
@@ -28,4 +30,10 @@ public class IdList implements Message {
     return null;
   }
 
+  @Override
+  public String toString() {
+    return "IdList{" +
+            "ids=" + Arrays.toString(ids) +
+            '}';
+  }
 }

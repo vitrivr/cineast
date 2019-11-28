@@ -36,4 +36,5 @@ public class NeighboringSegmentQuery extends Query {
     public MessageType getMessageType() {
         return MessageType.Q_NESEG;
     }
+
 }

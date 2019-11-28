@@ -146,6 +146,12 @@ public class QueryConfig extends ReadableQueryConfig {
         return this;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * Using {@link ReflectionToStringBuilder} with MULTI_LINE_STYLE
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

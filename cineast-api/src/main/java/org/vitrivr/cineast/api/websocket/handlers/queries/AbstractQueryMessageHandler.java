@@ -59,6 +59,10 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param message Message of type a that needs to be handled.
    */
   public final void handle(Session session, T message) {
+    if(message == null){
+      LOGGER.warn("Received null message. Ignoring.");
+      return;
+    }
     try {
       final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
       final String uuid = qconf.getQueryId().toString();

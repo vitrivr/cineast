@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.GroupingUtil;
 
 import java.util.Collection;
@@ -67,7 +68,10 @@ public interface ScoreElement {
 
     /**
      * Merges the entries in a collection of ScoreElements into the provided TObjectDoubleHashMap where the ScoreElements ID serves as key
-     * and its score serves as value. If an entry already exists, the value of that entry is adjusted. Every score-value is multiplied with a weight before being merged to the map.
+    * and its score serves as value. If an entry already exists, the value of that entry is adjusted. Every score-value is multiplied with a weight before being merged to the map.
+     *
+     * <b>TemporalScoring Hack</b> If the Collection contains elements of type SegmentScoreElement, then the key of the map is of format
+     * <code>{@link SegmentScoreElement#getId()}${@link SegmentScoreElement#getQueryContainerId()}</<code> (i.e. id$qcid)
      *
      * @param collection The collection of ScoreElements to merge.
      * @param map The score-map to merge the elements into.
@@ -82,6 +86,30 @@ public interface ScoreElement {
             }
             double weightedScore = score * weight;
             map.adjustOrPutValue(element.getId(), weightedScore, weightedScore);
+        }
+        return map;
+    }
+
+    /**
+     * Merges the entries in a collection of ScoreElements into the provided TObjectDoubleHashMap where the ScoreElements ID serves as key
+     * and its score serves as value. If an entry already exists, the value of that entry is adjusted. Every score-value is multiplied with a weight before being merged to the map.
+     *
+     * <b>TemporalScoring Hack</b> If the Collection contains elements of type SegmentScoreElement, then the key of the map is of format
+     * <code>{@link SegmentScoreElement#getId()}${@link SegmentScoreElement#getQueryContainerId()}</<code> (i.e. id$qcid)
+     *
+     * @param collection The collection of ScoreElements to merge.
+     * @param map The score-map to merge the elements into.
+     * @param weight The weight that should be applied to each score.
+     * @return TObjectDoubleHashMap
+     */
+    static TObjectDoubleHashMap<Pair<String,String>> mergeWithSegmentScoreMap(Collection<SegmentScoreElement> collection, TObjectDoubleHashMap<Pair<String,String>> map, double weight) {
+        for (SegmentScoreElement element : collection) {
+            double score = element.getScore();
+            if (Double.isInfinite(score) || Double.isNaN(score)) {
+                continue;
+            }
+            double weightedScore = score * weight;
+                map.adjustOrPutValue(new Pair<>(element.getId(), element.getQueryContainerId()), weightedScore, weightedScore);
         }
         return map;
     }

@@ -58,4 +58,12 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
             return 0;
         }
     }
+
+    @Override
+    public String toString() {
+        return "AbstractQueryResultMessage{" +
+                "content=" + content +
+                ", queryId='" + queryId + '\'' +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.result;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
@@ -36,5 +38,12 @@ public class QueryEnd implements Message {
      */
     public String getQueryId() {
         return queryId;
+    }
+
+    @Override
+    public String toString() {
+        return "QueryEnd{" +
+                "queryId='" + queryId + '\'' +
+                '}';
     }
 }
