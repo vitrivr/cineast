@@ -55,3 +55,7 @@ index*
 /db/**/*.json
 
 /benchmark-default.csv
+
+*.hogcb
+*.surfcb
+*.pb
