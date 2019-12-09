@@ -32,10 +32,8 @@ java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json impor
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1CLASSIFICATIONS --input $base/text/V3C1Analysis --threads $threads --batchsize 25000 >> text_import.log
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json import --type V3C1FACES --input $base/text/V3C1Analysis/faces --threads $threads --batchsize 25000 >> text_import.log
 
-restart_cottontail
 sleep $sleep
 echo "optimizing"
 java -jar cineast-runtime/build/libs/cineast-runtime-2.5-full.jar vbs.json optimize >> vbs_optimize.log
-restart_cottontail
 sleep $sleep
 tmux new-window -d -n cineast "java -jar cineast-api/build/libs/cineast-api-2.5-full.jar vbs.json"
