@@ -1,23 +1,59 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
+import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where.PredicateCase;
 import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.googlecode.javaewah.datastructure.BitSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.providers.primitive.*;
+import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.*;
 
 public class CottontailMessageBuilder {
 
@@ -51,78 +87,93 @@ public class CottontailMessageBuilder {
     return projection.build();
   }
 
-  public static AtomicLiteralBooleanPredicate atomicPredicate(
-      String attribute, RelationalOperator operator, Data... data) {
+  public static AtomicLiteralBooleanPredicate.Operator toOperator(RelationalOperator op) {
+    switch (op) {
+      case EQ:
+        return Operator.EQUAL;
+      case NEQ:
+        //this has to be not-ed!!
+        return Operator.EQUAL;
+      case GEQ:
+        return Operator.GEQUAL;
+      case LEQ:
+        return Operator.LEQUAL;
+      case GREATER:
+        return Operator.GREATER;
+      case LESS:
+        return Operator.LESS;
+      case BETWEEN:
+        return Operator.BETWEEN;
+      case LIKE:
+        return Operator.LIKE;
+      case ILIKE:
+      case RLIKE:
+      case NLIKE:
+        throw new UnsupportedOperationException();
+      case ISNULL:
+        return Operator.ISNULL;
+      case ISNOTNULL:
+        return Operator.ISNOTNULL;
+      case IN:
+        return Operator.IN;
+    }
+    throw new UnsupportedOperationException(op.toString());
+  }
+
+  public static AtomicLiteralBooleanPredicate atomicPredicate(String attribute, RelationalOperator operator, Data... data) {
     AtomicLiteralBooleanPredicate.Builder builder = AtomicLiteralBooleanPredicate.newBuilder().setAttribute(attribute);
     if (data != null) {
       for (Data d : data) {
         builder.addData(d);
       }
     }
-
-    switch (operator) {
-      case EQ: {
-        builder.setOp(Operator.EQUAL);
-        break;
-      }
-      case NEQ: {
-        builder.setOp(Operator.EQUAL).setNot(true);
-        break;
-      }
-      case GEQ: {
-        builder.setOp(Operator.GEQUAL);
-        break;
-      }
-      case LEQ: {
-        builder.setOp(Operator.LEQUAL);
-        break;
-      }
-      case GREATER: {
-        builder.setOp(Operator.GREATER);
-        break;
-      }
-      case LESS: {
-        builder.setOp(Operator.LESS);
-        break;
-      }
-      case BETWEEN: {
-        builder.setOp(Operator.BETWEEN);
-        break;
-      }
-      case LIKE: { // currently not supported
-        builder.setOp(Operator.LIKE);
-        break;
-      }
-      case ILIKE: { // currently not supported
-        break;
-      }
-      case NLIKE: { // currently not supported
-        break;
-      }
-      case RLIKE: { // currently not supported
-        break;
-      }
-      case ISNULL: {
-        builder.setOp(Operator.ISNULL);
-        break;
-      }
-      case ISNOTNULL: {
-        builder.setOp(Operator.ISNOTNULL);
-        break;
-      }
-
-      case IN: {
-        builder.setOp(Operator.IN);
-        break;
-      }
+    builder.setOp(toOperator(operator));
+    if (operator == NEQ) {
+      builder.setNot(true);
     }
-
     return builder.build();
   }
 
   public static Where atomicWhere(String attribute, RelationalOperator operator, Data... data) {
     return Where.newBuilder().setAtomic(atomicPredicate(attribute, operator, data)).build();
   }
+
+  public static ImmutablePair<PredicateCase, Object> recursiveCompoundOrWhere(String fieldname, RelationalOperator operator, Data... data) {
+    if (data.length == 1) {
+      return ImmutablePair.of(PredicateCase.ATOMIC, atomicPredicate(fieldname, operator, data));
+    }
+
+    Builder builder = CompoundBooleanPredicate.newBuilder();
+    builder.setAleft(atomicPredicate(fieldname, operator, data[0]));
+    builder.setOp(CompoundBooleanPredicate.Operator.OR);
+    if (data.length == 2) {
+      builder.setAright(atomicPredicate(fieldname, operator, data[1]));
+      return ImmutablePair.of(PredicateCase.COMPOUND, builder.build());
+    }
+    ImmutablePair<PredicateCase, Object> pair = recursiveCompoundOrWhere(fieldname, operator, Arrays.copyOfRange(data, 1, data.length));
+    if (pair.left == PredicateCase.ATOMIC) {
+      builder.setAright((AtomicLiteralBooleanPredicate) pair.right);
+    }
+    if (pair.left == PredicateCase.COMPOUND) {
+      builder.setCright((CompoundBooleanPredicate) pair.right);
+    }
+    return ImmutablePair.of(PredicateCase.COMPOUND, builder.build());
+  }
+
+  public static Where compoundOrWhere(String fieldname, RelationalOperator operator, Data... data) {
+    if (data.length == 1) {
+      return atomicWhere(fieldname, operator, data);
+    }
+    ImmutablePair<PredicateCase, Object> pair = recursiveCompoundOrWhere(fieldname, operator, data);
+    if (pair.left == PredicateCase.ATOMIC) {
+      return Where.newBuilder().setAtomic((AtomicLiteralBooleanPredicate) pair.right).build();
+    }
+    if (pair.left == PredicateCase.COMPOUND) {
+      return Where.newBuilder().setCompound((CompoundBooleanPredicate) pair.right).build();
+    }
+    throw new IllegalStateException(Arrays.toString(data));
+  }
+
 
   public static Query query(Entity entity, Projection projection, Where where, Knn knn) {
     Query.Builder queryBuilder = Query.newBuilder();
@@ -161,7 +212,7 @@ public class CottontailMessageBuilder {
       return dataBuilder.setDoubleData((double) o).build();
     }
 
-    if(o instanceof Long){
+    if (o instanceof Long) {
       return dataBuilder.setLongData((long) o).build();
     }
 
@@ -174,9 +225,9 @@ public class CottontailMessageBuilder {
     }
 
     if (o instanceof BitSet) {
-      final boolean[] vector = new boolean[((BitSet)o).size()];
-      for (int i = 0; i<((BitSet) o).size(); i++) {
-          vector[i] = ((BitSet) o).get(i);
+      final boolean[] vector = new boolean[((BitSet) o).size()];
+      for (int i = 0; i < ((BitSet) o).size(); i++) {
+        vector[i] = ((BitSet) o).get(i);
       }
       return dataBuilder.setVectorData(toVector(vector)).build();
     }
@@ -220,6 +271,11 @@ public class CottontailMessageBuilder {
     return dataBuilder.setStringData(o.toString()).build();
   }
 
+
+  public static Data toDatas(Object... objects) {
+    return toDatas(objects);
+  }
+
   public static Data[] toDatas(Iterable<?> objects) {
     ArrayList<Data> tmp = new ArrayList<>();
 
@@ -234,7 +290,6 @@ public class CottontailMessageBuilder {
   }
 
   public static PrimitiveTypeProvider fromData(Data d) {
-
     switch (d.getDataCase()) {
       case BOOLEANDATA:
         return new BooleanTypeProvider(d.getBooleanData());

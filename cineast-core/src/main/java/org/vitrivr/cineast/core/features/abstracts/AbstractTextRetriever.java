@@ -130,7 +130,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Generate a query term which will then be used for retrieval.
    */
-  private final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+  private static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
 
