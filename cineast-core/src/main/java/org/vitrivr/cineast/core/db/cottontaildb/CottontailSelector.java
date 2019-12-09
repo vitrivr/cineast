@@ -14,6 +14,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import com.google.common.collect.Iterables;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -181,7 +182,7 @@ public class CottontailSelector implements DBSelector {
     if (terms.length == 1) {
       where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(terms[0]));
     } else {
-      where = CottontailMessageBuilder.compoundOrWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(terms));
+      where = CottontailMessageBuilder.compoundOrWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
     }
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 

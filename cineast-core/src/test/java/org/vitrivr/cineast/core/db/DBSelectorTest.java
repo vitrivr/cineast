@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -75,6 +76,7 @@ public abstract class DBSelectorTest<R> {
     vectors.add(writer.generateTuple(4, "double"));
     vectors.add(writer.generateTuple(5, "hello"));
     vectors.add(writer.generateTuple(6, "world"));
+    vectors.add(writer.generateTuple(7, "hello world my name is cineast"));
     writer.persist(vectors);
   }
 
@@ -139,7 +141,7 @@ public abstract class DBSelectorTest<R> {
     selector.open(testVectorTableName);
     Assertions.assertEquals(10, selector.getAll().size());
     selector.open(testTextTableName);
-    Assertions.assertEquals(6, selector.getAll().size());
+    Assertions.assertEquals(7, selector.getAll().size());
   }
 
   @Test
@@ -153,21 +155,12 @@ public abstract class DBSelectorTest<R> {
     Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
   }
 
-  @Test
-  @DisplayName("Text: One el, LIKE")
-  void textRetrievalSingleLike() {
-    selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(TEXT_COL_NAME, RelationalOperator.LIKE, "hello");
-    Assertions.assertEquals(2, results.size());
-    checkContains(results, "hello");
-    checkContains(results, "hello world");
-  }
 
-  private void checkContains(List<Map<String, PrimitiveTypeProvider>> results, String text) {
+  private void checkContains(List<Map<String, PrimitiveTypeProvider>> results, String col, Function<PrimitiveTypeProvider, Boolean> function) {
     AtomicBoolean match = new AtomicBoolean(false);
     results.forEach(map -> {
       map.forEach((key, value) -> {
-        if (key.equals(TEXT_COL_NAME) && value.getString().equals(text)) {
+        if (key.equals(col) && function.apply(value)) {
           match.set(true);
         }
       });
@@ -175,48 +168,75 @@ public abstract class DBSelectorTest<R> {
     if (match.get()) {
       return;
     }
-    Assertions.fail("string " + text + " not found in results: \n" + new Gson().toJson(results));
+    Assertions.fail("element not found in results: \n" + new Gson().toJson(results));
   }
 
   @Test
-  @DisplayName("Text: One el, EQ")
-  void textRetrievalSingleEq() {
+  @DisplayName("Text: One el, LIKE")
+  void textRetrievalSingleLike() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(TEXT_COL_NAME, RelationalOperator.EQ, "hello");
-    Assertions.assertEquals(1, results.size());
-    checkContains(results, "hello");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello");
+    Assertions.assertEquals(3, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 5);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
+  }
+
+  @Test
+  @DisplayName("Text: One el (two words), LIKE")
+  void textRetrievalSingleTwoWordsLike() {
+    selector.open(testTextTableName);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "\"hello world\"");
+    Assertions.assertEquals(2, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
 
   @Test
   @DisplayName("Text: One el, Fuzzy")
   void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(TEXT_COL_NAME, RelationalOperator.LIKE, "hello~0.5");
-    Assertions.assertEquals(3, results.size());
-    checkContains(results, "hello");
-    checkContains(results, "hello world");
-    checkContains(results, "hella world");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello~1");
+    Assertions.assertEquals(4, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 2);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 5);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
+
+  @Test
+  @DisplayName("Text: One el (Two words), Fuzzy")
+  void testRetrievalSingleTwoWordsFuzzy() {
+    /*
+     * Fuzzy search on whole phrases is currently not supported.
+     * Something like "hello world"~1 would need to be implemented as either hello~1 AND world~1, but that is not implemented in the DBSelector / cottontail.
+     * The cottontail implementation in december 19 parses hello world~1 as hello .. world~1, which is not what we're looking for
+     * Therefore, this test serves as a note that this functionality is lacking.
+     */
+    return;
+  }
+
 
   @Test
   @DisplayName("Text: Two els")
   void testRetrievalTwo() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(TEXT_COL_NAME, RelationalOperator.LIKE, "single", "double");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double");
     Assertions.assertEquals(2, results.size());
-    checkContains(results, "single");
-    checkContains(results, "double");
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
   }
 
   @Test
   @DisplayName("Text: Three els")
   void testRetrievalThree() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(TEXT_COL_NAME, RelationalOperator.LIKE, "single", "double", "hello world");
-    Assertions.assertEquals(3, results.size());
-    checkContains(results, "single");
-    checkContains(results, "double");
-    checkContains(results, "hello world");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double", "\"hello world\"");
+    Assertions.assertEquals(4, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
 
 }

@@ -271,11 +271,6 @@ public class CottontailMessageBuilder {
     return dataBuilder.setStringData(o.toString()).build();
   }
 
-
-  public static Data toDatas(Object... objects) {
-    return toDatas(objects);
-  }
-
   public static Data[] toDatas(Iterable<?> objects) {
     ArrayList<Data> tmp = new ArrayList<>();
 
