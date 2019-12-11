@@ -90,9 +90,7 @@ public class CottontailMessageBuilder {
   public static AtomicLiteralBooleanPredicate.Operator toOperator(RelationalOperator op) {
     switch (op) {
       case EQ:
-        return Operator.EQUAL;
-      case NEQ:
-        //this has to be not-ed!!
+      case NEQ: //this has to be not-ed!!
         return Operator.EQUAL;
       case GEQ:
         return Operator.GEQUAL;
@@ -105,11 +103,10 @@ public class CottontailMessageBuilder {
       case BETWEEN:
         return Operator.BETWEEN;
       case LIKE:
-        return Operator.LIKE;
-      case ILIKE:
+      case ILIKE: //TODO map differently?
       case RLIKE:
       case NLIKE:
-        throw new UnsupportedOperationException();
+        return Operator.LIKE;
       case ISNULL:
         return Operator.ISNULL;
       case ISNOTNULL:
