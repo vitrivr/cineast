@@ -674,14 +674,5 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         return supportedFiles;
     }
 
-    /**
-     * Closes the {@link FFMpegVideoDecoder} if this hasn't happened yet.
-     *
-     * @throws Throwable On error
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
+
 }

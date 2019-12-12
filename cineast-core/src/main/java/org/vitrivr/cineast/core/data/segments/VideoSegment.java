@@ -314,11 +314,6 @@ public class VideoSegment implements SegmentContainer {
         this.movieId = id;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        clear();
-        super.finalize();
-    }
 
     @Override
     public List<SubtitleItem> getSubtitleItems() {

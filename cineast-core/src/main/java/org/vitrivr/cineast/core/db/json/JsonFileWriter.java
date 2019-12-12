@@ -89,12 +89,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   public boolean exists(String key, String value) {
     return false;
   }
-  
-  @Override
-  protected void finalize() throws Throwable {
-    close();
-    super.finalize();
-  }
+
   
   @Override
   public JsonObject getPersistentRepresentation(PersistentTuple tuple) {

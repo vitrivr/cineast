@@ -128,17 +128,6 @@ public class CachedByteData implements ByteData {
     }
 
     /**
-     * Finalizes this {@link CachedByteData}: Discards the cache file.
-     */
-    public void finalize() {
-        try {
-            Files.deleteIfExists(this.file);
-        } catch (IOException e) {
-            LOGGER.error("Failed to delete cache file at {}!", this.file);
-        }
-    }
-
-    /**
      * Reads the content of this {@link CachedByteData} object from the cache file. If the cache file exists and is readable,
      * this method guarantees to return the {@link ByteBuffer} object that contains the data in the cache.
      *

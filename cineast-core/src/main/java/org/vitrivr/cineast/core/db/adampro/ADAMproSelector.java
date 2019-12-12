@@ -332,11 +332,6 @@ public class ADAMproSelector extends AbstractADAMproSelector {
         return executeQuery(qbqm);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
 
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {

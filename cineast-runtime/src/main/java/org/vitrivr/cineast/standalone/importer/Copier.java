@@ -117,11 +117,6 @@ public class Copier implements AutoCloseable {
 
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		this.close();
-		super.finalize();
-	}
 
 	@Override
 	public void close(){
