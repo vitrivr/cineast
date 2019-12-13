@@ -87,6 +87,25 @@ public class QueryComponent {
     return categoryMap;
   }
 
+  /**
+   * Converts the provided collection of {@link QueryComponent} object to a map of {@link QueryContainer} and their categories.
+   *
+   * @return A map of querycontainers with their associated categories
+   */
+  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components){
+    final HashMap<QueryContainer, List<String>> map = new HashMap<>();
+    if(components.isEmpty()){
+      LOGGER.warn("Empty components collection, returning empty list of containers");
+    }else{
+      for(QueryComponent component: components){
+        for(QueryTerm qt : component.getTerms()){
+          map.put(qt.toContainer(), qt.getCategories());
+        }
+      }
+    }
+    return map;
+  }
+
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

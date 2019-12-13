@@ -5,6 +5,7 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.ExtendedSimilarityQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
@@ -24,6 +25,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,38 +59,32 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         /* Prepare QueryConfig (so as to obtain a QueryId). */
         final String uuid = qconf.getQueryId().toString();
 
-
         LOGGER.debug("Received SimilarityQuery: {}", DEBUG_OBJECT_MAPPER.writeValueAsString(message));
 
-        /*  Prepare map that maps category  to QueryTerm components. */
-        final HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryComponent.toCategoryMap(message.getComponents());
-        /* Add query id to each querycontainer, so that "superid" is used */
-        categoryMap.values().stream().forEach(list -> {
-            list.forEach(qc -> qc.setSuperId(uuid));
-        });
+        /* Prepare map that maps QueryTerms (as QueryContainer, ready for retrieval) and their associated categories */
+        final HashMap<QueryContainer, List<String>> containerCategoryMap = QueryComponent.toContainerMap(message.getComponents());
 
-        /*  Execute similarity queries for all Category -> QueryContainer combinations in the map. */
-        for (String category : categoryMap.keySet()) {
-            final TObjectDoubleHashMap<Pair<String,String>> map = new TObjectDoubleHashMap<>();
-            for (QueryContainer qc : categoryMap.get(category)) {
-                /* Merge partial results with score-map. */
-                float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
+        /* Execute similarity queries for all QueryContainer -> Category combinations in the map */
+        for(QueryContainer qc : containerCategoryMap.keySet()){
+            final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+            for(String category : containerCategoryMap.get(qc)){
+                /* Merge partial results with score-map */
+                float weight = qc.getWeight() > 0f ? 1f : -1f; // TODO better normalisation
                 List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, qconf);
-                scores.forEach(element -> element.setQueryContainerId(qc.getId()));
-                // TODO map scores that are merged in the map to the query container ids
-                ScoreElement.mergeWithSegmentScoreMap(scores, map, weight);
+                // scores.forEach(element -> element.setQueryContainerId(qc.getId())); // TODO Still required?
+                ScoreElement.mergeWithScoreMap(scores, map, weight);
             }
-            /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
+            /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
             final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-            final List<StringDoubleTriple> results = map.keySet().stream()
-                .map(key -> new StringDoubleTriple(key.first, map.get(key), key.second))
-                .filter(p -> p.value > 0.0)
-                .sorted(StringDoubleTriple.COMPARATOR)
-                .limit(max)
-                .collect(Collectors.toList());
+            final List<StringDoublePair> results = map.keySet().stream()
+                    .map(key -> new StringDoublePair(key, map.get(key)))
+                    .filter(p -> p.value > 0d)
+                    .sorted(StringDoublePair.COMPARATOR)
+                    .limit(max)
+                    .collect(Collectors.toList());
 
-            /* Finalize and submit per-category results. */
-            this.finalizeAndSubmitResults(session, uuid, category, results);
+            /* Finalize and submit per-container results */
+            this.finalizeAndSubmitResults(session, uuid, "qc", results);
         }
     }
 
@@ -102,10 +98,10 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * @param category Name of the query category.
      * @param raw List of raw per-category results (segmentId -> score).
      */
-    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoubleTriple> raw) {
+    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
         final int stride = 1000;
         for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
-            final List<StringDoubleTriple> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
+            final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
             final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
             /* Load segment & object information. */
@@ -119,7 +115,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             /* Write segments, objects and similarity search data to stream. */
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
-            this.write(session, new ExtendedSimilarityQueryResult(queryId, category, sub));
+            this.write(session, new SimilarityQueryResult(queryId, category, sub));
 
             /* Load and transmit segment & object metadata. */
             this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
