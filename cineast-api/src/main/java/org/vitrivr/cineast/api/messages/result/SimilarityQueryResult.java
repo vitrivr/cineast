@@ -51,4 +51,32 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
                 "category='" + category + '\'' +
                 '}';
     }
+
+    public static class ContainerSimilarityQueryResult extends SimilarityQueryResult{
+
+        private final String containerId;
+
+        /**
+         * @param queryId
+         * @param category
+         * @param containerId
+         * @param content
+         */
+        public ContainerSimilarityQueryResult(String queryId, String category, String containerId, List<StringDoublePair> content) {
+            super(queryId, category, content);
+            this.containerId = containerId;
+        }
+
+        public String getContainerId() {
+            return containerId;
+        }
+
+        @Override
+        public String toString() {
+            return "ContainerSimilarityQueryResult{" +
+                    "category='" + getCategory() + '\'' +
+                    ", containerId='" + containerId + '\'' +
+                    '}';
+        }
+    }
 }

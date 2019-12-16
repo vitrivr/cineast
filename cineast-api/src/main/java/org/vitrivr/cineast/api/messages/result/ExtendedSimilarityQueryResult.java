@@ -8,6 +8,10 @@ import org.vitrivr.cineast.core.data.StringDoubleTriple;
 
 import java.util.List;
 
+/**
+ * @deprecated Not needed anymore, as temporal scoring is handled differently
+ */
+@Deprecated
 public class ExtendedSimilarityQueryResult extends AbstractQueryResultMessage<StringDoubleTriple> {
     private String category;
 

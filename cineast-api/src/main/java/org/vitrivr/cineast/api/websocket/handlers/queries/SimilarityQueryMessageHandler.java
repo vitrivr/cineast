@@ -79,7 +79,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                         .collect(Collectors.toList());
 
                 /* Finalize and submit per-container results */
-                this.finalizeAndSubmitResults(session, uuid, category, results);
+                this.finalizeAndSubmitResults(session, uuid, category, qc.getSuperId(),results);
             }
         }
     }
@@ -94,7 +94,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * @param category Name of the query category.
      * @param raw      List of raw per-category results (segmentId -> score).
      */
-    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
+    private void finalizeAndSubmitResults(Session session, String queryId, String category, String containerId, List<StringDoublePair> raw) {
         final int stride = 1000;
         for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
             final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
@@ -111,7 +111,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             /* Write segments, objects and similarity search data to stream. */
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
-            this.write(session, new SimilarityQueryResult(queryId, category, sub));
+            this.write(session, new SimilarityQueryResult.ContainerSimilarityQueryResult(queryId, category,containerId, sub));
 
             /* Load and transmit segment & object metadata. */
             this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
