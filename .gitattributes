@@ -1,3 +1,0 @@
-*.hogcb filter=lfs diff=lfs merge=lfs -text
-*.surfcb filter=lfs diff=lfs merge=lfs -text
-*.pb filter=lfs diff=lfs merge=lfs -text

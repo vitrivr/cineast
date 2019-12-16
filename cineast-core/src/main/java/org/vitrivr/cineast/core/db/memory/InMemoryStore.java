@@ -249,9 +249,6 @@ public class InMemoryStore {
           return Entity.this.store.get(this.inner.next());
         }
 
-        public void finalize() {
-          Entity.this.lock.unlockRead(stamp);
-        }
       };
     }
   }

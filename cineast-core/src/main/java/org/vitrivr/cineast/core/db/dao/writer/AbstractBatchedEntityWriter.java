@@ -100,14 +100,5 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
         }
     }
 
-    /**
-     * Closes the {@link AbstractBatchedEntityWriter} upon finalization.
-     *
-     * @throws Throwable If finalization goes wrong.
-     */
-    @Override
-    public void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
+
 }

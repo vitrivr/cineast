@@ -54,8 +54,9 @@ public class TagReader implements Closeable {
      */
     public List<Tag> getTagsByMatchingName(final String name) {
         final String lname = name.toLowerCase();
-        return this.selector.getRows("name", RelationalOperator.ILIKE, lname).stream()
-                .map(TagReader::fromMap)
+//        return this.selector.getRows(TAG_NAME_COLUMNNAME, RelationalOperator.ILIKE, lname).stream()
+//                .map(TagReader::fromMap)
+        List<Tag> tags = tagCache.values().stream().filter(x -> x.getName().toLowerCase().contains(lname))
                 .sorted((o1, o2) -> {
                     boolean o1l = o1.getName().toLowerCase().startsWith(lname);
                     boolean o2l = o2.getName().toLowerCase().startsWith(lname);
@@ -74,6 +75,8 @@ public class TagReader implements Closeable {
                     }
                 })
                 .collect(Collectors.toList());
+        return tags;
+
     }
 
     /**
@@ -128,7 +131,6 @@ public class TagReader implements Closeable {
     /**
      * Returns a list of all {@link Tag}s contained in the database.
      * <p>
-     * TODO: Maybe should be removed, because ADAMpro caps the resultset anyway?
      *
      * @return List of all {@link Tag}s contained in the database
      */
@@ -194,10 +196,5 @@ public class TagReader implements Closeable {
         this.selector.close();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        close();
-        super.finalize();
-    }
 
 }

@@ -47,7 +47,7 @@ public class CottontailEntityCreator implements EntityCreator {
     ArrayList<ColumnDefinition> columns = new ArrayList<>(4);
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
 
-    columns.add(builder.clear().setName("id").setType(Type.STRING).build());
+    columns.add(builder.clear().setName(TagReader.TAG_ID_COLUMNNAME).setType(Type.STRING).build());
     columns.add(builder.clear().setName(TagReader.TAG_NAME_COLUMNNAME).setType(Type.STRING).build());
     columns.add(builder.clear().setName(TagReader.TAG_DESCRIPTION_COLUMNNAME).setType(Type.STRING).build());
 
@@ -57,8 +57,9 @@ public class CottontailEntityCreator implements EntityCreator {
 
     cottontail.createEntityBlocking(message);
 
-    this.createIndex(TagReader.TAG_ENTITY_NAME, "id", IndexType.HASH_UQ);
+    this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ);
     this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH);
+    this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE);
 
     return true;
   }

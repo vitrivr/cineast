@@ -426,17 +426,6 @@ public class JOGLOffscreenRenderer implements Renderer {
         }
     }
 
-    /**
-     * Invoked upon garbage collection; destroy the GLDrawable in order to free
-     * bound resources.
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        if (this.drawable != null) {
-            this.drawable.destroy();
-        }
-    }
 
     /**
      * Checks if the thread the GLContext is assigned to is equal to the Thread the current

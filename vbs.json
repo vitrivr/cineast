@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "10.34.58.178",
+    "host": "localhost",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
     "port": 1865,
@@ -92,6 +92,9 @@
       ],
       "scenecaption": [
         {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      ],
+      "objinstance": [
+        {"feature":  "ObjectInstances", "weight":  1.0}
       ]
     }
   },

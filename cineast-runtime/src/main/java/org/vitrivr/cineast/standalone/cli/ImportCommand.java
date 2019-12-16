@@ -14,6 +14,7 @@ import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
@@ -76,37 +77,37 @@ public class ImportCommand implements Runnable {
         handler = new TagImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case VISION:
-        doVisionImport(path);
-        break;
       case METADATA:
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
       case AUDIOTRANSCRIPTION:
-        AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(this.threads, 15_000);
-        audioHandler.doImport(path);
+        handler = new AudioTranscriptImportHandler(this.threads, 15_000);
+        handler.doImport(path);
         break;
       case CAPTIONING:
-        CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(this.threads, this.batchsize);
-        captionHandler.doImport(path);
+        handler = new CaptionTextImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case GOOGLEVISION:
         doVisionImport(path);
         break;
       case V3C1CLASSIFICATIONS:
-        ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, this.batchsize);
-        classificationsImportHandler.doImport(path);
+        handler = new ClassificationsImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata*/
-        ColorlabelImportHandler colorImportHandler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        colorImportHandler.doImport(path);
+        handler = new ColorlabelImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case V3C1FACES:
-        FacesImportHandler facesImportHandler = new FacesImportHandler(this.threads, this.batchsize);
-        facesImportHandler.doImport(path);
+        handler = new FacesImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
+      case OBJECTINSTANCE:
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
     }
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
   }
@@ -130,6 +131,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VISION, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS
+    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
   }
 }

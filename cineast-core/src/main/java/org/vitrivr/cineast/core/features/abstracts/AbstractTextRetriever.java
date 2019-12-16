@@ -1,5 +1,14 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -18,13 +27,8 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
-import java.util.*;
-import java.util.function.Supplier;
-
 /**
- * This is a proof of concept class and will probably be replaced by a more general solution to text
- * retrieval in the future.
- * Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
+ * This is a proof of concept class and will probably be replaced by a more general solution to text retrieval in the future. Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
  */
 public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
@@ -76,8 +80,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr
-   * storage handler. This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
+   * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr storage handler. This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
    */
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -112,9 +115,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Performs a fulltext search using the text specified in {@link SegmentContainer#getText()}. In
-   * contrast to convention used in most feature modules, the data used during ingest and retrieval
-   * is usually different for {@link AbstractTextRetriever} subclasses.
+   * Performs a fulltext search using the text specified in {@link SegmentContainer#getText()}. In contrast to convention used in most feature modules, the data used during ingest and retrieval is usually different for {@link AbstractTextRetriever} subclasses.
    *
    * <strong>Important:</strong> This implementation is tailored to the Apache Solr storage engine
    * used by ADAMpro. It uses Lucene's fuzzy search functionality.
@@ -128,11 +129,33 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Generate a query term which will then be used for retrieval.
    */
+  private static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return sc.getText().split(" ");
+
+    Matcher m = regex.matcher(sc.getText());
+    ArrayList<String> matches = new ArrayList<>();
+
+    while (m.find()) {
+      String match = m.group(1).trim();
+      if (!match.isEmpty()) {
+        matches.add(enrichQueryTerm(match));
+      }
+    }
+
+    return matches.toArray(new String[matches.size()]);
   }
+
   /**
-   * Convenience-Method for implementing classes once they have generated their query terms
+   * Implementing features can transform individual query terms. By default, nothing happens
+   */
+  protected String enrichQueryTerm(String queryTerm) {
+    return queryTerm;
+  }
+
+  /**
+   * Convenience-Method for implementing classes once they have generated their query terms.
+   * If there are multiple scores per segment (e.g. a segment has "hello" and "hello world" which produces two hits, does maxpooling
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
     final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
@@ -142,12 +165,17 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     final CorrespondenceFunction f = CorrespondenceFunction
         .fromFunction(score -> score / terms.length / 10f);
     final List<ScoreElement> scoreElements = new ArrayList<>(resultList.size());
+    final Map<String, Float> scoreMap = new HashMap<>();
 
     for (Map<String, PrimitiveTypeProvider> result : resultList) {
       String id = result.get("id").getString();
-      double score = f.applyAsDouble(result.get("ap_score").getFloat());
-      scoreElements.add(new SegmentScoreElement(id, score));
+      scoreMap.putIfAbsent(id, 0f);
+      scoreMap.compute(id, (key, val) -> Math.max(val, result.get("ap_score").getFloat()));
     }
+    scoreMap.forEach((key, value) -> {
+      double score = f.applyAsDouble(scoreMap.get(key));
+      scoreElements.add(new SegmentScoreElement(key, score));
+    });
     return scoreElements;
   }
 

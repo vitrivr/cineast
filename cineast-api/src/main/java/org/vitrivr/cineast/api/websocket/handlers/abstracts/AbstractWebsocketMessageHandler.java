@@ -40,9 +40,9 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
 
       @Override
       public void writeSuccess() {
-        Level lvl = Level.DEBUG;
+        Level lvl = Level.TRACE;
         if (message.getMessageType() == MessageType.PING) {
-          lvl = Level.OFF;
+          return;
         }
         LOGGER.log(lvl, "Successfully wrote {} message to WebSocket stream!", writer.toJson(message));
       }

@@ -117,10 +117,5 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     return true;
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    this.close();
-    super.finalize();
-  }
 
 }

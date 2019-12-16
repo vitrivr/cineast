@@ -32,6 +32,10 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCHING = "matchingname";
 
+    static {
+        TAG_READER.initCache();
+    }
+
     /**
      * Performs the lookup of {@link Tag}s in the system.
      *

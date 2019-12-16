@@ -167,19 +167,5 @@ public class BenchmarkWriter implements Runnable {
         }
     }
 
-    /**
-     * Just to be safe; close writer again upon finalization in case
-     * it failed in the teardown method.
-     */
-    @Override
-    public void finalize() {
-        try {
-            if (this.writer != null) {
-                this.writer.close();
-                this.writer = null;
-            }
-        } catch (IOException e) {
-            LOGGER.fatal("Failed to close writer upon finalisation!");
-        }
-    }
+
 }
