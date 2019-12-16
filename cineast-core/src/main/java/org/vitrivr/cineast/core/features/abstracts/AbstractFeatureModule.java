@@ -86,8 +86,12 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
             return getSimilar(list.get(0), qc);
         }
 
-        Stream<ScoreElement> elements = list.stream().flatMap(vector -> this.getSimilar(vector, qc).stream());
-        return ScoreElement.filterMaximumScores(elements);
+        //Stream<ScoreElement> elements = list.stream().flatMap(vector -> this.getSimilar(vector, qc).stream());
+        //return ScoreElement.filterMaximumScores(elements);
+        List<float[]> vectors = list.stream().map(x -> x.getFloatArray()).collect(Collectors.toList());
+        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, "feature", SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
+        CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(correspondence);
+        return ScoreElement.filterMaximumScores(DistanceElement.toScore(distances, function).stream());
     }
 
     /**
