@@ -42,7 +42,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
 
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
-    public SimilarityQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic){
+    public SimilarityQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic) {
         this.continuousRetrievalLogic = retrievalLogic;
     }
 
@@ -51,7 +51,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * objects provided in the {@link SimilarityQuery}.
      *
      * @param session WebSocket session the invocation is associated with.
-     * @param qconf The {@link QueryConfig} that contains additional specifications.
+     * @param qconf   The {@link QueryConfig} that contains additional specifications.
      * @param message Instance of {@link SimilarityQuery}
      */
     @Override
@@ -65,26 +65,22 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         final HashMap<QueryContainer, List<String>> containerCategoryMap = QueryComponent.toContainerMap(message.getComponents());
 
         /* Execute similarity queries for all QueryContainer -> Category combinations in the map */
-        for(QueryContainer qc : containerCategoryMap.keySet()){
-            final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
-            for(String category : containerCategoryMap.get(qc)){
+        for (QueryContainer qc : containerCategoryMap.keySet()) {
+            for (String category : containerCategoryMap.get(qc)) {
                 /* Merge partial results with score-map */
-                float weight = qc.getWeight() > 0f ? 1f : -1f; // TODO better normalisation
                 List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, qconf);
-                // scores.forEach(element -> element.setQueryContainerId(qc.getId())); // TODO Still required?
-                ScoreElement.mergeWithScoreMap(scores, map, weight);
-            }
-            /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
-            final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-            final List<StringDoublePair> results = map.keySet().stream()
-                    .map(key -> new StringDoublePair(key, map.get(key)))
-                    .filter(p -> p.value > 0d)
-                    .sorted(StringDoublePair.COMPARATOR)
-                    .limit(max)
-                    .collect(Collectors.toList());
+                /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
+                final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
+                final List<StringDoublePair> results = scores.stream()
+                        .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
+                        .filter(p -> p.value > 0d)
+                        .sorted(StringDoublePair.COMPARATOR)
+                        .limit(max)
+                        .collect(Collectors.toList());
 
-            /* Finalize and submit per-container results */
-            this.finalizeAndSubmitResults(session, uuid, "qc", results);
+                /* Finalize and submit per-container results */
+                this.finalizeAndSubmitResults(session, uuid, category, results);
+            }
         }
     }
 
@@ -93,15 +89,15 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the
      * raw results produced by a similarity search in a specific category.
      *
-     * @param session The {@link Session} object used to transmit the results.
-     * @param queryId ID of the running query.
+     * @param session  The {@link Session} object used to transmit the results.
+     * @param queryId  ID of the running query.
      * @param category Name of the query category.
-     * @param raw List of raw per-category results (segmentId -> score).
+     * @param raw      List of raw per-category results (segmentId -> score).
      */
     private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
         final int stride = 1000;
-        for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
-            final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
+        for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
+            final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
             final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
             /* Load segment & object information. */
