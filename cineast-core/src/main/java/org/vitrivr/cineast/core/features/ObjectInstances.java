@@ -26,7 +26,6 @@ public class ObjectInstances extends AbstractFeatureModule {
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     //TODO implement extraction
-    return Collections.emptyList();
+    throw new UnsupportedOperationException();
   }
-
 }

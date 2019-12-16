@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -164,6 +166,22 @@ public abstract class DBSelectorIntegrationTest<R> {
     Assertions.assertEquals("1", result.get(0).getSegmentId());
     Assertions.assertTrue(result.get(1).getSegmentId().equals("2") || result.get(2).getSegmentId().equals("2"));
     Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
+  }
+
+  @Test
+  @DisplayName("Batched KNN search")
+  void batchedKnnSearch() {
+    selector.open(testVectorTableName);
+    List<float[]> queries = new ArrayList<>();
+    queries.add(new float[]{0.001f,1,0});
+    queries.add(new float[]{3.1f,1,0});
+    queries.add(new float[]{4.8f,1,0});
+    List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
+    List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
+    Assertions.assertEquals(3, result.size());
+    Assertions.assertEquals("0", result.get(0).getSegmentId());
+    Assertions.assertEquals("3", result.get(1).getSegmentId());
+    Assertions.assertEquals("5", result.get(2).getSegmentId());
   }
 
 
