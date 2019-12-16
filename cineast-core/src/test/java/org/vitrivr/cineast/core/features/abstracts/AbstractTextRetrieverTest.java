@@ -14,7 +14,7 @@ public class AbstractTextRetrieverTest {
   @DisplayName("quoted string is not split")
   @Test
   public void testQuotedStringNotSplit() {
-    testMatch("\"hello world\"", "hello world");
+    testMatch("\"hello world\"", "\"hello world\"");
   }
 
   @DisplayName("non-quoted string is split")

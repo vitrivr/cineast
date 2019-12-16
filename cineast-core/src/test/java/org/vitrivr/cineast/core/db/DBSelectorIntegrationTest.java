@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
-public abstract class DBSelectorTest<R> {
+public abstract class DBSelectorIntegrationTest<R> {
 
   private DBSelector selector;
   private String testTextTableName;
@@ -38,6 +40,7 @@ public abstract class DBSelectorTest<R> {
   @BeforeEach
   void setupTest() {
     selector = getSelector();
+    assumeTrue(selector.ping(), "Connection to database could not be established");
     writer = getPersistencyWriter();
     ec = getEntityCreator();
     testTextTableName = getTestTextTableName();
@@ -60,10 +63,16 @@ public abstract class DBSelectorTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    writer.close();
-    selector.close();
+    if (writer != null) {
+      writer.close();
+    }
+    if (selector != null) {
+      selector.close();
+    }
     dropTables();
-    ec.close();
+    if (ec != null) {
+      ec.close();
+    }
   }
 
   protected void fillTextData() {
@@ -103,8 +112,10 @@ public abstract class DBSelectorTest<R> {
   }
 
   protected void dropTables() {
-    ec.dropEntity(testTextTableName);
-    ec.dropEntity(testVectorTableName);
+    if (ec != null) {
+      ec.dropEntity(testTextTableName);
+      ec.dropEntity(testVectorTableName);
+    }
   }
 
   /**
