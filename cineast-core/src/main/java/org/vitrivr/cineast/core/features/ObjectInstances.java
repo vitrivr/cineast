@@ -12,7 +12,7 @@ public class ObjectInstances extends AbstractFeatureModule {
 
   public static final String TABLE_NAME = "features_ObjectInstances";
 
-  protected ObjectInstances() {
+  public ObjectInstances() {
     super(TABLE_NAME, 100f, //TODO figure out proper value
         1280);
   }

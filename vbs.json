@@ -92,6 +92,9 @@
       ],
       "scenecaption": [
         {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      ],
+      "objinstance": [
+        {"feature":  "ObjectInstances", "weight":  1.0}
       ]
     }
   },
