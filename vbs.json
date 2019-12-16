@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "10.34.58.178",
+    "host": "localhost",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
     "port": 1865,
