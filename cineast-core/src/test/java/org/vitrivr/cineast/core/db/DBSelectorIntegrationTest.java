@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -103,6 +104,7 @@ public abstract class DBSelectorIntegrationTest<R> {
       vector[2] = 0;
       vectors.add(writer.generateTuple(i, vector));
     }
+    vectors.add(writer.generateTuple(0, new float[]{0, 0, 0}));
     writer.persist(vectors);
   }
 
@@ -152,9 +154,18 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Verify element count")
   void count() {
     selector.open(testVectorTableName);
-    Assertions.assertEquals(10, selector.getAll().size());
+    Assertions.assertEquals(11, selector.getAll().size());
     selector.open(testTextTableName);
     Assertions.assertEquals(7, selector.getAll().size());
+  }
+
+  @Test
+  @DisplayName("get multiple feature vectors")
+  void getFeatureVectors() {
+    selector.open(testVectorTableName);
+    List<PrimitiveTypeProvider> vectors = selector.getFeatureVectorsGeneric(ID_COL_NAME, "0", FEATURE_VECTOR_COL_NAME);
+    Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
+    Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }
 
   @Test
@@ -173,9 +184,9 @@ public abstract class DBSelectorIntegrationTest<R> {
   void batchedKnnSearch() {
     selector.open(testVectorTableName);
     List<float[]> queries = new ArrayList<>();
-    queries.add(new float[]{0.001f,1,0});
-    queries.add(new float[]{3.1f,1,0});
-    queries.add(new float[]{4.8f,1,0});
+    queries.add(new float[]{0.001f, 1, 0});
+    queries.add(new float[]{3.1f, 1, 0});
+    queries.add(new float[]{4.8f, 1, 0});
     List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
     List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
     Assertions.assertEquals(3, result.size());
