@@ -187,12 +187,16 @@ public abstract class DBSelectorIntegrationTest<R> {
     queries.add(new float[]{0.001f, 1, 0});
     queries.add(new float[]{3.1f, 1, 0});
     queries.add(new float[]{4.8f, 1, 0});
+    queryConfig.setDistanceIfEmpty(Distance.manhattan);
     List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
     List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
     Assertions.assertEquals(3, result.size());
     Assertions.assertEquals("0", result.get(0).getSegmentId());
+    Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
     Assertions.assertEquals("3", result.get(1).getSegmentId());
+    Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
     Assertions.assertEquals("5", result.get(2).getSegmentId());
+    Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
   }
 
 
