@@ -13,7 +13,7 @@ public class ObjectInstances extends AbstractFeatureModule {
   public static final String TABLE_NAME = "features_ObjectInstances";
 
   public ObjectInstances() {
-    super(TABLE_NAME, 100f, //TODO figure out proper value
+    super(TABLE_NAME, 1000f, //TODO figure out proper value
         1280);
   }
 
@@ -26,7 +26,6 @@ public class ObjectInstances extends AbstractFeatureModule {
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     //TODO implement extraction
-    return Collections.emptyList();
+    throw new UnsupportedOperationException();
   }
-
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -13,6 +15,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -27,6 +30,7 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     protected SimpleFeatureDescriptorWriter writer;
     protected DBSelector selector;
     protected final float maxDist;
@@ -80,15 +84,14 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
         List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric("id", shotId, "feature");
         if (list.isEmpty()) {
+            LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", shotId);
             return new ArrayList<>(0);
         }
         if (list.size() == 1) {
             return getSimilar(list.get(0), qc);
         }
 
-        //Stream<ScoreElement> elements = list.stream().flatMap(vector -> this.getSimilar(vector, qc).stream());
-        //return ScoreElement.filterMaximumScores(elements);
-        List<float[]> vectors = list.stream().map(x -> x.getFloatArray()).collect(Collectors.toList());
+        List<float[]> vectors = list.stream().map(FloatArrayProvider::getFloatArray).collect(Collectors.toList());
         List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, "feature", SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
         CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(correspondence);
         return ScoreElement.filterMaximumScores(DistanceElement.toScore(distances, function).stream());

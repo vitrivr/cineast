@@ -1,11 +1,15 @@
 package org.vitrivr.cineast.core.db;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -20,7 +25,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
-public abstract class DBSelectorTest<R> {
+public abstract class DBSelectorIntegrationTest<R> {
 
   private DBSelector selector;
   private String testTextTableName;
@@ -38,6 +43,7 @@ public abstract class DBSelectorTest<R> {
   @BeforeEach
   void setupTest() {
     selector = getSelector();
+    assumeTrue(selector.ping(), "Connection to database could not be established");
     writer = getPersistencyWriter();
     ec = getEntityCreator();
     testTextTableName = getTestTextTableName();
@@ -60,10 +66,16 @@ public abstract class DBSelectorTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    writer.close();
-    selector.close();
+    if (writer != null) {
+      writer.close();
+    }
+    if (selector != null) {
+      selector.close();
+    }
     dropTables();
-    ec.close();
+    if (ec != null) {
+      ec.close();
+    }
   }
 
   protected void fillTextData() {
@@ -92,6 +104,7 @@ public abstract class DBSelectorTest<R> {
       vector[2] = 0;
       vectors.add(writer.generateTuple(i, vector));
     }
+    vectors.add(writer.generateTuple(0, new float[]{0, 0, 0}));
     writer.persist(vectors);
   }
 
@@ -103,8 +116,10 @@ public abstract class DBSelectorTest<R> {
   }
 
   protected void dropTables() {
-    ec.dropEntity(testTextTableName);
-    ec.dropEntity(testVectorTableName);
+    if (ec != null) {
+      ec.dropEntity(testTextTableName);
+      ec.dropEntity(testVectorTableName);
+    }
   }
 
   /**
@@ -139,9 +154,18 @@ public abstract class DBSelectorTest<R> {
   @DisplayName("Verify element count")
   void count() {
     selector.open(testVectorTableName);
-    Assertions.assertEquals(10, selector.getAll().size());
+    Assertions.assertEquals(11, selector.getAll().size());
     selector.open(testTextTableName);
     Assertions.assertEquals(7, selector.getAll().size());
+  }
+
+  @Test
+  @DisplayName("get multiple feature vectors")
+  void getFeatureVectors() {
+    selector.open(testVectorTableName);
+    List<PrimitiveTypeProvider> vectors = selector.getFeatureVectorsGeneric(ID_COL_NAME, "0", FEATURE_VECTOR_COL_NAME);
+    Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
+    Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }
 
   @Test
@@ -153,6 +177,26 @@ public abstract class DBSelectorTest<R> {
     Assertions.assertEquals("1", result.get(0).getSegmentId());
     Assertions.assertTrue(result.get(1).getSegmentId().equals("2") || result.get(2).getSegmentId().equals("2"));
     Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
+  }
+
+  @Test
+  @DisplayName("Batched KNN search")
+  void batchedKnnSearch() {
+    selector.open(testVectorTableName);
+    List<float[]> queries = new ArrayList<>();
+    queries.add(new float[]{0.001f, 1, 0});
+    queries.add(new float[]{3.1f, 1, 0});
+    queries.add(new float[]{4.8f, 1, 0});
+    queryConfig.setDistanceIfEmpty(Distance.manhattan);
+    List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
+    List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
+    Assertions.assertEquals(3, result.size());
+    Assertions.assertEquals("0", result.get(0).getSegmentId());
+    Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
+    Assertions.assertEquals("3", result.get(1).getSegmentId());
+    Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
+    Assertions.assertEquals("5", result.get(2).getSegmentId());
+    Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
   }
 
 

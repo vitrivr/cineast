@@ -15,7 +15,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
 
   private final Retriever retriever;
   private final QueryContainer query;
-  private final String shotId;
+  private final String segmentId;
   private static final Logger LOGGER = LogManager.getLogger();
   private final ReadableQueryConfig config;
 
@@ -24,7 +24,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     this.retriever = retriever;
     this.query = query;
     this.config = qc;
-    this.shotId = null;
+    this.segmentId = null;
   }
 
   public RetrievalTask(Retriever retriever, QueryContainer query) {
@@ -34,7 +34,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
 
   public RetrievalTask(Retriever retriever, String segmentId, ReadableQueryConfig qc) {
     this.retriever = retriever;
-    this.shotId = segmentId;
+    this.segmentId = segmentId;
     this.config = qc;
     this.query = null;
 
@@ -51,7 +51,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
     List<ScoreElement> result;
     if (this.query == null) {
-      result = this.retriever.getSimilar(this.shotId, this.config);
+      result = this.retriever.getSimilar(this.segmentId, this.config);
     } else {
       result = this.retriever.getSimilar(this.query, this.config);
     }
@@ -70,7 +70,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
   }
 
   public String getSegmentId() {
-    return shotId;
+    return segmentId;
   }
 
   public ReadableQueryConfig getConfig() {
@@ -84,7 +84,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     result = prime * result + ((config == null) ? 0 : config.hashCode());
     result = prime * result + ((query == null) ? 0 : query.hashCode());
     result = prime * result + ((retriever == null) ? 0 : retriever.hashCode());
-    result = prime * result + ((shotId == null) ? 0 : shotId.hashCode());
+    result = prime * result + ((segmentId == null) ? 0 : segmentId.hashCode());
     return result;
   }
 
@@ -121,11 +121,11 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     } else if (!retriever.equals(other.retriever)) {
       return false;
     }
-    if (shotId == null) {
-      if (other.shotId != null) {
+    if (segmentId == null) {
+      if (other.segmentId != null) {
         return false;
       }
-    } else if (!shotId.equals(other.shotId)) {
+    } else if (!segmentId.equals(other.segmentId)) {
       return false;
     }
     return true;
