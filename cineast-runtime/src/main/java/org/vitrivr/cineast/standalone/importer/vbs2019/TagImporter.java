@@ -1,48 +1,38 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
+public class TagImporter implements Importer<String[]> {
 
-public class TagImporter implements Importer<Pair<String, String>> {
-
-  private final Iterator<Entry<String, JsonNode>> elements;
   private static final Logger LOGGER = LogManager.getLogger();
+  private final String[] columnNames;
+  private final List<String> lines;
+  private int index;
 
-  public TagImporter(Path input) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    JsonParser parser = mapper.getFactory().createParser(input.toFile());
-    if (parser.nextToken() == JsonToken.START_OBJECT) {
-      ObjectNode node = mapper.readTree(parser);
-      elements = node.fields();
-      if (elements == null) {
-        throw new IOException("Empty file");
-      }
-    } else {
-      throw new IOException("Empty file");
-    }
+  public TagImporter(Path input, String... columnNames) throws IOException {
+    this.columnNames = columnNames;
+    lines = FileUtils.readLines(input.toFile(), Charset.defaultCharset());
+    index = 0;
   }
 
-  private synchronized Optional<Pair<String, String>> nextPair() {
-    while (elements.hasNext()) {
-      Entry<String, JsonNode> next = elements.next();
-      if (next.getValue().asText() == null || next.getValue().asText().equals("")) {
-        continue;
-      }
-      return Optional.of(new Pair<>(next.getKey(), next.getValue().asText()));
+  private synchronized Optional<String[]> nextPair() {
+    if (index < (lines.size() - 1)) {
+      String line = lines.get(index);
+      String[] split = line.split("\t");
+      index++;
+      return Optional.of(split);
     }
     return Optional.empty();
   }
@@ -51,21 +41,30 @@ public class TagImporter implements Importer<Pair<String, String>> {
    * @return Pair mapping a segmentID to a List of Descriptions
    */
   @Override
-  public Pair<String, String> readNext() {
+  public String[] readNext() {
     try {
-      Optional<Pair<String, String>> node = nextPair();
-      return node.orElse(null);
+      return nextPair().orElse(null);
     } catch (NoSuchElementException e) {
       return null;
     }
   }
 
   @Override
-  public Map<String, PrimitiveTypeProvider> convert(Pair<String, String> data) {
-    final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
-    map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.first));
-    map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
-    map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
+  public Map<String, PrimitiveTypeProvider> convert(String[] data) {
+    final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(data.length);
+    for (int i = 0; i < data.length; i++) {
+      map.put(columnNames[i], PrimitiveTypeProvider.fromObject(data[i]));
+    }
+    if (data.length < columnNames.length) {
+      for (int i = data.length; i < columnNames.length; i++) {
+        if (columnNames[i].equals("score")) {
+          map.put(columnNames[i], PrimitiveTypeProvider.fromObject(1));
+        }
+        if (columnNames[i].equals("description")) {
+          map.put(columnNames[i], PrimitiveTypeProvider.fromObject(""));
+        }
+      }
+    }
     return map;
   }
 }
