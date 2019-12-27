@@ -9,37 +9,19 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 11.01.17
- */
 public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoublePair> {
     private String category;
 
-    /**
-     *
-     * @param category
-     * @param content
-     */
     @JsonCreator
     public SimilarityQueryResult(String queryId, String category, List<StringDoublePair> content) {
         super(queryId, content);
         this.category = category;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getCategory() {
         return category;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public MessageType getMessageType() {
         return MessageType.QR_SIMILARITY;
@@ -56,12 +38,6 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
 
         private final String containerId;
 
-        /**
-         * @param queryId
-         * @param category
-         * @param containerId
-         * @param content
-         */
         public ContainerSimilarityQueryResult(String queryId, String category, String containerId, List<StringDoublePair> content) {
             super(queryId, category, content);
             this.containerId = containerId;

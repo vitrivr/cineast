@@ -13,7 +13,7 @@ public interface Retriever extends PersistentOperator {
 
 	List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc);
 		
-	List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc);
+	List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc);
 
 	void finish();
 }

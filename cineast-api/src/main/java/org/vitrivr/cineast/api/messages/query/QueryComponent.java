@@ -100,7 +100,7 @@ public class QueryComponent {
       for(QueryComponent component: components){
         for(QueryTerm qt : component.getTerms()){
           QueryContainer qc = qt.toContainer();
-          qc.setSuperId(component.containerId);
+          qc.setContainerId(component.containerId);
           map.put(qc, qt.getCategories());
         }
       }

@@ -109,7 +109,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
     LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
     return new ArrayList<>(0); // currently not supported
   }

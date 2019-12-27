@@ -37,8 +37,7 @@ import java.util.stream.Collectors;
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {
 
-    private static final Logger LOGGER = LogManager.getLogger(SimilarityQueryMessageHandler.class);
-    private static final ObjectMapper DEBUG_OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
@@ -59,8 +58,6 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         /* Prepare QueryConfig (so as to obtain a QueryId). */
         final String uuid = qconf.getQueryId().toString();
 
-        LOGGER.debug("Received SimilarityQuery: {}", DEBUG_OBJECT_MAPPER.writeValueAsString(message));
-
         /* Prepare map that maps QueryTerms (as QueryContainer, ready for retrieval) and their associated categories */
         final HashMap<QueryContainer, List<String>> containerCategoryMap = QueryComponent.toContainerMap(message.getComponents());
 
@@ -79,7 +76,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                         .collect(Collectors.toList());
 
                 /* Finalize and submit per-container results */
-                this.finalizeAndSubmitResults(session, uuid, category, qc.getSuperId(),results);
+                this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(),results);
             }
         }
     }
@@ -88,7 +85,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
     /**
      * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the
      * raw results produced by a similarity search in a specific category.
-     *
+     *q
      * @param session  The {@link Session} object used to transmit the results.
      * @param queryId  ID of the running query.
      * @param category Name of the query category.

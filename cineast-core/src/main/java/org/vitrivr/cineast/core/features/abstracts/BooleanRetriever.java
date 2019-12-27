@@ -122,7 +122,7 @@ public abstract class BooleanRetriever implements Retriever {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) { //nop
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) { //nop
     return Collections.emptyList();
   }
 
