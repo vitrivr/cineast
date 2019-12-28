@@ -53,6 +53,12 @@ public class TagImporter implements Importer<String[]> {
   public Map<String, PrimitiveTypeProvider> convert(String[] data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(data.length);
     for (int i = 0; i < data.length; i++) {
+      if (columnNames[i].equals("id")) {
+        if (!data[i].startsWith("v_")) {
+          map.put(columnNames[i], PrimitiveTypeProvider.fromObject("v_" + data[i]));
+          continue;
+        }
+      }
       map.put(columnNames[i], PrimitiveTypeProvider.fromObject(data[i]));
     }
     if (data.length < columnNames.length) {
