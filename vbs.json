@@ -12,7 +12,7 @@
   },
   "retriever": {
     "threadPoolSize": 2,
-    "maxResults": 200,
+    "maxResults": 4000,
     "resultsPerModule": 250,
     "features": {
       "semantic" : [
