@@ -1,9 +1,20 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.BITSET;
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
+
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType;
-import javax.print.attribute.standard.Media;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -11,39 +22,29 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
-import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.BITSET;
-import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
-import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
 public class CottontailEntityCreator implements EntityCreator {
 
   private final CottontailWrapper cottontail;
 
 
-
-  public CottontailEntityCreator(DatabaseConfig config){
+  public CottontailEntityCreator(DatabaseConfig config) {
     this.cottontail = new CottontailWrapper(config, true);
     init();
   }
 
-  public CottontailEntityCreator(CottontailWrapper cottontailWrapper){
+  public CottontailEntityCreator(CottontailWrapper cottontailWrapper) {
     this.cottontail = cottontailWrapper;
     init();
   }
 
-  private void init(){
+  private void init() {
     cottontail.createSchema("cineast");
   }
 
   @Override
-  public boolean createTagEntity(){
+  public boolean createTagEntity() {
     ArrayList<ColumnDefinition> columns = new ArrayList<>(4);
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
 
@@ -127,10 +128,10 @@ public class CottontailEntityCreator implements EntityCreator {
     return true;
   }
 
-  public void createIndex(String entityName, String attribute, IndexType type){
+  public void createIndex(String entityName, String attribute, IndexType type) {
     Entity entity = CottontailMessageBuilder.entity(entityName);
     Index index = Index.newBuilder().setEntity(entity)
-        .setName("index-"+type.name().toLowerCase()+"-" + entity.getSchema().getName() + "_" + entity.getName() + "_"+attribute)
+        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
     /* Cottontail ignores index params as of july 19 */
     CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute).build();
@@ -220,6 +221,12 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
+  public boolean createHashNonUniqueIndex(String entityName, String column) {
+    this.createIndex(entityName, column, IndexType.HASH);
+    return true;
+  }
+
+  @Override
   public boolean existsEntity(String entityName) {
     return false;
   }
@@ -230,6 +237,7 @@ public class CottontailEntityCreator implements EntityCreator {
     cottontail.dropEntityBlocking(entity);
     return true;
   }
+
 
   @Override
   public void close() {

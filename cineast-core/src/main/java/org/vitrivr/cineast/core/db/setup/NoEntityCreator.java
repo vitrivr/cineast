@@ -75,4 +75,9 @@ public class NoEntityCreator implements EntityCreator {
     return false;
   }
 
+  @Override
+  public boolean createHashNonUniqueIndex(String entityName, String column) {
+    return false;
+  }
+
 }

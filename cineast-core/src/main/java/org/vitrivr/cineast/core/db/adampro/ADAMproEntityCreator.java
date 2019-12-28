@@ -262,6 +262,12 @@ public class ADAMproEntityCreator implements EntityCreator {
         return this.adampro.dropEntityBlocking(entityName);
     }
 
+    @Override
+    public boolean createHashNonUniqueIndex(String entityName, String column) {
+        /* If you are ever going to benchmark adampro vs cottontail, you should implement this method*/
+        throw new UnsupportedOperationException();
+    }
+
     public boolean dropIndex(String indexName){
         return this.adampro.dropIndexBlocking(indexName);
     }
