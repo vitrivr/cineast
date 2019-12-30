@@ -62,8 +62,10 @@ public class TextRetrievalTest implements Runnable {
         return;
       }
       System.out.println("Retrieving for " + retriever.getClass().getSimpleName());
+      long start = System.currentTimeMillis();
       List<SegmentScoreElement> results = retrieval.retrieveByRetriever(qc, retriever, new ConstrainedQueryConfig());
-      System.out.println("Results for " + retriever.getClass().getSimpleName() + ":");
+      long stop = System.currentTimeMillis();
+      System.out.println("Results for " + retriever.getClass().getSimpleName() + ":, retrieved in " + (stop - start) + "ms");
 
       for (SegmentScoreElement e : results.subList(0, Math.min(limit, results.size()))) {
         System.out.print(e.getSegmentId());
