@@ -43,7 +43,7 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
         if (message.getMessageType() == MessageType.PING) {
           return;
         }
-        LOGGER.log(Level.DEBUG, "Successfully wrote message of type {} to WebSocket stream!", message.getMessageType());
+        LOGGER.log(Level.TRACE, "Successfully wrote message of type {} to WebSocket stream!", message.getMessageType());
         LOGGER.log(Level.TRACE, writer.toJson(message));
       }
     });
