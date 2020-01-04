@@ -10,7 +10,8 @@ import org.vitrivr.cineast.core.util.MathHelper;
 public abstract class QueryContainer implements SegmentContainer {
 
   private float weight = 1f;
-  private String id = null, superId = null, containerId = null;
+  private String id = null, superId = null;
+  private int containerId = -1;
 
   /**
    * Weight of this specific query container. Defaults to {@link #weight} (1f)
@@ -30,11 +31,11 @@ public abstract class QueryContainer implements SegmentContainer {
     this.weight = MathHelper.limit(weight, -1f, 1f);
   }
 
-  public String getContainerId() {
+  public int getContainerId() {
     return containerId;
   }
 
-  public void setContainerId(String containerId) {
+  public void setContainerId(int containerId) {
     this.containerId = containerId;
   }
 

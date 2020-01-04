@@ -21,16 +21,14 @@
     </Appenders>
     <Loggers>
         <logger name="io" level="ERROR">
-            <AppenderRef ref="Console"/>
         </logger>
-        <logger name="org" level="INFO">
-            <AppenderRef ref="Console"/>
+        <logger name="org" level="INFO" additivity="true">
         </logger>
-        <logger name="org.vitrivr.cineast" level="TRACE">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
+        <logger name="org.vitrivr.cineast" level="TRACE" additivity="true">
         </logger>
         <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>

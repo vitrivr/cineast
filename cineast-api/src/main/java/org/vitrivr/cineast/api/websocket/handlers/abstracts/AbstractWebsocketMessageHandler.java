@@ -6,9 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WriteCallback;
-import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.json.JsonWriter;
 
@@ -40,11 +40,11 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
 
       @Override
       public void writeSuccess() {
-        Level lvl = Level.TRACE;
         if (message.getMessageType() == MessageType.PING) {
           return;
         }
-        LOGGER.log(lvl, "Successfully wrote {} message to WebSocket stream!", writer.toJson(message));
+        LOGGER.log(Level.DEBUG, "Successfully wrote message of type {} to WebSocket stream!", message.getMessageType());
+        LOGGER.log(Level.TRACE, writer.toJson(message));
       }
     });
   }

@@ -11,8 +11,6 @@ public final class APIConfig {
   private boolean enableRest = false;
   private boolean enableRestSecure = false;
 
-
-
 	private boolean enableGRPC = true;
   private String keystore;
   private String keystorePassword;
@@ -20,9 +18,7 @@ public final class APIConfig {
   private int httpPort = 4567;
   private int httpsPort = 4568;
 
-
-
-	private int grpcPort = 4569;
+	private int grpcPort = 4570;
   private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
 

@@ -1,58 +1,41 @@
 package org.vitrivr.cineast.api.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
-
-import java.util.List;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 
 public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoublePair> {
-    private String category;
 
-    @JsonCreator
-    public SimilarityQueryResult(String queryId, String category, List<StringDoublePair> content) {
-        super(queryId, content);
-        this.category = category;
-    }
+  private String category;
+  private int containerId;
 
-    public String getCategory() {
-        return category;
-    }
+  @JsonCreator
+  public SimilarityQueryResult(String queryId, String category, int containerId, List<StringDoublePair> content) {
+    super(queryId, content);
+    this.category = category;
+    this.containerId = containerId;
+  }
 
-    @Override
-    public MessageType getMessageType() {
-        return MessageType.QR_SIMILARITY;
-    }
+  public int getContainerId() {
+    return this.containerId;
+  }
 
-    @Override
-    public String toString() {
-        return "SimilarityQueryResult{" +
-                "category='" + category + '\'' +
-                '}';
-    }
+  public String getCategory() {
+    return category;
+  }
 
-    public static class ContainerSimilarityQueryResult extends SimilarityQueryResult{
+  @Override
+  public MessageType getMessageType() {
+    return MessageType.QR_SIMILARITY;
+  }
 
-        private final String containerId;
-
-        public ContainerSimilarityQueryResult(String queryId, String category, String containerId, List<StringDoublePair> content) {
-            super(queryId, category, content);
-            this.containerId = containerId;
-        }
-
-        public String getContainerId() {
-            return containerId;
-        }
-
-        @Override
-        public String toString() {
-            return "ContainerSimilarityQueryResult{" +
-                    "category='" + getCategory() + '\'' +
-                    ", containerId='" + containerId + '\'' +
-                    '}';
-        }
-    }
+  @Override
+  public String toString() {
+    return "SimilarityQueryResult{" +
+        "category='" + getCategory() + '\'' +
+        ", containerId='" + containerId + '\'' +
+        '}';
+  }
 }
