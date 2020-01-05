@@ -26,8 +26,6 @@ public class Main {
       System.exit(1);
     }
 
-    PrometheusServer.initialize();
-
     /* Either start Cineast in interactive mode OR execute command directly. */
     if (args[1].equals("interactive")) {
       CLI.start(CineastCli.class);
@@ -36,6 +34,5 @@ public class Main {
       final Runnable command = cli.parse(Arrays.copyOfRange(args, 1, args.length));
       command.run();
     }
-    PrometheusServer.stopServer();
   }
 }
