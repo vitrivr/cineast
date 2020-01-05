@@ -17,6 +17,12 @@ public class AbstractTextRetrieverTest {
     testMatch("\"hello world\"", "\"hello world\"");
   }
 
+  @DisplayName("double quoted string is split")
+  @Test
+  public void testDoubleQuotedStringSplit() {
+    testMatch("\"hello\" \"world\"", "\"hello\"", "\"world\"");
+  }
+
   @DisplayName("non-quoted string is split")
   @Test
   public void testNonQuotedStringSplit() {
