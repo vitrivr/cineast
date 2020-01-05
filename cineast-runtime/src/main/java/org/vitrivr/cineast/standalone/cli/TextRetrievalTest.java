@@ -18,13 +18,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
-
-/**
- * A CLI command that can be used to retrieve data from the database based on an example segment.
- *
- * @author Ralph Gasser
- * @version 1.0
- */
 @Command(name = "retrieve-text", description = "Retrieves objects from the database using text as query input.")
 public class TextRetrievalTest implements Runnable {
 
@@ -39,6 +32,7 @@ public class TextRetrievalTest implements Runnable {
 
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
+    System.out.println("Querying for text " + text);
     TextQueryContainer qc = new TextQueryContainer(text);
     List<Retriever> retrievers = new ArrayList<>();
     retrievers.add(new SubtitleFulltextSearch());
