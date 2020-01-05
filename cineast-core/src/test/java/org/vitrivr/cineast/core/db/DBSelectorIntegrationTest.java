@@ -220,7 +220,7 @@ public abstract class DBSelectorIntegrationTest<R> {
    * This test verifies that a simple "hello" query retrieves exact and partial matches, but no fuzziness
    */
   @Test
-  @DisplayName("Text: One el, LIKE")
+  @DisplayName("Text: One el, no quotes")
   void textRetrievalSingleLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello");
@@ -231,11 +231,24 @@ public abstract class DBSelectorIntegrationTest<R> {
   }
 
   /**
+   * This test verifies that a simple "hello" query retrieves exact and partial matches, but no fuzziness
+   */
+  @Test
+  @DisplayName("Text: two words, inverted, no quotes")
+  void textRetrievalSingleTwoWordsLike() {
+    selector.open(testTextTableName);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "name my");
+    Assertions.assertEquals(1, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
+  }
+
+
+  /**
    * This test verifies that a quoted query only retrieves results which contain the full query term
    */
   @Test
-  @DisplayName("Text: One el (two words), LIKE")
-  void textRetrievalSingleTwoWordsLike() {
+  @DisplayName("Text: One el (two words), quotes")
+  void textRetrievalSingleTwoWordsQuotedLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "\"hello world\"");
     Assertions.assertEquals(2, results.size());
@@ -247,7 +260,7 @@ public abstract class DBSelectorIntegrationTest<R> {
    * Verifies that ~1 means levenshtein 1
    */
   @Test
-  @DisplayName("Text: One el, Fuzzy")
+  @DisplayName("Text: One el, one word, Fuzzy")
   void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello~1");
@@ -275,7 +288,7 @@ public abstract class DBSelectorIntegrationTest<R> {
    * Verify that searching for two terms retrieves both individual results
    */
   @Test
-  @DisplayName("Text: Two els")
+  @DisplayName("Text: Two elements w/ single word")
   void testRetrievalTwo() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double");
@@ -285,7 +298,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Text: Two els")
+  @DisplayName("Text: Three elements, two are a match for the same id")
   void testRetrievalThreeDouble() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "double", "single", "duplicate");
@@ -298,7 +311,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Text: Three els")
+  @DisplayName("Text: Three els, one of those with quotes")
   void testRetrievalThree() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double", "\"hello world\"");
