@@ -72,7 +72,7 @@ public class TextRetrievalTest implements Runnable {
         System.out.print(": ");
         System.out.println(e.getScore());
         if (printDetail) {
-          SingleObjRetrievalCommand.printInfoForSegment(e.getSegmentId(), selector);
+          SingleObjRetrievalCommand.printInfoForSegment(e.getSegmentId(), selector, null);
         }
       }
       System.out.println();

@@ -28,10 +28,13 @@ public class SingleObjRetrievalCommand implements Runnable {
   @Option(name = {"--objectid"}, title = "Object ID", description = "The ID of the object for which to retrieve detailed information.")
   private String objectId;
 
+  @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve.")
+  private String category;
+
   public void run() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     if (segmentId != null) {
-      printInfoForSegment(segmentId, selector);
+      printInfoForSegment(segmentId, selector, category);
     }
     if (objectId != null) {
       printInfoForObject(objectId, selector);
@@ -49,7 +52,7 @@ public class SingleObjRetrievalCommand implements Runnable {
     metadataDescriptors.forEach(System.out::println);
   }
 
-  public static void printInfoForSegment(String segmentId, DBSelector selector) {
+  public static void printInfoForSegment(String segmentId, DBSelector selector, String _filterCategory) {
 
     System.out.println("= Retrieving segment information for " + segmentId + "=");
     MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
@@ -65,17 +68,24 @@ public class SingleObjRetrievalCommand implements Runnable {
     System.out.println("Retrieving all columns for segment " + segmentId);
     RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
 
-    retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
-      System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
-      retriever.getTableNames().forEach(tableName -> {
-        selector.open(tableName);
-        selector.getRows("id", segmentId).forEach(row -> {
-          System.out.println("== New row == ");
-          row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
+    retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> {
+      if(_filterCategory!=null){
+        if(!cat.equals(_filterCategory)){
+          return;
+        }
+      }
+      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
+        System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
+        retriever.getTableNames().forEach(tableName -> {
+          selector.open(tableName);
+          selector.getRows("id", segmentId).forEach(row -> {
+            System.out.println("== New row == ");
+            row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
+          });
         });
+        return true;
       });
-      return true;
-    }));
+    });
 
     System.out.println("Done");
   }
