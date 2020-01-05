@@ -99,6 +99,10 @@ public class QueryComponent {
     }else{
       for(QueryComponent component: components){
         for(QueryTerm qt : component.getTerms()){
+          if(qt == null){
+            /* in a rare instance, it is possible to have null as query component*/
+            continue;
+          }
           QueryContainer qc = qt.toContainer();
           qc.setContainerId(component.containerId);
           map.put(qc, qt.getCategories());
