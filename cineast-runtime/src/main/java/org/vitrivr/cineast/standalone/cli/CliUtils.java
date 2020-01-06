@@ -36,14 +36,18 @@ public class CliUtils {
     metadataDescriptors.forEach(System.out::println);
   }
 
-  public static void printInfoForSegment(String segmentId, DBSelector selector, String _filterCategory) {
+  public static void printInfoForSegment(String segmentId, DBSelector selector, String _filterCategory, boolean printObjInfo) {
 
     System.out.println("= Retrieving segment information for " + segmentId + "=");
     MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
     Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
     segmentDescriptor.ifPresent(System.out::println);
 
-    segmentDescriptor.ifPresent(descriptor -> printInfoForObject(descriptor.getObjectId(), selector));
+    segmentDescriptor.ifPresent(descriptor -> {
+      if (printObjInfo) {
+        printInfoForObject(descriptor.getObjectId(), selector);
+      }
+    });
 
     System.out.println("= Retrieving segment metadata =");
     MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
@@ -102,7 +106,7 @@ public class CliUtils {
         System.out.print(": ");
         System.out.println(e.getScore());
         if (printDetail) {
-          CliUtils.printInfoForSegment(e.getSegmentId(), selector, null);
+          CliUtils.printInfoForSegment(e.getSegmentId(), selector, null, true);
         }
       }
       System.out.println();
