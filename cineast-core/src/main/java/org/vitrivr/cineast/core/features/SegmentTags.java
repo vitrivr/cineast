@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.iterator.TObjectFloatIterator;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -85,31 +85,23 @@ public class SegmentTags implements Extractor, Retriever {
 
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
 
-    TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
+    Map<String, Map<String, Float>> maxScoreByTag = new HashMap<>();
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      if (row.size() != 3 || row.get("id") == null || row.get("tagid") == null || row.get("score") == null) {
-        row.forEach((key, value) -> LOGGER.error("{}:{}", key, value));
-        continue;
-      }
       String segment = row.get("id").getString();
       String tagid = row.get("tagid").getString();
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
-      segmentScores.adjustOrPutValue(segment, score, score);
+      maxScoreByTag.putIfAbsent(segment, new HashMap<>());
+      maxScoreByTag.get(segment).compute(tagid, (tagidInMap, tagScore) -> tagScore == null ? score : Math.max(tagScore, score));
     }
 
-    ArrayList<ScoreElement> _return = new ArrayList<>(segmentScores.size());
+    ArrayList<ScoreElement> _return = new ArrayList<>();
 
-    TObjectFloatIterator<String> iter = segmentScores.iterator();
+    final float normalizer = weightSum;
 
-    while (iter.hasNext()) {
-      iter.advance();
-      if (iter.value() > 0f) {
-        _return.add(new SegmentScoreElement(iter.key(), iter.value() / weightSum));
-      }
-    }
+    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, tagScores.values().stream().reduce(0f, Float::sum) / normalizer)));
 
     return _return;
   }
