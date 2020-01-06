@@ -172,7 +172,7 @@ public class CottontailMessageBuilder {
   }
 
 
-  public static Query query(Entity entity, Projection projection, Where where, Knn knn) {
+  public static Query query(Entity entity, Projection projection, Where where, Knn knn, Integer rows) {
     Query.Builder queryBuilder = Query.newBuilder();
     queryBuilder.setFrom(from(entity)).setProjection(projection);
     if (where != null) {
@@ -180,6 +180,9 @@ public class CottontailMessageBuilder {
     }
     if (knn != null) {
       queryBuilder.setKnn(knn);
+    }
+    if (rows != null) {
+      queryBuilder.setLimit(rows);
     }
     return queryBuilder.build();
   }

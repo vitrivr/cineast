@@ -110,8 +110,16 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
-    return new ArrayList<>(0); // currently not supported
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
+    if (rows.isEmpty()) {
+      LOGGER.debug("No rows with segment id {}", segmentId);
+      return Collections.emptyList();
+    }
+    List<String> terms = new ArrayList<>();
+    rows.forEach(row -> terms.add(row.get("feature").getString()));
+    return this.getSimilar(qc, terms.toArray(new String[]{}));
+    /*LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
+    return new ArrayList<>(0); // currently not supported*/
   }
 
   /**

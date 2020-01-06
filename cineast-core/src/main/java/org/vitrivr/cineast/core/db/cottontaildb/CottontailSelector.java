@@ -62,7 +62,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results = this.cottontail.query(
         CottontailMessageBuilder.queryMessage(
             CottontailMessageBuilder.query(entity,
-                CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn),
+                CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn, k),
             config.getQueryId().toString()));
 
     List<E> _return = new ArrayList<>();
@@ -86,7 +86,7 @@ public class CottontailSelector implements DBSelector {
             vectors,
             null,
             k,
-            configs.get(0).getDistance().orElse(Distance.manhattan)));
+            configs.get(0).getDistance().orElse(Distance.manhattan)), k);
 
     List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
@@ -116,7 +116,7 @@ public class CottontailSelector implements DBSelector {
             config.getDistance().orElse(Distance.manhattan));
 
     List<QueryResponseMessage> results =
-        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn), config.getQueryId().toString()));
+        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn, k), config.getQueryId().toString()));
 
     return processResults(results);
   }
@@ -128,7 +128,7 @@ public class CottontailSelector implements DBSelector {
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
     List<QueryResponseMessage> results =
-        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
+        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), ""));
 
     List<float[]> _return = new ArrayList<>();
 
@@ -147,7 +147,7 @@ public class CottontailSelector implements DBSelector {
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), ""));
 
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public class CottontailSelector implements DBSelector {
       array[i] = CottontailMessageBuilder.toData(s);
       i++;
     }
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, array), null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, array), null, null), ""));
 
     return processResults(results);
   }
@@ -186,7 +186,7 @@ public class CottontailSelector implements DBSelector {
     }
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
-    final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
+    final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), ""));
 
     return processResults(results);
   }
@@ -196,7 +196,7 @@ public class CottontailSelector implements DBSelector {
 
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, CottontailMessageBuilder.toDatas(values));
 
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), ""));
 
     return processResults(results);
   }
@@ -209,7 +209,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, projection, null, null), ""));
+                CottontailMessageBuilder.query(entity, projection, null, null, null), ""));
 
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
 
@@ -227,7 +227,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null), ""));
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null, null), ""));
 
     return processResults(results);
   }
