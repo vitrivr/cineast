@@ -83,7 +83,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 		return Collections.emptyList();
 	}
 

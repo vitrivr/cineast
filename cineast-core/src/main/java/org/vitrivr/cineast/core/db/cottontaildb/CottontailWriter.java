@@ -49,7 +49,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
         Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, key); //TODO replace with exists projection
         Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-        List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
+        List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1), ""));
 
         if (result.isEmpty()) {
             return false;

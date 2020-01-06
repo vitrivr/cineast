@@ -88,9 +88,9 @@ public class Tags implements Extractor, Retriever {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", shotId);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
 
     TObjectFloatHashMap<String> tagScores = new TObjectFloatHashMap<>();
 

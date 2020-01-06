@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.standalone.config.Config;
 
-@Command(name = "optimize", description = "Optimize all entities for the cineast schema")
+@Command(name = "optimize", description = "Optimize all entities for the cineast schema. This command is only compatible with the cottontail database")
 public class OptimizeEntitiesCommand implements Runnable {
 
   @Override

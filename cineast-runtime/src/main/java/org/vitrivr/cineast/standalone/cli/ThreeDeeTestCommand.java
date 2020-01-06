@@ -10,12 +10,6 @@ import org.joml.Vector3i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 
-/**
- * A CLI command that can be used to start a 3d test.
- *
- * @author Ralph Gasser
- * @version 1.0
- */
 @Command(name = "3dtest", description = "Starts a 3D rendering test to check availability of an OpenGL renderer.")
 public class ThreeDeeTestCommand implements Runnable {
 
@@ -47,7 +41,7 @@ public class ThreeDeeTestCommand implements Runnable {
     try {
       ImageIO.write(image, "PNG", new File("cineast-3dtest.png"));
       System.out.println("3D test complete. Check for cineast-3dtest.png");
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       System.err.println("Could not save rendered image due to an IO error.");
     }
   }

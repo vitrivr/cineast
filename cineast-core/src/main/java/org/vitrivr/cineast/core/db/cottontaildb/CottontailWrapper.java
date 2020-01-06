@@ -155,9 +155,9 @@ public class CottontailWrapper implements AutoCloseable {
       stub.query(query).forEachRemaining(results::add);
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
-        LOGGER.error("CottontailWrapper.batchedQuery has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
+        LOGGER.error("CottontailWrapper.query has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
       } else {
-        LOGGER.error("Error occurred during invocation of CottontailWrapper.batchedQuery: {}", e.getMessage());
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.query: {}", e.getMessage());
       }
     }
     return results;

@@ -109,9 +109,17 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
-    LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
-    return new ArrayList<>(0); // currently not supported
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
+    if (rows.isEmpty()) {
+      LOGGER.debug("No rows with segment id {}", segmentId);
+      return Collections.emptyList();
+    }
+    List<String> terms = new ArrayList<>();
+    rows.forEach(row -> terms.add(row.get("feature").getString()));
+    return this.getSimilar(qc, terms.toArray(new String[]{}));
+    /*LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
+    return new ArrayList<>(0); // currently not supported*/
   }
 
   /**
@@ -154,8 +162,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Convenience-Method for implementing classes once they have generated their query terms.
-   * If there are multiple scores per segment (e.g. a segment has "hello" and "hello world" which produces two hits, does maxpooling
+   * Convenience-Method for implementing classes once they have generated their query terms. If there are multiple scores per segment (e.g. a segment has "hello" and "hello world" which produces two hits, does maxpooling
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
     final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
@@ -170,7 +177,8 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     for (Map<String, PrimitiveTypeProvider> result : resultList) {
       String id = result.get("id").getString();
       scoreMap.putIfAbsent(id, 0f);
-      scoreMap.compute(id, (key, val) -> Math.max(val, result.get("ap_score").getFloat()));
+      // There is no way to trace from a result to which of the terms it matched. While this is regrettable behavior, averaging is preferable to maxpooling
+      scoreMap.compute(id, (key, val) -> val += result.get("ap_score").getFloat() / terms.length);
     }
     scoreMap.forEach((key, value) -> {
       double score = f.applyAsDouble(scoreMap.get(key));

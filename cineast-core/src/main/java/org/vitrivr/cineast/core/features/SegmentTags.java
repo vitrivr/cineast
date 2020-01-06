@@ -1,12 +1,15 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.iterator.TObjectFloatIterator;
+import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -26,12 +29,14 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
   protected BatchedTagWriter writer;
   protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
@@ -64,7 +69,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
 
-  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags) {
+  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
 
     ArrayList<String> tagids = new ArrayList<>();
     TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
@@ -82,7 +87,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
 
-    TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
+    Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       String segment = row.get("id").getString();
@@ -90,23 +95,22 @@ public class SegmentTags implements Extractor, Retriever {
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
-      segmentScores.adjustOrPutValue(segment, score, score);
-
-    }
-
-    ArrayList<ScoreElement> _return = new ArrayList<>(segmentScores.size());
-
-    TObjectFloatIterator<String> iter = segmentScores.iterator();
-
-    while (iter.hasNext()) {
-      iter.advance();
-      if (iter.value() > 0f) {
-        _return.add(new SegmentScoreElement(iter.key(), iter.value() / weightSum));
+      maxScoreByTag.putIfAbsent(segment, new TObjectFloatHashMap<>());
+      float prev = maxScoreByTag.get(segment).get(tagid);
+      if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
+        maxScoreByTag.get(segment).put(tagid, score);
+      } else {
+        maxScoreByTag.get(segment).put(tagid, Math.max(score, prev));
       }
     }
 
-    return _return;
+    ArrayList<ScoreElement> _return = new ArrayList<>();
 
+    final float normalizer = weightSum;
+
+    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
+
+    return _return;
   }
 
   @Override
@@ -128,7 +132,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
 
   }
 
@@ -147,7 +151,7 @@ public class SegmentTags implements Extractor, Retriever {
       wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
   }
 
   @Override

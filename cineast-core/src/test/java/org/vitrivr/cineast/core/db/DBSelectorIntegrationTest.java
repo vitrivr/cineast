@@ -87,6 +87,7 @@ public abstract class DBSelectorIntegrationTest<R> {
     vectors.add(writer.generateTuple(3, "single"));
     vectors.add(writer.generateTuple(4, "double"));
     vectors.add(writer.generateTuple(5, "hello"));
+    vectors.add(writer.generateTuple(4, "duplicate"));
     vectors.add(writer.generateTuple(6, "world"));
     vectors.add(writer.generateTuple(7, "hello world my name is cineast"));
     writer.persist(vectors);
@@ -156,7 +157,7 @@ public abstract class DBSelectorIntegrationTest<R> {
     selector.open(testVectorTableName);
     Assertions.assertEquals(11, selector.getAll().size());
     selector.open(testTextTableName);
-    Assertions.assertEquals(7, selector.getAll().size());
+    Assertions.assertEquals(8, selector.getAll().size());
   }
 
   @Test
@@ -215,8 +216,11 @@ public abstract class DBSelectorIntegrationTest<R> {
     Assertions.fail("element not found in results: \n" + new Gson().toJson(results));
   }
 
+  /**
+   * This test verifies that a simple "hello" query retrieves exact and partial matches, but no fuzziness
+   */
   @Test
-  @DisplayName("Text: One el, LIKE")
+  @DisplayName("Text: One el, no quotes")
   void textRetrievalSingleLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello");
@@ -226,9 +230,25 @@ public abstract class DBSelectorIntegrationTest<R> {
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
 
+  /**
+   * This test verifies that a simple "hello" query retrieves exact and partial matches, but no fuzziness
+   */
   @Test
-  @DisplayName("Text: One el (two words), LIKE")
+  @DisplayName("Text: two words, inverted, no quotes")
   void textRetrievalSingleTwoWordsLike() {
+    selector.open(testTextTableName);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "name my");
+    Assertions.assertEquals(1, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
+  }
+
+
+  /**
+   * This test verifies that a quoted query only retrieves results which contain the full query term
+   */
+  @Test
+  @DisplayName("Text: One el (two words), quotes")
+  void textRetrievalSingleTwoWordsQuotedLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "\"hello world\"");
     Assertions.assertEquals(2, results.size());
@@ -236,8 +256,11 @@ public abstract class DBSelectorIntegrationTest<R> {
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
 
+  /**
+   * Verifies that ~1 means levenshtein 1
+   */
   @Test
-  @DisplayName("Text: One el, Fuzzy")
+  @DisplayName("Text: One el, one word, Fuzzy")
   void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello~1");
@@ -261,8 +284,11 @@ public abstract class DBSelectorIntegrationTest<R> {
   }
 
 
+  /**
+   * Verify that searching for two terms retrieves both individual results
+   */
   @Test
-  @DisplayName("Text: Two els")
+  @DisplayName("Text: Two elements w/ single word")
   void testRetrievalTwo() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double");
@@ -272,7 +298,20 @@ public abstract class DBSelectorIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Text: Three els")
+  @DisplayName("Text: Three elements, two are a match for the same id")
+  void testRetrievalThreeDouble() {
+    selector.open(testTextTableName);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "double", "single", "duplicate");
+    Assertions.assertEquals(3, results.size());
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
+    float score = results.get(0).get("ap_score").getFloat();
+    Assertions.assertEquals(score, results.get(1).get("ap_score").getFloat(), 0.01);
+    Assertions.assertEquals(score, results.get(2).get("ap_score").getFloat(), 0.01);
+  }
+
+  @Test
+  @DisplayName("Text: Three els, one of those with quotes")
   void testRetrievalThree() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double", "\"hello world\"");
