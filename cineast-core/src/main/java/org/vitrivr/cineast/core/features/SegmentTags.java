@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -32,6 +34,7 @@ public class SegmentTags implements Extractor, Retriever {
   protected BatchedTagWriter writer;
   protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
@@ -85,6 +88,10 @@ public class SegmentTags implements Extractor, Retriever {
     TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
+      if (row.size() != 3 || row.get("id") == null || row.get("tagid") == null || row.get("score") == null) {
+        row.forEach((key, value) -> LOGGER.error("{}:{}", key, value));
+        continue;
+      }
       String segment = row.get("id").getString();
       String tagid = row.get("tagid").getString();
       float score = row.get("score").getFloat()
