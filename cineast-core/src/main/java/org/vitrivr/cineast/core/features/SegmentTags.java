@@ -67,7 +67,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
 
-  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags) {
+  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
 
     ArrayList<String> tagids = new ArrayList<>();
     TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
@@ -98,7 +98,6 @@ public class SegmentTags implements Extractor, Retriever {
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
       segmentScores.adjustOrPutValue(segment, score, score);
-
     }
 
     ArrayList<ScoreElement> _return = new ArrayList<>(segmentScores.size());
@@ -113,7 +112,6 @@ public class SegmentTags implements Extractor, Retriever {
     }
 
     return _return;
-
   }
 
   @Override
@@ -135,7 +133,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
 
   }
 
@@ -154,7 +152,7 @@ public class SegmentTags implements Extractor, Retriever {
       wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
   }
 
   @Override

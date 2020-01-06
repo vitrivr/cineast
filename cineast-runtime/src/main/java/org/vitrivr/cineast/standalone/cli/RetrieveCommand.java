@@ -11,19 +11,13 @@ import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 
-/**
- * A CLI command that can be used to retrieve data from the database based on an example segment.
- *
- * @author Ralph Gasser
- * @version 1.0
- */
-@Command(name = "retrieve", description = "Retrieves objects from the database using an example object.")
+@Command(name = "retrieve-mlt", description = "Retrieves objects from the database using an example segment. Equivalent to an MLT lookup.")
 public class RetrieveCommand implements Runnable {
 
   @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
   private String segmentId;
 
-  @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve.")
+  @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve. By default, all categories are searched")
   private String category;
 
   @Option(name = {"-e", "--export"}, title = "Export", description = "Indicates whether the results should be exported. Defaults to false.")
@@ -40,11 +34,7 @@ public class RetrieveCommand implements Runnable {
 
     final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, qc);
     System.out.println("results:");
-    for (SegmentScoreElement e : results) {
-      System.out.print(e.getSegmentId());
-      System.out.print(": ");
-      System.out.println(e.getScore());
-    }
+    results.forEach(System.out::println);
     System.out.println();
   }
 }

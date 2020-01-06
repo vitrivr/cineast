@@ -44,7 +44,7 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
           return;
         }
         LOGGER.log(Level.TRACE, "Successfully wrote message of type {} to WebSocket stream!", message.getMessageType());
-        LOGGER.log(Level.TRACE, writer.toJson(message));
+        //LOGGER.log(Level.TRACE, writer.toJson(message));
       }
     });
   }

@@ -4,10 +4,7 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
 import org.vitrivr.cineast.core.features.OCRSearch;
@@ -15,11 +12,10 @@ import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.TagsFtSearch;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 @Command(name = "retrieve-text", description = "Retrieves objects from the database using text as query input.")
-public class TextRetrievalTest implements Runnable {
+public class TextRetrievalCommand implements Runnable {
 
   @Option(name = {"--text"}, title = "text input", description = "query to be used for retrieval.")
   private String text;
@@ -40,38 +36,7 @@ public class TextRetrievalTest implements Runnable {
     retrievers.add(new AudioTranscriptionSearch());
     retrievers.add(new DescriptionTextSearch());
     retrievers.add(new TagsFtSearch());
-
-    System.out.println("Only printing the first " + limit + " results, change with --limit parameter");
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    retrievers.forEach(retriever -> {
-      AtomicBoolean entityExists = new AtomicBoolean(true);
-      retriever.getTableNames().forEach(table -> {
-        if (!selector.existsEntity(table)) {
-          System.out.println("Entity " + table + " does not exist");
-          entityExists.set(false);
-        }
-      });
-      if (!entityExists.get()) {
-        System.out.println("Not retrieving for " + retriever.getClass().getSimpleName() + " because entity does not exist");
-        return;
-      }
-      System.out.println("Retrieving for " + retriever.getClass().getSimpleName());
-      long start = System.currentTimeMillis();
-      List<SegmentScoreElement> results = retrieval.retrieveByRetriever(qc, retriever, new ConstrainedQueryConfig());
-      long stop = System.currentTimeMillis();
-      System.out.println("Results for " + retriever.getClass().getSimpleName() + ":, retrieved in " + (stop - start) + "ms");
-
-      for (SegmentScoreElement e : results.subList(0, Math.min(limit, results.size()))) {
-        System.out.print(e.getSegmentId());
-        System.out.print(": ");
-        System.out.println(e.getScore());
-        if (printDetail) {
-          SingleObjRetrievalCommand.printInfoForSegment(e.getSegmentId(), selector, null);
-        }
-      }
-      System.out.println();
-    });
-    retrieval.shutdown();
+    CliUtils.retrieveAndLog(retrievers, retrieval, limit, printDetail, qc);
     System.out.println("Done");
   }
 }

@@ -25,12 +25,11 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportH
 /**
  * A CLI command that can be used to start import of pre-extracted data.
  *
- * @author Ralph Gasser
  */
 @Command(name = "import", description = "Starts import of pre-extracted data.")
 public class ImportCommand implements Runnable {
 
-  @Option(name = {"-t", "--type"}, description = "Type of data import that should be started. Possible values are PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS and VISION.")
+  @Option(name = {"-t", "--type"}, description = "Type of data import that should be started.")
   private String type;
 
   @Option(name = {"-i", "--input"}, description = "The source file or folder for data import. If a folder is specified, the entire content will be considered for import.")
@@ -44,7 +43,7 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
-    System.out.println(String.format("Starting import of type %s for '%s'.", this.type.toString(), this.input));
+    System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
     DataImportHandler handler;
@@ -65,7 +64,7 @@ public class ImportCommand implements Runnable {
         handler = new OcrDataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case CAPTION:
+      case CAPTIONING:
         handler = new CaptionTextImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
@@ -85,10 +84,6 @@ public class ImportCommand implements Runnable {
         handler = new AudioTranscriptImportHandler(this.threads, 15_000);
         handler.doImport(path);
         break;
-      case CAPTIONING:
-        handler = new CaptionTextImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
-        break;
       case GOOGLEVISION:
         doVisionImport(path);
         break;
@@ -97,7 +92,7 @@ public class ImportCommand implements Runnable {
         handler.doImport(path);
         break;
       case V3C1COLORLABELS:
-        /* Be aware that this is metadata which might already be comprised in merged vbs metadata*/
+        /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
@@ -131,6 +126,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
+    PROTO, JSON, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
   }
 }
