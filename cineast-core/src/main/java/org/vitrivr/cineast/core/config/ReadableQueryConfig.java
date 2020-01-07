@@ -31,6 +31,7 @@ public class ReadableQueryConfig {
     protected int resultsPerModule = 250;
     protected Optional<Integer> maxResults = Optional.empty();
     protected final Set<Hints> hints;
+    protected final Set<String> relevantSegmentIds = new HashSet<>();
 
     /**
      * Constructor used to parse a {@link ReadableQueryConfig} from JSON.
@@ -112,5 +113,14 @@ public class ReadableQueryConfig {
 
     public Set<Hints> getHints() {
         return this.hints;
+    }
+
+    /**
+     * Specifies the segments to which a query result should be limited before any other evaluation.
+     * An empty set indicates no additional filtering
+     * @return set of relevant segment ids
+     */
+    public Set<String> getRelevantSegmentIds() {
+        return Collections.unmodifiableSet(this.relevantSegmentIds);
     }
 }

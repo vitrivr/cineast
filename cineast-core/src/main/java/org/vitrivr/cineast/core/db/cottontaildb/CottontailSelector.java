@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
+import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
@@ -73,7 +74,9 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn),
+                CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
+                        whereInList("id", config.getRelevantSegmentIds()),
+                        knn),
                 config.getQueryId().toString()));
 
     List<E> _return = new ArrayList<>();
@@ -96,7 +99,7 @@ public class CottontailSelector implements DBSelector {
     Query query = CottontailMessageBuilder.query(
         entity,
         CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
-        null,
+        whereInList("id", configs.get(0).getRelevantSegmentIds()),
         CottontailMessageBuilder.batchedKnn(
             column,
             vectors,
@@ -142,7 +145,9 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn),
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION,
+                        whereInList("id", config.getRelevantSegmentIds()),
+                        knn),
                 config.getQueryId().toString()));
 
     return processResults(results);

@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.*;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CottontailMessageBuilder {
 
@@ -406,5 +407,28 @@ public class CottontailMessageBuilder {
     }
 
     return knnBuilder.build();
+  }
+
+  public static AtomicLiteralBooleanPredicate inList(String attribute, Collection<String> elements) {
+
+    AtomicLiteralBooleanPredicate.Builder builder = AtomicLiteralBooleanPredicate.newBuilder().setAttribute(attribute);
+    builder.setOp(Operator.IN);
+    builder.addAllData(elements.stream().map(CottontailMessageBuilder::toData).collect(Collectors.toList()));
+    return builder.build();
+
+  }
+
+  /**
+   * Builds a where clause from a collection of strings. Returns null for an empty collection.
+   */
+  public static Where whereInList(String attribute, Collection<String> elements) {
+    if (elements == null || elements.isEmpty()) {
+      return null;
+    }
+
+    Where.Builder builder = Where.newBuilder();
+    builder.setAtomic(inList(attribute, elements));
+
+    return builder.build();
   }
 }
