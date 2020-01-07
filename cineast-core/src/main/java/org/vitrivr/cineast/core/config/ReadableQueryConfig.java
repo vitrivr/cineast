@@ -84,6 +84,7 @@ public class ReadableQueryConfig {
         this.norm = qc.norm;
         this.resultsPerModule = qc.resultsPerModule;
         this.hints.addAll(qc.hints);
+        this.relevantSegmentIds.addAll(qc.relevantSegmentIds);
     }
 
     public final UUID getQueryId() {
