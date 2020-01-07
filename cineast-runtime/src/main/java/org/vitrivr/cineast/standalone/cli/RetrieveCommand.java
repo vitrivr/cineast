@@ -29,12 +29,26 @@ public class RetrieveCommand implements Runnable {
   @Option(name = {"-e", "--export"}, title = "Export", description = "Indicates whether the results should be exported. Defaults to false.")
   private boolean export = false;
 
+  @Option(name = {"-r", "--relevantSegments"}, title = "Relevant segments", description = "Comma separated list of segment IDs to which the query is to be limited.")
+  private String relevantSegments;
+
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
     if (export) {
       retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));
     }
-    final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, new ConstrainedQueryConfig());
+
+
+    QueryConfig qc = QueryConfig.newQueryConfigFromOther(new ConstrainedQueryConfig());
+
+    if (relevantSegments != null && !relevantSegments.isEmpty()) {
+      String[] segments = relevantSegments.split(",");
+      for (String segment : segments) {
+        qc.addRelevantSegmentIds(segment);
+      }
+    }
+
+    final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, qc);
     System.out.println("results:");
     for (SegmentScoreElement e : results) {
       System.out.print(e.getSegmentId());
