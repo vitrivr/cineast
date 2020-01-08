@@ -2,16 +2,13 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
  * @author rgasser
@@ -92,21 +89,22 @@ public class QueryComponent {
    *
    * @return A map of querycontainers with their associated categories
    */
-  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components){
+  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components) {
     final HashMap<QueryContainer, List<String>> map = new HashMap<>();
-    if(components.isEmpty()){
+    if (components.isEmpty()) {
       LOGGER.warn("Empty components collection, returning empty list of containers");
-    }else{
-      for(QueryComponent component: components){
-        for(QueryTerm qt : component.getTerms()){
-          if(qt == null){
-            /* in a rare instance, it is possible to have null as query component*/
-            continue;
-          }
-          QueryContainer qc = qt.toContainer();
-          qc.setContainerId(component.containerId);
-          map.put(qc, qt.getCategories());
+      return map;
+    }
+    for (QueryComponent component : components) {
+      for (QueryTerm qt : component.getTerms()) {
+        if (qt == null) {
+          /* FIXME in rare instances, it is possible to have null as query component*/
+          LOGGER.warn("QueryTerm was null for component {}", component);
+          continue;
         }
+        QueryContainer qc = qt.toContainer();
+        qc.setContainerId(component.containerId);
+        map.put(qc, qt.getCategories());
       }
     }
     return map;
@@ -114,6 +112,9 @@ public class QueryComponent {
 
   @Override
   public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    return "QueryComponent{" +
+        "terms=" + terms +
+        ", containerId=" + containerId +
+        '}';
   }
 }
