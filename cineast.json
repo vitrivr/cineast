@@ -15,11 +15,6 @@
     "maxResults": 1000,
     "resultsPerModule": 1500,
     "features": {
-      "boolean" : [
-        {"feature":  "DailyRangeBooleanRetriever", "weight": 1.0},
-        {"feature":  "DailyCollectionBooleanRetriever", "weight": 1.0},
-        {"feature":  "WSDMTICollectionBooleanRetriever", "weight": 1.0}
-      ],
       "semantic" : [
         {"feature": "ConceptMasksAde20k", "weight" : 1.0}
       ],
@@ -63,9 +58,6 @@
       ],
       "audiofingerprint": [
         {"feature": "HPCP12Shingle", "weight": 1.0}
-      ],
-      "tagsft": [
-        {"feature": "TagsFtSearch", "weight": 1.0}
       ],
       "tags": [
         {"feature": "SegmentTags", "weight": 1.0}
@@ -129,7 +121,7 @@
   },
 
   "monitoring":{
-    "enablePrometheus": true,
+    "enablePrometheus": false,
     "prometheusPort": 4569
   }
 
