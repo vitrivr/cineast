@@ -48,12 +48,10 @@ public class QueryTerm {
   @JsonCreator
   public QueryTerm(@JsonProperty("type") QueryTermType type,
       @JsonProperty("data") String data,
-      @JsonProperty("categories") List<String> categories/*,
-                   @JsonProperty("termId") String termId*/) {
+      @JsonProperty("categories") List<String> categories) {
     this.type = type;
     this.categories = categories;
     this.data = data;
-    /*this.termId = termId;*/
   }
 
   /**
