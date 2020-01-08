@@ -148,9 +148,23 @@ public class QueryConfig extends ReadableQueryConfig {
     this.correspondence = f;
     return this;
   }
-    
+
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
+
+  public void addRelevantSegmentIds(Collection<String> ids) {
+    this.relevantSegmentIds.addAll(ids);
+  }
+
+  public void addRelevantSegmentIds(String... ids) {
+    if (ids != null) {
+      for (int i = 0; i < ids.length; ++i) {
+        if (ids[i] != null) {
+          this.relevantSegmentIds.add(ids[i]);
+        }
+      }
+    }
   }
 }
