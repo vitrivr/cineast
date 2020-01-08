@@ -3,7 +3,6 @@ package org.vitrivr.cineast.standalone;
 import java.util.Arrays;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
 import org.vitrivr.cineast.standalone.util.CLI;
 
 public class Main {

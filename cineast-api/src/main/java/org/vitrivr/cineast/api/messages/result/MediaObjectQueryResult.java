@@ -1,39 +1,21 @@
 package org.vitrivr.cineast.api.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
-import java.util.List;
-
-/**
- * @author rgasser
- * @version 1.0
- * @created 12.01.17
- */
 public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObjectDescriptor> {
 
-    /**
-     *
-     * @param queryId
-     * @param content
-     */
-    @JsonCreator
-    public MediaObjectQueryResult(String queryId, List<MediaObjectDescriptor> content) {
-        super(queryId, content);
-    }
+  @JsonCreator
+  public MediaObjectQueryResult(String queryId, List<MediaObjectDescriptor> content) {
+    super(queryId, content);
+  }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public MessageType getMessageType() {
-        return MessageType.QR_OBJECT;
-    }
-
+  @Override
+  public MessageType getMessageType() {
+    return MessageType.QR_OBJECT;
+  }
 
 }

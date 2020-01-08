@@ -28,7 +28,7 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 /**
- * This is a proof of concept class and will probably be replaced by a more general solution to text retrieval in the future. Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
+ * Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
  */
 public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
@@ -80,7 +80,9 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr storage handler. This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
+   * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr storage handler.
+   *
+   * This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
    */
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -118,8 +120,6 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     List<String> terms = new ArrayList<>();
     rows.forEach(row -> terms.add(row.get("feature").getString()));
     return this.getSimilar(qc, terms.toArray(new String[]{}));
-    /*LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
-    return new ArrayList<>(0); // currently not supported*/
   }
 
   /**
