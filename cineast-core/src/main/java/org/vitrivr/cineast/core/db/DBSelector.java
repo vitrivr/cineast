@@ -126,7 +126,7 @@ public interface DBSelector {
    * @param terms The query terms. Individual terms will be connected by a logical OR.
    * @return List of rows that math the fulltext search.
    */
-  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
+  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
       String... terms);
 
   /**

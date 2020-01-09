@@ -285,7 +285,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     throw new IllegalStateException("Not implemented.");
   }
 
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
       String... terms) {
     throw new IllegalStateException("Not implemented.");
   }

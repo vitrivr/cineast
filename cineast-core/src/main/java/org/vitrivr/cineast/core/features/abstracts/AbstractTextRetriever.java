@@ -165,7 +165,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * Convenience-Method for implementing classes once they have generated their query terms. If there are multiple scores per segment (e.g. a segment has "hello" and "hello world" which produces two hits, does maxpooling
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
-    final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
+    final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], qc, terms);
 
     LOGGER.trace("Retrieved {} results for terms {}", resultList.size(), Arrays.toString(terms));
 
