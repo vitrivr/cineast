@@ -328,7 +328,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
       String... terms) {
     final ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
     ehqmBuilder.setEntity(this.entityName);

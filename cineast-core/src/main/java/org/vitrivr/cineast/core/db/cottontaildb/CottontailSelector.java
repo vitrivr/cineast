@@ -220,7 +220,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
-      int rows, String fieldname, String... terms) {
+      int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
 
     final String searchString = Joiner.on(' ').join(terms); //TODO there might be a better way to do this?
 

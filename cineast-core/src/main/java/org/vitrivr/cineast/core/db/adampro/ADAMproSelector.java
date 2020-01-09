@@ -392,7 +392,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
      * @param terms The query terms. Individual terms will be connected by a logical OR.
      * @return List of rows that math the fulltext search.
      */
-    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, String... terms) {
+    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
         final ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
         ehqmBuilder.setEntity(this.entityName);
         ehqmBuilder.setHandler("solr");
