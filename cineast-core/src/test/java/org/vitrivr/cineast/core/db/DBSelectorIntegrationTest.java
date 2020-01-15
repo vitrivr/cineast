@@ -223,7 +223,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: One el, no quotes")
   void textRetrievalSingleLike() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello");
     Assertions.assertEquals(3, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 5);
@@ -237,7 +237,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: two words, inverted, no quotes")
   void textRetrievalSingleTwoWordsLike() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "name my");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "name my");
     Assertions.assertEquals(1, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
   }
@@ -250,7 +250,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: One el (two words), quotes")
   void textRetrievalSingleTwoWordsQuotedLike() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "\"hello world\"");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig,"\"hello world\"");
     Assertions.assertEquals(2, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 7);
@@ -263,7 +263,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: One el, one word, Fuzzy")
   void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "hello~1");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello~1");
     Assertions.assertEquals(4, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 1);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 2);
@@ -291,7 +291,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: Two elements w/ single word")
   void testRetrievalTwo() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "single", "double");
     Assertions.assertEquals(2, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
@@ -301,7 +301,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: Three elements, two are a match for the same id")
   void testRetrievalThreeDouble() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "double", "single", "duplicate");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "double", "single", "duplicate");
     Assertions.assertEquals(3, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
@@ -314,7 +314,7 @@ public abstract class DBSelectorIntegrationTest<R> {
   @DisplayName("Text: Three els, one of those with quotes")
   void testRetrievalThree() {
     selector.open(testTextTableName);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, "single", "double", "\"hello world\"");
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig,"single", "double", "\"hello world\"");
     Assertions.assertEquals(4, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 3);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == 4);
