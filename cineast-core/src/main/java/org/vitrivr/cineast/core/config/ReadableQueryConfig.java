@@ -7,6 +7,9 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import java.util.*;
 
 public class ReadableQueryConfig {
+
+    private static final int DEFAULT_RESULTS_PER_MODULE = 250;
+
     /**
      * Possible distance functions that can be configured in the {@link QueryConfig}. It's up to the implementing selector to support these distances and / or provide fallback options.
      */
@@ -28,7 +31,7 @@ public class ReadableQueryConfig {
     protected float[] distanceWeights = null;
     protected float norm = Float.NaN;
     protected CorrespondenceFunction correspondence = null;
-    protected int resultsPerModule = 250;
+    protected int resultsPerModule = -1;
     protected Optional<Integer> maxResults = Optional.empty();
     protected final Set<Hints> hints;
     protected final Set<String> relevantSegmentIds = new HashSet<>();
@@ -91,9 +94,13 @@ public class ReadableQueryConfig {
         return this.queryId;
     }
 
-    public int getResultsPerModule() { return this.resultsPerModule; }
+    public int getResultsPerModule() {
+        return this.resultsPerModule > 0 ? this.resultsPerModule : DEFAULT_RESULTS_PER_MODULE;
+    }
 
-    public Optional<Integer> getMaxResults() { return this.maxResults; }
+    public Optional<Integer> getMaxResults() {
+        return this.maxResults;
+    }
 
     public Optional<Distance> getDistance() {
         return Optional.ofNullable(this.distance);
@@ -128,7 +135,35 @@ public class ReadableQueryConfig {
     /**
      * checks if the config has segment ids to which the result is to be limited without the need for allocation of immutable wrapper
      */
-    public boolean hasRelevantSegmentIds(){
+    public boolean hasRelevantSegmentIds() {
         return !this.relevantSegmentIds.isEmpty();
+    }
+
+    public ReadableQueryConfig withChangesFrom(ReadableQueryConfig other) {
+
+        ReadableQueryConfig _return = new ReadableQueryConfig(this);
+
+        if (other.distance != null) {
+            this.distance = other.distance;
+        }
+
+        if (other.distanceWeights != null) {
+            this.distanceWeights = other.distanceWeights;
+        }
+
+        if (!Float.isNaN(other.norm)) {
+            this.norm = other.norm;
+        }
+
+        if (other.resultsPerModule > 0) {
+            this.resultsPerModule = other.resultsPerModule;
+        }
+
+        this.hints.addAll(other.hints);
+
+        this.relevantSegmentIds.addAll(other.relevantSegmentIds);
+
+        return _return;
+
     }
 }

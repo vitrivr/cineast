@@ -2,14 +2,11 @@ package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+
+import java.util.*;
 
 public class QueryConfig extends ReadableQueryConfig {
 
@@ -53,7 +50,9 @@ public class QueryConfig extends ReadableQueryConfig {
   }
 
   public QueryConfig setResultsPerModule(int k) {
-    this.resultsPerModule = k;
+    if (k > 0) {
+      this.resultsPerModule = k;
+    }
     return this;
   }
 

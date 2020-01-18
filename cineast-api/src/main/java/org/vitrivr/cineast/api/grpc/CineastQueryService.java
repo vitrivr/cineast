@@ -1,19 +1,19 @@
 package org.vitrivr.cineast.api.grpc;
 
 import io.grpc.stub.StreamObserver;
+import org.vitrivr.cineast.api.grpc.data.QueryStage;
 import org.vitrivr.cineast.api.grpc.data.QueryTerm;
 import org.vitrivr.cineast.api.grpc.util.MediaObjectUtil;
 import org.vitrivr.cineast.api.grpc.util.MediaSegmentUtil;
 import org.vitrivr.cineast.api.grpc.util.QueryContainerUtil;
 import org.vitrivr.cineast.api.util.QueryUtil;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
@@ -21,14 +21,19 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
+    private static final int DEFAULT_NEIGHBORING_SEGMENTS = 10;
+
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
-    public CineastQueryService(ContinuousRetrievalLogic continuousRetrievalLogic){
+    public CineastQueryService(ContinuousRetrievalLogic continuousRetrievalLogic) {
         this.continuousRetrievalLogic = continuousRetrievalLogic;
     }
 
@@ -64,17 +69,39 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
     @Override
     public void getMediaSegmentScores(CineastGrpc.Query query, StreamObserver<CineastGrpc.SimilarityQueryResult> responseObserver) {
-        List<QueryTerm> terms = QueryContainerUtil.query(query);
 
-        for(QueryTerm term : terms) {
+        List<QueryStage> stages = QueryContainerUtil.query(query);
 
-            for (String category : term.getCategories()) {
-                List<StringDoublePair> results = QueryUtil.retrieve(continuousRetrievalLogic, term.getContainer(), term.getQueryConfig(), category);
-                responseObserver.onNext(QueryContainerUtil.similarityQueryResult(
-                        term.getQueryConfig().getQueryId().toString(),
-                        category,
-                        results
-                ));
+        HashSet<String> relevantSegments = new HashSet<>();
+
+        for (int i = 0; i < stages.size(); ++i) {
+
+            QueryStage stage = stages.get(i);
+            boolean lastStage = i == stages.size() - 1;
+
+            List<QueryTerm> terms = stage.getQueryTerms();
+            QueryConfig stageConfig = QueryConfig.clone(stage.getQueryConfig());
+            stageConfig.addRelevantSegmentIds(relevantSegments);
+            relevantSegments.clear();
+
+            for (QueryTerm term : terms) {
+
+                for (String category : term.getCategories()) {
+
+                    ReadableQueryConfig queryConfig = stageConfig.withChangesFrom(term.getQueryConfig());
+
+                    List<StringDoublePair> results = QueryUtil.retrieve(continuousRetrievalLogic, term.getContainer(), queryConfig, category);
+
+                    if (lastStage) {
+                        responseObserver.onNext(QueryContainerUtil.similarityQueryResult(
+                                term.getQueryConfig().getQueryId().toString(),
+                                category,
+                                results
+                        ));
+                    } else {
+                        results.stream().forEach(x -> relevantSegments.add(x.key));
+                    }
+                }
             }
         }
 
@@ -83,8 +110,6 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
     @Override
     public void getSimilar(CineastGrpc.Query query, StreamObserver<CineastGrpc.QueryResult> responseObserver) {
-        List<QueryTerm> terms = QueryContainerUtil.query(query);
-
         Set<String> sentSegmentIds = new HashSet<>(), sentObjectIds = new HashSet<>();
 
         MediaSegmentReader mediaSegmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
@@ -92,71 +117,94 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
         MediaSegmentMetadataReader segmentMetadataReader = new MediaSegmentMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         MediaObjectMetadataReader objectMetadataReader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
-        for(QueryTerm term : terms) {
+        List<QueryStage> stages = QueryContainerUtil.query(query);
 
-            for (String category : term.getCategories()) {
-                List<StringDoublePair> results = QueryUtil.retrieve(continuousRetrievalLogic, term.getContainer(), term.getQueryConfig(), category);
-                responseObserver.onNext(
-                        QueryContainerUtil.queryResult(
-                            QueryContainerUtil.similarityQueryResult(
-                            term.getQueryConfig().getQueryId().toString(),
-                            category,
-                            results
-                )));
+        HashSet<String> relevantSegments = new HashSet<>();
 
-                List<String> segmentIds = results.stream().map(x -> x.key).filter(x -> !sentSegmentIds.contains(x)).collect(Collectors.toList());
-                if (segmentIds.isEmpty()){
-                    continue;
+        for (int i = 0; i < stages.size(); ++i) {
+
+            QueryStage stage = stages.get(i);
+            boolean lastStage = i == stages.size() - 1;
+
+            List<QueryTerm> terms = stage.getQueryTerms();
+            QueryConfig stageConfig = QueryConfig.clone(stage.getQueryConfig());
+            stageConfig.addRelevantSegmentIds(relevantSegments);
+            relevantSegments.clear();
+
+            for (QueryTerm term : terms) {
+
+                ReadableQueryConfig queryConfig = stageConfig.withChangesFrom(term.getQueryConfig());
+
+                for (String category : term.getCategories()) {
+                    List<StringDoublePair> results = QueryUtil.retrieve(continuousRetrievalLogic, term.getContainer(), queryConfig, category);
+
+                    if (!lastStage) {
+                        results.stream().forEach(x -> relevantSegments.add(x.key));
+                        continue;
+                    }
+
+
+                    responseObserver.onNext(
+                            QueryContainerUtil.queryResult(
+                                    QueryContainerUtil.similarityQueryResult(
+                                            term.getQueryConfig().getQueryId().toString(),
+                                            category,
+                                            results
+                                    )));
+
+                    List<String> segmentIds = results.stream().map(x -> x.key).filter(x -> !sentSegmentIds.contains(x)).collect(Collectors.toList());
+                    if (segmentIds.isEmpty()) {
+                        continue;
+                    }
+
+                    Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds);
+
+                    responseObserver.onNext(
+                            QueryContainerUtil.queryResult(
+                                    CineastGrpc.MediaSegmentQueryResult.newBuilder().addAllSegments(
+                                            segments.values().stream().map(MediaSegmentUtil::fromMediaSegmentDescriptor).collect(Collectors.toList())
+                                    ).build()
+                            )
+                    );
+
+                    List<MediaSegmentMetadataDescriptor> segmentMetaData = segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+                    responseObserver.onNext(
+                            QueryContainerUtil.queryResult(
+                                    CineastGrpc.MediaSegmentMetaDataQueryResult.newBuilder().addAllSegmentMetaData(
+                                            segmentMetaData.stream().map(QueryContainerUtil::mediaSegmentMetaData).collect(Collectors.toList())
+                                    ).build()
+                            )
+                    );
+
+                    sentSegmentIds.addAll(segmentIds);
+
+                    List<String> objectIds = segments.values().stream().map(MediaSegmentDescriptor::getObjectId).filter(x -> !sentObjectIds.contains(x)).collect(Collectors.toList());
+                    if (objectIds.isEmpty()) {
+                        continue;
+                    }
+                    Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
+
+                    responseObserver.onNext(
+                            QueryContainerUtil.queryResult(
+                                    CineastGrpc.MediaObjectQueryResult.newBuilder().addAllObjects(
+                                            objects.values().stream().map(MediaObjectUtil::fromMediaObjectDescriptor).collect(Collectors.toList())
+                                    ).build()
+                            )
+                    );
+
+                    List<MediaObjectMetadataDescriptor> objectMetaData = objectMetadataReader.lookupMultimediaMetadata(objectIds);
+                    responseObserver.onNext(
+                            QueryContainerUtil.queryResult(
+                                    CineastGrpc.MediaObjectMetaDataQueryResult.newBuilder().addAllObjectMetaData(
+                                            objectMetaData.stream().map(QueryContainerUtil::mediaObjectMetaData).collect(Collectors.toList())
+                                    ).build()
+                            )
+                    );
+
+                    sentObjectIds.addAll(objectIds);
                 }
-
-                Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds);
-
-                responseObserver.onNext(
-                        QueryContainerUtil.queryResult(
-                                CineastGrpc.MediaSegmentQueryResult.newBuilder().addAllSegments(
-                        segments.values().stream().map(MediaSegmentUtil::fromMediaSegmentDescriptor).collect(Collectors.toList())
-                                ).build()
-                        )
-                );
-
-                List<MediaSegmentMetadataDescriptor> segmentMetaData = segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
-                responseObserver.onNext(
-                        QueryContainerUtil.queryResult(
-                                CineastGrpc.MediaSegmentMetaDataQueryResult.newBuilder().addAllSegmentMetaData(
-                                        segmentMetaData.stream().map(QueryContainerUtil::mediaSegmentMetaData).collect(Collectors.toList())
-                                ).build()
-                        )
-                );
-
-                sentSegmentIds.addAll(segmentIds);
-
-                List<String> objectIds = segments.values().stream().map(MediaSegmentDescriptor::getObjectId).filter(x -> !sentObjectIds.contains(x)).collect(Collectors.toList());
-                if (objectIds.isEmpty()){
-                    continue;
-                }
-                Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
-
-                responseObserver.onNext(
-                        QueryContainerUtil.queryResult(
-                                CineastGrpc.MediaObjectQueryResult.newBuilder().addAllObjects(
-                                        objects.values().stream().map(MediaObjectUtil::fromMediaObjectDescriptor).collect(Collectors.toList())
-                                ).build()
-                        )
-                );
-
-                List<MediaObjectMetadataDescriptor> objectMetaData = objectMetadataReader.lookupMultimediaMetadata(objectIds);
-                responseObserver.onNext(
-                        QueryContainerUtil.queryResult(
-                                CineastGrpc.MediaObjectMetaDataQueryResult.newBuilder().addAllObjectMetaData(
-                                        objectMetaData.stream().map(QueryContainerUtil::mediaObjectMetaData).collect(Collectors.toList())
-                                ).build()
-                        )
-                );
-
-                sentObjectIds.addAll(objectIds);
             }
         }
-
         responseObserver.onCompleted();
 
         mediaSegmentReader.close();
@@ -172,7 +220,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
         Set<String> ids = request.getIdsList().stream().map(CineastGrpc.MediaSegmentId::getId).collect(Collectors.toSet());
         Map<String, MediaSegmentDescriptor> descriptors = mediaSegmentReader.lookUpSegments(ids);
 
-        int range = QueryContainerUtil.queryConfig(request.getQueryConfig()).getMaxResults().orElse(10) / 2;
+        int range = QueryContainerUtil.queryConfig(request.getQueryConfig()).getMaxResults().orElse(DEFAULT_NEIGHBORING_SEGMENTS) / 2;
 
         if (range > 0){
             Set<MediaSegmentDescriptor> results = new HashSet<>( 2 * range * descriptors.size());
