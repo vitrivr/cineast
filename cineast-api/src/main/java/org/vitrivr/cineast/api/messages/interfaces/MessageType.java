@@ -2,10 +2,7 @@ package org.vitrivr.cineast.api.messages.interfaces;
 
 import org.vitrivr.cineast.api.messages.general.Ping;
 import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
-import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
-import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
-import org.vitrivr.cineast.api.messages.query.SegmentQuery;
-import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
+import org.vitrivr.cineast.api.messages.query.*;
 import org.vitrivr.cineast.api.messages.result.*;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
@@ -21,7 +18,7 @@ public enum MessageType {
     PING(Ping.class),
 
     /* Query  message types. */
-    Q_SIM(SimilarityQuery.class), Q_MLT(MoreLikeThisQuery.class), Q_NESEG(NeighboringSegmentQuery.class), Q_SEG(SegmentQuery.class), M_LOOKUP(MetadataLookup.class),
+    Q_SIM(SimilarityQuery.class), Q_SSIM(StagedSimilarityQuery.class), Q_MLT(MoreLikeThisQuery.class), Q_NESEG(NeighboringSegmentQuery.class), Q_SEG(SegmentQuery.class), M_LOOKUP(MetadataLookup.class),
 
     /* Session */
     SESSION_START(StartSessionMessage.class),

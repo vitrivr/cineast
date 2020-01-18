@@ -3,14 +3,15 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.vitrivr.cineast.api.messages.query.Query;
+import org.vitrivr.cineast.api.messages.result.*;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.api.messages.query.Query;
-import org.vitrivr.cineast.api.messages.result.*;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
@@ -22,6 +23,7 @@ import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -147,6 +149,39 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
     if (!segmentMetadata.isEmpty()) {
       this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
+    }
+  }
+
+  /**
+   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the raw results produced by a similarity search in a specific category. q
+   *
+   * @param session The {@link Session} object used to transmit the results.
+   * @param queryId ID of the running query.
+   * @param category Name of the query category.
+   * @param raw List of raw per-category results (segmentId -> score).
+   */
+  protected void finalizeAndSubmitResults(Session session, String queryId, String category, int containerId, List<StringDoublePair> raw) {
+    final int stride = 1000;
+    for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
+      final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
+      final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
+
+      /* Load segment & object information. */
+      final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+      final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+      final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+      if (segments.isEmpty() || objects.isEmpty()) {
+        continue;
+      }
+
+      /* Write segments, objects and similarity search data to stream. */
+      this.write(session, new MediaObjectQueryResult(queryId, objects));
+      this.write(session, new MediaSegmentQueryResult(queryId, segments));
+      this.write(session, new SimilarityQueryResult(queryId, category, containerId, sub));
+
+      /* Load and transmit segment & object metadata. */
+      this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
+      this.loadAndWriteObjectMetadata(session, queryId, objectIds);
     }
   }
 }
