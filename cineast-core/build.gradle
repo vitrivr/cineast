@@ -102,3 +102,7 @@ dependencies {
     compile group: "org.bytedeco", name: "javacpp", version: "1.5.1"
     compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}"
 }
+
+test {
+    useJUnitPlatform()
+}

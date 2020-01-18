@@ -180,12 +180,8 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
       int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
 
-    Where where;
-    if (terms.length == 1) {
-      where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(terms[0]));
-    } else {
-      where = CottontailMessageBuilder.compoundOrWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
-    }
+    Where where = CottontailMessageBuilder.compoundOrWhere(queryConfig, fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
+
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
     final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), ""));

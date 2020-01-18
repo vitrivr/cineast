@@ -7,7 +7,6 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPre
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BoolVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Builder;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
@@ -31,6 +30,8 @@ import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.googlecode.javaewah.datastructure.BitSet;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -137,40 +138,81 @@ public class CottontailMessageBuilder {
     return Where.newBuilder().setAtomic(atomicPredicate(attribute, operator, data)).build();
   }
 
-  public static ImmutablePair<PredicateCase, Object> recursiveCompoundOrWhere(String fieldname, RelationalOperator operator, Data... data) {
-    if (data.length == 1) {
-      return ImmutablePair.of(PredicateCase.ATOMIC, atomicPredicate(fieldname, operator, data));
+  public static List<AtomicLiteralBooleanPredicate> toAtomicLiteralBooleanPredicates(String fieldname, RelationalOperator operator, Data... data){
+    if (data == null || data.length == 0){
+      return Collections.emptyList();
     }
 
-    Builder builder = CompoundBooleanPredicate.newBuilder();
-    builder.setAleft(atomicPredicate(fieldname, operator, data[0]));
-    builder.setOp(CompoundBooleanPredicate.Operator.OR);
-    if (data.length == 2) {
-      builder.setAright(atomicPredicate(fieldname, operator, data[1]));
-      return ImmutablePair.of(PredicateCase.COMPOUND, builder.build());
+    ArrayList<AtomicLiteralBooleanPredicate> _return = new ArrayList<>(data.length);
+
+    for (Data d : data ) {
+      _return.add(
+        atomicPredicate(fieldname, operator, d)
+      );
     }
-    ImmutablePair<PredicateCase, Object> pair = recursiveCompoundOrWhere(fieldname, operator, Arrays.copyOfRange(data, 1, data.length));
-    if (pair.left == PredicateCase.ATOMIC) {
-      builder.setAright((AtomicLiteralBooleanPredicate) pair.right);
-    }
-    if (pair.left == PredicateCase.COMPOUND) {
-      builder.setCright((CompoundBooleanPredicate) pair.right);
-    }
-    return ImmutablePair.of(PredicateCase.COMPOUND, builder.build());
+
+    return _return;
+
   }
 
-  public static Where compoundOrWhere(String fieldname, RelationalOperator operator, Data... data) {
-    if (data.length == 1) {
-      return atomicWhere(fieldname, operator, data);
+  private static CompoundBooleanPredicate reduce(CompoundBooleanPredicate.Operator op, List<AtomicLiteralBooleanPredicate> predicates) {
+    if (predicates == null || predicates.size() < 2) {
+      throw new IllegalArgumentException("CottontailMessageBuilder.reduce needs at least 2 predicates");
     }
-    ImmutablePair<PredicateCase, Object> pair = recursiveCompoundOrWhere(fieldname, operator, data);
-    if (pair.left == PredicateCase.ATOMIC) {
-      return Where.newBuilder().setAtomic((AtomicLiteralBooleanPredicate) pair.right).build();
+
+    CompoundBooleanPredicate _return = CompoundBooleanPredicate.newBuilder()
+            .setAleft(predicates.get(predicates.size() - 2))
+            .setOp(op)
+            .setAright(predicates.get(predicates.size() - 1))
+            .build();
+
+    for (int i = predicates.size() - 3; i >= 0; --i) {
+      _return = CompoundBooleanPredicate.newBuilder()
+              .setAleft(predicates.get(i))
+              .setOp(op)
+              .setCright(_return)
+              .build();
     }
-    if (pair.left == PredicateCase.COMPOUND) {
-      return Where.newBuilder().setCompound((CompoundBooleanPredicate) pair.right).build();
+
+    return _return;
+
+  }
+
+  public static Where compoundOrWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, Data... data) {
+
+    if (data == null || data.length == 0) {
+      throw new IllegalArgumentException("data not set in CottontailMessageBuilder.compoundOrWhere");
     }
-    throw new IllegalStateException(Arrays.toString(data));
+
+    AtomicLiteralBooleanPredicate inList = null;
+    if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
+      inList = inList("id", queryConfig.getRelevantSegmentIds());
+    }
+
+    List<AtomicLiteralBooleanPredicate> predicates = toAtomicLiteralBooleanPredicates(fieldname, operator, data);
+
+    if (inList == null) {
+
+      if (predicates.size() > 1){
+        return Where.newBuilder().setCompound(
+                reduce(CompoundBooleanPredicate.Operator.OR, predicates)
+        ).build();
+      } else {
+        return Where.newBuilder().setAtomic(predicates.get(0)).build();
+      }
+
+    } else {
+
+      CompoundBooleanPredicate.Builder builder = CompoundBooleanPredicate.newBuilder().setAleft(inList).setOp(CompoundBooleanPredicate.Operator.AND);
+      if (predicates.size() > 1){
+        builder.setCright(reduce(CompoundBooleanPredicate.Operator.OR, predicates));
+      } else {
+        builder.setAright(predicates.get(0));
+      }
+
+      return Where.newBuilder().setCompound(builder).build();
+
+    }
   }
 
 
