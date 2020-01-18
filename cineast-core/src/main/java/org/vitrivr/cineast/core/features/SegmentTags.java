@@ -2,12 +2,6 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -30,6 +24,9 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.MathHelper;
+
+import java.util.*;
+import java.util.function.Supplier;
 
 public class SegmentTags implements Extractor, Retriever {
 
@@ -89,8 +86,19 @@ public class SegmentTags implements Extractor, Retriever {
 
     Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
+    Set<String> relevant = null;
+    if (qc != null && qc.hasRelevantSegmentIds()){
+      relevant = qc.getRelevantSegmentIds();
+    }
+
     for (Map<String, PrimitiveTypeProvider> row : rows) {
+
       String segment = row.get("id").getString();
+
+      if (relevant != null && !relevant.contains(segment)){
+        continue;
+      }
+
       String tagid = row.get("tagid").getString();
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);

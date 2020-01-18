@@ -124,4 +124,11 @@ public class ReadableQueryConfig {
     public Set<String> getRelevantSegmentIds() {
         return Collections.unmodifiableSet(this.relevantSegmentIds);
     }
+
+    /**
+     * checks if the config has segment ids to which the result is to be limited without the need for allocation of immutable wrapper
+     */
+    public boolean hasRelevantSegmentIds(){
+        return !this.relevantSegmentIds.isEmpty();
+    }
 }
