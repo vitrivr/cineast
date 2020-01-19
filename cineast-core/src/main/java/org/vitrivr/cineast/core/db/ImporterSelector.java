@@ -13,9 +13,7 @@ import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.distance.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class ImporterSelector<T extends Importer<?>> implements DBSelector {
@@ -130,15 +128,25 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
     FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue
-        .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+            .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+
+    HashSet<String> relevant = null;
+    if (config.hasRelevantSegmentIds()) {
+      Set<String> ids = config.getRelevantSegmentIds();
+      relevant = new HashSet<>(ids.size());
+      relevant.addAll(ids);
+    }
 
     Map<String, PrimitiveTypeProvider> map;
     while ((map = importer.readNextAsMap()) != null) {
       if (!map.containsKey(column)) {
         continue;
       }
+      if (relevant != null && !relevant.contains(map.get("id"))) {
+        continue;
+      }
       double d = distance
-          .applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
+              .applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
       map.put("distance", new FloatTypeProvider((float) d));
       knn.add(map);
     }
