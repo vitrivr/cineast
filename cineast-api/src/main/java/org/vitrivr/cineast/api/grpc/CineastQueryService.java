@@ -74,6 +74,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
         HashSet<String> relevantSegments = new HashSet<>();
 
+        stages:
         for (int i = 0; i < stages.size(); ++i) {
 
             QueryStage stage = stages.get(i);
@@ -99,6 +100,11 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                                 results
                         ));
                     } else {
+
+                        if (results.isEmpty()) { //no more results left
+                            break stages;
+                        }
+
                         results.stream().forEach(x -> relevantSegments.add(x.key));
                     }
                 }
@@ -121,6 +127,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
         HashSet<String> relevantSegments = new HashSet<>();
 
+        stages:
         for (int i = 0; i < stages.size(); ++i) {
 
             QueryStage stage = stages.get(i);
@@ -139,6 +146,11 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                     List<StringDoublePair> results = QueryUtil.retrieve(continuousRetrievalLogic, term.getContainer(), queryConfig, category);
 
                     if (!lastStage) {
+
+                        if (results.isEmpty()) { //no more results left, later stages can be ignored
+                            break stages;
+                        }
+
                         results.stream().forEach(x -> relevantSegments.add(x.key));
                         continue;
                     }

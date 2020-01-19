@@ -65,6 +65,11 @@ public class StagedSimilarityQueryMessageHandler extends AbstractQueryMessageHan
                         /* Finalize and submit per-container results */
                         this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
                     } else {
+
+                        if (results.isEmpty()) { //no more results left
+                            return;
+                        }
+
                         results.stream().forEach(x -> relevantSegments.add(x.key));
                     }
                 }
