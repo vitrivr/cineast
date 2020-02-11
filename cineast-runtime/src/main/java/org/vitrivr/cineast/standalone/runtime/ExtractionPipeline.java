@@ -172,13 +172,21 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         LOGGER.info("Warming up extraction pipeline....");
 
         for (Extractor extractor : this.context.extractors()) {
-            extractor.init(this.context.persistencyWriter(), this.context.batchSize());
-            this.extractors.add(extractor);
+            try {
+                extractor.init(this.context.persistencyWriter(), this.context.batchSize());
+                this.extractors.add(extractor);
+            } catch (Throwable t) {
+                LOGGER.warn("Failed to initialize extractor {} due to an exception: {}", extractor.getClass().getSimpleName(), t.getMessage());
+            }
         }
 
         for (Extractor exporter : this.context.exporters()) {
-            exporter.init(this.context.persistencyWriter(), this.context.batchSize());
-            this.extractors.add(exporter);
+            try {
+                exporter.init(this.context.persistencyWriter(), this.context.batchSize());
+                this.extractors.add(exporter);
+            } catch (Throwable t) {
+                LOGGER.warn("Failed to exporter extractor {} due to an exception: {}", exporter.getClass().getSimpleName(), t.getMessage());
+            }
         }
         
         LOGGER.info("Extraction pipeline is ready with {} extractors.", this.extractors.size());
