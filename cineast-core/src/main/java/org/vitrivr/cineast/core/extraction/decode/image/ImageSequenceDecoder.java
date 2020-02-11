@@ -31,15 +31,7 @@ public class ImageSequenceDecoder implements Decoder<ImageSequence> {
     SUPPORTED.add("application/octet-stream");
   }
 
-  /** {@link DefaultImageDecoder} instance used for actual image decoding. */
-  private final DefaultImageDecoder imageDecoder = new DefaultImageDecoder();
-
-  private final DirectoryStream.Filter<Path> filter = file -> {
-    if (Files.isRegularFile(file) && imageDecoder.supportedFiles().contains(MimeTypeHelper.getContentType(file))){
-      return true;
-    }
-    return false;
-  };
+  private final DirectoryStream.Filter<Path> filter = file -> Files.isRegularFile(file) && ImageSequence.SUPPORTED_FILES.contains(MimeTypeHelper.getContentType(file));
 
   /** Path to the folder that contains the next {@link ImageSequence}. */
   private Path path;
@@ -75,13 +67,12 @@ public class ImageSequenceDecoder implements Decoder<ImageSequence> {
     if (this.path == null) {
       throw new IllegalStateException("Cannot invoke getNext() on ImageSequenceDecoder that has completed.");
     }
-    final ImageSequence sequence = new ImageSequence(this.path.getFileName().toString());
+    final ImageSequence sequence = new ImageSequence(this.decoderConfig);
     if (this.path != null) {
       if (Files.isDirectory(path)) {
         try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, this.filter)){
           for (Path p: directoryStream){
-            this.imageDecoder.init(p, this.decoderConfig, this.cacheConfig);
-            sequence.add(this.imageDecoder.getNext());
+            sequence.add(p);
           }
         } catch (IOException e) {
           LOGGER.fatal("A severe error occurred while trying to decode an image file for image sequence sequence '{}'.", this.path.getFileName());

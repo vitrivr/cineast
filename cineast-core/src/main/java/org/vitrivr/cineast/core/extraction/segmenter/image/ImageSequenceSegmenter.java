@@ -87,9 +87,9 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
 
     while (!this.decoder.complete()) {
       final ImageSequence sequence = this.decoder.getNext();
-      for (BufferedImage image : sequence) {
-        this.segments.offer(new ImageSegment(image, this.factory));
-      }
+      BufferedImage next;
+      while ((next = sequence.pop()) != null)
+        this.segments.offer(new ImageSegment(next, this.factory));
     }
 
     /* Sets the running flag to false. */
