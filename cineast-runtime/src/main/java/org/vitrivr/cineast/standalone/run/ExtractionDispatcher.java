@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
-import org.vitrivr.cineast.standalone.run.filehandler.GenericExtractionItemHandler;
 
 import java.io.File;
 import java.io.IOException;

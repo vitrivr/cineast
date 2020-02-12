@@ -4,6 +4,7 @@ import com.twelvemonkeys.image.ResampleOp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.Pair;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,7 +36,7 @@ public final class ImageSequence {
     private final int rescale_bounds;
 
     /** List of suppliers for {@link BufferedImage}s. */
-    private final Queue<Supplier<BufferedImage>> images = new ConcurrentLinkedQueue<>();
+    private final Queue<Supplier<Pair<Path,Optional<BufferedImage>>>> images = new ConcurrentLinkedQueue<>();
 
     /**
      * Default constructor for {@link ImageSequence}.
@@ -77,12 +78,12 @@ public final class ImageSequence {
                     }
 
                     final BufferedImageOp resampler = new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
-                    return resampler.filter(input, null);
+                    return new Pair<>(path, Optional.of(resampler.filter(input, null)));
                 }
             } catch (IOException | IllegalArgumentException e) {
                 LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", path.toString());
             }
-            return null;
+            return new Pair<>(path, null);
         });
     }
 
@@ -91,8 +92,8 @@ public final class ImageSequence {
      *
      * @return Next {@link BufferedImage}
      */
-    public BufferedImage pop() {
-        final Supplier<BufferedImage> supplier = this.images.poll();
+    public Pair<Path,Optional<BufferedImage>> pop() {
+        final Supplier<Pair<Path,Optional<BufferedImage>>> supplier = this.images.poll();
         if (supplier != null) {
             return supplier.get();
         }
