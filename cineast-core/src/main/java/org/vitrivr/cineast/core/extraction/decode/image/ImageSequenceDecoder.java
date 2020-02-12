@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
@@ -16,7 +17,14 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Decoder for sequence of images in a single folder that, in terms of Cineast's data model, belong together.
+ * Decoder for media object of type {@link MediaType.IMAGE_SEQUENCE}, i.e. a sequence of images contained in a single
+ * folder that, in terms of Cineast's data model, belong together.
+ *
+ * <strong>Important:</strong> Unlike other implementations of {@link Decoder} this class operates on folders only!
+ * It assumes that the images belonging to the sequence are contained in that folder (no subfolders) and that the images'
+ * occurrence in the sequence correspond to the natural ordering of the filenames in ascending direction.
+ *
+ * @see ImageSequence
  *
  * @author rgasser
  * @version 1.0
@@ -47,8 +55,8 @@ public class ImageSequenceDecoder implements Decoder<ImageSequence> {
    * the decoder by means of the getNext() method.
    *
    * @param path Path to the file that should be decoded.
-   * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
-   * @param cacheConfig The {@link CacheConfig} used by this {@link Decoder}
+   * @param decoderConfig {@link DecoderConfig} used by this {@link ImageSequenceDecoder}.
+   * @param cacheConfig The {@link CacheConfig} used by this {@link ImageSequenceDecoder}
    * @return True if initialization was successful, false otherwise.
    */
   @Override
@@ -71,7 +79,12 @@ public class ImageSequenceDecoder implements Decoder<ImageSequence> {
     if (this.path != null) {
       if (Files.isDirectory(path)) {
         try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, this.filter)){
+          final LinkedList<Path> paths = new LinkedList<>();
           for (Path p: directoryStream){
+            paths.add(p);
+          }
+          paths.sort(Comparator.comparing(Path::getFileName));
+          for (Path p: paths){
             sequence.add(p);
           }
         } catch (IOException e) {
