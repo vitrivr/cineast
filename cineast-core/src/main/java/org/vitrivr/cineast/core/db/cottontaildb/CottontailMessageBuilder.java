@@ -138,6 +138,9 @@ public class CottontailMessageBuilder {
 
   }
 
+  /**
+   * This is a convenience-method to build up a where-object based on an arbitrary number of data (mostly strings).
+   */
   public static Where compoundOrWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, Data... data) {
 
     if (data == null || data.length == 0) {

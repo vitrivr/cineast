@@ -93,9 +93,10 @@ public class SegmentTags implements Extractor, Retriever {
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
 
-      String segment = row.get("id").getString();
+      String segmentId = row.get("id").getString();
 
-      if (relevant != null && !relevant.contains(segment)){
+      /* Skip segments which are not desired by the query-config */
+      if (relevant != null && !relevant.contains(segmentId)){
         continue;
       }
 
@@ -103,12 +104,12 @@ public class SegmentTags implements Extractor, Retriever {
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
-      maxScoreByTag.putIfAbsent(segment, new TObjectFloatHashMap<>());
-      float prev = maxScoreByTag.get(segment).get(tagid);
+      maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
+      float prev = maxScoreByTag.get(segmentId).get(tagid);
       if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
-        maxScoreByTag.get(segment).put(tagid, score);
+        maxScoreByTag.get(segmentId).put(tagid, score);
       } else {
-        maxScoreByTag.get(segment).put(tagid, Math.max(score, prev));
+        maxScoreByTag.get(segmentId).put(tagid, Math.max(score, prev));
       }
     }
 

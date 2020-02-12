@@ -30,18 +30,15 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 
 public class CottontailSelector implements DBSelector {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final Projection SELECT_ALL_PROJECTION = CottontailMessageBuilder.projection(Operation.SELECT, "*");
+
   private final CottontailWrapper cottontail;
+  private Entity entity;
 
   public CottontailSelector(CottontailWrapper wrapper) {
     this.cottontail = wrapper;
   }
-
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  private Entity entity;
-
-  private static final Projection SELECT_ALL_PROJECTION = CottontailMessageBuilder.projection(Operation.SELECT, "*");
 
   @Override
   public boolean open(String name) {
@@ -55,6 +52,9 @@ public class CottontailSelector implements DBSelector {
     return true;
   }
 
+  /**
+   * if {@link ReadableQueryConfig#getRelevantSegmentIds()} is null, the where-clause will be left empty
+   */
   @Override
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
 
@@ -180,6 +180,7 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
       int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
 
+    /* This includes the filter for segmentids in the where-statement */
     Where where = CottontailMessageBuilder.compoundOrWhere(queryConfig, fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
 
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();

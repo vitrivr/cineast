@@ -10,6 +10,9 @@ public class StagedSimilarityQuery extends Query {
 
     private List<SimilarityQuery> stages;
 
+    /**
+     * The super()-call is made with the config of the last similarity query
+     */
     public StagedSimilarityQuery(@JsonProperty(value = "stages", required = true) List<SimilarityQuery> stages,
                                  @JsonProperty(value = "config", required = false) QueryConfig config) {
         super(config != null ?
