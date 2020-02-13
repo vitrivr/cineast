@@ -1,34 +1,19 @@
 package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 
-import java.util.List;
+public class StagedSimilarityQuery extends SimilarityQuery {
 
-public class StagedSimilarityQuery extends Query {
+  public StagedSimilarityQuery(@JsonProperty(value = "containers", required = true) List<QueryComponent> components,
+      @JsonProperty(value = "config", required = false) QueryConfig config) {
+    super(components, config);
+  }
 
-    private List<SimilarityQuery> stages;
-
-    /**
-     * The super()-call is made with the config of the last similarity query
-     */
-    public StagedSimilarityQuery(@JsonProperty(value = "stages", required = true) List<SimilarityQuery> stages,
-                                 @JsonProperty(value = "config", required = false) QueryConfig config) {
-        super(config != null ?
-                config :
-                (!stages.isEmpty() ? stages.get(stages.size() - 1).config : null)
-        );
-
-        this.stages = stages;
-    }
-
-    public List<SimilarityQuery> getStages() {
-        return stages;
-    }
-
-    @Override
-    public MessageType getMessageType() {
-        return MessageType.Q_SSIM;
-    }
+  @Override
+  public MessageType getMessageType() {
+    return MessageType.Q_SSIM;
+  }
 }
