@@ -2,18 +2,19 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 
-public class StagedSimilarityQuery extends SimilarityQuery {
+/**
+ * A {@link StagedSimilarityQuery} contains a list of {@link QueryStage}s. Each of them is used as a filter for the next one.
+ */
+public class StagedSimilarityQuery {
 
-  public StagedSimilarityQuery(@JsonProperty(value = "containers", required = true) List<QueryComponent> components,
+  public final List<QueryStage> stages;
+  public final QueryConfig config;
+
+  public StagedSimilarityQuery(@JsonProperty(value = "stages", required = true) List<QueryStage> stages,
       @JsonProperty(value = "config", required = false) QueryConfig config) {
-    super(components, config);
-  }
-
-  @Override
-  public MessageType getMessageType() {
-    return MessageType.Q_SSIM;
+    this.stages = stages;
+    this.config = config;
   }
 }
