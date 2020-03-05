@@ -1,0 +1,122 @@
+{
+  "database": {
+    "host": "10.34.58.146",
+    "selector": "COTTONTAIL",
+    "writer": "COTTONTAIL",
+    "port": 1865,
+    "plaintext": true
+  },
+  "benchmark": {
+    "mode": "OFF",
+    "path": "benchmarks"
+  },
+  "retriever": {
+    "threadPoolSize": 2,
+    "maxResults": 1000,
+    "resultsPerModule": 1500,
+    "features": {
+      "semantic" : [
+        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
+      ],
+      "globalcolor": [
+        {"feature": "AverageColor",  "weight": 2.3},
+        {"feature": "MedianColor", "weight": 1.2},
+        {"feature": "AverageFuzzyHist", "weight": 0.7},
+        {"feature": "HueHistogram", "weight": 0.7},
+        {"feature": "MedianFuzzyHist",   "weight": 1.3 }
+      ],
+      "localcolor": [
+        {"feature": "AverageColorARP44", "weight": 0.5},
+        {"feature": "SubDivMedianFuzzyColor", "weight": 0.85},
+        {"feature": "AverageColorGrid8", "weight": 1.8},
+        {"feature": "CLD", "weight": 1.3},
+        {"feature": "MedianColorGrid8", "weight": 1.7},
+        {"feature": "AverageColorRaster", "weight": 1.0}
+      ],
+      "edge": [
+	{"feature": "EdgeARP88", "weight": 0.85},
+        {"feature": "EdgeGrid16", "weight": 1.15},
+	{"feature": "EHD", "weight": 0.7},
+        {"feature": "DominantEdgeGrid16", "weight": 1.4},
+        {"feature": "DominantEdgeGrid8", "weight": 1.4}
+      ],
+      "motion": [
+        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
+      ],
+      "quantized": [
+
+      ],
+      "localfeatures": [
+        {"feature": "SURFMirflickr25K512", "weight": 1.25},
+	{"feature": "HOGMirflickr25K512", "weight": 1.0}
+      ],
+      "tags": [
+        {"feature": "SegmentTags", "weight": 1.0}
+      ],
+      "ocr": [
+        {"feature": "OCRSearch", "weight": 1.0}
+      ],
+      "asr": [
+        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
+      ],
+      "scenecaption": [
+        {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      ]
+    }
+  },
+
+  "decoders": {
+    "VIDEO": {
+      "decoder": "FFMpegVideoDecoder",
+      "properties": {
+        "maxFrameWidth": 640,
+        "maxFrameHeight": 480
+      }
+    },
+    "IMAGE": {
+      "decoder": "DefaultImageDecoder",
+      "properties": {
+        "bounds": 1024
+      }
+    },
+    "AUDIO": {
+      "decoder": "FFMpegAudioDecoder",
+      "properties": {
+        "samplerate": 44100,
+        "channels": 2
+      }
+    }
+  },
+
+  "extractor": {
+    "threadPoolSize": 4,
+    "outputLocation": "out"
+  },
+
+  "api": {
+    "enableCLI": true,
+    "enableWebsocket": true,
+    "enableWebsocketSecure": false,
+    "enableRest": true,
+    "enableRestSecure": false,
+    "enableLegacy": false,
+    "httpPort": 4567,
+    "httpsPort": 4568,
+    "legacyPort": 12345,
+    "threadPoolSize": 12,
+    "serveContent": true,
+    "serveUI": true,
+    "uiLocation": "dist",
+    "thumbnailLocation": "thumbnails",
+    "objectLocation": "objects"
+  },
+
+  "monitoring":{
+    "enablePrometheus": false,
+    "prometheusPort": 4569
+  }
+
+}
