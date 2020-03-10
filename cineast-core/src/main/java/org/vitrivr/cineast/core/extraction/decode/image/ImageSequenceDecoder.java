@@ -1,103 +1,118 @@
 package org.vitrivr.cineast.core.extraction.decode.image;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
-public class ImageSequenceDecoder implements Decoder<BufferedImage> {
+/**
+ * Decoder for media object of type {@link MediaType.IMAGE_SEQUENCE}, i.e. a sequence of images contained in a single
+ * folder that, in terms of Cineast's data model, belong together.
+ *
+ * <strong>Important:</strong> Unlike other implementations of {@link Decoder} this class operates on folders only!
+ * It assumes that the images belonging to the sequence are contained in that folder (no subfolders) and that the images'
+ * occurrence in the sequence correspond to the natural ordering of the filenames in ascending direction.
+ *
+ * @see ImageSequence
+ *
+ * @author rgasser
+ * @version 1.0
+ */
+public class ImageSequenceDecoder implements Decoder<ImageSequence> {
 
-  private final DefaultImageDecoder imageDecoder = new DefaultImageDecoder();
+  /** Default logging facility. */
+  private static final Logger LOGGER = LogManager.getLogger();
 
-  private final DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
+  private static final Set<String> SUPPORTED = new HashSet<>();
+  static {
+    SUPPORTED.add("application/octet-stream");
+  }
 
-    Set<String> supportedFiles = imageDecoder.supportedFiles();
+  private final DirectoryStream.Filter<Path> filter = file -> Files.isRegularFile(file) && ImageSequence.SUPPORTED_FILES.contains(MimeTypeHelper.getContentType(file));
 
-    public boolean accept(Path file) throws IOException {
-      for (String ending : supportedFiles){
-        if (file.toFile().isFile() && file.toFile().getName().toLowerCase().endsWith(ending.toLowerCase())){
-          return true;
-        }
-      }
-      return false;
-    }
-  };
+  /** Path to the folder that contains the next {@link ImageSequence}. */
+  private Path path;
 
-  private final Queue<Path> imagePaths = new ArrayDeque<>();
+  /** {@link DecoderConfig} instance to use. */
+  private DecoderConfig decoderConfig;
 
-  private int count = 0;
-
-  private DecoderConfig config;
+  /** {@link CacheConfig} instance to use. */
+  private CacheConfig cacheConfig;
 
   /**
    * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
    * the decoder by means of the getNext() method.
    *
    * @param path Path to the file that should be decoded.
-   * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
-   * @param cacheConfig The {@link CacheConfig} used by this {@link Decoder}
+   * @param decoderConfig {@link DecoderConfig} used by this {@link ImageSequenceDecoder}.
+   * @param cacheConfig The {@link CacheConfig} used by this {@link ImageSequenceDecoder}
    * @return True if initialization was successful, false otherwise.
    */
   @Override
   public boolean init(Path path, DecoderConfig decoderConfig, CacheConfig cacheConfig) {
+    this.path = path;
+    this.decoderConfig = decoderConfig;
+    this.cacheConfig = cacheConfig;
+    return true;
+  }
 
-    imagePaths.clear();
-    this.config = decoderConfig;
+  @Override
+  public void close() { }
 
-    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, filter)){
-
-      for (Path p: directoryStream){
-        imagePaths.add(p);
+  @Override
+  public ImageSequence getNext() {
+    if (this.path == null) {
+      throw new IllegalStateException("Cannot invoke getNext() on ImageSequenceDecoder that has completed.");
+    }
+    final ImageSequence sequence = new ImageSequence(this.decoderConfig);
+    if (this.path != null) {
+      if (Files.isDirectory(path)) {
+        try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, this.filter)){
+          final LinkedList<Path> paths = new LinkedList<>();
+          for (Path p: directoryStream){
+            paths.add(p);
+          }
+          paths.sort(Comparator.comparing(Path::getFileName));
+          for (Path p: paths){
+            sequence.add(p);
+          }
+        } catch (IOException e) {
+          LOGGER.fatal("A severe error occurred while trying to decode an image file for image sequence sequence '{}'.", this.path.getFileName());
+        }
       }
-
-    } catch (IOException e) { //TODO
-      e.printStackTrace();
-      return false;
     }
-
-    return false;
-  }
-
-  @Override
-  public void close() {
-    this.imagePaths.clear();
-  }
-
-  @Override
-  public BufferedImage getNext() {
-
-    Path p = this.imagePaths.poll();
-    if (p == null){
-      return null;
-    }
-
-    this.imageDecoder.init(p, this.config, null);
-    ++this.count;
-
-    return this.imageDecoder.getNext();
+    this.path = null;
+    return sequence;
   }
 
   @Override
   public int count() {
-    return this.count;
+    if (this.path != null) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   @Override
   public boolean complete() {
-    return !this.imagePaths.isEmpty();
+    return this.path == null;
   }
 
   @Override
   public Set<String> supportedFiles() {
-    return this.imageDecoder.supportedFiles();
+    return SUPPORTED;
   }
 
   @Override

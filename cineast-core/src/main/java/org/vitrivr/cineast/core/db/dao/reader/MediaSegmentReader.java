@@ -4,6 +4,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -40,14 +41,15 @@ public class MediaSegmentReader extends AbstractEntityReader {
         && properties.containsKey(FIELDNAMES[6])) {
 
       return Optional.of(
-          new MediaSegmentDescriptor(
+              new MediaSegmentDescriptor(
               properties.get(FIELDNAMES[1]).getString(),
               properties.get(FIELDNAMES[0]).getString(),
               properties.get(FIELDNAMES[2]).getInt(),
               properties.get(FIELDNAMES[3]).getInt(),
               properties.get(FIELDNAMES[4]).getInt(),
               properties.get(FIELDNAMES[5]).getFloat(),
-              properties.get(FIELDNAMES[6]).getFloat()));
+              properties.get(FIELDNAMES[6]).getFloat(),
+              true));
 
     } else {
       return Optional.empty();

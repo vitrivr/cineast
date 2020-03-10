@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.MediaType;
 
 /**
+ * Describes a media segment in the Cineast data model i.e. a part of a media object (e.g. a series of frames in a video
+ * or an image in an image sequence). The cardinality of a media object to its segments is 1 to (1..n) depending on the
+ * type of media.
+ *
  * @author rgasser
- * @version 1.0
- * @created 10.01.17
+ * @version 1.1
  */
-public class MediaSegmentDescriptor implements ExistenceCheck {
+public final class MediaSegmentDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY  = "cineast_segment";
 
@@ -34,21 +36,18 @@ public class MediaSegmentDescriptor implements ExistenceCheck {
     private final boolean exists;
 
     /**
-     * Convenience method to create a MediaSegmentDescriptor marked as new. The method will assign
-     * a new ID to this MediaSegmentDescriptor.
+     * Constructor for {@link MediaSegmentDescriptor}.
      *
-     * @param objectId Object
-     * @param segmentNumber
-     * @param start
-     * @param end
-     * @return
+     * @param objectId ID of the {@link MediaObjectDescriptor} this {@link MediaSegmentDescriptor} belongs to.
+     * @param segmentId ID of the {@link MediaSegmentDescriptor}.
+     * @param segmentNumber Relative position of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} (starts with 1)
+     * @param start Start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
+     * @param end End of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
+     * @param startabs Absolute start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
+     * @param endabs Absolute end of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
+     * @param exists Whether or not this {@link MediaSegmentDescriptor} exists in the underlying database.
      */
-    public static MediaSegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
-        String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-        return new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false);
-    }
-
-    private MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
+    public MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
         this.segmentId = segmentId;
         this.objectId = objectId;
         this.number = segmentNumber;
@@ -57,10 +56,6 @@ public class MediaSegmentDescriptor implements ExistenceCheck {
         this.startabs = startabs;
         this.endabs = endabs;
         this.exists = exists;
-    }
-
-    public MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
-        this(objectId, segmentId, segmentNumber, start, end, startabs, endabs, true);
     }
 
     public MediaSegmentDescriptor() {
@@ -117,6 +112,4 @@ public class MediaSegmentDescriptor implements ExistenceCheck {
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
-
-
 }
