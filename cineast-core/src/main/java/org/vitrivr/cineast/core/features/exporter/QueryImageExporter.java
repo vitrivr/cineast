@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * This class is used to store the query images (i.e. sketches) which is why it implements retriever functionality.
+ * It is not actually a retriever in the sense that it returns any results.
+ */
 public class QueryImageExporter implements Retriever {
 
 	private static final Logger LOGGER = LogManager.getLogger();
