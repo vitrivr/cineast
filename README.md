@@ -14,6 +14,8 @@ Cineast can be built using [Gradle](http://gradle.org/). Building and running it
  java -jar cineast.jar
  ```
 
+For more setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki)
+
 ## Prerequisites
 ### System dependencies
 * git
