@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
- * @author rgasser
- * @version 1.0
- * @created 11.01.17
+ * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
+ *
+ * These all have the {@link QueryComponent#containerId} of their parent.
  */
 public class QueryComponent {
 
@@ -25,7 +25,7 @@ public class QueryComponent {
   /**
    * The client-generated uuid for this container for reference purposes
    */
-  private final int containerId;
+  public final int containerId;
 
   private static final Logger LOGGER = LogManager.getLogger();
 

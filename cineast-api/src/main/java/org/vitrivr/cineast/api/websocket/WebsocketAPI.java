@@ -47,7 +47,7 @@ public class WebsocketAPI {
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
     static {
         STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
-        STATELESS_HANDLERS.put(MessageType.Q_SSIM, new StagedSimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
+        STATELESS_HANDLERS.put(MessageType.Q_TEMPORAL, new TemporalQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());

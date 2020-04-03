@@ -52,8 +52,8 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
       for (String category : containerCategoryMap.get(qc)) {
         /* Merge partial results with score-map */
         List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, qconf);
-        /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
 
+        /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
         final List<StringDoublePair> results = scores.stream()
             .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
             .filter(p -> p.value > 0d)
