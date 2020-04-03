@@ -37,6 +37,10 @@ dependencies {
     /** JLine 3 */
     compile group: 'org.jline', name: 'jline', version: '3.12.1'
 
+    /** OpenCSV for simple, yet effective CSV parsing */
+    compile group: 'com.opencsv', name: 'opencsv', version: '5.1'
+
+
     /** Prometheus */
     compile group: 'io.prometheus', name: 'simpleclient', version: '0.6.0'
     compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.6.0'
