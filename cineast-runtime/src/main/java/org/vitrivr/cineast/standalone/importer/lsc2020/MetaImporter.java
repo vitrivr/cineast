@@ -4,7 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.importer.Importer;
 
@@ -114,16 +114,15 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     }
 
     private HashMap<String, PrimitiveTypeProvider> parseMeta(String path, String[] items, int index, String domain) {
-        // TODO proper domains for all
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
         // "id"
-        map.put(MediaObjectMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(path)));
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(path)));
         // domain
-        map.put(MediaObjectMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(domain));
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(domain));
         // key
-        map.put(MediaObjectMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject(META_NAMES[index]));
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject(META_NAMES[index]));
         // value
-        map.put(MediaObjectMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(items[index]));
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(items[index]));
         return map;
     }
 
@@ -160,7 +159,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
                 // Catch the header line, which is not important
                 String[] items = s.split(","); // Csv
                 String minuteId = items[CONCEPTS_MINUTEID_COL];
-                String imagePath = items[CONCEPTS_IMAGEPATH_COL].substring("DATASETS/LSC2020/".length()+1);
+                String imagePath = LSCUtilities.pathToSegmentId(items[CONCEPTS_IMAGEPATH_COL].substring("DATASETS/LSC2020/".length()+1));
                 LOGGER.trace("Adding to lookup: {} <-> {}", minuteId, imagePath);
                 minuteIdPathMap.put(minuteId, imagePath);
             }
