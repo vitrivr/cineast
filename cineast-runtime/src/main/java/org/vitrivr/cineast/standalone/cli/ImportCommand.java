@@ -12,6 +12,8 @@ import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImporter;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
@@ -110,7 +112,8 @@ public class ImportCommand implements Runnable {
         handler.doImport(path);
         break;
       case LSCCONCEPT:
-        // TODO
+        handler = new VisaulConceptTagImportHandler(this.threads,this.batchsize);
+        handler.doImport(path);
         break;
 
     }

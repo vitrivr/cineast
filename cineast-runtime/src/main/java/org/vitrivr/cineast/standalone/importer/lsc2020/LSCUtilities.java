@@ -38,4 +38,8 @@ public class LSCUtilities {
         int endIdx = path.contains(".") ? path.lastIndexOf(".") : path.length();
         return "is_" + path.substring(beginIdx, endIdx);
     }
+
+    public static String cleanImagePath(String path){
+        return path.substring("DATASETS/LSC2020/".length()+1);
+    }
 }
