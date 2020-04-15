@@ -83,7 +83,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
             String imgPath = line[MetaImporter.CONCEPTS_IMAGEPATH_COL];
             String id = LSCUtilities.pathToSegmentId(LSCUtilities.cleanImagePath(imgPath));
             for (int i = 3; i < line.length; i++) {
-                if (line[i].equals("NULL")) {
+                if (ignoreContent(line[i])) {
                     continue;
                 }
                 String colName = headers[i];
@@ -100,6 +100,10 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         LOGGER.info("Finished parsing tags per segment in " + (System.currentTimeMillis() - start) + "ms");
     }
 
+    private static boolean ignoreContent(String tag){
+        return tag == null || tag.isEmpty() || tag.equals("NULL");
+    }
+
     private void readTags() {
         LOGGER.info("Parsing tags...");
         long start = System.currentTimeMillis();
@@ -109,7 +113,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
                 if(ignoreColumn(headers[i])){
                     continue;
                 }else{
-                    if (!l[i].equals("NULL")) {
+                    if (!ignoreContent(l[i])) {
                         uniqueTags.add(l[i]);
                     }
                 }
