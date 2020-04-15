@@ -68,6 +68,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             continue;
           }
           QueryContainer qc = qt.toContainer();
+          if(qc == null){
+            LOGGER.warn("Likely an empty query, as it could not be converted to a query container. Ignoring it");
+            continue;
+          }
           qc.setContainerId(containerIdx);
 
           /* For each category of a specific queryterm, we actually go and retrieve. Be aware that we do not change the relevant ids after this call */
