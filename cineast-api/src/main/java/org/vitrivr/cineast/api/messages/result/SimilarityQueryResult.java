@@ -22,7 +22,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
      */
     @JsonCreator
     public SimilarityQueryResult(String queryId, String category, List<StringDoublePair> content) {
-        super(queryId, content);
+        super(queryId, StringDoublePair.class, content);
         this.category = category;
     }
 

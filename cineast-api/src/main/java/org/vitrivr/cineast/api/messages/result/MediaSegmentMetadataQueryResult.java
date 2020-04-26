@@ -11,7 +11,7 @@ public class MediaSegmentMetadataQueryResult extends AbstractQueryResultMessage<
 
     @JsonCreator
     public MediaSegmentMetadataQueryResult(String queryId, List<MediaSegmentMetadataDescriptor> content) {
-        super(queryId, content);
+        super(queryId, MediaSegmentMetadataDescriptor.class, content);
     }
 
 

@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.api.messages.result;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import java.util.List;
+
 import org.vitrivr.cineast.api.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * @author rgasser
@@ -16,7 +17,7 @@ public class MediaObjectMetadataQueryResult extends AbstractQueryResultMessage<M
 
     @JsonCreator
     public MediaObjectMetadataQueryResult(String queryId, List<MediaObjectMetadataDescriptor> content) {
-        super(queryId, content);
+        super(queryId, MediaObjectMetadataDescriptor.class, content);
     }
 
 

@@ -1,21 +1,24 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
+import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
-
-import java.util.*;
-import spark.route.HttpMethod;
-import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -30,8 +33,8 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
     }
 
     @Override
-    public List<HttpMethod> supportedMethods() {
-        return Collections.singletonList(HttpMethod.post);
+    public List<RestHttpMethod> supportedMethods() {
+        return Collections.singletonList(RestHttpMethod.POST);
     }
 
     /**
@@ -82,7 +85,7 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription(RestHttpMethod method) {
         return "Finds similar segments based on the given query";
     }
 

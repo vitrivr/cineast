@@ -21,7 +21,7 @@ public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObje
      */
     @JsonCreator
     public MediaObjectQueryResult(String queryId, List<MediaObjectDescriptor> content) {
-        super(queryId, content);
+        super(queryId, MediaObjectDescriptor.class, content);
     }
 
     /**

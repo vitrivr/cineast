@@ -1,13 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import java.util.Map;
+
+import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.session.SessionState;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.Session;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
-import org.vitrivr.cineast.api.messages.session.SessionState;
-
-import java.util.Map;
 
 public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
 
@@ -46,7 +47,7 @@ public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage, Ses
   }
 
   @Override
-  public String getDescription() {
+  public String getDescription(RestHttpMethod method) {
     return "Validate the session with the given id";
   }
 

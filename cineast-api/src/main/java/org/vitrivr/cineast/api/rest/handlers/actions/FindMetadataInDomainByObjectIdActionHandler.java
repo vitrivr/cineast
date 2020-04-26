@@ -1,19 +1,19 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.Arrays;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.api.messages.components.MetadataDomainFilter;
-import org.vitrivr.cineast.api.messages.lookup.IdList;
-import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
-import org.vitrivr.cineast.standalone.config.Config;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import spark.route.HttpMethod;
+
+import org.vitrivr.cineast.api.messages.components.MetadataDomainFilter;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
+import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a
@@ -43,8 +43,8 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
   private static final String DOMAIN_NAME = ":domain";
 
   @Override
-  public List<HttpMethod> supportedMethods() {
-    return Arrays.asList(HttpMethod.get, HttpMethod.post);
+  public List<RestHttpMethod> supportedMethods() {
+    return Arrays.asList(RestHttpMethod.GET, RestHttpMethod.POST);
   }
   /**
    * Processes a HTTP GET request.
@@ -104,7 +104,7 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
   }
 
   @Override
-  public String getDescription() {
+  public String getDescription(RestHttpMethod method) {
     return "Find meta data in domain by object id";
   }
 

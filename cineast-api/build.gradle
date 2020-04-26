@@ -74,10 +74,13 @@ task fatJar(type: Jar) {
 }
 
 dependencies {
-    compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+    compile group: 'io.javalin', name: 'javalin', version: '3.8.0'
+	compile group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.0.6'
+	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.10.1'
+	compile group: 'org.webjars', name: 'swagger-ui', version: '3.25.0'
+    compile group: 'cc.vileda', name: 'kotlin-openapi3-dsl', version: '0.20.2'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
     compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
-    compile group: 'io.github.manusant', name: 'spark-swagger', version: '1.0.0.49-SNAPSHOT', changing:true
 }
 
 

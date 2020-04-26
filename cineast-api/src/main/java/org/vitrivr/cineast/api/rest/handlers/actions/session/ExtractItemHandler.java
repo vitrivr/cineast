@@ -1,19 +1,19 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
+import org.vitrivr.cineast.api.messages.session.SessionState;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
-import org.vitrivr.cineast.api.messages.session.SessionState;
-
-import java.util.Arrays;
-import java.util.Map;
-import spark.route.HttpMethod;
 
 /**
  * @author silvan on 19.01.18.
@@ -49,7 +49,7 @@ public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainer
   }
 
   @Override
-  public String getDescription() {
+  public String getDescription(RestHttpMethod method) {
     return "Extract new item";
   }
 
@@ -59,7 +59,7 @@ public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainer
   }
 
   @Override
-  public List<HttpMethod> supportedMethods() {
-    return Collections.singletonList(HttpMethod.post);
+  public List<RestHttpMethod> supportedMethods() {
+    return Collections.singletonList(RestHttpMethod.POST);
   }
 }

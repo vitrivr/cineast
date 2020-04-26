@@ -1,20 +1,21 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import spark.route.HttpMethod;
+import com.google.common.collect.Lists;
 
 /**
  * @author rgasser
@@ -29,8 +30,8 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList, Medi
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public List<HttpMethod> supportedMethods() {
-        return Arrays.asList(HttpMethod.get, HttpMethod.post);
+    public List<RestHttpMethod> supportedMethods() {
+        return Arrays.asList(RestHttpMethod.GET, RestHttpMethod.POST);
     }
     /**
      * Processes a HTTP GET request.
@@ -96,7 +97,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList, Medi
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription(RestHttpMethod method) {
         return "Find object by attribute and value";
     }
 

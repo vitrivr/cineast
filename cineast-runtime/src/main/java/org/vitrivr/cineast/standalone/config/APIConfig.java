@@ -15,6 +15,8 @@ public final class APIConfig {
     private String keystore;
     private String keystorePassword;
 
+    private String apiAddress = "http://localhost:4567/";
+    
     private int httpPort = 4567;
     private int httpsPort = 4568;
     private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
@@ -33,6 +35,8 @@ public final class APIConfig {
     private String objectLocation = "";
     private String uiLocation = "";
 
+    private int grpcPort;
+    
     @JsonCreator
     public APIConfig() {
     }
@@ -95,6 +99,15 @@ public final class APIConfig {
         this.keystorePassword = keystorePassword;
     }
 
+    @JsonProperty
+    public String getApiAddress() {
+        return apiAddress;
+    }
+
+    public void setApiAddress(String apiAddress) {
+        this.apiAddress = apiAddress;
+    }
+    
     @JsonProperty
     public int getHttpPort() {
         return httpPort;

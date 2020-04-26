@@ -2,19 +2,18 @@ package org.vitrivr.cineast.api.rest.handlers.interfaces;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
-import spark.Route;
-
-import java.util.Map;
-import spark.route.HttpMethod;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 09.01.17
  */
-public interface ActionHandler<A> extends Route {
+public interface ActionHandler<A> {
     /**
      * This method gets invoked by the router after a GET request has been processed. It parameters and does something meaningful with it.
      * Once processing has completed, the method returns a resulting object.
@@ -63,26 +62,26 @@ public interface ActionHandler<A> extends Route {
     }
 
     /**
-     * Returns the supported {@link HttpMethod}s by this ActionHandler.
+     * Returns the supported {@link RestHttpMethod}s by this ActionHandler.
      * <br>
      * Implementing classes of this interface have to override this, if they do support anything other
-     * than {@link HttpMethod#get}.
+     * than {@link RestHttpMethod#GET}.
      * <br>
      * The return value of this method is for information purposes only, i.e. there is no way to change the supported methods during runtime.
      * <br>
-     * Please be aware that {@link HttpMethod} by spark is a superset of the official HTTP methods.
+     * Please be aware that {@link RestHttpMethod} by spark is a superset of the official HTTP methods.
      * However, {@link ActionHandler} only supports a subset of them:
      * <ul>
-     *   <li>{@link HttpMethod#get}</li>
-     *   <li>{@link HttpMethod#post}</li>
-     *   <li>{@link HttpMethod#delete}</li>
-     *   <li>{@link HttpMethod#put}</li>
+     *   <li>{@link RestHttpMethod#GET}</li>
+     *   <li>{@link RestHttpMethod#POST}</li>
+     *   <li>{@link RestHttpMethod#DELETE}</li>
+     *   <li>{@link RestHttpMethod#PUT}</li>
      * </ul>
      *
      * @return The supported HTTP methods. Can also be used to control which routes are registered.
      */
-    default List<HttpMethod> supportedMethods(){
-        return (List<HttpMethod>)Arrays.asList(HttpMethod.get);
+    default List<RestHttpMethod> supportedMethods(){
+        return (List<RestHttpMethod>)Arrays.asList(RestHttpMethod.GET);
     }
 
     /**

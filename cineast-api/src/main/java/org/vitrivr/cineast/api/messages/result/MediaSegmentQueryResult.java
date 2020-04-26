@@ -19,7 +19,7 @@ public class MediaSegmentQueryResult extends AbstractQueryResultMessage<MediaSeg
      */
     @JsonCreator
     public MediaSegmentQueryResult(String queryId, List<MediaSegmentDescriptor> content) {
-        super(queryId, content);
+        super(queryId, MediaSegmentDescriptor.class, content);
     }
 
     /**

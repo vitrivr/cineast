@@ -16,6 +16,8 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
      */
     private List<T> content;
 
+    private final Class<T> contentType;
+    
     /**
      *
      */
@@ -26,8 +28,9 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
      * @param queryId
      * @param content
      */
-    public AbstractQueryResultMessage(String queryId, List<T> content) {
+    public AbstractQueryResultMessage(String queryId, Class<T> contentType, List<T> content) {
         this.queryId = queryId;
+        this.contentType = contentType;
         this.content = content;
     }
 
@@ -45,6 +48,11 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
     @Override
     public List<T> getContent() {
         return this.content;
+    }
+    
+    @Override
+    public Class<T> getContentType() {
+    	return this.contentType;
     }
 
     /**

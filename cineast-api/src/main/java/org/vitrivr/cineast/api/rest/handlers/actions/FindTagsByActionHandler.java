@@ -1,20 +1,20 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.Arrays;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.messages.lookup.IdList;
-import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.db.dao.reader.TagReader;
-import org.vitrivr.cineast.standalone.config.Config;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import spark.route.HttpMethod;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
+import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     /** The {@link TagReader} instance used for lookup of {@link Tag}s. */
@@ -35,8 +35,8 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     private static final String FIELD_MATCHING = "matchingname";
 
     @Override
-    public List<HttpMethod> supportedMethods() {
-        return Arrays.asList(HttpMethod.get, HttpMethod.post);
+    public List<RestHttpMethod> supportedMethods() {
+        return Arrays.asList(RestHttpMethod.GET, RestHttpMethod.POST);
     }
     /**
      * Performs the lookup of {@link Tag}s in the system.
@@ -101,18 +101,15 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     }
 
     @Override
-    public String getDescription() {
-        return "Find tags by given id or attribute and value";
-    }
-
-    @Override
-    public String descriptionForGet() {
-        return "Find tags by attribute and value";
-    }
-
-    @Override
-    public String descriptionForPost() {
-        return "Find tags for given id list";
+    public String getDescription(RestHttpMethod method) {
+        switch(method) {
+        case GET:
+            return "Find tags by attribute and value";
+        case POST:
+            return "Find tags for given id list";
+        default:
+                return "Find tags by given id or attribute and value";
+        }
     }
 
     @Override

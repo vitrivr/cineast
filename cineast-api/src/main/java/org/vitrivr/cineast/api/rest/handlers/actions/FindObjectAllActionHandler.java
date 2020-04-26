@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.TYPE;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
-import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
-import org.vitrivr.cineast.standalone.config.Config;
-
 import java.util.List;
 import java.util.Map;
+
+import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * @author rgasser
@@ -46,7 +46,7 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage,
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription(RestHttpMethod method) {
         return "Find all objects for a certain type";
     }
 

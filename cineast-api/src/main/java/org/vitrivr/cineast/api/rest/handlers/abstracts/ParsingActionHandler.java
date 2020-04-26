@@ -1,20 +1,18 @@
 package org.vitrivr.cineast.api.rest.handlers.abstracts;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestOperation;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestOperation;
-import spark.Request;
-import spark.Response;
 
-import java.util.HashMap;
-import java.util.Map;
-import spark.route.HttpMethod;
+import io.javalin.http.Context;
 
 /**
  * @author rgasser
@@ -26,7 +24,7 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
     /**
      * Jackson ObjectMapper used to map to/from objects.
      */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    public static final ObjectMapper MAPPER = new ObjectMapper();
 
     /* Can be used to setup the ObjectMapper.  */
     static {
@@ -34,9 +32,9 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
     }
-
+    
     /**
-     * Invoked when an incoming request is routed towards this class by Java Spark. The method handles
+     * Invoked when an incoming request is routed towards this class by Javalin. The method handles
      * that request, extracts named parameters and parses the (optional) request body using Jackson. The
      * resulting context object is then forwarded to the doGet() method.
      *
@@ -46,29 +44,32 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
      * @throws Exception implementation can choose to throw exception
      */
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        Map<String, String> params = request.params();
+    public void handle(Context ctx) throws Exception {
+    	Map<String, String> params = ctx.pathParamMap();
         if (params == null) {
             params = new HashMap<>();
         }
-        response.type("application/json");
-        switch (request.requestMethod()) {
+        ctx.contentType("application/json");
+        switch (ctx.method()) {
             case "GET":
-                return MAPPER.writeValueAsString(this.doGet(params));
+                ctx.result(MAPPER.writeValueAsString(this.doGet(params)));
+                break;
             case "DELETE":
                 this.doDelete(params);
-                return null;
+                break;
             case "POST":
-                return MAPPER.writeValueAsString(this.doPost(MAPPER.readValue(request.body(), this.inClass()), params));
+                ctx.result(MAPPER.writeValueAsString(this.doPost(MAPPER.readValue(ctx.body(), this.inClass()), params)));
+                break;
             case "PUT":
-                return MAPPER.writeValueAsString(this.doPut(MAPPER.readValue(request.body(), this.inClass()), params));
+                ctx.result(MAPPER.writeValueAsString(this.doPut(MAPPER.readValue(ctx.body(), this.inClass()), params)));
+                break;
             default:
-                throw new MethodNotSupportedException(request);
+                throw new MethodNotSupportedException(ctx);
         }
     }
 
     @Override
-    public List<HttpMethod> supportedMethods() {
-        return Collections.singletonList(HttpMethod.get);
+    public List<RestHttpMethod> supportedMethods() {
+        return Collections.singletonList(RestHttpMethod.GET);
     }
 }

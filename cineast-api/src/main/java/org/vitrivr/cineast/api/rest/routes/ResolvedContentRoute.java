@@ -1,60 +1,57 @@
 package org.vitrivr.cineast.api.rest.routes;
 
-import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
-import org.vitrivr.cineast.api.rest.resolvers.Resolver;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.utils.GzipUtils;
-import spark.utils.IOUtils;
-
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
-public class ResolvedContentRoute implements Route {
+import org.apache.commons.io.IOUtils;
+import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
+import org.vitrivr.cineast.api.rest.resolvers.Resolver;
 
-  private Resolver resolver;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
 
-  public ResolvedContentRoute(Resolver resolver) {
-    this.resolver = resolver;
-  }
+public class ResolvedContentRoute implements Handler {
 
-  @Override
-  public Object handle(Request request, Response response) throws Exception {
+	private Resolver resolver;
 
-    Map<String, String> params = request.params();
+	public ResolvedContentRoute(Resolver resolver) {
+		this.resolver = resolver;
+	}
 
-    String id;
+	@Override
+	public void handle(Context ctx) throws Exception {
+		Map<String, String> params = ctx.pathParamMap();
 
-    if (params != null && params.containsKey(":id")) {
-      id = params.get(":id");
-    } else {
-      response.status(400);
-      response.raw().getWriter().write("Bad request");
-      response.raw().getWriter().flush();
-      return 404;
-    }
+		String id;
 
-    ResolutionResult rresult = this.resolver.resolve(id);
+		if (params != null && params.containsKey(":id")) {
+			id = params.get(":id");
+		} else {
+			ctx.status(400);
+			ctx.result("Bad request");
+			return;
+		}
 
-    if (rresult == null) {
-      response.status(400);
-      response.raw().getWriter().write("Bad request");
-      response.raw().getWriter().flush();
-      return 404;
-    }
+		ResolutionResult rresult = this.resolver.resolve(id);
 
-    response.type(rresult.mimeType);
+		if (rresult == null) {
+			ctx.status(400);
+			ctx.result("Bad request");
+			return;
+		}
 
-    try (InputStream inputStream = rresult.stream;
-        OutputStream wrappedOutputStream =
-            GzipUtils.checkAndWrap(request.raw(), response.raw(), false)) {
-      IOUtils.copy(inputStream, wrappedOutputStream);
-      wrappedOutputStream.flush();
-      response.raw().getOutputStream().close();
-    }
+		ctx.contentType(rresult.mimeType);
+		
+		try (InputStream inputStream = rresult.stream;
+				ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+				/*OutputStream wrappedOutputStream =
+						GzipUtils.checkAndWrap(byteOutputStream, byteOutputStream, false)*/ /*TODO Shouldn't be needed? Javalin seems to handle compression internally*/) {
+			IOUtils.copy(inputStream, byteOutputStream);
+			byteOutputStream.flush();
+			ctx.result(byteOutputStream.toByteArray());
+		}
 
-    return 200;
-  }
+		ctx.status(200);
+	}
 }

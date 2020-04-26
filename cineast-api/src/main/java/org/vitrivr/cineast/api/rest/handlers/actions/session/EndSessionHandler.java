@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.session.Session;
-import org.vitrivr.cineast.api.session.SessionManager;
-import org.vitrivr.cineast.api.session.SessionType;
+import java.util.Map;
+
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.session.SessionState;
-
-import java.util.Map;
-import org.yaml.snakeyaml.events.Event.ID;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.session.SessionManager;
+import org.vitrivr.cineast.api.session.SessionType;
 
 public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
 
@@ -36,7 +35,7 @@ public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionS
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription(RestHttpMethod method) {
         return "End the session for id";
     }
 
