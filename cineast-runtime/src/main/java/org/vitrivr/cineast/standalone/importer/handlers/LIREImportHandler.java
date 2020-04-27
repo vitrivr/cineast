@@ -36,7 +36,7 @@ public class LIREImportHandler extends DataImportHandler {
                 final String filename = p.getFileName().toString();
                 final String suffix = filename.substring(filename.lastIndexOf("."));
                 try {
-                    this.futures.add(this.service.submit(new DataImportRunner(new LIREImporter(p.toFile()), name, "lire_" + filename.replace(suffix, ""))));
+                    this.futures.add(this.service.submit(new DataImportRunner(new LIREImporter(p.toFile()), "feature_" + name, "lire_" + filename.replace(suffix, ""))));
                 } catch (IOException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }
