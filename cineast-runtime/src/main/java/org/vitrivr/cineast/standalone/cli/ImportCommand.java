@@ -9,6 +9,7 @@ import java.util.List;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.LIREImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
@@ -54,6 +55,10 @@ public class ImportCommand implements Runnable {
         break;
       case JSON:
         handler = new JsonDataImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
+      case LIRE:
+        handler = new LIREImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
       case ASR:
@@ -126,6 +131,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
   }
 }
