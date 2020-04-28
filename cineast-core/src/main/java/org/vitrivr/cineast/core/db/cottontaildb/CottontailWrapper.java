@@ -144,13 +144,13 @@ public class CottontailWrapper implements AutoCloseable {
       public void onError(Throwable t) {
         status[0] = true;
         status[1] = true;
-        LOGGER.error("Error during insert: {}", t.getMessage());
+        LOGGER.error("Error during insert. Everything was rolled back: {}", t.getMessage());
       }
 
       @Override
       public void onCompleted() {
         status[0] = true;
-        LOGGER.trace("Commit successful!");
+        LOGGER.trace("Insert successful. Changes were committed!");
       }
     };
 
@@ -159,18 +159,12 @@ public class CottontailWrapper implements AutoCloseable {
     for (InsertMessage message : messages) {
       sink.onNext(message);
     }
+    sink.onCompleted(); /* Send commit message. */
 
     while (!status[0]) {
       Thread.yield();
     }
-
-    if (status[1]) {
-      sink.onError(null); /* Commit. */
-    } else {
-      sink.onCompleted(); /* Commit. */
-    }
-
-    return status[1];
+    return !status[1];
   }
 
   /**
