@@ -34,7 +34,7 @@ public class LSCUtilities {
      * @return
      */
     public static String pathToSegmentId(String path) {
-        int beginIdx = path.contains("/") ? path.indexOf("/")+1 : 0;
+        int beginIdx = path.contains("/") ? path.lastIndexOf("/")+1 : 0;
         int endIdx = path.contains(".") ? path.lastIndexOf(".") : path.length();
         return "is_" + path.substring(beginIdx, endIdx);
     }

@@ -11,6 +11,7 @@ import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImporter;
@@ -115,7 +116,10 @@ public class ImportCommand implements Runnable {
         handler = new VisaulConceptTagImportHandler(this.threads,this.batchsize);
         handler.doImport(path);
         break;
-
+      case LSCCAPTION:
+        handler = new CaptionImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
     }
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
   }
@@ -139,6 +143,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT
+    PROTO, JSON, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
   }
 }
