@@ -132,7 +132,7 @@ public class CottontailWrapper implements AutoCloseable {
 
   public boolean insert(List<InsertMessage> messages) {
 
-    final boolean[] error = {false};
+    final boolean[] status = {false, false}; /* {done, error}. */
     final StreamObserver<InsertStatus> observer = new StreamObserver<InsertStatus>() {
 
       @Override
@@ -142,12 +142,14 @@ public class CottontailWrapper implements AutoCloseable {
 
       @Override
       public void onError(Throwable t) {
-        error[0] = true;
+        status[0] = true;
+        status[1] = true;
         LOGGER.error("Error during insert: {}", t.getMessage());
       }
 
       @Override
       public void onCompleted() {
+        status[0] = true;
         LOGGER.trace("Commit successful!");
       }
     };
@@ -155,18 +157,20 @@ public class CottontailWrapper implements AutoCloseable {
     /* Start data transfer. */
     final StreamObserver<InsertMessage> sink = this.managementStub.insert(observer);
     for (InsertMessage message : messages) {
-      if (error[0]) break;
       sink.onNext(message);
     }
 
-    if (error[0]) {
-      sink.onError(null); /* Commit. */
+    while (!status[0]) {
+      Thread.yield();
+    }
 
+    if (status[1]) {
+      sink.onError(null); /* Commit. */
     } else {
       sink.onCompleted(); /* Commit. */
     }
 
-    return error[0];
+    return status[1];
   }
 
   /**
