@@ -41,9 +41,8 @@ public class LIREImporter implements Importer<StringFloatArrayPair> {
       String[] split = line.split("\t");
 
       if (split.length < 4) {
-        LOGGER.error("line in '{}' does not conform to expected format",
-            this.file.getAbsolutePath());
-        return null;
+        LOGGER.error("line in '{}' does not conform to expected format; skipping...", this.file.getAbsolutePath());
+        return readNext();
       }
 
       String id = split[0];
@@ -52,8 +51,8 @@ public class LIREImporter implements Importer<StringFloatArrayPair> {
       try {
         vectorLength = Integer.parseInt(split[2]);
       } catch (NumberFormatException e) {
-        LOGGER.error("'{}' is not an integer in '{}'", split[2], this.file.getAbsolutePath());
-        return null;
+        LOGGER.error("'{}' is not an integer in '{}'; skipping...", split[2], this.file.getAbsolutePath());
+        return readNext();
       }
 
       float[] vector = new float[vectorLength];
@@ -70,11 +69,9 @@ public class LIREImporter implements Importer<StringFloatArrayPair> {
       return new StringFloatArrayPair(id, vector);
 
     } catch (IOException e) {
-
       e.printStackTrace();
       return null;
     }
-
   }
 
   @Override
