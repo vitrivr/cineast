@@ -3,6 +3,8 @@ package org.vitrivr.cineast.standalone.importer.lsc2020;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 
 import java.nio.file.Path;
@@ -16,6 +18,15 @@ public class MetaImportHandler extends DataImportHandler {
     public MetaImportHandler(int threads, int batchSize, boolean clean){
         super(threads, batchSize);
         this.clean= clean;
+        final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        /* Beware, this drops the table */
+        if (clean) {
+            LOGGER.info("Dropping table ...");
+            ec.dropSegmentMetadataEntity();
+            LOGGER.info("Finished dropping table for entity ");
+            ec.createSegmentMetadataEntity();
+            LOGGER.info("Re-created SegmentMetaData entity");
+        }
     }
 
     @Override

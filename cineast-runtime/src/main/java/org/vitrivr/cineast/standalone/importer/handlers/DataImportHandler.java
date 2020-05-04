@@ -63,7 +63,7 @@ public abstract class DataImportHandler {
             this.entityName = entityName;
             this.importer = importer;
             this.taskName = taskName;
-            this.clean = clean;
+            this.clean = false; // TODO only enable again when cottontail supports meta-lookup
         }
 
         /**
