@@ -105,6 +105,12 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
+  public boolean createHashNonUniqueIndex(String entityName, String column) {
+    /* Ignored for in-memory store*/
+    return false;
+  }
+
+  @Override
   public void close() {
 
   }

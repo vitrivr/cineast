@@ -2,6 +2,7 @@ package org.vitrivr.cineast.api;
 
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
 import org.vitrivr.cineast.standalone.util.CLI;
 
 public class Main {
@@ -30,11 +31,15 @@ public class Main {
     APIEndpoint.start();
     GRPCEndpoint.start();
 
+    /* Initalize Monitoring */
+    PrometheusServer.initialize();
+
     /* Start Cineast CLI in interactive mode (blocking). */
     CLI.start(CineastCli.class);
 
     /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
     APIEndpoint.stop();
     GRPCEndpoint.stop();
+    PrometheusServer.stopServer();
   }
 }

@@ -84,6 +84,10 @@ public abstract class BooleanRetriever implements Retriever {
   protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
 
     Set<String> relevantIds = null;
+    if (qc.hasRelevantSegmentIds()){
+      relevantIds = new HashSet<>();
+      relevantIds.addAll(qc.getRelevantSegmentIds());
+    }
 
     for (BooleanExpression be: expressions){
       List<Map<String, PrimitiveTypeProvider>> rows = selector
@@ -122,7 +126,7 @@ public abstract class BooleanRetriever implements Retriever {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) { //nop
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) { //nop
     return Collections.emptyList();
   }
 

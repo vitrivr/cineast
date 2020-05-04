@@ -31,9 +31,5 @@ public abstract class AbstractEntityReader implements Closeable {
         this.selector.close();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        close();
-        super.finalize();
-    }
+
 }

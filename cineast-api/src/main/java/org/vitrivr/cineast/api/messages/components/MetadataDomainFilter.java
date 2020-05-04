@@ -2,6 +2,7 @@ package org.vitrivr.cineast.api.messages.components;
 
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -24,5 +25,12 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
     MetadataDomainFilter filter = new MetadataDomainFilter();
     filter.setKeywords(keywords);
     return filter;
+  }
+
+  @Override
+  public String toString() {
+    return "MetadataDomainFilter{" +
+            "keywords=" + Arrays.toString(keywords) +
+            '}';
   }
 }

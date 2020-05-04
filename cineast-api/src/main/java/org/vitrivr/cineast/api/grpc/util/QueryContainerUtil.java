@@ -4,8 +4,8 @@ import georegression.struct.point.Point2D_F32;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.grpc.CineastGrpc;
+import org.vitrivr.cineast.api.grpc.data.QueryStage;
 import org.vitrivr.cineast.api.grpc.data.QueryTerm;
-import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Location;
@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.vitrivr.cineast.core.config.ReadableQueryConfig.*;
+import static org.vitrivr.cineast.core.config.ReadableQueryConfig.Hints;
 
 public class QueryContainerUtil {
 
@@ -214,8 +214,15 @@ public class QueryContainerUtil {
         );
     }
 
-    public static List<QueryTerm> query(CineastGrpc.Query query){
-        return query.getTermsList().stream().map(QueryContainerUtil::queryTerm).collect(Collectors.toList());
+    public static QueryStage queryStage(CineastGrpc.QueryStage queryStage) {
+        return new QueryStage(
+                queryStage.getTermsList().stream().map(QueryContainerUtil::queryTerm).collect(Collectors.toList()),
+                queryConfig(queryStage.getConfig())
+        );
+    }
+
+    public static List<QueryStage> query(CineastGrpc.Query query) {
+        return query.getStagesList().stream().map(QueryContainerUtil::queryStage).collect(Collectors.toList());
     }
 
     public static CineastGrpc.MediaSegmentId mediaSegmentId(String id) {

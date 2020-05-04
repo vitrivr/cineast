@@ -272,4 +272,12 @@ public class MathHelper {
 
 		return new int[]{(int) h1, (int) k1};
 	}
+
+	public static float sum(float[] arr) {
+		float _result = 0;
+		for (int i = 0; i < arr.length; i++) {
+			_result += arr[i];
+		}
+		return _result;
+	}
 }

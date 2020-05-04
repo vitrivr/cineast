@@ -46,4 +46,12 @@ public class Error implements Message {
     public MessageType getMessageType() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Error{" +
+                "message='" + message + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

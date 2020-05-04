@@ -257,11 +257,6 @@ public class ADAMproWrapper implements AutoCloseable {
     this.channel.shutdown();
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    this.close();
-    super.finalize();
-  }
 
   public ListenableFuture<AckMessage> dropEntity(String entityName){
     return this.definitionStub.dropEntity(EntityNameMessage.newBuilder().setEntity(entityName).build());

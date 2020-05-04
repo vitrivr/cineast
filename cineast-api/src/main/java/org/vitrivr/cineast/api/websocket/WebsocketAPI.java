@@ -5,16 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.vitrivr.cineast.api.APIEndpoint;
-import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.*;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -33,9 +30,6 @@ import java.util.concurrent.*;
  * @see WebsocketMessageHandler
  * @see Message
  *
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
  */
 @WebSocket
 public class WebsocketAPI {
@@ -53,6 +47,7 @@ public class WebsocketAPI {
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
     static {
         STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
+        STATELESS_HANDLERS.put(MessageType.Q_SSIM, new StagedSimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());

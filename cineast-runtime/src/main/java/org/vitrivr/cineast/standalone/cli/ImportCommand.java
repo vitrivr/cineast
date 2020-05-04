@@ -9,25 +9,28 @@ import java.util.List;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.LIREImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
  *
- * @author Ralph Gasser
  */
 @Command(name = "import", description = "Starts import of pre-extracted data.")
 public class ImportCommand implements Runnable {
 
-  @Option(name = {"-t", "--type"}, description = "Type of data import that should be started. Possible values are PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS and VISION.")
+  @Option(name = {"-t", "--type"}, description = "Type of data import that should be started.")
   private String type;
 
   @Option(name = {"-i", "--input"}, description = "The source file or folder for data import. If a folder is specified, the entire content will be considered for import.")
@@ -41,7 +44,7 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
-    System.out.println(String.format("Starting import of type %s for '%s'.", this.type.toString(), this.input));
+    System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
     DataImportHandler handler;
@@ -54,6 +57,10 @@ public class ImportCommand implements Runnable {
         handler = new JsonDataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
+      case LIRE:
+        handler = new LIREImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
       case ASR:
         handler = new AsrDataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
@@ -62,7 +69,7 @@ public class ImportCommand implements Runnable {
         handler = new OcrDataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case CAPTION:
+      case CAPTIONING:
         handler = new CaptionTextImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
@@ -74,30 +81,33 @@ public class ImportCommand implements Runnable {
         handler = new TagImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case VISION:
-        doVisionImport(path);
-        break;
       case METADATA:
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
         handler.doImport(path);
         break;
-      case VBS2020:
-        AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(this.threads, 15_000);
-        audioHandler.doImport(path.resolve("audiomerge.json"));
-        CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(this.threads, 25_000);
-        captionHandler.doImport(path.resolve("captions.json"));
-        doVisionImport(path.resolve("gvision.json"));
-        ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(this.threads, 25_000);
-        metaHandler.doImport(path.resolve("metamerge.json"));
-        TagImportHandler tagHandler = new TagImportHandler(this.threads, 35_000);
-        tagHandler.doImport(path.resolve("tags.json"));
-        ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, 25_000);
-        classificationsImportHandler.doImport(path.resolve("V3C1Analysis"));
+      case AUDIOTRANSCRIPTION:
+        handler = new AudioTranscriptImportHandler(this.threads, 15_000);
+        handler.doImport(path);
         break;
-      case V3C1ANALYSIS:
-        handler = new ClassificationsImportHandler(this.threads, 25_000);
-        handler.doImport(path.resolve("V3C1Analysis"));
+      case GOOGLEVISION:
+        doVisionImport(path);
         break;
+      case V3C1CLASSIFICATIONS:
+        handler = new ClassificationsImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
+      case V3C1COLORLABELS:
+        /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
+        handler = new ColorlabelImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
+      case V3C1FACES:
+        handler = new FacesImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
+        break;
+      case OBJECTINSTANCE:
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
     }
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
   }
@@ -121,6 +131,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS, VISION, VBS2020, METADATA, V3C1ANALYSIS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE
   }
 }

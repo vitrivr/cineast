@@ -15,7 +15,7 @@ import org.vitrivr.cineast.standalone.config.Config;
  * @author Ralph Gasser
  * @version 1.0
  */
-@Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities.")
+@Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
 public class DatabaseSetupCommand implements Runnable {
 
   @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
