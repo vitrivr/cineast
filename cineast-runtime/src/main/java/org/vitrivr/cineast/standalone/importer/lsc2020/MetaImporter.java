@@ -159,12 +159,12 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
                 // Catch the header line, which is not important
                 String[] items = s.split(","); // Csv
                 String minuteId = items[CONCEPTS_MINUTEID_COL];
-                String imagePath = LSCUtilities.pathToSegmentId(items[CONCEPTS_IMAGEPATH_COL].substring("DATASETS/LSC2020/".length()+1));
+                String imagePath = LSCUtilities.cleanImagePath(items[CONCEPTS_IMAGEPATH_COL]);
                 LOGGER.trace("Adding to lookup: {} <-> {}", minuteId, imagePath);
                 minuteIdPathMap.put(minuteId, imagePath);
             }
         });
-        long time = (System.nanoTime() - start) / 1000000l;
+        long time = (System.nanoTime() - start) / 1000000L;
         LOGGER.info("Successfully initialised the lookup with {} entries in {}ms", minuteIdPathMap.size(),time);
     }
 

@@ -11,13 +11,16 @@ public class MetaImportHandler extends DataImportHandler {
 
     private static final Logger LOGGER = LogManager.getLogger(MetaImportHandler.class);
 
-    public MetaImportHandler(int threads, int batchSize){
+    private final boolean clean;
+
+    public MetaImportHandler(int threads, int batchSize, boolean clean){
         super(threads, batchSize);
+        this.clean= clean;
     }
 
     @Override
     public void doImport(Path path) {
         LOGGER.info("Starting LSC metadata import from folder {}", path);
-        this.futures.add(this.service.submit(new DataImportRunner(new MetaImporter(path), MediaSegmentMetadataDescriptor.ENTITY, "lsc-metadata")));
+        this.futures.add(this.service.submit(new DataImportRunner(new MetaImporter(path), MediaSegmentMetadataDescriptor.ENTITY, "lsc-metadata", clean)));
     }
 }

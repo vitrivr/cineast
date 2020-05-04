@@ -45,82 +45,79 @@ public class ImportCommand implements Runnable {
   @Option(name = {"-b", "--batchsize"}, description = "The batch size used for the import. Imported data will be persisted in batches of the specified size.")
   private int batchsize = 500;
 
+  @Option(name={"-c", "--clean"}, description = "Cleans, i.e. drops the tables before import. Use with caution, as the already imported data will be lost! Requires the import type to respect this option")
+  private boolean clean = false;
+
   @Override
   public void run() {
     System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
-    DataImportHandler handler;
+    DataImportHandler handler = null;
+    boolean isGoogleVision = false;
     switch (type) {
       case PROTO:
         handler = new ProtoDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case JSON:
         handler = new JsonDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case ASR:
         handler = new AsrDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case OCR:
         handler = new OcrDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case CAPTIONING:
         handler = new CaptionTextImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case AUDIO:
         handler = new AudioTranscriptImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case TAGS:
         handler = new TagImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case METADATA:
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case AUDIOTRANSCRIPTION:
         handler = new AudioTranscriptImportHandler(this.threads, 15_000);
-        handler.doImport(path);
         break;
       case GOOGLEVISION:
         doVisionImport(path);
+        isGoogleVision = true;
         break;
       case V3C1CLASSIFICATIONS:
         handler = new ClassificationsImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case V3C1FACES:
         handler = new FacesImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case OBJECTINSTANCE:
         handler = new MLTFeaturesImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case LSCMETA:
-        handler = new MetaImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
+        handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCCONCEPT:
         handler = new VisaulConceptTagImportHandler(this.threads,this.batchsize);
-        handler.doImport(path);
         break;
       case LSCCAPTION:
         handler = new CaptionImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
     }
+    if(!isGoogleVision){
+      if(handler == null){
+        throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: "+type);
+      }else{
+        handler.doImport(path);
+      }
+    }
+
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
   }
 

@@ -19,7 +19,7 @@ public class LSCUtilities {
      * @throws IOException If something goes wrong. Possibly due to the file not being created beforehand
      */
     public static void writeLines(Path directory, String file, List<String> lines) throws IOException {
-        Path p = directory.resolve(file);
+        final Path p = directory.resolve(file);
         Files.write(p, lines, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
@@ -34,9 +34,10 @@ public class LSCUtilities {
      * @return
      */
     public static String pathToSegmentId(String path) {
-        int beginIdx = path.contains("/") ? path.lastIndexOf("/")+1 : 0;
-        int endIdx = path.contains(".") ? path.lastIndexOf(".") : path.length();
-        return "is_" + path.substring(beginIdx, endIdx);
+        final int beginIdx = path.contains("/") ? path.lastIndexOf("/")+1 : 0;
+        final int endIdx = path.contains(".") ? path.lastIndexOf(".") : path.length();
+        final String prefix = path.startsWith("is_") ? "" : "is_";
+        return prefix + path.substring(beginIdx, endIdx);
     }
 
     public static String cleanImagePath(String path){
