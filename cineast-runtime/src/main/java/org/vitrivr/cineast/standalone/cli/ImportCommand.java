@@ -6,15 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
+
+import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImporter;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
@@ -58,9 +54,13 @@ public class ImportCommand implements Runnable {
     switch (type) {
       case PROTO:
         handler = new ProtoDataImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case JSON:
         handler = new JsonDataImportHandler(this.threads, this.batchsize);
+        break;
+      case LIRE:
+        handler = new LIREImportHandler(this.threads, this.batchsize);
         break;
       case ASR:
         handler = new AsrDataImportHandler(this.threads, this.batchsize);
@@ -89,10 +89,12 @@ public class ImportCommand implements Runnable {
         break;
       case V3C1CLASSIFICATIONS:
         handler = new ClassificationsImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
+        handler.doImport(path);
         break;
       case V3C1FACES:
         handler = new FacesImportHandler(this.threads, this.batchsize);
@@ -140,6 +142,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
   }
 }

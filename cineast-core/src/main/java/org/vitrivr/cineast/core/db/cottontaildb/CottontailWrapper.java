@@ -24,6 +24,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -41,7 +42,7 @@ public class CottontailWrapper implements AutoCloseable {
 
   private final ManagedChannel channel;
   private final CottonDDLFutureStub definitionFutureStub;
-  private final CottonDMLFutureStub managementStub;
+  private final CottonDMLStub managementStub;
   private final CottonDMLStub insertStub;
 
   private static final int maxMessageSize = 10_000_000;
@@ -58,7 +59,7 @@ public class CottontailWrapper implements AutoCloseable {
     this.channel = builder.build();
     LOGGER.info("Connected to Cottontail at {}:{}", config.getHost(), config.getPort());
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
-    this.managementStub = CottonDMLGrpc.newFutureStub(channel);
+    this.managementStub = CottonDMLGrpc.newStub(channel);
     this.insertStub = CottonDMLGrpc.newStub(channel);
   }
 
@@ -129,18 +130,41 @@ public class CottontailWrapper implements AutoCloseable {
     }
   }
 
-  public ListenableFuture<InsertStatus> insert(InsertMessage message) {
-    return this.managementStub.insert(message);
-  }
+  public boolean insert(List<InsertMessage> messages) {
 
-  public InsertStatus insertBlocking(InsertMessage message) {
-    ListenableFuture<InsertStatus> future = this.insert(message);
-    try {
-      return future.get();
-    } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in insertBlocking on entity {} (msg size {} KB): {}", message.getEntity().getName(), message.getSerializedSize() / 1_000, LogHelper.getStackTrace(e));
-      return INTERRUPTED_INSERT;
+    final boolean[] status = {false, false}; /* {done, error}. */
+    final StreamObserver<InsertStatus> observer = new StreamObserver<InsertStatus>() {
+
+      @Override
+      public void onNext(InsertStatus value) {
+        LOGGER.trace("Tuple received: {}", value.getTimestamp());
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        status[0] = true;
+        status[1] = true;
+        LOGGER.error("Error during insert. Everything was rolled back: {}", t.getMessage());
+      }
+
+      @Override
+      public void onCompleted() {
+        status[0] = true;
+        LOGGER.trace("Insert successful. Changes were committed!");
+      }
+    };
+
+    /* Start data transfer. */
+    final StreamObserver<InsertMessage> sink = this.managementStub.insert(observer);
+    for (InsertMessage message : messages) {
+      sink.onNext(message);
     }
+    sink.onCompleted(); /* Send commit message. */
+
+    while (!status[0]) {
+      Thread.yield();
+    }
+    return !status[1];
   }
 
   /**
