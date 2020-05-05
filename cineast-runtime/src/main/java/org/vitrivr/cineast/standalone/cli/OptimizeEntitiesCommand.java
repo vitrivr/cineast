@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.standalone.cli;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Schema;
 import com.github.rvesse.airline.annotations.Command;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Selector;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
