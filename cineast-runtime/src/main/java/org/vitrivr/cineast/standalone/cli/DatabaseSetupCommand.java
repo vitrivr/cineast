@@ -26,10 +26,34 @@ public class DatabaseSetupCommand implements Runnable {
   @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
   private boolean clean = false;
 
+  /**
+   * This is a hacky way to support CLI and non CLI usage.
+   *
+   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used.
+   * See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
+   */
+  private final boolean isNotCommand;
+
+  /**
+   * For CLI
+   */
+  public DatabaseSetupCommand(){
+    this(false);
+  }
+
+  /**
+   * Other usages, i.e. in Import
+   * @param nonCli
+   */
+  public DatabaseSetupCommand(boolean nonCli){
+    this.isNotCommand = nonCli;
+  }
+
   @Override
   public void run() {
     doSetup();
   }
+
 
   /**
    * Performs necessary setup on database, i.e. creating the required tables.
@@ -47,7 +71,7 @@ public class DatabaseSetupCommand implements Runnable {
         this.dropAllEntities(ec, retrievers);
       }
 
-      LOGGER.info("Setting up basic entities...");
+      print("Setting up basic entities...");
 
       ec.createMultiMediaObjectsEntity();
       ec.createMetadataEntity();
@@ -55,17 +79,17 @@ public class DatabaseSetupCommand implements Runnable {
       ec.createSegmentEntity();
       ec.createTagEntity();
 
-      LOGGER.info("...done");
+      print("...done");
 
-      LOGGER.info("Setting up retriever classes...");
+      print("Setting up retriever classes...");
 
       for (Retriever r : retrievers) {
-        LOGGER.info("Creating entity for " + r.getClass().getSimpleName());
+        print("Creating entity for " + r.getClass().getSimpleName());
         r.initalizePersistentLayer(() -> ec);
       }
-      LOGGER.info("...done");
+      print("...done");
 
-      LOGGER.info("Setup complete!");
+      print("Setup complete!");
 
       /* Closes the EntityCreator. */
       ec.close();
@@ -79,7 +103,7 @@ public class DatabaseSetupCommand implements Runnable {
    * @param retrievers The list of {@link Retriever} classes to drop the entities for.
    */
   private void dropAllEntities(EntityCreator ec, Collection<Retriever> retrievers) {
-    LOGGER.info("Dropping all entities... ");
+    print("Dropping all entities... ");
     ec.dropMultiMediaObjectsEntity();
     ec.dropMetadataEntity();
     ec.dropSegmentEntity();
@@ -87,8 +111,19 @@ public class DatabaseSetupCommand implements Runnable {
     ec.dropTagEntity();
 
     for (Retriever r : retrievers) {
-      LOGGER.info("Dropping " + r.getClass().getSimpleName());
+      print("Dropping " + r.getClass().getSimpleName());
       r.dropPersistentLayer(() -> ec);
+    }
+  }
+
+  /**
+   * Prints the message given, if this is object was created in a CLI env, then it prints to standard out, otherwise it just logs on INFO
+   */
+  private void print(String msg){
+    if(this.isNotCommand){
+      LOGGER.info(msg);
+    }else{
+      System.out.println(msg);
     }
   }
 }

@@ -68,6 +68,34 @@ public abstract class DataImportHandler {
             this.importer = importer;
             this.taskName = taskName;
             this.clean = clean;
+            cleanOnDemand();
+        }
+
+        private void cleanOnDemand(){
+            final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+            /* Beware, this drops the table */
+            if (clean) {
+                CottontailGrpc.EntityDefinition entityDefinition = null;
+                CottontailWrapper cottontail = null;
+                if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+                    LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
+                }else{
+                    LOGGER.info("Storing entity ({}) details for re-setup", this.entityName);
+                    cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
+                    entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(this.entityName));
+                }
+                LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
+                ec.dropEntity(this.entityName);
+                LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
+                if(entityDefinition == null){
+                    LOGGER.warn("Calling command: setup -- This may take a while");
+                    DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
+                    setupCmd.doSetup();
+                }else{
+                    cottontail.createEntityBlocking(entityDefinition);
+                    LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
+                }
+            }
         }
 
         /**
@@ -93,30 +121,6 @@ public abstract class DataImportHandler {
         public void run() {
             try {
                 long start = System.currentTimeMillis();
-                final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
-                /* Beware, this drops the table */
-                if (clean) {
-                    CottontailGrpc.EntityDefinition entityDefinition = null;
-                    CottontailWrapper cottontail = null;
-                    if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
-                        LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
-                    }else{
-                        LOGGER.info("Storing entity ({}) details for re-setup", this.entityName);
-                        cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
-                        entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(this.entityName));
-                    }
-                    LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
-                    ec.dropEntity(this.entityName);
-                    LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
-                    if(entityDefinition == null){
-                        LOGGER.warn("Calling command: setup -- This may take a while");
-                        DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
-                        setupCmd.doSetup();
-                    }else{
-                        cottontail.createEntityBlocking(entityDefinition);
-                        LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
-                    }
-                }
                 final Copier copier = new Copier(this.entityName, this.importer);
                 LOGGER.info("Starting progress on entity: {}, task {}...", this.entityName, taskName);
                 copier.copyBatched(DataImportHandler.this.batchsize);
