@@ -15,6 +15,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+/**
+ * Importer for the LSC 2020 metadata, delivered with the dataset.
+ */
 public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
 
     private static final Logger LOGGER = LogManager.getLogger(MetaImporter.class);
@@ -103,6 +106,9 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         }
         List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
         for (int i = 0; i < META_NAMES.length; i++) {
+            if(items[i].equalsIgnoreCase("null")){
+                continue;
+            }
             list.add(parseMeta(path, items, i));
         }
         written.add(minuteId);

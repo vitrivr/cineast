@@ -114,6 +114,7 @@ public abstract class DataImportHandler {
                         setupCmd.doSetup();
                     }else{
                         cottontail.createEntityBlocking(entityDefinition);
+                        LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
                     }
                 }
                 final Copier copier = new Copier(this.entityName, this.importer);
