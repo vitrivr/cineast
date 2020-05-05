@@ -18,7 +18,7 @@ import org.vitrivr.cineast.standalone.config.Config;
  */
 public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage, MediaObjectDescriptor> {
 
-    public static final String TYPE_NAME = ":type";
+    public static final String TYPE_NAME = "type";
 
     /**
      * Processes a HTTP GET request.
@@ -42,7 +42,7 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage,
 
     @Override
     public String getRoute() {
-        return "find/objects/all/"+ TYPE_NAME;
+        return "find/objects/all/:" + TYPE_NAME;
     }
 
     @Override

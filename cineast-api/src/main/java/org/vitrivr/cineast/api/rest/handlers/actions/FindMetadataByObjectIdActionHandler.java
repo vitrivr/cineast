@@ -23,7 +23,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 public class FindMetadataByObjectIdActionHandler extends
         ParsingActionHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
 
-  private static final String ATTRIBUTE_ID = ":id";
+  private static final String ATTRIBUTE_ID = "id";
 
   @Override
   public List<RestHttpMethod> supportedMethods() {
@@ -85,7 +85,12 @@ public class FindMetadataByObjectIdActionHandler extends
 
   @Override
   public String getRoute() {
-    return "find/metadata/by/id/"+ATTRIBUTE_ID;
+    return "find/metadata/by/id/:" + ATTRIBUTE_ID;
+  }
+  
+  @Override
+  public String routeForPost() {
+    return "find/metadata/by/id";
   }
 
   @Override

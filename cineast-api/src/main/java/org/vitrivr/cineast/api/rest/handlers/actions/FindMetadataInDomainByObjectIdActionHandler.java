@@ -39,8 +39,8 @@ import org.vitrivr.cineast.standalone.config.Config;
  */
 public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHandler<IdList,MediaObjectMetadataQueryResult> {
 
-  private static final String ATTRIBUTE_ID = ":id";
-  private static final String DOMAIN_NAME = ":domain";
+  private static final String ATTRIBUTE_ID = "id";
+  private static final String DOMAIN_NAME = "domain";
 
   @Override
   public List<RestHttpMethod> supportedMethods() {
@@ -100,9 +100,14 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
 
   @Override
   public String getRoute() {
-    return String.format("find/metadata/in/%s/by/id/%s", DOMAIN_NAME, ATTRIBUTE_ID);
+    return String.format("find/metadata/in/:%s/by/id/:%s", DOMAIN_NAME, ATTRIBUTE_ID);
   }
 
+  @Override
+  public String routeForPost() {
+     return String.format("find/metadata/in/:%s", DOMAIN_NAME);
+  }
+  
   @Override
   public String getDescription(RestHttpMethod method) {
     return "Find meta data in domain by object id";

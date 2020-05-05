@@ -8,6 +8,7 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class IdList implements Message {
@@ -27,6 +28,7 @@ public class IdList implements Message {
     return this.ids.toArray(new String[0]);
   }
 
+  @JsonIgnore //prevents IDs being included in json a second time as "idList"
   public List<String> getIdList(){ return this.ids;}
   
   @Override

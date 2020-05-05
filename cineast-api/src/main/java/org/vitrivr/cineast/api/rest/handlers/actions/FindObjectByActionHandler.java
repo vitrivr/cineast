@@ -24,8 +24,8 @@ import com.google.common.collect.Lists;
  */
 public class FindObjectByActionHandler extends ParsingActionHandler<IdList, MediaObjectQueryResult> {
 
-    public final static String ATTRIBUTE_NAME = ":attribute";
-    public final static String VALUE_NAME = ":value";
+    public final static String ATTRIBUTE_NAME = "attribute";
+    public final static String VALUE_NAME = "value";
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -93,9 +93,14 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList, Medi
 
     @Override
     public String getRoute() {
-        return String.format("find/object/by/%s/%s", ATTRIBUTE_NAME, VALUE_NAME);
+        return String.format("find/object/by/:%s/:%s", ATTRIBUTE_NAME, VALUE_NAME);
     }
 
+    @Override
+    public String routeForPost() {
+        return "find/object/by/id";
+    }
+    
     @Override
     public String getDescription(RestHttpMethod method) {
         return "Find object by attribute and value";

@@ -24,10 +24,10 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Name of the GET parameter that denotes the attribute that should be used for lookup. */
-    private static final String GET_PARAMETER_ATTRIBUTE = ":attribute";
+    private static final String GET_PARAMETER_ATTRIBUTE = "attribute";
 
     /** Name of the GET parameter that denotes the value that should be used for lookup. */
-    private static final String GET_PARAMETER_VALUE = ":value";
+    private static final String GET_PARAMETER_VALUE = "value";
 
     /** Supported field names (attributes). */
     private static final String FIELD_ID = "id";
@@ -92,7 +92,7 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
 
     @Override
     public String routeForGet() {
-        return String.format("find/tags/by/%s/%s", GET_PARAMETER_ATTRIBUTE, GET_PARAMETER_VALUE);
+        return String.format("find/tags/by/:%s/:%s", GET_PARAMETER_ATTRIBUTE, GET_PARAMETER_VALUE);
     }
 
     @Override

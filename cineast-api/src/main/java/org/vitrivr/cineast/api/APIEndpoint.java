@@ -159,6 +159,9 @@ public class APIEndpoint {
             if(config.getEnableLiveDoc()) {
                 this.openApi = new OpenApiPlugin(this.getJavalinOpenApiOptions(config));
                 serviceConfig.registerPlugin(this.openApi);
+                
+                /* Enable webjars to serve Swagger-UI */
+                serviceConfig.enableWebjars();
             }
         });
 

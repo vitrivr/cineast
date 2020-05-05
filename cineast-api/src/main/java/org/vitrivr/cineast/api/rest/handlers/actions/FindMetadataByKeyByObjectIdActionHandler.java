@@ -21,8 +21,8 @@ import org.vitrivr.cineast.standalone.config.Config;
  * @author loris.sauter
  */
 public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandler<IdList, MediaObjectMetadataQueryResult> {
-  private static final String ATTRIBUTE_ID = ":id";
-  private static final String KEY_NAME = ":key";
+  private static final String ATTRIBUTE_ID = "id";
+  private static final String KEY_NAME = "key";
 
   /**
    * Processes a HTTP GET request.
@@ -70,12 +70,17 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
   public Class<IdList> inClass() {
     return IdList.class;
   }
-
+  
+  @Override
+  public String routeForPost() {
+    return String.format("find/metadata/with/:%s", KEY_NAME);
+  }
+  
   @Override
   public String getRoute() {
-    return String.format("find/metadata/with/%s/by/id/%s",KEY_NAME, ATTRIBUTE_ID);
+    return String.format("find/metadata/with/:%s/by/id/:%s", KEY_NAME, ATTRIBUTE_ID);
   }
-
+  
   @Override
   public String getDescription(RestHttpMethod method) {
     return "Find meta data for a given object id with specified key";

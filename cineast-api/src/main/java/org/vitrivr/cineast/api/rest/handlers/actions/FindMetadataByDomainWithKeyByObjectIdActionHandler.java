@@ -28,9 +28,9 @@ import org.vitrivr.cineast.standalone.config.Config;
 public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
         ParsingActionHandler<AnyMessage, MediaObjectMetadataQueryResult> {
 
-  public static final String OBJECT_ID_NAME = ":id";
-  public static final String DOMAIN_NAME = ":domain";
-  public static final String KEY_NAME = ":key";
+  public static final String OBJECT_ID_NAME = "id";
+  public static final String DOMAIN_NAME = "domain";
+  public static final String KEY_NAME = "key";
 
   private static Predicate<MediaObjectMetadataDescriptor> createDomainAndKeyFilter(String domain,
                                                                                    String key) {
@@ -59,7 +59,7 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
 
   @Override
   public String getRoute() {
-    return String.format("find/metadata/of/%s/in/%s/with/%s", OBJECT_ID_NAME, DOMAIN_NAME, KEY_NAME);
+    return String.format("find/metadata/of/:%s/in/:%s/with/:%s", OBJECT_ID_NAME, DOMAIN_NAME, KEY_NAME);
   }
 
   @Override

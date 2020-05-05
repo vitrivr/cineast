@@ -13,7 +13,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<AnyMessage, MediaSegmentDescriptor> {
 
-    private final static String ID_NAME = ":id";
+    private final static String ID_NAME = "id";
 
     /**
      * Processes a HTTP GET request. Searches all {@link MediaSegmentDescriptor}s that belong to the
@@ -38,7 +38,7 @@ public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<An
 
     @Override
     public String getRoute() {
-        return "find/segments/all/object/"+ID_NAME;
+        return "find/segments/all/object/:" + ID_NAME;
     }
 
     @Override

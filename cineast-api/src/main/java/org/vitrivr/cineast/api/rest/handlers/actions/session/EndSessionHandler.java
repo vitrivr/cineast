@@ -11,7 +11,7 @@ import org.vitrivr.cineast.api.session.SessionType;
 
 public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
 
-    public static final String ID_NAME = ":id";
+    public static final String ID_NAME = "id";
 
     @Override
     public Object doGet(Map<String, String> parameters) {
@@ -31,7 +31,7 @@ public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionS
 
     @Override
     public String getRoute() {
-        return "session/end/"+ ID_NAME;
+        return "session/end/:"+ ID_NAME;
     }
 
     @Override

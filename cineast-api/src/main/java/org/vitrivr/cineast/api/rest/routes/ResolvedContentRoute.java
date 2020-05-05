@@ -25,8 +25,8 @@ public class ResolvedContentRoute implements Handler {
 
 		String id;
 
-		if (params != null && params.containsKey(":id")) {
-			id = params.get(":id");
+		if (params != null && params.containsKey("id")) {
+			id = params.get("id");
 		} else {
 			ctx.status(400);
 			ctx.result("Bad request");

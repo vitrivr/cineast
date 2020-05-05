@@ -57,7 +57,7 @@ public class OptionallyFilteredIdList implements Message {
     this.filters = Arrays.asList(filters);
   }
 
-
+  @JsonIgnore //prevents filters being included in json a second time as "filterList"
   public List<AbstractMetadataFilterDescriptor> getFilterList(){
     return this.filters;
   }

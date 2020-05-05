@@ -15,7 +15,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList, MediaSegmentQueryResult> {
 
-    private final static String ID_NAME = ":id";
+    private final static String ID_NAME = "id";
 
     @Override
     public List<RestHttpMethod> supportedMethods() {
@@ -71,7 +71,7 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList, 
 
     @Override
     public String routeForGet() {
-        return String.format("find/segments/by/id/%s", ID_NAME);
+        return String.format("find/segments/by/id/:%s", ID_NAME);
     }
 
     @Override

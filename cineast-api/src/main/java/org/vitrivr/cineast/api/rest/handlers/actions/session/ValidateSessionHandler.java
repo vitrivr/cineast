@@ -11,7 +11,8 @@ import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
 
 public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
-
+  private final static String ID_NAME = "id";
+    
   @Override
   public Object doGet(Map<String, String> parameters) {
     return validateSession(parameters);
@@ -37,13 +38,13 @@ public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage, Ses
   }
 
   public static SessionState validateSession(Map<String, String> parameters) {
-    final String sessionId = parameters.get(":id");
+    final String sessionId = parameters.get(ID_NAME);
     return validateSession(sessionId);
   }
 
   @Override
   public String getRoute() {
-    return "session/validate/:id";
+    return "session/validate/:" + ID_NAME;
   }
 
   @Override
