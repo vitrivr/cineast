@@ -5,6 +5,9 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -18,11 +21,20 @@ import org.vitrivr.cineast.standalone.config.Config;
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
 public class DatabaseSetupCommand implements Runnable {
 
+  private static final Logger LOGGER = LogManager.getLogger(DatabaseSetupCommand.class);
+
   @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
   private boolean clean = false;
 
   @Override
   public void run() {
+    doSetup();
+  }
+
+  /**
+   * Performs necessary setup on database, i.e. creating the required tables.
+   */
+  public void doSetup(){
     final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
       /* Collects all the relevant retriever classes based on the application config. */
@@ -31,12 +43,11 @@ public class DatabaseSetupCommand implements Runnable {
         retrievers.addAll(Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet());
       }
 
-      System.out.println(clean);
       if (this.clean) {
         this.dropAllEntities(ec, retrievers);
       }
 
-      System.out.println("Setting up basic entities...");
+      LOGGER.info("Setting up basic entities...");
 
       ec.createMultiMediaObjectsEntity();
       ec.createMetadataEntity();
@@ -44,17 +55,17 @@ public class DatabaseSetupCommand implements Runnable {
       ec.createSegmentEntity();
       ec.createTagEntity();
 
-      System.out.println("...done");
+      LOGGER.info("...done");
 
-      System.out.println("Setting up retriever classes...");
+      LOGGER.info("Setting up retriever classes...");
 
       for (Retriever r : retrievers) {
-        System.out.println("Creating entity for " + r.getClass().getSimpleName());
+        LOGGER.info("Creating entity for " + r.getClass().getSimpleName());
         r.initalizePersistentLayer(() -> ec);
       }
-      System.out.println("...done");
+      LOGGER.info("...done");
 
-      System.out.println("Setup complete!");
+      LOGGER.info("Setup complete!");
 
       /* Closes the EntityCreator. */
       ec.close();
@@ -68,7 +79,7 @@ public class DatabaseSetupCommand implements Runnable {
    * @param retrievers The list of {@link Retriever} classes to drop the entities for.
    */
   private void dropAllEntities(EntityCreator ec, Collection<Retriever> retrievers) {
-    System.out.println("Dropping all entities... ");
+    LOGGER.info("Dropping all entities... ");
     ec.dropMultiMediaObjectsEntity();
     ec.dropMetadataEntity();
     ec.dropSegmentEntity();
@@ -76,7 +87,7 @@ public class DatabaseSetupCommand implements Runnable {
     ec.dropTagEntity();
 
     for (Retriever r : retrievers) {
-      System.out.println("Dropping " + r.getClass().getSimpleName());
+      LOGGER.info("Dropping " + r.getClass().getSimpleName());
       r.dropPersistentLayer(() -> ec);
     }
   }

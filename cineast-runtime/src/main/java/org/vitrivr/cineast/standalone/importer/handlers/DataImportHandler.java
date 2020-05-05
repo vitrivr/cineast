@@ -10,12 +10,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.cli.DatabaseSetupCommand;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 /**
  * @author rgasser
@@ -63,7 +67,7 @@ public abstract class DataImportHandler {
             this.entityName = entityName;
             this.importer = importer;
             this.taskName = taskName;
-            this.clean = false; // TODO only enable again when cottontail supports meta-lookup
+            this.clean = clean;
         }
 
         /**
@@ -92,9 +96,25 @@ public abstract class DataImportHandler {
                 final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
                 /* Beware, this drops the table */
                 if (clean) {
+                    CottontailGrpc.EntityDefinition entityDefinition = null;
+                    CottontailWrapper cottontail = null;
+                    if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+                        LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
+                    }else{
+                        LOGGER.info("Storing entity ({}) details for re-setup", this.entityName);
+                        cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
+                        entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(this.entityName));
+                    }
                     LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
                     ec.dropEntity(this.entityName);
                     LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
+                    if(entityDefinition == null){
+                        LOGGER.warn("Calling command: setup -- This may take a while");
+                        DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
+                        setupCmd.doSetup();
+                    }else{
+                        cottontail.createEntityBlocking(entityDefinition);
+                    }
                 }
                 final Copier copier = new Copier(this.entityName, this.importer);
                 LOGGER.info("Starting progress on entity: {}, task {}...", this.entityName, taskName);
