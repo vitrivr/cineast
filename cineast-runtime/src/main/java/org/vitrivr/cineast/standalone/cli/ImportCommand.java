@@ -10,7 +10,7 @@ import java.util.List;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
@@ -106,7 +106,7 @@ public class ImportCommand implements Runnable {
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCCONCEPT:
-        handler = new VisaulConceptTagImportHandler(this.threads,this.batchsize);
+        handler = new VisualConceptTagImportHandler(this.threads,this.batchsize);
         break;
       case LSCCAPTION:
         handler = new CaptionImportHandler(this.threads, this.batchsize);
