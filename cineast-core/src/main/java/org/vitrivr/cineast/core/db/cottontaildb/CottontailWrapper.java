@@ -1,24 +1,23 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Empty;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus;
+import org.vitrivr.cottontail.grpc.CottonDDLGrpc;
+import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
+import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
+import org.vitrivr.cottontail.grpc.CottonDMLGrpc;
+import org.vitrivr.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
+import org.vitrivr.cottontail.grpc.CottonDQLGrpc;
+import org.vitrivr.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Empty;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityDefinition;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertStatus;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Schema;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.SuccessStatus;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
@@ -63,12 +62,12 @@ public class CottontailWrapper implements AutoCloseable {
     this.insertStub = CottonDMLGrpc.newStub(channel);
   }
 
-  public synchronized ListenableFuture<SuccessStatus> createEntity(CreateEntityMessage createMessage) {
+  public synchronized ListenableFuture<SuccessStatus> createEntity(EntityDefinition createMessage) {
     final CottonDDLFutureStub stub = CottonDDLGrpc.newFutureStub(this.channel);
     return stub.createEntity(createMessage);
   }
 
-  public synchronized void createEntityBlocking(CreateEntityMessage createMessage) {
+  public synchronized void createEntityBlocking(EntityDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.createEntity(createMessage);

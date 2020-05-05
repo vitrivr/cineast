@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.Operation;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;

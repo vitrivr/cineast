@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Vector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn.Distance;
 import com.google.common.primitives.*;
 import com.googlecode.javaewah.datastructure.BitSet;
 import org.apache.logging.log4j.LogManager;
