@@ -11,6 +11,7 @@ import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
@@ -38,11 +39,8 @@ public class FindMetadataByObjectIdActionHandler extends
   @Override
   public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(ATTRIBUTE_ID);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final List<MediaObjectMetadataDescriptor> descriptors = reader
-        .lookupMultimediaMetadata(objectId);
-    reader.close();
-    return new MediaObjectMetadataQueryResult("", descriptors);
+    final MetadataRetrievalService service = new MetadataRetrievalService();
+    return new MediaObjectMetadataQueryResult("", service.lookupMultimediaMetadata(objectId));
   }
 
   /**
@@ -59,11 +57,9 @@ public class FindMetadataByObjectIdActionHandler extends
     if (context == null || context.getIds().length == 0) {
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
-
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    List<MediaObjectMetadataDescriptor> descriptors = reader
+    final MetadataRetrievalService service = new MetadataRetrievalService();
+    List<MediaObjectMetadataDescriptor> descriptors = service
         .lookupMultimediaMetadata(context.getIdList());
-    reader.close();
     if (context.hasFilters()) {
       final List<AbstractMetadataFilterDescriptor> filters = context.getFilterList();
       for (AbstractMetadataFilterDescriptor filter : filters) {

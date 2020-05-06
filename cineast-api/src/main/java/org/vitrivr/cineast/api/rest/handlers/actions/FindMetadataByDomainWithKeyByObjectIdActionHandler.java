@@ -1,72 +1,60 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import io.javalin.http.Context;
+import io.javalin.plugin.openapi.annotations.*;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.api.rest.RestHttpMethod;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
-import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
+import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 /**
- * This class handles GET requests with an object id, domain and key and returns all matching
- * metadata descriptors.
+ * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.
  * <p>
  * <h3>GET</h3>
- * This action's resource should have the following structure: {@code
- * find/metadata/of/:id/in/:domain/with/:key}. It returns then all metadata of the object with this
- * id, belonging to that domain with the specified key.
+ * This action's resource should have the following structure: {@code find/metadata/of/:id/in/:domain/with/:key}. It
+ * returns then all metadata of the object with this id, belonging to that domain with the specified key.
  * </p>
  *
  * @author loris.sauter
  */
-public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
-        ParsingActionHandler<AnyMessage, MediaObjectMetadataQueryResult> {
-
+public class FindMetadataByDomainWithKeyByObjectIdActionHandler implements
+    GetRestHandler<MediaObjectMetadataQueryResult> {
+  
   public static final String OBJECT_ID_NAME = "id";
   public static final String DOMAIN_NAME = "domain";
   public static final String KEY_NAME = "key";
-
-  private static Predicate<MediaObjectMetadataDescriptor> createDomainAndKeyFilter(String domain,
-                                                                                   String key) {
-    return (m) -> m.getKey().toLowerCase().equals(key.toLowerCase()) && m.getDomain().toLowerCase()
-        .equals(domain.toLowerCase());
-  }
-
+  
+  public static final String ROUTE = "find/metadata/of/:" + OBJECT_ID_NAME + "/in/:" + DOMAIN_NAME + "/with/:" + KEY_NAME;
+  
+  @OpenApi(
+      summary = "Find metadata for specific object id in given domain with given key",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+          @OpenApiParam(name = OBJECT_ID_NAME, description = "The object id"),
+          @OpenApiParam(name = DOMAIN_NAME, description = "The domain name"),
+          @OpenApiParam(name = KEY_NAME, description = "The key of the metadata")
+      },
+      tags = {"metadata"},
+      responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))}
+      // TODO Other responses in error case
+  )
   @Override
-  public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
+  public MediaObjectMetadataQueryResult doGet(Context ctx) {
+    final Map<String, String> parameters = ctx.pathParamMap();
     final String objectId = parameters.get(OBJECT_ID_NAME);
     final String domain = parameters.get(DOMAIN_NAME);
     final String key = parameters.get(KEY_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final List<MediaObjectMetadataDescriptor> descriptors = reader
-        .lookupMultimediaMetadata(objectId);
-    reader.close();
-    return new MediaObjectMetadataQueryResult("",
-        descriptors.stream().filter(createDomainAndKeyFilter(domain, key))
-            .collect(Collectors.toList()));
+    final MetadataRetrievalService service = new MetadataRetrievalService();
+    return new MediaObjectMetadataQueryResult("", service.find(objectId, domain, key)
+    );
   }
-
+  
   @Override
-  public Class<AnyMessage> inClass() {
-    return AnyMessage.class;
+  public String route() {
+    return ROUTE;
   }
-
-  @Override
-  public String getRoute() {
-    return String.format("find/metadata/of/:%s/in/:%s/with/:%s", OBJECT_ID_NAME, DOMAIN_NAME, KEY_NAME);
-  }
-
-  @Override
-  public String getDescription(RestHttpMethod method) {
-    return "Find meta data for specific object id in given domain with given key";
-  }
-
+  
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
