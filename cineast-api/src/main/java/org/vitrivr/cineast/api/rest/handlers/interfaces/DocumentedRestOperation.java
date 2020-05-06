@@ -6,10 +6,11 @@ import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 
 /**
- * A documented {@link ActionHandler}, ready to be used with {@link io.github.manusant.ss.rest.Endpoint}.
+ * A documented {@link ActionHandler}.
  *
  * @author loris.sauter
  */
+@Deprecated
 public interface DocumentedRestOperation<A,O> extends ActionHandler<A>, Handler {
 
     /**

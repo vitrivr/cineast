@@ -33,7 +33,7 @@ public abstract class Query implements Message {
      *
      * @return
      */
-    @JsonIgnore //QueryConfig is handled by subclasses
+    @JsonIgnore /* JSON: the config field is specified in sublcasses */ // TODO See whether there's a better way to do this
     public final QueryConfig getQueryConfig() {
         return this.config;
     }

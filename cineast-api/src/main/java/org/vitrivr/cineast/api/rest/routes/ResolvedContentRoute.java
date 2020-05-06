@@ -25,7 +25,7 @@ public class ResolvedContentRoute implements Handler {
 
 		String id;
 
-		if (params != null && params.containsKey("id")) {
+		if (params.containsKey("id")) {
 			id = params.get("id");
 		} else {
 			ctx.status(400);
@@ -41,17 +41,7 @@ public class ResolvedContentRoute implements Handler {
 			return;
 		}
 
-		ctx.contentType(rresult.mimeType);
-		
-		try (InputStream inputStream = rresult.stream;
-				ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-				/*OutputStream wrappedOutputStream =
-						GzipUtils.checkAndWrap(byteOutputStream, byteOutputStream, false)*/ /*TODO Shouldn't be needed? Javalin seems to handle compression internally*/) {
-			IOUtils.copy(inputStream, byteOutputStream);
-			byteOutputStream.flush();
-			ctx.result(byteOutputStream.toByteArray());
-		}
-
+		ctx.seekableStream(rresult.stream, rresult.mimeType);
 		ctx.status(200);
 	}
 }

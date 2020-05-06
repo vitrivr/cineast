@@ -20,6 +20,8 @@ import io.javalin.http.Context;
  * @created 10.01.17
  */
 public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperation<A,O> {
+    
+    public static final String CONTENT_TYPE = "application/json";
 
     /**
      * Jackson ObjectMapper used to map to/from objects.
@@ -38,8 +40,6 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
      * that request, extracts named parameters and parses the (optional) request body using Jackson. The
      * resulting context object is then forwarded to the doGet() method.
      *
-     * @param request  The request object providing information about the HTTP request
-     * @param response The response object providing functionality for modifying the response
      * @return The content to be set in the response
      * @throws Exception implementation can choose to throw exception
      */
@@ -49,19 +49,18 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
         if (params == null) {
             params = new HashMap<>();
         }
-        ctx.contentType("application/json");
         switch (ctx.method()) {
             case "GET":
-                ctx.result(MAPPER.writeValueAsString(this.doGet(params)));
+                ctx.json(this.doGet(params));
                 break;
             case "DELETE":
                 this.doDelete(params);
                 break;
             case "POST":
-                ctx.result(MAPPER.writeValueAsString(this.doPost(MAPPER.readValue(ctx.body(), this.inClass()), params)));
+                ctx.json(this.doPost(ctx.bodyAsClass(this.inClass()), params));
                 break;
             case "PUT":
-                ctx.result(MAPPER.writeValueAsString(this.doPut(MAPPER.readValue(ctx.body(), this.inClass()), params)));
+                ctx.json(this.doPut(ctx.bodyAsClass(this.inClass()), params));
                 break;
             default:
                 throw new MethodNotSupportedException(ctx);

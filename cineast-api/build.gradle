@@ -53,15 +53,6 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-repositories {
-    maven {
-        url "https://packagecloud.io/manusant/beerRepo/maven2"
-    }
-    maven {
-        // DBIS Nexus // TODO Replace with official, at some point in the future
-        url "https://dbis-nexus.dmi.unibas.ch/repository/maven2/"
-    }
-}
 
 task fatJar(type: Jar) {
     archiveClassifier = 'full'

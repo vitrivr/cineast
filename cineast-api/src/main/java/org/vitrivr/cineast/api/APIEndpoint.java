@@ -126,7 +126,7 @@ public class APIEndpoint {
     private Javalin dispatchService(boolean secure) {
         final APIConfig config = Config.sharedConfig().getApi();
 
-        final int port = this.validatePort(secure, config);
+        final int port = this.validateAndNormalizePort(secure, config);
 
         final Javalin service = Javalin.create(serviceConfig -> {
             /* Configure server (TLS, thread pool, etc.) */
@@ -212,10 +212,7 @@ public class APIEndpoint {
         });
 
         /* Configure the result after processing was completed. */
-        service.after(ctx -> {
-            ctx.header("Access-Control-Allow-Origin", "*");
-            ctx.header("Access-Control-Allow-Headers", "*");
-        });
+        service.config.enableCorsForAllOrigins();
 
         /* Start javalin */
         try {
@@ -232,11 +229,13 @@ public class APIEndpoint {
         return service;
     }
 
-    private int validatePort(boolean secure, APIConfig config) {
+    private int validateAndNormalizePort(boolean secure, APIConfig config) {
         int port = secure ? config.getHttpsPort() : config.getHttpPort();
         if(port <= 0 || port >= 65535) {
-            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
-            return -1;
+            APIConfig defaultConfig = new APIConfig();
+            int _port = secure ? defaultConfig.getHttpsPort() : defaultConfig.getHttpPort();
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port {}.", port, _port);
+            return _port;
         }
         return port;
     }
