@@ -438,14 +438,4 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         this.pFormatCtx = null;
     }
 
-    /**
-     * Closes the FFMpegAudioDecoder if this hasn't happened yet.
-     *
-     * @throws Throwable On error
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
 }

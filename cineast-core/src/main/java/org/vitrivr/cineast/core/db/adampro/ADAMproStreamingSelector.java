@@ -63,8 +63,8 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
 
     NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
-        DataMessageConverter.convertVectorMessage(vector), k, config);
-    QueryMessage sqMessage = this.mb.buildQueryMessage(config.getHints().isEmpty() ? ADAMproMessageBuilder.DEFAULT_HINT : config.getHints(), fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+            DataMessageConverter.convertVectorMessage(vector), k, config);
+    QueryMessage sqMessage = this.mb.buildQueryMessage(config.getHints().isEmpty() ? ADAMproMessageBuilder.DEFAULT_HINT : config.getHints(), fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(sqMessage);
@@ -112,8 +112,9 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
           DataMessageConverter.convertVectorMessage(vector), k, config);
       QueryMessage sqMessage = this.mb
-          .buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null,
-              ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+              .buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage,
+                      this.mb.inList("id", config.getRelevantSegmentIds()),
+                      ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
 
       messages.add(sqMessage);
 
@@ -170,7 +171,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
         hints = ADAMproMessageBuilder.DEFAULT_HINT;
       }
       NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
-      QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+      QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
       queryMessages.add(this.mb.buildSubExpressionQueryMessage(qMessage));
     }
 
@@ -234,7 +235,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       hints = ADAMproMessageBuilder.DEFAULT_HINT;
     }
 
-    QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, null, nnqMessage);
+    QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), null, nnqMessage);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro.streamingStandardQuery(sqMessage);
 
@@ -328,7 +329,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
       String... terms) {
     final ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
     ehqmBuilder.setEntity(this.entityName);
@@ -356,7 +357,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     FromMessage.Builder fmBuilder = FromMessage.newBuilder();
     fmBuilder.setExpression(seqmBuilder);
 
-    QueryMessage qm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fmBuilder, null, null, null);
+    QueryMessage qm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fmBuilder, this.mb.inList("id", queryConfig.getRelevantSegmentIds()), null, null);
 
     return executeQuery(qm);
   }

@@ -1,3 +1,8 @@
+plugins {
+    id 'idea'
+    id "de.undercouch.download" version "4.0.2"
+}
+
 allprojects {
     group = 'org.vitrivr'
     version = '2.5'
@@ -25,7 +30,7 @@ subprojects {
         }
     }
 
-    apply plugin: "java"
+    apply plugin: 'java'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -79,14 +84,25 @@ project(':cineast-api') {
     }
 }
 
-apply plugin: "idea"
-
 idea {
     module {
         downloadJavadoc = true
 
         excludeDirs += file('data')
         excludeDirs += file('thumbnails')
+    }
+}
+
+task getExternalFiles {
+    doLast {
+        def fileList = new File("externalFiles.csv")
+        fileList.eachLine { String line ->
+            def split = line.split(",")
+            download {
+                src split[0]
+                dest split[1]
+            }
+        }
     }
 }
 
@@ -98,4 +114,3 @@ task generateOpenApiSpecs(type: JavaExec){
 
     args("${config}")
 }
-

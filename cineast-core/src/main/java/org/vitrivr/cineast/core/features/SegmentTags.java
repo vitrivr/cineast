@@ -1,12 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.iterator.TObjectFloatIterator;
+import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -26,12 +23,17 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.MathHelper;
+
+import java.util.*;
+import java.util.function.Supplier;
 
 public class SegmentTags implements Extractor, Retriever {
 
   protected BatchedTagWriter writer;
   protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
@@ -48,6 +50,8 @@ public class SegmentTags implements Extractor, Retriever {
     supply.get().createIdEntity(SEGMENT_TAGS_TABLE_NAME,
         new AttributeDefinition("tagid", AttributeType.STRING),
         new AttributeDefinition("score", AttributeType.FLOAT));
+
+    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "tagid");
   }
 
   @Override
@@ -62,7 +66,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
 
-  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags) {
+  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
 
     ArrayList<String> tagids = new ArrayList<>();
     TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
@@ -80,31 +84,42 @@ public class SegmentTags implements Extractor, Retriever {
 
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
 
-    TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
+    Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
+
+    Set<String> relevant = null;
+    if (qc != null && qc.hasRelevantSegmentIds()){
+      relevant = qc.getRelevantSegmentIds();
+    }
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      String segment = row.get("id").getString();
+
+      String segmentId = row.get("id").getString();
+
+      /* Skip segments which are not desired by the query-config */
+      if (relevant != null && !relevant.contains(segmentId)){
+        continue;
+      }
+
       String tagid = row.get("tagid").getString();
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
-      segmentScores.adjustOrPutValue(segment, score, score);
-
-    }
-
-    ArrayList<ScoreElement> _return = new ArrayList<>(segmentScores.size());
-
-    TObjectFloatIterator<String> iter = segmentScores.iterator();
-
-    while (iter.hasNext()) {
-      iter.advance();
-      if (iter.value() > 0f) {
-        _return.add(new SegmentScoreElement(iter.key(), iter.value() / weightSum));
+      maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
+      float prev = maxScoreByTag.get(segmentId).get(tagid);
+      if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
+        maxScoreByTag.get(segmentId).put(tagid, score);
+      } else {
+        maxScoreByTag.get(segmentId).put(tagid, Math.max(score, prev));
       }
     }
 
-    return _return;
+    ArrayList<ScoreElement> _return = new ArrayList<>();
 
+    final float normalizer = weightSum;
+
+    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
+
+    return _return;
   }
 
   @Override
@@ -126,7 +141,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
 
   }
 
@@ -145,13 +160,13 @@ public class SegmentTags implements Extractor, Retriever {
       wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
     }
 
-    return getSimilar(wtags);
+    return getSimilar(wtags, qc);
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) {
+  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
     this.phandler = phandlerSupply.get();
-    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, 10);
+    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
   }
 
   @Override

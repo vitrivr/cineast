@@ -68,6 +68,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
         attributes 'Multi-Release': 'true'
+		attributes 'Implementation-Version': '1.xx'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar

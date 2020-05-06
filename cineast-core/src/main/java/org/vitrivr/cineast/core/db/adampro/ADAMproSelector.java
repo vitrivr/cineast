@@ -129,7 +129,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
             }
 
             NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
-            queryMessages.add(this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage));
+            queryMessages.add(this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage));
         }
 
         /* Prepare a BatchedQueryMessage. */
@@ -203,7 +203,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
                 hints = ADAMproMessageBuilder.DEFAULT_HINT;
             }
             NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
-            QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+            QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
             queryMessages.add(this.mb.buildSubExpressionQueryMessage(qMessage));
         }
 
@@ -256,7 +256,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
                                                                     Class<T> distanceElementClass, ReadableQueryConfig config) {
         NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
                 DataMessageConverter.convertVectorMessage(vector), k, config);
-        QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+        QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
         ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
         QueryResultsMessage result;
@@ -332,11 +332,6 @@ public class ADAMproSelector extends AbstractADAMproSelector {
         return executeQuery(qbqm);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
 
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
@@ -351,7 +346,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
             hints = ADAMproMessageBuilder.DEFAULT_HINT;
         }
 
-        QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, null, nnqMessage);
+        QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), null, nnqMessage);
 
         ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
@@ -392,7 +387,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
      * @param terms The query terms. Individual terms will be connected by a logical OR.
      * @return List of rows that math the fulltext search.
      */
-    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, String... terms) {
+    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
         final ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
         ehqmBuilder.setEntity(this.entityName);
         ehqmBuilder.setHandler("solr");
@@ -419,7 +414,7 @@ public class ADAMproSelector extends AbstractADAMproSelector {
         FromMessage.Builder fmBuilder = FromMessage.newBuilder();
         fmBuilder.setExpression(seqmBuilder);
 
-        QueryMessage qm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fmBuilder, null, null, null);
+        QueryMessage qm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fmBuilder, this.mb.inList("id", queryConfig.getRelevantSegmentIds()), null, null);
 
         return executeQuery(qm);
     }

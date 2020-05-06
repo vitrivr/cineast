@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,6 +14,7 @@ import java.util.List;
  * @version 1.0
  * @created 11.01.17
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class QueryTerm {
 
   /**
@@ -69,6 +71,7 @@ public class QueryTerm {
   public QueryTermType getType() {
     return type;
   }
+
 
   /**
    * Converts the {@link QueryTerm} to a {@link QueryContainer} that can be processed by the retrieval pipeline. This includes conversion of query-objects from the Base64 encoded representation.

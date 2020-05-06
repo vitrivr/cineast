@@ -11,23 +11,12 @@ import java.util.List;
  */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
 
-    /**
-     *
-     */
     private List<T> content;
 
     private final Class<T> contentType;
     
-    /**
-     *
-     */
     private final String queryId;
 
-    /**
-     *
-     * @param queryId
-     * @param content
-     */
     public AbstractQueryResultMessage(String queryId, Class<T> contentType, List<T> content) {
         this.queryId = queryId;
         this.contentType = contentType;
@@ -65,5 +54,13 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractQueryResultMessage{" +
+                "content=" + content +
+                ", queryId='" + queryId + '\'' +
+                '}';
     }
 }

@@ -15,6 +15,8 @@ $> ./gradlew cineast-runtime:fatJar
 $> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
 
+For more setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki)
+
 ## Generate OpenApi Specification
 
 If you need to rebuild the OpenApi Specification (OAS), there is a gradle task for this purpose:
@@ -25,6 +27,7 @@ $> ./gradlew -PcineastConfig=<path/to/your/config> generateOpenApiSpecs
 
 You can omit `-PcineastConfig`, then the default config (`cineast.json`) is used.
 As a result, the OAS is stored at `docs/swagger.json`
+
 
 ## Prerequisites
 ### System dependencies

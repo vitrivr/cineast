@@ -24,7 +24,7 @@ public interface PersistencyWriter <R> {
 
 	void setFieldNames(String...names);
 
-  	boolean persist(List<PersistentTuple> tuples);
+	boolean persist(List<PersistentTuple> tuples);
   
-  	R getPersistentRepresentation(PersistentTuple tuple);
+	R getPersistentRepresentation(PersistentTuple tuple);
 }

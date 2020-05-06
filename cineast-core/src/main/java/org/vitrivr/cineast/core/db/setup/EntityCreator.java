@@ -160,6 +160,8 @@ public interface EntityCreator extends AutoCloseable {
      */
     boolean dropEntity(String entityName);
 
+    boolean createHashNonUniqueIndex(String entityName, String column);
+
     @Override
     void close();
 }

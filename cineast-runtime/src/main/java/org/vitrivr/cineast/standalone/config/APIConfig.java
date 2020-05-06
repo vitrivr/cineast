@@ -5,21 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class APIConfig {
 
-    private boolean enableWebsocket = true;
-    private boolean enableWebsocketSecure = true;
-    private boolean enableExtractionServer = true;
-    private boolean enableRest = false;
-    private boolean enableRestSecure = false;
-    private boolean enableRestLiveDoc = false; // Defaults to same result as enableRest
-    private boolean enableGRPC = true;
-    private String keystore;
-    private String keystorePassword;
+  private boolean enableWebsocket = true;
+  private boolean enableWebsocketSecure = true;
+  private boolean enableExtractionServer = true;
+  private boolean enableRest = false;
+  private boolean enableRestSecure = false;
 
-    private String apiAddress = "http://localhost:4567/";
-    
-    private int httpPort = 4567;
-    private int httpsPort = 4568;
-    private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
+	private boolean enableGRPC = true;
+  private String keystore;
+  private String keystorePassword;
+  
+  private boolean enableRestLiveDoc = false; // Defaults to same result as enableRest
+  private String apiAddress = "http://localhost:4567/";
+  
+  private int httpPort = 4567;
+  private int httpsPort = 4568;
+
+
+
+	private int grpcPort = 4570;
+  private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
     private boolean enableLegacy = false;
     private int legacyPort = 12345;
@@ -35,7 +40,6 @@ public final class APIConfig {
     private String objectLocation = "";
     private String uiLocation = "";
 
-    private int grpcPort;
     
     @JsonCreator
     public APIConfig() {

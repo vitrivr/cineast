@@ -46,7 +46,7 @@ public class NoDBSelector implements DBSelector {
     }
 
     @Override
-    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, String... terms) {
+    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
         return new ArrayList<>(0);
     }
 

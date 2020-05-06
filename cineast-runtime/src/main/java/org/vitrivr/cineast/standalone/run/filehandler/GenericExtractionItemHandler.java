@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -36,7 +35,6 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -116,16 +114,14 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
-    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.getBatchsize());
-    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(),
-        context.getBatchsize());
+    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.batchSize());
+    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(), context.batchSize());
 
     final DBSelectorSupplier readerSupplier = context.persistencyReader();
     this.objectReader = new MediaObjectReader(readerSupplier.get());
     this.segmentReader = new MediaSegmentReader(readerSupplier.get());
 
-    this.pipeline = new ExtractionPipeline(context,
-        new DefaultExtractorInitializer(writerSupplier));
+    this.pipeline = new ExtractionPipeline(context);
     this.metadataExtractors = context.metadataExtractors();
 
     //Reasonable Defaults
@@ -163,7 +159,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
-        this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>) extractor);
+         ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter(), this.context.batchSize());
       } else {
         extractor.init();
       }

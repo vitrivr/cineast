@@ -45,7 +45,6 @@ public class DatabaseHealthMonitor {
           }
         } else {
           long stop = System.currentTimeMillis();
-          LOGGER.trace("Ping of {} ms", stop - start);
           executionTime.observe(stop - start);
         }
         try {

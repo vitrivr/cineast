@@ -82,7 +82,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
             /* Write segments, objects and similarity search data to stream. */
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
-            this.write(session, new SimilarityQueryResult(queryId, category, sub));
+            this.write(session, new SimilarityQueryResult(queryId, category, -1, sub));
 
             /* Load and transmit segment & object metadata. */
             this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);

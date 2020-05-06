@@ -445,4 +445,25 @@ public class ADAMproMessageBuilder {
                 return manhattan;
         }
     }
+
+    public BooleanQueryMessage inList(String attribute, Collection<String> elements) {
+
+        if (elements == null || elements.isEmpty()) {
+            return null;
+        }
+
+        final DataMessage.Builder damBuilder = DataMessage.newBuilder();
+
+        return BooleanQueryMessage.newBuilder()
+                .addWhere(
+                        WhereMessage.newBuilder()
+                                .setOp("IN")
+                                .setAttribute(attribute)
+                                .addAllValues(
+                                        elements.stream().map(x -> damBuilder.clear().setStringData(x).build()).collect(Collectors.toList())
+                                )
+                                .build()
+                ).build();
+
+    }
 }

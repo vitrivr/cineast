@@ -23,7 +23,6 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -104,9 +103,8 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     /* Setup the required persistence-writer classes. */
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
-    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.getBatchsize());
-    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(),
-        context.getBatchsize());
+    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.batchSize());
+    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(), context.batchSize());
 
     /* Setup the required persistence-reader classes. */
     final DBSelectorSupplier readerSupplier = context.persistencyReader();
@@ -114,8 +112,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     this.segmentReader = new MediaSegmentReader(readerSupplier.get());
 
     /* Setup the ExtractionPipeline and the metadata extractors. */
-    this.pipeline = new ExtractionPipeline(context,
-        new DefaultExtractorInitializer(writerSupplier));
+    this.pipeline = new ExtractionPipeline(context);
     this.metadataExtractors = context.metadataExtractors();
 
     /* Store the context. */
@@ -139,7 +136,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
 
     for (MetadataExtractor extractor : this.metadataExtractors) {
       if (extractor instanceof MetadataFeatureModule) {
-        this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>) extractor);
+        ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter(), this.context.batchSize());
       } else {
         extractor.init();
       }

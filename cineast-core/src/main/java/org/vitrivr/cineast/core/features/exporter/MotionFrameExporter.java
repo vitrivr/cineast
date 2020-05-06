@@ -48,7 +48,7 @@ public class MotionFrameExporter implements Extractor {
 
 
 	@Override
-	public void init(PersistencyWriterSupplier phandlerSupply) {
+	public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
 		if(!folder.exists()){
 			folder.mkdirs();
 		}

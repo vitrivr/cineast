@@ -1,27 +1,20 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImporter.ClassificationTuple;
 
@@ -32,123 +25,141 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.Classificati
  */
 public class ClassificationsImporter implements Importer<ClassificationTuple> {
 
-  private final Iterator<Entry<String, JsonNode>> movies;
   private static final Logger LOGGER = LogManager.getLogger();
-  private final Path input;
-  private final List<String> synsetLines;
   private final boolean importSegmentTags;
   private final boolean importTagsFt;
-  private Iterator<String> _names;
-  private LineIterator lineIterator = null;
-  private Iterator<Entry<String, JsonNode>> _tags;
+  private final List<String> synsetLines;
+  private final JsonReader reader;
+  private final Path input;
   private String _segmentID;
-  private Iterator<Entry<String, JsonNode>> _segments;
   private String _movieID;
-  private String _tagId;
 
 
-  public ClassificationsImporter(Path input, Path synset, boolean importSegmentTags, boolean importTagsFt) throws IOException {
+  /**
+   * Only importTagsFt is currently supported
+   */
+  public ClassificationsImporter(Path input, List<String> synsetLines, boolean importSegmentTags, boolean importTagsFt) throws IOException {
     this.input = input;
-    synsetLines = FileUtils.readLines(synset.toFile(), Charset.defaultCharset());
     this.importSegmentTags = importSegmentTags;
     this.importTagsFt = importTagsFt;
+    this.synsetLines = synsetLines;
     if (importSegmentTags) {
-      lineIterator = FileUtils.lineIterator(synset.toFile());
-      if (!lineIterator.hasNext()) {
-        throw new IOException("Empty synset file");
-      }
-      String next = lineIterator.next();
-      _tagId = next.split(" ")[0];
-      String[] names = next.substring(next.indexOf(" ") + 1).split(",");
-      _names = Arrays.stream(names).iterator();
       throw new UnsupportedOperationException("There is an inherent mismatch between the tag retrieval logic and the way synsets are structured. Therefore, importing tags into cineast_tags makes no sense");
     }
     if (!importTagsFt) {
       throw new UnsupportedOperationException("There is an inherent mismatch between the tag retrieval logic and the way synsets are structured. Therefore, importing tags into features_segmenttags makes no sense");
     }
-    ObjectMapper mapper = new ObjectMapper();
-    JsonParser parser = mapper.getFactory().createParser(input.toFile());
-    if (parser.nextToken() == JsonToken.START_OBJECT) {
-      ObjectNode node = mapper.readTree(parser);
-      movies = node.fields();
-      if (movies == null || !movies.hasNext()) {
-        throw new IOException("Empty file");
-      }
-      do {
-        Entry<String, JsonNode> next = movies.next();
-        _segments = next.getValue().fields();
-        _movieID = next.getKey();
-      } while (!_segments.hasNext());
-      Entry<String, JsonNode> nextSegment = _segments.next();
-      _segmentID = nextSegment.getKey();
-      _tags = nextSegment.getValue().fields();
-    } else {
-      throw new IOException("Empty file");
-    }
-  }
-
-  private synchronized Optional<ClassificationTuple> nextPair() {
-    if (importSegmentTags) {
-      while (!_names.hasNext()) {
-        if (!lineIterator.hasNext()) {
-          LOGGER.error("Reached end of line iterator");
-          return Optional.empty();
-        }
-        String next = lineIterator.next();
-        _tagId = next.split(" ")[0];
-        String[] names = next.substring(next.indexOf(" ") + 1).split(",");
-        _names = Arrays.stream(names).iterator();
-      }
-      String name = _names.next();
-      //TODO one id corresponds to multiple names. This is not supported in the Tags feature which uses the cineast_tags table
-      return Optional.of(new ClassificationTuple(null, _tagId, null, name));
-    }
-    while (!_tags.hasNext()) {
-      while (!_segments.hasNext()) {
-        if (!movies.hasNext()) {
-          return Optional.empty();
-        }
-        Entry<String, JsonNode> next = movies.next();
-        _segments = next.getValue().fields();
-        _movieID = next.getKey();
-      }
-      Entry<String, JsonNode> nextSegment = _segments.next();
-      _segmentID = nextSegment.getKey();
-      _tags = nextSegment.getValue().fields();
-    }
-    Entry<String, JsonNode> _nextTag = _tags.next();
-    if (_nextTag.getKey() == null || _nextTag.getKey().equals("")) {
-      return nextPair();
-    }
-    if (_nextTag.getValue() == null || _nextTag.getValue().asText().equals("")) {
-      return nextPair();
-    }
-    try {
-      Integer.parseInt(_nextTag.getKey());
-    } catch (NumberFormatException e) {
-      LOGGER.error("{} is not a number ", _nextTag.getKey(), e);
-      return nextPair();
-    }
-    if (_nextTag.getValue().asDouble() == 0d) {
-      LOGGER.error("{} is not a double", _nextTag.getValue().asText());
-      return nextPair();
-    }
-    if (importTagsFt) {
-      return Optional.of(new ClassificationTuple(_movieID + "_" + _segmentID, null, null, synsetLines.get(Integer.parseInt(_nextTag.getKey()))));
-    }
-    //TODO write logic to store tags into features_segmenttags
-    return Optional.empty();
+    reader = new JsonReader(new FileReader(input.toFile()));
+    //begin top-level object containing all movies
+    reader.beginObject();
+    /* move to first item */
+    nextMovie();
+    nextSegment();
+    //now we should be at our starting position: inside a movie, inside a segment and the next token should be a classification
   }
 
   /**
-   * @return Pair mapping a segmentID to a List of Descriptions
+   * Up next should be "movieID": { or } closing the entire document
    */
+  private boolean nextMovie() throws IOException {
+    //check if the document has come to its end
+    if (reader.peek() == JsonToken.END_OBJECT) {
+      LOGGER.info("Closing entire document");
+      reader.endObject();
+      return false;
+    }
+    //verify that a name (which we expect to be the movieID is next
+    if (reader.peek() != JsonToken.NAME) {
+      throw new IOException("Ill-formatted JSON, found " + reader.peek());
+    }
+    //store current movieID
+    _movieID = reader.nextName();
+    //begin movie
+    if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+      throw new IOException("Ill-formatted JSON, found " + reader.peek());
+    }
+    LOGGER.trace("Starting movie {}", _movieID);
+    reader.beginObject();
+    //verify that a name (which we expect to be a segmentID is next
+    if (reader.peek() != JsonToken.NAME) {
+      throw new IOException("Ill-formatted JSON, found " + reader.peek());
+    }
+    return true;
+  }
+
+  /**
+   * Either the next item is "segmentID": { or a } closing the movie
+   */
+  private boolean nextSegment() throws IOException {
+    //verify that a name (which we expect to be a segmentID is next
+    if (reader.peek() != JsonToken.NAME) {
+      //no next segment anymore, so we close this movie and go to the next one
+      LOGGER.trace("movie {} done, going to next movie", _movieID);
+      reader.endObject();
+      //if there is a next movie, look for a segment
+      if (nextMovie()) {
+        LOGGER.trace("Looking for next segment in movie {}", _movieID);
+        return nextSegment();
+      }
+      LOGGER.trace("no next movie exists, returning false");
+      return false;
+    }
+    _segmentID = reader.nextName();
+    //begin segment
+    if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+      throw new IOException("Ill-formatted JSON, found " + reader.peek());
+    }
+    LOGGER.trace("Beginning segment {}_{}", _movieID, _segmentID);
+    reader.beginObject();
+    //verify that an item is next
+    if (reader.peek() != JsonToken.NAME) {
+      LOGGER.warn("Empty segment {}_{}, going to next segment", _movieID, _segmentID);
+      reader.endObject();
+      return nextSegment();
+    }
+    return true;
+  }
+
+  /**
+   * Expects the next token to be a name, which is the synset-line number
+   */
+  private Optional<ClassificationTuple> nextTuple() throws IOException {
+    String synsetLineNumber = reader.nextName();
+    String score = reader.nextString();
+    //LOGGER.trace("inserting tuple {}:{} for {}_{}", synsetLineNumber, score, _movieID, _segmentID);
+    try {
+      Double.parseDouble(score);
+      Integer.parseInt(synsetLineNumber);
+    } catch (NumberFormatException e) {
+      LOGGER.error("{} or {} is not a number ", synsetLineNumber, score, e);
+      throw new RuntimeException();
+    }
+    return Optional.of(new ClassificationTuple("v_" + _movieID + "_" + _segmentID, null, null, synsetLines.get(Integer.parseInt(synsetLineNumber)).split(" ")[0]));
+  }
+
+  private synchronized Optional<ClassificationTuple> nextPair() throws IOException {
+    if (importSegmentTags) {
+      throw new UnsupportedOperationException();
+    }
+    //check if there is a next classification to score mapping
+    if (reader.peek() == JsonToken.NAME) {
+      return nextTuple();
+    }
+    LOGGER.trace("No next tuple found in segment {}_{}, going to next segment", _movieID, _segmentID);
+    reader.endObject();
+    if (nextSegment()) {
+      return nextTuple();
+    }
+    LOGGER.info("No next segment found, file {} ended", input.getFileName().toString());
+    return Optional.empty();
+  }
+
   @Override
   public ClassificationTuple readNext() {
     try {
       Optional<ClassificationTuple> node = nextPair();
       return node.orElse(null);
-    } catch (NoSuchElementException e) {
+    } catch (NoSuchElementException | IOException e) {
       return null;
     }
   }
@@ -163,8 +174,8 @@ public class ClassificationsImporter implements Importer<ClassificationTuple> {
     }
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
 
-    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(data.id));
-    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.tag));
+    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], new StringTypeProvider(data.id));
+    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], new StringTypeProvider(data.tag));
     return map;
   }
 

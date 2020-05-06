@@ -19,6 +19,10 @@ public interface DBSelector {
 
   boolean close();
 
+  /**
+   * Convenience-wrapper to query with float-arrays
+   * {@link #getNearestNeighboursGeneric(int, PrimitiveTypeProvider, String, Class, ReadableQueryConfig)}
+   */
   default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] query, String column, Class<E> distanceElementClass, ReadableQueryConfig config){
     return getNearestNeighboursGeneric(k, new FloatArrayTypeProvider(query), column, distanceElementClass, config);
   }
@@ -122,7 +126,7 @@ public interface DBSelector {
    * @param terms The query terms. Individual terms will be connected by a logical OR.
    * @return List of rows that math the fulltext search.
    */
-  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
+  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
       String... terms);
 
   /**
@@ -147,6 +151,10 @@ public interface DBSelector {
    */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
       Iterable<String> values);
+
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String... values){
+    return getRows(fieldName, Arrays.asList(values));
+  }
 
   /**
    * SELECT column from the table. Be careful with large entities

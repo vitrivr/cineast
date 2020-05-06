@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
 /**
- * Uses standard text support from Solr. OCR is handled by adding fuzziness / levenshtein-distance support to the query. This makes sense here since we expect small errors from OCR sources
+ *  OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision)
+ *  This makes sense here since we expect small errors from OCR sources
  */
 public class OCRSearch extends AbstractTextRetriever {
 
@@ -18,14 +17,11 @@ public class OCRSearch extends AbstractTextRetriever {
     super(OCR_TABLE_NAME);
   }
 
-
   @Override
-  protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    String[] split = sc.getText().split(" ");
-    String[] _return = new String[split.length];
-    for (int i = 0; i < split.length; i++) {
-      _return[i] = split[i] + "~0.5";
+  protected String enrichQueryTerm(String queryTerm) {
+    if (queryTerm.contains("\"")) {
+      return queryTerm;
     }
-    return _return;
+    return queryTerm + "~1";
   }
 }

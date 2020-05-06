@@ -41,8 +41,8 @@ public class AverageColorRaster extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply) {
-    super.init(supply);
+  public void init(PersistencyWriterSupplier supply, int batchSize) {
+    super.init(supply, batchSize);
     this.phandler.setFieldNames("id", "hist", "raster");
   }
 
@@ -284,8 +284,8 @@ public class AverageColorRaster extends AbstractFeatureModule {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", shotId);
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
 
     if (rows.isEmpty()) {
       return new ArrayList<>(1);

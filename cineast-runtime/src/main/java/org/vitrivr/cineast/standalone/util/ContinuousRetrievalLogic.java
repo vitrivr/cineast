@@ -42,14 +42,14 @@ public class ContinuousRetrievalLogic {
     return ContinuousQueryDispatcher.retrieve(qc, retrievers, initializer, config, this.segmentReader);
   }
 
-  public List<SegmentScoreElement> retrieve(String id, String category, ReadableQueryConfig config) {
+  public List<SegmentScoreElement> retrieve(String segmentId, String category, ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
-      LOGGER.warn("Empty retriever list for id {}, category {} and config {}, returning no results", id, category, config);
+      LOGGER.warn("Empty retriever list for segmentID {}, category {} and config {}, returning no results", segmentId, category, config);
       return new ArrayList<>(0);
     }
-    return ContinuousQueryDispatcher.retrieve(id, retrievers, initializer, config, this.segmentReader);
+    return ContinuousQueryDispatcher.retrieve(segmentId, retrievers, initializer, config, this.segmentReader);
   }
 
   /**
@@ -57,21 +57,21 @@ public class ContinuousRetrievalLogic {
    *
    * @param retrieverName Name of the retriever as received by config
    */
-  public List<SegmentScoreElement> retrieveByRetrieverName(String id, String retrieverName,
+  public List<SegmentScoreElement> retrieveByRetrieverName(String segmentId, String retrieverName,
       ReadableQueryConfig config) {
     Optional<Retriever> retriever = Config.sharedConfig().getRetriever()
         .getRetrieverByName(retrieverName);
     if (!retriever.isPresent()) {
       return new ArrayList<>(0);
     }
-    return retrieveByRetriever(id, retriever.get(), config);
+    return retrieveByRetriever(segmentId, retriever.get(), config);
   }
 
-  public List<SegmentScoreElement> retrieveByRetriever(String id, Retriever retriever,
+  public List<SegmentScoreElement> retrieveByRetriever(String segmentId, Retriever retriever,
       ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
     map.put(retriever, 1d);
-    return ContinuousQueryDispatcher.retrieve(id, map, initializer, config, this.segmentReader);
+    return ContinuousQueryDispatcher.retrieve(segmentId, map, initializer, config, this.segmentReader);
   }
 
   public List<SegmentScoreElement> retrieveByRetriever(QueryContainer qc,

@@ -181,7 +181,7 @@ public enum MediaType {
         if (sequenceNumber < 0) {
             throw new IllegalArgumentException("sequenceNumber must be non-negative");
         }
-        return objectId + DELIMITER + String.format("%06d", sequenceNumber);
+        return objectId + DELIMITER + sequenceNumber;
     }
 
     /**

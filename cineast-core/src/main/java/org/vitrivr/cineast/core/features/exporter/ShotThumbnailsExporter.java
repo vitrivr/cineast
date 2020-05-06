@@ -56,7 +56,7 @@ public class ShotThumbnailsExporter implements Extractor {
      * @param supply
      */
 	@Override
-	public void init(PersistencyWriterSupplier supply) {
+	public void init(PersistencyWriterSupplier supply, int batchSize) {
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}
@@ -83,11 +83,11 @@ public class ShotThumbnailsExporter implements Extractor {
 	}
 
 	@Override
-	public void finish() {}
+	public void finish() { /* Nothing to finish. */ }
 	
 	@Override
-	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to init. */ }
 
 	@Override
-	public void dropPersistentLayer(Supplier<EntityCreator> supply) {}
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to drop. */ }
 }

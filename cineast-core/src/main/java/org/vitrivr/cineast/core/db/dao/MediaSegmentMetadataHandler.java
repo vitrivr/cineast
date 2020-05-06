@@ -99,11 +99,6 @@ public class MediaSegmentMetadataHandler implements Closeable {
     this.writer.close();
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    close();
-    super.finalize();
-  }
 
   private PersistentTuple toPersistenTuple(MediaSegmentMetadataDescriptor descriptor){
     return this.writer.generateTuple(descriptor.getSegmentId(), descriptor.getDomain(), descriptor.getKey(), descriptor.getValue());

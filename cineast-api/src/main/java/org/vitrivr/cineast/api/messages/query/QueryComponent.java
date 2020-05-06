@@ -2,21 +2,18 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
- * @author rgasser
- * @version 1.0
- * @created 11.01.17
+ * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
+ *
+ * These all have the {@link QueryComponent#containerId} of their parent.
  */
 public class QueryComponent {
 
@@ -25,14 +22,20 @@ public class QueryComponent {
    */
   private final List<QueryTerm> terms;
 
+  /**
+   * The client-generated uuid for this container for reference purposes
+   */
+  public final int containerId;
+
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Constructor for QueryComponent.
    */
   @JsonCreator
-  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms) {
+  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms, @JsonProperty("containerId") int containerId) {
     this.terms = terms;
+    this.containerId = containerId;
   }
 
   /**
@@ -70,6 +73,7 @@ public class QueryComponent {
           }
           final QueryContainer container = term.toContainer();
           if (container != null) {
+            container.setContainerId(component.containerId);
             categoryMap.get(category).add(container);
           } else {
             LOGGER.warn("Null container generated for term {}", term);
@@ -80,8 +84,37 @@ public class QueryComponent {
     return categoryMap;
   }
 
+  /**
+   * Converts the provided collection of {@link QueryComponent} object to a map of {@link QueryContainer} and their categories.
+   *
+   * @return A map of querycontainers with their associated categories
+   */
+  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components) {
+    final HashMap<QueryContainer, List<String>> map = new HashMap<>();
+    if (components.isEmpty()) {
+      LOGGER.warn("Empty components collection, returning empty list of containers");
+      return map;
+    }
+    for (QueryComponent component : components) {
+      for (QueryTerm qt : component.getTerms()) {
+        if (qt == null) {
+          /* FIXME in rare instances, it is possible to have null as query component*/
+          LOGGER.warn("QueryTerm was null for component {}", component);
+          continue;
+        }
+        QueryContainer qc = qt.toContainer();
+        qc.setContainerId(component.containerId);
+        map.put(qc, qt.getCategories());
+      }
+    }
+    return map;
+  }
+
   @Override
   public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    return "QueryComponent{" +
+        "terms=" + terms +
+        ", containerId=" + containerId +
+        '}';
   }
 }

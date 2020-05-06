@@ -123,8 +123,11 @@ public abstract class DataImportHandler {
       this.futures.forEach(future -> {
         LOGGER.warn("A future is still present, this should not be happening.");
       });
+      LOGGER.info("Shutting down threadpool for {}", this.getClass().getSimpleName());
       this.service.shutdown();
+      LOGGER.info("Awaiting termination {}", this.getClass().getSimpleName());
       this.service.awaitTermination(30, TimeUnit.SECONDS);
+      LOGGER.info("Service terminated {}", this.getClass().getSimpleName());
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
