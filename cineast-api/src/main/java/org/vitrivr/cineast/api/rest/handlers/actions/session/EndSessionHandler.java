@@ -2,19 +2,39 @@ package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import java.util.Map;
 
+import io.javalin.http.Context;
+import io.javalin.plugin.openapi.annotations.*;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
 
-public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
+public class EndSessionHandler implements GetRestHandler<SessionState> {
 
+    
     public static final String ID_NAME = "id";
-
+    
+    public static final String ROUTE = "session/end/:"+ID_NAME;
+    
+    @OpenApi(
+        summary = "End the session for given id",
+        path = ROUTE, method = HttpMethod.GET,
+        pathParams = {
+            @OpenApiParam(name = ID_NAME, description = "The id of the session to end")
+        },
+        tags = {"Session"},
+        responses = {
+            @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+        }
+    )
     @Override
-    public Object doGet(Map<String, String> parameters) {
+    public SessionState doGet(Context ctx) {
+        final Map<String, String> parameters = ctx.pathParamMap();
         String sessionId = parameters.get(ID_NAME);
         if (sessionId == null) {
             sessionId = "";
@@ -24,17 +44,7 @@ public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionS
         return new SessionState(sessionId, -1, SessionType.UNAUTHENTICATED);
     }
 
-    @Override
-    public Class<AnyMessage> inClass() {
-        return AnyMessage.class;
-    }
 
-    @Override
-    public String getRoute() {
-        return "session/end/:"+ ID_NAME;
-    }
-
-    @Override
     public String getDescription(RestHttpMethod method) {
         return "End the session for id";
     }
@@ -42,5 +52,10 @@ public class EndSessionHandler extends ParsingActionHandler<AnyMessage, SessionS
     @Override
     public Class<SessionState> outClass() {
         return SessionState.class;
+    }
+    
+    @Override
+    public String route() {
+        return ROUTE;
     }
 }

@@ -4,7 +4,6 @@ import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataByObjectIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 

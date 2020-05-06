@@ -116,7 +116,6 @@ public class APIEndpoint {
     }
 
     private APIEndpoint(){
-        registerOperations();
         registerRestOperations();
     }
 
@@ -209,7 +208,6 @@ public class APIEndpoint {
 
         /* Setup HTTP/RESTful connection (if configured). */
         if (config.getEnableRest() || config.getEnableRestSecure()) {
-            this.registerRoutes(config, service);
             this.restHandlers.forEach(handler -> registerRestHandler(service, handler, config));
             this.registerServingRoutes(service,config);
         }
@@ -286,64 +284,6 @@ public class APIEndpoint {
             https.stop();
         }
     }
-
-    /**
-     * Registers all routes of a single {@link DocumentedRestOperation} to the {@link Javalin} service.
-     * 
-     * @param config
-     * @param route
-     * @param service
-     */
-    @Deprecated
-    private void registerRoute(APIConfig config, final DocumentedRestOperation<?, ?> route, final Javalin service){
-        route.supportedMethods().forEach(m -> {
-            RestHttpMethod method = (RestHttpMethod)m;
-
-            Handler handler = route;
-
-            if(config.getEnableLiveDoc()) {
-                //Document handler
-                OpenApiDocumentation document = OpenApiBuilder.document();
-
-                //Default route documentation
-                document.operation(operation -> {
-                    operation.description(route.getDescription(method));
-                    operation.summary(route.getSummary(method));
-                    operation.operationId(String.format("%s#%s", route.getClass().getName(), method.toString()));
-                    operation.addTagsItem(namespace());
-                });
-
-                if(method != RestHttpMethod.GET) {
-                    document.body(route.inClass());
-                }
-
-                document.json("200", route.outClass());
-
-                //Custom route documentation
-                route.document(method, document);
-
-                handler = OpenApiBuilder.documented(document, handler);
-            }
-
-            switch(method){
-            case GET:
-                service.get(makePath(route.routeForGet()), handler);
-                break;
-            case POST:
-                service.post(makePath(route.routeForPost()), handler);
-                break;
-            case PUT:
-                service.put(makePath(route.routeForPut()), handler);
-                break;
-            case DELETE:
-                service.delete(makePath(route.routeForDelete()), handler);
-                break;
-            default:
-                LOGGER.warn("Route {} supports unsupported http method {}", route, method);
-                return;
-            }
-        });
-    }
     
     private void registerRestHandler(final Javalin javalin, final RestHandler handler, final APIConfig config){
         if(handler instanceof GetRestHandler<?>){
@@ -360,20 +300,6 @@ public class APIEndpoint {
         /* One would implement the remaining HTTP methods here */
     }
 
-    @Deprecated
-    private void registerOperations(){
-        /* Add your operations here */
-        registeredOperations.addAll(
-                Arrays.asList(
-                        new EndExtractionHandler(),
-                        new EndSessionHandler(),
-                        new ExtractItemHandler(),
-                        new StartExtractionHandler(),
-                        new StartSessionHandler(),
-                        new ValidateSessionHandler()
-                        )
-                );
-    }
     
     private void registerRestOperations(){
         restHandlers.addAll(Arrays.asList(
@@ -399,24 +325,17 @@ public class APIEndpoint {
             new FindTagsByIdsPostHandler(),
             new FindTagsGetHandler(),
             /* Session */
-            
+            new StartSessionHandler(),
+            new StartExtractionHandler(),
+            new ExtractItemHandler(),
+            new ValidateSessionHandler(),
+            new EndExtractionHandler(),
+            new EndSessionHandler(),
             /* Status */
             new StatusInvokationHandler()
         ));
     }
 
-    /**
-     * Registers the routes for the provided service.
-     *
-     * @param service Service for which routes should be registered.
-     * @deprecated
-     */
-    @Deprecated
-    private void registerRoutes(APIConfig config, Javalin service) {
-        //Register all operations
-        this.registeredOperations.forEach(r -> registerRoute(config, r, service));
-    }
-    
     private void registerServingRoutes(final  Javalin service, final APIConfig config){
         // TODO Register these special cases as well with the new model
         if (config.getServeContent()) {
