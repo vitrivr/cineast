@@ -19,6 +19,7 @@ import io.javalin.http.Context;
  * @version 1.0
  * @created 10.01.17
  */
+@Deprecated
 public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperation<A,O> {
     
     public static final String CONTENT_TYPE = "application/json";

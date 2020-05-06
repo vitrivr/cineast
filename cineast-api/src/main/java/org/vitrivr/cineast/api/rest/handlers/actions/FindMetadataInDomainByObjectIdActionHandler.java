@@ -29,12 +29,15 @@ import org.vitrivr.cineast.standalone.config.Config;
  * <h3>POST</h3>
  * The action should contain a domain, e.g. {@code /metadata/in/:domain}. The post body is an {@link IdList} and the
  * response contains metadata for each id in that list, belonging to the specified domain. The response is JSON encoded
- * and basically identical to a response from {@link FindMetadataByObjectIdActionHandler}: *   A list of {@link
+ * and basically identical to a response from {@link FindMetadataByObjectIdActionHandler}:
+ * A list of {@link
  * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
  * </p>
  *
  * @author loris.sauter
+ * @deprecated See {@link FindObjectMetadataByDomainGetHandler} and {@link FindObjectMetadataByDomainPostHandler}
  */
+@Deprecated
 public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHandler<IdList, MediaObjectMetadataQueryResult> {
   
   private static final String ATTRIBUTE_ID = "id";

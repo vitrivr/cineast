@@ -4,6 +4,7 @@ import java.util.Map;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
@@ -18,7 +19,7 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
  *
  * @author loris.sauter
  */
-public class FindMetadataByDomainWithKeyByObjectIdActionHandler implements
+public class FindObjectMetadataFullyQualifiedGetHandler implements
     GetRestHandler<MediaObjectMetadataQueryResult> {
   
   public static final String OBJECT_ID_NAME = "id";
@@ -35,7 +36,7 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler implements
           @OpenApiParam(name = DOMAIN_NAME, description = "The domain name"),
           @OpenApiParam(name = KEY_NAME, description = "The key of the metadata")
       },
-      tags = {"metadata"},
+      tags = {APIEndpoint.METADATA_OAS_TAG},
       responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))}
       // TODO Other responses in error case
   )

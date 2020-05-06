@@ -20,7 +20,10 @@ import org.vitrivr.cineast.standalone.config.Config;
 /**
  * Retrieves all the {@link MediaObjectMetadataDescriptor}s for the given ID of a {@link
  * MediaObjectDescriptor}
+ *
+ * @deprecated See {@link FindObjectMetadataGetHandler}
  */
+@Deprecated
 public class FindMetadataByObjectIdActionHandler extends
         ParsingActionHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
 

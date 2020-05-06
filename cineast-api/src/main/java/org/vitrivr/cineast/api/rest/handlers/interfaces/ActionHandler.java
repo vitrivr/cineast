@@ -13,6 +13,7 @@ import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
  * @version 1.0
  * @created 09.01.17
  */
+@Deprecated
 public interface ActionHandler<A> {
     /**
      * This method gets invoked by the router after a GET request has been processed. It parameters and does something meaningful with it.

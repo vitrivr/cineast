@@ -18,26 +18,14 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataByDomainWithKeyByObjectIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataByKeyByObjectIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataByObjectIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataInDomainByObjectIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentSimilarActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByObjectIdActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindTagsActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindTagsByActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestOperation;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.*;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
@@ -86,6 +74,11 @@ import io.swagger.v3.oas.models.tags.Tag;
  * @see WebsocketAPI
  */
 public class APIEndpoint {
+    /**
+     * OpenAPI Specification tag for metadata related routes
+     */
+    public static final String METADATA_OAS_TAG = "Metadata";
+    
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Version of the protocol used by the RESTful endpoint. Will be appended to the endpoint URL.*/
@@ -113,9 +106,12 @@ public class APIEndpoint {
 
     private APIEndpoint(){
         registerOperations();
+        registerRestOperations();
     }
 
+    @Deprecated
     private List<DocumentedRestOperation<?, ?>> registeredOperations = new ArrayList<>();
+    private List<RestHandler> restHandlers = new ArrayList<>();
 
     /**
      * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the necessary setup.
@@ -203,6 +199,7 @@ public class APIEndpoint {
         /* Setup HTTP/RESTful connection (if configured). */
         if (config.getEnableRest() || config.getEnableRestSecure()) {
             this.registerRoutes(config, service);
+            this.restHandlers.forEach(handler -> registerRestHandler(service, handler, config));
         }
 
         /* Register a general exception handler. TODO: Add fine grained exception handling. */
@@ -213,6 +210,10 @@ public class APIEndpoint {
 
         /* Configure the result after processing was completed. */
         service.config.enableCorsForAllOrigins();
+        
+        /* Some reasonable settings */
+        service.config.defaultContentType = "application/json";
+        service.config.prefer405over404 = true;
 
         /* Start javalin */
         try {
@@ -281,6 +282,7 @@ public class APIEndpoint {
      * @param route
      * @param service
      */
+    @Deprecated
     private void registerRoute(APIConfig config, final DocumentedRestOperation<?, ?> route, final Javalin service){
         route.supportedMethods().forEach(m -> {
             RestHttpMethod method = (RestHttpMethod)m;
@@ -330,15 +332,31 @@ public class APIEndpoint {
             }
         });
     }
+    
+    private void registerRestHandler(final Javalin javalin, final RestHandler handler, final APIConfig config){
+        if(handler instanceof GetRestHandler<?>){
+            javalin.get(makePath(handler.route()), ((GetRestHandler) handler)::get);
+        }else if(handler instanceof PostRestHandler<?>){
+            javalin.post(makePath(handler.route()), ((PostRestHandler) handler)::post);
+        }else if(handler instanceof DeleteRestHandler<?>){
+            javalin.delete(makePath(handler.route()), ((DeleteRestHandler) handler)::delete);
+        }else if(handler instanceof PutRestHandler<?>){
+            javalin.put(makePath(handler.route()), ((PutRestHandler) handler)::put);
+        }else{
+            throw new IllegalArgumentException("The given handler of type "+handler.getClass()+" has no specified method");
+        }
+        /* One would implement the remaining HTTP methods here */
+    }
 
+    @Deprecated
     private void registerOperations(){
         /* Add your operations here */
         registeredOperations.addAll(
                 Arrays.asList(
-                        new FindMetadataByDomainWithKeyByObjectIdActionHandler(),
+                        /*new FindMetadataByDomainWithKeyByObjectIdActionHandler(),
                         new FindMetadataByKeyByObjectIdActionHandler(),
                         new FindMetadataByObjectIdActionHandler(),
-                        new FindMetadataInDomainByObjectIdActionHandler(),
+                        new FindMetadataInDomainByObjectIdActionHandler(),*/
                         new FindObjectAllActionHandler(),
                         new FindObjectByActionHandler(),
                         new FindSegmentsByIdActionHandler(),
@@ -356,12 +374,25 @@ public class APIEndpoint {
                         )
                 );
     }
+    
+    private void registerRestOperations(){
+        restHandlers.addAll(Arrays.asList(
+            new FindObjectMetadataFullyQualifiedGetHandler(),
+            new FindObjectMetadataGetHandler(),
+            new FindObjectMetadataPostHandler(),
+            new FindObjectMetadataByDomainGetHandler(),
+            new FindObjectMetadataByDomainPostHandler(),
+            new FindObjectMetadataByKeyGetHandler(),
+            new FindObjectMetadataByKeyPostHandler()
+        ));
+    }
 
     /**
      * Registers the routes for the provided service.
      *
      * @param service Service for which routes should be registered.
      */
+    @Deprecated
     private void registerRoutes(APIConfig config, Javalin service) {
         // TODO Register these special cases as well with the new model
         if (config.getServeContent()) {
@@ -410,8 +441,8 @@ public class APIEndpoint {
      * @return Full path to the service.
      */
     private static String makePath(String name) {
-        return String.format("%s/%s", "", name);
-        //        return String.format("%s/%s", namespace(), name);
+//        return String.format("%s/%s", "", name);
+                return String.format("%s/%s", namespace(), name);
         //        return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
     }
 
@@ -440,7 +471,7 @@ public class APIEndpoint {
                     }
                 })
                 .modelConverterFactory(() -> new ModelResolver(mapper) /*Default JavalinModelResolver breaks with Jackson JSON objects*/)
-                .path("/cineast-openapi-spec")
+                .path("/openapi-specs")
                 .swagger(
                         new SwaggerOptions("/swagger-ui")
                         .title("Cineast Swagger Documentation")
@@ -477,8 +508,10 @@ public class APIEndpoint {
         api.addTagsItem(
                 new Tag()
                 .name(namespace())
-                .description("API Context and Version")
+                .description("Cineast Default")
                 );
+        
+        api.addTagsItem( new Tag().name(METADATA_OAS_TAG).description("Metadata related operations"));
 
         api.addServersItem(
                 new io.swagger.v3.oas.models.servers.Server()

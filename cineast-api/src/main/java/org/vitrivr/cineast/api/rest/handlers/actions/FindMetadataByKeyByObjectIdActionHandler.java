@@ -15,7 +15,9 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
  * TODO: write JavaDoc
  *
  * @author loris.sauter
+ * @deprecated see {@link FindObjectMetadataByKeyGetHandler}
  */
+@Deprecated
 public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandler<IdList, MediaObjectMetadataQueryResult> {
   private static final String ATTRIBUTE_ID = "id";
   private static final String KEY_NAME = "key";
