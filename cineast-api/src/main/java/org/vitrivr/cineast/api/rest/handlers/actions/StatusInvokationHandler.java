@@ -1,47 +1,48 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
 
-import java.util.Map;
-
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import io.javalin.http.Context;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import org.vitrivr.cineast.api.messages.general.Ping;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 09.01.17
  */
-public class StatusInvokationHandler extends ParsingActionHandler<AnyMessage, Ping> {
-    /**
-     * Processes a HTTP GET request. Returns a {@link Ping} object
-     *
-     * @param parameters Map containing named parameters in the URL.
-     * @return {@link Ping}
-     */
-    @Override
-    public Ping doGet(Map<String, String> parameters) {
-        return new Ping();
-    }
-
-    @Override
-    public Class<AnyMessage> inClass() {
-        return AnyMessage.class;
-    }
-
-    @Override
-    public String getRoute() {
-        return "status";
-    }
-
-    @Override
-    public String getDescription(RestHttpMethod method) {
-        return "Get the status of the server";
-    }
-
-    @Override
-    public Class<Ping> outClass() {
-        return Ping.class;
-    }
+public class StatusInvokationHandler implements GetRestHandler<Ping> {
+  
+  public static final String ROUTE = "status";
+  
+  
+  @OpenApi(
+      summary = "Get the status of the server",
+      path = ROUTE, method = HttpMethod.GET,
+      responses = @OpenApiResponse(status = "200", content = @OpenApiContent(from = Ping.class)),
+      tags = {"Status"}
+  )
+  @Override
+  public Ping doGet(Context ctx) {
+    return new Ping();
+  }
+  
+  
+  public String getDescription(RestHttpMethod method) {
+    return "Get the status of the server";
+  }
+  
+  @Override
+  public Class<Ping> outClass() {
+    return Ping.class;
+  }
+  
+  @Override
+  public String route() {
+    return ROUTE;
+  }
 }

@@ -15,7 +15,9 @@ import org.vitrivr.cineast.standalone.config.Config;
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
+ * @deprecated see {@link org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler}
  */
+@Deprecated
 public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage, MediaObjectDescriptor> {
 
     public static final String TYPE_NAME = "type";

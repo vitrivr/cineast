@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
+@Deprecated
 public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList, MediaSegmentQueryResult> {
 
     private final static String ID_NAME = "id";

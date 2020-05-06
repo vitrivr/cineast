@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.api.rest.handlers.actions;
+package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import java.util.Map;
 
@@ -60,4 +60,6 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
+  
+  /* TODO Actually, there is a lot of refactoring potential in this entire package */
 }

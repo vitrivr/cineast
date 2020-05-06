@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
+@Deprecated
 public class FindTagsByActionHandler extends ParsingActionHandler<IdList, Tag> {
   /**
    * The {@link TagReader} instance used for lookup of {@link Tag}s.

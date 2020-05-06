@@ -19,12 +19,23 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.*;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
@@ -200,6 +211,7 @@ public class APIEndpoint {
         if (config.getEnableRest() || config.getEnableRestSecure()) {
             this.registerRoutes(config, service);
             this.restHandlers.forEach(handler -> registerRestHandler(service, handler, config));
+            this.registerServingRoutes(service,config);
         }
 
         /* Register a general exception handler. TODO: Add fine grained exception handling. */
@@ -353,18 +365,6 @@ public class APIEndpoint {
         /* Add your operations here */
         registeredOperations.addAll(
                 Arrays.asList(
-                        /*new FindMetadataByDomainWithKeyByObjectIdActionHandler(),
-                        new FindMetadataByKeyByObjectIdActionHandler(),
-                        new FindMetadataByObjectIdActionHandler(),
-                        new FindMetadataInDomainByObjectIdActionHandler(),*/
-                        new FindObjectAllActionHandler(),
-                        new FindObjectByActionHandler(),
-                        new FindSegmentsByIdActionHandler(),
-                        new FindSegmentsByObjectIdActionHandler(),
-                        new FindSegmentSimilarActionHandler(retrievalLogic),
-                        new FindTagsActionHandler(),
-                        new FindTagsByActionHandler(),
-                        new StatusInvokationHandler(),
                         new EndExtractionHandler(),
                         new EndSessionHandler(),
                         new ExtractItemHandler(),
@@ -377,13 +377,31 @@ public class APIEndpoint {
     
     private void registerRestOperations(){
         restHandlers.addAll(Arrays.asList(
+            /* Metadata */
             new FindObjectMetadataFullyQualifiedGetHandler(),
             new FindObjectMetadataGetHandler(),
             new FindObjectMetadataPostHandler(),
             new FindObjectMetadataByDomainGetHandler(),
             new FindObjectMetadataByDomainPostHandler(),
             new FindObjectMetadataByKeyGetHandler(),
-            new FindObjectMetadataByKeyPostHandler()
+            new FindObjectMetadataByKeyPostHandler(),
+            /* Media Object */
+            new FindObjectAllGetHandler(),
+            new FindObjectByIdPostHandler(),
+            new FindObjectGetHandler(),
+            /* Segments */
+            new FindSegmentByIdPostHandler(),
+            new FindSegmentsByIdGetHandler(),
+            new FindSegmentsByObjectIdGetHandler(),
+            new FindSegmentSimilarPostHandler(retrievalLogic),
+            /* Tags */
+            new FindTagsAllGetHandler(),
+            new FindTagsByIdsPostHandler(),
+            new FindTagsGetHandler(),
+            /* Session */
+            
+            /* Status */
+            new StatusInvokationHandler()
         ));
     }
 
@@ -391,23 +409,26 @@ public class APIEndpoint {
      * Registers the routes for the provided service.
      *
      * @param service Service for which routes should be registered.
+     * @deprecated
      */
     @Deprecated
     private void registerRoutes(APIConfig config, Javalin service) {
+        //Register all operations
+        this.registeredOperations.forEach(r -> registerRoute(config, r, service));
+    }
+    
+    private void registerServingRoutes(final  Javalin service, final APIConfig config){
         // TODO Register these special cases as well with the new model
         if (config.getServeContent()) {
             service.get("/thumbnails/:id", new ResolvedContentRoute(
-                    new FileSystemThumbnailResolver(
-                            new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
-
+                new FileSystemThumbnailResolver(
+                    new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
+        
             service.get("/objects/:id", new ResolvedContentRoute(
-                    new FileSystemObjectResolver(
-                            new File(Config.sharedConfig().getApi().getObjectLocation()),
-                            new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
+                new FileSystemObjectResolver(
+                    new File(Config.sharedConfig().getApi().getObjectLocation()),
+                    new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
         }
-
-        //Register all operations
-        this.registeredOperations.forEach(r -> registerRoute(config, r, service));
     }
 
     public void writeOpenApiDocPersistently(final String path) throws IOException {

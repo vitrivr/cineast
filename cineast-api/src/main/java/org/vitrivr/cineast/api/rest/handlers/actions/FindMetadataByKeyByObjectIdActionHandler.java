@@ -9,6 +9,7 @@ import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByKeyGetHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 /**

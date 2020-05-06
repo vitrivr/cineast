@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
+@Deprecated
 public class FindTagsActionHandler extends ParsingActionHandler<IdList,Tag> {
 
     private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());

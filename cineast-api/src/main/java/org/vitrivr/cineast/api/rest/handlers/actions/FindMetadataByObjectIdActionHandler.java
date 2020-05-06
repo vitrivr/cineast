@@ -11,11 +11,10 @@ import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
-import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * Retrieves all the {@link MediaObjectMetadataDescriptor}s for the given ID of a {@link

@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.api.rest.handlers.actions;
+package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;

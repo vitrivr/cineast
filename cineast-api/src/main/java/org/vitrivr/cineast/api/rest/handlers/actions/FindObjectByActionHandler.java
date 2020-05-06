@@ -21,7 +21,10 @@ import com.google.common.collect.Lists;
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
+ *
+ * @deprecated See {@link org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler}
  */
+@Deprecated
 public class FindObjectByActionHandler extends ParsingActionHandler<IdList, MediaObjectQueryResult> {
 
     public final static String ATTRIBUTE_NAME = "attribute";

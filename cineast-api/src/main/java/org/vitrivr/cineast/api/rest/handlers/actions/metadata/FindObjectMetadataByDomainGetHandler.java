@@ -1,15 +1,16 @@
-package org.vitrivr.cineast.api.rest.handlers.actions;
+package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadataByObjectIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 import java.util.Map;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.FindObjectMetadataFullyQualifiedGetHandler.*;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.*;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.

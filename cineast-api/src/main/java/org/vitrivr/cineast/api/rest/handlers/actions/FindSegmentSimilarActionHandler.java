@@ -25,6 +25,7 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
  * @version 1.0
  * @created 11.01.17
  */
+@Deprecated
 public class FindSegmentSimilarActionHandler extends ParsingActionHandler<SimilarityQuery, SimilarityQueryResultBatch> {
 
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
