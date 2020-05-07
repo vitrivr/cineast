@@ -1,18 +1,12 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.session.SessionState;
-import org.vitrivr.cineast.api.rest.RestHttpMethod;
-import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
 
 /**

@@ -16,8 +16,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.vitrivr.cineast.api.rest.RestHttpMethod;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
@@ -119,8 +117,6 @@ public class APIEndpoint {
         registerRestOperations();
     }
 
-    @Deprecated
-    private List<DocumentedRestOperation<?, ?>> registeredOperations = new ArrayList<>();
     private List<RestHandler> restHandlers = new ArrayList<>();
 
     /**
@@ -402,7 +398,7 @@ public class APIEndpoint {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         return new OpenApiOptions(() -> this.getOpenApi(config))
-                .jacksonMapper(ParsingActionHandler.MAPPER)
+                .jacksonMapper(mapper)
                 .toJsonMapper(o -> {
                     try {
                         return mapper.writeValueAsString(o);

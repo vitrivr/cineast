@@ -41,6 +41,7 @@ public class ResolvedContentRoute implements Handler {
 			return;
 		}
 
+		ctx.contentType(rresult.mimeType); // Can be removed with the next javalin release
 		ctx.seekableStream(rresult.stream, rresult.mimeType);
 		ctx.status(200);
 	}
