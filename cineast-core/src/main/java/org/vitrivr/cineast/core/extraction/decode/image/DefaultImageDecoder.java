@@ -97,7 +97,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
                     height = (int)(height * ratio);
                 }
 
-                BufferedImageOp resampler = new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
+                final BufferedImageOp resampler = new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
                 output = resampler.filter(input, null);
             }
         } catch (IOException | IllegalArgumentException e) {
@@ -163,7 +163,5 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * Nothing to close!
      */
     @Override
-    public void close() {
-
-    }
+    public void close() {}
 }

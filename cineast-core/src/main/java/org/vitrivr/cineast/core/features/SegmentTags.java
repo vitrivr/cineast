@@ -2,6 +2,13 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -24,9 +31,6 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.MathHelper;
-
-import java.util.*;
-import java.util.function.Supplier;
 
 public class SegmentTags implements Extractor, Retriever {
 
@@ -72,31 +76,38 @@ public class SegmentTags implements Extractor, Retriever {
     TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
     float weightSum = 0f;
 
+    /* Sum weights for normalization at a later point*/
     for (WeightedTag wt : tags) {
       tagids.add(wt.getId());
       tagWeights.put(wt.getId(), wt.getWeight());
-      weightSum += wt.getWeight();
+      if (wt.getWeight() > 1) {
+        LOGGER.error("Weight is > 1 -- this makes little sense.");
+      }
+      weightSum += Math.min(1, wt.getWeight());
     }
 
     if (tagids.isEmpty() || weightSum <= 0f) {
       return Collections.emptyList();
     }
 
+    /* Retrieve all elements matching the provided ids */
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
 
     Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
+    /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
     Set<String> relevant = null;
-    if (qc != null && qc.hasRelevantSegmentIds()){
+    if (qc != null && qc.hasRelevantSegmentIds()) {
       relevant = qc.getRelevantSegmentIds();
     }
 
+    /* Iterate over all matches */
     for (Map<String, PrimitiveTypeProvider> row : rows) {
 
       String segmentId = row.get("id").getString();
 
       /* Skip segments which are not desired by the query-config */
-      if (relevant != null && !relevant.contains(segmentId)){
+      if (relevant != null && !relevant.contains(segmentId)) {
         continue;
       }
 
@@ -104,6 +115,12 @@ public class SegmentTags implements Extractor, Retriever {
       float score = row.get("score").getFloat()
           * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
 
+      if (score > 1) {
+        LOGGER.warn("Score is larger than 1 - this makes little sense");
+        score = 1f;
+      }
+
+      /* Update maximum score by tag*/
       maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
       float prev = maxScoreByTag.get(segmentId).get(tagid);
       if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
@@ -117,6 +134,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     final float normalizer = weightSum;
 
+    /* per segment, the max score for all tags is summed and divided by the normalizer */
     maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
 
     return _return;

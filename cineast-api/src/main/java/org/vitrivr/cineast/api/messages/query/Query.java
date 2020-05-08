@@ -10,30 +10,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 11.01.17
- */
 public abstract class Query implements Message {
     /** The {@link ReadableQueryConfig} that should be used to configure the query. May be null! */
     protected final QueryConfig config;
 
-    /**
-     * Constructor for {@link Query} message.
-     *
-     * @param config The {@link ReadableQueryConfig}
-     */
     public Query(QueryConfig config) {
         this.config = config;
     }
 
     /**
-     * Getter for {@link Query#config}.
-     *
-     * @return
+     * JSON: the config field is specified in subclasses
+     * The JsonIgnore is needed because the actual field is not called queryconfig
      */
-    @JsonIgnore /* JSON: the config field is specified in sublcasses */ // TODO See whether there's a better way to do this
+    @JsonIgnore
     public final QueryConfig getQueryConfig() {
         return this.config;
     }

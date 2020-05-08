@@ -1,5 +1,6 @@
-package org.vitrivr.cineast.standalone.run.filehandler;
+package org.vitrivr.cineast.standalone.run;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -41,12 +42,10 @@ import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
-import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
-import org.vitrivr.cineast.standalone.run.ExtractionItemProcessor;
 import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,14 +56,9 @@ import java.util.stream.Collectors;
 /**
  * This class is used to extract a continuous list of {@link ExtractionItemContainer}s.
  *
- * It replaces the need to extend separate {@link AbstractExtractionFileHandler} per {@link MediaType}. It should also step-by-step phase out the {@link AbstractExtractionFileHandler}.
- *
  * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
  *
- * Has NO AUTOMATIC SUPPORT FOR {@link MediaType#IMAGE_SEQUENCE} since its impossible to distinguish an individual image from a sequence if you're only looking at one item.
- *
- * If you want to use {@link MediaType#IMAGE_SEQUENCE}, specify it explicitly in the {@link IngestConfig}
- *
+ * @version 1.1
  * @author silvan on 16.04.18.
  */
 public class GenericExtractionItemHandler implements Runnable, ExtractionItemProcessor {
@@ -219,16 +213,17 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
               final SegmentContainer container = segmenter.getNext();
               if (container != null) {
                 /* Create segment-descriptor and try to persist it. */
-                final MediaSegmentDescriptor mediaSegmentDescriptor = this
-                    .fetchOrCreateSegmentDescriptor(objectId, segmentNumber,
-                        container.getStart(), container.getEnd(),
-                        container.getAbsoluteStart(), container.getAbsoluteEnd());
+                MediaSegmentDescriptor mediaSegmentDescriptor;
+                if (container.getId() != null) {
+                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, container.getId(), segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd()); /* Special case; segment ID is determined by container (image sequences only) */
+                } else {
+                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
+                }
+                container.setId(mediaSegmentDescriptor.getSegmentId());
+                container.setSuperId(mediaSegmentDescriptor.getObjectId());
                 if (!this.checkAndPersistSegment(mediaSegmentDescriptor)) {
                   continue;
                 }
-
-                container.setId(mediaSegmentDescriptor.getSegmentId());
-                container.setSuperId(mediaSegmentDescriptor.getObjectId());
 
                 int emissionTimeout = 1000;
 
@@ -463,17 +458,40 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == type) {
       return fetchedDescriptor;
     }
-    return AbstractExtractionFileHandler.mergeItem(fetchedDescriptor, generator, item, type);
+    return GenericExtractionItemHandler.mergeItem(fetchedDescriptor, generator, item, type);
   }
 
   /**
-   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
+   * Convenience method to lookup a MediaSegmentDescriptor for a given properties and type or create a new one if needed.
+   * The {@link MediaSegmentDescriptor}'s ID is auto-generated.
+   *
+   * @param objectId
+   * @param segmentNumber
+   * @param start
+   * @param end
+   * @param startabs
+   * @param endabs
+   * @return {@link MediaSegmentDescriptor}
    */
-  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber,
-      int start, int end, float startabs, float endabs) {
+  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
     String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-    return this.segmentReader.lookUpSegment(segmentId).orElse(MediaSegmentDescriptor
-        .newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
+    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false));
+  }
+
+  /**
+   * Convenience method to lookup a MediaSegmentDescriptor for a given properties and type or create a new one if needed.
+   * The {@link MediaSegmentDescriptor}'s ID is provided.
+   *
+   * @param objectId
+   * @param segmentNumber
+   * @param start
+   * @param end
+   * @param startabs
+   * @param endabs
+   * @return {@link MediaSegmentDescriptor}
+   */
+  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
+    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false));
   }
 
   protected void extractAndPersistMetadata(ExtractionItemContainer item, String objectId) {
@@ -489,6 +507,37 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         LOGGER.error("exception during metadata extraction: {}", LogHelper.getStackTrace(e));
       }
     }
+  }
+
+ /**
+  * create a new descriptor based on the provided one.
+  *
+  * if an id is already given in the descriptor, it takes precedence over generating a new one. if
+  * a new path is provided as an argument, it takes precedence over one which might already be
+  * existing in the descriptor. if a new type is provided as an argument, it takes precedence over
+  * one which might already be existing in the descriptor.
+  *
+  * The exists variable is taken from the provided descriptor, since that is more current than the
+  * one provided in the item
+  */
+  public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
+                                                ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
+    Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
+            : item.getPathForExtraction();
+    String _name =
+            StringUtils.isEmpty(item.getObject().getName()) ? StringUtils.isEmpty(descriptor.getName())
+                    ? MediaObjectDescriptor.cleanPath(_path.getFileName()) : descriptor.getName()
+                    : item.getObject().getName();
+    boolean exists = descriptor.exists();
+    MediaType _type = type == null ? descriptor.getMediatype() : type;
+    String _id =
+            StringUtils.isEmpty(item.getObject().getObjectId()) ?
+                    StringUtils.isEmpty(descriptor.getObjectId())
+                            ? generator.next(_path, _type) : descriptor.getObjectId()
+                    : item.getObject().getObjectId();
+    String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
+            : item.getObject().getPath();
+    return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
   }
 
 

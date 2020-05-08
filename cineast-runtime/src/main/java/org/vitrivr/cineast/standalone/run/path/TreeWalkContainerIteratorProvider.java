@@ -48,12 +48,9 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
       pathIterator = Files.walk(this.basePath, this.context.depth(), FileVisitOption.FOLLOW_LINKS)
           .filter(p -> {
             try {
-              return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p)
-                  && Files.isReadable(p);
+              return Files.exists(p)  && !Files.isHidden(p) && Files.isReadable(p) && !this.basePath.equals(p);
             } catch (IOException e) {
-              LOGGER.error("An IO exception occurred while testing the media file at '{}': {}",
-                  p.toString(),
-                  LogHelper.getStackTrace(e));
+              LOGGER.error("An IO exception occurred while testing the media file at '{}': {}", p.toString(), LogHelper.getStackTrace(e));
               return false;
             }
           }).iterator();

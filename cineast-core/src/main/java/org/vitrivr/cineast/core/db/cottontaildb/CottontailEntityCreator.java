@@ -5,13 +5,10 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnDefinition;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityDefinition;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Index;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Type;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,7 +53,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(TagReader.TAG_ENTITY_NAME))
         .addAllColumns(columns).build();
 
-    cottontail.createEntity(message);
+    cottontail.createEntityBlocking(message);
 
     this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ);
     this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH);
@@ -80,7 +77,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(MediaObjectDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
-    cottontail.createEntity(message);
+    cottontail.createEntityBlocking(message);
 
     this.createIndex(MediaObjectDescriptor.ENTITY, MediaObjectDescriptor.FIELDNAMES[0], IndexType.HASH_UQ);
 
