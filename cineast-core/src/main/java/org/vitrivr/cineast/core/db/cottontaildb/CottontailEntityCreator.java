@@ -6,12 +6,9 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnDefinition;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Index;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Type;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
