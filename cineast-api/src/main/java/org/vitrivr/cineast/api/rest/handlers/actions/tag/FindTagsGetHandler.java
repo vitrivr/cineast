@@ -62,6 +62,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
         break;
       case MATCHING_NAME:
         list = tagReader.getTagsByMatchingName(value);
+        break;
       default:
         LOGGER.error("Unknown attribute '{}' in FindTagsByActionHandler", attribute);
         list =  new ArrayList<>(0);
