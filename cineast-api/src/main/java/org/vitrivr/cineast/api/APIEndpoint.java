@@ -132,6 +132,7 @@ public class APIEndpoint {
 
         final Javalin service = Javalin.create(serviceConfig -> {
             /* Configure server (TLS, thread pool, etc.) */
+            serviceConfig.enableCorsForAllOrigins();
             serviceConfig.server(() -> {
                 QueuedThreadPool threadPool = new QueuedThreadPool(config.getThreadPoolSize(), 2, 30000);
 
@@ -213,9 +214,6 @@ public class APIEndpoint {
             ex.printStackTrace();
             LOGGER.error(ex);
         });
-
-        /* Configure the result after processing was completed. */
-        service.config.enableCorsForAllOrigins();
         
         /* Some reasonable settings */
         service.config.defaultContentType = "application/json";
