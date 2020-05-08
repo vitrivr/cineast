@@ -1,19 +1,38 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import java.util.Map;
+
+import io.javalin.http.Context;
+import io.javalin.plugin.openapi.annotations.*;
+import org.vitrivr.cineast.api.messages.session.SessionState;
+import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.session.Session;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
-import org.vitrivr.cineast.api.messages.session.SessionState;
 
-import java.util.Map;
-
-public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
-
+public class ValidateSessionHandler implements GetRestHandler<SessionState> {
+  
+  private final static String ID_NAME = "id";
+  
+  public static final String ROUTE = "session/validate/:"+ID_NAME;
+  
+  
+  @OpenApi(
+      summary = "Validates the session with given id",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+        @OpenApiParam(name = ID_NAME, description = "The id to validate the session of")
+      },
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
   @Override
-  public Object doGet(Map<String, String> parameters) {
-    return validateSession(parameters);
+  public SessionState doGet(Context ctx) {
+    return validateSession(ctx.pathParamMap());
   }
 
   public static SessionState validateSession(String sessionId) {
@@ -30,13 +49,24 @@ public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
     return new SessionState(s);
   }
 
-  @Override
-  public Class<AnyMessage> inClass() {
-    return AnyMessage.class;
-  }
 
   public static SessionState validateSession(Map<String, String> parameters) {
-    final String sessionId = parameters.get(":id");
+    final String sessionId = parameters.get(ID_NAME);
     return validateSession(sessionId);
+  }
+
+
+  public String getDescription(RestHttpMethod method) {
+    return "Validate the session with the given id";
+  }
+
+  @Override
+  public Class<SessionState> outClass() {
+    return SessionState.class;
+  }
+  
+  @Override
+  public String route() {
+    return ROUTE;
   }
 }

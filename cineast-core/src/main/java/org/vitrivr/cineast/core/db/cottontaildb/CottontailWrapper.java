@@ -62,12 +62,12 @@ public class CottontailWrapper implements AutoCloseable {
     this.insertStub = CottonDMLGrpc.newStub(channel);
   }
 
-  public synchronized ListenableFuture<SuccessStatus> createEntity(CottontailGrpc.EntityDefinition createMessage) {
+  public synchronized ListenableFuture<SuccessStatus> createEntity(EntityDefinition createMessage) {
     final CottonDDLFutureStub stub = CottonDDLGrpc.newFutureStub(this.channel);
     return stub.createEntity(createMessage);
   }
 
-  public synchronized void createEntityBlocking(CottontailGrpc.EntityDefinition createMessage) {
+  public synchronized void createEntityBlocking(EntityDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.createEntity(createMessage);

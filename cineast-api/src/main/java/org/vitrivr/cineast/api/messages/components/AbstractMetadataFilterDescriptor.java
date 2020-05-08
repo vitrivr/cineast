@@ -36,33 +36,42 @@ public abstract class AbstractMetadataFilterDescriptor implements
 
   public static final String KEYWORDS_NAME = "keywords";
 
-  protected String[] keywords;
+  protected List<String> keywords;
 
   public AbstractMetadataFilterDescriptor() {
   }
 
+  public AbstractMetadataFilterDescriptor(String[] keywords) {
+    this.keywords = Arrays.asList(keywords);
+  }
+
   @JsonCreator
-  public AbstractMetadataFilterDescriptor(@JsonProperty(KEYWORDS_NAME) String[] keywords) {
+  public AbstractMetadataFilterDescriptor(@JsonProperty(KEYWORDS_NAME) List<String> keywords) {
     this.keywords = keywords;
   }
 
   @JsonProperty(value = KEYWORDS_NAME)
-  public String[] getKeywords() {
+  public List<String> getKeywords() {
     return keywords;
   }
 
   @JsonProperty(value = KEYWORDS_NAME)
-  public void setKeywords(String[] keywords) {
+  public void setKeywords(List<String> keywords) {
     this.keywords = keywords;
   }
 
   @JsonIgnore
-  public List<String> getKeywordsAsList() {
-    return Arrays.asList(keywords);
+  public String[] getKeywordsAsArray() {
+    return keywords.toArray(new String[0]);
+  }
+
+  @JsonIgnore
+  public void setKeywords(String[] keywords){
+    this.keywords = Arrays.asList(keywords);
   }
 
   @JsonIgnore
   public List<String> getKeywordsAsListLowercase() {
-    return getKeywordsAsList().stream().map(k -> k.toLowerCase()).collect(Collectors.toList());
+    return getKeywords().stream().map(String::toLowerCase).collect(Collectors.toList());
   }
 }

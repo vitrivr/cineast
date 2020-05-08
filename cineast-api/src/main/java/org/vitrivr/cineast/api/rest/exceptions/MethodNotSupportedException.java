@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.api.rest.exceptions;
 
-import spark.Request;
+import io.javalin.http.Context;
 
 /**
  * @author rgasser
@@ -14,7 +14,7 @@ public class MethodNotSupportedException extends ActionHandlerException {
         super(message);
     }
 
-    public MethodNotSupportedException(Request request) {
-        this("HTTP method '" + request.requestMethod() + "' is not supported for call to' " + request.url() + "'.");
+    public MethodNotSupportedException(Context request) {
+        this("HTTP method '" + request.method() + "' is not supported for call to' " + request.url() + "'.");
     }
 }

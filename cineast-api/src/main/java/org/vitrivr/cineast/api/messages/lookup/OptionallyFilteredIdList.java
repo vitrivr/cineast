@@ -24,9 +24,9 @@ public class OptionallyFilteredIdList implements Message {
   how to still realise that there are unkown properties
    */
 
-  private AbstractMetadataFilterDescriptor[] filters;
+  private List<AbstractMetadataFilterDescriptor> filters;
 
-  private String[] ids;
+  private List<String> ids;
 
   /**
    * This default constructor is required for deserialization by fasterxml/jackson.
@@ -35,17 +35,17 @@ public class OptionallyFilteredIdList implements Message {
   }
 
   public String[] getIds(){
-    return this.ids;
+    return this.ids.toArray(new String[0]);
   }
 
-  public List<String> getIdList(){ return Arrays.asList(this.ids);}
+  public List<String> getIdList(){ return this.ids;}
 
   @Override
   public MessageType getMessageType() {
     return null;
   }
 
-  public AbstractMetadataFilterDescriptor[] getFilters() {
+  public List<AbstractMetadataFilterDescriptor> getFilters() {
     return filters;
   }
 
@@ -56,19 +56,19 @@ public class OptionallyFilteredIdList implements Message {
 
   public void setFilters(
       AbstractMetadataFilterDescriptor[] filters) {
-    this.filters = filters;
+    this.filters = Arrays.asList(filters);
   }
 
-
+  @JsonIgnore //prevents filters being included in json a second time as "filterList"
   public List<AbstractMetadataFilterDescriptor> getFilterList(){
-    return Arrays.asList(this.filters);
+    return this.filters;
   }
 
   @Override
   public String toString() {
     return "OptionallyFilteredIdList{" +
-            "filters=" + Arrays.toString(filters) +
-            ", ids=" + Arrays.toString(ids) +
+            "filters=" + Arrays.toString(filters.toArray()) +
+            ", ids=" + Arrays.toString(ids.toArray()) +
             '}';
   }
 }

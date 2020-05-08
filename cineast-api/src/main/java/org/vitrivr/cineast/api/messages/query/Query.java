@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 
 public abstract class Query implements Message {
@@ -15,6 +18,11 @@ public abstract class Query implements Message {
         this.config = config;
     }
 
+    /**
+     * JSON: the config field is specified in subclasses
+     * The JsonIgnore is needed because the actual field is not called queryconfig
+     */
+    @JsonIgnore
     public final QueryConfig getQueryConfig() {
         return this.config;
     }
