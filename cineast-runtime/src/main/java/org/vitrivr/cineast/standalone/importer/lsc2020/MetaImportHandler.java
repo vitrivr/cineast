@@ -26,6 +26,7 @@ public class MetaImportHandler extends DataImportHandler {
             LOGGER.info("Finished dropping table for entity ");
             ec.createSegmentMetadataEntity();
             LOGGER.info("Re-created SegmentMetaData entity");
+            ec.close();
         }
     }
 
