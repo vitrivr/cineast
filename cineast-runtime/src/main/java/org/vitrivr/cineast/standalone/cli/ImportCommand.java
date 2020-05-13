@@ -10,6 +10,7 @@ import java.util.List;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
@@ -111,6 +112,9 @@ public class ImportCommand implements Runnable {
       case LSCCAPTION:
         handler = new CaptionImportHandler(this.threads, this.batchsize);
         break;
+      case LSCX:
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize);
+        break;
     }
     if(!isGoogleVision){
       if(handler == null){
@@ -142,6 +146,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX
   }
 }
