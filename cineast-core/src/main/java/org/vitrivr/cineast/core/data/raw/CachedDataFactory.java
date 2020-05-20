@@ -1,5 +1,10 @@
 package org.vitrivr.cineast.core.data.raw;
 
+import static java.lang.Thread.MIN_PRIORITY;
+
+import java.lang.ref.PhantomReference;
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,19 +26,71 @@ import java.util.Comparator;
 
 
 /**
- * This factory class generates {@link ByteData} objects based on a heuristic involving the size of the allocated data chunks.
+ * This factory class generates {@link ByteData} objects either in memory or backed by a file cache based on a heuristic involving
+ * the size of the allocated data chunks.
+ *
+ * @author Ralph Gasser
+ * @version 1.1
+ *
+ * @see ByteData
+ * @see InMemoryByteData
+ * @see CachedByteData
+ * @see InMemoryMultiImage
+ * @see CachedMultiImage
  */
 public class CachedDataFactory {
 
+    /** Default instance of {@link CachedDataFactory}. */
     public static final CachedDataFactory DEFAULT_INSTANCE = new CachedDataFactory(new CacheConfig());
+
+    /** {@link ReferenceQueue} that keeps track of {@link CachedByteData} objects. */
+    private static final ReferenceQueue<CachedByteData> CACHED_REF_QUEUE = new ReferenceQueue<>();
+
     /** Logger instance used to log errors. */
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /** Thread that cleans the cached byte data files. */
+    private static final Thread CLEANER_THREAD = new Thread(() -> {
+        while (true) {
+            final Reference<?> ref = CACHED_REF_QUEUE.poll();
+            if (ref instanceof CachedByteDataReference) {
+                final Path path = ((CachedByteDataReference) ref).path;
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException e) {
+                    LOGGER.fatal("Failed to delete temporary cache file: {}", path.toString());
+                }
+            } else {
+                Thread.yield();
+            }
+        }
+    });
+
+    static {
+        CLEANER_THREAD.setName("Cache-File-Cleaner");
+        CLEANER_THREAD.setPriority(MIN_PRIORITY);
+        CLEANER_THREAD.start();
+    }
 
     /** Reference to {@link CacheConfig} used to setup this {@link CachedDataFactory}. */
     private final CacheConfig config;
 
     /** Location where this instance of {@link CachedDataFactory} will store its cached images. */
     private final Path cacheLocation;
+
+    /**
+     * Inner {@link PhantomReference} implementations that keeps track of the cache path for every {@link CachedByteData}.
+     */
+    private static class CachedByteDataReference extends PhantomReference<CachedByteData> {
+        private final Path path;
+        private CachedByteDataReference(CachedByteData data) {
+            super(data, CachedDataFactory.CACHED_REF_QUEUE);
+            this.path = data.getPath();
+        }
+        public Path getPath() {
+            return path;
+        }
+    }
 
     /**
      * Default constructor.
@@ -49,13 +106,11 @@ public class CachedDataFactory {
                 try {
                     Files.walk(CachedDataFactory.this.cacheLocation).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
                 } catch (IOException e) {
-                    LOGGER.fatal("Could not sweep the cache location under {}", this.cacheLocation.toAbsolutePath().toString());
-                    LOGGER.fatal(e);
+                    LOGGER.fatal("Failed to sweep the cache location under {}", this.cacheLocation.toAbsolutePath().toString());
                 }
             })) ;
         } catch (IOException e) {
-            LOGGER.fatal("Could not create the cache location under {}", cacheLocation.toAbsolutePath().toString());
-            LOGGER.fatal(e);
+            LOGGER.fatal("Failed to create the cache location under {}", cacheLocation.toAbsolutePath().toString());
         }
     }
 
@@ -201,7 +256,9 @@ public class CachedDataFactory {
      */
     public MultiImage newCachedMultiImage(BufferedImage image, String prefix) {
         try {
-            return new CachedMultiImage(image, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
+            final CachedMultiImage cimg = new CachedMultiImage(image, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
+            new CachedByteDataReference(cimg); /* Enqueue phantom reference for garbage collection. */
+            return cimg;
         } catch (IOException e) {
             LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
             return new InMemoryMultiImage(image, this);
@@ -219,7 +276,9 @@ public class CachedDataFactory {
      */
     public MultiImage newCachedMultiImage(BufferedImage image, BufferedImage thumb, String prefix) {
         try {
-            return new CachedMultiImage(image, thumb, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
+            final CachedMultiImage cimg = new CachedMultiImage(image, thumb, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
+            new CachedByteDataReference(cimg); /* Enqueue phantom reference for garbage collection. */
+            return cimg;
         } catch (IOException e) {
             LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
             return new InMemoryMultiImage(image, thumb, this);
