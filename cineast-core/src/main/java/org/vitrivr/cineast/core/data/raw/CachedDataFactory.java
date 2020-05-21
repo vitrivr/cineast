@@ -69,6 +69,7 @@ public class CachedDataFactory {
     static {
         CLEANER_THREAD.setName("Cache-File-Cleaner");
         CLEANER_THREAD.setPriority(MIN_PRIORITY);
+        CLEANER_THREAD.setDaemon(true);
         CLEANER_THREAD.start();
     }
 
