@@ -5,6 +5,8 @@ import static java.lang.Thread.MIN_PRIORITY;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
+import java.util.HashSet;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +45,13 @@ public class CachedDataFactory {
     /** Default instance of {@link CachedDataFactory}. */
     public static final CachedDataFactory DEFAULT_INSTANCE = new CachedDataFactory(new CacheConfig());
 
-    /** {@link ReferenceQueue} that keeps track of {@link CachedByteData} objects. */
+    /** A {@link ReentrantLock} to mediate access to CACHED_REFS. */
+    private static final ReentrantLock CACHED_REFS_LOCK = new ReentrantLock();
+
+    /** Internal set that keeps track of {@link CachedByteData} objects; prevents garbage collection of those references. */
+    private static final HashSet<Reference<CachedByteData>> CACHED_REFS = new HashSet<>();
+
+    /** {@link ReferenceQueue} for {@link CachedByteData} objects. */
     private static final ReferenceQueue<CachedByteData> CACHED_REF_QUEUE = new ReferenceQueue<>();
 
     /** Logger instance used to log errors. */
@@ -52,16 +60,25 @@ public class CachedDataFactory {
     /** Thread that cleans the cached byte data files. */
     private static final Thread CLEANER_THREAD = new Thread(() -> {
         while (true) {
-            final Reference<?> ref = CACHED_REF_QUEUE.poll();
-            if (ref instanceof CachedByteDataReference) {
-                final Path path = ((CachedByteDataReference) ref).path;
-                try {
-                    Files.deleteIfExists(path);
-                } catch (IOException e) {
-                    LOGGER.fatal("Failed to delete temporary cache file: {}", path.toString());
+            try {
+                final Reference<?> ref = CACHED_REF_QUEUE.remove();
+
+                /* Synchronization. */
+                CACHED_REFS_LOCK.lock();
+                CACHED_REFS.remove(ref);
+                CACHED_REFS_LOCK.unlock();
+
+                if (ref instanceof CachedByteDataReference) {
+                    final Path path = ((CachedByteDataReference) ref).path;
+                    try {
+                        Files.deleteIfExists(path);
+                        LOGGER.trace("Temporary cache file was purged: {}", path.toString());
+                    } catch (IOException e) {
+                        LOGGER.fatal("Failed to delete temporary cache file: {}", path.toString());
+                    }
                 }
-            } else {
-                Thread.yield();
+            } catch (InterruptedException e) {
+                LOGGER.fatal("Cleaner thread was interrupted. Cached objects backed by disk will no longer be purged!");
             }
         }
     });
@@ -86,6 +103,9 @@ public class CachedDataFactory {
         private final Path path;
         private CachedByteDataReference(CachedByteData data) {
             super(data, CachedDataFactory.CACHED_REF_QUEUE);
+            CACHED_REFS_LOCK.lock();
+            CACHED_REFS.add(this);
+            CACHED_REFS_LOCK.unlock();
             this.path = data.getPath();
         }
         public Path getPath() {
