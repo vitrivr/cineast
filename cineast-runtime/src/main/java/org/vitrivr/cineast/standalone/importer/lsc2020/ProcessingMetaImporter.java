@@ -7,16 +7,18 @@ import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
 
-    public static final List<Integer> TAG_CANDATES = Arrays.asList(LSCUtilities.META_SEMANTIC_COL, LSCUtilities.META_ACTIVITY_COL, LSCUtilities.META_TIMEZONE_COL);
+    public static final List<Integer> TAG_CANDIDATES = Arrays.asList(LSCUtilities.META_SEMANTIC_COL, LSCUtilities.META_ACTIVITY_COL, LSCUtilities.META_TIMEZONE_COL, LSCUtilities.META_UTC_COL, LSCUtilities.META_LOCAL_COL);
     private static final Logger LOGGER = LogManager.getLogger(ProcessingMetaImporter.class);
     private final Type type;
     private Iterator<Map<String, PrimitiveTypeProvider>> currentDataIterator = null;
     private Iterator<String[]> iterator;
     private Map<String, String> minuteIdPathMap = new HashMap<>();
+    private HashSet<String> uniqueList = new HashSet<>();
 
     public ProcessingMetaImporter(final Path path, final Type type) {
         this.type = type;
@@ -62,10 +64,11 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     }
 
     private Optional<Map<String, PrimitiveTypeProvider>> parseTag(String path, String[] items, int index) {
-        if (TAG_CANDATES.contains(index)) {
+        if (TAG_CANDIDATES.contains(index)) {
+            final String tag = metaAsTag(items, index);
             final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
             map.put("id", PrimitiveTypeProvider.fromObject(path));
-            map.put("tagid", PrimitiveTypeProvider.fromObject(items[index]));
+            map.put("tagid", PrimitiveTypeProvider.fromObject(tag));
             map.put("score", PrimitiveTypeProvider.fromObject(1));
             return Optional.of(map);
         } else {
@@ -78,11 +81,46 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
      * tags: id === name, description is empty (no tag expansion done)
      */
     private Optional<Map<String, PrimitiveTypeProvider>> parseTagForLookup(String path, String[] items, int index) {
-        final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
-        map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(path));
-        map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(items[index]));
-        map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(""));
-        return Optional.of(map);
+        if (TAG_CANDIDATES.contains(index)) {
+            final String tag = metaAsTag(items, index);
+            final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
+            map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
+            map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
+            map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(""));
+            if(onlyUnique()){
+                if(!isUnique(tag)){
+                    return Optional.empty();
+                }
+            }
+            return Optional.of(map);
+        }else{
+            return Optional.empty();
+        }
+    }
+
+    private String metaAsTag(String[] items, int index){
+        String tag;
+        if(index == LSCUtilities.META_UTC_COL){
+            tag = LSCUtilities.convertUtc(items[index]).getDayOfWeek().toString();
+        }else if(index == LSCUtilities.META_LOCAL_COL) {
+            String zone = items[LSCUtilities.META_TIMEZONE_COL];
+            final ZonedDateTime dateTime = LSCUtilities.convertLocal(items[index], zone);
+            final int hour = dateTime.getHour();
+            if(hour > 7 && hour < 11){
+                tag = "MORNING";
+            }else if(hour >= 11 && hour < 14){
+                tag = "NOON";
+            }else if(hour >= 14 && hour < 17){
+                tag = "AFTERNOON";
+            }else if(hour >=17 && hour < 22){
+                tag = "EVENING";
+            }else{
+                tag = "NIGHT";
+            }
+        }else{
+            tag = items[index];
+        }
+        return tag;
     }
 
     @Override
@@ -109,6 +147,24 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         return null;
     }
 
+    /**
+     * Checks if the needle is in the unique set. if so, it's not unique. otherwise its unique and added to the list
+     * @param needle
+     * @return
+     */
+    private boolean isUnique(String needle){
+        boolean found = uniqueList.contains(needle);
+        if(!found){
+            uniqueList.add(needle);
+        }
+        return !found;
+    }
+
+    private boolean onlyUnique(){
+        return type == Type.TAG_LOOKUP;
+    }
+
+
     @Override
     public Map<String, PrimitiveTypeProvider> convert(Map<String, PrimitiveTypeProvider> data) {
         return data;
@@ -123,5 +179,8 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
          * Tags for tag lookup (i.e. autocomplete in vitrivr-ng
          */
         TAG_LOOKUP
+//        ,        META_PROCESSED_TIME
     }
+
+
 }
