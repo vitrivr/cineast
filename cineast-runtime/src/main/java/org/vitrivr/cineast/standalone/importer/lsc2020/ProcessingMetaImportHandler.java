@@ -33,7 +33,7 @@ public class ProcessingMetaImportHandler extends DataImportHandler {
             LOGGER.error("Cannot do import as initialization failed.", e);
             return;
         }
+        this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG_LOOKUP), TagReader.TAG_ENTITY_NAME, "lsc-metaAsTagsLookup")));
         this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "lsc-metaAsTags")));
-        this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG), TagReader.TAG_ENTITY_NAME, "lsc-metaAsTagsLookup")));
     }
 }
