@@ -310,7 +310,7 @@ public class APIEndpoint {
             return OpenApiBuilder.moveDocumentationFromAnnotationToHandler(method, javalinHandler);
         } catch (NoSuchMethodException | SecurityException e) {
             throw new IllegalArgumentException("The given handler of type "+restHandler.getClass()+" has no " + implMethodName + "(Context) method", e);
-	    }
+        }
     }
     
     private void registerRestOperations(){
