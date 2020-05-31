@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,9 +50,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
+import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
@@ -281,19 +284,34 @@ public class APIEndpoint {
     
     private void registerRestHandler(final Javalin javalin, final RestHandler handler, final APIConfig config){
         if(handler instanceof GetRestHandler<?>){
-            javalin.get(makePath(handler.route()), ((GetRestHandler) handler)::get);
+        	javalin.get(makePath(handler.route()), documentHandler(handler, ((GetRestHandler) handler)::get, "doGet"));
         }else if(handler instanceof PostRestHandler<?>){
-            javalin.post(makePath(handler.route()), ((PostRestHandler) handler)::post);
+            javalin.post(makePath(handler.route()), documentHandler(handler, ((PostRestHandler) handler)::post, "doPost"));
         }else if(handler instanceof DeleteRestHandler<?>){
-            javalin.delete(makePath(handler.route()), ((DeleteRestHandler) handler)::delete);
+            javalin.delete(makePath(handler.route()), documentHandler(handler, ((DeleteRestHandler) handler)::delete, "doDelete"));
         }else if(handler instanceof PutRestHandler<?>){
-            javalin.put(makePath(handler.route()), ((PutRestHandler) handler)::put);
+            javalin.put(makePath(handler.route()), documentHandler(handler, ((PutRestHandler) handler)::put, "doPut"));
         }else{
             throw new IllegalArgumentException("The given handler of type "+handler.getClass()+" has no specified method");
         }
         /* One would implement the remaining HTTP methods here */
     }
 
+    /**
+     * Documents the given handler by copying the documentation from the implementation method's annotation
+     * @param restHandler {@link RestHandler} which owns the handler method
+     * @param javalinHandler {@link Handler} to document
+     * @param implMethodName Name of the method that has the {@link OpenApi} annotation
+     * @return Documented handler or the input handler if no annotation is present
+     */
+    private Handler documentHandler(final RestHandler restHandler, final Handler javalinHandler, final String implMethodName) {
+    	try {
+			Method method = restHandler.getClass().getMethod(implMethodName, Context.class);
+			return OpenApiBuilder.moveDocumentationFromAnnotationToHandler(method, javalinHandler);
+    	} catch (NoSuchMethodException | SecurityException e) {
+			throw new IllegalArgumentException("The given handler of type "+restHandler.getClass()+" has no " + implMethodName + "(Context) method", e);
+		}
+    }
     
     private void registerRestOperations(){
         restHandlers.addAll(Arrays.asList(
