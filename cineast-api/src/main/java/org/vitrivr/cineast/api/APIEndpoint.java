@@ -305,12 +305,12 @@ public class APIEndpoint {
      * @return Documented handler or the input handler if no annotation is present
      */
     private Handler documentHandler(final RestHandler restHandler, final Handler javalinHandler, final String implMethodName) {
-    	try {
-			Method method = restHandler.getClass().getMethod(implMethodName, Context.class);
-			return OpenApiBuilder.moveDocumentationFromAnnotationToHandler(method, javalinHandler);
-    	} catch (NoSuchMethodException | SecurityException e) {
-			throw new IllegalArgumentException("The given handler of type "+restHandler.getClass()+" has no " + implMethodName + "(Context) method", e);
-		}
+        try {
+            Method method = restHandler.getClass().getMethod(implMethodName, Context.class);
+            return OpenApiBuilder.moveDocumentationFromAnnotationToHandler(method, javalinHandler);
+        } catch (NoSuchMethodException | SecurityException e) {
+            throw new IllegalArgumentException("The given handler of type "+restHandler.getClass()+" has no " + implMethodName + "(Context) method", e);
+	    }
     }
     
     private void registerRestOperations(){
