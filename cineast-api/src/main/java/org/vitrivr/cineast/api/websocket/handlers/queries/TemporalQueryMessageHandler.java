@@ -35,7 +35,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-
+    qconf.setMaxResults(max);
+    final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
+    qconf.setResultsPerModule(resultsPerModule);
 
     /* We iterate over all components independently, because they have a temporal context.*/
     for (int containerIdx = 0; containerIdx < message.queries.size(); containerIdx++) {

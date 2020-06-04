@@ -85,7 +85,9 @@ public class ReadableQueryConfig {
         this.distance = qc.distance;
         this.distanceWeights = qc.distanceWeights;
         this.norm = qc.norm;
+        this.correspondence = qc.correspondence;
         this.resultsPerModule = qc.resultsPerModule;
+        this.maxResults = qc.maxResults;
         this.hints.addAll(qc.hints);
         this.relevantSegmentIds.addAll(qc.relevantSegmentIds);
     }
@@ -94,8 +96,18 @@ public class ReadableQueryConfig {
         return this.queryId;
     }
 
+    /**
+     * Will always be above 0; returns {@link #DEFAULT_RESULTS_PER_MODULE} if no value was set at creation
+     */
     public int getResultsPerModule() {
         return this.resultsPerModule > 0 ? this.resultsPerModule : DEFAULT_RESULTS_PER_MODULE;
+    }
+
+    /**
+     * Returns the actual underlying value of {@link #resultsPerModule}, might be below 0
+     */
+    public int getRawResultsPerModule(){
+        return this.resultsPerModule;
     }
 
     public Optional<Integer> getMaxResults() {
