@@ -71,6 +71,27 @@
       ],
       "objectInstances": [
         {"feature":  "ObjectInstances", "weight":  1.0}
+      ],
+      "generic": [
+        {
+          "feature": "ConventionalTableRetriever", "weight": 1.0,
+          "properties": {
+            "entity.name": "features_table_lsc20meta",
+            "minute_id": "STRING",
+            "utc_time": "STRING",
+            "local_time": "STRING",
+            "timezone": "STRING",
+            "lat": "STRING",
+            "lon": "STRING",
+            "semantic_name": "STRING",
+            "elevation": "STRING",
+            "speed": "STRING",
+            "heart": "STRING",
+            "calories": "STRING",
+            "activity_type": "STRING",
+            "steps": "STRING"
+          }
+        }
       ]
     }
   },
