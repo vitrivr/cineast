@@ -77,6 +77,8 @@
           "feature": "ConventionalTableRetriever", "weight": 1.0,
           "properties": {
             "entity.name": "features_table_lsc20meta",
+            "segmentid": "STRING",
+            "idx.segmentid": "HASH",
             "minute_id": "STRING",
             "utc_time": "STRING",
             "local_time": "STRING",
@@ -89,7 +91,22 @@
             "heart": "STRING",
             "calories": "STRING",
             "activity_type": "STRING",
-            "steps": "STRING"
+            "steps": "STRING",
+            "p_utc_standard": "STRING",
+            "p_local_standard": "STRING",
+            "p_day_of_week": "STRING",
+            "p_phase_of_day": "STRING",
+            "p_year": "STRING",
+            "p_month": "STRING"
+          }
+        }
+      ],
+      "boolean": [
+        {
+          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "properties": {
+            "entity": "features_table_lsc20meta",
+            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month"
           }
         }
       ]
