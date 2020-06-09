@@ -139,7 +139,11 @@ public class LSCUtilities {
     }
 
     public static String cleanImagePath(String path) {
-        return path.substring("DATASETS/LSC2020/".length() + 1);
+        if(path.startsWith("DATASETS/LSC2020/")){
+            return path.substring("DATASETS/LSC2020/".length() + 1);
+        }else{
+            return path;
+        }
     }
 
     /**
@@ -163,6 +167,31 @@ public class LSCUtilities {
     public static ZonedDateTime convertLocal(String lscFormat, String zone) {
         final long epochSec = convert(lscFormat, false, zone);
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSec), ZoneId.of(zone)); // Zone is parseable, otherwise not reached here
+    }
+
+    public static String extractPhaseOfDay(ZonedDateTime dateTime){
+        final int hour = dateTime.getHour();
+        String tag;
+        if(hour > 7 && hour < 11){
+            tag = "MORNING";
+        }else if(hour >= 11 && hour < 14){
+            tag = "NOON";
+        }else if(hour >= 14 && hour < 17){
+            tag = "AFTERNOON";
+        }else if(hour >=17 && hour < 22){
+            tag = "EVENING";
+        }else{
+            tag = "NIGHT";
+        }
+        return tag;
+    }
+
+    public static String extractYear(LocalDateTime time){
+        return String.valueOf(time.getYear());
+    }
+
+    public static String extractMonth(LocalDateTime time){
+        return time.getMonth().name();
     }
 
     private static String getLscFormat(boolean utc) {

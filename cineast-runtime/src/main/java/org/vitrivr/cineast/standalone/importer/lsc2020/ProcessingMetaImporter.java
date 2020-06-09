@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -37,37 +38,64 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         path = LSCUtilities.cleanImagePath(path);
         path = LSCUtilities.pathToSegmentId(path);
         List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
-        for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
-            if (items[i].equalsIgnoreCase("null")) {
-                continue;
-            }
-            Optional<Map<String, PrimitiveTypeProvider>> data = parse(path, items, i);
-            if (!data.isPresent()) {
-                continue;
-            } else {
-                list.add(data.get());
-            }
+        switch(this.type){
+            case TAG:
+            case TAG_LOOKUP:
+                for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
+                    if (items[i].equalsIgnoreCase("null")) {
+                        continue;
+                    }
+                    Optional<Map<String, PrimitiveTypeProvider>> data = parse(path, items, i);
+                    if (!data.isPresent()) {
+                        continue;
+                    } else {
+                        list.add(data.get());
+                    }
+                }
+                break;
+            case META_AS_TABLE:
+                list.add(parseAsMeta(path, items));
+                break;
         }
         return Optional.of(list);
     }
 
-    private Optional<Map<String, PrimitiveTypeProvider>> parse(String path, String[] items, int index) {
+    private Map<String, PrimitiveTypeProvider> parseAsMeta(String segmentId, String[] items) {
+        final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(items.length + 7);
+
+        map.put("segmentid", PrimitiveTypeProvider.fromObject(segmentId));
+        for (int i=0; i<items.length;i++){
+            map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(items[i]));
+        }
+        final LocalDateTime utc = LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]);
+        final ZonedDateTime local = LSCUtilities.convertLocal(items[LSCUtilities.META_LOCAL_COL], items[LSCUtilities.META_TIMEZONE_COL]);
+        map.put("p_utc_standard", PrimitiveTypeProvider.fromObject(utc));
+        map.put("p_local_standard", PrimitiveTypeProvider.fromObject(local));
+        map.put("p_day_of_week", PrimitiveTypeProvider.fromObject(utc.getDayOfWeek().toString()));
+        map.put("p_phase_of_day", PrimitiveTypeProvider.fromObject(LSCUtilities.extractPhaseOfDay(local)));
+        map.put("p_month", PrimitiveTypeProvider.fromObject(LSCUtilities.extractMonth(utc)));
+        map.put("p_year", PrimitiveTypeProvider.fromObject(LSCUtilities.extractYear(utc)));
+
+        return map;
+    }
+
+    private Optional<Map<String, PrimitiveTypeProvider>> parse(String segmentid, String[] items, int index) {
         // TODO more types
         switch (this.type) {
             case TAG:
-                return parseTag(path, items, index);
+                return parseTag(segmentid, items, index);
             case TAG_LOOKUP:
-                return parseTagForLookup(path, items, index);
+                return parseTagForLookup(segmentid, items, index);
             default:
                 return Optional.empty();
         }
     }
 
-    private Optional<Map<String, PrimitiveTypeProvider>> parseTag(String path, String[] items, int index) {
+    private Optional<Map<String, PrimitiveTypeProvider>> parseTag(String segmentid, String[] items, int index) {
         if (TAG_CANDIDATES.contains(index)) {
             final String tag = metaAsTag(items, index);
             final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
-            map.put("id", PrimitiveTypeProvider.fromObject(path));
+            map.put("id", PrimitiveTypeProvider.fromObject(segmentid));
             map.put("tagid", PrimitiveTypeProvider.fromObject(tag));
             map.put("score", PrimitiveTypeProvider.fromObject(1));
             return Optional.of(map);
@@ -80,7 +108,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
      * Must only be called with index values for valid tags
      * tags: id === name, description is empty (no tag expansion done)
      */
-    private Optional<Map<String, PrimitiveTypeProvider>> parseTagForLookup(String path, String[] items, int index) {
+    private Optional<Map<String, PrimitiveTypeProvider>> parseTagForLookup(String segmentid, String[] items, int index) {
         if (TAG_CANDIDATES.contains(index)) {
             final String tag = metaAsTag(items, index);
             final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
@@ -104,19 +132,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
             tag = LSCUtilities.convertUtc(items[index]).getDayOfWeek().toString();
         }else if(index == LSCUtilities.META_LOCAL_COL) {
             String zone = items[LSCUtilities.META_TIMEZONE_COL];
-            final ZonedDateTime dateTime = LSCUtilities.convertLocal(items[index], zone);
-            final int hour = dateTime.getHour();
-            if(hour > 7 && hour < 11){
-                tag = "MORNING";
-            }else if(hour >= 11 && hour < 14){
-                tag = "NOON";
-            }else if(hour >= 14 && hour < 17){
-                tag = "AFTERNOON";
-            }else if(hour >=17 && hour < 22){
-                tag = "EVENING";
-            }else{
-                tag = "NIGHT";
-            }
+            tag = LSCUtilities.extractPhaseOfDay(LSCUtilities.convertLocal(items[index], zone));
         }else{
             tag = items[index];
         }
@@ -178,8 +194,12 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         /**
          * Tags for tag lookup (i.e. autocomplete in vitrivr-ng
          */
-        TAG_LOOKUP
-//        ,        META_PROCESSED_TIME
+        TAG_LOOKUP,
+        /**
+         * Meta as is and certain processed metadata in a conventional table.
+         * Requires the table to be created as {@link org.vitrivr.cineast.core.features.ConventionalTableRetriever} in the config
+         */
+        META_AS_TABLE
     }
 
 

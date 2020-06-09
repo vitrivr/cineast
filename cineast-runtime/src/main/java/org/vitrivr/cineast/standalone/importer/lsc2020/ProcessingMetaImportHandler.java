@@ -13,6 +13,7 @@ import java.nio.file.Path;
 public class ProcessingMetaImportHandler extends DataImportHandler {
 
     private static final Logger LOGGER = LogManager.getLogger();
+    private final boolean metaAsTable;
 
     /**
      * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
@@ -20,20 +21,25 @@ public class ProcessingMetaImportHandler extends DataImportHandler {
      * @param threads   Number of threads to use for data import.
      * @param batchsize Size of data batches that are sent to the persistence layer.
      */
-    public ProcessingMetaImportHandler(int threads, int batchsize) {
+    public ProcessingMetaImportHandler(int threads, int batchsize, boolean metaAsTable) {
         super(threads, batchsize);
+        this.metaAsTable = metaAsTable;
     }
 
     @Override
     public void doImport(Path path) {
-        LOGGER.info("Starting meta as tag import for tags in {}", path);
+        LOGGER.info("Starting "+(metaAsTable ? "meta-as-table" : "meta-as-tag")+" import in {}", path);
         try {
             LSCUtilities.create(path);
         } catch (IOException | CsvException e) {
             LOGGER.error("Cannot do import as initialization failed.", e);
             return;
         }
-        this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG_LOOKUP), TagReader.TAG_ENTITY_NAME, "lsc-metaAsTagsLookup")));
-        this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "lsc-metaAsTags")));
+        if (metaAsTable) {
+            this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.META_AS_TABLE), "features_table_lsc20meta", "lsc-metaAsTable")));
+        } else {
+            this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG_LOOKUP), TagReader.TAG_ENTITY_NAME, "lsc-metaAsTagsLookup")));
+            this.futures.add(this.service.submit(new DataImportRunner(new ProcessingMetaImporter(path, ProcessingMetaImporter.Type.TAG), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "lsc-metaAsTags")));
+        }
     }
 }
