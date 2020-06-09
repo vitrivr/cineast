@@ -90,15 +90,16 @@ public abstract class BooleanRetriever implements Retriever {
     }
 
     for (BooleanExpression be: expressions){
+
       List<Map<String, PrimitiveTypeProvider>> rows = selector
-          .getRows(be.getAttribute(), be.getOperator(), be.getValues().stream().map(
+          .getRows(be.getAttribute().substring(this.entity.length()+1), be.getOperator(), be.getValues().stream().map(
               PrimitiveTypeProvider::getString).collect(Collectors.toList()));
 
       if(rows.isEmpty()){
         return Collections.emptyList();
       }
-
-      Set<String> ids = rows.stream().map(x -> x.get("id").getString())
+// TODO consistent fix for segmentid
+      Set<String> ids = rows.stream().map(x -> x.get("segmentid").getString())
           .collect(Collectors.toSet());
 
       Map<String, PrimitiveTypeProvider> firstRow = rows.get(0);

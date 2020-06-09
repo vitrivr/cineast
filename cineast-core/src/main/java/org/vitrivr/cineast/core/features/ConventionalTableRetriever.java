@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.db.cottontaildb.CottontailSelector;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -35,13 +36,36 @@ import java.util.function.Supplier;
  *  <li>{@link org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType#TEXT},</li>
  *  <li>{@link org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType#BOOLEAN}</li>
  * </ul>
+ * <h3>Index Request</h3>
+ * Special entries for index requests exist.
+ * I.e. entires in {@code properties} with a key in format {@linkplain ConventionalTableRetriever#IDX_PREFIX}{@code COLNAME}
+ * request an index for that column. Supported are these indices:
+ * <ul>
+ *     <li>{@link org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType#HASH}</li>
+ *     <li>{@link org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType#HASH_UQ}</li>
+ * </ul>
  *
+ * <h2>Example</h2>
+ * See this example for a conventional table configured in the cineast config json:
+ * <pre>
+ *     {
+ *       "feature": "ConventionalTableRetriever",
+ *       "weight": 1.0,
+ *       "properties": {
+ *         "entity.name": "features_table_lsc20meta",
+ *         "id": "STRING",
+ *         "idx.id": "HASH_UQ",
+ *         "name": "STRING",
+ *         "value": "INT"
+ *     }
+ * </pre>
  *
  * </p>
  */
 public class ConventionalTableRetriever implements Retriever {
 
     public static final String ENTITY_NAME_PROPERTY = "entity.name";
+    public static final String IDX_PREFIX = "idx.";
 
     private static final Logger LOGGER = LogManager.getLogger(ConventionalTableRetriever.class);
     private final String entity;
@@ -49,10 +73,10 @@ public class ConventionalTableRetriever implements Retriever {
     private DBSelector selector;
 
     /**
-     * @param properties
+     * Properties has to be a {@link LinkedHashMap}, since deserialization from the config results in a linkedhashmap
      */
     public ConventionalTableRetriever(LinkedHashMap<String, String> properties) {
-        if(properties.isEmpty() || properties.size() < 2){
+        if (properties.isEmpty() || properties.size() < 2) {
             throw new IllegalArgumentException("Properties are empty. Cannot create an empty table");
         }
         if (!properties.containsKey(ENTITY_NAME_PROPERTY)) {
@@ -62,6 +86,22 @@ public class ConventionalTableRetriever implements Retriever {
         /* Remove name for table init*/
         properties.remove(ENTITY_NAME_PROPERTY);
         this.properties.putAll(properties);
+    }
+
+    private static AttributeDefinition.AttributeType parseType(String name) {
+        AttributeDefinition.AttributeType type = AttributeDefinition.AttributeType.valueOf(name);
+        switch (type) {
+            case LONG:
+            case INT:
+            case FLOAT:
+            case DOUBLE:
+            case STRING:
+            case TEXT:
+            case BOOLEAN:
+                return type;
+            default:
+                throw new IllegalArgumentException("The given column type " + name + " could not be parsed as valid");
+        }
     }
 
     @Override
@@ -75,12 +115,12 @@ public class ConventionalTableRetriever implements Retriever {
 
     @Override
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        return null;
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-        return null;
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
@@ -95,11 +135,21 @@ public class ConventionalTableRetriever implements Retriever {
         }
         CottontailEntityCreator ec = (CottontailEntityCreator) supply.get();
         ArrayList<AttributeDefinition> colDefs = new ArrayList<>();
-        this.properties.forEach((key, value) -> colDefs.add(new AttributeDefinition(key, parseType(value))));
+        this.properties.entrySet().stream().filter(entry -> !entry.getKey().startsWith(IDX_PREFIX)).forEach((entry) -> colDefs.add(new AttributeDefinition(entry.getKey(), parseType(entry.getValue()))));
         boolean result = ec.createEntity(this.entity, colDefs.toArray(new AttributeDefinition[0]));
-        LOGGER.info((result ? "Successfully ":"Failed to ")+"created entity "+entity);
-        if(!result){
+        this.properties.entrySet().stream().filter(entry -> entry.getKey().startsWith(IDX_PREFIX)).forEach(entry -> ec.createIndex(this.entity, entry.getKey().substring(IDX_PREFIX.length()), parseIndex(entry.getValue())));
+        LOGGER.info((result ? "Successfully " : "Failed to ") + "created entity " + entity);
+        if (!result) {
             throw new RuntimeException("Could not create the entity. Something went really wrong!");
+        }
+    }
+
+    private static CottontailGrpc.Index.IndexType parseIndex(String value) {
+        final CottontailGrpc.Index.IndexType idx = CottontailGrpc.Index.IndexType.valueOf(value);
+        if(idx == CottontailGrpc.Index.IndexType.HASH || idx == CottontailGrpc.Index.IndexType.HASH_UQ){
+            return idx;
+        }else{
+            throw new IllegalArgumentException("Cannot parse index type "+value);
         }
     }
 
@@ -114,21 +164,5 @@ public class ConventionalTableRetriever implements Retriever {
     @Override
     public List<String> getTableNames() {
         return Collections.singletonList(entity);
-    }
-
-    private static AttributeDefinition.AttributeType parseType(String name){
-        AttributeDefinition.AttributeType type = AttributeDefinition.AttributeType.valueOf(name);
-        switch(type){
-            case LONG:
-            case INT:
-            case FLOAT:
-            case DOUBLE:
-            case STRING:
-            case TEXT:
-            case BOOLEAN:
-                return type;
-            default:
-                throw new IllegalArgumentException("The given column type "+name+" could not be parsed as valid");
-        }
     }
 }
