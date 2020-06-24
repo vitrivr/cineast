@@ -12,14 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LSCUtilities {
 
-
+    public static final String LSC_REPORT_VALID_FILNE_NAME = "report-valid.txt";
     public static final String METADATA_FILE_NAME = "lsc2020-metadata.csv";
     public static final String CONCEPTS_FILE_NAME = "lsc2020-visual-concepts.csv";
     public static final String META_NO_PATH_FILE = "meta-no-path.txt";
@@ -77,22 +74,46 @@ public class LSCUtilities {
     public static final String DATETIME_DOMAIN = "TIME";
     public static final String LSC_UTC_PREFIX = "UTC_";
     public static final String LSC_FORMAT = "yyyy-MM-dd_hh:mm";
+
+    public static final String PROCESSED_META_UTC = "p_utc_standard";
+    public static final String PROCESSED_META_LOCAL = "p_local_standard";
+    public static final String PROCESSED_META_DATETIME = "p_datetime"; // based on filename, utc
+    public static final String PROCESSED_META_DAY_OF_WEEK = "p_day_of_week";
+    public static final String PROCESSED_META_PHASE_OF_DAY = "p_phase_of_day";
+    public static final String PROCESSED_META_HOUR_OF_DAY = "p_hour";
+    public static final String PROCESSED_META_MONTH = "p_month";
+    public static final String PROCESSED_META_YEAR = "p_year";
+    public static final String PROCESSED_META_DAY = "p_day";
+
+
     private static final Logger LOGGER = LogManager.getLogger(LSCUtilities.class);
+
+
+
     private static LSCUtilities instance = null;
     private final Path root;
     private List<String[]> headerlessMetaContents;
-    private HashMap<String, String> minuteIdPathMap = new HashMap<>();
+
+    @Deprecated private HashMap<String, String> minuteIdPathMap = new HashMap<>();
+
+    private HashMap<String, String> filenameToMinuteIdMap = new HashMap<>();
+    private HashMap<String, String[]> metaPerMinute = new HashMap<>();
 
     private LSCUtilities(final Path root) throws IOException, CsvException {
         this.root = root;
-        this.initLookup(minuteIdPathMap, root);
-        headerlessMetaContents = readFile(root);
+        // this.initLookup(minuteIdPathMap, root);
+        LOGGER.info("Initialising lookup...");
+        this.initMap(this.readListOfFiles(root));
+        LOGGER.info("Initialisation done.");
+        // headerlessMetaContents = readFile(root);
     }
 
     public static LSCUtilities create(final Path root) throws IOException, CsvException {
         if (instance == null) {
             instance = new LSCUtilities(root);
-        } else {
+        } else if(!root.equals(instance.root)) {
+            return instance;
+        }else {
             LOGGER.warn("Instance already created with path {}. Returning this one", instance.root);
         }
         return instance;
@@ -139,12 +160,57 @@ public class LSCUtilities {
     }
 
     public static String cleanImagePath(String path) {
-        if(path.startsWith("DATASETS/LSC2020/")){
+        if (path.startsWith("DATASETS/LSC2020/")) {
             return path.substring("DATASETS/LSC2020/".length() + 1);
-        }else{
+        } else {
             return path;
         }
     }
+
+    /**
+     * Two potential naming formats:<br>
+     * Simple Format: {@code YYYMMDD_HHMMSS_000.ext} and <br>
+     * Extended Format: {@code prefix001_prefix_YYYMMDD_HHMMSS*.ext}
+     * Extension is jpg
+     * <p>
+     * Example of Simple: {@code 20160914_192303_000.jpg}<br>
+     * Example of Extended: {@code B00006542_21I6X0_20180505_140053E.JPG}
+     *
+     * </p>
+     */
+    public static Optional<String> filenameToMinuteId(String filename) {
+        String[] parts = filename.split("_");
+        switch (parts.length) {
+            case 3: // simple
+                return Optional.of(filename.substring(0, filename.lastIndexOf("_") - 2));
+            case 4: // Extended
+                String date = parts[2];
+                String time = parts[3];
+                return Optional.of(date + "_" + time.substring(0, 4));
+            default:
+                return Optional.empty();
+        }
+    }
+
+    /**
+     * Removes all but after the last "/"
+     *
+     * @param path
+     * @return
+     */
+    public static String sanitizeFilename(String path) {
+        int i = path.lastIndexOf("/");
+        if (i > 0) {
+            return path.substring(i + 1);
+        } else {
+            return path;
+        }
+    }
+
+    public static String sanitizeFilename(Path path) {
+        return sanitizeFilename(path.toString());
+    }
+
 
     /**
      * Converts a lscUtcTime format {@code UTC_yyyy-MM-dd_hh:mm} datetime to a {@link LocalDateTime}
@@ -169,29 +235,37 @@ public class LSCUtilities {
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSec), ZoneId.of(zone)); // Zone is parseable, otherwise not reached here
     }
 
-    public static String extractPhaseOfDay(ZonedDateTime dateTime){
+    public static String extractPhaseOfDay(ZonedDateTime dateTime) {
         final int hour = dateTime.getHour();
         String tag;
-        if(hour > 7 && hour < 11){
+        if (hour > 7 && hour < 11) {
             tag = "MORNING";
-        }else if(hour >= 11 && hour < 14){
+        } else if (hour >= 11 && hour < 14) {
             tag = "NOON";
-        }else if(hour >= 14 && hour < 17){
+        } else if (hour >= 14 && hour < 17) {
             tag = "AFTERNOON";
-        }else if(hour >=17 && hour < 22){
+        } else if (hour >= 17 && hour < 22) {
             tag = "EVENING";
-        }else{
+        } else {
             tag = "NIGHT";
         }
         return tag;
     }
 
-    public static String extractYear(LocalDateTime time){
+    public static String extractYear(LocalDateTime time) {
         return String.valueOf(time.getYear());
     }
 
-    public static String extractMonth(LocalDateTime time){
+    public static String extractDay(LocalDateTime time){
+        return String.valueOf(time.getDayOfMonth());
+    }
+
+    public static String extractMonth(LocalDateTime time) {
         return time.getMonth().name();
+    }
+
+    public static String extractHour(LocalDateTime utc) {
+        return String.valueOf(utc.getHour());
     }
 
     private static String getLscFormat(boolean utc) {
@@ -247,62 +321,29 @@ public class LSCUtilities {
     }
 
     /**
-     * Testing only
-     *
-     * @param args
+     * Parses a minuteId {@code YYYYMMDD_HH:mm} to a {@link LocalDateTime}.
+     * The result is to be treated as UTC timestamp
      */
-    public static void main(String[] args) {
-        /*
-        // TODO move to unit test
-        // From lsc metadata except weekday, that's from wolframalpha
-        // UTC_2015-03-20_07:30,2015-03-20_15:30,Asia/Shanghai FRI
-        // UTC_2016-08-23_16:38,2016-08-23_17:38,Europe/Dublin TUE
-        // UTC_2018-05-10_22:36,2018-05-10_23:36,Europe/Dublin THUR
-        String date1 = "UTC_2015-03-20_07:30";
-        String local1 = "2015-03-20_15:30";
-        String zone1 = "Asia/Shanghai";
-        LocalDateTime d1 = LocalDateTime.of(2015, 3, 20, 7, 30);
-        ZonedDateTime z1 = ZonedDateTime.of(2015, 3, 20, 15, 30, 0, 0, ZoneId.of(zone1));
-        LocalDateTime p1 = convertUtc(date1);
-        ZonedDateTime c1 = convertLocal(local1, zone1);
-
-        String date2 = "UTC_2016-08-23_16:38";
-        String local2 = "2016-08-23_17:38";
-        String zone2 = "Europe/Dublin";
-        LocalDateTime d2 = LocalDateTime.of(2016, 8, 23, 16, 38);
-        ZonedDateTime z2 = ZonedDateTime.of(2016, 8, 23, 17, 38, 0, 0, ZoneId.of(zone2));
-        LocalDateTime p2 = convertUtc(date2);
-        ZonedDateTime c2 = convertLocal(local2, zone2);
-
-        if (!d1.equals(p1)) {
-            System.out.println("D1: not equal");
+    public static LocalDateTime fromMinuteId(String minuteId) {
+        // YYYYMMDD_HHMM
+        // 0123456789012
+        try {
+            final int year = Integer.parseInt(minuteId.substring(0, 4));
+            final int month = Integer.parseInt(minuteId.substring(4, 6));
+            final int day = Integer.parseInt(minuteId.substring(6, 8));
+            final int hour = Integer.parseInt(minuteId.substring(9, 11));
+            final int minute = Integer.parseInt(minuteId.substring(11));
+            return LocalDateTime.of(year, month, day, hour, minute);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Cannot parse due to invalid number format in minuteId");
         }
-        if (!z1.equals(c1)) {
-            System.out.println("Z1: not equal");
-        }
-
-        if (!d2.equals(p2)) {
-            System.out.println("D2: not equal");
-        }
-        if (!z2.equals(c2)) {
-            System.out.println("Z2: not equal");
-        }
+    }
 
 
-        System.out.println("---");
-        System.out.println("d1: " + d1 + " " + d1.getDayOfWeek());
-        System.out.println("p1: " + p1);
-        System.out.println("z1: " + d1);
-        System.out.println("c1: " + p1);
-        System.out.println("---");
-
-        System.out.println("---");
-        System.out.println("d2: " + d2 + " " + d2.getDayOfWeek());
-        System.out.println("p2: " + p2);
-        System.out.println("z2: " + d2);
-        System.out.println("c2: " + p2);
-        System.out.println("---");
-        */
+    private void readMetadata() throws IOException, CsvException {
+        LOGGER.info("Reading metadata file...");
+        headerlessMetaContents = readFile(root);
+        LOGGER.info("Read metadata file");
     }
 
     private void initLookup(HashMap<String, String> minuteIdPathMap, Path root) throws IOException {
@@ -324,6 +365,35 @@ public class LSCUtilities {
         LOGGER.info("Successfully initialised the lookup with {} entries in {}ms", minuteIdPathMap.size(), time);
     }
 
+    private List<String[]> readListOfFiles(Path root) throws IOException, CsvException {
+        Path file = root.resolve(LSC_REPORT_VALID_FILNE_NAME);
+        CSVReader csv = new CSVReader(Files.newBufferedReader(file, StandardCharsets.UTF_8));
+        List<String[]> lookupContents = csv.readAll();
+        lookupContents.remove(0); // Remove header
+        return lookupContents;
+    }
+
+    private void initMap(List<String[]> listOfFiles){
+        listOfFiles.stream().forEach(s ->{
+            final String sanitizeFilename = sanitizeFilename(s[0]);
+            final Optional<String> minuteId = filenameToMinuteId(sanitizeFilename);
+            minuteId.ifPresent(value -> filenameToMinuteIdMap.put(sanitizeFilename, value));
+        });
+    }
+
+    public void initMetadata() throws IOException, CsvException {
+        LOGGER.info("Initialising metadata lookup...");
+        readMetadata();
+        initMetaPerMinuteId();
+        LOGGER.info("Initialised metadata lookup.");
+    }
+
+    private void initMetaPerMinuteId(){
+        headerlessMetaContents.stream().forEach(items ->{
+            metaPerMinute.put(items[META_MIN_COL], items);
+        });
+    }
+
     private List<String[]> readFile(Path root) throws IOException, CsvException {
         Path file = root.resolve(METADATA_FILE_NAME);
 
@@ -338,8 +408,17 @@ public class LSCUtilities {
      *
      * @return
      */
+    @Deprecated
     public List<String[]> getHeaderlessMetaContents() {
         return Collections.unmodifiableList(headerlessMetaContents);
+    }
+
+    public Map<String, String[]> getMetaPerMinuteId(){
+        return Collections.unmodifiableMap(metaPerMinute);
+    }
+
+    public Map<String,String> getFilenameToMinuteIdLookUp(){
+        return Collections.unmodifiableMap(filenameToMinuteIdMap);
     }
 
     /**
@@ -347,6 +426,7 @@ public class LSCUtilities {
      *
      * @return
      */
+    @Deprecated
     public Map<String, String> getMinuteIdPathMap() {
         return Collections.unmodifiableMap(minuteIdPathMap);
     }

@@ -75,6 +75,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         map.put("p_phase_of_day", PrimitiveTypeProvider.fromObject(LSCUtilities.extractPhaseOfDay(local)));
         map.put("p_month", PrimitiveTypeProvider.fromObject(LSCUtilities.extractMonth(utc)));
         map.put("p_year", PrimitiveTypeProvider.fromObject(LSCUtilities.extractYear(utc)));
+        map.put("p_hour", PrimitiveTypeProvider.fromObject(LSCUtilities.extractHour(utc)));
 
         return map;
     }

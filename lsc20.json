@@ -97,7 +97,9 @@
             "p_day_of_week": "STRING",
             "p_phase_of_day": "STRING",
             "p_year": "STRING",
-            "p_month": "STRING"
+            "p_month": "STRING",
+            "p_hour": "STRING",
+            "p_datetime": "STRING"
           }
         }
       ],
