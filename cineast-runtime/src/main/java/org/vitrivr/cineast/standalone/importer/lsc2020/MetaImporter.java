@@ -51,10 +51,10 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         final LocalDateTime dt = LSCUtilities.fromMinuteId(minuteId);
         list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DATETIME, dt.toString()));
         list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY_OF_WEEK, String.valueOf(dt.getDayOfWeek())));
-        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY_OF_WEEK, LSCUtilities.extractMonth(dt)));
-        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY_OF_WEEK, LSCUtilities.extractDay(dt)));
-        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY_OF_WEEK, LSCUtilities.extractYear(dt)));
-        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY_OF_WEEK, LSCUtilities.extractHour(dt)));
+        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_MONTH, LSCUtilities.extractMonth(dt)));
+        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY, LSCUtilities.extractDay(dt)));
+        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_YEAR, LSCUtilities.extractYear(dt)));
+        list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_HOUR_OF_DAY, LSCUtilities.extractHour(dt)));
         if(StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")){
             list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_UTC, LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]).toString()));
         }
