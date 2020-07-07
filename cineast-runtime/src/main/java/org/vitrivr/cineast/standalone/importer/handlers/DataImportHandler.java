@@ -28,7 +28,30 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc;
  */
 public abstract class DataImportHandler {
 
-
+    protected static void cleanOnDemand(String entityName, String taskName){
+        final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        /* Beware, this drops the table */
+        CottontailGrpc.EntityDefinition entityDefinition = null;
+        CottontailWrapper cottontail = null;
+        if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+            LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
+        }else{
+            LOGGER.info("Storing entity ({}) details for re-setup", entityName);
+            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
+            entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(entityName));
+        }
+        LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
+        ec.dropEntity(entityName);
+        LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
+        if(entityDefinition == null){
+            LOGGER.warn("Calling command: setup -- This may take a while");
+            DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
+            setupCmd.doSetup();
+        }else{
+            cottontail.createEntityBlocking(entityDefinition);
+            LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
+        }
+    }
     /**
      * This inner class implements the runnable that actually executes the copy operation.
      */
@@ -68,35 +91,12 @@ public abstract class DataImportHandler {
             this.importer = importer;
             this.taskName = taskName;
             this.clean = clean;
-            cleanOnDemand();
-        }
-
-        private void cleanOnDemand(){
-            final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
-            /* Beware, this drops the table */
-            if (clean) {
-                CottontailGrpc.EntityDefinition entityDefinition = null;
-                CottontailWrapper cottontail = null;
-                if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
-                    LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
-                }else{
-                    LOGGER.info("Storing entity ({}) details for re-setup", this.entityName);
-                    cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
-                    entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(this.entityName));
-                }
-                LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
-                ec.dropEntity(this.entityName);
-                LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
-                if(entityDefinition == null){
-                    LOGGER.warn("Calling command: setup -- This may take a while");
-                    DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
-                    setupCmd.doSetup();
-                }else{
-                    cottontail.createEntityBlocking(entityDefinition);
-                    LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
-                }
+            if(clean){
+                cleanOnDemand(this.entityName, this.taskName);
             }
         }
+
+
 
         /**
          * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}.

@@ -3,10 +3,7 @@ package org.vitrivr.cineast.standalone.cli;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
-import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.VisaulConceptTagImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.*;
 import org.vitrivr.cineast.standalone.importer.vbs2019.*;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
@@ -112,6 +109,9 @@ public class ImportCommand implements Runnable {
             case LSCTABLE:
                 handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, true);
                 break;
+            case LSC20TAGS:
+                handler = new LSCAllTagsImportHandler(this.threads,this.batchsize, clean);
+                break;
         }
         if (!isGoogleVision) {
             if (handler == null) {
@@ -143,6 +143,6 @@ public class ImportCommand implements Runnable {
      * Enum of the available types of data imports.
      */
     private enum ImportType {
-        PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE
+        PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS
     }
 }
