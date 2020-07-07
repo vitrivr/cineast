@@ -69,7 +69,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         return Optional.of(list);
     }
 
-    private HashMap<String, PrimitiveTypeProvider> meta(String filename, String domain, String name, String value){
+    static HashMap<String, PrimitiveTypeProvider> meta(String filename, String domain, String name, String value){
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
         // "id"
         map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(filename)));

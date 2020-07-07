@@ -31,6 +31,7 @@ public class ProcessingMetaImportHandler extends DataImportHandler {
         LOGGER.info("Starting "+(metaAsTable ? "meta-as-table" : "meta-as-tag")+" import in {}", path);
         try {
             LSCUtilities.create(path);
+            LSCUtilities.getInstance().initMetadata();
         } catch (IOException | CsvException e) {
             LOGGER.error("Cannot do import as initialization failed.", e);
             return;
