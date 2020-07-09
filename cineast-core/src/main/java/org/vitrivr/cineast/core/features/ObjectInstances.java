@@ -11,10 +11,11 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 public class ObjectInstances extends AbstractFeatureModule {
 
   public static final String TABLE_NAME = "features_ObjectInstances";
+  public static final int VECTOR_LENGTH = 512;
 
   public ObjectInstances() {
     super(TABLE_NAME, 1000f, //TODO figure out proper value
-        1280);
+        VECTOR_LENGTH);
   }
 
   @Override

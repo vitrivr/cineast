@@ -30,7 +30,7 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
   @Override
   public String toString() {
     return "MetadataDomainFilter{" +
-            "keywords=" + Arrays.toString(keywords) +
+            "keywords=" + Arrays.toString(keywords.toArray()) +
             '}';
   }
 }

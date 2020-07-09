@@ -26,7 +26,7 @@ import java.nio.file.StandardOpenOption;
  * representation gets garbage collected.
  *
  * @author Ralph Gasser
- * @version 1.0
+ * @version 1.1
  *
  * @see ByteData
  * @see CacheableData
@@ -40,7 +40,7 @@ public class CachedByteData implements ByteData {
     private final CachedDataFactory factory;
 
     /** The file that backs this {@link CachedByteData} object. */
-    protected final Path file;
+    protected final Path path;
 
     /** Size of the {@link CachedByteData}. Because the reference to the underlying data is volatile, this value is stored separately. */
     protected final int size;
@@ -60,7 +60,7 @@ public class CachedByteData implements ByteData {
         /* Write data to cache file. */
         try (final OutputStream stream = Files.newOutputStream(file,StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)){
             stream.write(data);
-            this.file = file;
+            this.path = file;
             this.size = data.length;
             this.data = new SoftReference<>(ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             this.factory = factory;
@@ -79,6 +79,15 @@ public class CachedByteData implements ByteData {
     @Override
     public synchronized int size() {
         return this.size;
+    }
+
+    /**
+     * Getter for {@link Path} to cache file.
+     *
+     * @return {@link Path} to cache file.
+     */
+    public Path getPath() {
+        return this.path;
     }
 
     /**
@@ -139,14 +148,14 @@ public class CachedByteData implements ByteData {
     protected ByteBuffer resurrect() {
         try {
             /* Allocate a new Buffer according to the size of the CachedByteData object. */
-            final byte[] data = Files.readAllBytes(this.file);
+            final byte[] data = Files.readAllBytes(this.path);
             final ByteBuffer buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
             this.data = new SoftReference<>(buffer);
 
             /* Return true.*/
             return buffer;
         } catch (IOException e) {
-            LOGGER.error("Failed to read data from cache at {} due to an exception. The data contained in {} is lost!", this.file, this.toString());
+            LOGGER.error("Failed to read data from cache at {} due to an exception. The data contained in {} is lost!", this.path, this.toString());
             LOGGER.error(e);
             return ByteBuffer.wrap(new byte[0]).order(ByteOrder.LITTLE_ENDIAN);
         }

@@ -28,7 +28,7 @@ public class Main {
     }
 
     /* Start Cineast API endpoint. */
-    APIEndpoint.start();
+    APIEndpoint.getInstance().start();
     GRPCEndpoint.start();
 
     /* Initalize Monitoring */

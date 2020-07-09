@@ -1,31 +1,37 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import io.javalin.http.Context;
+import io.javalin.plugin.openapi.annotations.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
-import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
-import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
 import org.vitrivr.cineast.api.messages.session.SessionState;
-
-import java.util.Map;
+import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
 
 /**
  * @author silvan on 23.01.18.
  */
-public class StartExtractionHandler extends ParsingActionHandler<AnyMessage> {
+public class StartExtractionHandler implements PostRestHandler<SessionState> {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  public static final String ROUTE = "session/extract/start";
+  
+  
+  @OpenApi(
+      summary = "Start extraction session",
+      path = ROUTE, method = HttpMethod.POST,
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
   @Override
-  public Object doGet(Map<String, String> parameters) throws ActionHandlerException {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Object doPost(AnyMessage context, Map<String, String> parameters)
-      throws ActionHandlerException {
-    SessionState state = ValidateSessionHandler.validateSession(parameters); //TODO Use State
+  public SessionState doPost(Context ctx) {
+    SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
 
     if (SessionExtractionContainer.keepAliveCheckIfClosed()) {
       LOGGER.info("Session is closed, restarting");
@@ -37,7 +43,12 @@ public class StartExtractionHandler extends ParsingActionHandler<AnyMessage> {
   }
 
   @Override
-  public Class<AnyMessage> inClass() {
-    return AnyMessage.class;
+  public Class<SessionState> outClass() {
+    return SessionState.class;
+  }
+  
+  @Override
+  public String route() {
+    return ROUTE;
   }
 }
