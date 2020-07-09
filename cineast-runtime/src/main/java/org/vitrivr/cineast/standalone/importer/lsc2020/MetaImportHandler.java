@@ -20,6 +20,16 @@ public class MetaImportHandler extends DataImportHandler {
     public MetaImportHandler(int threads, int batchSize, boolean clean){
         super(threads, batchSize);
         this.clean= clean;
+        final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        /* Beware, this drops the table */
+        if (clean) {
+            LOGGER.info("Dropping table ...");
+            ec.dropSegmentMetadataEntity();
+            LOGGER.info("Finished dropping table for entity ");
+            ec.createSegmentMetadataEntity();
+            LOGGER.info("Re-created SegmentMetaData entity");
+            ec.close();
+        }
     }
 
     @Override

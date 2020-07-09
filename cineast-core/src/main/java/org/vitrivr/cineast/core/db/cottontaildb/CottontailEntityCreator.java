@@ -6,12 +6,9 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnDefinition;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Index;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Type;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +49,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(TagReader.TAG_NAME_COLUMNNAME).setType(Type.STRING).build());
     columns.add(builder.clear().setName(TagReader.TAG_DESCRIPTION_COLUMNNAME).setType(Type.STRING).build());
 
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(TagReader.TAG_ENTITY_NAME))
         .addAllColumns(columns).build();
 
@@ -76,7 +73,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectDescriptor.FIELDNAMES[2]).setType(Type.STRING).build());
     columns.add(builder.clear().setName(MediaObjectDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(MediaObjectDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
@@ -98,7 +95,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectMetadataDescriptor.FIELDNAMES[2]).setType(Type.STRING).build());
     columns.add(builder.clear().setName(MediaObjectMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(MediaObjectMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
@@ -119,7 +116,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentMetadataDescriptor.FIELDNAMES[2]).setType(Type.STRING).build());
     columns.add(builder.clear().setName(MediaSegmentMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(MediaSegmentMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
@@ -151,7 +148,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[5]).setType(Type.DOUBLE).build());
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[6]).setType(Type.DOUBLE).build());
 
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(MediaSegmentDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
@@ -205,7 +202,7 @@ public class CottontailEntityCreator implements EntityCreator {
       builder.clear();
     }
     Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
-    CottontailGrpc.EntityDefinition message = CottontailGrpc.EntityDefinition.newBuilder()
+    EntityDefinition message = EntityDefinition.newBuilder()
         .setEntity(entity)
         .addAllColumns(columns).build();
 

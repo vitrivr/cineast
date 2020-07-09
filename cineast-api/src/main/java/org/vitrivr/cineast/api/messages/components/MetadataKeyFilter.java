@@ -30,7 +30,7 @@ public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implemen
   @Override
   public String toString() {
     return "MetadataKeyFilter{" +
-            "keywords=" + Arrays.toString(keywords) +
+            "keywords=" + Arrays.toString(keywords.toArray()) +
             '}';
   }
 }

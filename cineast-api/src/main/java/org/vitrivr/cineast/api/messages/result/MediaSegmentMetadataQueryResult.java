@@ -8,10 +8,10 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 
 public class MediaSegmentMetadataQueryResult extends AbstractQueryResultMessage<MediaSegmentMetadataDescriptor> {
 
-  @JsonCreator
-  public MediaSegmentMetadataQueryResult(String queryId, List<MediaSegmentMetadataDescriptor> content) {
-    super(queryId, content);
-  }
+    @JsonCreator
+    public MediaSegmentMetadataQueryResult(String queryId, List<MediaSegmentMetadataDescriptor> content) {
+        super(queryId, MediaSegmentMetadataDescriptor.class, content);
+    }
 
   @Override
   public MessageType getMessageType() {

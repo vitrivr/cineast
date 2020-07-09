@@ -25,6 +25,13 @@ public interface QueryResultMessage<T> extends Message {
     public List<T> getContent();
 
     /**
+     * Returns the type of the query result content
+     * 
+     * @return
+     */
+    public Class<T> getContentType();
+    
+    /**
      * Returns the number of items in the QueryResultMessage.
      *
      * @return Number of item in List<T>, returned by getContent()

@@ -87,7 +87,7 @@ public class CottontailSelector implements DBSelector {
             vectors,
             null,
             k,
-            configs.get(0).getDistance().orElse(Distance.manhattan)), k);
+            configs.get(0).getDistance().orElse(Distance.manhattan)), null);
 
     List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
