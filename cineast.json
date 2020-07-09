@@ -12,8 +12,8 @@
   },
   "retriever": {
     "threadPoolSize": 2,
-    "maxResults": 1000,
-    "resultsPerModule": 1500,
+    "maxResults": 10000,
+    "resultsPerModule": 5000,
     "features": {
       "semantic" : [
         {"feature": "ConceptMasksAde20k", "weight" : 1.0}
@@ -99,7 +99,8 @@
             "p_day_of_week": "STRING",
             "p_phase_of_day": "STRING",
             "p_year": "STRING",
-            "p_month": "STRING"
+            "p_month": "STRING",
+            "p_hour":"STRING"
           }
         }
       ],
