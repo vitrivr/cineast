@@ -96,6 +96,9 @@ public class CachedDataFactory {
     /** Location where this instance of {@link CachedDataFactory} will store its cached images. */
     private final Path cacheLocation;
 
+    /** Keeps track of whether the cache directory has been created yet */
+    private boolean cacheDirectoryCreated = false;
+
     /**
      * Inner {@link PhantomReference} implementations that keeps track of the cache path for every {@link CachedByteData}.
      */
@@ -121,6 +124,14 @@ public class CachedDataFactory {
     public CachedDataFactory(CacheConfig config){
         this.config = config;
         this.cacheLocation = this.config.getCacheLocation().resolve("cineast_cache_" + config.getUUID());
+    }
+
+    /** Method to lazily create the cache directory exists */
+    private void ensureDirectory() {
+        if (this.cacheDirectoryCreated) {
+            return;
+        }
+        this.cacheDirectoryCreated = true;
         try {
             Files.createDirectories(this.cacheLocation);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -131,7 +142,7 @@ public class CachedDataFactory {
                 }
             })) ;
         } catch (IOException e) {
-            LOGGER.fatal("Failed to create the cache location under {}", cacheLocation.toAbsolutePath().toString());
+            LOGGER.fatal("Failed to create the cache location under {}", this.cacheLocation.toAbsolutePath().toString());
         }
     }
 
@@ -187,6 +198,7 @@ public class CachedDataFactory {
      * @throws UncheckedIOException If the allocation of the {@link CachedByteData} fails and FORCE_DISK_CACHE cache policy is used.
      */
     public ByteData newCachedData(byte[] data, String prefix) {
+        ensureDirectory();
         final CacheConfig.Policy cachePolicy = this.config.getCachingPolicy();
         final Path cacheLocation = this.config.getCacheLocation();
         try {
@@ -276,6 +288,7 @@ public class CachedDataFactory {
      * @return {@link CachedMultiImage} or {@link InMemoryMultiImage}, if former could not be created.
      */
     public MultiImage newCachedMultiImage(BufferedImage image, String prefix) {
+        ensureDirectory();
         try {
             final CachedMultiImage cimg = new CachedMultiImage(image, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
             new CachedByteDataReference(cimg); /* Enqueue phantom reference for garbage collection. */
@@ -296,6 +309,7 @@ public class CachedDataFactory {
      * @return {@link CachedMultiImage} or  {@link InMemoryMultiImage}, if former could not be created.
      */
     public MultiImage newCachedMultiImage(BufferedImage image, BufferedImage thumb, String prefix) {
+        ensureDirectory();
         try {
             final CachedMultiImage cimg = new CachedMultiImage(image, thumb, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
             new CachedByteDataReference(cimg); /* Enqueue phantom reference for garbage collection. */
