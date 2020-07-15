@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "default",
+    "host": "10.34.58.146",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
     "port": 1865,
