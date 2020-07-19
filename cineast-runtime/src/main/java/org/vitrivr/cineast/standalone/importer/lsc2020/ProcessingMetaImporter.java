@@ -7,12 +7,10 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
-import javax.swing.text.html.Option;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
 
@@ -20,11 +18,11 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     private static final Logger LOGGER = LogManager.getLogger(ProcessingMetaImporter.class);
     private final Type type;
     private final Map<String, String[]> metaPerMinuteId;
+    private final Map<String, String> filenameToMinuteIdLookUp;
     private Iterator<Map<String, PrimitiveTypeProvider>> currentDataIterator = null;
     private Iterator<Map.Entry<String, String>> iterator;
     private Map<String, String> minuteIdPathMap = new HashMap<>();
     private HashSet<String> uniqueList = new HashSet<>();
-    private final Map<String, String> filenameToMinuteIdLookUp;
 
     public ProcessingMetaImporter(final Path path, final Type type) {
         this.type = type;
@@ -46,7 +44,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         String segmentId = LSCUtilities.cleanImagePath(path);
         segmentId = LSCUtilities.pathToSegmentId(segmentId);
         List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
-        switch(this.type){
+        switch (this.type) {
             case TAG:
             case TAG_LOOKUP:
                 Optional<List<Map<String, PrimitiveTypeProvider>>> maps = parseAsTag(segmentId, path, items);
@@ -64,32 +62,38 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(items.length + 9);
 
         map.put("segmentid", PrimitiveTypeProvider.fromObject(segmentId));
-        for (int i=0; i<items.length;i++){
-            map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(items[i]));
+        for (int i = 0; i < items.length; i++) {
+            switch (i) {
+                case LSCUtilities.META_LAT_COL:
+                case LSCUtilities.META_LON_COL:
+                    map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(Double.parseDouble(items[i])));
+                default:
+                    map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(items[i]));
+            }
         }
         final String minuteId = LSCUtilities.filenameToMinuteId(path).get(); // Purposely no isPresent check, because it should not be possible
         final LocalDateTime dt = LSCUtilities.fromMinuteId(minuteId);
-        map.put( LSCUtilities.PROCESSED_META_DATETIME, PrimitiveTypeProvider.fromObject(dt.toString()));
-        map.put( LSCUtilities.PROCESSED_META_DAY_OF_WEEK,PrimitiveTypeProvider.fromObject( String.valueOf(dt.getDayOfWeek())));
-        map.put( LSCUtilities.PROCESSED_META_MONTH, PrimitiveTypeProvider.fromObject(LSCUtilities.extractMonth(dt)));
-        map.put( LSCUtilities.PROCESSED_META_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractDay(dt)));
-        map.put( LSCUtilities.PROCESSED_META_YEAR, PrimitiveTypeProvider.fromObject(LSCUtilities.extractYear(dt)));
-        map.put( LSCUtilities.PROCESSED_META_HOUR_OF_DAY,PrimitiveTypeProvider.fromObject( LSCUtilities.extractHour(dt)));
-        if(StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")){
-            map.put( LSCUtilities.PROCESSED_META_UTC, PrimitiveTypeProvider.fromObject(LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]).toString()));
+        map.put(LSCUtilities.PROCESSED_META_DATETIME, PrimitiveTypeProvider.fromObject(dt.toString()));
+        map.put(LSCUtilities.PROCESSED_META_DAY_OF_WEEK, PrimitiveTypeProvider.fromObject(String.valueOf(dt.getDayOfWeek())));
+        map.put(LSCUtilities.PROCESSED_META_MONTH, PrimitiveTypeProvider.fromObject(LSCUtilities.extractMonth(dt)));
+        map.put(LSCUtilities.PROCESSED_META_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractDay(dt)));
+        map.put(LSCUtilities.PROCESSED_META_YEAR, PrimitiveTypeProvider.fromObject(Integer.valueOf(LSCUtilities.extractYear(dt))));
+        map.put(LSCUtilities.PROCESSED_META_HOUR_OF_DAY, PrimitiveTypeProvider.fromObject(Integer.valueOf(LSCUtilities.extractHour(dt))));
+        if (StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")) {
+            map.put(LSCUtilities.PROCESSED_META_UTC, PrimitiveTypeProvider.fromObject(LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]).toString()));
         }
         // Processed temporal metadata, based on metadata file
-        if((StringUtils.isNotBlank(items[LSCUtilities.META_LOCAL_COL]) && !items[LSCUtilities.META_LOCAL_COL].equalsIgnoreCase("null"))
-                && (StringUtils.isNotBlank(items[LSCUtilities.META_TIMEZONE_COL]) && !items[LSCUtilities.META_TIMEZONE_COL].equalsIgnoreCase("null"))){
+        if ((StringUtils.isNotBlank(items[LSCUtilities.META_LOCAL_COL]) && !items[LSCUtilities.META_LOCAL_COL].equalsIgnoreCase("null"))
+                && (StringUtils.isNotBlank(items[LSCUtilities.META_TIMEZONE_COL]) && !items[LSCUtilities.META_TIMEZONE_COL].equalsIgnoreCase("null"))) {
             final ZonedDateTime zdt = LSCUtilities.convertLocal(items[LSCUtilities.META_LOCAL_COL], items[LSCUtilities.META_TIMEZONE_COL]);
-            map.put( LSCUtilities.PROCESSED_META_LOCAL, PrimitiveTypeProvider.fromObject(zdt.toString()));
-            map.put( LSCUtilities.PROCESSED_META_PHASE_OF_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractPhaseOfDay(zdt)));
+            map.put(LSCUtilities.PROCESSED_META_LOCAL, PrimitiveTypeProvider.fromObject(zdt.toString()));
+            map.put(LSCUtilities.PROCESSED_META_PHASE_OF_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractPhaseOfDay(zdt)));
         }
 
         return map;
     }
 
-    private Optional<List<Map<String, PrimitiveTypeProvider>>> parseAsTag(String segmentid, String path, String[] items){
+    private Optional<List<Map<String, PrimitiveTypeProvider>>> parseAsTag(String segmentid, String path, String[] items) {
         List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
         for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
             if (items[i].equalsIgnoreCase("null")) {
@@ -105,12 +109,12 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         // Additionally processed meta as tags: DayOfWeek, Month, Day, Year, HourOfDay
         final String minuteId = LSCUtilities.filenameToMinuteId(path).get(); // Purposely no isPresent check, because it should not be possible
         final LocalDateTime dt = LSCUtilities.fromMinuteId(minuteId);
-        BiProducer<String,String,Map<String,PrimitiveTypeProvider>> parser;
-        if(type == Type.TAG){
+        BiProducer<String, String, Map<String, PrimitiveTypeProvider>> parser;
+        if (type == Type.TAG) {
             parser = this::toTag;
-        }else if(type == Type.TAG_LOOKUP){
+        } else if (type == Type.TAG_LOOKUP) {
             parser = this::toTagLookup;
-        }else{
+        } else {
             parser = null; // To willfully throw NPE
         }
         // Day of week
@@ -120,17 +124,17 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         // Year
         list.add(parser.produce(segmentid, LSCUtilities.extractYear(dt)));
         // Day
-        list.add(parser.produce(segmentid,LSCUtilities.extractDay(dt)));
+        list.add(parser.produce(segmentid, LSCUtilities.extractDay(dt)));
         // HourOfDay
-        list.add(parser.produce(segmentid,LSCUtilities.extractDay(dt)));
-        if(list.isEmpty()){
+        list.add(parser.produce(segmentid, LSCUtilities.extractDay(dt)));
+        if (list.isEmpty()) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(list);
         }
     }
 
-    private Optional<Map<String, PrimitiveTypeProvider>> parse(String segmentid, String path,  String[] items, int index) {
+    private Optional<Map<String, PrimitiveTypeProvider>> parse(String segmentid, String path, String[] items, int index) {
         switch (this.type) {
             case TAG:
                 return parseTag(segmentid, path, items, index);
@@ -150,11 +154,11 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         }
     }
 
-    private Map<String, PrimitiveTypeProvider> toTag(String segmentid, String tag){
-        return toTag(segmentid,tag, 1);
+    private Map<String, PrimitiveTypeProvider> toTag(String segmentid, String tag) {
+        return toTag(segmentid, tag, 1);
     }
 
-    private Map<String, PrimitiveTypeProvider> toTag(String segmentid, String tag, int score){
+    private Map<String, PrimitiveTypeProvider> toTag(String segmentid, String tag, int score) {
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
         map.put("id", PrimitiveTypeProvider.fromObject(segmentid));
         map.put("tagid", PrimitiveTypeProvider.fromObject(tag));
@@ -166,21 +170,21 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
      * Must only be called with index values for valid tags
      * tags: id === name, description is empty (no tag expansion done)
      */
-    private Optional<Map<String, PrimitiveTypeProvider>> parseTagForLookup(String segmentid,String path, String[] items, int index) {
+    private Optional<Map<String, PrimitiveTypeProvider>> parseTagForLookup(String segmentid, String path, String[] items, int index) {
         if (TAG_CANDIDATES.contains(index)) {
             final String tag = metaAsTag(items, index);
-            if(onlyUnique()){
-                if(!isUnique(tag)){
+            if (onlyUnique()) {
+                if (!isUnique(tag)) {
                     return Optional.empty();
                 }
             }
-            return Optional.of(toTagLookup(segmentid,tag));
-        }else{
+            return Optional.of(toTagLookup(segmentid, tag));
+        } else {
             return Optional.empty();
         }
     }
 
-    private Map<String, PrimitiveTypeProvider> toTagLookup(String segmentid, String tag){
+    private Map<String, PrimitiveTypeProvider> toTagLookup(String segmentid, String tag) {
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
         map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
         map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
@@ -189,15 +193,14 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     }
 
 
-
-    private String metaAsTag(String[] items, int index){
+    private String metaAsTag(String[] items, int index) {
         String tag;
-        if(index == LSCUtilities.META_UTC_COL){
+        if (index == LSCUtilities.META_UTC_COL) {
             tag = LSCUtilities.convertUtc(items[index]).getDayOfWeek().toString();
-        }else if(index == LSCUtilities.META_LOCAL_COL) {
+        } else if (index == LSCUtilities.META_LOCAL_COL) {
             String zone = items[LSCUtilities.META_TIMEZONE_COL];
             tag = LSCUtilities.extractPhaseOfDay(LSCUtilities.convertLocal(items[index], zone));
-        }else{
+        } else {
             tag = items[index];
         }
         return tag;
@@ -230,18 +233,19 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
 
     /**
      * Checks if the needle is in the unique set. if so, it's not unique. otherwise its unique and added to the list
+     *
      * @param needle
      * @return
      */
-    private boolean isUnique(String needle){
+    private boolean isUnique(String needle) {
         boolean found = uniqueList.contains(needle);
-        if(!found){
+        if (!found) {
             uniqueList.add(needle);
         }
         return !found;
     }
 
-    private boolean onlyUnique(){
+    private boolean onlyUnique() {
         return type == Type.TAG_LOOKUP;
     }
 
@@ -268,7 +272,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     }
 
     @FunctionalInterface
-    public interface BiProducer<I1, I2, O>{
+    public interface BiProducer<I1, I2, O> {
         O produce(I1 i1, I2 i2);
     }
 
