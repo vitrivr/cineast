@@ -66,7 +66,11 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
             switch (i) {
                 case LSCUtilities.META_LAT_COL:
                 case LSCUtilities.META_LON_COL:
-                    map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(Double.parseDouble(items[i])));
+                    if(StringUtils.isNotBlank(items[i]) && !items[i].equalsIgnoreCase("null")){
+                        // Only add if useful
+                        map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(Double.parseDouble(items[i])));
+                    }
+                    break;
                 default:
                     map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(items[i]));
             }
