@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.features.RangeBooleanRetriever;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
@@ -67,6 +68,9 @@ public class CliUtils {
         retriever.getTableNames().forEach(tableName -> {
           selector.open(tableName);
           List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", segmentId);
+          if( retriever.getClass() == RangeBooleanRetriever.class){
+            rows = selector.getRows("segmentid", segmentId);
+          }
           rows.forEach(row -> {
             System.out.println("== New row == ");
             row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
