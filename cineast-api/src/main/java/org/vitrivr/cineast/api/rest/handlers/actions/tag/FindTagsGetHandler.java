@@ -30,11 +30,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
   private static final Logger LOGGER = LogManager.getLogger(FindTagsGetHandler.class);
   
   private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-  
-  {
-    tagReader.initCache();
-  }
-  
+
   @OpenApi(
       summary = "Find all tags specified by attribute value",
       path = ROUTE, method = HttpMethod.GET,

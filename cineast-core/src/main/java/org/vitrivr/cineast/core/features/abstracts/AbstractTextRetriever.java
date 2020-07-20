@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -113,7 +114,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
     if (rows.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentId);
       return Collections.emptyList();
@@ -121,6 +122,16 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     List<String> terms = new ArrayList<>();
     rows.forEach(row -> terms.add(row.get("feature").getString()));
     return this.getSimilar(qc, terms.toArray(new String[]{}));
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
+    List<String> list = this.selector.getRows("id", segmentIds.stream().map(StringTypeProvider::new).collect(Collectors.toList())).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
+    if (list.isEmpty()) {
+      LOGGER.debug("No rows with segment id {}", segmentIds);
+      return Collections.emptyList();
+    }
+    return this.getSimilar(qc, list.toArray(new String[]{}));
   }
 
   /**
