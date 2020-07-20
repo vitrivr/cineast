@@ -99,7 +99,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     }
 
     public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
-        List<PrimitiveTypeProvider> list =  this.selector.getRows("id", segmentIds).stream().map(map -> map.get("feature")).collect(Collectors.toList());
+        List<PrimitiveTypeProvider> list =  this.selector.getRows("id", segmentIds.stream().map(StringTypeProvider::new).collect(Collectors.toList())).stream().map(map -> map.get("feature")).collect(Collectors.toList());
 
         if (list.isEmpty()) {
             LOGGER.warn("No feature vectors for segmentIds {} found, returning empty result-list", segmentIds);
