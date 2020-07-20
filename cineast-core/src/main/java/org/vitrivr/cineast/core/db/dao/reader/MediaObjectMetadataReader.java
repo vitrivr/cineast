@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class MediaObjectMetadataReader extends AbstractEntityReader {
      * @return List of MediaObjectMetadataDescriptor object's. May be empty!
      */
     public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(String objectid) {
-        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectid);
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], new StringTypeProvider(objectid));
         if(results.isEmpty()){
             LOGGER.debug("Could not find MediaObjectMetadataDescriptor with ID {}", objectid);
             return new ArrayList<>(0);
@@ -67,7 +69,7 @@ public class MediaObjectMetadataReader extends AbstractEntityReader {
      * @return List of MediaObjectMetadataDescriptor object's. May be empty!
      */
     public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
-        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectids);
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
         if(results.isEmpty()){
             LOGGER.debug("Could not find any MediaObjectMetadataDescriptor for provided ID's.");
             return new ArrayList<>(0);

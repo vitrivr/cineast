@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -14,6 +15,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.features.RangeBooleanRetriever;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
@@ -66,7 +68,10 @@ public class CliUtils {
         System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
         retriever.getTableNames().forEach(tableName -> {
           selector.open(tableName);
-          List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", segmentId);
+          List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
+          if( retriever.getClass() == RangeBooleanRetriever.class){
+            rows = selector.getRows("segmentid", new StringTypeProvider(segmentId));
+          }
           rows.forEach(row -> {
             System.out.println("== New row == ");
             row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));

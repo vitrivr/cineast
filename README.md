@@ -3,10 +3,10 @@
 
 # Cineast
 Cineast is a multi-feature content-based mulitmedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
-Cineast is written in Java and uses [CottontailDB](https://github.com/https://github.com/ppanopticon/cottontaildb) as a storage backend.
+Cineast is written in Java and uses [CottontailDB](https://github.com/vitrivr/cottontaildb) as a storage backend.
 
 ## Building Cineast
-Cineast can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
+Cineast can be built using [Gradle](https://gradle.org/). Building and running it is as easy as
 ```
 $> git clone --recursive https://github.com/vitrivr/cineast.git cineast
 $> cd cineast

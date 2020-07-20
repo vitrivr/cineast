@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.db;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -93,29 +97,29 @@ public interface DBSelector {
   /**
    * SELECT 'vectorname' from entity where 'fieldname' = 'value'
    */
-  List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
+  List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName);
 
   /**
    * for legacy support, takes the float[] method by default
    */
-  default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, String value,
+  default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value,
       String vectorName) {
     return getFeatureVectors(fieldName, value, vectorName).stream().map(FloatArrayTypeProvider::new)
         .collect(Collectors.toList());
   }
 
-  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value){
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, PrimitiveTypeProvider value){
     return getRows(fieldName, Collections.singleton(value));
   }
 
-  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values){
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, PrimitiveTypeProvider... values){
     return getRows(fieldName, Arrays.asList(values));
   }
 
   /**
    * SELECT * where fieldName IN (values)
    */
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
+  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values);
 
   /**
    * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to
@@ -133,7 +137,7 @@ public interface DBSelector {
    * {@link #getRows(String, RelationalOperator, Iterable)}
    */
   default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      String value){
+      PrimitiveTypeProvider value){
     return getRows(fieldName, operator, Collections.singleton(value));
   }
 
@@ -150,10 +154,37 @@ public interface DBSelector {
    * contained in the field).
    */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      Iterable<String> values);
+      Iterable<PrimitiveTypeProvider> values);
 
-  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String... values){
-    return getRows(fieldName, Arrays.asList(values));
+  /**
+   * Performs a boolean lookup based on multiple conditions, linked with AND.
+   * Each element of the list specifies one of the conditions - left middle right, i.e. id IN (1, 5, 7)
+   *  @param conditions conditions which will be linked by AND
+   * @param identifier column upon which the retain operation will be performed if the database layer does not support compound boolean retrieval.
+   * @param projection Which columns shall be selected
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection){
+    HashMap<String, Map<String, PrimitiveTypeProvider>> relevant = new HashMap<>();
+    for (Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> condition : conditions) {
+      List<Map<String, PrimitiveTypeProvider>> rows = this.getRows(condition.getLeft(), condition.getMiddle(), condition.getRight());
+      if(rows.isEmpty()){
+        return Collections.emptyList();
+      }
+      Set<String> ids = rows.stream().map(x -> x.get(identifier).getString())
+          .collect(Collectors.toSet());
+
+      if(relevant.size() == 0){
+        rows.forEach(map -> relevant.put(map.get(identifier).getString(), map));
+      }else{
+        relevant.keySet().retainAll(ids);
+      }
+    }
+    if(relevant.isEmpty()){
+      return Collections.emptyList();
+    }
+
+    return new ArrayList<>(relevant.values());
+
   }
 
   /**

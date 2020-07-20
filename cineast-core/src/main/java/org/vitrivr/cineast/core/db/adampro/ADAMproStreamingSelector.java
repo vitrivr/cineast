@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.collect.Iterables;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc;
@@ -262,8 +264,8 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
-    QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value)), null, null);
+  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
+    QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value.getString())), null, null);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro.streamingStandardQuery(qbqm);
     ArrayList<float[]> _return = new ArrayList<>();
@@ -364,13 +366,13 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      RelationalOperator operator, Iterable<String> values) {
+      RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     if (values == null || Iterables.isEmpty(values)) {
       return new ArrayList<>(0);
     }
 
     /* TODO: Escape quotes. */
-    final WhereMessage where = this.mb.buildWhereMessage(fieldName, values, operator);
+    final WhereMessage where = this.mb.buildWhereMessage(fieldName, StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::getString).collect(Collectors.toList()), operator);
     final BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
     return executeBooleanQuery(bqMessage);
   }

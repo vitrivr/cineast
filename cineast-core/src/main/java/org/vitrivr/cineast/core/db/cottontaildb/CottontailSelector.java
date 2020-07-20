@@ -3,7 +3,9 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
@@ -87,7 +89,7 @@ public class CottontailSelector implements DBSelector {
             vectors,
             null,
             k,
-            configs.get(0).getDistance().orElse(Distance.manhattan)), k);
+            configs.get(0).getDistance().orElse(Distance.manhattan)), null);
 
     List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
@@ -123,7 +125,7 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
+  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
 
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
@@ -143,7 +145,7 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, String value, String vectorName) {
+  public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName) {
 
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
@@ -163,11 +165,11 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
 
     CottontailGrpc.Data[] array = new CottontailGrpc.Data[Iterables.size(values)];
     int i = 0;
-    for (String s : values) {
+    for (PrimitiveTypeProvider s : values) {
       array[i] = CottontailMessageBuilder.toData(s);
       i++;
     }
@@ -181,7 +183,7 @@ public class CottontailSelector implements DBSelector {
       int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
 
     /* This includes the filter for segmentids in the where-statement */
-    Where where = CottontailMessageBuilder.compoundOrWhere(queryConfig, fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
+    Where where = CottontailMessageBuilder.compoundWhere(queryConfig, fieldname, RelationalOperator.LIKE, Operator.OR, CottontailMessageBuilder.toDatas(Arrays.asList(terms)));
 
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
@@ -191,11 +193,20 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
 
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, CottontailMessageBuilder.toDatas(values));
 
     List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), ""));
+
+    return processResults(results);
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection) {
+    Where where = CottontailMessageBuilder.compoundWhere(conditions);
+
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), ""));
 
     return processResults(results);
   }

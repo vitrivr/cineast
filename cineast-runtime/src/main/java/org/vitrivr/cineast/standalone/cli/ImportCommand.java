@@ -100,7 +100,7 @@ public class ImportCommand implements Runnable {
         handler = new FacesImportHandler(this.threads, this.batchsize);
         break;
       case OBJECTINSTANCE:
-        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize);
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCMETA:
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);

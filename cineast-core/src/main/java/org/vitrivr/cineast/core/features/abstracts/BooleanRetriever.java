@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -83,46 +84,9 @@ public abstract class BooleanRetriever implements Retriever {
 
   protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
 
-    Set<String> relevantIds = null;
-    if (qc.hasRelevantSegmentIds()){
-      relevantIds = new HashSet<>();
-      relevantIds.addAll(qc.getRelevantSegmentIds());
-    }
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length()+1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "segmentid", Collections.singletonList("segmentid"));
 
-    for (BooleanExpression be: expressions){
-      List<Map<String, PrimitiveTypeProvider>> rows = selector
-          .getRows(be.getAttribute(), be.getOperator(), be.getValues().stream().map(
-              PrimitiveTypeProvider::getString).collect(Collectors.toList()));
-
-      if(rows.isEmpty()){
-        return Collections.emptyList();
-      }
-
-      Set<String> ids = rows.stream().map(x -> x.get("id").getString())
-          .collect(Collectors.toSet());
-
-      Map<String, PrimitiveTypeProvider> firstRow = rows.get(0);
-      firstRow.keySet().stream().forEach(x -> {
-        if (!this.columnTypes.containsKey(x)){
-          this.columnTypes.put(x, firstRow.get(x).getType());
-        }
-      });
-
-      if(relevantIds == null){
-        relevantIds = new HashSet<>(ids.size());
-        relevantIds.addAll(ids);
-      }else{
-        relevantIds.retainAll(ids);
-      }
-
-    }
-
-    if(relevantIds == null || relevantIds.isEmpty()){
-      return Collections.emptyList();
-    }
-    
-    return relevantIds.stream().map(BooleanSegmentScoreElement::new).collect(Collectors.toList());
-
+    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get("segmentid").getString())).collect(Collectors.toList());
   }
 
   @Override

@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -82,7 +83,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
     @Override
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-        List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric("id", segmentId, "feature");
+        List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric("id", new StringTypeProvider(segmentId), "feature");
         if (list.isEmpty()) {
             LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
             return new ArrayList<>(0);

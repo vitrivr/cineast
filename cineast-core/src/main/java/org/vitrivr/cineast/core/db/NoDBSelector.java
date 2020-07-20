@@ -41,7 +41,7 @@ public class NoDBSelector implements DBSelector {
     }
 
     @Override
-    public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
+    public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
         return new ArrayList<>(0);
     }
 
@@ -51,7 +51,7 @@ public class NoDBSelector implements DBSelector {
     }
 
     @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
         return new ArrayList<>(0);
     }
 
@@ -76,7 +76,7 @@ public class NoDBSelector implements DBSelector {
   }
 
     @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
         return new ArrayList<>(0);
     }
 }
