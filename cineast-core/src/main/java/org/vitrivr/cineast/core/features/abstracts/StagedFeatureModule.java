@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
@@ -138,7 +139,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         QueryConfig qcc = this.defaultQueryConfig(qc);
 
         /* Lookup features. */
-        List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
+        List<float[]> features = this.selector.getFeatureVectors("id",  new StringTypeProvider(segmentId), "feature");
         if (features.isEmpty()) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
             benchmark.end();

@@ -1,11 +1,14 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class MediaObjectReader extends AbstractEntityReader {
     }
 
   public MediaObjectDescriptor lookUpObjectById(String objectId) {
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], objectId);
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], new StringTypeProvider(objectId));
 
     if (result.isEmpty()) {
       return new MediaObjectDescriptor();
@@ -82,7 +85,7 @@ public class MediaObjectReader extends AbstractEntityReader {
   }
 
   public MediaObjectDescriptor lookUpObjectByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[2], name);
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[2], new StringTypeProvider(name));
 
     if (result.isEmpty()) {
       return new MediaObjectDescriptor();
@@ -92,7 +95,7 @@ public class MediaObjectReader extends AbstractEntityReader {
   }
   
   public MediaObjectDescriptor lookUpObjectByPath(String path) {
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[3], path);
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[3], new StringTypeProvider(path));
 
     if (result.isEmpty()) {
       return new MediaObjectDescriptor();
@@ -108,7 +111,7 @@ public class MediaObjectReader extends AbstractEntityReader {
 
     HashMap<String, MediaObjectDescriptor> _return = new HashMap<>();
 
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], videoIds);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Arrays.stream(videoIds).map(StringTypeProvider::new).collect(Collectors.toList()));
 
     if (results.isEmpty()) {
       return new HashMap<>();
@@ -130,7 +133,13 @@ public class MediaObjectReader extends AbstractEntityReader {
 
     HashMap<String, MediaObjectDescriptor> _return = new HashMap<>();
 
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], videoIds);
+    List<PrimitiveTypeProvider> in = new ArrayList<>();
+
+    for (String s : videoIds) {
+      in.add(new StringTypeProvider(s));
+    }
+
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], in);
 
     if (results.isEmpty()) {
       return new HashMap<>();

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc;
@@ -29,8 +31,8 @@ public class ADAMproSelector extends AbstractADAMproSelector {
     }
 
     @Override
-    public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
-        QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value)), null, null);
+    public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
+        QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value.getString())), null, null);
 
         ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
         ArrayList<float[]> _return = new ArrayList<>();
@@ -284,13 +286,13 @@ public class ADAMproSelector extends AbstractADAMproSelector {
 
 
     @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
         if (values == null || Iterables.isEmpty(values)) {
             return new ArrayList<>(0);
         }
 
         /* TODO: Escape quotes. */
-        final WhereMessage where = this.mb.buildWhereMessage(fieldName, values, operator);
+        final WhereMessage where = this.mb.buildWhereMessage(fieldName, StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::getString).collect(Collectors.toList()), operator);
         final BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
         return executeBooleanQuery(bqMessage);
     }

@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -91,7 +93,7 @@ public class SegmentTags implements Extractor, Retriever {
     }
 
     /* Retrieve all elements matching the provided ids */
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid",  tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
     Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
@@ -166,7 +168,7 @@ public class SegmentTags implements Extractor, Retriever {
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return Collections.emptyList();

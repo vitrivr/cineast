@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -112,7 +113,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
     if (rows.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentId);
       return Collections.emptyList();

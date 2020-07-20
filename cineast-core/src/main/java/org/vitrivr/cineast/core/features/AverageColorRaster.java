@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
@@ -285,7 +286,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", segmentId);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return new ArrayList<>(1);

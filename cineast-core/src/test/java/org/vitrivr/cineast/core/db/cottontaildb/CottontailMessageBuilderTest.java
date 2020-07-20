@@ -19,7 +19,7 @@ public class CottontailMessageBuilderTest {
   @DisplayName("Single argument for compound or")
   void singleArgCompoundOr() {
     Data data = CottontailMessageBuilder.toData("hello");
-    Where where = CottontailMessageBuilder.compoundOrWhere(null, fieldname, op, data);
+    Where where = CottontailMessageBuilder.compoundWhere(null, fieldname, op, Operator.OR, data);
     assertEquals(where.getAtomic(), CottontailMessageBuilder.atomicPredicate(fieldname, op, data));
   }
 
@@ -28,7 +28,7 @@ public class CottontailMessageBuilderTest {
   void doubleArgCompoundOr() {
     Data one = CottontailMessageBuilder.toData("hello");
     Data two = CottontailMessageBuilder.toData("world");
-    CompoundBooleanPredicate where = CottontailMessageBuilder.compoundOrWhere(null, fieldname, op, one, two).getCompound();
+    CompoundBooleanPredicate where = CottontailMessageBuilder.compoundWhere(null, fieldname, op, Operator.OR, one, two).getCompound();
     assertEquals(where.getOp(), Operator.OR);
     assertEquals(where.getAleft(), CottontailMessageBuilder.atomicPredicate(fieldname, op, one));
     assertEquals(where.getAright(), CottontailMessageBuilder.atomicPredicate(fieldname, op, two));
@@ -41,7 +41,7 @@ public class CottontailMessageBuilderTest {
     Data two = CottontailMessageBuilder.toData("two");
     Data three = CottontailMessageBuilder.toData("three");
     Data four = CottontailMessageBuilder.toData("four");
-    CompoundBooleanPredicate where = CottontailMessageBuilder.compoundOrWhere(null, fieldname, op, one, two, three, four).getCompound();
+    CompoundBooleanPredicate where = CottontailMessageBuilder.compoundWhere(null, fieldname, op,Operator.OR, one, two, three, four).getCompound();
     assertEquals(where.getOp(), Operator.OR);
     assertEquals(where.getAleft(), CottontailMessageBuilder.atomicPredicate(fieldname, op, one));
     where = where.getCright();
