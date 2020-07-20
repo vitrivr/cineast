@@ -23,6 +23,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     private Iterator<Map.Entry<String, String>> iterator;
     private Map<String, String> minuteIdPathMap = new HashMap<>();
     private HashSet<String> uniqueList = new HashSet<>();
+    private HashSet<String> uniqueTemporalMetadata = new HashSet<>();
 
     public ProcessingMetaImporter(final Path path, final Type type) {
         this.type = type;
@@ -130,16 +131,53 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         } else {
             parser = null; // To willfully throw NPE
         }
+        String dow = String.valueOf(dt.getDayOfWeek());
+        String month = LSCUtilities.extractMonth(dt);
+        String year = LSCUtilities.extractYearStr(dt);
+        String day = LSCUtilities.extractDayStr(dt);
+        String hod = LSCUtilities.extractHourStr(dt);
+
         // Day of week
-        list.add(parser.produce(segmentid, String.valueOf(dt.getDayOfWeek())));
+        if(onlyUnique()){
+            // tag lookup, it must be unique
+            if(isUniqueTemporalContext(dow)){
+                list.add(parser.produce(segmentid, dow));
+            }
+        }else{
+            list.add(parser.produce(segmentid, dow));
+        }
         // Month
-        list.add(parser.produce(segmentid, LSCUtilities.extractMonth(dt)));
+        if(onlyUnique()){
+            if(isUniqueTemporalContext(month)){
+                list.add(parser.produce(segmentid, month));
+            }
+        }else{
+            list.add(parser.produce(segmentid, month));
+        }
         // Year
-        list.add(parser.produce(segmentid, LSCUtilities.extractYearStr(dt)));
+        if(onlyUnique()){
+            if(isUniqueTemporalContext(year)){
+                list.add(parser.produce(segmentid, year));
+            }
+        }else{
+            list.add(parser.produce(segmentid, year));
+        }
         // Day
-        list.add(parser.produce(segmentid, LSCUtilities.extractDayStr(dt)));
+        if(onlyUnique()){
+            if(isUniqueTemporalContext(day)){
+                list.add(parser.produce(segmentid, day));
+            }
+        }else{
+            list.add(parser.produce(segmentid, day));
+        }
         // HourOfDay
-        list.add(parser.produce(segmentid, LSCUtilities.extractDayStr(dt)));
+        if(onlyUnique()){
+            if(isUniqueTemporalContext(hod)){
+                list.add(parser.produce(segmentid, hod));
+            }
+        }else{
+            list.add(parser.produce(segmentid, hod));
+        }
         if (list.isEmpty()) {
             return Optional.empty();
         } else {
@@ -254,6 +292,14 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         boolean found = uniqueList.contains(needle);
         if (!found) {
             uniqueList.add(needle);
+        }
+        return !found;
+    }
+
+    private boolean isUniqueTemporalContext(String temp){
+        boolean found = uniqueTemporalMetadata.contains(temp);
+        if(!found){
+            uniqueTemporalMetadata.add(temp);
         }
         return !found;
     }

@@ -226,7 +226,7 @@ public class CottontailEntityCreator implements EntityCreator {
   @Override
   public boolean existsEntity(String entityName) {
     return false;
-  }
+  } // fixme Replace with actual check
 
   @Override
   public boolean dropEntity(String entityName) {
