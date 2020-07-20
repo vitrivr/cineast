@@ -32,7 +32,8 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
    * Writes a message back to the stream.
    */
   protected final void write(Session session, Message message) {
-    session.getRemote().sendString(this.writer.toJson(message), new WriteCallback() {
+    String json = this.writer.toJson(message);
+    session.getRemote().sendString(json, new WriteCallback() {
       @Override
       public void writeFailed(Throwable x) {
         LOGGER.fatal("Failed to write {} message to WebSocket stream!", message.getMessageType());
@@ -43,8 +44,7 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
         if (message.getMessageType() == MessageType.PING) {
           return;
         }
-        LOGGER.log(Level.TRACE, "Successfully wrote message of type {} to WebSocket stream!", message.getMessageType());
-        //LOGGER.log(Level.TRACE, writer.toJson(message));
+        LOGGER.trace("Successfully message {} with size {} KB", message.getMessageType(), json.getBytes().length / 1_000);
       }
     });
   }

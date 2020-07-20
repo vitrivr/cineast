@@ -1,11 +1,14 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import com.google.common.base.Stopwatch;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -32,6 +35,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
   @Override
   public void execute(Session session, QueryConfig qconf, TemporalQuery message) throws Exception {
+    StopWatch watch = StopWatch.createStarted();
+
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
@@ -62,7 +67,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         /* We now iterate over all QueryTerms for this stage, simply adding their results to the list of relevant segments for the next querystage.
          * The list is only updated once we've iterated over all terms
          */
-        for (QueryTerm qt : stage.terms) {
+        for(int i = 0; i<stage.terms.size(); i++){
+          QueryTerm qt = stage.terms.get(i);
           /* Prepare QueryTerm and perform sanity-checks */
           if (qt == null) {
             /* In rare instances, it is possible to have null as query stage. If this happens to you, please report this to the developers so we can try to fix it. */
@@ -97,6 +103,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             }
             cache.get(stageIndex).put(category, results);
             results.forEach(res -> relevantSegments.add(res.key));
+            LOGGER.trace("Category {} at stage {} executed @ {} ms", category, i, watch.getTime(TimeUnit.MILLISECONDS));
 
             /* If this is the last stage, we can send relevant results per category back to the UI.
              * Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
@@ -133,5 +140,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.
      */
+    watch.stop();
+    LOGGER.debug("Query executed in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
   }
 }
