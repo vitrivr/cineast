@@ -56,7 +56,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
     return getRows(fieldName, RelationalOperator.EQ, values);
   }
 

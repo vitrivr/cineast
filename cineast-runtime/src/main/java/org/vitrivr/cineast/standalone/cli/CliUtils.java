@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -67,9 +68,9 @@ public class CliUtils {
         System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
         retriever.getTableNames().forEach(tableName -> {
           selector.open(tableName);
-          List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", segmentId);
+          List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
           if( retriever.getClass() == RangeBooleanRetriever.class){
-            rows = selector.getRows("segmentid", segmentId);
+            rows = selector.getRows("segmentid", new StringTypeProvider(segmentId));
           }
           rows.forEach(row -> {
             System.out.println("== New row == ");

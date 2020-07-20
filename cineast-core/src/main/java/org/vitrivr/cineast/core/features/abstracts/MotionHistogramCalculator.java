@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -124,7 +125,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<float[]> list = this.selector.getFeatureVectors("id", segmentId, this.fieldName);
+    List<float[]> list = this.selector.getFeatureVectors("id", new StringTypeProvider(segmentId), this.fieldName);
     if (list.isEmpty()) {
       return new ArrayList<>(1);
     }

@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.data.distance.ObjectDistanceElement;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -152,7 +153,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     return this.mediaSegmentReader.lookUpSegment(segmentId)
         .map(MediaSegmentDescriptor::getObjectId)
-        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, objId, FEATURE_COLUMN_NAME))
+        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, new StringTypeProvider(objId), FEATURE_COLUMN_NAME))
         .flatMap(features -> features.stream().findFirst()) // Feature vectors are unique per id
         .map(feature -> this.getSimilar(feature, rqc))
         .orElse(Collections.emptyList());

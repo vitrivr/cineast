@@ -165,10 +165,10 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
+  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
     ArrayList<float[]> _return = new ArrayList<>(1);
 
-    if (value == null || value.isEmpty()) {
+    if (value == null || value.getString().isEmpty()) {
       return _return;
     }
 
@@ -190,7 +190,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, PrimitiveTypeProvider... values) {
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(1);
 
     if (values == null || values.length == 0) {
@@ -217,17 +217,17 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      Iterable<String> values) {
+      Iterable<PrimitiveTypeProvider> values) {
     if (values == null) {
       return new ArrayList<>(0);
     }
 
-    ArrayList<String> tmp = new ArrayList<>();
-    for (String value : values) {
+    ArrayList<PrimitiveTypeProvider> tmp = new ArrayList<>();
+    for (PrimitiveTypeProvider value : values) {
       tmp.add(value);
     }
 
-    String[] valueArr = new String[tmp.size()];
+    PrimitiveTypeProvider[] valueArr = new PrimitiveTypeProvider[tmp.size()];
     tmp.toArray(valueArr);
 
     return this.getRows(fieldName, valueArr);
@@ -289,7 +289,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      RelationalOperator operator, Iterable<String> values) {
+      RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     throw new IllegalStateException("Not implemented.");
   }
 

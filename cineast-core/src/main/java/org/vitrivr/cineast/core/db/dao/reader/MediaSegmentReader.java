@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
 import java.util.*;
@@ -101,8 +104,8 @@ public class MediaSegmentReader extends AbstractEntityReader {
 
   private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
       String fieldName, Iterable<String> fieldValues) {
-    Set<String> uniqueFieldValues = new HashSet<>();
-    fieldValues.forEach(uniqueFieldValues::add);
+    Set<PrimitiveTypeProvider> uniqueFieldValues = new HashSet<>();
+    fieldValues.forEach(el -> uniqueFieldValues.add(new StringTypeProvider(el)));
 
     List<Map<String, PrimitiveTypeProvider>> segmentsProperties =
         this.selector.getRows(fieldName, uniqueFieldValues);

@@ -6,6 +6,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage.Operation;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 

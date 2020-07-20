@@ -1,22 +1,59 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Vector;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn.Distance;
-import com.google.common.primitives.*;
+import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+
+import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Floats;
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
 import com.googlecode.javaewah.datastructure.BitSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.providers.primitive.*;
+import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.BoolVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.DoubleVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.FloatVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.IntVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn.Distance;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.LongVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Schema;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Vector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 
 public class CottontailMessageBuilder {
 
@@ -98,16 +135,16 @@ public class CottontailMessageBuilder {
     return Where.newBuilder().setAtomic(atomicPredicate(attribute, operator, data)).build();
   }
 
-  public static List<AtomicLiteralBooleanPredicate> toAtomicLiteralBooleanPredicates(String fieldname, RelationalOperator operator, Data... data){
-    if (data == null || data.length == 0){
+  public static List<AtomicLiteralBooleanPredicate> toAtomicLiteralBooleanPredicates(String fieldname, RelationalOperator operator, Data... data) {
+    if (data == null || data.length == 0) {
       return Collections.emptyList();
     }
 
     ArrayList<AtomicLiteralBooleanPredicate> _return = new ArrayList<>(data.length);
 
-    for (Data d : data ) {
+    for (Data d : data) {
       _return.add(
-        atomicPredicate(fieldname, operator, d)
+          atomicPredicate(fieldname, operator, d)
       );
     }
 
@@ -121,28 +158,23 @@ public class CottontailMessageBuilder {
     }
 
     CompoundBooleanPredicate _return = CompoundBooleanPredicate.newBuilder()
-            .setAleft(predicates.get(predicates.size() - 2))
-            .setOp(op)
-            .setAright(predicates.get(predicates.size() - 1))
-            .build();
+        .setAleft(predicates.get(predicates.size() - 2))
+        .setOp(op)
+        .setAright(predicates.get(predicates.size() - 1))
+        .build();
 
     for (int i = predicates.size() - 3; i >= 0; --i) {
       _return = CompoundBooleanPredicate.newBuilder()
-              .setAleft(predicates.get(i))
-              .setOp(op)
-              .setCright(_return)
-              .build();
+          .setAleft(predicates.get(i))
+          .setOp(op)
+          .setCright(_return)
+          .build();
     }
 
     return _return;
-
   }
 
-  /**
-   * This is a convenience-method to build up a where-object based on an arbitrary number of data (mostly strings).
-   */
-  public static Where compoundOrWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, Data... data) {
-
+  public static Where compoundWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, CompoundBooleanPredicate.Operator op, Data... data) {
     if (data == null || data.length == 0) {
       throw new IllegalArgumentException("data not set in CottontailMessageBuilder.compoundOrWhere");
     }
@@ -156,19 +188,19 @@ public class CottontailMessageBuilder {
 
     if (inList == null) {
 
-      if (predicates.size() > 1){
+      if (predicates.size() > 1) {
         return Where.newBuilder().setCompound(
-                reduce(CompoundBooleanPredicate.Operator.OR, predicates)
+            reduce(op, predicates)
         ).build();
       } else {
         return Where.newBuilder().setAtomic(predicates.get(0)).build();
       }
 
     } else {
-
+      /* A match for the ids is mandatory, that's why there's an and here */
       CompoundBooleanPredicate.Builder builder = CompoundBooleanPredicate.newBuilder().setAleft(inList).setOp(CompoundBooleanPredicate.Operator.AND);
-      if (predicates.size() > 1){
-        builder.setCright(reduce(CompoundBooleanPredicate.Operator.OR, predicates));
+      if (predicates.size() > 1) {
+        builder.setCright(reduce(op, predicates));
       } else {
         builder.setAright(predicates.get(0));
       }
@@ -178,6 +210,16 @@ public class CottontailMessageBuilder {
     }
   }
 
+  public static Where compoundWhere(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions) {
+    if (conditions.size() == 0) {
+      throw new IllegalArgumentException("no condition given");
+    }
+    List<AtomicLiteralBooleanPredicate> predicates = conditions.stream().map(cond -> atomicPredicate(cond.getLeft(), cond.getMiddle(), toDatas(cond.getRight()))).collect(Collectors.toList());
+    if (predicates.size() > 1) {
+      return Where.newBuilder().setCompound(reduce(CompoundBooleanPredicate.Operator.AND, predicates)).build();
+    }
+    return Where.newBuilder().setAtomic(predicates.get(0)).build();
+  }
 
   public static Query query(Entity entity, Projection projection, Where where, Knn knn, Integer rows) {
     Query.Builder queryBuilder = Query.newBuilder();
@@ -201,6 +243,10 @@ public class CottontailMessageBuilder {
 
     if (o == null) {
       return dataBuilder.setStringData("null").build();
+    }
+
+    if (o instanceof PrimitiveTypeProvider) {
+      o = PrimitiveTypeProvider.getObject((PrimitiveTypeProvider) o);
     }
 
     if (o instanceof Boolean) {

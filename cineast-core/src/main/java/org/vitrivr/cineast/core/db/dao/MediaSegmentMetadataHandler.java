@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -77,7 +78,7 @@ public class MediaSegmentMetadataHandler implements Closeable {
       return Collections.emptyList();
     }
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(FIELDNAMES[0], segmentId);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(FIELDNAMES[0], new StringTypeProvider(segmentId));
     ArrayList<MediaSegmentMetadataDescriptor> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       MediaSegmentMetadataDescriptor d = null;

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -83,7 +84,7 @@ public class TagReader implements Closeable {
      * @return List of matching {@link Tag}s.
      */
     public List<Tag> getTagsByName(String name) {
-        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", name);
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", new StringTypeProvider(name));
         ArrayList<Tag> _return = new ArrayList<>(rows.size());
         for (Map<String, PrimitiveTypeProvider> row : rows) {
             Tag t = fromMap(row);
@@ -98,7 +99,7 @@ public class TagReader implements Closeable {
         if (id == null) {
             return null;
         }
-        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", id);
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(id));
         if (rows.isEmpty()) {
             return null;
         }
@@ -110,7 +111,7 @@ public class TagReader implements Closeable {
         if (ids == null) {
             return null;
         }
-        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", ids);
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", Arrays.stream(ids).map(StringTypeProvider::new).collect(Collectors.toList()));
         if (rows.isEmpty()) {
             return null;
         }
