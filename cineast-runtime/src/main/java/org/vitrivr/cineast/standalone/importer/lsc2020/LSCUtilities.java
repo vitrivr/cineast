@@ -252,20 +252,32 @@ public class LSCUtilities {
         return tag;
     }
 
-    public static String extractYear(LocalDateTime time) {
-        return String.valueOf(time.getYear());
+    public static int extractYear(LocalDateTime time) {
+        return time.getYear();
     }
 
-    public static String extractDay(LocalDateTime time){
-        return String.valueOf(time.getDayOfMonth());
+    public static int extractDay(LocalDateTime time){
+        return time.getDayOfMonth();
     }
 
     public static String extractMonth(LocalDateTime time) {
         return time.getMonth().name();
     }
 
-    public static String extractHour(LocalDateTime utc) {
-        return String.valueOf(utc.getHour());
+    public static int extractHour(LocalDateTime utc) {
+        return utc.getHour();
+    }
+
+    public static String extractHourStr(LocalDateTime utc){
+        return String.valueOf(extractHour(utc));
+    }
+
+    public static String extractYearStr(LocalDateTime utc){
+        return String.valueOf(extractYear(utc));
+    }
+
+    public static String extractDayStr(LocalDateTime utc){
+        return String.valueOf(extractHour(utc));
     }
 
     private static String getLscFormat(boolean utc) {

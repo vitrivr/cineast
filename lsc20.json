@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "10.34.58.146",
+    "host": "localhost",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
     "port": 1865,
@@ -99,7 +99,8 @@
             "p_year": "INT",
             "p_month": "STRING",
             "p_hour": "INT",
-            "p_datetime": "STRING"
+            "p_datetime": "STRING",
+            "p_day": "INT"
           }
         }
       ],
@@ -108,7 +109,7 @@
           "feature": "RangeBooleanRetriever", "weight": 1.0,
           "properties": {
             "entity": "features_table_lsc20meta",
-            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month"
+            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month,p_hour,p_day"
           }
         }
       ]

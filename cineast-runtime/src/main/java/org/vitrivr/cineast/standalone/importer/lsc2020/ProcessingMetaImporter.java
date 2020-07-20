@@ -68,11 +68,16 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
                 case LSCUtilities.META_LON_COL:
                     if(StringUtils.isNotBlank(items[i]) && !items[i].equalsIgnoreCase("null")){
                         // Only add if useful
+
                         map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(Double.parseDouble(items[i])));
+                    }else{
+                        LOGGER.trace("Did not include "+segmentId+" :"+LSCUtilities.META_NAMES[i]+", beacuse its blank or null:"+ items[i]);
+                        map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(Double.NaN));
                     }
                     break;
                 default:
                     map.put(LSCUtilities.META_NAMES[i], PrimitiveTypeProvider.fromObject(items[i]));
+                    break;
             }
         }
         final String minuteId = LSCUtilities.filenameToMinuteId(path).get(); // Purposely no isPresent check, because it should not be possible
@@ -80,9 +85,10 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         map.put(LSCUtilities.PROCESSED_META_DATETIME, PrimitiveTypeProvider.fromObject(dt.toString()));
         map.put(LSCUtilities.PROCESSED_META_DAY_OF_WEEK, PrimitiveTypeProvider.fromObject(String.valueOf(dt.getDayOfWeek())));
         map.put(LSCUtilities.PROCESSED_META_MONTH, PrimitiveTypeProvider.fromObject(LSCUtilities.extractMonth(dt)));
+        // Numeric values
         map.put(LSCUtilities.PROCESSED_META_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractDay(dt)));
-        map.put(LSCUtilities.PROCESSED_META_YEAR, PrimitiveTypeProvider.fromObject(Integer.valueOf(LSCUtilities.extractYear(dt))));
-        map.put(LSCUtilities.PROCESSED_META_HOUR_OF_DAY, PrimitiveTypeProvider.fromObject(Integer.valueOf(LSCUtilities.extractHour(dt))));
+        map.put(LSCUtilities.PROCESSED_META_YEAR, PrimitiveTypeProvider.fromObject(LSCUtilities.extractYear(dt)));
+        map.put(LSCUtilities.PROCESSED_META_HOUR_OF_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractHour(dt)));
         if (StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")) {
             map.put(LSCUtilities.PROCESSED_META_UTC, PrimitiveTypeProvider.fromObject(LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]).toString()));
         }
@@ -92,6 +98,9 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
             final ZonedDateTime zdt = LSCUtilities.convertLocal(items[LSCUtilities.META_LOCAL_COL], items[LSCUtilities.META_TIMEZONE_COL]);
             map.put(LSCUtilities.PROCESSED_META_LOCAL, PrimitiveTypeProvider.fromObject(zdt.toString()));
             map.put(LSCUtilities.PROCESSED_META_PHASE_OF_DAY, PrimitiveTypeProvider.fromObject(LSCUtilities.extractPhaseOfDay(zdt)));
+        }else{
+            map.put(LSCUtilities.PROCESSED_META_LOCAL, PrimitiveTypeProvider.fromObject(null));
+            map.put(LSCUtilities.PROCESSED_META_PHASE_OF_DAY, PrimitiveTypeProvider.fromObject(null));
         }
 
         return map;
@@ -126,11 +135,11 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         // Month
         list.add(parser.produce(segmentid, LSCUtilities.extractMonth(dt)));
         // Year
-        list.add(parser.produce(segmentid, LSCUtilities.extractYear(dt)));
+        list.add(parser.produce(segmentid, LSCUtilities.extractYearStr(dt)));
         // Day
-        list.add(parser.produce(segmentid, LSCUtilities.extractDay(dt)));
+        list.add(parser.produce(segmentid, LSCUtilities.extractDayStr(dt)));
         // HourOfDay
-        list.add(parser.produce(segmentid, LSCUtilities.extractDay(dt)));
+        list.add(parser.produce(segmentid, LSCUtilities.extractDayStr(dt)));
         if (list.isEmpty()) {
             return Optional.empty();
         } else {
