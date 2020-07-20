@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -35,12 +34,12 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
  */
 public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Name of the table/entity used to store the data.
-     */
-    private final String tableName;
+  /**
+   * Name of the table/entity used to store the data.
+   */
+  private final String tableName;
 
   /**
    * The {@link DBSelector} used for database lookup.
@@ -115,7 +114,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
     if (rows.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentId);
       return Collections.emptyList();
@@ -125,27 +124,27 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     return this.getSimilar(qc, terms.toArray(new String[]{}));
   }
 
-    @Override
-    public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
-        List<String> list = this.selector.getRows("id", segmentIds).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
-        if (list.isEmpty()) {
-            LOGGER.debug("No rows with segment id {}", segmentIds);
-            return Collections.emptyList();
-        }
-        return this.getSimilar(qc, list.toArray(new String[]{}));
+  @Override
+  public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
+    List<String> list = this.selector.getRows("id", segmentIds.stream().map(StringTypeProvider::new).collect(Collectors.toList())).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
+    if (list.isEmpty()) {
+      LOGGER.debug("No rows with segment id {}", segmentIds);
+      return Collections.emptyList();
     }
+    return this.getSimilar(qc, list.toArray(new String[]{}));
+  }
 
-    /**
-     * Performs a fulltext search using the text specified in {@link SegmentContainer#getText()}. In contrast to convention used in most feature modules, the data used during ingest and retrieval is usually different for {@link AbstractTextRetriever} subclasses.
-     *
-     * <strong>Important:</strong> This implementation is tailored to the Apache Solr storage engine
-     * used by ADAMpro. It uses Lucene's fuzzy search functionality.
-     */
-    @Override
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        final String[] terms = generateQuery(sc, qc);
-        return this.getSimilar(qc, terms);
-    }
+  /**
+   * Performs a fulltext search using the text specified in {@link SegmentContainer#getText()}. In contrast to convention used in most feature modules, the data used during ingest and retrieval is usually different for {@link AbstractTextRetriever} subclasses.
+   *
+   * <strong>Important:</strong> This implementation is tailored to the Apache Solr storage engine
+   * used by ADAMpro. It uses Lucene's fuzzy search functionality.
+   */
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    final String[] terms = generateQuery(sc, qc);
+    return this.getSimilar(qc, terms);
+  }
 
   /**
    * Generate a query term which will then be used for retrieval.
