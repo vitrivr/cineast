@@ -20,10 +20,6 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
   
   private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
   
-  {
-    tagReader.initCache();
-  }
-  
   @OpenApi(
       summary = "Find all tags by ids",
       path = ROUTE, method = HttpMethod.POST,

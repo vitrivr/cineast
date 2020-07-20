@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
@@ -41,16 +42,18 @@ public class CottontailWrapper implements AutoCloseable {
   private final boolean closeWrapper;
 
   public CottontailWrapper(DatabaseConfig config, boolean closeWrapper) {
+    StopWatch watch = StopWatch.createStarted();
     this.closeWrapper = closeWrapper;
     NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxInboundMessageSize(maxMessageSize);
     if (config.getPlaintext()) {
       builder = builder.usePlaintext();
     }
     this.channel = builder.build();
-    LOGGER.info("Connected to Cottontail at {}:{}", config.getHost(), config.getPort());
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newStub(channel);
     this.insertStub = CottonDMLGrpc.newStub(channel);
+    watch.stop();
+    LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
   }
 
   public synchronized ListenableFuture<SuccessStatus> createEntity(EntityDefinition createMessage) {

@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
@@ -14,7 +18,9 @@ import java.util.stream.Collectors;
 
 public class TagReader implements Closeable {
 
+    private static final Logger LOGGER = LogManager.getLogger();
 
+    private static boolean initialized = false;
     private final DBSelector selector;
 
     /**
@@ -29,7 +35,7 @@ public class TagReader implements Closeable {
     /**
      * A map containing cached {@link Tag}s.
      */
-    private final HashMap<String, Tag> tagCache = new HashMap<>();
+    private final static HashMap<String, Tag> tagCache = new HashMap<>();
 
     /**
      * Constructor for {@link TagReader}
@@ -44,6 +50,7 @@ public class TagReader implements Closeable {
         }
 
         this.selector.open(TAG_ENTITY_NAME);
+        TagReader.initCache(selector);
     }
 
     /**
@@ -132,8 +139,8 @@ public class TagReader implements Closeable {
      *
      * @return List of all {@link Tag}s contained in the database
      */
-    public List<Tag> getAll() {
-        return this.selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull)
+    public static List<Tag> getAll(DBSelector selector) {
+        return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -143,27 +150,34 @@ public class TagReader implements Closeable {
      * @return List of all {@link Tag}s contained in the cache.
      */
     public List<Tag> getAllCached() {
-        return new ArrayList<>(this.tagCache.values());
+        return new ArrayList<>(tagCache.values());
     }
 
-    public void initCache() {
-        List<Tag> all = getAll();
-        for (Tag tag : all) {
-            this.tagCache.put(tag.getId(), tag);
+    public static synchronized void initCache(DBSelector selector) {
+        if(initialized){
+            return;
         }
+        StopWatch watch = StopWatch.createStarted();
+        List<Tag> all = getAll(selector);
+        for (Tag tag : all) {
+            tagCache.put(tag.getId(), tag);
+        }
+        initialized = true;
+        watch.stop();
+        LOGGER.debug("Tag Reader initialized in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
     }
 
     public void flushCache() {
-        this.tagCache.clear();
+        tagCache.clear();
     }
 
     public Tag getCachedById(String id) {
-        return this.tagCache.get(id);
+        return tagCache.get(id);
     }
 
     public List<Tag> getCachedByName(String name) {
         ArrayList<Tag> _return = new ArrayList<>();
-        for (Tag t : this.tagCache.values()) {
+        for (Tag t : tagCache.values()) {
             if (t.getName().equals(name)) {
                 _return.add(t);
             }

@@ -15,12 +15,8 @@ public class FindTagsAllGetHandler implements GetRestHandler<TagsQueryResult> {
   // TODO CAUTION: This route has a breaking change in response signature
   
   public static final String ROUTE = "find/tags/all";
-  
+
   private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-  
-  {
-    tagReader.initCache();
-  }
   
   @OpenApi(
       summary = "Find all tags",
