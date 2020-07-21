@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import java.util.Iterator;
 import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
@@ -74,7 +75,7 @@ public class CottontailWrapper implements AutoCloseable {
     }
   }
 
-  public synchronized void createIndexBlocking(CreateIndexMessage createMessage) {
+  public synchronized void createIndexBlocking(IndexDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.createIndex(createMessage);
@@ -165,12 +166,21 @@ public class CottontailWrapper implements AutoCloseable {
    *
    * @return The query results (unprocessed).
    */
-  public List<QueryResponseMessage> query(QueryMessage query) {
+  public List<QueryResultMessage> query(QueryMessage query) {
     StopWatch watch = StopWatch.createStarted();
-    final ArrayList<QueryResponseMessage> results = new ArrayList<>();
+    final ArrayList<QueryResultMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      stub.query(query).forEachRemaining(results::add);
+      Iterator<QueryResultMessage> iterator = stub.query(query);
+      int i = 0;
+      while(iterator.hasNext()){
+        iterator.next();
+        i++;
+        if(i%100 == 0){
+          LOGGER.debug("fetched {} elements at {} ms", i, watch.getTime(TimeUnit.MILLISECONDS));
+        }
+      }
+      //stub.query(query).forEachRemaining(results::add);
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
         LOGGER.error("CottontailWrapper.query has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
@@ -187,8 +197,8 @@ public class CottontailWrapper implements AutoCloseable {
    *
    * @return The query results (unprocessed).
    */
-  public List<QueryResponseMessage> batchedQuery(BatchedQueryMessage query) {
-    final ArrayList<QueryResponseMessage> results = new ArrayList<>();
+  public List<QueryResultMessage> batchedQuery(BatchedQueryMessage query) {
+    final ArrayList<QueryResultMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
       stub.batchedQuery(query).forEachRemaining(results::add);

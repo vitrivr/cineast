@@ -5,10 +5,6 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +16,13 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnDefinition;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityDefinition;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Index;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.IndexDefinition;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Type;
 
 public class CottontailEntityCreator implements EntityCreator {
 
@@ -131,7 +134,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
     /* Cottontail ignores index params as of july 19 */
-    CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute).build();
+    IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
   }
 
