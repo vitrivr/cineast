@@ -143,8 +143,7 @@ public class ContinuousQueryDispatcher {
     return futures;
   }
 
-  private List<SegmentScoreElement> extractResults(
-      List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures, MediaSegmentReader mediaSegmentReader) {
+  private List<SegmentScoreElement> extractResults(List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures, MediaSegmentReader mediaSegmentReader) {
     TObjectDoubleMap<String> scoreByObjectId = new TObjectDoubleHashMap<>();
     TObjectDoubleMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
     while (!futures.isEmpty()) {

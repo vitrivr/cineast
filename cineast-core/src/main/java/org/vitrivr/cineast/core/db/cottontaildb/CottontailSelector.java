@@ -3,8 +3,22 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.MergeOperation;
+import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate.Operator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
@@ -15,20 +29,6 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
-import com.google.common.collect.Iterables;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
-import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.MergeOperation;
-import org.vitrivr.cineast.core.db.RelationalOperator;
 
 public class CottontailSelector implements DBSelector {
 
@@ -131,7 +131,7 @@ public class CottontailSelector implements DBSelector {
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
     List<QueryResponseMessage> results =
-        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), ""));
+        this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), null));
 
     List<float[]> _return = new ArrayList<>();
 
@@ -150,7 +150,7 @@ public class CottontailSelector implements DBSelector {
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), null));
 
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
 
@@ -166,16 +166,17 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
+    return getRows(fieldName, CottontailMessageBuilder.toDatas(values));
+  }
 
-    CottontailGrpc.Data[] array = new CottontailGrpc.Data[Iterables.size(values)];
-    int i = 0;
-    for (PrimitiveTypeProvider s : values) {
-      array[i] = CottontailMessageBuilder.toData(s);
-      i++;
-    }
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, array), null, null), ""));
-
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Data... values) {
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, values), null, null), null));
     return processResults(results);
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values) {
+    return getRows(fieldName, CottontailMessageBuilder.toDatas(values));
   }
 
   @Override
@@ -187,7 +188,7 @@ public class CottontailSelector implements DBSelector {
 
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
-    final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), ""));
+    final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), null));
 
     return processResults(results);
   }
@@ -197,7 +198,7 @@ public class CottontailSelector implements DBSelector {
 
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, CottontailMessageBuilder.toDatas(values));
 
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), null));
 
     return processResults(results);
   }
@@ -206,7 +207,7 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection) {
     Where where = CottontailMessageBuilder.compoundWhere(conditions);
 
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), ""));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), null));
 
     return processResults(results);
   }
@@ -219,7 +220,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, projection, null, null, null), ""));
+                CottontailMessageBuilder.query(entity, projection, null, null, null), null));
 
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
 
@@ -237,7 +238,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null, null), ""));
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null, null), null));
 
     return processResults(results);
   }
