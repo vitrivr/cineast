@@ -262,19 +262,19 @@ public class CottontailSelector implements DBSelector {
     return this.cottontail.ping();
   }
 
-  private static List<Map<String, PrimitiveTypeProvider>> processResults(
-      Iterable<QueryResponseMessage> queryResponses) {
+  public static List<Map<String, PrimitiveTypeProvider>> processResults(List<QueryResponseMessage> queryResponses) {
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>();
+    StopWatch watch = StopWatch.createStarted();
 
     for (QueryResponseMessage response : queryResponses) {
       response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.tupleToMap(tuple)));
     }
+    LOGGER.trace("Processed {} results in {} ms", _return.size(), watch.getTime(TimeUnit.MILLISECONDS));
 
     return _return;
   }
 
-  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(
-      QueryResponseMessage response, Class<? extends T> distanceElementClass) {
+  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResponseMessage response, Class<? extends T> distanceElementClass) {
     List<T> result = new ArrayList<>();
     for (Tuple t : response.getResultsList()) {
       String id = null;
@@ -304,8 +304,7 @@ public class CottontailSelector implements DBSelector {
       if (id == null) {
         continue;
       }
-      double distance =
-          t.getDataMap().get("distance").getDoubleData(); // TODO what key is used for the distance?
+      double distance = t.getDataMap().get("distance").getDoubleData(); // TODO what key is used for the distance?
       T e = DistanceElement.create(distanceElementClass, id, distance);
       result.add(e);
     }
