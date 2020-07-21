@@ -188,6 +188,7 @@ public class CottontailWrapper implements AutoCloseable {
    * @return The query results (unprocessed).
    */
   public List<QueryResponseMessage> query(QueryMessage query) {
+    StopWatch watch = StopWatch.createStarted();
     final ArrayList<QueryResponseMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
@@ -199,6 +200,7 @@ public class CottontailWrapper implements AutoCloseable {
         LOGGER.error("Error occurred during invocation of CottontailWrapper.query: {}", e.getMessage());
       }
     }
+    LOGGER.trace("Wall time for query {} is {} ms", query.getQueryId(), watch.getTime());
     return results;
   }
 

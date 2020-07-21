@@ -126,7 +126,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
-    List<String> list = this.selector.getRows("id", segmentIds.stream().map(StringTypeProvider::new).collect(Collectors.toList())).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
+    List<String> list = this.selector.getRows("id", segmentIds).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
     if (list.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentIds);
       return Collections.emptyList();
