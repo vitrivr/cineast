@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -407,7 +408,11 @@ public class CottontailMessageBuilder {
     return _return;
   }
 
+  /**
+   * @param queryId can be null, in which case a random 3-char identifier will be generated.
+   */
   public static QueryMessage queryMessage(Query query, String queryId) {
+    queryId = queryId == null || queryId.isEmpty() ? RandomStringUtils.randomAlphanumeric(3).toLowerCase() : queryId;
     return QueryMessage.newBuilder().setQuery(query).setQueryId(queryId).build();
   }
 
@@ -424,9 +429,7 @@ public class CottontailMessageBuilder {
     Map<String, Data> datamap = tuple.getDataMap();
     Map<String, PrimitiveTypeProvider> map = new HashMap<>(datamap.size());
 
-    for (String k : datamap.keySet()) {
-      map.put(k, fromData(datamap.get(k)));
-    }
+    datamap.forEach((key, value) -> map.put(key, fromData(value)));
 
     return map;
   }
