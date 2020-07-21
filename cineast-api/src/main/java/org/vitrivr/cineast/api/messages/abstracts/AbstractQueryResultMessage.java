@@ -23,17 +23,11 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
         this.content = content;
     }
 
-    /**
-     *
-     */
     @Override
     public String getQueryId() {
         return this.queryId;
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<T> getContent() {
         return this.content;
@@ -44,9 +38,6 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
     	return this.contentType;
     }
 
-    /**
-     * @return
-     */
     @Override
     public int count() {
         if (this.content != null) {

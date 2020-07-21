@@ -15,11 +15,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
   
   private String category;
   private int containerId;
-  
-  /**
-   * @param category
-   * @param content
-   */
+
   @JsonCreator
   public SimilarityQueryResult(String queryId, String category, int containerId, List<StringDoublePair> content) {
     super(queryId, StringDoublePair.class, content);
