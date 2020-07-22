@@ -27,10 +27,10 @@ public class SkelLookupMessageHandler extends StatelessWebsocketMessageHandler<S
     @Override
     public void handle(Session session, SkelLookup message) {
         PoseConfig poseConfig = Config.sharedConfig().getPose();
-        if (poseConfig.getModelPath() == null) {
+        if (poseConfig == null || poseConfig.getModelPath() == null) {
             logger.error("Openpose not run since required value missing from config: pose / modelPath");
             this.write(session, new SkelLookupResult("",
-                Collections.singletonList(new PoseKeypoints(null))));
+                Collections.emptyList()));
             return;
         }
         SkelProcessor skelProcessor = SkelProcessor.getInstance(poseConfig);
