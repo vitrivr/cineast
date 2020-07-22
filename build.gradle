@@ -1,6 +1,7 @@
 plugins {
     id 'idea'
     id "de.undercouch.download" version "4.0.2"
+    id 'org.bytedeco.gradle-javacpp-platform' version "1.5.4-SNAPSHOT"
 }
 
 allprojects {
@@ -31,13 +32,16 @@ subprojects {
     }
 
     apply plugin: 'java'
-
+    apply plugin: 'org.bytedeco.gradle-javacpp-platform'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     repositories {
         jcenter()
         mavenCentral()
+        repositories {
+            maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        }
     }
 
     /* Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future. */

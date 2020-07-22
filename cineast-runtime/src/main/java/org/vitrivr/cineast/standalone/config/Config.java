@@ -24,6 +24,7 @@ public class Config {
     private RetrievalRuntimeConfig retriever;
     private ExtractionPipelineConfig extractor;
     private CacheConfig cache;
+    private PoseConfig pose;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
@@ -108,6 +109,13 @@ public class Config {
         this.cache = cache;
     }
 
+    @JsonProperty
+    public PoseConfig getPose() {
+        return pose;
+    }
+    public void setPose(PoseConfig pose) {
+        this.pose = pose;
+    }
 
     @JsonProperty
     public HashMap<MediaType, DecoderConfig> getDecoders() {

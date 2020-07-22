@@ -74,6 +74,14 @@ dependencies {
     compile group: "com.drewnoakes", name: "metadata-extractor", version: "2.10.1"
     compile group: "org.boofcv", name: "boofcv-all", version: "0.29"
     compile group: "net.coobird", name: "thumbnailator", version: "0.4.8"
+    compile group: "org.bytedeco", name: "openpose-platform", version: "1.6.0-1.5.4-20200716.003656-12"
+    // We have to pin all these versions since SNAPSHOT the version is often only partially built
+    compile (group: "org.bytedeco", name: "openpose", version: "1.6.0-1.5.4-20200717.002050-17") { force = true }
+    compile (group: "org.bytedeco", name: "hdf5", version: "1.12.0-1.5.4-20200716.042129-261") { force = true }
+    compile (group: "org.bytedeco", name: "opencv", version: "4.3.0-1.5.4-20200716.042603-534") { force = true }
+    compile (group: "org.bytedeco", name: "openblas", version: "0.3.10-1.5.4-20200716.042540-114") { force = true }
+    compile (group: "org.bytedeco", name: "caffe", version: "1.0-1.5.4-20200717.002049-166") { force = true }
+    compile (group: "org.bytedeco", name: "javacpp", version: "1.5.4-20200720.033903-461") { force = true }
 
     /** Java 9+ compatibility. */
     compile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
