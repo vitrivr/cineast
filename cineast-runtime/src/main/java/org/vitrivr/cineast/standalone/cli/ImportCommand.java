@@ -112,6 +112,9 @@ public class ImportCommand implements Runnable {
             case LSC20TAGS:
                 handler = new LSCAllTagsImportHandler(this.threads,this.batchsize, clean);
                 break;
+            case LSCOCR:
+                handler = new OCRImportHandler(this.threads, this.batchsize, clean);
+                break;
         }
         if (!isGoogleVision) {
             if (handler == null) {
@@ -143,6 +146,6 @@ public class ImportCommand implements Runnable {
      * Enum of the available types of data imports.
      */
     private enum ImportType {
-        PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS
+        PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR
     }
 }

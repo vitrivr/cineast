@@ -109,7 +109,7 @@
           "feature": "RangeBooleanRetriever", "weight": 1.0,
           "properties": {
             "entity": "features_table_lsc20meta",
-            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month"
+            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month,p_hour,p_day"
           }
         }
       ]
