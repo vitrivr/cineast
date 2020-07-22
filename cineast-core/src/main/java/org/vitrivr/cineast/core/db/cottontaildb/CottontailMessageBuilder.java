@@ -412,7 +412,7 @@ public class CottontailMessageBuilder {
    * @param queryId can be null, in which case a random 3-char identifier will be generated.
    */
   public static QueryMessage queryMessage(Query query, String queryId) {
-    queryId = queryId == null || queryId.isEmpty() ? RandomStringUtils.randomAlphanumeric(3).toLowerCase() : queryId;
+    queryId = queryId == null || queryId.isEmpty() ? "cin-"+RandomStringUtils.randomNumeric(3).toLowerCase() : queryId;
     return QueryMessage.newBuilder().setQuery(query).setQueryId(queryId).build();
   }
 
