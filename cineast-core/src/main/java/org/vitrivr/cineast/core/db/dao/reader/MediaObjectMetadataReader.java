@@ -76,7 +76,7 @@ public class MediaObjectMetadataReader extends AbstractEntityReader {
         StopWatch watch = StopWatch.createStarted();
         final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectids);
         if(results.isEmpty()){
-            LOGGER.debug("Could not find any metadata for provided object ID's. Excerpt: {}", Arrays.toString(objectids.subList(0, 5).toArray()));
+            LOGGER.debug("Could not find any metadata for provided object ID's. Excerpt: {}", Arrays.toString(objectids.subList(0, Math.min(5, objectids.size())).toArray()));
         }
 
         final ArrayList<MediaObjectMetadataDescriptor> list = new ArrayList<>(results.size());
