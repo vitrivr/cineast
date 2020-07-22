@@ -1,10 +1,24 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.query.Query;
-import org.vitrivr.cineast.api.messages.result.*;
+import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
+import org.vitrivr.cineast.api.messages.result.QueryEnd;
+import org.vitrivr.cineast.api.messages.result.QueryError;
+import org.vitrivr.cineast.api.messages.result.QueryStart;
+import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -19,11 +33,6 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -61,7 +70,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param message Message of type a that needs to be handled.
    */
   public final void handle(Session session, T message) {
-    if(message == null){
+    if (message == null) {
       LOGGER.warn("Received null message. Ignoring.");
       return;
     }
@@ -132,10 +141,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param objectIds List of object IDs for which to lookup metadata.
    */
   protected void loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds) {
-    final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
-    if (!objectMetadata.isEmpty()) {
-      this.write(session, new MediaObjectMetadataQueryResult(queryId, objectMetadata));
+    if (objectIds.size() > 100_000) {
+      Lists.partition(objectIds, 100_000).forEach(list -> loadAndWriteObjectMetadata(session, queryId, list));
     }
+
+    final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
+
+    if (objectMetadata.isEmpty()) {
+      return;
+    }
+    Lists.partition(objectMetadata, 100_000).forEach(list -> this.write(session, new MediaObjectMetadataQueryResult(queryId, list)));
   }
 
   /**
@@ -146,10 +161,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param segmentIds List of segment IDs for which to lookup metadata.
    */
   protected void loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds) {
-    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
-    if (!segmentMetadata.isEmpty()) {
-      this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
+    //chunk for memory safety-purposes
+    if (segmentIds.size() > 100_000) {
+      Lists.partition(segmentIds, 100_000).forEach(list -> loadAndWriteSegmentMetadata(session, queryId, list));
     }
+
+    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+    if (segmentMetadata.isEmpty()) {
+      return;
+    }
+    Lists.partition(segmentMetadata, 100_000).forEach(list -> this.write(session, new MediaSegmentMetadataQueryResult(queryId, list)));
   }
 
   /**
@@ -161,15 +182,18 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param raw List of raw per-category results (segmentId -> score).
    */
   protected void finalizeAndSubmitResults(Session session, String queryId, String category, int containerId, List<StringDoublePair> raw) {
-    final int stride = 1000;
+    StopWatch watch = StopWatch.createStarted();
+    final int stride = 50_000;
     for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
       final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
       final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
       /* Load segment & object information. */
       final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+
       final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
       final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+
       if (segments.isEmpty() || objects.isEmpty()) {
         continue;
       }
@@ -183,5 +207,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
       this.loadAndWriteObjectMetadata(session, queryId, objectIds);
     }
+    watch.stop();
+    LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));
   }
 }

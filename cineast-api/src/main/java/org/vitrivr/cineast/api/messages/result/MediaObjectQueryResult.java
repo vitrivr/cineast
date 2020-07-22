@@ -13,11 +13,7 @@ import java.util.List;
  * @created 12.01.17
  */
 public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObjectDescriptor> {
-  
-  /**
-   * @param queryId
-   * @param content
-   */
+
   @JsonCreator
   public MediaObjectQueryResult(String queryId, List<MediaObjectDescriptor> content) {
     super(queryId, MediaObjectDescriptor.class, content);

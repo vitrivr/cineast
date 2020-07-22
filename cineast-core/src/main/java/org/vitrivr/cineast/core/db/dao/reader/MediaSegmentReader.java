@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -108,7 +109,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
     fieldValues.forEach(el -> uniqueFieldValues.add(new StringTypeProvider(el)));
 
     List<Map<String, PrimitiveTypeProvider>> segmentsProperties =
-        this.selector.getRows(fieldName, uniqueFieldValues);
+        this.selector.getRows(fieldName, Lists.newArrayList(uniqueFieldValues));
     return segmentsProperties
         .stream()
         .map(MediaSegmentReader::propertiesToDescriptor)

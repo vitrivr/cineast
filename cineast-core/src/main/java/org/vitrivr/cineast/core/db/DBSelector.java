@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 
 public interface DBSelector {
 
@@ -120,6 +121,13 @@ public interface DBSelector {
    * SELECT * where fieldName IN (values)
    */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values);
+
+  /**
+   * Conversion to PrimitiveTypeProviders is expensive so feel free to use & implement extension for generic objects
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values){
+    return getRows(fieldName, values.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+  }
 
   /**
    * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to

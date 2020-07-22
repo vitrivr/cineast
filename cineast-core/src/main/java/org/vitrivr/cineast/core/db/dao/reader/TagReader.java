@@ -118,7 +118,7 @@ public class TagReader implements Closeable {
         if (ids == null) {
             return null;
         }
-        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", Arrays.stream(ids).map(StringTypeProvider::new).collect(Collectors.toList()));
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", Arrays.asList(ids));
         if (rows.isEmpty()) {
             return null;
         }
@@ -140,8 +140,7 @@ public class TagReader implements Closeable {
      * @return List of all {@link Tag}s contained in the database
      */
     public static List<Tag> getAll(DBSelector selector) {
-        return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**

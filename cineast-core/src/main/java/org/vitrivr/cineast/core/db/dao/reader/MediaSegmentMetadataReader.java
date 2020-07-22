@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
@@ -41,10 +43,10 @@ public class MediaSegmentMetadataReader extends AbstractEntityReader {
     }
 
     public List<MediaSegmentMetadataDescriptor> lookupMultimediaMetadata(List<String> segmentIds) {
-        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaSegmentMetadataDescriptor.FIELDNAMES[0], segmentIds.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+        StopWatch watch = StopWatch.createStarted();
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaSegmentMetadataDescriptor.FIELDNAMES[0], segmentIds);
         if(results.isEmpty()){
             LOGGER.debug("Could not find any MediaObjectMetadataDescriptor for provided IDs: {}. ID count: {}", String.join(", ", segmentIds ), segmentIds.size());
-            return new ArrayList<>(0);
         }
 
         final ArrayList<MediaSegmentMetadataDescriptor> list = new ArrayList<>(results.size());
@@ -55,6 +57,8 @@ public class MediaSegmentMetadataReader extends AbstractEntityReader {
                 LOGGER.fatal("Could not map data. This is a programmer's error!");
             }
         });
+        watch.stop();
+        LOGGER.debug("Performed segment metadata lookup for {} ids in {} ms. {} results.", segmentIds.size(), watch.getTime(TimeUnit.MILLISECONDS), list.size());
         return list;
     }
 }
