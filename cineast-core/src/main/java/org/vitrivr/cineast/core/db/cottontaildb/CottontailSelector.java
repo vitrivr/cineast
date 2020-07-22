@@ -234,6 +234,16 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<PrimitiveTypeProvider> getUniqueValues(String column) {
+    List<PrimitiveTypeProvider> _return = new ArrayList<>();
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(
+        CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT_DISTINCT, column), null, null, null), null));
+
+    results.forEach(response -> response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.fromData(tuple.getDataOrThrow(column)))));
+    return _return;
+  }
+
+  @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     List<QueryResponseMessage> results =
         this.cottontail.query(

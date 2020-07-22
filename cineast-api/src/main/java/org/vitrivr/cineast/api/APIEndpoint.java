@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
@@ -325,6 +326,8 @@ public class APIEndpoint {
             new ValidateSessionHandler(),
             new EndExtractionHandler(),
             new EndSessionHandler(),
+            /* Boolean */
+            new FindDistinctElementsByColumnGetHandler(),
             /* Status */
             new StatusInvokationHandler()
         ));
