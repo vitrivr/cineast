@@ -85,8 +85,8 @@
             "utc_time": "STRING",
             "local_time": "STRING",
             "timezone": "STRING",
-            "lat": "STRING",
-            "lon": "STRING",
+            "lat": "DOUBLE",
+            "lon": "DOUBLE",
             "semantic_name": "STRING",
             "elevation": "STRING",
             "speed": "STRING",
@@ -98,9 +98,11 @@
             "p_local_standard": "STRING",
             "p_day_of_week": "STRING",
             "p_phase_of_day": "STRING",
-            "p_year": "STRING",
+            "p_year": "INT",
             "p_month": "STRING",
-            "p_hour":"STRING"
+            "p_hour": "INT",
+            "p_datetime": "STRING",
+            "p_day": "INT"
           }
         }
       ],
