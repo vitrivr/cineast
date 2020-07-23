@@ -124,6 +124,9 @@
   "monitoring":{
     "enablePrometheus": false,
     "prometheusPort": 4569
-  }
+  },
 
+  "pose": {
+    "modelPath": "resources/openpose"
+  }
 }
