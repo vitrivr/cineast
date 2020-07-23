@@ -40,6 +40,17 @@ public interface ExtractionContextProvider {
   Optional<Path> inputPath();
 
   /**
+   * Gives a path to which inputPath, and all output path references are relative to.
+   * Intended for running multiple instances of the extraction process on different parts of a
+   * collection.
+   *
+   * @return Path to the relative parent of inputPath
+   */
+  default Optional<Path> relPath() {
+    return Optional.empty();
+  }
+
+  /**
    * Limits the number of files that should be extracted. This a predicate is applied before
    * extraction starts. If extraction fails for some fails the effective number of extracted files
    * may be lower.
