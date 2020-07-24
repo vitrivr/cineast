@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -14,13 +15,14 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
     /**
      * Executes a {@link NeighboringSegmentQuery} message. Performs a lookup for the {@link MediaSegmentDescriptor}s
      * that are temporal neigbours of the provided segment ID.
-     *
-     * @param session WebSocket session the invocation is associated with.
+     *  @param session WebSocket session the invocation is associated with.
      * @param qconf The {@link QueryConfig} that contains additional specifications.
      * @param message Instance of {@link NeighboringSegmentQuery}
+     * @param segmentIdsForWhichMetadataIsFetched
+     * @param objectIdsForWhichMetadataIsFetched
      */
     @Override
-    public void execute(Session session, QueryConfig qconf, NeighboringSegmentQuery message) throws Exception {
+    public void execute(Session session, QueryConfig qconf, NeighboringSegmentQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
         /* Prepare QueryConfig (so as to obtain a QueryId). */
         final String uuid = qconf.getQueryId().toString();
 
@@ -45,6 +47,6 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
         this.write(session, new MediaSegmentQueryResult(uuid, segments));
 
         /* Load and transmit segment metadata. */
-        this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()));
+        this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched);
     }
 }

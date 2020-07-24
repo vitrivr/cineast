@@ -29,8 +29,10 @@ public class ScoreFusion {
       TObjectDoubleMap<String> scoreByObjectId, MediaSegmentReader mediaSegmentReader) {
 
     Set<String> objectIds = scoreByObjectId.keySet();
-    ListMultimap<String, MediaSegmentDescriptor> segmentsByObjectId =
-        mediaSegmentReader.lookUpSegmentsOfObjects(objectIds);
+    if(objectIds.isEmpty()){
+      return;
+    }
+    ListMultimap<String, MediaSegmentDescriptor> segmentsByObjectId = mediaSegmentReader.lookUpSegmentsOfObjects(objectIds);
     for (String objectId : segmentsByObjectId.keySet()) {
       assert scoreByObjectId.containsKey(objectId);
       double objectScore = scoreByObjectId.get(objectId);
@@ -41,7 +43,6 @@ public class ScoreFusion {
       }
       fuseObjectScoreIntoSegments(scoreBySegmentId, objectScore, segments);
     }
-    mediaSegmentReader.close();
   }
 
   private static void fuseObjectScoreIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,

@@ -2,9 +2,14 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
@@ -77,13 +82,15 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     try {
       final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
       final String uuid = qconf.getQueryId().toString();
-
+      Thread.currentThread().setName("query-msg-handler-" + uuid.substring(0, 3));
       try {
         /* Begin of Query: Send QueryStart Message to Client. */
         this.write(session, new QueryStart(uuid));
         /* Execute actual query. */
         LOGGER.trace("Executing query from message {}", message);
-        this.execute(session, qconf, message);
+        final Set<String> segmentIdsForWhichMetadataIsFetched = new HashSet<>();
+        final Set<String> objectIdsForWhichMetadataIsFetched = new HashSet<>();
+        this.execute(session, qconf, message, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
       } catch (Exception e) {
         /* Error: Send QueryError Message to Client. */
         LOGGER.error("An exception occurred during execution of similarity query message {}.", LogHelper.getStackTrace(e));
@@ -100,12 +107,11 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Executes the actual query specified by the {@link Query} object.
-   *
-   * @param session WebSocket session the invocation is associated with.
+   *  @param session WebSocket session the invocation is associated with.
    * @param qconf The {@link QueryConfig} that contains additional specifications.
    * @param message {@link Query} that must be executed.
    */
-  protected abstract void execute(Session session, QueryConfig qconf, T message) throws Exception;
+  protected abstract void execute(Session session, QueryConfig qconf, T message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception;
 
   /**
    * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and returns a list of the {@link MediaSegmentDescriptor}s that were found.
@@ -135,42 +141,103 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Performs a lookup for {@link MediaObjectMetadataReader} identified by the provided segment IDs.
-   *
-   * @param session The WebSocket session to write the data to.
+   *  @param session The WebSocket session to write the data to.
    * @param queryId The current query id used for transmitting data back.
    * @param objectIds List of object IDs for which to lookup metadata.
    */
-  protected void loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds) {
+  protected synchronized List<Thread> loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds, Collection<String> objectIdsForWhichMetadataIsFetched) {
+    if (objectIds.isEmpty()) {
+      return new ArrayList<>();
+    }
+    objectIds.removeAll(objectIdsForWhichMetadataIsFetched);
+    objectIdsForWhichMetadataIsFetched.addAll(objectIds);
     if (objectIds.size() > 100_000) {
-      Lists.partition(objectIds, 100_000).forEach(list -> loadAndWriteObjectMetadata(session, queryId, list));
+      return Lists.partition(objectIds, 100_000).stream().map(list -> loadAndWriteObjectMetadata(session, queryId, list, objectIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
     }
-
-    final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
-
-    if (objectMetadata.isEmpty()) {
-      return;
-    }
-    Lists.partition(objectMetadata, 100_000).forEach(list -> this.write(session, new MediaObjectMetadataQueryResult(queryId, list)));
+    Thread thread = new Thread(() -> {
+      final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
+      if (objectMetadata.isEmpty()) {
+        return;
+      }
+      Lists.partition(objectMetadata, 100_000).forEach(list -> this.write(session, new MediaObjectMetadataQueryResult(queryId, list)));
+    });
+    thread.setName("metadata-retrieval-objects");
+    thread.start();
+    return Collections.singletonList(thread);
   }
 
   /**
    * Performs a lookup for {@link MediaSegmentMetadataDescriptor} identified by the provided segment IDs and writes them to the WebSocket stream.
-   *
    * @param session The WebSocket session to write the data to.
    * @param queryId The current query id used for transmitting data back.
    * @param segmentIds List of segment IDs for which to lookup metadata.
+   * @param segmentIdsForWhichMetadataIsFetched segmentids for which metadata is already fetched
    */
-  protected void loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds) {
+  protected synchronized List<Thread> loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds, Collection<String> segmentIdsForWhichMetadataIsFetched) {
+    if (segmentIds.isEmpty()) {
+      return new ArrayList<>();
+    }
+    List<Thread> threads = new ArrayList<>();
+    segmentIds.removeAll(segmentIdsForWhichMetadataIsFetched);
+    segmentIdsForWhichMetadataIsFetched.addAll(segmentIds);
     //chunk for memory safety-purposes
     if (segmentIds.size() > 100_000) {
-      Lists.partition(segmentIds, 100_000).forEach(list -> loadAndWriteSegmentMetadata(session, queryId, list));
+      return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+    Thread thread = new Thread(() -> {
+      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+      if (segmentMetadata.isEmpty()) {
+        return;
+      }
+      AtomicInteger i = new AtomicInteger(0);
+      Lists.partition(segmentMetadata, 100_000).forEach(list -> {
+        Thread writing = new Thread(() -> {
+          this.write(session, new MediaSegmentMetadataQueryResult(queryId, list));
+        });
+        writing.setName("metadata-ws-write-" + i.getAndIncrement());
+        writing.start();
+        threads.add(writing);
+      });
+    });
+    thread.setName("metadata-retrieval-segments");
+    thread.start();
+    threads.add(thread);
+    return threads;
+  }
+
+  /**
+   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) to the UI. Should be executed before sending results.
+   *
+   * @return objectIds retrieved for the segmentIds
+   */
+  protected List<String> submitSegmentAndObjectInformation(Session session, String queryId, List<String> segmentIds) {
+    StopWatch watch = StopWatch.createStarted();
+    /* Load segment & object information. */
+    LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+
+    LOGGER.trace("Loading object information");
+    final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+
+    if (segments.isEmpty() || objects.isEmpty()) {
+      LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
     }
 
-    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
-    if (segmentMetadata.isEmpty()) {
-      return;
-    }
-    Lists.partition(segmentMetadata, 100_000).forEach(list -> this.write(session, new MediaSegmentMetadataQueryResult(queryId, list)));
+    LOGGER.trace("Writing results to the websocket");
+
+    /* Write segments, objects and similarity search data to stream. */
+    this.write(session, new MediaObjectQueryResult(queryId, objects));
+    this.write(session, new MediaSegmentQueryResult(queryId, segments));
+    return objectIds;
+  }
+
+  protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched) {
+    /* Load and transmit segment & object metadata. */
+    List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched);
+    List<Thread> objectThreads = this.loadAndWriteObjectMetadata(session, queryId, objectIds, objectIdsForWhichMetadataIsFetched);
+    segmentThreads.addAll(objectThreads);
+    return segmentThreads;
   }
 
   /**
@@ -186,26 +253,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     final int stride = 50_000;
     for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
       final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
-      final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
-      /* Load segment & object information. */
-      final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
-
-      final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-      final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
-
-      if (segments.isEmpty() || objects.isEmpty()) {
-        continue;
-      }
-
-      /* Write segments, objects and similarity search data to stream. */
-      this.write(session, new MediaObjectQueryResult(queryId, objects));
-      this.write(session, new MediaSegmentQueryResult(queryId, segments));
       this.write(session, new SimilarityQueryResult(queryId, category, containerId, sub));
-
-      /* Load and transmit segment & object metadata. */
-      this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
-      this.loadAndWriteObjectMetadata(session, queryId, objectIds);
     }
     watch.stop();
     LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));
