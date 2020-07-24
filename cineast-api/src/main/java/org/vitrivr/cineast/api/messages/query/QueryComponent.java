@@ -14,7 +14,9 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
  * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
  *
  * These all have the {@link QueryComponent#containerId} of their parent.
+ * @deprecated use {@link TemporalQuery} instead
  */
+@Deprecated
 public class QueryComponent {
 
   /**

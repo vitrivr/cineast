@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.api.websocket.handlers.abstracts;
 
 
-import org.apache.logging.log4j.Level;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -32,7 +33,14 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
    * Writes a message back to the stream.
    */
   protected final void write(Session session, Message message) {
+
+    StopWatch watch = StopWatch.createStarted();
     String json = this.writer.toJson(message);
+    if (message.getMessageType() != MessageType.PING) {
+      LOGGER.trace("Serialization for {} in {} ms", message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
+    }
+    String callbackName = Thread.currentThread().getName();
+
     session.getRemote().sendString(json, new WriteCallback() {
       @Override
       public void writeFailed(Throwable x) {
@@ -44,7 +52,8 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
         if (message.getMessageType() == MessageType.PING) {
           return;
         }
-        LOGGER.trace("Successfully message {} with size {} KB", message.getMessageType(), json.getBytes().length / 1_000);
+        watch.stop();
+        LOGGER.trace("{}: Successfully wrote message {} in {} ms", callbackName, message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
       }
     });
   }
