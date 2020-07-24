@@ -67,8 +67,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds) {
-    Stream<MediaSegmentDescriptor> descriptors =
-        this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
     //this implicitly deduplicates the stream
     Map<String, MediaSegmentDescriptor> _return = new HashMap<>();
     descriptors.forEach(msd -> _return.put(msd.getSegmentId(), msd));
