@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
@@ -204,10 +205,10 @@ public class CottontailSelector implements DBSelector {
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
-    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(
+    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(
         CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT_DISTINCT, column), null, null, null), null));
 
-    results.forEach(response -> response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.fromData(tuple.getDataOrThrow(column)))));
+    results.forEach(tuple -> _return.add(CottontailMessageBuilder.fromData(tuple.getTuple().getDataOrThrow(column))));
     return _return;
   }
 
@@ -240,17 +241,10 @@ public class CottontailSelector implements DBSelector {
     return this.cottontail.ping();
   }
 
-  public static List<Map<String, PrimitiveTypeProvider>> processResults(List<QueryResponseMessage> queryResponses) {
-    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>();
-    StopWatch watch = StopWatch.createStarted();
   private static List<Map<String, PrimitiveTypeProvider>> processResults(
       List<QueryResultMessage> queryResponses) {
     StopWatch watch = StopWatch.createStarted();
 
-    for (QueryResponseMessage response : queryResponses) {
-      response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.tupleToMap(tuple)));
-    }
-    LOGGER.trace("Processed {} results in {} ms", _return.size(), watch.getTime(TimeUnit.MILLISECONDS));
     List<Map<String, PrimitiveTypeProvider>> _return = queryResponses.stream().map(response -> CottontailMessageBuilder.tupleToMap(response.getTuple())).collect(Collectors.toList());
 
     LOGGER.trace("Processed {} results in {} ms", _return.size(), watch.getTime(TimeUnit.MILLISECONDS));

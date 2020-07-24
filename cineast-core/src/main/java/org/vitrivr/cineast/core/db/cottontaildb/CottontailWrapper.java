@@ -171,16 +171,7 @@ public class CottontailWrapper implements AutoCloseable {
     final ArrayList<QueryResultMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      Iterator<QueryResultMessage> iterator = stub.query(query);
-      int i = 0;
-      while(iterator.hasNext()){
-        iterator.next();
-        i++;
-        if(i%100 == 0){
-          LOGGER.debug("fetched {} elements at {} ms", i, watch.getTime(TimeUnit.MILLISECONDS));
-        }
-      }
-      //stub.query(query).forEachRemaining(results::add);
+      stub.query(query).forEachRemaining(results::add);
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
         LOGGER.error("CottontailWrapper.query has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
