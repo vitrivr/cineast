@@ -3,7 +3,7 @@
     "host": "localhost",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
-    "port": 1865,
+    "port": 1800,
     "plaintext": true
   },
   "benchmark": {
@@ -135,10 +135,12 @@
     "enableWebsocketSecure": false,
     "enableRest": true,
     "enableRestSecure": false,
+    "enableRestLiveDoc": true,
     "enableLegacy": false,
     "maxMessageSize": 40960000,
-    "httpPort": 4567,
-    "httpsPort": 4568,
+    "httpPort": 1900,
+    "httpsPort": 1901,
+    "grpcPort":1902,
     "legacyPort": 12345,
     "threadPoolSize": 12,
     "serveContent": true,
@@ -154,7 +156,7 @@
   },
 
   "monitoring":{
-    "enablePrometheus": true,
+    "enablePrometheus": false,
     "prometheusPort": 4569
   }
 
