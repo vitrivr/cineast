@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
+import com.sun.mail.imap.protocol.ID;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
@@ -24,17 +27,7 @@ public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSeg
   public static final String ROUTE = "find/segments/all/object/:" + ID_NAME;
   
   
-  @OpenApi(
-      summary = "Find segments by their media object's id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id of the media object to find segments of")
-      },
-      tags = {"Segment"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
-      }
-  )
+  
   @Override
   public MediaSegmentQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -53,5 +46,29 @@ public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSeg
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Find segments by their media object's id",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+          @OpenApiParam(name = ID_NAME, description = "The id of the media object to find segments of")
+      },
+      tags = {"Segment"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find segments by their media object's id");
+          op.description("Find segments by their media object's id");
+          op.operationId("findSegmentByObjectId");
+          op.addTagsItem("Segment");
+        })
+        .pathParam(ID_NAME, String.class, p -> p.description("The id of the media object to find segments fo"))
+        .json("200", outClass());
   }
 }

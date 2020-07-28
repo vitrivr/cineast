@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.tag;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.result.TagsQueryResult;
@@ -74,5 +76,32 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Find all tags specified by attribute value",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+          @OpenApiParam(name = ATTRIBUTE_NAME, description = "The attribute to filter on. One of: id, name, matchingname"),
+          @OpenApiParam(name = VALUE_NAME, description = "The actual value of the attribute to filter")
+      },
+      tags = {"Tag"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find all tags specified by attribute value");
+          op.description("Find all tags by attributes id, name or matchingname and filter value");
+          op.operationId("findTagsBy");
+          op.addTagsItem("Tag");
+        })
+        .pathParam(ATTRIBUTE_NAME, String.class, p -> p.description("The attribute to filter on. One of: id, name, "+MATCHING_NAME))
+        .pathParam(VALUE_NAME, String.class, p -> p.description("The value of the attribute to filter"))
+        .json("200", outClass());
+    
   }
 }

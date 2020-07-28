@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -16,7 +18,7 @@ import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectM
  *  *
  *  * <p>
  *  * The action should contain an id and a domain, e.g. {@code /metadata/in/:domain/by/id/:id}. The response is JSON
- *  * encoded and basically identical to a response from {@link FindMetadataByObjectIdActionHandler}: A list of {@link
+ *  * encoded and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}: A list of {@link
  *  * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
  */
 public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
@@ -54,5 +56,19 @@ public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<Medi
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find metadata for specific object id in given domain");
+          op.description("Find metadata for specific object id in given domain");
+          op.operationId("findMetadataByDomain");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+        })
+        .pathParam(DOMAIN_NAME, String.class, p -> p.description("The domain of the metadata to find"))
+        .pathParam(OBJECT_ID_NAME, String.class, p -> p.description("The object id of the multimedia object to find metadata for"))
+        .json("200", outClass());
   }
 }

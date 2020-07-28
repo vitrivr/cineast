@@ -2,6 +2,9 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -12,13 +15,14 @@ import java.util.Map;
 
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
 import static org.vitrivr.cineast.api.APIEndpoint.METADATA_OAS_TAG;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.
  *
  * The action should contain a domain, e.g. {@code /metadata/in/:domain}. The post body is an {@link IdList} and the
  *  * response contains metadata for each id in that list, belonging to the specified domain. The response is JSON encoded
- *  * and basically identical to a response from {@link FindMetadataByObjectIdActionHandler}:
+ *  * and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}:
  *  * A list of {@link
  *  * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
  */
@@ -63,5 +67,19 @@ public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHan
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find metadata in the specified domain for all the given ids");
+          op.description("Find metadata in the specified domain for all the given ids");
+          op.operationId("findMetadataByDomainBatched");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+        })
+        .pathParam(DOMAIN_NAME, String.class, p -> p.description("The domain of the metadata to find"))
+        .body(inClass())
+        .json("200", outClass());
   }
 }

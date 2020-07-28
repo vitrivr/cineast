@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.mediaobject;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -51,5 +53,18 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find objects by id");
+          op.description("Find objects by id");
+          op.operationId("findObjectsByIdBatched");
+          op.addTagsItem("Object");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

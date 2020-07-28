@@ -5,6 +5,8 @@ import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.result.TagsQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
@@ -39,5 +41,17 @@ public class FindTagsAllGetHandler implements GetRestHandler<TagsQueryResult> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find all tags");
+          op.operationId("findAllTags");
+          op.addTagsItem("Tag");
+        })
+        .json("200", outClass());
+    
   }
 }

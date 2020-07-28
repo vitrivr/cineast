@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +29,7 @@ import org.vitrivr.cineast.standalone.config.Config;
  *
  * For example, it would be useful to know all available timezones for the column $table.timezone
  */
-public class FindDistinctElementsByColumnGetHandler implements ParsingPostRestHandler<ColumnSpecification, DistinctElementsResult> {
+public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestHandler<ColumnSpecification, DistinctElementsResult> {
 
   public static final String ROUTE = "find/boolean/column/distinct";
 
@@ -36,14 +39,7 @@ public class FindDistinctElementsByColumnGetHandler implements ParsingPostRestHa
 
   private static Map<String, List<String>> cache = new HashMap<String, List<String>>();
 
-  @OpenApi(
-      summary = "Find all distinct elements of a given column",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Boolean"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = DistinctElementsResult.class))
-      }
-  )
+ 
   @Override
   public DistinctElementsResult performPost(ColumnSpecification specification, Context ctx) {
     List<String> distinct = new ArrayList<>();
@@ -77,5 +73,19 @@ public class FindDistinctElementsByColumnGetHandler implements ParsingPostRestHa
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary( "Find all distinct elements of a given column");
+          op.description("TODO");
+          op.operationId("FindDistinctElementsByColumn");
+          op.addTagsItem("Misc");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

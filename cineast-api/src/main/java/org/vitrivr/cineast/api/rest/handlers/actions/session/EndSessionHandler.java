@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import com.sun.mail.imap.protocol.ID;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -17,17 +20,7 @@ public class EndSessionHandler implements GetRestHandler<SessionState> {
   
   public static final String ROUTE = "session/end/:" + ID_NAME;
   
-  @OpenApi(
-      summary = "End the session for given id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id of the session to end")
-      },
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
+ 
   @Override
   public SessionState doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -41,10 +34,6 @@ public class EndSessionHandler implements GetRestHandler<SessionState> {
   }
   
   
-  public String getDescription(RestHttpMethod method) {
-    return "End the session for id";
-  }
-  
   @Override
   public Class<SessionState> outClass() {
     return SessionState.class;
@@ -53,5 +42,29 @@ public class EndSessionHandler implements GetRestHandler<SessionState> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "End the session for given id",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+          @OpenApiParam(name = ID_NAME, description = "The id of the session to end")
+      },
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("End the session for given id");
+          op.description("Ends the session for the given id");
+          op.addTagsItem("Session");
+          op.operationId("endSession");
+        })
+        .pathParam(ID_NAME, String.class, p -> p.description("The id of the session to end"))
+        .json("200", outClass());
   }
 }
