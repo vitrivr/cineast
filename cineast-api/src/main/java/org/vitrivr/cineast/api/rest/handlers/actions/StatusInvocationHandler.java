@@ -17,7 +17,7 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
  * @version 1.0
  * @created 09.01.17
  */
-public class StatusInvokationHandler implements GetRestHandler<Ping> {
+public class StatusInvocationHandler implements GetRestHandler<Ping> {
   
   public static final String ROUTE = "status";
   

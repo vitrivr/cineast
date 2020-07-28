@@ -21,15 +21,6 @@ public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionCont
   public static final String ROUTE = "session/extract/new";
   private static final Logger LOGGER = LogManager.getLogger();
   
-  @OpenApi(
-      summary = "Extrat new item",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ExtractionContainerMessage.class)),
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public SessionState performPost(ExtractionContainerMessage context, Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State

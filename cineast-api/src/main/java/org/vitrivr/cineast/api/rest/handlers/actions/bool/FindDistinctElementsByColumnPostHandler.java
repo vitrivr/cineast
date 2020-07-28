@@ -77,7 +77,7 @@ public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestH
     return OpenApiBuilder.document()
         .operation(op -> {
           op.summary("Find all distinct elements of a given column");
-          op.description("TODO");
+          op.description("Find all distinct elements of a given column. Please note that this operation does cache results.");
           op.operationId("FindDistinctElementsByColumn");
           op.addTagsItem("Misc");
         })

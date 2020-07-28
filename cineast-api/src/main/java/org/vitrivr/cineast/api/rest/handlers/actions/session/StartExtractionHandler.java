@@ -25,14 +25,6 @@ public class StartExtractionHandler implements PostRestHandler<SessionState> {
   public static final String ROUTE = "session/extract/start";
   
   
-  @OpenApi(
-      summary = "Start extraction session",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public SessionState doPost(Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
