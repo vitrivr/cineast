@@ -54,15 +54,6 @@ public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionCont
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Extrat new item",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ExtractionContainerMessage.class)),
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

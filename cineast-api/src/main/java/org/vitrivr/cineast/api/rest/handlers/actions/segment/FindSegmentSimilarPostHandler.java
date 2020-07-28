@@ -72,15 +72,6 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Finds similar segments based on the given query",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = SimilarityQuery.class)),
-      tags = {"Segments"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SimilarityQueryResultBatch.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

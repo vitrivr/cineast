@@ -55,14 +55,6 @@ public class StartExtractionHandler implements PostRestHandler<SessionState> {
   public String route() {
     return ROUTE;
   }
-  @OpenApi(
-      summary = "Start extraction session",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

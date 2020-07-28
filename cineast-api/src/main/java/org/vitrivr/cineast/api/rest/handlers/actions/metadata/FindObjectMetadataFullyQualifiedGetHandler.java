@@ -30,19 +30,6 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
   
   public static final String ROUTE = "find/metadata/of/:" + OBJECT_ID_NAME + "/in/:" + DOMAIN_NAME + "/with/:" + KEY_NAME;
   
-  // Unused, replaced by docs()
-//  @OpenApi(
-//      summary = "Find metadata for specific object id in given domain with given key",
-//      path = ROUTE, method = HttpMethod.GET,
-//      pathParams = {
-//          @OpenApiParam(name = OBJECT_ID_NAME, description = "The object id"),
-//          @OpenApiParam(name = DOMAIN_NAME, description = "The domain name"),
-//          @OpenApiParam(name = KEY_NAME, description = "The key of the metadata")
-//      },
-//      tags = {APIEndpoint.METADATA_OAS_TAG},
-//      responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))}
-//      // TODO Other responses in error case
-//  )
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

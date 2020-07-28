@@ -19,15 +19,6 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
   
   public static final String ROUTE = "find/object/by/id";
   
-  @OpenApi(
-      summary = "Find objects by id",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      tags = {"Object"},
-      responses = {
-          @OpenApiResponse(status="200", content = @OpenApiContent(from = MediaObjectQueryResult.class))
-      }
-  )
   @Override
   public MediaObjectQueryResult performPost(IdList context, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

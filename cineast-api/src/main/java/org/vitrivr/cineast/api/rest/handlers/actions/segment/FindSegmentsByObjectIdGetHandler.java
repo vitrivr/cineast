@@ -48,17 +48,6 @@ public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSeg
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Find segments by their media object's id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id of the media object to find segments of")
-      },
-      tags = {"Segment"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

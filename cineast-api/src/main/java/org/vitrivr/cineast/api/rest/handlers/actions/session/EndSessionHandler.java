@@ -44,17 +44,6 @@ public class EndSessionHandler implements GetRestHandler<SessionState> {
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "End the session for given id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id of the session to end")
-      },
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

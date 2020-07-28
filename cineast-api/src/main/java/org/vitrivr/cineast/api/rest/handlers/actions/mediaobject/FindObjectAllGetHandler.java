@@ -40,17 +40,6 @@ public class FindObjectAllGetHandler implements GetRestHandler<MediaObjectQueryR
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Find all objects for a certain type",
-      path= ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = TYPE_NAME, description = "The type the objects should have")
-      },
-      tags={"Object"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectQueryResult.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

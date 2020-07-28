@@ -26,18 +26,6 @@ public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<Medi
   
   public static final String ROUTE = "find/metadata/in/:" + DOMAIN_NAME + "/by/id/:" + FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
   
-  @OpenApi(
-      summary = "Find metadata for specific object id in given domain",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = OBJECT_ID_NAME, description = "The object id of the multimedia object to find metadata for"),
-          @OpenApiParam(name = DOMAIN_NAME, description = "The domain of the metadata to find")
-      },
-      tags = {APIEndpoint.METADATA_OAS_TAG},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
-      }
-  )
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

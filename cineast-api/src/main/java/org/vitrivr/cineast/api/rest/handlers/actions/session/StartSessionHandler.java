@@ -17,15 +17,6 @@ public class StartSessionHandler implements ParsingPostRestHandler<StartSessionM
   
   public static final String ROUTE = "session/start";
   
-  @OpenApi(
-      summary = "Start new session for given credentials",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Session"},
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = StartSessionMessage.class)),
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public SessionState performPost(StartSessionMessage context, Context ctx) {
     SessionType type = SessionType.UNAUTHENTICATED;

@@ -25,17 +25,6 @@ public class FindSegmentsByIdGetHandler implements GetRestHandler<MediaSegmentQu
   
   public static final String ROUTE = "find/segments/by/id/:"+ ID_NAME;
   
-  @OpenApi(
-      summary = "Find segments for specified ids",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id of the segments")
-      },
-      tags = {"Segment"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
-      }
-  )
   @Override
   public MediaSegmentQueryResult doGet(Context ctx) {
     final Map<String,String> parameters = ctx.pathParamMap();

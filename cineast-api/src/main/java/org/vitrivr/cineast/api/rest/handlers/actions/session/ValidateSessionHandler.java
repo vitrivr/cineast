@@ -62,17 +62,6 @@ public class ValidateSessionHandler implements GetRestHandler<SessionState> {
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Validates the session with given id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ID_NAME, description = "The id to validate the session of")
-      },
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

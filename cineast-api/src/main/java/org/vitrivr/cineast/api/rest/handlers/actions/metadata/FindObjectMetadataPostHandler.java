@@ -21,15 +21,6 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
   
   public static final String ROUTE = "find/metadata/by/id";
   
-  @OpenApi(
-      summary = "Find metadata for the given object id",
-      path=ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from=OptionallyFilteredIdList.class)),
-      tags={APIEndpoint.METADATA_OAS_TAG},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
-      }
-  )
   @Override
   public MediaObjectMetadataQueryResult performPost(OptionallyFilteredIdList ids, Context ctx) {
     if (ids == null || ids.getIds().length == 0) {

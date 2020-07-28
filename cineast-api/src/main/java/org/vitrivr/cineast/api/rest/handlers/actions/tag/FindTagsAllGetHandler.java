@@ -20,14 +20,6 @@ public class FindTagsAllGetHandler implements GetRestHandler<TagsQueryResult> {
 
   private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
   
-  @OpenApi(
-      summary = "Find all tags",
-      path = ROUTE, method = HttpMethod.GET,
-      tags = {"Tag"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
-      }
-  )
   @Override
   public TagsQueryResult doGet(Context ctx) {
     return new TagsQueryResult("", tagReader.getAllCached());

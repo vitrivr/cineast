@@ -47,15 +47,6 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Finds segments for specified ids",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      tags = {"Segment"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

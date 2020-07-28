@@ -78,18 +78,6 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Find all tags specified by attribute value",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ATTRIBUTE_NAME, description = "The attribute to filter on. One of: id, name, matchingname"),
-          @OpenApiParam(name = VALUE_NAME, description = "The actual value of the attribute to filter")
-      },
-      tags = {"Tag"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

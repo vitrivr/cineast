@@ -68,16 +68,6 @@ public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResu
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Find object by specified attribute value. I.e by id, name or path",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ATTRIBUTE_NAME, description = "The attribute type of the value. One of: id, name, path")
-      },
-      tags= {"Object"},
-      responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectQueryResult.class))}
-  
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

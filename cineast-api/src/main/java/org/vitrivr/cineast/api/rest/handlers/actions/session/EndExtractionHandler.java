@@ -22,14 +22,6 @@ public class EndExtractionHandler implements PostRestHandler<SessionState> {
   public static final String ROUTE = "session/extract/end";
   
 
-  @OpenApi(
-      summary = "End the active extraction session",
-      path= ROUTE, method = HttpMethod.POST,
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from=SessionState.class))
-      },
-      tags={"Session"}
-  )
   @Override
   public SessionState doPost(Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State

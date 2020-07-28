@@ -30,18 +30,6 @@ public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHan
   
   public static final String ROUTE = "find/metadata/in/:"+DOMAIN_NAME;
   
-  @OpenApi(
-      summary = "Find metadata in the specified domain for all the given ids",
-      path = ROUTE, method = HttpMethod.POST,
-      pathParams = {
-          @OpenApiParam(name = DOMAIN_NAME, description = "The domain name")
-      },
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      tags = {METADATA_OAS_TAG},
-      responses = {
-          @OpenApiResponse(status="200", content = @OpenApiContent(from=MediaObjectMetadataQueryResult.class))
-      }
-  )
   @Override
   public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
     final Map<String,String> parameters = ctx.pathParamMap();

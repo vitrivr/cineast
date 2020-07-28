@@ -17,17 +17,6 @@ public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectM
   
   public static final String ROUTE = "find/metadata/by/id/:"+OBJECT_ID_NAME;
   
-//  @OpenApi(
-//      summary = "Find metadata for the given object id",
-//      path=ROUTE, method = HttpMethod.GET,
-//      pathParams = {
-//          @OpenApiParam(name=OBJECT_ID_NAME, description = "The object id to find metadata of")
-//      },
-//      tags={APIEndpoint.METADATA_OAS_TAG},
-//      responses = {
-//          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
-//      }
-//  )
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

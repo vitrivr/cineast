@@ -57,15 +57,6 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
     return ROUTE;
   }
   
-  @OpenApi(
-      summary = "Find all tags by ids",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Tag"},
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
-      }
-  )
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
