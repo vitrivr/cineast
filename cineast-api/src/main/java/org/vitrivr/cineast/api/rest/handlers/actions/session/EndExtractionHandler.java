@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.HttpMethod;
-import io.javalin.plugin.openapi.annotations.OpenApi;
-import io.javalin.plugin.openapi.annotations.OpenApiContent;
-import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
@@ -13,18 +11,13 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
  * @author silvan on 23.01.18.
  */
 public class EndExtractionHandler implements PostRestHandler<SessionState> {
-
+  
+  // FIXME This needs cleanup and testing
+  
+  
   public static final String ROUTE = "session/extract/end";
   
-
-  @OpenApi(
-      summary = "End the active extraction session",
-      path= ROUTE, method = HttpMethod.POST,
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from=SessionState.class))
-      },
-      tags={"Session"}
-  )
+  
   @Override
   public SessionState doPost(Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
@@ -40,5 +33,18 @@ public class EndExtractionHandler implements PostRestHandler<SessionState> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("End the active extraction session");
+          op.description("CAUTION. Untested");
+          op.deprecated(true); // FIXME when testing / cleanup is done, please remove
+          op.addTagsItem("Session");
+          op.operationId("endExtraction");
+        })
+        .json("200", outClass());
   }
 }

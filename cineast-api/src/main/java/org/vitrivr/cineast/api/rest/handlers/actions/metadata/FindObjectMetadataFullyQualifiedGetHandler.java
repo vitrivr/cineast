@@ -1,13 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import java.util.Map;
-
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
+
+import java.util.Map;
 
 /**
  * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.
@@ -28,18 +29,6 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
   
   public static final String ROUTE = "find/metadata/of/:" + OBJECT_ID_NAME + "/in/:" + DOMAIN_NAME + "/with/:" + KEY_NAME;
   
-  @OpenApi(
-      summary = "Find metadata for specific object id in given domain with given key",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = OBJECT_ID_NAME, description = "The object id"),
-          @OpenApiParam(name = DOMAIN_NAME, description = "The domain name"),
-          @OpenApiParam(name = KEY_NAME, description = "The key of the metadata")
-      },
-      tags = {APIEndpoint.METADATA_OAS_TAG},
-      responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))}
-      // TODO Other responses in error case
-  )
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -49,6 +38,24 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
     final MetadataRetrievalService service = new MetadataRetrievalService();
     return new MediaObjectMetadataQueryResult("", service.find(objectId, domain, key)
     );
+  }
+  
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.description("The description");
+          op.summary("Find metadata for specific object id in given domain with given key");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.operationId("findMetaFullyQualified");
+        })
+        .pathParam(OBJECT_ID_NAME, String.class, param -> {
+          param.description("The object id");
+        })
+        .pathParam(DOMAIN_NAME, String.class, param -> {
+          param.description("The domain name");
+        })
+        .pathParam(KEY_NAME, String.class, param -> param.description("Metadata key"))
+        .json("200", outClass());
   }
   
   @Override
