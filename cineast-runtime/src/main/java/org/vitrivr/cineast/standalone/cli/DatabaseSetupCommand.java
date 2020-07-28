@@ -3,13 +3,11 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
-
 import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.HashSet;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -17,9 +15,6 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ExtractorConfig;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
-import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactory;
 
 /**
  * A CLI command that can be used to setup all the database entities required by Cineast.
@@ -65,23 +60,21 @@ public class DatabaseSetupCommand implements Runnable {
   /**
    * This is a hacky way to support CLI and non CLI usage.
    *
-   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used.
-   * See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
+   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used. See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
    */
   private final boolean isNotCommand;
 
   /**
    * For CLI
    */
-  public DatabaseSetupCommand(){
+  public DatabaseSetupCommand() {
     this(false);
   }
 
   /**
    * Other usages, i.e. in Import
-   * @param nonCli
    */
-  public DatabaseSetupCommand(boolean nonCli){
+  public DatabaseSetupCommand(boolean nonCli) {
     this.isNotCommand = nonCli;
   }
 
@@ -94,7 +87,7 @@ public class DatabaseSetupCommand implements Runnable {
   /**
    * Performs necessary setup on database, i.e. creating the required tables.
    */
-  public void doSetup(){
+  public void doSetup() {
     final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
       HashSet<PersistentOperator> persistentOperators;
@@ -137,7 +130,7 @@ public class DatabaseSetupCommand implements Runnable {
    * Drops all entities currently required by Cineast.
    *
    * @param ec The {@link EntityCreator} used to drop the entities.
-   * @param retrievers The list of {@link Retriever} classes to drop the entities for.
+   * @param persistentOperators The list of {@link PersistentOperator} classes to drop the entities for.
    */
   private void dropAllEntities(EntityCreator ec, Collection<PersistentOperator> persistentOperators) {
     print("Dropping all entities... ");
@@ -156,10 +149,10 @@ public class DatabaseSetupCommand implements Runnable {
   /**
    * Prints the message given, if this is object was created in a CLI env, then it prints to standard out, otherwise it just logs on INFO
    */
-  private void print(String msg){
-    if(this.isNotCommand){
+  private void print(String msg) {
+    if (this.isNotCommand) {
       LOGGER.info(msg);
-    }else{
+    } else {
       System.out.println(msg);
     }
   }
