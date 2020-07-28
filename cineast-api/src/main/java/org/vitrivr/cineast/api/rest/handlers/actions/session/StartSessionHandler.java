@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.credentials.Credentials;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
@@ -15,15 +16,6 @@ public class StartSessionHandler implements ParsingPostRestHandler<StartSessionM
   
   public static final String ROUTE = "session/start";
   
-  @OpenApi(
-      summary = "Start new session for given credentials",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Session"},
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = StartSessionMessage.class)),
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
   @Override
   public SessionState performPost(StartSessionMessage context, Context ctx) {
     SessionType type = SessionType.UNAUTHENTICATED;
@@ -48,5 +40,17 @@ public class StartSessionHandler implements ParsingPostRestHandler<StartSessionM
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Start new session for given credentials");
+          op.operationId("startSession");
+          op.addTagsItem("Session");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

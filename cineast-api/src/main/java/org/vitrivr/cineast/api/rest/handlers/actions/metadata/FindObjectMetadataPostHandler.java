@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
@@ -12,25 +13,14 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
   
   public static final String ROUTE = "find/metadata/by/id";
   
-  @OpenApi(
-      summary = "Find metadata for the given object id",
-      path=ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from=OptionallyFilteredIdList.class)),
-      tags={APIEndpoint.METADATA_OAS_TAG},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
-      }
-  )
   @Override
   public MediaObjectMetadataQueryResult performPost(OptionallyFilteredIdList ids, Context ctx) {
-    final Map<String, String> parameters = ctx.pathParamMap();
     if (ids == null || ids.getIds().length == 0) {
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
@@ -59,5 +49,18 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.description("Finds metadata for the given list of object ids");
+          op.summary("Finds metadata for the given list of object ids");
+          op.operationId("findMetadataForObjectIdBatched");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }
