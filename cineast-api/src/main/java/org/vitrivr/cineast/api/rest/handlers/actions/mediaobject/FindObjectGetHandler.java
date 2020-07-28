@@ -2,7 +2,6 @@ package org.vitrivr.cineast.api.rest.handlers.actions.mediaobject;
 
 import com.google.common.collect.Lists;
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.logging.log4j.LogManager;
@@ -20,22 +19,21 @@ public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResu
   public static final String ATTRIBUTE_NAME = "attribute";
   public static final String VALUE_NAME = "value";
   
-  public static final String ROUTE = "find/object/by/:"+ATTRIBUTE_NAME+"/:"+VALUE_NAME;
+  public static final String ROUTE = "find/object/by/:" + ATTRIBUTE_NAME + "/:" + VALUE_NAME;
   
   private static final Logger LOGGER = LogManager.getLogger(FindObjectGetHandler.class);
-  
   
   
   @Override
   public MediaObjectQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
-  
+    
     final String attribute = parameters.get(ATTRIBUTE_NAME);
     final String value = parameters.get(VALUE_NAME);
-  
+    
     final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     MediaObjectDescriptor object = null;
-  
+    
     switch (attribute.toLowerCase()) {
       case "id": {
         object = ol.lookUpObjectById(value);
@@ -53,7 +51,7 @@ public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResu
         LOGGER.error("Unknown attribute '{}' in FindObjectByActionHandler", attribute);
       }
     }
-  
+    
     ol.close();
     return new MediaObjectQueryResult("", Lists.newArrayList(object));
   }

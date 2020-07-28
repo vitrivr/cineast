@@ -1,15 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import java.util.Map;
-
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
+
+import java.util.Map;
 
 /**
  * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.
@@ -41,16 +40,16 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
     );
   }
   
-  public OpenApiDocumentation docs(){
+  public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
-      op.description("The description");
-      op.summary("Find metadata for specific object id in given domain with given key");
-      op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
-      op.operationId("findMetaFullyQualified");
-    })
+          op.description("The description");
+          op.summary("Find metadata for specific object id in given domain with given key");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.operationId("findMetaFullyQualified");
+        })
         .pathParam(OBJECT_ID_NAME, String.class, param -> {
-      param.description("The object id");
+          param.description("The object id");
         })
         .pathParam(DOMAIN_NAME, String.class, param -> {
           param.description("The domain name");

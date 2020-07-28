@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;

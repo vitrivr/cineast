@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.mediaobject;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
@@ -22,13 +21,13 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
   @Override
   public MediaObjectQueryResult performPost(IdList context, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
-    if(context == null || context.getIds().length == 0){
-      return new MediaObjectQueryResult("",new ArrayList<>(0));
+    if (context == null || context.getIds().length == 0) {
+      return new MediaObjectQueryResult("", new ArrayList<>(0));
     }
     final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final Map<String, MediaObjectDescriptor> objects = ol.lookUpObjects(Arrays.asList(context.getIds()));
     ol.close();
-    return new MediaObjectQueryResult("",new ArrayList<>(objects.values()));
+    return new MediaObjectQueryResult("", new ArrayList<>(objects.values()));
   }
   
   @Override

@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +51,7 @@ public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionCont
           op.operationId("extractItem");
           op.summary("Extract new item");
           op.description("TODO");
-              op.addTagsItem("Session");
+          op.addTagsItem("Session");
         })
         .body(inClass())
         .json("200", outClass());

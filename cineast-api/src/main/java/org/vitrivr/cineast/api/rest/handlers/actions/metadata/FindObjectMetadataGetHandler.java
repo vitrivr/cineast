@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
@@ -11,11 +10,11 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 import java.util.Map;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.*;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
   
-  public static final String ROUTE = "find/metadata/by/id/:"+OBJECT_ID_NAME;
+  public static final String ROUTE = "find/metadata/by/id/:" + OBJECT_ID_NAME;
   
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {

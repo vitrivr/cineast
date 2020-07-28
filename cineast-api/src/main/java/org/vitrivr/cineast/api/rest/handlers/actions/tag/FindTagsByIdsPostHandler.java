@@ -20,7 +20,7 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
   
   public static final String ROUTE = "tags/by/id"; // TODO only route not prefixed by find?
   
-  private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+  private static final TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
   
   @OpenApi(
       summary = "Find all tags by ids",

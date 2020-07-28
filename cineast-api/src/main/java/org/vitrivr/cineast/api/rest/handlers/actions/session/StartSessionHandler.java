@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.credentials.Credentials;
@@ -52,6 +51,6 @@ public class StartSessionHandler implements ParsingPostRestHandler<StartSessionM
           op.addTagsItem("Session");
         })
         .body(inClass())
-        .json("200",outClass());
+        .json("200", outClass());
   }
 }

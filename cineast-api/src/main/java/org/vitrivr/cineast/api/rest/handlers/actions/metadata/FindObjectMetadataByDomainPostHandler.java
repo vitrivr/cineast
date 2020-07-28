@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
@@ -14,25 +13,22 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
-import static org.vitrivr.cineast.api.APIEndpoint.METADATA_OAS_TAG;
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.
- *
- * The action should contain a domain, e.g. {@code /metadata/in/:domain}. The post body is an {@link IdList} and the
- *  * response contains metadata for each id in that list, belonging to the specified domain. The response is JSON encoded
- *  * and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}:
- *  * A list of {@link
- *  * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
+ * <p>
+ * The action should contain a domain, e.g. {@code /metadata/in/:domain}. The post body is an {@link IdList} and the *
+ * response contains metadata for each id in that list, belonging to the specified domain. The response is JSON encoded
+ * * and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}: * A list of {@link *
+ * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
  */
 public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHandler<IdList, MediaObjectMetadataQueryResult> {
   
-  public static final String ROUTE = "find/metadata/in/:"+DOMAIN_NAME;
+  public static final String ROUTE = "find/metadata/in/:" + DOMAIN_NAME;
   
   @Override
   public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
-    final Map<String,String> parameters = ctx.pathParamMap();
+    final Map<String, String> parameters = ctx.pathParamMap();
     if (ids == null || ids.getIds().length == 0) {
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }

@@ -1,13 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
-import com.sun.mail.imap.protocol.ID;
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import org.vitrivr.cineast.api.APIEndpoint;
-import org.vitrivr.cineast.api.messages.lookup.IdList;
-import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -17,15 +12,12 @@ import org.vitrivr.cineast.standalone.config.Config;
 import java.util.List;
 import java.util.Map;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.KEY_NAME;
-
 public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSegmentQueryResult> {
   
   // TODO CAUTION: This route has a breaking change in response signature
   
   public static final String ID_NAME = "id";
   public static final String ROUTE = "find/segments/all/object/:" + ID_NAME;
-  
   
   
   @Override

@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
@@ -11,15 +10,14 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 import java.util.Map;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.*;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 /**
- * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.
- *  *
- *  * <p>
- *  * The action should contain an id and a domain, e.g. {@code /metadata/in/:domain/by/id/:id}. The response is JSON
- *  * encoded and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}: A list of {@link
- *  * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
+ * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain. * * <p>
+ * * The action should contain an id and a domain, e.g. {@code /metadata/in/:domain/by/id/:id}. The response is JSON *
+ * encoded and basically identical to a response from {@link FindObjectMetadataFullyQualifiedGetHandler}: A list of
+ * {@link * MediaObjectMetadataDescriptor}s with only entries of the specified domain.
  */
 public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
   
