@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
@@ -53,5 +55,19 @@ public class FindObjectMetadataByKeyPostHandler implements ParsingPostRestHandle
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find metadata for a given object id with specified key");
+          op.description("Find metadata with a the speicifed key from the path across all domains and for the provided ids");
+          op.operationId("findMetadataByKeyBatched");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+        })
+        .pathParam(KEY_NAME, String.class, p -> p.description("The key of the metadata to find"))
+        .body(inClass())
+        .json("200", outClass());
   }
 }

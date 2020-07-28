@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -68,5 +70,27 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Finds similar segments based on the given query",
+      path = ROUTE, method = HttpMethod.POST,
+      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = SimilarityQuery.class)),
+      tags = {"Segments"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SimilarityQueryResultBatch.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find similar segments based on the given query");
+          op.description("Performs a similarity search based on the formulated query");
+          op.operationId("findSegmentSimilar");
+          op.addTagsItem("Segments");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

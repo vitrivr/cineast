@@ -4,6 +4,8 @@ import java.util.Map;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 import org.vitrivr.cineast.api.rest.RestHttpMethod;
@@ -19,17 +21,7 @@ public class ValidateSessionHandler implements GetRestHandler<SessionState> {
   public static final String ROUTE = "session/validate/:"+ID_NAME;
   
   
-  @OpenApi(
-      summary = "Validates the session with given id",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-        @OpenApiParam(name = ID_NAME, description = "The id to validate the session of")
-      },
-      tags = {"Session"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
-      }
-  )
+  
   @Override
   public SessionState doGet(Context ctx) {
     return validateSession(ctx.pathParamMap());
@@ -68,5 +60,28 @@ public class ValidateSessionHandler implements GetRestHandler<SessionState> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Validates the session with given id",
+      path = ROUTE, method = HttpMethod.GET,
+      pathParams = {
+          @OpenApiParam(name = ID_NAME, description = "The id to validate the session of")
+      },
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Validates the session with given id");
+          op.operationId("validateSession");
+          op.addTagsItem("Session");
+        })
+        .pathParam(ID_NAME, String.class, p -> p.description("The id to validate the session of"))
+        .json("200", outClass());
   }
 }

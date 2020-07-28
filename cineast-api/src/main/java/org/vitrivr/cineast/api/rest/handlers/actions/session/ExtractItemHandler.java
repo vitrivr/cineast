@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
@@ -50,5 +52,27 @@ public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionCont
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Extrat new item",
+      path = ROUTE, method = HttpMethod.POST,
+      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ExtractionContainerMessage.class)),
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.operationId("extractItem");
+          op.summary("Extract new item");
+          op.description("TODO");
+              op.addTagsItem("Session");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

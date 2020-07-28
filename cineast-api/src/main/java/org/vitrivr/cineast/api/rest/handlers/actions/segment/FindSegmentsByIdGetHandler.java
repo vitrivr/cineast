@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
@@ -56,5 +58,18 @@ public class FindSegmentsByIdGetHandler implements GetRestHandler<MediaSegmentQu
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Finds segments for specified id");
+          op.description("Finds segments for specified id");
+          op.operationId("findSegmentById");
+          op.addTagsItem("Segment");
+        })
+        .pathParam(ID_NAME, String.class, p -> p.description("The id of the segments"))
+        .json("200", outClass());
   }
 }

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -15,17 +17,17 @@ public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectM
   
   public static final String ROUTE = "find/metadata/by/id/:"+OBJECT_ID_NAME;
   
-  @OpenApi(
-      summary = "Find metadata for the given object id",
-      path=ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name=OBJECT_ID_NAME, description = "The object id to find metadata of")
-      },
-      tags={APIEndpoint.METADATA_OAS_TAG},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
-      }
-  )
+//  @OpenApi(
+//      summary = "Find metadata for the given object id",
+//      path=ROUTE, method = HttpMethod.GET,
+//      pathParams = {
+//          @OpenApiParam(name=OBJECT_ID_NAME, description = "The object id to find metadata of")
+//      },
+//      tags={APIEndpoint.METADATA_OAS_TAG},
+//      responses = {
+//          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaObjectMetadataQueryResult.class))
+//      }
+//  )
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -42,5 +44,19 @@ public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectM
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.operationId("findMetaById");
+          op.description("Find metadata by the given object id");
+          op.summary("Find metadata for the given object id");
+          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+        })
+        .pathParam(OBJECT_ID_NAME, String.class, p -> p.description("The object id to find metadata of"))
+        .json("200", outClass());
+    
   }
 }

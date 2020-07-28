@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
@@ -16,6 +18,8 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
  */
 public class StartExtractionHandler implements PostRestHandler<SessionState> {
 
+  // FIXME this needs cleanup / rework
+  
   private static final Logger LOGGER = LogManager.getLogger();
 
   public static final String ROUTE = "session/extract/start";
@@ -50,5 +54,25 @@ public class StartExtractionHandler implements PostRestHandler<SessionState> {
   @Override
   public String route() {
     return ROUTE;
+  }
+  @OpenApi(
+      summary = "Start extraction session",
+      path = ROUTE, method = HttpMethod.POST,
+      tags = {"Session"},
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = SessionState.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Start extraction session");
+          op.description("Changes the session's state to extraction");
+          op.addTagsItem("Session");
+          op.deprecated(true); // FIXME remove when done
+          op.operationId("startExtraction");
+        })
+        .json("200", outClass());
   }
 }

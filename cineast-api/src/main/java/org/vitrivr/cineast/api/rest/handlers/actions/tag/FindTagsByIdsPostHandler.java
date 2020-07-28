@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.tag;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.TagsQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -53,5 +55,26 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @OpenApi(
+      summary = "Find all tags by ids",
+      path = ROUTE, method = HttpMethod.POST,
+      tags = {"Tag"},
+      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
+      responses = {
+          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
+      }
+  )
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Find all tags by ids");
+          op.addTagsItem("Tag");
+          op.operationId("findTagsById");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }
