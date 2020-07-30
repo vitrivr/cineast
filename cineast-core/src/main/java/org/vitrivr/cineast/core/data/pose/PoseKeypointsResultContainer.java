@@ -6,11 +6,11 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 
-public class PoseKeypoints implements ExistenceCheck {
+public class PoseKeypointsResultContainer implements ExistenceCheck {
     final private float[][] keypoints;
 
     @JsonCreator
-    public PoseKeypoints(@JsonProperty("keypoints") float[][] keypoints) {
+    public PoseKeypointsResultContainer(@JsonProperty("keypoints") float[][] keypoints) {
         this.keypoints = keypoints;
     }
 

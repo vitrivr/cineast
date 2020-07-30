@@ -82,6 +82,7 @@ dependencies {
     compile (group: "org.bytedeco", name: "openblas", version: "0.3.10-1.5.4-20200716.042540-114") { force = true }
     compile (group: "org.bytedeco", name: "caffe", version: "1.0-1.5.4-20200717.002049-166") { force = true }
     compile (group: "org.bytedeco", name: "javacpp", version: "1.5.4-20200720.033903-461") { force = true }
+    compile group: "edu.ucar", name: "cdm-core", version: "5.3.3"
 
     /** Java 9+ compatibility. */
     compile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'

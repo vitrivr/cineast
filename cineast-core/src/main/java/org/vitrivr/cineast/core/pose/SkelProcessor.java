@@ -19,6 +19,21 @@ import java.nio.ByteBuffer;
 
 public class SkelProcessor {
     static SkelProcessor skelProcessor = null;
+    final private OpWrapper opWrapper;
+    static PoseConfig preConfig = null;
+
+    public static void configure(PoseConfig preConfig) {
+        SkelProcessor.preConfig = preConfig;
+    }
+
+    public static SkelProcessor getInstance() {
+        if (SkelProcessor.preConfig == null) {
+            throw new IllegalStateException(
+                "getInstance() called with no PoseConfig before configure(config) called"
+            );
+        }
+        return SkelProcessor.getInstance(SkelProcessor.preConfig);
+    }
 
     public static SkelProcessor getInstance(PoseConfig config) {
         if (skelProcessor == null) {
@@ -26,8 +41,6 @@ public class SkelProcessor {
         }
         return SkelProcessor.skelProcessor;
     }
-;
-    final private OpWrapper opWrapper;
 
     SkelProcessor(PoseConfig config) {
         String modelPath = config.getModelPath();

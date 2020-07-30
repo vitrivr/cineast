@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.query.containers.InstantQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.LocationQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.MotionQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.PoseQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryContainer;
@@ -34,7 +35,8 @@ public enum QueryTermType {
    * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
    */
   ID(IdQueryContainer.class),
-  BOOLEAN(BooleanQueryContainer.class);
+  BOOLEAN(BooleanQueryContainer.class),
+  POSE(PoseQueryContainer.class);
 
   private static final Logger LOGGER = LogManager.getLogger();
 

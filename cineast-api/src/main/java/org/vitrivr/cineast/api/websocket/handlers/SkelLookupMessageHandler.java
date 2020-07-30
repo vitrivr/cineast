@@ -7,7 +7,7 @@ import org.vitrivr.cineast.api.messages.pose.SkelLookup;
 import org.vitrivr.cineast.api.messages.result.SkelLookupResult;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.PoseConfig;
-import org.vitrivr.cineast.core.data.pose.PoseKeypoints;
+import org.vitrivr.cineast.core.data.pose.PoseKeypointsResultContainer;
 import org.vitrivr.cineast.core.pose.SkelProcessor;
 import org.vitrivr.cineast.standalone.config.Config;
 
@@ -35,9 +35,9 @@ public class SkelLookupMessageHandler extends StatelessWebsocketMessageHandler<S
         }
         SkelProcessor skelProcessor = SkelProcessor.getInstance(poseConfig);
         float[][][] poses = skelProcessor.getPose(message.getImg());
-        List<PoseKeypoints> resultList;
+        List<PoseKeypointsResultContainer> resultList;
         if (poses != null && poses.length >= 1) {
-            resultList = Collections.singletonList(new PoseKeypoints(poses[0]));
+            resultList = Collections.singletonList(new PoseKeypointsResultContainer(poses[0]));
         } else {
             resultList = Collections.emptyList();
         }

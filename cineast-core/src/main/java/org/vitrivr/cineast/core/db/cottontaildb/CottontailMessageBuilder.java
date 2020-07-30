@@ -472,6 +472,10 @@ public class CottontailMessageBuilder {
         knnBuilder.setDistance(Distance.CHISQUARED);
         break;
       }
+      case keypoints2d: {
+        knnBuilder.setDistance(Distance.KEYPOINTS2D);
+        break;
+      }
       default: {
         LOGGER.error("distance '{}' not supported by cottontail", distance);
         break;

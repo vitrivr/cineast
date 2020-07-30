@@ -14,7 +14,7 @@ public class ReadableQueryConfig {
      * Possible distance functions that can be configured in the {@link QueryConfig}. It's up to the implementing selector to support these distances and / or provide fallback options.
      */
     public enum Distance {
-        chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm, haversine
+        chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm, haversine, keypoints2d
     }
 
     /**

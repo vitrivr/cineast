@@ -72,7 +72,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         this.writer.write(descriptor);
     }
 
-    protected void persist(String shotId, List<ReadableFloatVector> fvs) {
+    protected void persist(String shotId, List<? extends ReadableFloatVector> fvs) {
         List<SimpleFeatureDescriptor> entities = fvs.stream().map(fv -> new SimpleFeatureDescriptor(shotId, fv)).collect(Collectors.toList());
         this.writer.write(entities);
     }

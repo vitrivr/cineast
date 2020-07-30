@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.*;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
+import org.vitrivr.cineast.core.pose.SkelProcessor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.io.File;
@@ -63,6 +64,7 @@ public class Config {
     if (config.cache != null) {
       CachedDataFactory.configureDefault(config.cache);
     }
+    SkelProcessor.configure(config.pose);
   }
 
 

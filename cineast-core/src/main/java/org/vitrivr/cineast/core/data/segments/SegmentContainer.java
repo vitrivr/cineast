@@ -10,6 +10,7 @@ public interface SegmentContainer
         MostRepresentativeFrameProvider,
         SubtitleItemProvider,
         PathProvider,
+        PoseProvider,
         TagProvider,
         FrameListProvider,
         AudioFrameProvider,

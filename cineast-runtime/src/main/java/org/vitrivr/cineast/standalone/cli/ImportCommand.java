@@ -21,9 +21,11 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
+import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionLabelTuple;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
+import org.vitrivr.cineast.standalone.importer.redhen.PoseHdf5ImportHandler;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
@@ -119,6 +121,9 @@ public class ImportCommand implements Runnable {
       case LSCCAPTION:
         handler = new CaptionImportHandler(this.threads, this.batchsize);
         break;
+      case POSEHDF5:
+        handler = new PoseHdf5ImportHandler(this.threads, this.batchsize);
+        break;
     }
     if(!isGoogleVision){
       if(handler == null){
@@ -154,6 +159,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, POSEHDF5
   }
 }
