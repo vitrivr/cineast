@@ -280,14 +280,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k,
-      List<float[]> vectors, String column, Class<T> distanceElementClass,
-      List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
       RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     throw new IllegalStateException("Not implemented.");

@@ -30,12 +30,7 @@ public class NoDBSelector implements DBSelector {
         return new ArrayList<>(0);
     }
 
-    @Override
-    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
-        return new ArrayList<>(0);
-    }
-
-    @Override
+  @Override
     public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
         return new ArrayList<>(0);
     }

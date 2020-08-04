@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.*;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
@@ -14,7 +13,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
-import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -170,87 +168,6 @@ public class ADAMproSelector extends AbstractADAMproSelector {
         }
 
         return results;
-    }
-
-    /**
-     * Performs a combined kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector and then
-     * merge the partial result sets pairwise using the desired MergeOperation.
-     *
-     * @param k                    The number k vectors to return per query.
-     * @param vectors              The list of vectors to use.
-     * @param column               The column to perform the kNN search on.
-     * @param distanceElementClass class of the {@link DistanceElement} type
-     * @param configs              The query configuration, which may contain distance definitions or query-hints.
-     * @param <T>
-     * @return
-     */
-    @Override
-    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String, String> options) {
-        /* Check if sizes of configs and vectors array correspond. */
-        if (vectors.size() > configs.size()) {
-            throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
-        }
-
-        /* Prepare list of QueryMessages. */
-        List<SubExpressionQueryMessage> queryMessages = new ArrayList<>(vectors.size());
-        for (int i = 0; i < vectors.size(); i++) {
-            float[] vector = vectors.get(i);
-            ReadableQueryConfig config = configs.get(i);
-
-            /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-            Collection<ReadableQueryConfig.Hints> hints;
-            if (!config.getHints().isEmpty()) {
-                hints = config.getHints();
-            } else {
-                hints = ADAMproMessageBuilder.DEFAULT_HINT;
-            }
-            NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
-            QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
-            queryMessages.add(this.mb.buildSubExpressionQueryMessage(qMessage));
-        }
-
-        /* Constructs the correct SubExpressionQueryMessage bassed on the mergeOperation. */
-        SubExpressionQueryMessage seqm;
-        switch (mergeOperation) {
-            case UNION:
-                seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYUNION, options);
-                break;
-            case INTERSECT:
-                seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYINTERSECT, options);
-                break;
-            case EXCEPT:
-                seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.EXCEPT, options);
-                break;
-            default:
-                seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYUNION, options);
-                break;
-        }
-
-        FromMessage fromMessage = this.mb.buildFromSubExpressionMessage(seqm);
-        QueryMessage sqMessage = this.mb.buildQueryMessage(null, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, null);
-        ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
-
-        QueryResultsMessage result;
-        try {
-            result = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error(LogHelper.getStackTrace(e));
-            return new ArrayList<>(0);
-        }
-
-        AckMessage ack = result.getAck();
-        if (ack.getCode() != AckMessage.Code.OK) {
-            LOGGER.error("error in getNearestNeighbours on entity {}, (Code {}) : {}", entityName, ack.getCode(), ack.getMessage());
-            LOGGER.error("Query was {} ",sqMessage.toString());
-            return new ArrayList<>(0);
-        }
-
-        if (result.getResponsesCount() == 0) {
-            return new ArrayList<>(0);
-        }
-
-        QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-        return handleNearestNeighbourResponse(response, k, distanceElementClass);
     }
 
     @Override
