@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import java.util.Iterator;
 import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc;
 import org.vitrivr.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
@@ -9,7 +8,6 @@ import org.vitrivr.cottontail.grpc.CottonDMLGrpc;
 import org.vitrivr.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import org.vitrivr.cottontail.grpc.CottonDQLGrpc;
 import org.vitrivr.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
@@ -97,10 +95,11 @@ public class CottontailWrapper implements AutoCloseable {
     }
   }
 
-  public synchronized void dropEntityBlocking(Entity entity) {
+  public synchronized boolean dropEntityBlocking(Entity entity) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.dropEntity(entity);
+      return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
         LOGGER.debug("entity {} was not dropped because it does not exist", entity.getName());
@@ -108,6 +107,7 @@ public class CottontailWrapper implements AutoCloseable {
         e.printStackTrace();
       }
     }
+    return false;
   }
 
   public synchronized ListenableFuture<SuccessStatus> createSchema(String schama) {
@@ -166,9 +166,9 @@ public class CottontailWrapper implements AutoCloseable {
    *
    * @return The query results (unprocessed).
    */
-  public List<QueryResultMessage> query(QueryMessage query) {
+  public List<QueryResponseMessage> query(QueryMessage query) {
     StopWatch watch = StopWatch.createStarted();
-    final ArrayList<QueryResultMessage> results = new ArrayList<>();
+    final ArrayList<QueryResponseMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
       stub.query(query).forEachRemaining(results::add);
@@ -188,8 +188,8 @@ public class CottontailWrapper implements AutoCloseable {
    *
    * @return The query results (unprocessed).
    */
-  public List<QueryResultMessage> batchedQuery(BatchedQueryMessage query) {
-    final ArrayList<QueryResultMessage> results = new ArrayList<>();
+  public List<QueryResponseMessage> batchedQuery(BatchedQueryMessage query) {
+    final ArrayList<QueryResponseMessage> results = new ArrayList<>();
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
       stub.batchedQuery(query).forEachRemaining(results::add);

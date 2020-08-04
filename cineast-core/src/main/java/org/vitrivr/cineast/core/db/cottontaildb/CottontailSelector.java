@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,7 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.Operation;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResultMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 
@@ -63,13 +62,19 @@ public class CottontailSelector implements DBSelector {
 
     Knn knn = CottontailMessageBuilder.knn(column, vector, config.getDistanceWeights().orElse(null), k, config.getDistance().orElse(Distance.manhattan));
 
-    List<QueryResultMessage> results = this.cottontail.query(
+    List<QueryResponseMessage> results = this.cottontail.query(
         CottontailMessageBuilder.queryMessage(
             CottontailMessageBuilder.query(entity,
                 CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), whereInList("id", config.getRelevantSegmentIds()), knn, k),
             config.getQueryId().toString()));
 
-    return new ArrayList<>(handleNearestNeighbourResponse(results, distanceElementClass));
+    List<E> _return = new ArrayList<>();
+
+    for (QueryResponseMessage r : results) {
+      _return.addAll(handleNearestNeighbourResponse(r, distanceElementClass));
+    }
+
+    return _return;
   }
 
   @Override
@@ -86,9 +91,15 @@ public class CottontailSelector implements DBSelector {
             k,
             configs.get(0).getDistance().orElse(Distance.manhattan)), null);
 
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
-    return new ArrayList<>(handleNearestNeighbourResponse(results, distanceElementClass));
+    List<E> _return = new ArrayList<>();
+
+    for (QueryResponseMessage r : results) {
+      _return.addAll(handleNearestNeighbourResponse(r, distanceElementClass));
+    }
+
+    return _return;
   }
 
   @Override
@@ -107,7 +118,7 @@ public class CottontailSelector implements DBSelector {
             k,
             config.getDistance().orElse(Distance.manhattan));
 
-    List<QueryResultMessage> results =
+    List<QueryResponseMessage> results =
         this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, whereInList("id", config.getRelevantSegmentIds()), knn, k), config.getQueryId().toString()));
 
     return processResults(results);
@@ -119,18 +130,18 @@ public class CottontailSelector implements DBSelector {
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-    List<QueryResultMessage> results =
+    List<QueryResponseMessage> results =
         this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), null));
 
-    return results.stream().map(el -> {
-      List<Float> list = el.getTuple().getDataOrThrow(vectorName).getVectorData().getFloatVector().getVectorList();
-      float[] arr = new float[list.size()];
-      int i = 0;
-      for (Float f : list) {
-        arr[i++] = f;
+    List<float[]> _return = new ArrayList<>();
+
+    for (QueryResponseMessage response : results) {
+      for (Tuple t : response.getResultsList()) {
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)).getFloatArray());
       }
-      return arr;
-    }).collect(Collectors.toList());
+    }
+
+    return _return;
   }
 
   @Override
@@ -139,9 +150,18 @@ public class CottontailSelector implements DBSelector {
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), null));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, null), null));
 
-    return results.stream().map(el -> CottontailMessageBuilder.fromData(el.getTuple().getDataMap().get(vectorName))).collect(Collectors.toList());
+    List<PrimitiveTypeProvider> _return = new ArrayList<>();
+
+    for (QueryResponseMessage response : results) {
+      for (Tuple t : response.getResultsList()) {
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)));
+      }
+    }
+
+    return _return;
+
   }
 
   @Override
@@ -150,7 +170,7 @@ public class CottontailSelector implements DBSelector {
   }
 
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Data... values) {
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, values), null, null), null));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, values), null, null), null));
     return processResults(results);
   }
 
@@ -168,7 +188,7 @@ public class CottontailSelector implements DBSelector {
 
     final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
-    final List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), null));
+    final List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, rows), null));
 
     return processResults(results);
   }
@@ -178,7 +198,7 @@ public class CottontailSelector implements DBSelector {
 
     Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, CottontailMessageBuilder.toDatas(values));
 
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), null));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null, null), null));
 
     return processResults(results);
   }
@@ -187,7 +207,7 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection) {
     Where where = CottontailMessageBuilder.compoundWhere(conditions);
 
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), null));
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), null));
 
     return processResults(results);
   }
@@ -197,24 +217,35 @@ public class CottontailSelector implements DBSelector {
 
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, column);
 
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, null, null, null), null));
+    List<QueryResponseMessage> results =
+        this.cottontail.query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, projection, null, null, null), null));
 
-    return results.stream().map(el -> CottontailMessageBuilder.fromData(el.getTuple().getDataMap().get(column))).collect(Collectors.toList());
+    List<PrimitiveTypeProvider> _return = new ArrayList<>();
+
+    for (QueryResponseMessage response : results) {
+      for (Tuple t : response.getResultsList()) {
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(column)));
+      }
+    }
+
+    return _return;
   }
 
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     List<PrimitiveTypeProvider> _return = new ArrayList<>();
-    List<QueryResultMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(
         CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT_DISTINCT, column), null, null, null), null));
 
-    results.forEach(tuple -> _return.add(CottontailMessageBuilder.fromData(tuple.getTuple().getDataOrThrow(column))));
+    results.forEach(response -> response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.fromData(tuple.getDataOrThrow(column)))));
     return _return;
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
-    List<QueryResultMessage> results =
+    List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
                 CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null, null), null));
@@ -237,26 +268,25 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public boolean ping() {
+  public boolean ping() { // currently not supported
     return this.cottontail.ping();
   }
 
-  private static List<Map<String, PrimitiveTypeProvider>> processResults(
-      List<QueryResultMessage> queryResponses) {
+  public static List<Map<String, PrimitiveTypeProvider>> processResults(List<QueryResponseMessage> queryResponses) {
+    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>();
     StopWatch watch = StopWatch.createStarted();
 
-    List<Map<String, PrimitiveTypeProvider>> _return = queryResponses.stream().map(response -> CottontailMessageBuilder.tupleToMap(response.getTuple())).collect(Collectors.toList());
-
+    for (QueryResponseMessage response : queryResponses) {
+      response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.tupleToMap(tuple)));
+    }
     LOGGER.trace("Processed {} results in {} ms", _return.size(), watch.getTime(TimeUnit.MILLISECONDS));
 
     return _return;
   }
 
-  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(
-      List<QueryResultMessage> response, Class<? extends T> distanceElementClass) {
+  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResponseMessage response, Class<? extends T> distanceElementClass) {
     List<T> result = new ArrayList<>();
-    for (QueryResultMessage msg : response) {
-      Tuple t = msg.getTuple();
+    for (Tuple t : response.getResultsList()) {
       String id = null;
       Data data = t.getDataMap().get("id");
       switch (t.getDataMap().get("id").getDataCase()) {
@@ -284,8 +314,7 @@ public class CottontailSelector implements DBSelector {
       if (id == null) {
         continue;
       }
-      double distance =
-          t.getDataMap().get("distance").getDoubleData(); // TODO what key is used for the distance?
+      double distance = t.getDataMap().get("distance").getDoubleData(); // TODO what key is used for the distance?
       T e = DistanceElement.create(distanceElementClass, id, distance);
       result.add(e);
     }

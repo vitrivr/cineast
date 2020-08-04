@@ -128,7 +128,7 @@ public class CottontailEntityCreator implements EntityCreator {
     return true;
   }
 
-  public void createIndex(String entityName, String attribute, IndexType type) {
+  public boolean createIndex(String entityName, String attribute, IndexType type) {
     Entity entity = CottontailMessageBuilder.entity(entityName);
     Index index = Index.newBuilder().setEntity(entity)
         .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
@@ -136,6 +136,7 @@ public class CottontailEntityCreator implements EntityCreator {
     /* Cottontail ignores index params as of july 19 */
     IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
+    return true;
   }
 
   @Override
@@ -222,8 +223,7 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createHashNonUniqueIndex(String entityName, String column) {
-    this.createIndex(entityName, column, IndexType.HASH);
-    return true;
+    return this.createIndex(entityName, column, IndexType.HASH);
   }
 
   @Override
@@ -234,8 +234,7 @@ public class CottontailEntityCreator implements EntityCreator {
   @Override
   public boolean dropEntity(String entityName) {
     final Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
-    cottontail.dropEntityBlocking(entity);
-    return true;
+    return cottontail.dropEntityBlocking(entity);
   }
 
 

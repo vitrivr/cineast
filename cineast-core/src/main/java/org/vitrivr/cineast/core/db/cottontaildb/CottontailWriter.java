@@ -13,7 +13,7 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.Operation;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResultMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 
@@ -49,8 +49,14 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
     Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, key); //TODO replace with exists projection
     Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-    List<QueryResultMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1), null));
-    return result.size() > 0;
+    List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1), ""));
+
+    if (result.isEmpty()) {
+      return false;
+    }
+
+    return result.get(0).getResultsCount() > 0;
+
   }
 
 
