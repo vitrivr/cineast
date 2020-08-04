@@ -5,16 +5,13 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.*;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig.Hints;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
-import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.*;
@@ -148,79 +145,6 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
     return _return;
 
-  }
-
-  @Override
-  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k,
-      List<float[]> vectors, String column, Class<T> distanceElementClass,
-      List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
-    /* Check if sizes of configs and vectors array correspond. */
-    if (vectors.size() > configs.size()) {
-      throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
-    }
-
-    /* Prepare list of QueryMessages. */
-    List<SubExpressionQueryMessage> queryMessages = new ArrayList<>(vectors.size());
-    for (int i = 0; i < vectors.size(); i++) {
-      float[] vector = vectors.get(i);
-      ReadableQueryConfig config = configs.get(i);
-
-      /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-      Collection<Hints> hints;
-      if (!config.getHints().isEmpty()) {
-        hints = config.getHints();
-      } else {
-        hints = ADAMproMessageBuilder.DEFAULT_HINT;
-      }
-      NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
-      QueryMessage qMessage = this.mb.buildQueryMessage(hints, this.fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
-      queryMessages.add(this.mb.buildSubExpressionQueryMessage(qMessage));
-    }
-
-    /* Constructs the correct SubExpressionQueryMessage bassed on the mergeOperation. */
-    SubExpressionQueryMessage seqm;
-    switch (merge) {
-      case UNION:
-        seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYUNION, options);
-        break;
-      case INTERSECT:
-        seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYINTERSECT, options);
-        break;
-      case EXCEPT:
-        seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.EXCEPT, options);
-        break;
-      default:
-        seqm = this.mb.mergeSubexpressions(queryMessages, AdamGrpc.ExpressionQueryMessage.Operation.FUZZYUNION, options);
-        break;
-    }
-
-    FromMessage fromMessage = this.mb.buildFromSubExpressionMessage(seqm);
-    QueryMessage sqMessage = this.mb.buildQueryMessage(null, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, null);
-
-    List<QueryResultsMessage> resultList = this.adampro.streamingStandardQuery(sqMessage);
-
-    List<T> _return = new ArrayList<>();
-
-    for(QueryResultsMessage result : resultList) {
-
-      AckMessage ack = result.getAck();
-      if (ack.getCode() != AckMessage.Code.OK) {
-        LOGGER.error("error in getNearestNeighbours on entity {}, (Code {}) : {}", entityName,
-            ack.getCode(), ack.getMessage());
-        LOGGER.error("Query was {} ", sqMessage.toString());
-        continue;
-      }
-
-      if (result.getResponsesCount() == 0) {
-        continue;
-      }
-
-      QueryResultInfoMessage response = result
-          .getResponses(0); // only head (end-result) is important
-      _return.addAll(handleNearestNeighbourResponse(response, k, distanceElementClass));
-    }
-
-    return _return;
   }
 
   @Override
