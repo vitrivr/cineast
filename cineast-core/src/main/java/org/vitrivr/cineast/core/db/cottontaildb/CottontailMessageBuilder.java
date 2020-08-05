@@ -211,11 +211,19 @@ public class CottontailMessageBuilder {
     }
   }
 
-  public static Where compoundWhere(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions) {
+  public static Where compoundWhere(ReadableQueryConfig qc, List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions) {
     if (conditions.size() == 0) {
       throw new IllegalArgumentException("no condition given");
     }
+    AtomicLiteralBooleanPredicate inList = null;
+    if (qc != null && qc.hasRelevantSegmentIds()) {
+      inList = inList("id", qc.getRelevantSegmentIds());
+    }
+
     List<AtomicLiteralBooleanPredicate> predicates = conditions.stream().map(cond -> atomicPredicate(cond.getLeft(), cond.getMiddle(), toDatas(cond.getRight()))).collect(Collectors.toList());
+    if (inList != null) {
+      predicates.add(0, inList);
+    }
     if (predicates.size() > 1) {
       return Where.newBuilder().setCompound(reduce(CompoundBooleanPredicate.Operator.AND, predicates)).build();
     }
@@ -412,7 +420,7 @@ public class CottontailMessageBuilder {
    * @param queryId can be null, in which case a random 3-char identifier will be generated.
    */
   public static QueryMessage queryMessage(Query query, String queryId) {
-    queryId = queryId == null || queryId.isEmpty() ? "cin-"+RandomStringUtils.randomNumeric(3).toLowerCase() : queryId;
+    queryId = queryId == null || queryId.isEmpty() ? "cin-" + RandomStringUtils.randomNumeric(3).toLowerCase() : queryId;
     return QueryMessage.newBuilder().setQuery(query).setQueryId(queryId).build();
   }
 
