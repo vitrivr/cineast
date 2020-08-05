@@ -41,7 +41,13 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         }
         String minuteId = LSCUtilities.filenameToMinuteId(filename).get();
         List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
-        for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
+//        for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
+//            if(items[i].equalsIgnoreCase("null")){
+//                continue;
+//            }
+//            list.add(parseMeta(filename, items, i));
+//        }
+        for(int i : LSCUtilities.META_COLUMNS_IN_USE){
             if(items[i].equalsIgnoreCase("null")){
                 continue;
             }
