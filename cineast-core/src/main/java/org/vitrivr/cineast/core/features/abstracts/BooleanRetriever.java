@@ -84,7 +84,7 @@ public abstract class BooleanRetriever implements Retriever {
 
   protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
 
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length()+1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "segmentid", Collections.singletonList("segmentid"));
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length()+1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "segmentid", Collections.singletonList("segmentid"), qc);
 
     return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get("segmentid").getString())).collect(Collectors.toList());
   }

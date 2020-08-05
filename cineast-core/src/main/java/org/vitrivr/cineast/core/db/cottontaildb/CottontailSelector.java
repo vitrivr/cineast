@@ -156,8 +156,9 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection) {
-    Where where = CottontailMessageBuilder.compoundWhere(conditions);
+  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
+
+    Where where = CottontailMessageBuilder.compoundWhere(qc, conditions);
     QueryMessage queryMessage = queryMessage(query(entity, CottontailMessageBuilder.projection(Operation.SELECT, projection.toArray(new String[]{})), where, null, null), null);
     return processResults(this.cottontail.query(queryMessage));
   }
