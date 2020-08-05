@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.importer.lsc2020;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,6 +70,7 @@ public class LSCUtilities {
     //minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps
     public static final String[] META_NAMES = new String[]{META_MIN_NAME, META_UTC_NAME, META_LOCAL_NAME, META_TIMEZONE_NAME, META_LAT_NAME, META_LON_NAME, META_SEMANTIC_NAME, META_ELEVATION_NAME, META_SPEED_NAME, META_HEART_NAME, META_CALORIES_NAME, META_ACTIVITY_NAME, META_STEPS_NAME
     };
+    public static final Set<Integer> META_COLUMNS_IN_USE = Set.of(META_MIN_COL, META_UTC_COL, META_LOCAL_COL, META_LAT_COL, META_LON_COL, META_TIMEZONE_COL, META_SEMANTIC_COL, META_ACTIVITY_COL);
     public static final String DEFAULT_DOMAIN = "LSCMETA";
     public static final String LOCATION_DOMAIN = "LOCATION";
     public static final String DATETIME_DOMAIN = "TIME";
