@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -18,15 +19,6 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
   public static final String ROUTE = "find/segments/by/id";
   
   
-  @OpenApi(
-      summary = "Finds segments for specified ids",
-      path = ROUTE, method = HttpMethod.POST,
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      tags = {"Segment"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = MediaSegmentQueryResult.class))
-      }
-  )
   @Override
   public MediaSegmentQueryResult performPost(IdList ids, Context ctx) {
     if (ids == null || ids.getIds().length == 0) {
@@ -51,5 +43,18 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
   @Override
   public String route() {
     return ROUTE;
+  }
+  
+  @Override
+  public OpenApiDocumentation docs() {
+    return OpenApiBuilder.document()
+        .operation(op -> {
+          op.summary("Finds segments for specified ids");
+          op.description("Finds segments for specified ids");
+          op.operationId("findSegmentByIdBatched");
+          op.addTagsItem("Segment");
+        })
+        .body(inClass())
+        .json("200", outClass());
   }
 }

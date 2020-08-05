@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import java.util.ArrayList;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -33,13 +35,15 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
 
   /**
    * Executes a {@link SimilarityQuery}. Performs the similarity query based on the {@link QueryContainer} objects provided in the {@link SimilarityQuery}.
-   *
-   * @param session WebSocket session the invocation is associated with.
+   *  @param session WebSocket session the invocation is associated with.
    * @param qconf The {@link QueryConfig} that contains additional specifications.
    * @param message Instance of {@link SimilarityQuery}
+   * @param segmentIdsForWhichMetadataIsFetched
+   * @param objectIdsForWhichMetadataIsFetched
    */
   @Override
-  public void execute(Session session, QueryConfig qconf, SimilarityQuery message) {
+  public void execute(Session session, QueryConfig qconf, SimilarityQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) {
+
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
 
@@ -47,6 +51,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
     final HashMap<QueryContainer, List<String>> containerCategoryMap = QueryComponent.toContainerMap(message.getComponents());
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
 
+    List<Thread> threads = new ArrayList<>();
     /* Execute similarity queries for all QueryContainer -> Category combinations in the map */
     for (QueryContainer qc : containerCategoryMap.keySet()) {
       for (String category : containerCategoryMap.get(qc)) {
@@ -62,9 +67,21 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             .collect(Collectors.toList());
 
         /* Finalize and submit per-container results */
+        List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
+        List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
         this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
+        List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+        threads.addAll(_threads);
       }
     }
+    for (Thread thread : threads) {
+      try {
+        thread.join();
+      } catch (InterruptedException e) {
+        LOGGER.error(e);
+      }
+    }
+
   }
 
 }

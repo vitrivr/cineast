@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -29,6 +30,8 @@ public class GpsData {
   public static final String KEY_LATITUDE = "latitude";
   public static final String KEY_LONGITUDE = "longitude";
   public static final String KEY_DATETIME = "datetime";
+  public static final String KEY_BEARING = "bearing";
+  public static final String KEY_DATING = "Dating";
 
   private static final GpsData EMPTY = new GpsData(null, null);
 
@@ -93,8 +96,10 @@ public class GpsData {
    * <p>Location information requires the key {@code "location"} containing an object with numbers
    * for {@code "latitude"} and {@code "longitude"}. Alternatively, the coordinates can also be
    * represented as an two-valued array with latitude first, longitude second, such as {@code
-   * [47.559601, 7.588576]}. Time information requires an ISO 8601 string describing the instant for
-   * key {@code "datetime"}.
+   * [47.559601, 7.588576]}.
+   *
+   *  Time information must either be a valid ISO 8601 instant description, with key "{@code datetime}" or
+   *  conform to the description of {@link #parseFuzzyDating(String)}.
    *
    * @param file file to extract json data from
    * @return an object containing the extracted information, if available, otherwise an empty
@@ -102,17 +107,121 @@ public class GpsData {
    */
   public static GpsData ofJson(Path file) {
     Optional<JsonNode> root = MetadataUtil.getJsonMetadata(file);
-
-    Optional<Instant> instant = root
-        .map(o -> o.get(KEY_DATETIME))
-        .map(JsonNode::textValue)
-        .flatMap(GpsData::parseInstant);
+  
+    Optional<Instant> instant;
+  
+    if(root.isPresent() && root.get().has(KEY_DATETIME)){
+      instant = root
+          .map(o -> o.get(KEY_DATETIME))
+          .map(JsonNode::textValue)
+          .flatMap(GpsData::parseInstant);
+    }else if(root.isPresent() && root.get().hasNonNull(KEY_DATING)){
+      instant = parseFuzzyDating(root.get().get(KEY_DATING).asText() );
+    }else{
+      instant = Optional.empty();
+    }
 
     Optional<Location> location = root
         .map(o -> o.get(KEY_LOCATION))
         .flatMap(GpsData::parseLocationFromJson);
 
     return ofData(location.orElse(null), instant.orElse(null));
+  }
+  
+  /**
+   * Parses fuzzy Dating specifiers. Several input formats are accepted:
+   *
+   * <ul>
+   *   <li>US-style month / year: {@code [M]M/YYYY}</li>
+   *   <li>German annual estimate: {@code (vor | ca. | nach} YYYY</li>
+   *   <li>Latin annual estimate: {@code (pre | circa | post) YYYY}</li>
+   *   <li>English annual estimate: {@code (before | approx. | after) YYYY}</li>
+   * </ul>
+   * The <i>annual estimates</i> are respected with best effort.
+   *
+   * If the Dating given does not contain information for
+   * <ul>
+   *   <li>the day of the month, the 15th is then used </li>
+   *   <li>the month, the 6th (June) is used instead</li>
+   *   <li>the hours of the day, noon is used</li>
+   *   <li>the minutes or seconds, 0 is used for this</li>
+   * </ul>
+   * Following this approach, the date is somewhat 'centered' within a year, so that the {@link org.vitrivr.cineast.core.features.TemporalDistance} works best.
+   *
+   * @param dating
+   * @return
+   */
+  public static Optional<Instant> parseFuzzyDating(String dating){
+    if(dating == null){
+      return Optional.empty();
+    }else if(dating.isEmpty()){
+      return Optional.empty();
+    }
+    logger.debug("Parsing dating: "+dating);
+    String[] prePrefixes = new String[]{"pre","vor","before"};
+    String[] approxPrefixes = new String[]{"ca.", "ca", "circa", "approx.", "approx", "approximately", "about", "around"};
+    String[] postPrefixes = new String[]{"post", "nach", "after"};
+    
+    int year=-1, month=6, day=15, hours=12, minutes=0, seconds=0;
+    if(dating.contains("/")){
+      /*
+       * US-style M/YYYY dating specification
+       */
+      String[] splits = dating.split("/");
+      if(splits.length >= 2){
+        try {
+          month = Integer.parseInt(splits[0]);
+          if(month < 1 || month > 12){
+            throw new NumberFormatException("Month out of bounds: "+month);
+          }
+        }catch(NumberFormatException e){
+          logger.error("Couldn't parse month value "+splits[0]);
+          logger.catching(e);
+          month = 6;
+        }
+        try{
+          year = Integer.parseInt(splits[1]);
+          if(year < 0){
+            throw new NumberFormatException("Year cannot be negative "+year);
+          }
+        }catch(NumberFormatException e){
+          logger.error("Couldn't parse year value: "+splits[1]);
+          logger.catching(e);
+          year = -1;
+        }
+      }
+    }else{
+      /*
+       * Annual estimate, as described above
+       */
+      String[] splits = dating.split(" ");
+      if(splits.length >= 2){
+        int modifier = 0;
+        if(Arrays.asList(prePrefixes).contains(splits[0])){
+          modifier = -1;
+        }else if(Arrays.asList(approxPrefixes).contains(splits[0])){
+          modifier = 0;
+        }else if(Arrays.asList(postPrefixes).contains(splits[0])){
+          modifier = 1;
+        }else{
+          logger.error("Unknown Dating prefix: "+splits[0]);
+        }
+        try{
+          int _year = Integer.parseInt(splits[1].trim());
+          year = modifier + _year;
+        }catch(NumberFormatException e){
+          logger.error("Year not parsable: "+splits[1]);
+          logger.catching(e);
+        }
+      }
+    }
+    if(year!=-1){
+      String instant = String.format("%d-%02d-%02dT%02d:%02d:%02d.00Z",year,month,day,hours,minutes,seconds);
+      logger.debug("Fuzzy instant pre-parsing: {}", instant);
+      return parseInstant(instant);
+    }else{
+      return Optional.empty();
+    }
   }
 
   /**

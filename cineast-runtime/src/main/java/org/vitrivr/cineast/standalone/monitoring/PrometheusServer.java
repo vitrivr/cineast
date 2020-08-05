@@ -20,7 +20,7 @@ public class PrometheusServer {
 
   private static boolean initalized = false;
   private static final Logger LOGGER = LogManager.getLogger();
-  private static Optional<Server> server;
+  private static Optional<Server> server = Optional.empty();
   private static final Semaphore lock = new Semaphore(1);
 
   public static synchronized void initialize() {

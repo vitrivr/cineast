@@ -93,7 +93,7 @@ public class SegmentTags implements Extractor, Retriever {
     }
 
     /* Retrieve all elements matching the provided ids */
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid",  tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
     Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
@@ -168,7 +168,7 @@ public class SegmentTags implements Extractor, Retriever {
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return Collections.emptyList();

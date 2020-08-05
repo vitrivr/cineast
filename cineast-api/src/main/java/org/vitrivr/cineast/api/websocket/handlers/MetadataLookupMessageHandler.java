@@ -27,6 +27,7 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
      */
     @Override
     public void handle(Session session, MetadataLookup message) {
+        Thread.currentThread().setName("metadata-lookup-handler");
         MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
         this.write(session, new MediaObjectMetadataQueryResult("", descriptors));
