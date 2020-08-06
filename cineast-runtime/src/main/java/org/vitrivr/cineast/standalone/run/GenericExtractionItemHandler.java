@@ -44,6 +44,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -363,6 +364,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         continue;
       }
       ExtractionItemContainer item = providerResult.get();
+
+      /* Skip directories. They will be traversed recursively anyway, but obviously the actual directory is not processed */
+      if (Files.isDirectory(item.getPathForExtraction())) {
+        continue;
+      }
+
       /* Get content type */
       String type = MimeTypeHelper.getContentType(item.getPathForExtraction().toString());
 
@@ -383,11 +390,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       }
 
       /* Get the appropriate handler for this item. We ignore image sequences if they're not specified because they support the same file types as images*/
-      if (handlerCache.entrySet().stream().filter(handler -> handler != null && handler.getKey() != MediaType.IMAGE_SEQUENCE)
-          .anyMatch(handler -> handler.getValue() != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type))) {
-        return new ImmutablePair<>(item, handlerCache.entrySet().stream()
-            .filter(handler -> handler != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type) && handler.getKey() != MediaType.IMAGE_SEQUENCE).findFirst()
-            .get().getKey());
+      Optional<Map.Entry<MediaType, Pair<Decoder, Segmenter>>> match = handlerCache.entrySet().stream().filter(handler -> handler != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type) && handler.getKey() != MediaType.IMAGE_SEQUENCE).findFirst();
+      if (match.isPresent()) {
+        return new ImmutablePair<>(item, match.get().getKey());
       } else {
         /* If no appropriate handler is found, we log an error and continue with the next item */
         LOGGER.error("No matching handlers found for type {} and item {}", type, item);
@@ -465,12 +470,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * Convenience method to lookup a MediaSegmentDescriptor for a given properties and type or create a new one if needed.
    * The {@link MediaSegmentDescriptor}'s ID is auto-generated.
    *
-   * @param objectId
-   * @param segmentNumber
-   * @param start
-   * @param end
-   * @param startabs
-   * @param endabs
    * @return {@link MediaSegmentDescriptor}
    */
   protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
@@ -482,12 +481,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * Convenience method to lookup a MediaSegmentDescriptor for a given properties and type or create a new one if needed.
    * The {@link MediaSegmentDescriptor}'s ID is provided.
    *
-   * @param objectId
-   * @param segmentNumber
-   * @param start
-   * @param end
-   * @param startabs
-   * @param endabs
    * @return {@link MediaSegmentDescriptor}
    */
   protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
