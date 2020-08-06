@@ -13,8 +13,6 @@ public class InputConfig {
     private String name;
     private Integer depth = 1;
 
-    private Integer skip = 0;
-    private Integer limit = Integer.MAX_VALUE;
     private IdConfig id = new IdConfig();
 
     @JsonProperty
@@ -47,21 +45,5 @@ public class InputConfig {
     }
     public void setDepth(Integer depth) {
         this.depth = depth;
-    }
-
-    @JsonProperty
-    public Integer getSkip() {
-        return skip;
-    }
-    public void setSkip(Integer skip) {
-        this.skip = skip;
-    }
-
-    @JsonProperty
-    public Integer getLimit() {
-        return limit;
-    }
-    public void setLimit(Integer limit) {
-        this.limit = limit;
     }
 }

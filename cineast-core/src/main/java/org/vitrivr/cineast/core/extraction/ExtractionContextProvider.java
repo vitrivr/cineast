@@ -40,24 +40,6 @@ public interface ExtractionContextProvider {
   Optional<Path> inputPath();
 
   /**
-   * Limits the number of files that should be extracted. This a predicate is applied before
-   * extraction starts. If extraction fails for some fails the effective number of extracted files
-   * may be lower.
-   *
-   * @return A number greater than zero.
-   */
-  @Deprecated
-  int limit();
-
-  /**
-   * Offset into the list of files that are being distracted.
-   *
-   * @return A positive number or zero
-   */
-  @Deprecated
-  int skip();
-
-  /**
    * Limits the depth of recursion when extraction folders of files. Has no effect if the inputPath
    * points to a file.
    *

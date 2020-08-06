@@ -275,30 +275,6 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * Offset into the list of files that are being distracted.
-     *
-     * @return A positive number or zero
-     */
-    @Override
-    @Deprecated
-    public int skip() {
-        return this.input.getSkip();
-    }
-
-    /**
-     * Limits the number of files that should be extracted. This a predicate is applied
-     * before extraction starts. If extraction fails for some fails the effective number
-     * of extracted files may be lower.
-     *
-     * @return A number greater than zero.
-     */
-    @Override
-    @Deprecated
-    public int limit() {
-        return this.input.getLimit();
-    }
-
-    /**
      * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
      * during an extraction run.
      *
