@@ -285,10 +285,6 @@ public final class IngestConfig implements ExtractionContextProvider {
         return this.getInput().getId().getGenerator();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public IdConfig.ExistenceCheck existenceCheck() {
         return this.input.getId().getExistenceCheckMode();
@@ -328,19 +324,11 @@ public final class IngestConfig implements ExtractionContextProvider {
         return this.database.getSelectorSupplier();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public File outputLocation() {
         return this.pipeline.getOutputLocation();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int threadPoolSize() {
         return this.pipeline.getThreadPoolSize();
