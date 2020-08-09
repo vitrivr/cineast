@@ -14,6 +14,8 @@ import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
+import org.vitrivr.cineast.standalone.importer.redhen.OcrImporterHandler;
+import org.vitrivr.cineast.standalone.importer.redhen.SubtitleImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
@@ -124,6 +126,12 @@ public class ImportCommand implements Runnable {
       case POSEHDF5:
         handler = new PoseHdf5ImportHandler(this.threads, this.batchsize);
         break;
+      case REDHENSUB:
+        handler = new SubtitleImportHandler(this.threads, this.batchsize);
+        break;
+      case REDHENOCR:
+        handler = new OcrImporterHandler(this.threads, this.batchsize);
+        break;
     }
     if(!isGoogleVision){
       if(handler == null){
@@ -159,6 +167,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, POSEHDF5
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, POSEHDF5, REDHENSUB, REDHENOCR
   }
 }

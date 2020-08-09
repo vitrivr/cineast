@@ -9,19 +9,13 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
-import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.pose.PoseKeypoints;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.pose.PoseSpecs;
-import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class PoseHdf5ImportHandler extends DataImportHandler {
+public class PoseHdf5ImportHandler extends AligningImportHandler {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private static final Pattern[] H5_EXT = {
@@ -42,11 +36,17 @@ public class PoseHdf5ImportHandler extends DataImportHandler {
     return 1 + PoseSpecs.getInstance().specs.size();
   }
 
+  private Map<String, String> pathMap;
+
   public PoseHdf5ImportHandler(int threads, int batchsize) {
     super(threads * threadsPerItem(), batchsize);
   }
 
-  private void addFileJobs(String trimmedPath, Path input, List<MediaSegmentDescriptor> objectDescriptors) {
+  @Override
+  protected void addFileJobs(String fullPath, Path input) {
+    String trimmedPath = trimExtension(fullPath);
+    String objectPath = objectPathOfFilesystemPath(fullPath);
+    List<MediaSegmentDescriptor> objectDescriptors = getObjectDescriptors(objectPath);
     PoseHdf5Generator poseHdf5Generator = new PoseHdf5Generator(input, objectDescriptors);
     this.futures.add(this.service.submit(poseHdf5Generator));
     for (String poseSpecName : PoseSpecs.getInstance().specs.keySet()) {
@@ -59,17 +59,21 @@ public class PoseHdf5ImportHandler extends DataImportHandler {
   }
 
   @Override
-  public void doImport(Path root) {
-    final DBSelectorSupplier readerSupplier = Config.sharedConfig().getDatabase().getSelectorSupplier();
-    if (!readerSupplier.get().ping()) {
-      LOGGER.fatal("Database reader unreachable. Aborting...");
-      return;
+  protected String getExtension() {
+    return ".h5";
+  }
+
+  private String objectPathOfFilesystemPath(String fsPath) {
+    if (pathMap != null) {
+      return pathMap.get(fsPath);
+    } else {
+      return trimExtension(fsPath) + ".mp4";
     }
-    MediaObjectReader objectReader = new MediaObjectReader(readerSupplier.get());
-    MediaSegmentReader segmentReader = new MediaSegmentReader(readerSupplier.get());
-    Path rootDir = Files.isDirectory(root) ? root : root.getParent();
-    Path mapFilePath = rootDir.resolve("pathMap.json");
-    final Map<String, String> pathMap;
+  }
+
+  @Override
+  public void doImport(Path root) {
+    Path mapFilePath = root.resolve("pathMap.json");
     if (Files.exists(mapFilePath)) {
       ObjectMapper jsonMapper = new ObjectMapper();
       TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
@@ -82,29 +86,6 @@ public class PoseHdf5ImportHandler extends DataImportHandler {
     } else {
       pathMap = null;
     }
-    try {
-      LOGGER.info("Starting import on path {}", root.toAbsolutePath());
-      Files.walk(root, 2).filter(
-          path -> path.toString().toLowerCase().endsWith(".h5")
-      ).forEach(path -> {
-        String hdfPath = rootDir.relativize(path).toString();
-        String objectPath;
-        String trimmedPath = trimExtension(hdfPath);
-        if (pathMap != null) {
-          objectPath = pathMap.get(hdfPath);
-        } else {
-          objectPath = trimmedPath + ".mp4";
-        }
-        System.out.printf("objectPath: %s\n", objectPath);
-        final String objectId = objectReader.lookUpObjectByPath(objectPath).getObjectId();
-        System.out.printf("objectId: %s\n", objectId);
-        List<MediaSegmentDescriptor> objectDescriptors = segmentReader.lookUpSegmentsOfObject(objectId);
-        addFileJobs(trimmedPath, path, objectDescriptors);
-      });
-      LOGGER.info("Waiting for completion");
-      this.waitForCompletion();
-    } catch (IOException e) {
-      LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));
-    }
+    super.doImport(root);
   }
 }
