@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.importer.PlainTextImporter;
 
@@ -28,7 +29,11 @@ public class AsrDataImportHandler extends DataImportHandler {
     @Override
     public void doImport(Path path) {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_asr", "asr")));
+          this.futures.add(this.service.submit(new DataImportRunner(
+              new PlainTextImporter(path),
+              SubtitleFulltextSearch.ASR_TABLE_NAME,
+              "asr"
+          )));
         } catch (IOException e) {
             LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
         }

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
+import org.vitrivr.cineast.core.features.abstracts.QueuedTextRetriever;
 
 /**
  *  OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision)
  *  This makes sense here since we expect small errors from OCR sources
  */
-public class OCRSearch extends AbstractTextRetriever {
+public class OCRSearch extends QueuedTextRetriever {
 
   public static final String OCR_TABLE_NAME = "features_ocr";
 

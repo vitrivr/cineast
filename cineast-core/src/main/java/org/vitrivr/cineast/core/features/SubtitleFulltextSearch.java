@@ -1,27 +1,15 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
+import org.vitrivr.cineast.core.features.abstracts.QueuedTextRetriever;
 
-public class SubtitleFulltextSearch extends AbstractTextRetriever {
+public class SubtitleFulltextSearch extends QueuedTextRetriever {
+
+  public static final String ASR_TABLE_NAME = "features_asr";
 
   /**
    * Default constructor for {@link SubtitleFulltextSearch}.
    */
   public SubtitleFulltextSearch() {
-    super("features_asr");
-  }
-
-  /**
-   * Extracts the subtitle text and ingests it using the {@link SimpleFulltextFeatureDescriptor}.
-   *
-   * @param shot The {@link SegmentContainer} that should be processed.
-   */
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    shot.getSubtitleItems().stream()
-        .map(s -> new SimpleFulltextFeatureDescriptor(shot.getId(), s.getText()))
-        .forEach(s -> this.writer.write(s));
+    super(ASR_TABLE_NAME);
   }
 }
