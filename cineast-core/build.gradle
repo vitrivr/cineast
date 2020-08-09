@@ -109,10 +109,12 @@ test {
     useJUnitPlatform()
 }
 
-task fetchjavacppjars(type: Exec) {
-    workingDir rootDir
-    commandLine 'pwd'
-    commandLine 'sh', 'fetchjavacppjars.sh', project.property("javacppPlatform")
+afterEvaluate {
+    /* TODO: This can be removed after JavaCPP-presets 1.5.4 is released */
+    exec {
+        workingDir rootDir
+        commandLine 'pwd'
+        commandLine 'sh', 'fetchjavacppjars.sh', project.property("javacppPlatform")
+    }
 }
 
-compileJava.dependsOn fetchjavacppjars
