@@ -187,6 +187,14 @@ public final class IngestConfig implements ExtractionContextProvider {
         }
     }
 
+    @Override
+    public Optional<Path> relPath() {
+        if (this.input == null || this.input.getRelTo() == null) {
+            return Optional.empty();
+        }
+        return Optional.of(Paths.get(this.input.getRelTo()));
+    }
+
     public ExtractionContainerProvider pathProvider() {
         if (this.input != null) {
             return new SingletonContainerProvider(Paths.get(this.input.getPath()));

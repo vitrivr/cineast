@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.config.IdConfig;
 public class InputConfig {
     private String path;
     private String name;
+    private String relTo;
     private Integer depth = 1;
 
     private IdConfig id = new IdConfig();
@@ -29,6 +30,14 @@ public class InputConfig {
     }
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @JsonProperty(required = true)
+    public String getRelTo() {
+        return relTo;
+    }
+    public void setRelTo(String relTo) {
+        this.relTo = relTo;
     }
 
     @JsonProperty
