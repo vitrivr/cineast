@@ -328,6 +328,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       });
       this.pathProvider.close();
       LOGGER.debug("Shutdown complete");
+      this.completeListeners.forEach(ExtractionCompleteListener::extractionComplete);
     }
   }
 

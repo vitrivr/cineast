@@ -23,6 +23,10 @@ public class ExtractionCommand implements Runnable {
   @Option(name = {"-e", "--extraction"}, title = "Extraction config", description = "Path that points to a valid Cineast extraction config file.")
   private String extractionConfig;
 
+  @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the extraction. Set this flag when you want more performance with external parallelism.")
+  private boolean doNotFinalize = true;
+
+
   @Override
   public void run() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
@@ -33,6 +37,14 @@ public class ExtractionCommand implements Runnable {
         final IngestConfig context = reader.toObject(file, IngestConfig.class);
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
         if (dispatcher.initialize(provider, context)) {
+          if (!doNotFinalize) {
+            dispatcher.registerListener(new ExtractionCompleteListener() {
+              @Override
+              public void extractionComplete() {
+                OptimizeEntitiesCommand.optimizeAllCottontailEntities();
+              }
+            });
+          }
           dispatcher.start();
           dispatcher.registerListener((ExtractionCompleteListener) provider);
         } else {
