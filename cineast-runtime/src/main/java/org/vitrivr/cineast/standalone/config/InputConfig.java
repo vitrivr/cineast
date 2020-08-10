@@ -32,7 +32,7 @@ public class InputConfig {
         this.path = path;
     }
 
-    @JsonProperty(required = true)
+    @JsonProperty()
     public String getRelTo() {
         return relTo;
     }
