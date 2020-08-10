@@ -142,12 +142,12 @@ public interface DBSelector {
 
   /**
    * Performs a boolean lookup based on multiple conditions, linked with AND. Each element of the list specifies one of the conditions - left middle right, i.e. id IN (1, 5, 7)
-   *
-   * @param conditions conditions which will be linked by AND
+   *  @param conditions conditions which will be linked by AND
    * @param identifier column upon which the retain operation will be performed if the database layer does not support compound boolean retrieval.
    * @param projection Which columns shall be selected
+   * @param qc
    */
-  default List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection) {
+  default List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
     HashMap<String, Map<String, PrimitiveTypeProvider>> relevant = new HashMap<>();
     for (Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> condition : conditions) {
       List<Map<String, PrimitiveTypeProvider>> rows = this.getRows(condition.getLeft(), condition.getMiddle(), condition.getRight());
