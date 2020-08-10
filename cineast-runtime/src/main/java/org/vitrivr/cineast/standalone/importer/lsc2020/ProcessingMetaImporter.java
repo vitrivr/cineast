@@ -62,7 +62,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     private Map<String, PrimitiveTypeProvider> parseAsMeta(String segmentId, String path, String[] items) {
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(items.length + 9);
 
-        map.put("segmentid", PrimitiveTypeProvider.fromObject(segmentId));
+        map.put("id", PrimitiveTypeProvider.fromObject(segmentId));
         for (int i = 0; i < items.length; i++) {
             switch (i) {
                 case LSCUtilities.META_LAT_COL:

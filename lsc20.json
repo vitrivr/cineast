@@ -77,7 +77,7 @@
           "feature": "ConventionalTableRetriever", "weight": 1.0,
           "properties": {
             "entity.name": "features_table_lsc20meta",
-            "segmentid": "STRING",
+            "id": "STRING",
             "idx.segmentid": "HASH",
             "minute_id": "STRING",
             "utc_time": "STRING",
