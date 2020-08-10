@@ -30,7 +30,7 @@ public interface ExtractionContextProvider {
    *
    * @return Media-type of the source material.
    */
-  MediaType sourceType();
+  MediaType getType();
 
   /**
    * Determines the path of the input-file or folder.

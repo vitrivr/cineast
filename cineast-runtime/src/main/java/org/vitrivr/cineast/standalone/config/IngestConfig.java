@@ -143,11 +143,6 @@ public final class IngestConfig implements ExtractionContextProvider {
         this.cacheConfig = cacheConfig;
     }
 
-    @JsonProperty
-    public MediaType getType() {
-        return type;
-    }
-
     @JsonProperty(required = true)
     public InputConfig getInput() {
         return input;
@@ -207,7 +202,8 @@ public final class IngestConfig implements ExtractionContextProvider {
      * @return Media-type of the source material.
      */
     @Override
-    public MediaType sourceType() {
+    @JsonProperty
+    public MediaType getType() {
         return this.type;
     }
 

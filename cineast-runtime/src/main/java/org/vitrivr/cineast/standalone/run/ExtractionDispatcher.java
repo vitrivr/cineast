@@ -54,7 +54,7 @@ public class ExtractionDispatcher {
     this.context = context;
 
     if (this.fileHandlerThread == null) {
-      this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context, this.context.sourceType());
+      this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context, this.context.getType());
       this.fileHandlerThread = new Thread((GenericExtractionItemHandler) handler);
     } else {
       LOGGER.warn("You cannot initialize the current instance of ExtractionDispatcher again!");
