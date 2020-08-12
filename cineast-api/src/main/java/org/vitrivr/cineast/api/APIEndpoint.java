@@ -92,6 +92,7 @@ public class APIEndpoint {
   private static final String CONTEXT = "api";
   public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
   private static APIEndpoint instance = null;
+  private WebsocketAPI webSocketApi = null;
   private final List<DocumentedRestHandler> restHandlers = new ArrayList<>();
   /**
    * References to the HTTP and HTTPS service.
@@ -120,6 +121,7 @@ public class APIEndpoint {
     if (instance != null) {
       instance.shutdown();
     }
+    retrievalLogic.shutdown();
   }
   
   /**
@@ -160,6 +162,9 @@ public class APIEndpoint {
     if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi()
         .getEnableWebsocketSecure()) {
       https.stop();
+    }
+    if (Config.sharedConfig().getApi().getEnableWebsocket()) {
+      webSocketApi.shutdown();
     }
   }
   
@@ -238,7 +243,7 @@ public class APIEndpoint {
     
     /* Enable WebSocket (if configured). */
     if (config.getEnableWebsocket()) {
-      WebsocketAPI webSocketApi = new WebsocketAPI();
+      this.webSocketApi = new WebsocketAPI();
       
       service.ws(String.format("%s/websocket", namespace()), handler -> {
         handler.onConnect(ctx -> {

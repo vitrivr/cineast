@@ -126,6 +126,15 @@ public class ContinuousQueryDispatcher {
     taskQueue.clear();
     if (executor != null) {
       executor.shutdown();
+      try {
+        executor.awaitTermination(10, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      List<Runnable> runnables = executor.shutdownNow();
+      if(runnables.size()>0){
+        LOGGER.warn("{} threads terminated prematurely", runnables.size());
+      }
       executor = null;
     }
   }
