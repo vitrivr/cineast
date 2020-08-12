@@ -4,6 +4,8 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.io.File;
 import java.io.IOException;
+
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
@@ -24,7 +26,7 @@ public class ExtractionCommand implements Runnable {
   private String extractionConfig;
 
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the extraction. Set this flag when you want more performance with external parallelism.")
-  private boolean doNotFinalize = true;
+  private boolean doNotFinalize = false;
 
 
   @Override
@@ -42,7 +44,8 @@ public class ExtractionCommand implements Runnable {
         final IngestConfig context = reader.toObject(file, IngestConfig.class);
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
         if (dispatcher.initialize(provider, context)) {
-          if (!doNotFinalize) {
+          /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
+          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
             dispatcher.registerListener(new ExtractionCompleteListener() {
               @Override
               public void extractionComplete() {
@@ -53,16 +56,16 @@ public class ExtractionCommand implements Runnable {
           dispatcher.start();
           dispatcher.registerListener((ExtractionCompleteListener) provider);
         } else {
-          System.err.println(String.format("Could not start handleExtraction with configuration file '%s'. Does the file exist?", file.toString()));
+          System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file.toString());
         }
       } catch (IOException e) {
-        System.err.println(String.format("Could not start handleExtraction with configuration file '%s' due to a IO error.", file.toString()));
+        System.err.printf("Could not start handleExtraction with configuration file '%s' due to a IO error.%n", file.toString());
         e.printStackTrace();
       } catch (ClassCastException e) {
         System.err.println("Could not register completion listener for extraction.");
       }
     } else {
-      System.err.println(String.format("Could not start handleExtraction with configuration file '%s'; the file does not exist!", file.toString()));
+      System.err.printf("Could not start handleExtraction with configuration file '%s'; the file does not exist!%n", file.toString());
     }
   }
 }
