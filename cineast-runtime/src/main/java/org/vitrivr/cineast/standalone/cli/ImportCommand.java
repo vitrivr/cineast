@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
@@ -43,6 +45,9 @@ public class ImportCommand implements Runnable {
 
   @Option(name={"-c", "--clean"}, description = "Cleans, i.e. drops the tables before import. Use with caution, as the already imported data will be lost! Requires the import type to respect this option")
   private boolean clean = false;
+
+  @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the import. Set this flag when you want more performance with external parallelism.")
+  private boolean doNotFinalize = false;
 
   @Override
   public void run() {
@@ -117,10 +122,14 @@ public class ImportCommand implements Runnable {
         throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: "+type);
       }else{
         handler.doImport(path);
+        /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
+        if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
+            OptimizeEntitiesCommand.optimizeAllCottontailEntities();
+        }
       }
     }
 
-    System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
+    System.out.printf("Completed import of type %s for '%s'.%n", this.type, this.input);
   }
 
   private void doVisionImport(Path path) {
