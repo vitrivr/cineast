@@ -30,10 +30,12 @@ public class PrometheusServer {
     }
     if (initalized) {
       LOGGER.info("Prometheus already initalized");
+      lock.release();
       return;
     }
     if (!Config.sharedConfig().getMonitoring().enablePrometheus) {
       LOGGER.info("Prometheus monitoring not enabled");
+      lock.release();
       return;
     }
     DefaultExports.initialize();
