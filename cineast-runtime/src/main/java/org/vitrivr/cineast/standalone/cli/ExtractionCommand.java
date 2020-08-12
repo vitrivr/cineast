@@ -45,7 +45,7 @@ public class ExtractionCommand implements Runnable {
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
         if (dispatcher.initialize(provider, context)) {
           /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
-          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
             dispatcher.registerListener(new ExtractionCompleteListener() {
               @Override
               public void extractionComplete() {
