@@ -30,6 +30,11 @@ public class ExtractionCommand implements Runnable {
   @Override
   public void run() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
+    /* Prevent NullPointerException crash when extraction config isn't provided */
+    if (this.extractionConfig == null) {
+      System.err.println("No extraction config argument provided!");
+      return;
+    }
     final File file = new File(this.extractionConfig);
     if (file.exists()) {
       try {
