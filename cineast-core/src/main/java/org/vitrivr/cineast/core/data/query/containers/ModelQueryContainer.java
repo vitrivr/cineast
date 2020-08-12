@@ -48,7 +48,7 @@ public class ModelQueryContainer extends QueryContainer {
     }
 
     public ModelQueryContainer(String data){
-        this(data, CachedDataFactory.DEFAULT_INSTANCE);
+        this(data, CachedDataFactory.getDefault());
     }
 
     /**
