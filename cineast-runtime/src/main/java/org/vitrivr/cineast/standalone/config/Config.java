@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.*;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.io.File;
@@ -27,7 +28,6 @@ public class Config {
     private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
 
-
     /**
      * Accessor for shared (i.e. application wide) configuration.
      *
@@ -35,7 +35,7 @@ public class Config {
      */
     public synchronized static Config sharedConfig() {
         if (sharedConfig == null) {
-            sharedConfig = loadConfig("cineast.json");
+            loadConfig("cineast.json");
         }
         return sharedConfig;
     }
@@ -52,12 +52,20 @@ public class Config {
       return null;
     } else {
       LOGGER.info("Config file loaded!");
-      sharedConfig = config;
+      initSharedConfig(config);
       return config;
     }
   }
 
-    @JsonProperty
+  public static void initSharedConfig(Config config) {
+    sharedConfig = config;
+    if (config.cache != null) {
+      CachedDataFactory.configureDefault(config.cache);
+    }
+  }
+
+
+  @JsonProperty
     public APIConfig getApi() {
         return api;
     }

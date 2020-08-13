@@ -38,11 +38,11 @@ public class ImageQueryContainer extends QueryContainer {
 	}
 
 	public ImageQueryContainer(BufferedImage image) {
-		this(image, CachedDataFactory.DEFAULT_INSTANCE);
+		this(image, CachedDataFactory.getDefault());
 	}
 
 	public ImageQueryContainer(String data){
-		this(data, CachedDataFactory.DEFAULT_INSTANCE);
+		this(data, CachedDataFactory.getDefault());
 	}
 
 	public ImageQueryContainer(MultiImage img){
