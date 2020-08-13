@@ -4,6 +4,7 @@ import com.github.rvesse.airline.model.CommandMetadata;
 import com.github.rvesse.airline.parser.errors.ParseRestrictionViolatedException;
 import org.jline.builtins.Completers;
 import org.jline.reader.Completer;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.AggregateCompleter;
@@ -56,7 +57,7 @@ public class CLI {
 
         
         final Completer completer = new AggregateCompleter(
-                new StringsCompleter("quit", "exit"),
+                new StringsCompleter("quit", "exit", "stop"),
                 new StringsCompleter(commandNames),
                 new Completers.FileNameCompleter()
         );
@@ -73,8 +74,15 @@ public class CLI {
         try {
             while (true) {
 
-                final String line = lineReader.readLine(PROMPT).trim();
-                if (line.toLowerCase().equals("exit") || line.toLowerCase().equals("quit")) {
+                final String line;
+                /* Catch ^D end of file as exit method */
+                try {
+                    line = lineReader.readLine(PROMPT).trim();
+                } catch (EndOfFileException e) {
+                    break;
+                }
+
+                if (line.toLowerCase().equals("exit") || line.toLowerCase().equals("quit") || line.toLowerCase().equals("stop")) {
                     break;
                 }
 
