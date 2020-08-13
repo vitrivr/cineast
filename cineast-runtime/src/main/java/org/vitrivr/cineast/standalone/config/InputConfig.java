@@ -11,10 +11,9 @@ import org.vitrivr.cineast.core.config.IdConfig;
 public class InputConfig {
     private String path;
     private String name;
+    private String relTo;
     private Integer depth = 1;
 
-    private Integer skip = 0;
-    private Integer limit = Integer.MAX_VALUE;
     private IdConfig id = new IdConfig();
 
     @JsonProperty
@@ -33,6 +32,14 @@ public class InputConfig {
         this.path = path;
     }
 
+    @JsonProperty()
+    public String getRelTo() {
+        return relTo;
+    }
+    public void setRelTo(String relTo) {
+        this.relTo = relTo;
+    }
+
     @JsonProperty
     public IdConfig getId() {
         return id;
@@ -47,21 +54,5 @@ public class InputConfig {
     }
     public void setDepth(Integer depth) {
         this.depth = depth;
-    }
-
-    @JsonProperty
-    public Integer getSkip() {
-        return skip;
-    }
-    public void setSkip(Integer skip) {
-        this.skip = skip;
-    }
-
-    @JsonProperty
-    public Integer getLimit() {
-        return limit;
-    }
-    public void setLimit(Integer limit) {
-        this.limit = limit;
     }
 }

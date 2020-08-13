@@ -57,6 +57,19 @@ public class WebsocketAPI {
 
     /* */
     private JacksonJsonProvider reader = new JacksonJsonProvider();
+
+    /**
+     * Shuts down this WebsocketAPIs ThreadPoolExecutor.
+     */
+    public void shutdown() {
+        EXECUTORS.shutdown();
+        try {
+            EXECUTORS.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        EXECUTORS.shutdownNow();
+    }
  
     /**
      * Invoked whenever a new connection is established. Configures the session and stashes it in the {@link WebsocketAPI#SESSIONS} map.
@@ -75,8 +88,6 @@ public class WebsocketAPI {
      * Invoked whenever a new connection is closed. Removes the session from the {@link WebsocketAPI#SESSIONS} map.
      *
      * @param session Session associated with the new connection.
-     * @param statusCode
-     * @param reason
      */
     @OnWebSocketClose
     public void closed(Session session, int statusCode, String reason) {
@@ -84,11 +95,8 @@ public class WebsocketAPI {
         LOGGER.debug("Connection of session closed (Code: {}, Reason: {}).", statusCode, reason);
     }
 
-    /**
+    /*
      * TODO: Handle errors properly.
-     *
-     * @param session
-     * @param error
      */
     @OnWebSocketError
     public void onWebSocketException(Session session, Throwable error) {

@@ -101,8 +101,8 @@ public class ContinuousRetrievalLogic {
     ContinuousQueryDispatcher.removeRetrievalResultListener(listener);
   }
 
-  // TODO: Is this method actually needed?
   public void shutdown() {
     ContinuousQueryDispatcher.shutdown();
+    segmentReader.close();
   }
 }
