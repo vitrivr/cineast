@@ -37,7 +37,7 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   private void init() {
-    cottontail.createSchema("cineast");
+    cottontail.ensureSchemaBlocking("cineast");
   }
 
   @Override
