@@ -143,11 +143,6 @@ public final class IngestConfig implements ExtractionContextProvider {
         this.cacheConfig = cacheConfig;
     }
 
-    @JsonProperty
-    public MediaType getType() {
-        return type;
-    }
-
     @JsonProperty(required = true)
     public InputConfig getInput() {
         return input;
@@ -192,6 +187,14 @@ public final class IngestConfig implements ExtractionContextProvider {
         }
     }
 
+    @Override
+    public Optional<Path> relPath() {
+        if (this.input == null || this.input.getRelTo() == null) {
+            return Optional.empty();
+        }
+        return Optional.of(Paths.get(this.input.getRelTo()));
+    }
+
     public ExtractionContainerProvider pathProvider() {
         if (this.input != null) {
             return new SingletonContainerProvider(Paths.get(this.input.getPath()));
@@ -207,7 +210,8 @@ public final class IngestConfig implements ExtractionContextProvider {
      * @return Media-type of the source material.
      */
     @Override
-    public MediaType sourceType() {
+    @JsonProperty
+    public MediaType getType() {
         return this.type;
     }
 
@@ -275,30 +279,6 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * Offset into the list of files that are being distracted.
-     *
-     * @return A positive number or zero
-     */
-    @Override
-    @Deprecated
-    public int skip() {
-        return this.input.getSkip();
-    }
-
-    /**
-     * Limits the number of files that should be extracted. This a predicate is applied
-     * before extraction starts. If extraction fails for some fails the effective number
-     * of extracted files may be lower.
-     *
-     * @return A number greater than zero.
-     */
-    @Override
-    @Deprecated
-    public int limit() {
-        return this.input.getLimit();
-    }
-
-    /**
      * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
      * during an extraction run.
      *
@@ -309,10 +289,6 @@ public final class IngestConfig implements ExtractionContextProvider {
         return this.getInput().getId().getGenerator();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public IdConfig.ExistenceCheck existenceCheck() {
         return this.input.getId().getExistenceCheckMode();
@@ -352,19 +328,11 @@ public final class IngestConfig implements ExtractionContextProvider {
         return this.database.getSelectorSupplier();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public File outputLocation() {
         return this.pipeline.getOutputLocation();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int threadPoolSize() {
         return this.pipeline.getThreadPoolSize();

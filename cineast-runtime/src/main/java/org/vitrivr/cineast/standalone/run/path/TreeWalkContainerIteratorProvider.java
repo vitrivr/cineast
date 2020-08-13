@@ -31,29 +31,35 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
   private static final Logger LOGGER = LogManager.getLogger();
 
   private final Path basePath;
-  private final ExtractionContextProvider context;
+  private final Path startPath;
+  private final int depth;
   private volatile boolean open = true;
   private Iterator<Path> pathIterator = Collections.emptyIterator();
   private Counter pathsCompleted;
 
-  public TreeWalkContainerIteratorProvider(Path basePath, ExtractionContextProvider context) {
+  public TreeWalkContainerIteratorProvider(Path basePath, Path startPath, int depth) {
     this.basePath = basePath;
-    this.context = context;
+    this.startPath = startPath;
+    this.depth = depth;
     if (Config.sharedConfig().getMonitoring().enablePrometheus) {
       LOGGER.debug("Enabling prometheus monitoring for paths in queue");
       pathsCompleted = Counter.build().name("cineast_path_completed_treewalk")
           .help("Paths completed in Tree Walk for base path " + basePath).register();
     }
     try {
-      pathIterator = Files.walk(this.basePath, this.context.depth(), FileVisitOption.FOLLOW_LINKS)
+      Path resolvedStartPath = this.basePath.resolve(this.startPath);
+      pathIterator = Files.walk(resolvedStartPath, this.depth, FileVisitOption.FOLLOW_LINKS)
           .filter(p -> {
             try {
-              return Files.exists(p)  && !Files.isHidden(p) && Files.isReadable(p) && !this.basePath.equals(p);
+              return Files.exists(p)  && !Files.isHidden(p) && Files.isReadable(p);
             } catch (IOException e) {
               LOGGER.error("An IO exception occurred while testing the media file at '{}': {}", p.toString(), LogHelper.getStackTrace(e));
               return false;
             }
           }).iterator();
+      if (!pathIterator.hasNext()) {
+        LOGGER.info("{} does not seem to contain any readable files", resolvedStartPath.toString());
+      }
     } catch (IOException e) {
       LOGGER.error("An IO exception occurred while scanning '{}': {}", basePath.toString(),
           LogHelper.getStackTrace(e));
