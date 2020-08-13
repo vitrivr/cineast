@@ -53,8 +53,8 @@ public class ExtractionCommand implements Runnable {
               }
             });
           }
-          dispatcher.start();
           dispatcher.registerListener((ExtractionCompleteListener) provider);
+          dispatcher.start();
           dispatcher.block();
         } else {
           System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file.toString());
