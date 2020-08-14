@@ -38,6 +38,7 @@ public class AudioSpectogramExporter implements Extractor {
     private static final String PROPERTY_NAME_DESTINATION = "destination";
     private static final String PROPERTY_NAME_WIDTH = "width";
     private static final String PROPERTY_NAME_HEIGHT = "height";
+    private static final String PROPERTY_NAME_FORMAT = "format";
 
     /** Destination path; can be set in the AudioWaveformExporter properties. */
     private final Path destination;
@@ -47,6 +48,9 @@ public class AudioSpectogramExporter implements Extractor {
 
     /** Height of the resulting image in pixels. */
     private final int height;
+
+    /** Output format for thumbnails. Defaults to PNG. */
+    private final String format;
 
     /**
      * Default constructor
@@ -72,11 +76,12 @@ public class AudioSpectogramExporter implements Extractor {
         this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
         this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "800"));
         this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "600"));
+        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "PNG");
     }
 
     @Override
     public void processSegment(SegmentContainer shot) {
-        /* IF shot has no samples, this step is skipped. */
+        /* If shot has no samples, this step is skipped. */
         if (shot.getNumberOfSamples() == 0) {
           return;
         }
@@ -91,7 +96,7 @@ public class AudioSpectogramExporter implements Extractor {
             BufferedImage image = AudioSignalVisualizer.visualizeSpectogram(spectrums, this.width, this.height);
             if (image != null) {
                 Files.createDirectories(directory);
-                ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+                ImageIO.write(image, format, directory.resolve(shot.getId() + format.toLowerCase()).toFile());
             } else {
                 LOGGER.warn("Spectrum could not be visualized!");
             }

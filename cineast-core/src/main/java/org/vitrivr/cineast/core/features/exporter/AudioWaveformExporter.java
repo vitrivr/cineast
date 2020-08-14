@@ -33,6 +33,7 @@ public class AudioWaveformExporter implements Extractor {
     private static final String PROPERTY_NAME_DESTINATION = "destination";
     private static final String PROPERTY_NAME_WIDTH = "width";
     private static final String PROPERTY_NAME_HEIGHT = "height";
+    private static final String PROPERTY_NAME_FORMAT = "format";
 
     /** Destination path; can be set in the AudioWaveformExporter properties. */
     private final Path destination;
@@ -43,11 +44,14 @@ public class AudioWaveformExporter implements Extractor {
     /** Height of the resulting image in pixels. */
     private final int height;
 
+    /** Output format for thumbnails. Defaults to PNG. */
+    private final String format;
+
     /** Background color of the resulting image. */
-    private Color backgroundColor = Color.lightGray;
+    private final Color backgroundColor = Color.lightGray;
 
     /** Foreground color of the resulting image (used to draw the waveform). */
-    private Color foregroundColor = Color.darkGray;
+    private final Color foregroundColor = Color.darkGray;
 
     /**
      * Default constructor
@@ -73,6 +77,7 @@ public class AudioWaveformExporter implements Extractor {
         this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
         this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "600"));
         this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "250"));
+        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "PNG");
     }
 
     /**
@@ -83,6 +88,11 @@ public class AudioWaveformExporter implements Extractor {
     @Override
     public void processSegment(SegmentContainer shot) {
         try {
+            /* If shot has no samples, this step is skipped. */
+            if (shot.getNumberOfSamples() == 0) {
+                return;
+            }
+
             Path directory = this.destination.resolve(shot.getSuperId());
             Files.createDirectories(directory);
 
@@ -121,7 +131,7 @@ public class AudioWaveformExporter implements Extractor {
                 graphics.drawLine(i, baseline + (int) (bin_min[i] * baseline), i, baseline + (int) (bin_max[i] * baseline));
             }
 
-            ImageIO.write(image, "JPEG", directory.resolve(shot.getId()+".jpg").toFile());
+            ImageIO.write(image, format, directory.resolve(shot.getId() + "." + format.toLowerCase()).toFile());
         } catch (IOException exception) {
             LOGGER.fatal("Could not export waveform image for audio segment {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
         }
