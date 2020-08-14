@@ -30,16 +30,19 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
     /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final double THRESHOLD = 0.05;
+    private static final double DEFAULT_THRESHOLD = 0.05;
 
     private static final int SEGMENT_QUEUE_LENGTH = 10;
 
     private static final int PRESHOT_QUEUE_LENGTH = 10;
 
-    private static final int MAX_SHOT_LENGTH = 720;
+    private static final int DEFAULT_MAX_SHOT_LENGTH = 720;
 
     private static final int SEGMENT_POLLING_TIMEOUT = 1000;
 
+    private final double threshold;
+
+    private final int maxShotLength;
 
     private Decoder<VideoFrame> decoder;
 
@@ -70,6 +73,16 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      * Constructor required for instantiates through {@link ReflectionHelper}.
      */
     public VideoHistogramSegmenter(ExtractionContextProvider context, Map<String,String> parameters) {
+        if (parameters.containsKey("threshold")) {
+            this.threshold = Double.parseDouble(parameters.get("threshold"));
+        } else {
+            this.threshold = DEFAULT_THRESHOLD;
+        }
+        if (parameters.containsKey("maxShotLength")) {
+            this.maxShotLength = Integer.parseInt(parameters.get("maxShotLength"));
+        } else {
+            this.maxShotLength = DEFAULT_MAX_SHOT_LENGTH;
+        }
         this.segmentReader = new MediaSegmentReader(context.persistencyReader().get());
     }
 
@@ -229,7 +242,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                                 }
                                 i++;
                             }
-                            if (max <= THRESHOLD && _return.getNumberOfFrames() < MAX_SHOT_LENGTH) { //no cut
+                            if (max <= this.threshold && _return.getNumberOfFrames() < this.maxShotLength) { //no cut
                                 for (Pair<VideoFrame, Double> pair : preShotList) {
                                     _return.addVideoFrame(pair.first);
                                 }
