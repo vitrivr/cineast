@@ -80,7 +80,7 @@ public class CottontailWrapper implements AutoCloseable {
     return false;
   }
 
-  public synchronized boolean createIndexBlocking(CreateIndexMessage createMessage) {
+  public synchronized boolean createIndexBlocking(IndexDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.createIndex(createMessage);
