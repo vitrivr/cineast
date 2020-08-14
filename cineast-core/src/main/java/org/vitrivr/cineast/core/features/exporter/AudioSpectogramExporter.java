@@ -76,7 +76,7 @@ public class AudioSpectogramExporter implements Extractor {
         this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
         this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "800"));
         this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "600"));
-        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "PNG");
+        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
     }
 
     @Override

@@ -49,7 +49,7 @@ public class ShotThumbnailsExporter implements Extractor {
 	 */
 	public ShotThumbnailsExporter(HashMap<String, String> properties) {
 		this.folder =  new File(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "./thumbnails"));
-		this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "PNG");
+		this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
 	}
 
 	@Override
@@ -76,7 +76,16 @@ public class ShotThumbnailsExporter implements Extractor {
 			if(!imageFolder.exists()){
 				imageFolder.mkdirs();
 			}
-			ImageIO.write(thumb, format, img);
+			boolean writeSuccess = ImageIO.write(thumb, format, img);
+			if (!writeSuccess) {
+				LOGGER.warn("Could not find appropriate writer for thumbnail \"{}\", attempting conversion.", shot.getId());
+				BufferedImage convertedThumb = new BufferedImage(thumb.getWidth(), thumb.getHeight(), BufferedImage.TYPE_INT_RGB);
+				convertedThumb.getGraphics().drawImage(thumb, 0, 0, null);
+				writeSuccess = ImageIO.write(convertedThumb, format, img);
+				if (!writeSuccess) {
+					LOGGER.error("Could not find appropriate writer for thumbnail \"{}\", even after conversion!", shot.getId());
+				}
+			}
 		} catch (IOException e) {
 			LOGGER.error("Could not write thumbnail image: {}", LogHelper.getStackTrace(e));
 		}

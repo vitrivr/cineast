@@ -77,7 +77,7 @@ public class AudioWaveformExporter implements Extractor {
         this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
         this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "600"));
         this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "250"));
-        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "PNG");
+        this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
     }
 
     /**
