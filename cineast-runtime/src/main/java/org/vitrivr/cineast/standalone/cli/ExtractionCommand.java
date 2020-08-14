@@ -23,7 +23,7 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
 public class ExtractionCommand implements Runnable {
 
   @Option(name = {"-e", "--extraction"}, title = "Extraction config", description = "Path that points to a valid Cineast extraction config file.")
-  private String extractionConfig;
+  private String extractionConfig = null;
 
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the extraction. Set this flag when you want more performance with external parallelism.")
   private boolean doNotFinalize = false;

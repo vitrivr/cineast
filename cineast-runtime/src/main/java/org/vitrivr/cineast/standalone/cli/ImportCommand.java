@@ -32,10 +32,10 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportH
 public class ImportCommand implements Runnable {
 
   @Option(name = {"-t", "--type"}, description = "Type of data import that should be started.")
-  private String type;
+  private String type = null;
 
   @Option(name = {"-i", "--input"}, description = "The source file or folder for data import. If a folder is specified, the entire content will be considered for import.")
-  private String input;
+  private String input = null;
 
   @Option(name = {"--threads"}, description = "Level of parallelization for import")
   private int threads = 2;
@@ -51,6 +51,14 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
+    if (type == null) {
+      System.err.println("No type argument provided!");
+      return;
+    }
+    if (input == null) {
+      System.err.println("No import argument provided!");
+      return;
+    }
     System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
