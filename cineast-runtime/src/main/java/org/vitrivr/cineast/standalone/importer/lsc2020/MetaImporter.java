@@ -34,6 +34,40 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     private Iterator<Map<String, PrimitiveTypeProvider>> currentDataIterator = null;
     private Iterator<Map.Entry<String, String>> iterator;
 
+    public MetaImporter(Path path) {
+        this.root = path;
+        try {
+            LSCUtilities lsc = LSCUtilities.create(path);
+            lsc.initMetadata();
+            filenameToMinuteId = lsc.getFilenameToMinuteIdLookUp();
+            metadataMap = lsc.getMetaPerMinuteId();
+            iterator = filenameToMinuteId.entrySet().iterator();
+        } catch (IOException | CsvException e) {
+            LOGGER.error("Failed to prepare metadata readout due to {}", e, e);
+            throw new RuntimeException("Failed to prepare metadata readout", e);
+        }
+        try {
+            Files.createFile(root.resolve(LSCUtilities.META_NO_PATH_FILE));
+            Files.createFile(root.resolve(LSCUtilities.WRITTEN_FILE));
+        } catch (IOException e) {
+            LOGGER.error("Could not open important housekeeping files", e);
+        }
+        LOGGER.info("Finished setup of Importer. Importing now...");
+    }
+
+    static HashMap<String, PrimitiveTypeProvider> meta(String filename, String domain, String name, String value) {
+        final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
+        // "id"
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(filename)));
+        // domain
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(domain));
+        // key
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject(name));
+        // value
+        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(value));
+        return map;
+    }
+
     private Optional<List<Map<String, PrimitiveTypeProvider>>> parseLine(String filename, String[] items) {
         if (items.length != LSCUtilities.META_NAMES.length) {
             LOGGER.error("THe line's number of entries is illegal. Expected={}, Found={}. Line={}", LSCUtilities.META_NAMES.length, items.length, items);
@@ -47,11 +81,13 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
 //            }
 //            list.add(parseMeta(filename, items, i));
 //        }
-        for(int i : LSCUtilities.META_COLUMNS_IN_USE){
-            if(items[i].equalsIgnoreCase("null")){
-                continue;
+        for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
+            if (LSCUtilities.META_COLUMNS_IN_USE.contains(i)) {
+                if (items[i].equalsIgnoreCase("null")) {
+                    continue;
+                }
+                list.add(parseMeta(filename, items, i));
             }
-            list.add(parseMeta(filename, items, i));
         }
         // Processed temporal metadata, based on filename
         final LocalDateTime dt = LSCUtilities.fromMinuteId(minuteId);
@@ -61,12 +97,12 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_DAY, LSCUtilities.extractDayStr(dt)));
         list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_YEAR, LSCUtilities.extractYearStr(dt)));
         list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_HOUR_OF_DAY, LSCUtilities.extractHourStr(dt)));
-        if(StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")){
+        if (StringUtils.isNotBlank(items[LSCUtilities.META_UTC_COL]) && !items[LSCUtilities.META_UTC_COL].equalsIgnoreCase("null")) {
             list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_UTC, LSCUtilities.convertUtc(items[LSCUtilities.META_UTC_COL]).toString()));
         }
         // Processed temporal metadata, based on metadata file
-        if((StringUtils.isNotBlank(items[LSCUtilities.META_LOCAL_COL]) && !items[LSCUtilities.META_LOCAL_COL].equalsIgnoreCase("null"))
-        && (StringUtils.isNotBlank(items[LSCUtilities.META_TIMEZONE_COL]) && !items[LSCUtilities.META_TIMEZONE_COL].equalsIgnoreCase("null"))){
+        if ((StringUtils.isNotBlank(items[LSCUtilities.META_LOCAL_COL]) && !items[LSCUtilities.META_LOCAL_COL].equalsIgnoreCase("null"))
+                && (StringUtils.isNotBlank(items[LSCUtilities.META_TIMEZONE_COL]) && !items[LSCUtilities.META_TIMEZONE_COL].equalsIgnoreCase("null"))) {
             final ZonedDateTime zdt = LSCUtilities.convertLocal(items[LSCUtilities.META_LOCAL_COL], items[LSCUtilities.META_TIMEZONE_COL]);
             list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_LOCAL, zdt.toString()));
             list.add(meta(filename, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.PROCESSED_META_PHASE_OF_DAY, LSCUtilities.extractPhaseOfDay(zdt)));
@@ -75,46 +111,12 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         return Optional.of(list);
     }
 
-    static HashMap<String, PrimitiveTypeProvider> meta(String filename, String domain, String name, String value){
-        final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
-        // "id"
-        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(filename)));
-        // domain
-        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(domain));
-        // key
-        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject(name));
-        // value
-        map.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(value));
-        return map;
-    }
-
     private HashMap<String, PrimitiveTypeProvider> parseMeta(String path, String[] items, int index) {
         return parseMeta(path, items, index, LSCUtilities.DEFAULT_DOMAIN);
     }
 
     private HashMap<String, PrimitiveTypeProvider> parseMeta(String path, String[] items, int index, String domain) {
         return meta(path, domain, LSCUtilities.META_NAMES[index], items[index]);
-    }
-
-    public MetaImporter(Path path) {
-        this.root = path;
-        try {
-            LSCUtilities lsc = LSCUtilities.create(path);
-            lsc.initMetadata();
-            filenameToMinuteId = lsc.getFilenameToMinuteIdLookUp();
-             metadataMap = lsc.getMetaPerMinuteId();
-            iterator = filenameToMinuteId.entrySet().iterator();
-        } catch (IOException | CsvException e) {
-            LOGGER.error("Failed to prepare metadata readout due to {}", e, e);
-            throw new RuntimeException("Failed to prepare metadata readout", e);
-        }
-        try {
-            Files.createFile(root.resolve(LSCUtilities.META_NO_PATH_FILE));
-            Files.createFile(root.resolve(LSCUtilities.WRITTEN_FILE));
-        }catch(IOException e){
-            LOGGER.error("Could not open important housekeeping files", e);
-        }
-        LOGGER.info("Finished setup of Importer. Importing now...");
     }
 
     @Override
@@ -147,7 +149,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     private void writeLogs() {
         try {
             writeLines(LSCUtilities.META_NO_PATH_FILE, metaNoPath);
-            writeLines(LSCUtilities.WRITTEN_FILE,written);
+            writeLines(LSCUtilities.WRITTEN_FILE, written);
         } catch (IOException e) {
             LOGGER.error("Could not write crucial housekeeping info. Continuing", e);
         }
