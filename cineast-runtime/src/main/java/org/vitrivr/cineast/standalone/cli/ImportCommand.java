@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
@@ -31,11 +32,13 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportH
 @Command(name = "import", description = "Starts import of pre-extracted data.")
 public class ImportCommand implements Runnable {
 
+  @Required
   @Option(name = {"-t", "--type"}, description = "Type of data import that should be started.")
-  private String type = null;
+  private String type;
 
+  @Required
   @Option(name = {"-i", "--input"}, description = "The source file or folder for data import. If a folder is specified, the entire content will be considered for import.")
-  private String input = null;
+  private String input;
 
   @Option(name = {"--threads"}, description = "Level of parallelization for import")
   private int threads = 2;
@@ -51,14 +54,6 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
-    if (type == null) {
-      System.err.println("No type argument provided!");
-      return;
-    }
-    if (input == null) {
-      System.err.println("No import argument provided!");
-      return;
-    }
     System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());

@@ -5,6 +5,7 @@ import com.github.rvesse.airline.annotations.Option;
 import java.io.File;
 import java.io.IOException;
 
+import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
@@ -22,8 +23,9 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
 public class ExtractionCommand implements Runnable {
 
+  @Required
   @Option(name = {"-e", "--extraction"}, title = "Extraction config", description = "Path that points to a valid Cineast extraction config file.")
-  private String extractionConfig = null;
+  private String extractionConfig;
 
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the extraction. Set this flag when you want more performance with external parallelism.")
   private boolean doNotFinalize = false;
@@ -32,11 +34,6 @@ public class ExtractionCommand implements Runnable {
   @Override
   public void run() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
-    /* Prevent NullPointerException crash when extraction config isn't provided */
-    if (this.extractionConfig == null) {
-      System.err.println("No extraction config argument provided!");
-      return;
-    }
     final File file = new File(this.extractionConfig);
     if (file.exists()) {
       try {
