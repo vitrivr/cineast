@@ -96,7 +96,7 @@ public class AudioSpectogramExporter implements Extractor {
             BufferedImage image = AudioSignalVisualizer.visualizeSpectogram(spectrums, this.width, this.height);
             if (image != null) {
                 Files.createDirectories(directory);
-                ImageIO.write(image, format, directory.resolve(shot.getId() + format.toLowerCase()).toFile());
+                ImageIO.write(image, format, directory.resolve(shot.getId() + "." + format.toLowerCase()).toFile());
             } else {
                 LOGGER.warn("Spectrum could not be visualized!");
             }
