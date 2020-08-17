@@ -78,7 +78,7 @@
           "properties": {
             "entity.name": "features_table_lsc20meta",
             "id": "STRING",
-            "idx.segmentid": "HASH",
+            "idx.id": "HASH",
             "minute_id": "STRING",
             "utc_time": "STRING",
             "local_time": "STRING",
