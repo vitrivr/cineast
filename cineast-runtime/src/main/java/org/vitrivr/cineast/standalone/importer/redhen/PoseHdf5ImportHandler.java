@@ -46,7 +46,7 @@ public class PoseHdf5ImportHandler extends AligningImportHandler {
   protected void addFileJobs(String fullPath, Path input) {
     String trimmedPath = trimExtension(fullPath);
     String objectPath = objectPathOfFilesystemPath(fullPath);
-    List<MediaSegmentDescriptor> objectDescriptors = getObjectDescriptors(objectPath);
+    List<MediaSegmentDescriptor> objectDescriptors = getObjectDescriptorsByPath(objectPath);
     PoseHdf5Generator poseHdf5Generator = new PoseHdf5Generator(input, objectDescriptors);
     this.futures.add(this.service.submit(poseHdf5Generator));
     for (String poseSpecName : PoseSpecs.getInstance().specs.keySet()) {

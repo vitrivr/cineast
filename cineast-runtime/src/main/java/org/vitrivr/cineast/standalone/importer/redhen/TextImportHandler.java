@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.standalone.importer.redhen;
 
+import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.features.pose.PoseKeypoints;
 import java.nio.file.Path;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.standalone.importer.redhen.TextImporter.HeaderInfo;
-import sun.jvm.hotspot.memory.HeapBlock.Header;
 
 
 abstract public class TextImportHandler extends AligningImportHandler {
@@ -30,7 +30,8 @@ abstract public class TextImportHandler extends AligningImportHandler {
       throw new RuntimeException("Could not parse header");
     }
     HeaderInfo headerInfoGot = headerInfo.get();
-    importer.setSegments(getObjectDescriptors(headerInfoGot.name));
+    List<MediaSegmentDescriptor> segments = getObjectDescriptorsById("v_" + headerInfoGot.name);
+    importer.setSegments(segments);
     this.futures.add(this.service.submit(new DataImportRunner(
         importer,
         this.getTableName(),

@@ -10,11 +10,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,8 +36,8 @@ public class TextImporter implements Importer<Pair<String, String>> {
           .toFormatter()
   );
   private final Path fsPath;
-  private final Stream<String> lines;
-  private final Stream<Pair<String, String>> stream;
+  private final Supplier<Stream<String>> lines;
+  private final Iterator<Pair<String, String>> iter;
   private final String fieldName;
   private List<MediaSegmentDescriptor> objectDescriptors;
   private ListIterator<MediaSegmentDescriptor> segments;
@@ -42,17 +45,20 @@ public class TextImporter implements Importer<Pair<String, String>> {
 
   public TextImporter(Path fsPath, String fieldName) {
     this.fsPath = fsPath;
-    try {
-      this.lines = Files.lines(this.fsPath);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-    this.stream = this.alignedStream();
+    this.lines = () -> {
+      try {
+        return Files.lines(this.fsPath);
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    };
+    this.iter = this.alignedStream().iterator();
     this.fieldName = fieldName;
   }
 
   public void setSegments(List<MediaSegmentDescriptor> segments) {
     this.segments = segments.listIterator();
+    getNextSegment();
   }
 
   void getNextSegment() {
@@ -72,7 +78,7 @@ public class TextImporter implements Importer<Pair<String, String>> {
   }
 
   private Stream<Pair<String, String>> alignedStream() {
-    return this.lines.flatMap(
+    return this.lines.get().flatMap(
         line -> {
           String[] bits = line.split("\\|");
           if (bits.length != 4 || !bits[2].equals(this.fieldName)) {
@@ -93,7 +99,7 @@ public class TextImporter implements Importer<Pair<String, String>> {
            */
           ArrayList<String> segmentIds = new ArrayList<>();
           int lookaheads = 0;
-          while (this.curSegment.getStartabs() < floatOfDuration(subEnd)) {
+          while (this.curSegment != null && this.curSegment.getStartabs() < floatOfDuration(subEnd)) {
             segmentIds.add(this.curSegment.getSegmentId());
             if (this.segments.hasNext()) {
               this.curSegment = this.segments.next();
@@ -103,7 +109,11 @@ public class TextImporter implements Importer<Pair<String, String>> {
             }
           }
           for (int i = 0; i < lookaheads; i++) {
-            this.curSegment = this.segments.previous();
+            this.segments.previous();
+          }
+          if (lookaheads > 0) {
+            this.segments.previous();
+            this.curSegment = this.segments.next();
           }
           return segmentIds.stream().map(segId -> new ImmutablePair<>(segId, bits[3]));
         }
@@ -112,7 +122,10 @@ public class TextImporter implements Importer<Pair<String, String>> {
 
   @Override
   public Pair<String, String> readNext() {
-    return this.stream.findFirst().orElse(null);
+    if (this.iter.hasNext()) {
+      return this.iter.next();
+    }
+    return null;
   }
 
   @Override
@@ -145,7 +158,7 @@ public class TextImporter implements Importer<Pair<String, String>> {
 
   public Optional<HeaderInfo> getHeaderInfo() {
     if (!headerParsed) {
-      this.headerInfo = this.lines.limit(20).flatMap(s -> {
+      this.headerInfo = this.lines.get().limit(20).flatMap(s -> {
         String[] bits = s.split("\\|");
         if (bits.length == 3 && bits[0].equals("TOP")) {
           return Stream.of(new HeaderInfo(
