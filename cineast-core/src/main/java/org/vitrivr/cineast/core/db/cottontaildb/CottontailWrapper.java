@@ -19,6 +19,8 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -30,13 +32,13 @@ import org.vitrivr.cineast.core.util.LogHelper;
 public class CottontailWrapper implements AutoCloseable {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
   private static final InsertStatus INTERRUPTED_INSERT = InsertStatus.newBuilder().setSuccess(false).build();
 
   private final ManagedChannel channel;
   private final CottonDDLFutureStub definitionFutureStub;
   private final CottonDMLStub managementStub;
   private final CottonDMLStub insertStub;
+  private final HashSet<String> ensuredSchemas = new HashSet<>();
 
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
@@ -154,6 +156,25 @@ public class CottontailWrapper implements AutoCloseable {
       LOGGER.error("error in createSchemaBlocking: {}", LogHelper.getStackTrace(e));
       return false;
     }
+  }
+
+  public synchronized void ensureSchemaBlocking(String schema) {
+    if (this.ensuredSchemas.contains(schema)) {
+      return;
+    }
+    final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+    Iterator<Schema> existingSchemas = stub.listSchemas(Empty.getDefaultInstance());
+    boolean schemaExists = false;
+    while (existingSchemas.hasNext()) {
+      Schema existingSchema = existingSchemas.next();
+      if (existingSchema.getName().equals(schema)) {
+        schemaExists = true;
+      }
+    }
+    if (!schemaExists) {
+      this.createSchemaBlocking(schema);
+    }
+    this.ensuredSchemas.add(schema);
   }
 
   public boolean insert(List<InsertMessage> messages) {

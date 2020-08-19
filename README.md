@@ -17,6 +17,24 @@ $> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.jso
 
 For more setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki)
 
+## Docker image
+
+There is a Docker image available [on Docker
+Hub](https://hub.docker.com/repository/docker/vitrivr/cineast).
+
+You can then run the CLI with:
+```
+$> docker run vitrivr/cineast cli cineast.json help
+```
+
+To change the configuration you can use a bind mount, e.g. to run the API
+server with custom configuration file cineast.json in the current directory:
+```
+$> docker run \
+  --mount type=bind,source="$(pwd)"/cineast.json,target=/opt/cineast/cineast.json \
+  cineast.json vitrivr/cineast api cineast.json
+```
+
 ## Generate OpenApi Specification
 
 If you need to rebuild the OpenApi Specification (OAS), there is a gradle task for this purpose:

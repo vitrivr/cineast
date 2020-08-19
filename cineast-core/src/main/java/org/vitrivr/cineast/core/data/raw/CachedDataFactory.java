@@ -41,9 +41,16 @@ import java.util.Comparator;
  * @see CachedMultiImage
  */
 public class CachedDataFactory {
+    private static CachedDataFactory defaultInstance = new CachedDataFactory(new CacheConfig());
 
     /** Default instance of {@link CachedDataFactory}. */
-    public static final CachedDataFactory DEFAULT_INSTANCE = new CachedDataFactory(new CacheConfig());
+    public static CachedDataFactory getDefault() {
+      return defaultInstance;
+    }
+
+    public static void configureDefault(CacheConfig cacheConfig) {
+      defaultInstance = new CachedDataFactory(cacheConfig);
+    }
 
     /** A {@link ReentrantLock} to mediate access to CACHED_REFS. */
     private static final ReentrantLock CACHED_REFS_LOCK = new ReentrantLock();
