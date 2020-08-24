@@ -1,7 +1,7 @@
 {
   "type": "IMAGE_SEQUENCE",
   "input":{
-    "path": "/Users/florian/Documents/DBIS/vitrivr/data/LSC2020-ImageSequenceTest-Small",
+    "path": "/home/ubuntu/vitrivr/data/lsc2020-images/",
     "depth": 2,
     "id": {
       "name": "FileNameObjectIdGenerator",
