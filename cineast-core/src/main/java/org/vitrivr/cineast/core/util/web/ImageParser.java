@@ -38,6 +38,10 @@ public class ImageParser extends DataURLParser {
             LOGGER.error("could not make image, {}", LogHelper.getStackTrace(e));
             return null;
         }
+        if (bimg == null) {
+            LOGGER.error("ImageIO did not return an image (unsupported image type/missing codec?)");
+            return null;
+        }
 
         return bimg;
     }
