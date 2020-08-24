@@ -149,6 +149,7 @@
     "enableWebsocket": true,
     "enableWebsocketSecure": false,
     "enableRest": true,
+    "enableRestLiveDoc":true,
     "enableRestSecure": false,
     "enableLegacy": false,
     "httpPort": 4567,
