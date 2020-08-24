@@ -72,7 +72,7 @@ public final class MimeTypeHelper {
   public static String getContentType(String filename){
     final String[] split = filename.split("\\.");
     if (split.length > 0) {
-      return FILETYPES.getOrDefault(split[split.length-1], "application/octet-stream");
+      return FILETYPES.getOrDefault(split[split.length-1].toLowerCase(), "application/octet-stream");
     } else {
       return "application/octet-stream";
     }
