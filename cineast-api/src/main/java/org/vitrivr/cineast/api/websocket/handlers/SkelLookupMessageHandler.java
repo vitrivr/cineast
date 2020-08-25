@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.api.websocket.handlers;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -34,10 +37,12 @@ public class SkelLookupMessageHandler extends StatelessWebsocketMessageHandler<S
             return;
         }
         SkelProcessor skelProcessor = SkelProcessor.getInstance(poseConfig);
-        float[][][] poses = skelProcessor.getPose(message.getImg());
+        List<Pair<String, float[][]>> poses = skelProcessor.getPosesAndHands(message.getImg());
         List<PoseKeypointsResultContainer> resultList;
-        if (poses != null && poses.length >= 1) {
-            resultList = Collections.singletonList(new PoseKeypointsResultContainer(poses[0]));
+        if (poses != null && poses.size() >= 1) {
+            resultList = poses.stream().map(posePair ->
+                new PoseKeypointsResultContainer(posePair.getLeft(), posePair.getRight()))
+                .collect(Collectors.toList());
         } else {
             resultList = Collections.emptyList();
         }

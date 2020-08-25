@@ -10,13 +10,14 @@ public interface PoseProvider extends MostRepresentativeFrameProvider {
    * 
    * @return the poses in segment.
    */
+
 	default float[][][] getPose() {
 		VideoFrame frame = this.getMostRepresentativeFrame();
 		if (frame == VideoFrame.EMPTY_VIDEO_FRAME) {
 			return new float[][][]{};
 		} else {
 			SkelProcessor skelProcessor = SkelProcessor.getInstance();
-			return skelProcessor.getPose(frame.getImage());
+			return skelProcessor.getPoses(frame.getImage());
 		}
 	}
 

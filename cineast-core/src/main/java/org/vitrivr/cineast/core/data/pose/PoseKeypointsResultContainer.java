@@ -7,11 +7,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 
 public class PoseKeypointsResultContainer implements ExistenceCheck {
+    final private String name;
     final private float[][] keypoints;
 
     @JsonCreator
-    public PoseKeypointsResultContainer(@JsonProperty("keypoints") float[][] keypoints) {
+    public PoseKeypointsResultContainer(@JsonProperty("name") String name, @JsonProperty("keypoints") float[][] keypoints) {
+        this.name = name;
         this.keypoints = keypoints;
+    }
+
+    @JsonProperty
+    public final String getName() {
+        return this.name;
     }
 
     @JsonProperty

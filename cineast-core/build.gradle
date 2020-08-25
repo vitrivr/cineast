@@ -59,7 +59,7 @@ dependencies {
     compile group: "com.googlecode.javaewah", name: "JavaEWAH", version: "1.1.6"
 
     /** Tensorflow (Java). */
-    compile group: "org.tensorflow", name: "tensorflow", version: "1.9.0"
+    compile group: "org.tensorflow", name: "tensorflow", version: "1.15.0"
 
 
     /** Apache Commons Libraries */
