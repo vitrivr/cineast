@@ -37,7 +37,7 @@
     {
       "name": "ShotThumbnailsExporter",
       "properties": {
-        "destination":"/Users/florian/Documents/DBIS/vitrivr/data/LSC2020-ImageSequenceTest-Small-Thumbnails"
+        "destination":"./lsc2020-thumbnails-all"
       }
     }
   ],
