@@ -1,6 +1,12 @@
 package org.vitrivr.cineast.core.util.pose;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public class PoseNormalize {
   static final float THRESHOLD = 0.05f;
@@ -53,5 +59,13 @@ public class PoseNormalize {
     float[][] subsetPose = spec.subset(pose);
     PoseNormalize.minMaxScale(subsetPose);
     return Optional.of(PoseNormalize.flatten(subsetPose));
+  }
+
+  static public Stream<float[]> procSegmentContainer(PoseSpec spec, SegmentContainer sc) {
+    float[][][] poses = sc.getPose();
+    return Arrays.stream(poses).flatMap(pose -> {
+      Optional<float[]> flatPose = PoseNormalize.pipeline(spec, pose);
+      return flatPose.<Stream<? extends float[]>>map(Stream::of).orElseGet(Stream::empty);
+    });
   }
 }

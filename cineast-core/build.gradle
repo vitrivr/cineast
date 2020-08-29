@@ -61,6 +61,8 @@ dependencies {
     /** Tensorflow (Java). */
     compile group: "org.tensorflow", name: "tensorflow", version: "1.15.0"
 
+    /** PyTorch (Java). */
+    compile group: "org.pytorch", name: "pytorch_java_only", version: "1.6.0-SNAPSHOT"
 
     /** Apache Commons Libraries */
     compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"

@@ -12,3 +12,4 @@ http://posefs1.perception.cs.cmu.edu/OpenPose/models/hand/pose_iter_102000.caffe
 https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/pose/body_25/pose_deploy.prototxt,resources/openpose/pose/body_25/pose_deploy.prototxt
 https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/face/pose_deploy.prototxt,resources/openpose/face/pose_deploy.prototxt
 https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/hand/pose_deploy.prototxt,resources/openpose/hand/pose_deploy.prototxt
+https://github.com/frankier/skelshop/releases/download/handpt/hand.pt,resources/skelembed/hand.pt

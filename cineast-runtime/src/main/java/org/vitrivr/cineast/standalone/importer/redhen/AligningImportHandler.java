@@ -35,7 +35,7 @@ abstract class AligningImportHandler extends DataImportHandler {
   protected abstract void addFileJobs(String fullPath, Path input);
 
   protected List<MediaSegmentDescriptor> getObjectDescriptorsByPath(String objectPath) {
-    final String objectId = objectReader.lookUpObjectByPath(objectPath).getObjectId();
+    final String objectId = objectReader.lookUpObjectByName(objectPath).getObjectId();
     return getObjectDescriptorsById(objectId);
   }
 

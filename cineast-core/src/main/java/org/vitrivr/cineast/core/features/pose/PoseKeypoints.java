@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -37,16 +38,10 @@ public class PoseKeypoints extends AbstractFeatureModule {
   }
 
   private List<FloatVectorImpl> procPoses(SegmentContainer sc) {
-    float[][][] poses = sc.getPose();
-    ArrayList<FloatVectorImpl> poseKeypointContainers = new ArrayList<>();
-    for (float[][] pose : poses) {
-      Optional<float[]> flatPose = PoseNormalize.pipeline(this.poseSpec, pose);
-      if (!flatPose.isPresent()) {
-        continue;
-      }
-      poseKeypointContainers.add(new FloatVectorImpl(flatPose.get()));
-    }
-    return poseKeypointContainers;
+    return (
+        PoseNormalize.procSegmentContainer(this.poseSpec, sc)
+            .map(FloatVectorImpl::new)
+            .collect(Collectors.toList()));
   }
 
   @Override

@@ -41,6 +41,9 @@ subprojects {
         mavenCentral()
         maven { url 'https://artifacts.unidata.ucar.edu/repository/unidata-all/' }
         mavenLocal()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
 
     /* Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future. */
