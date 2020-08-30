@@ -13,3 +13,4 @@ https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/m
 https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/face/pose_deploy.prototxt,resources/openpose/face/pose_deploy.prototxt
 https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/hand/pose_deploy.prototxt,resources/openpose/hand/pose_deploy.prototxt
 https://github.com/frankier/skelshop/releases/download/handpt/hand.pt,resources/skelembed/hand.pt
+https://drive.google.com/uc?export=download&id=1ksch7Iqj9teaVXatseOzkXHz6TPeKX1b,resources/handtracking/ssdlitemobilenetv2.pb
