@@ -9,8 +9,6 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public class PoseNormalize {
-  static final float THRESHOLD = 0.05f;
-
   static public void minMaxScale(float[][] poseArr) {
     float minX = Float.POSITIVE_INFINITY;
     float maxX = Float.NEGATIVE_INFINITY;
@@ -41,13 +39,8 @@ public class PoseNormalize {
   static public float[] flatten(float[][] poseArr) {
     float[] flatArr = new float[2 * poseArr.length];
     for (int idx = 0; idx < poseArr.length; idx++) {
-      if (poseArr[idx][2] >= THRESHOLD) {
-        flatArr[2 * idx] = poseArr[idx][0];
-        flatArr[2 * idx + 1] = poseArr[idx][1];
-      } else {
-        flatArr[2 * idx] = Float.NaN;
-        flatArr[2 * idx + 1] = Float.NaN;
-      }
+      flatArr[2 * idx] = poseArr[idx][0];
+      flatArr[2 * idx + 1] = poseArr[idx][1];
     }
     return flatArr;
   }

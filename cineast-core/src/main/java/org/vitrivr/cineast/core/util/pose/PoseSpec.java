@@ -30,7 +30,7 @@ public class PoseSpec {
 
   public boolean hasAll(float[][] pose) {
     for (Integer nodeIdx : this.nodes) {
-      if (pose[nodeIdx][2] < PoseNormalize.THRESHOLD) {
+      if (pose[nodeIdx][2] <= 0) {
         System.out.printf("idx %d not present %s\n", nodeIdx, Arrays.toString(pose[nodeIdx]));
         return false;
       }
