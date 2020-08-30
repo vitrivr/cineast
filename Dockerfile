@@ -43,7 +43,7 @@ if [ "$1" != "api" ] && [ "$1" != "cli" ]; then\n\
     echo "Usage: $0 api|cli" >&2\n\
     exit 1\n\
 fi\n\
-cd /opt/cineast/ && java -Djava.library.path=/opt/libtorch/lib -jar cineast-$1.jar ${@:2}'\
+cd /opt/cineast/ && LD_LIBRARY_PATH=/opt/libtorch/lib:$LD_LIBRARY_PATH java -jar cineast-$1.jar ${@:2}'\
 > /opt/cineast/bootstrap.sh
 RUN chmod +x /opt/cineast/bootstrap.sh
 
