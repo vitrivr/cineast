@@ -472,6 +472,10 @@ public class CottontailMessageBuilder {
         knnBuilder.setDistance(Distance.CHISQUARED);
         break;
       }
+      case cosine: {
+        knnBuilder.setDistance(Distance.COSINE);
+        break;
+      }
       case keypoints2d: {
         knnBuilder.setDistance(Distance.KEYPOINTS2D);
         break;
@@ -515,6 +519,14 @@ public class CottontailMessageBuilder {
       }
       case chisquared: {
         knnBuilder.setDistance(Distance.CHISQUARED);
+        break;
+      }
+      case cosine: {
+        knnBuilder.setDistance(Distance.COSINE);
+        break;
+      }
+      case keypoints2d: {
+        knnBuilder.setDistance(Distance.KEYPOINTS2D);
         break;
       }
       default: {
