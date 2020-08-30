@@ -35,7 +35,7 @@ COPY --from=build \
   /opt/cineast/resources
 
 COPY --from=build \
-  /cineast-src/libtorch/ \
+  /libtorch/ \
   /opt/libtorch/
 
 RUN printf '#!/bin/bash\n\
