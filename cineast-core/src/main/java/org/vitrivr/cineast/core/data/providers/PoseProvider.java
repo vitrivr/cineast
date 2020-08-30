@@ -24,4 +24,8 @@ public interface PoseProvider extends MostRepresentativeFrameProvider {
 	default Optional<String> getPoseModel() {
 		return Optional.empty();
 	}
+
+	default boolean[] getOrientations() {
+		return new boolean[] { false, false };
+	}
 }

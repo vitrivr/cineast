@@ -54,8 +54,7 @@ public class PoseNormalize {
     return Optional.of(PoseNormalize.flatten(subsetPose));
   }
 
-  static public Stream<float[]> procSegmentContainer(PoseSpec spec, SegmentContainer sc) {
-    float[][][] poses = sc.getPose();
+  static public Stream<float[]> procPoses(PoseSpec spec, float[][][] poses) {
     return Arrays.stream(poses).flatMap(pose -> {
       Optional<float[]> flatPose = PoseNormalize.pipeline(spec, pose);
       return flatPose.<Stream<? extends float[]>>map(Stream::of).orElseGet(Stream::empty);

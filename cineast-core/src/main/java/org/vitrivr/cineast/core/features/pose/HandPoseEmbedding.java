@@ -49,13 +49,13 @@ public class HandPoseEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private List<FloatVectorImpl> procPoses(SegmentContainer sc) {
+  private List<FloatVectorImpl> procPoses(float[][][] poses) {
     if (this.mod == null) {
       this.mod = Module.load("resources/skelembed/hand.pt");
     }
     // XXX: Probably all this copying can be avoided somehow
     PoseSpec poseSpec = this.getPoseSpec();
-    List<float[]> allKps = PoseNormalize.procSegmentContainer(poseSpec, sc)
+    List<float[]> allKps = PoseNormalize.procPoses(poseSpec, poses)
         .collect(Collectors.toList());
     if (this.isLeft) {
       for (float[] kps : allKps) {
@@ -110,19 +110,23 @@ public class HandPoseEmbedding extends AbstractFeatureModule {
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      persist(shot.getId(), procPoses(shot));
+      persist(shot.getId(), procPoses(shot.getPose()));
     }
+  }
+
+  public List<ScoreElement> getSimilar(float[][][] poses, ReadableQueryConfig qcIn) {
+    QueryConfig qc = new QueryConfig(qcIn);
+    qc.setDistanceIfEmpty(Distance.cosine);
+    ArrayList<ScoreElement> results = new ArrayList<>();
+    for (FloatVectorImpl query : procPoses(poses)) {
+      results.addAll(getSimilar(ReadableFloatVector.toArray(query), qc));
+    }
+    return results;
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qcIn) {
-    QueryConfig qc = new QueryConfig(qcIn);
-    qc.setDistanceIfEmpty(Distance.cosine);
-    ArrayList<ScoreElement> results = new ArrayList<>();
-    for (FloatVectorImpl query : procPoses(sc)) {
-      results.addAll(getSimilar(ReadableFloatVector.toArray(query), qc));
-    }
-    return results;
+    return getSimilar(sc.getPose(), qcIn);
   }
 
   @Override

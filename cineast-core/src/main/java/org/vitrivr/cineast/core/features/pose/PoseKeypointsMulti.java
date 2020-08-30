@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.features.pose;
 
+import static org.vitrivr.cineast.core.util.pose.PoseFlip.flip;
+import static org.vitrivr.cineast.core.util.pose.PoseFlip.modelFlip;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +35,16 @@ public class PoseKeypointsMulti extends MultiFeature<PoseKeypoints> {
       LOGGER.warn("Tried to getSimilar(...) with a SegmentContainer without a pose model. Returning empty list.");
       return Collections.emptyList();
     }
-    return this.poseSpecFeatures.get(poseModel.get()).getSimilar(sc, qc);
+    float[][][] poses = sc.getPose();
+    ArrayList<ScoreElement> results = new ArrayList<>();
+    boolean[] orientations = sc.getOrientations();
+    if (orientations[0]) {
+      results.addAll(this.poseSpecFeatures.get(poseModel.get()).getSimilar(poses, qc));
+    }
+    if (orientations[1]) {
+      results.addAll(this.poseSpecFeatures.get(modelFlip(poseModel.get())).getSimilar(flip(poses), qc));
+    }
+    return results;
   }
 
   @Override

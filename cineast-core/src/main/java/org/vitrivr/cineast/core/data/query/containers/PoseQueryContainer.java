@@ -11,8 +11,9 @@ import java.util.function.IntFunction;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
 
 public class PoseQueryContainer extends QueryContainer {
-	private String poseSpec;
-	private float[][] pose;
+	final private String poseSpec;
+	final private float[][] pose;
+	final private boolean[] orientations;
 
 	/**
 	 * Constructs a {@link PoseQueryContainer} from base 64 encoded query json.
@@ -28,6 +29,8 @@ public class PoseQueryContainer extends QueryContainer {
 		this.pose = streamOfIterator(query.get("pose").get("keypoints").elements()).map(xyc ->
 			Floats.toArray(streamOfIterator(xyc.elements()).map(JsonNode::asDouble).collect(toList()))
 		).toArray(float[][]::new);
+		JsonNode orientations = query.get("orientations");
+		this.orientations = new boolean[] {orientations.get(0).asBoolean(), orientations.get(1).asBoolean()};
 	}
 
 	@Override
@@ -37,5 +40,9 @@ public class PoseQueryContainer extends QueryContainer {
 
 	public Optional<String> getPoseModel() {
 		return Optional.of(this.poseSpec);
+	}
+
+	public boolean[] getOrientations() {
+		return this.orientations;
 	}
 }

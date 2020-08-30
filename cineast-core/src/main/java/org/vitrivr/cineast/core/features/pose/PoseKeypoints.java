@@ -37,9 +37,9 @@ public class PoseKeypoints extends AbstractFeatureModule {
     this.poseSpec = PoseSpecs.getInstance().specs.get(poseSpecName);
   }
 
-  private List<FloatVectorImpl> procPoses(SegmentContainer sc) {
+  private List<FloatVectorImpl> procPoses(float[][][] poses) {
     return (
-        PoseNormalize.procSegmentContainer(this.poseSpec, sc)
+        PoseNormalize.procPoses(this.poseSpec, poses)
             .map(FloatVectorImpl::new)
             .collect(Collectors.toList()));
   }
@@ -50,19 +50,22 @@ public class PoseKeypoints extends AbstractFeatureModule {
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      persist(shot.getId(), procPoses(shot));
+      persist(shot.getId(), procPoses(shot.getPose()));
     }
   }
 
-  @Override
-  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qcIn) {
+  public List<ScoreElement> getSimilar(float[][][] poses, ReadableQueryConfig qcIn) {
     QueryConfig qc = new QueryConfig(qcIn);
     qc.setDistanceIfEmpty(Distance.keypoints2d);
     ArrayList<ScoreElement> results = new ArrayList<>();
-    for (FloatVectorImpl query : procPoses(sc)) {
+    for (FloatVectorImpl query : procPoses(poses)) {
       results.addAll(getSimilar(ReadableFloatVector.toArray(query), qc));
     }
     return results;
   }
 
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qcIn) {
+    return getSimilar(sc.getPose(), qcIn);
+  }
 }
