@@ -83,13 +83,25 @@ public class HandPoseEmbedding extends AbstractFeatureModule {
     Tensor data =
         Tensor.fromBlob(
             kpsFlat, // data
-            new long[]{allKps.size(), 2, 21, 1, 1}
+            new long[]{allKps.size(), 2, 1, 21, 1}
         );
-    IValue result = mod.forward(IValue.from(data), IValue.from(3.0));
-    Tensor output = result.toTensor();
-    System.out.println("shape: " + Arrays.toString(output.shape()));
-    System.out.println("data: " + Arrays.toString(output.getDataAsFloatArray()));
-    return new ArrayList<>();
+    IValue modelResult = mod.forward(IValue.from(data));
+    Tensor output = modelResult.toTensor();
+    long[] shape = output.shape();
+    ArrayList<FloatVectorImpl> result = new ArrayList<>();
+    if (shape.length != 2) {
+      LOGGER.warn("Unexpected shape from hand pose embedder: {}", Arrays.toString(shape));
+      return result;
+    }
+    float[] floatArr = output.getDataAsFloatArray();
+    int numResults = (int)shape[0];
+    int vecSize = (int)shape[1];
+    for (int i = 0; i < numResults; i++) {
+      float[] vec = new float[vecSize];
+      System.arraycopy(floatArr, i * vecSize, vec, 0, vecSize);
+      result.add(new FloatVectorImpl(vec));
+    }
+    return result;
   }
 
   @Override
