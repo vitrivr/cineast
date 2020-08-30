@@ -16,7 +16,7 @@ FROM openjdk:14-slim-buster
 
 RUN mkdir -p /opt/cineast
 
-RUN apt-get update && apt-get install -y libgtk2.0-0
+RUN apt-get update && apt-get install -y libgtk2.0-0 libgomp1
 
 COPY --from=build \
   /cineast-src/cineast.json \
