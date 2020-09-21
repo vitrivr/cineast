@@ -7,6 +7,6 @@ package org.vitrivr.cineast.standalone.run;
  */
 public interface ExtractionItemProcessor {
 
-  public void addExtractionCompleteListener(ExtractionCompleteListener listener);
+  void addExtractionCompleteListener(ExtractionCompleteListener listener);
 
 }

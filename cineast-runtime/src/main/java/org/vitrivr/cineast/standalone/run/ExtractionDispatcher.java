@@ -78,6 +78,21 @@ public class ExtractionDispatcher {
     }
   }
 
+  /**
+   * Blocks until the extraction process thread is completed.
+   */
+  public synchronized void block() {
+    if (fileHandlerThread == null) {
+      LOGGER.warn("Tried to wait for extraction thread before extraction thread was initialized!");
+      return;
+    }
+    try {
+      fileHandlerThread.join();
+    } catch (InterruptedException e) {
+      LOGGER.error("Interrupted while waiting for extraction thread to complete!");
+    }
+  }
+
   public void registerListener(ExtractionCompleteListener listener) {
     if (this.fileHandlerThread == null) {
       LOGGER.error("Could not register listener, no thread available");
