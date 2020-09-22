@@ -1,20 +1,24 @@
-version: '3.2'
+version: '3.7'
 services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus-cineast
+    expose:
+     - "9090"
     ports:
-    - 9090:9090
+    - "9090:9090"
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
     - ./prometheus_mac.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
     - cadvisor
-    network_mode: host
+    network_mode: bridge
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
+    expose:
+    - 8080
     ports:
     - 8080:8080
     volumes:
@@ -22,10 +26,12 @@ services:
     - /var/run:/var/run:rw
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
-    network_mode: host
+    network_mode: bridge
   grafana:
     image: grafana/grafana:latest
     container_name: grafana-cineast
+    expose:
+    - 3000
     ports:
     - 3000:3000
-    network_mode: host
+    network_mode: bridge

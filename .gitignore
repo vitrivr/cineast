@@ -1,5 +1,9 @@
+# Cineast Caches
+cineast_cache*
+
 *.orig
 *.class
+*.log
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -49,3 +53,12 @@ index*
 
 ##JSON
 /db/**/*.json
+
+/benchmark-default.csv
+
+*.hogcb
+*.surfcb
+*.pb
+
+##macOS
+.DS_Store

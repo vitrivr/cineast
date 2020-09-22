@@ -1,0 +1,51 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClassName = 'org.vitrivr.cineast.standalone.Main'
+    applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
+}
+
+distributions {
+    main {
+        contents {
+            from('../cineast.json') {
+                into 'bin'
+            }
+        }
+    }
+}
+
+task fatJar(type: Jar) {
+    archiveClassifier = 'full'
+    manifest {
+        attributes 'Main-Class': 'org.vitrivr.cineast.standalone.Main'
+        attributes 'Multi-Release': 'true'
+		attributes 'Implementation-Version': '1.xx'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+dependencies {
+    /** Jetty Servlet support. */
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
+
+    /** Airline (CLI parsing) */
+    compile group: 'com.github.rvesse', name: 'airline', version: '2.7.2'
+    
+    /** JLine 3 */
+    compile group: 'org.jline', name: 'jline', version: '3.12.1'
+
+    /** OpenCSV for simple, yet effective CSV parsing */
+    compile group: 'com.opencsv', name: 'opencsv', version: '5.1'
+
+
+    /** Prometheus */
+    compile group: 'io.prometheus', name: 'simpleclient', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_httpserver', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_pushgateway', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.6.0'
+}
