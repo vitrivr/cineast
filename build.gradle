@@ -5,7 +5,7 @@ plugins {
 
 allprojects {
     group = 'org.vitrivr'
-    version = '2.5'
+    version = '3.0.1'
 }
 
 project.ext.protobufVersion = "3.9.0"
