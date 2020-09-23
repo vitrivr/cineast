@@ -230,8 +230,8 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean dropEntity(String entityName) {
-    final Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
-    return cottontail.dropEntityBlocking(entity);
+    cottontail.dropEntityBlocking(CottontailWrapper.entityByName(entityName));
+    return true;
   }
 
 

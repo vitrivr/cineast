@@ -17,13 +17,13 @@ public final class ExtractionPipelineConfig {
 	public static final int DEFAULT_SEGMENTQUEUE_SIZE = 10;
 
 	/** */
-	private Integer shotQueueSize = DEFAULT_THREADPOOL_SIZE;
+	private Integer shotQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
 
 	/** */
-	private Integer threadPoolSize = DEFAULT_TASKQUEUE_SIZE;
+	private Integer threadPoolSize = DEFAULT_THREADPOOL_SIZE;
 
 	/** */
-	private Integer taskQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
+	private Integer taskQueueSize = DEFAULT_TASKQUEUE_SIZE;
 
 	private File outputLocation = new File(".");
 

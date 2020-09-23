@@ -3,13 +3,11 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
-
 import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.HashSet;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -17,9 +15,6 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ExtractorConfig;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
-import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactory;
 
 /**
  * A CLI command that can be used to setup all the database entities required by Cineast.
@@ -29,6 +24,8 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
  */
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
 public class DatabaseSetupCommand implements Runnable {
+
+  private static final Logger LOGGER = LogManager.getLogger(DatabaseSetupCommand.class);
 
   @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
   private boolean clean = false;
@@ -58,10 +55,39 @@ public class DatabaseSetupCommand implements Runnable {
       System.err.println(String.format("Could not setup database based upon extraction config '%s'; the file does not exist!", file.toString()));
     }
     return persistentOperators;
-}
+  }
+
+  /**
+   * This is a hacky way to support CLI and non CLI usage.
+   *
+   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used. See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
+   */
+  private final boolean isNotCommand;
+
+  /**
+   * For CLI
+   */
+  public DatabaseSetupCommand() {
+    this(false);
+  }
+
+  /**
+   * Other usages, i.e. in Import
+   */
+  public DatabaseSetupCommand(boolean nonCli) {
+    this.isNotCommand = nonCli;
+  }
 
   @Override
   public void run() {
+    doSetup();
+  }
+
+
+  /**
+   * Performs necessary setup on database, i.e. creating the required tables.
+   */
+  public void doSetup() {
     final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
       HashSet<PersistentOperator> persistentOperators;
@@ -71,12 +97,11 @@ public class DatabaseSetupCommand implements Runnable {
         persistentOperators = this.extractionConfigPersistentOperators(this.extractionConfig);
       }
 
-      System.out.println(clean);
       if (this.clean) {
         this.dropAllEntities(ec, persistentOperators);
       }
 
-      System.out.println("Setting up basic entities...");
+      print("Setting up basic entities...");
 
       ec.createMultiMediaObjectsEntity();
       ec.createMetadataEntity();
@@ -84,17 +109,17 @@ public class DatabaseSetupCommand implements Runnable {
       ec.createSegmentEntity();
       ec.createTagEntity();
 
-      System.out.println("...done");
+      print("...done");
 
-      System.out.println("Setting up retriever classes...");
+      print("Setting up retriever classes...");
 
       for (PersistentOperator r : persistentOperators) {
-        System.out.println("Creating entity for " + r.getClass().getSimpleName());
+        print("Creating entity for " + r.getClass().getSimpleName());
         r.initalizePersistentLayer(() -> ec);
       }
-      System.out.println("...done");
+      print("...done");
 
-      System.out.println("Setup complete!");
+      print("Setup complete!");
 
       /* Closes the EntityCreator. */
       ec.close();
@@ -105,10 +130,10 @@ public class DatabaseSetupCommand implements Runnable {
    * Drops all entities currently required by Cineast.
    *
    * @param ec The {@link EntityCreator} used to drop the entities.
-   * @param retrievers The list of {@link Retriever} classes to drop the entities for.
+   * @param persistentOperators The list of {@link PersistentOperator} classes to drop the entities for.
    */
   private void dropAllEntities(EntityCreator ec, Collection<PersistentOperator> persistentOperators) {
-    System.out.println("Dropping all entities... ");
+    print("Dropping all entities... ");
     ec.dropMultiMediaObjectsEntity();
     ec.dropMetadataEntity();
     ec.dropSegmentEntity();
@@ -116,8 +141,19 @@ public class DatabaseSetupCommand implements Runnable {
     ec.dropTagEntity();
 
     for (PersistentOperator p : persistentOperators) {
-      System.out.println("Dropping " + p.getClass().getSimpleName());
+      print("Dropping " + p.getClass().getSimpleName());
       p.dropPersistentLayer(() -> ec);
+    }
+  }
+
+  /**
+   * Prints the message given, if this is object was created in a CLI env, then it prints to standard out, otherwise it just logs on INFO
+   */
+  private void print(String msg) {
+    if (this.isNotCommand) {
+      LOGGER.info(msg);
+    } else {
+      System.out.println(msg);
     }
   }
 }
