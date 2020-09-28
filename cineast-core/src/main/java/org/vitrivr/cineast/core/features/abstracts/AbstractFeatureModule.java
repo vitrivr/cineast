@@ -148,6 +148,11 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
             this.writer = null;
         }
 
+        if (this.primitiveWriter != null) {
+            this.primitiveWriter.close();
+            this.primitiveWriter = null;
+        }
+
         if (this.phandler != null) {
             this.phandler.close();
             this.phandler = null;
