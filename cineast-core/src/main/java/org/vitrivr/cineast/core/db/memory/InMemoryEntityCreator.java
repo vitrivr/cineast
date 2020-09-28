@@ -63,16 +63,16 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, int length, String... featureNames) {
+  public boolean createFeatureEntity(String featureEntityName, boolean unique, int length, String... featureNames) {
     final String[] columns = new String[featureNames.length + 1];
     columns[0] = "id";
     System.arraycopy(featureNames, 0, columns, 1, columns.length - 1);
-    return this.store.createEntity(featurename, columns).isPresent();
+    return this.store.createEntity(featureEntityName, columns).isPresent();
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
-    return createIdEntity(featurename, attributes);
+  public boolean createFeatureEntity(String featureEntityName, boolean unique, AttributeDefinition... attributes) {
+    return createIdEntity(featureEntityName, attributes);
   }
 
   @Override

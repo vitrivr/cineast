@@ -162,23 +162,23 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, int length,
+  public boolean createFeatureEntity(String featureEntityName, boolean unique, int length,
       String... featureNames) {
     final AttributeDefinition[] attributes = Arrays.stream(featureNames)
         .map(s -> new AttributeDefinition(s, VECTOR, length))
         .toArray(AttributeDefinition[]::new);
-    return this.createFeatureEntity(featurename, unique, attributes);
+    return this.createFeatureEntity(featureEntityName, unique, attributes);
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique,
+  public boolean createFeatureEntity(String featureEntityName, boolean unique,
       AttributeDefinition... attributes) {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
     final HashMap<String, String> hints = new HashMap<>(1);
 
     extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(featurename, extended);
+    return this.createEntity(featureEntityName, extended);
   }
 
   @Override
