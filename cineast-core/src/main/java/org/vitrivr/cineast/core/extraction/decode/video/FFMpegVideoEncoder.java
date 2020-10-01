@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.extraction.decode.video;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.avformat;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
@@ -10,10 +9,11 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static org.bytedeco.javacpp.avcodec.AV_CODEC_ID_NONE;
-import static org.bytedeco.javacpp.avformat.*;
-import static org.bytedeco.javacpp.avutil.AVDictionary;
-import static org.bytedeco.javacpp.avutil.av_compare_ts;
+import org.bytedeco.ffmpeg.avformat.*;
+import org.bytedeco.ffmpeg.avutil.*;
+import static org.bytedeco.ffmpeg.global.avcodec.*;
+import static org.bytedeco.ffmpeg.global.avformat.*;
+import static org.bytedeco.ffmpeg.global.avutil.*;
 
 /**
  *
@@ -29,8 +29,8 @@ public class FFMpegVideoEncoder {
 
     private VideoOutputStreamContainer video_st = null;
     private AudioOutputStreamContainer audio_st = null;
-    private avformat.AVOutputFormat fmt;
-    private avformat.AVFormatContext oc = new avformat.AVFormatContext();
+    private AVOutputFormat fmt;
+    private AVFormatContext oc = new AVFormatContext();
 
     private Queue<MultiImage> imageQueue = new LinkedList<>();
     private Queue<AudioFrame> audioQueue = new LinkedList<>();

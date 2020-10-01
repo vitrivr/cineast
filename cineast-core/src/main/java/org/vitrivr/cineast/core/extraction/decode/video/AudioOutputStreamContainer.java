@@ -2,15 +2,16 @@ package org.vitrivr.cineast.core.extraction.decode.video;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.swresample;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 
-import static org.bytedeco.javacpp.avcodec.*;
-import static org.bytedeco.javacpp.avutil.*;
-import static org.bytedeco.javacpp.swresample.*;
+import org.bytedeco.ffmpeg.avcodec.*;
+import org.bytedeco.ffmpeg.avformat.*;
+import org.bytedeco.ffmpeg.avutil.*;
+import org.bytedeco.ffmpeg.swresample.*;
+import static org.bytedeco.ffmpeg.global.avcodec.*;
+import static org.bytedeco.ffmpeg.global.avformat.*;
+import static org.bytedeco.ffmpeg.global.avutil.*;
+import static org.bytedeco.ffmpeg.global.swresample.*;
 
 class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
@@ -19,17 +20,17 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
     AVFrame tmp_frame;
     private int samples_count;
     private AVFrame frame;
-    private swresample.SwrContext swr_ctx;
+    private SwrContext swr_ctx;
     private AVRational rat = new AVRational();
 
     private final int channels = 1;
 
-    AudioOutputStreamContainer(avformat.AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
+    AudioOutputStreamContainer(AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
         super(oc, codec_id);
 
-        long channellayout = avutil.av_get_default_channel_layout(channels);
+        long channellayout = av_get_default_channel_layout(channels);
 
-        if (codec.type() != avutil.AVMEDIA_TYPE_AUDIO) {
+        if (codec.type() != AVMEDIA_TYPE_AUDIO) {
             LOGGER.error("Not an audio codec");
             return;
         }
@@ -51,7 +52,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         }
         
         c.channel_layout(channellayout);
-        c.channels(avutil.av_get_channel_layout_nb_channels(c.channel_layout()));
+        c.channels(av_get_channel_layout_nb_channels(c.channel_layout()));
         
         if (codec.channel_layouts() != null) {
             c.channel_layout(codec.channel_layouts().get(0));
@@ -64,24 +65,24 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
                 }
             }
         }
-        c.channels(avutil.av_get_channel_layout_nb_channels(c.channel_layout()));
+        c.channels(av_get_channel_layout_nb_channels(c.channel_layout()));
         AVRational timeBase = new AVRational();
         timeBase.num(1);
         timeBase.den(c.sample_rate());
         st.time_base(timeBase);
 
 
-        if ((oc.oformat().flags() & avformat.AVFMT_GLOBALHEADER) != 0) {
-            oc.oformat().flags(oc.oformat().flags() | avformat.AVFMT_GLOBALHEADER);
+        if ((oc.oformat().flags() & AVFMT_GLOBALHEADER) != 0) {
+            oc.oformat().flags(oc.oformat().flags() | AVFMT_GLOBALHEADER);
         }
 
         int nb_samples;
 
         AVDictionary topt = new AVDictionary();
 
-        avutil.av_dict_copy(topt, opt, 0);
-        int ret = avcodec.avcodec_open2(c, codec, topt);
-        avutil.av_dict_free(topt);
+        av_dict_copy(topt, opt, 0);
+        int ret = avcodec_open2(c, codec, topt);
+        av_dict_free(topt);
 
         if (ret < 0) {
             LOGGER.error("Could not open audio codec: {}", ret);
@@ -128,7 +129,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
     private static AVFrame alloc_audio_frame(int sample_fmt, long channel_layout, int sample_rate, int nb_samples) {
 
-        AVFrame frame = avutil.av_frame_alloc();
+        AVFrame frame = av_frame_alloc();
 
         if (frame == null) {
             LOGGER.error("Error allocating an audio frame");
@@ -141,7 +142,7 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
         frame.nb_samples(nb_samples);
 
         if (nb_samples > 0) {
-            int ret = avutil.av_frame_get_buffer(frame, 0);
+            int ret = av_frame_get_buffer(frame, 0);
             if (ret < 0) {
                 LOGGER.error("Error allocating an audio buffer");
                 return null;

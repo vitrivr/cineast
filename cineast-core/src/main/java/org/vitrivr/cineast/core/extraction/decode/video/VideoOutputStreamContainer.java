@@ -6,21 +6,25 @@ import org.bytedeco.javacpp.*;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import static org.bytedeco.javacpp.avcodec.*;
-import static org.bytedeco.javacpp.avutil.*;
-import static org.bytedeco.javacpp.swscale.sws_freeContext;
+import org.bytedeco.ffmpeg.avutil.*;
+import org.bytedeco.ffmpeg.avformat.*;
+import org.bytedeco.ffmpeg.swscale.*;
+import static org.bytedeco.ffmpeg.global.avcodec.*;
+import static org.bytedeco.ffmpeg.global.avformat.*;
+import static org.bytedeco.ffmpeg.global.avutil.*;
+import static org.bytedeco.ffmpeg.global.swscale.*;
 
 class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
     private static final Logger LOGGER = LogManager.getLogger();
     int frameCounter = 0;
     private AVFrame rgbFrame, outFrame;
-    private swscale.SwsContext sws_ctx;
+    private SwsContext sws_ctx;
 
-    VideoOutputStreamContainer(int width, int height, int bitRate, float frameRate, avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
+    VideoOutputStreamContainer(int width, int height, int bitRate, float frameRate, AVFormatContext oc, int codec_id, AVDictionary opt) {
         super(oc, codec_id);
 
-        if (codec.type() != avutil.AVMEDIA_TYPE_VIDEO) {
+        if (codec.type() != AVMEDIA_TYPE_VIDEO) {
             LOGGER.error("Not a video codec");
             return;
         }
@@ -33,7 +37,7 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
         c.gop_size(10);
         c.max_b_frames(1);
-        c.pix_fmt(avutil.AV_PIX_FMT_YUV420P);
+        c.pix_fmt(AV_PIX_FMT_YUV420P);
 
         AVRational timeBase = new AVRational();
         timeBase.num(frameRateFraction[1]);
@@ -46,19 +50,19 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
         fps.num(frameRateFraction[0]);
         c.framerate(fps);
 
-        if (c.codec_id() == avcodec.AV_CODEC_ID_MPEG2VIDEO) {
+        if (c.codec_id() == AV_CODEC_ID_MPEG2VIDEO) {
             c.max_b_frames(2);
         }
-        if (c.codec_id() == avcodec.AV_CODEC_ID_MPEG1VIDEO) {
+        if (c.codec_id() == AV_CODEC_ID_MPEG1VIDEO) {
             c.mb_decision(2);
         }
-        if (codec.id() == avcodec.AV_CODEC_ID_H264) {
-            avutil.av_opt_set(c.priv_data(), "preset", "slow", 0);
+        if (codec.id() == AV_CODEC_ID_H264) {
+            av_opt_set(c.priv_data(), "preset", "slow", 0);
         }
 
 
-        if ((oc.oformat().flags() & avformat.AVFMT_GLOBALHEADER) != 0) {
-            oc.oformat().flags(oc.oformat().flags() | avformat.AVFMT_GLOBALHEADER);
+        if ((oc.oformat().flags() & AVFMT_GLOBALHEADER) != 0) {
+            oc.oformat().flags(oc.oformat().flags() | AVFMT_GLOBALHEADER);
         }
 
         AVDictionary topt = new AVDictionary();
@@ -73,23 +77,23 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
             return;
         }
 
-        rgbFrame = avutil.av_frame_alloc();
+        rgbFrame = av_frame_alloc();
         if (rgbFrame == null) {
             LOGGER.error("Could not allocate frame");
             return;
         }
 
-        rgbFrame.format(avutil.AV_PIX_FMT_RGB24);
+        rgbFrame.format(AV_PIX_FMT_RGB24);
         rgbFrame.width(c.width());
         rgbFrame.height(c.height());
 
-        ret = avutil.av_frame_get_buffer(rgbFrame, 32);
+        ret = av_frame_get_buffer(rgbFrame, 32);
         if (ret < 0) {
             LOGGER.error("Could not allocate video frame data");
             return;
         }
 
-        outFrame = avutil.av_frame_alloc();
+        outFrame = av_frame_alloc();
         if (outFrame == null) {
             LOGGER.error("Could not allocate frame");
             return;
@@ -99,7 +103,7 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
         outFrame.width(c.width());
         outFrame.height(c.height());
 
-        ret = avutil.av_frame_get_buffer(outFrame, 32);
+        ret = av_frame_get_buffer(outFrame, 32);
         if (ret < 0) {
             LOGGER.error("Could not allocate video frame data");
             return;
@@ -112,19 +116,19 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
             return;
         }
 
-        sws_ctx = swscale.sws_getContext(c.width(), c.height(), avutil.AV_PIX_FMT_RGB24, c.width(), c.height(), c.pix_fmt(), swscale.SWS_BILINEAR, null, null, (DoublePointer) null);
+        sws_ctx = sws_getContext(c.width(), c.height(), AV_PIX_FMT_RGB24, c.width(), c.height(), c.pix_fmt(), SWS_BILINEAR, null, null, (DoublePointer) null);
 
     }
 
 
     void addFrame(MultiImage img) {
 
-        int ret = avutil.av_frame_make_writable(outFrame);
+        int ret = av_frame_make_writable(outFrame);
         if (ret < 0) {
             return;
         }
 
-        ret = avutil.av_frame_make_writable(rgbFrame);
+        ret = av_frame_make_writable(rgbFrame);
         if (ret < 0) {
             return;
         }
@@ -136,7 +140,7 @@ class VideoOutputStreamContainer extends AbstractAVStreamContainer {
             rgbFrame.data(0).put(3 * i + 2, (byte) ((pixels[i]) & 0xff));
         }
 
-        swscale.sws_scale(sws_ctx, rgbFrame.data(), rgbFrame.linesize(), 0, outFrame.height(), outFrame.data(), outFrame.linesize());
+        sws_scale(sws_ctx, rgbFrame.data(), rgbFrame.linesize(), 0, outFrame.height(), outFrame.data(), outFrame.linesize());
 
         outFrame.pts(this.frameCounter++);
         encode(c, outFrame, pkt);

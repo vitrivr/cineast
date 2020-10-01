@@ -2,20 +2,23 @@ package org.vitrivr.cineast.core.extraction.decode.video;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
+import org.bytedeco.ffmpeg.avcodec.*;
+import org.bytedeco.ffmpeg.avformat.*;
+import org.bytedeco.ffmpeg.avutil.*;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
 
 public abstract class AbstractAVStreamContainer {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    avcodec.AVPacket pkt;
-    protected avformat.AVStream st;
-    protected avcodec.AVCodec codec;
-    avcodec.AVCodecContext c;
-    private avformat.AVFormatContext oc;
+    AVPacket pkt;
+    protected AVStream st;
+    protected AVCodec codec;
+    AVCodecContext c;
+    private AVFormatContext oc;
 
-    AbstractAVStreamContainer(avformat.AVFormatContext oc, int codec_id) {
+    AbstractAVStreamContainer(AVFormatContext oc, int codec_id) {
         this.oc = oc;
         st = avformat.avformat_new_stream(oc, null);
         if (st == null) {
@@ -42,7 +45,7 @@ public abstract class AbstractAVStreamContainer {
     }
 
 
-    void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt) {
+    void encode(AVCodecContext enc_ctx, AVFrame frame, AVPacket pkt) {
 
         int ret = avcodec.avcodec_send_frame(enc_ctx, frame);
         if (ret < 0) {

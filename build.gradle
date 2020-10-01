@@ -1,7 +1,7 @@
 plugins {
     id 'idea'
     id "de.undercouch.download" version "4.0.2"
-    id 'org.bytedeco.gradle-javacpp-platform' version "1.5.4-SNAPSHOT"
+    id 'org.bytedeco.gradle-javacpp-platform' version "1.5.4"
 }
 
 allprojects {
