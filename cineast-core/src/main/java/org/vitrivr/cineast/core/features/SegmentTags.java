@@ -75,6 +75,7 @@ public class SegmentTags implements Extractor, Retriever {
         ArrayList<String> tagids = new ArrayList<>();
         Map<String, String> preferenceMap = new HashMap<>();
         Set<String> mustTagsSet = new HashSet<>();
+        Set<String> couldTagsSet = new HashSet<>();
         TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
         float weightSum = 0f;
 
@@ -86,6 +87,9 @@ public class SegmentTags implements Extractor, Retriever {
             preferenceMap.put(wt.getId(), wt.getPreference());
             if (wt.getPreference().equals("must")) {
                 mustTagsSet.add(wt.getId());
+            }
+            if (wt.getPreference().equals("could")) {
+                couldTagsSet.add(wt.getId());
             }
             if (wt.getWeight() > 1) {
                 LOGGER.error("Weight is > 1 -- this makes little sense.");
@@ -101,7 +105,7 @@ public class SegmentTags implements Extractor, Retriever {
         // String is either 'tagid', 'score' or 'id'
         List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
-        /** create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
+        /* create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
          * split 'row' in couldRows and mustRows for further processing */
         Set<String> notSegments = new HashSet<>();
         Set<String> couldSegments = new HashSet<>();
@@ -111,66 +115,63 @@ public class SegmentTags implements Extractor, Retriever {
 
         for (Map<String, PrimitiveTypeProvider> row : rows) {
             String currentTagId = row.get("tagid").getString();
-            String currentId = row.get("id").getString();
+            String currentSegmentId = row.get("id").getString();
             preferenceMap.get(currentTagId);
             if (preferenceMap.get(currentTagId).equals("not")) { // add segmentID if NOT tags associated with this segment
-                notSegments.add(currentId);
+                notSegments.add(currentSegmentId);
             }
             if (preferenceMap.get(currentTagId).equals("could")) {
-                couldSegments.add(currentId);
+                couldSegments.add(currentSegmentId);
                 couldRows.add(row);
             }
             if (preferenceMap.get(currentTagId).equals("must")) {
-                mustSegments.add(currentId);
+                mustSegments.add(currentSegmentId);
                 mustRows.add(row);
             }
         }
 
         Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet, mustRows); // <tag, Set of segmentIds>
 
-        Set<String> mustResultSet = new HashSet<>();
+        Set<String> mustSegmentIdsSet = new HashSet<>();
         if (!mustTagsSet.isEmpty()) {
-            mustResultSet.addAll(mustMap.get(mustTagsSet.iterator().next()));
+            mustSegmentIdsSet.addAll(mustMap.get(mustTagsSet.iterator().next()));
         }
         for (String tag : mustTagsSet) {
-            mustResultSet.retainAll(mustMap.get(tag));
+            mustSegmentIdsSet.retainAll(mustMap.get(tag));
         }
 
-        float score = 1 / (couldSegments.size() + 1);
-        // Map<String, Float> scores = new HashMap<>(); // segmentId --> score
-        List<ScoreElement> _return = scoreSegments(qc, notSegments, couldSegments, mustMap, mustResultSet, score);
-
-
-        return _return;
+        return scoreSegments(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
     }
 
-    private List<ScoreElement> scoreSegments(ReadableQueryConfig qc, Set<String> notSegments, Set<String> couldSegments, Map<String, Set<String>> mustMap, Set<String> mustResultSet, float score) {
+    private List<ScoreElement> scoreSegments(ReadableQueryConfig qc, Set<String> notSegments, Set<String> couldTagsSet, Set<String> couldSegments, Map<String, Set<String>> mustMap, Set<String> mustSegmentIdsSet) {
         /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
         List<ScoreElement> _return = new ArrayList<>();
         Set<String> relevant = null;
         if (qc != null && qc.hasRelevantSegmentIds()) {
             relevant = qc.getRelevantSegmentIds();
         }
-        for (String mustEntry : mustResultSet) {
-            for (String segmentId : mustMap.get(mustEntry)) {
-                if (!relevant.contains(segmentId)) {
+        for (String mustSegmentId : mustSegmentIdsSet) {
+/*                if (!relevant.contains(mustSegmentId)) {
                     continue;
-                }
-                if (notSegments.contains(segmentId)) { // we do not add the NOT segments to the result
-                    continue;
-                }
-                for (String couldEntry : couldSegments) {
-                    if (couldSegments.contains(segmentId)) {
-                        score += 1 / (couldSegments.size() + 1);
+                }*/
+            if (notSegments.contains(mustSegmentId)) { // we do not add the 'NOT' segments to the result
+                continue;
+            }
+
+            float score = (float) (1.0 / (couldTagsSet.size() + 1));
+            if (!couldTagsSet.isEmpty()) {
+                for (String couldTag : couldTagsSet) {
+                    int couldSize = couldTagsSet.size();
+                    if (couldSegments.contains(mustSegmentId)) {
+                        score += 1.0 / (couldTagsSet.size() + 1);
                     }
                     if (score > 1) {
                         LOGGER.warn("Score is larger than 1 - this makes little sense");
-                        score = 1f;
+                        score += (float) (1.0 / (couldTagsSet.size() + 1));
                     }
                 }
-                // scores.put(segmentId, score);
-                _return.add(new SegmentScoreElement(segmentId, score));
             }
+            _return.add(new SegmentScoreElement(mustSegmentId, score));
         }
         return _return;
     }
