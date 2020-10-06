@@ -105,45 +105,67 @@ public class SegmentTags implements Extractor, Retriever {
         // String is either 'tagid', 'score' or 'id'
         List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
-        /* create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
-         * split 'row' in couldRows and mustRows for further processing */
-        Set<String> notSegments = new HashSet<>();
-        Set<String> couldSegments = new HashSet<>();
-        List<Map<String, PrimitiveTypeProvider>> couldRows = new ArrayList<>();
-        Set<String> mustSegments = new HashSet<>();
-        List<Map<String, PrimitiveTypeProvider>> mustRows = new ArrayList<>();
+        if (!preferenceMap.isEmpty()) { // should always be the case
+            /* create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
+             * split 'row' in couldRows and mustRows for further processing */
+            Set<String> notSegments = new HashSet<>();
+            Set<String> couldSegments = new HashSet<>();
+            List<Map<String, PrimitiveTypeProvider>> couldRows = new ArrayList<>();
+            Set<String> mustSegments = new HashSet<>();
+            List<Map<String, PrimitiveTypeProvider>> mustRows = new ArrayList<>();
 
-        for (Map<String, PrimitiveTypeProvider> row : rows) {
-            String currentTagId = row.get("tagid").getString();
-            String currentSegmentId = row.get("id").getString();
-            preferenceMap.get(currentTagId);
-            if (preferenceMap.get(currentTagId).equals("not")) { // add segmentID if NOT tags associated with this segment
-                notSegments.add(currentSegmentId);
+            for (Map<String, PrimitiveTypeProvider> row : rows) {
+                String currentTagId = row.get("tagid").getString();
+                String currentSegmentId = row.get("id").getString();
+                preferenceMap.get(currentTagId);
+                if (preferenceMap.get(currentTagId).equals("not")) { // add segmentID if NOT tags associated with this segment
+                    notSegments.add(currentSegmentId);
+                }
+                if (preferenceMap.get(currentTagId).equals("could")) {
+                    couldSegments.add(currentSegmentId);
+                    couldRows.add(row);
+                }
+                if (preferenceMap.get(currentTagId).equals("must")) {
+                    mustSegments.add(currentSegmentId);
+                    mustRows.add(row);
+                }
             }
-            if (preferenceMap.get(currentTagId).equals("could")) {
-                couldSegments.add(currentSegmentId);
-                couldRows.add(row);
+
+            Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet, mustRows); // <tag, Set of segmentIds>
+
+            Set<String> mustSegmentIdsSet = new HashSet<>();
+            if (!mustTagsSet.isEmpty()) {
+                mustSegmentIdsSet.addAll(mustMap.get(mustTagsSet.iterator().next())); // initiate mustSegmentIdsSet to start intersection process
+            } else {
+                Set<String> noPreferenceSegmentIdSet = new HashSet<>();
+                for (Map<String, PrimitiveTypeProvider> row : rows) {
+                    String currentSegmentId = row.get("id").getString();
+                    noPreferenceSegmentIdSet.add(currentSegmentId);
+                }
+                return scoreSegmentsWithoutPreferences(tagids, noPreferenceSegmentIdSet);
             }
-            if (preferenceMap.get(currentTagId).equals("must")) {
-                mustSegments.add(currentSegmentId);
-                mustRows.add(row);
+            for (String tag : mustTagsSet) {
+                mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
             }
-        }
 
-        Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet, mustRows); // <tag, Set of segmentIds>
-
-        Set<String> mustSegmentIdsSet = new HashSet<>();
-        if (!mustTagsSet.isEmpty()) {
-            mustSegmentIdsSet.addAll(mustMap.get(mustTagsSet.iterator().next()));
+            return scoreSegmentsWithPreferences(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
+        } else {
+            LOGGER.error("preferenceMap should never be empty");
+            return null;
         }
-        for (String tag : mustTagsSet) {
-            mustSegmentIdsSet.retainAll(mustMap.get(tag));
-        }
-
-        return scoreSegments(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
     }
 
-    private List<ScoreElement> scoreSegments(ReadableQueryConfig qc, Set<String> notSegments, Set<String> couldTagsSet, Set<String> couldSegments, Map<String, Set<String>> mustMap, Set<String> mustSegmentIdsSet) {
+    private List<ScoreElement> scoreSegmentsWithoutPreferences(ArrayList<String> tagids, Set<String> noPreferenceSegmentIdSet) {
+        float score = (float) (1.0 / (tagids.size() + 1));
+        List<ScoreElement> _return = new ArrayList<>();
+        for (String noPreferenceSegmentId : noPreferenceSegmentIdSet) {
+            _return.add(new SegmentScoreElement(noPreferenceSegmentId, score));
+        }
+        return _return;
+    }
+
+
+    private List<ScoreElement> scoreSegmentsWithPreferences(ReadableQueryConfig qc, Set<String> notSegments, Set<String> couldTagsSet, Set<String> couldSegments, Map<String, Set<String>> mustMap, Set<String> mustSegmentIdsSet) {
         /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
         List<ScoreElement> _return = new ArrayList<>();
         Set<String> relevant = null;
