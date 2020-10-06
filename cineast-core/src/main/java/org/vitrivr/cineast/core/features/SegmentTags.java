@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,193 +32,245 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.util.MathHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
-  protected BatchedTagWriter writer;
-  protected DBSelector selector;
-  protected PersistencyWriter<?> phandler;
-  private static final Logger LOGGER = LogManager.getLogger();
 
-  public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
+    protected BatchedTagWriter writer;
+    protected DBSelector selector;
+    protected PersistencyWriter<?> phandler;
+    private static final Logger LOGGER = LogManager.getLogger();
 
-  public SegmentTags() {
-  }
+    public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
-  @Override
-  public List<String> getTableNames() {
-    return Collections.singletonList(SEGMENT_TAGS_TABLE_NAME);
-  }
-
-  @Override
-  public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createIdEntity(SEGMENT_TAGS_TABLE_NAME,
-        new AttributeDefinition("tagid", AttributeType.STRING),
-        new AttributeDefinition("score", AttributeType.FLOAT));
-
-    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "tagid");
-  }
-
-  @Override
-  public void dropPersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().dropEntity(SEGMENT_TAGS_TABLE_NAME);
-  }
-
-  @Override
-  public void init(DBSelectorSupplier selectorSupply) {
-    this.selector = selectorSupply.get();
-    this.selector.open(SEGMENT_TAGS_TABLE_NAME);
-  }
-
-
-  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
-
-    ArrayList<String> tagids = new ArrayList<>();
-    TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
-    float weightSum = 0f;
-
-    /* Sum weights for normalization at a later point*/
-    for (WeightedTag wt : tags) {
-      tagids.add(wt.getId());
-      tagWeights.put(wt.getId(), wt.getWeight());
-      if (wt.getWeight() > 1) {
-        LOGGER.error("Weight is > 1 -- this makes little sense.");
-      }
-      weightSum += Math.min(1, wt.getWeight());
+    public SegmentTags() {
     }
 
-    if (tagids.isEmpty() || weightSum <= 0f) {
-      return Collections.emptyList();
+    @Override
+    public List<String> getTableNames() {
+        return Collections.singletonList(SEGMENT_TAGS_TABLE_NAME);
     }
 
-    /* Retrieve all elements matching the provided ids */
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+    @Override
+    public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+        supply.get().createIdEntity(SEGMENT_TAGS_TABLE_NAME, new AttributeDefinition("tagid", AttributeType.STRING), new AttributeDefinition("score", AttributeType.FLOAT));
 
-    Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
-
-    /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
-    Set<String> relevant = null;
-    if (qc != null && qc.hasRelevantSegmentIds()) {
-      relevant = qc.getRelevantSegmentIds();
+        supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "tagid");
     }
 
-    /* Iterate over all matches */
-    for (Map<String, PrimitiveTypeProvider> row : rows) {
-
-      String segmentId = row.get("id").getString();
-
-      /* Skip segments which are not desired by the query-config */
-      if (relevant != null && !relevant.contains(segmentId)) {
-        continue;
-      }
-
-      String tagid = row.get("tagid").getString();
-      float score = row.get("score").getFloat()
-          * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
-
-      if (score > 1) {
-        LOGGER.warn("Score is larger than 1 - this makes little sense");
-        score = 1f;
-      }
-
-      /* Update maximum score by tag*/
-      maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
-      float prev = maxScoreByTag.get(segmentId).get(tagid);
-      if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
-        maxScoreByTag.get(segmentId).put(tagid, score);
-      } else {
-        maxScoreByTag.get(segmentId).put(tagid, Math.max(score, prev));
-      }
+    @Override
+    public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+        supply.get().dropEntity(SEGMENT_TAGS_TABLE_NAME);
     }
 
-    ArrayList<ScoreElement> _return = new ArrayList<>();
-
-    final float normalizer = weightSum;
-
-    /* per segment, the max score for all tags is summed and divided by the normalizer */
-    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
-
-    return _return;
-  }
-
-  @Override
-  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
-    List<Tag> tags = sc.getTags();
-    if (tags.isEmpty()) {
-      return Collections.emptyList();
+    @Override
+    public void init(DBSelectorSupplier selectorSupply) {
+        this.selector = selectorSupply.get();
+        this.selector.open(SEGMENT_TAGS_TABLE_NAME);
     }
 
-    ArrayList<WeightedTag> wtags = new ArrayList<>(tags.size());
 
-    for (Tag t : tags) {
-      if (t instanceof WeightedTag) {
-        wtags.add((WeightedTag) t);
-      } else {
-        wtags.add(new IncompleteTag(t));
-      }
+    private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
+
+        ArrayList<String> tagids = new ArrayList<>();
+        Map<String, String> preferenceMap = new HashMap<>();
+        Set<String> mustTagsSet = new HashSet<>();
+        TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
+        float weightSum = 0f;
+
+        /* Sum weights for normalization at a later point*/
+        for (WeightedTag wt : tags) {
+            tagids.add(wt.getId());
+            tagWeights.put(wt.getId(), wt.getWeight());
+            // add tag and its preference to preferenceMap
+            preferenceMap.put(wt.getId(), wt.getPreference());
+            if (wt.getPreference().equals("must")) {
+                mustTagsSet.add(wt.getId());
+            }
+            if (wt.getWeight() > 1) {
+                LOGGER.error("Weight is > 1 -- this makes little sense.");
+            }
+            weightSum += Math.min(1, wt.getWeight());
+        }
+
+        if (tagids.isEmpty() || weightSum <= 0f) {
+            return Collections.emptyList();
+        }
+
+        /* Retrieve all elements matching the provided ids */
+        // String is either 'tagid', 'score' or 'id'
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+
+        /** create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
+         * split 'row' in couldRows and mustRows for further processing */
+        Set<String> notSegments = new HashSet<>();
+        Set<String> couldSegments = new HashSet<>();
+        List<Map<String, PrimitiveTypeProvider>> couldRows = new ArrayList<>();
+        Set<String> mustSegments = new HashSet<>();
+        List<Map<String, PrimitiveTypeProvider>> mustRows = new ArrayList<>();
+
+        for (Map<String, PrimitiveTypeProvider> row : rows) {
+            String currentTagId = row.get("tagid").getString();
+            String currentId = row.get("id").getString();
+            preferenceMap.get(currentTagId);
+            if (preferenceMap.get(currentTagId).equals("not")) { // add segmentID if NOT tags associated with this segment
+                notSegments.add(currentId);
+            }
+            if (preferenceMap.get(currentTagId).equals("could")) {
+                couldSegments.add(currentId);
+                couldRows.add(row);
+            }
+            if (preferenceMap.get(currentTagId).equals("must")) {
+                mustSegments.add(currentId);
+                mustRows.add(row);
+            }
+        }
+
+        Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet, mustRows); // <tag, Set of segmentIds>
+
+        Set<String> mustResultSet = new HashSet<>();
+        if (!mustTagsSet.isEmpty()) {
+            mustResultSet.addAll(mustMap.get(mustTagsSet.iterator().next()));
+        }
+        for (String tag : mustTagsSet) {
+            mustResultSet.retainAll(mustMap.get(tag));
+        }
+
+        float score = 1 / (couldSegments.size() + 1);
+        // Map<String, Float> scores = new HashMap<>(); // segmentId --> score
+        List<ScoreElement> _return = scoreSegments(qc, notSegments, couldSegments, mustMap, mustResultSet, score);
+
+
+        return _return;
+    }
+
+    private List<ScoreElement> scoreSegments(ReadableQueryConfig qc, Set<String> notSegments, Set<String> couldSegments, Map<String, Set<String>> mustMap, Set<String> mustResultSet, float score) {
+        /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
+        List<ScoreElement> _return = new ArrayList<>();
+        Set<String> relevant = null;
+        if (qc != null && qc.hasRelevantSegmentIds()) {
+            relevant = qc.getRelevantSegmentIds();
+        }
+        for (String mustEntry : mustResultSet) {
+            for (String segmentId : mustMap.get(mustEntry)) {
+                if (!relevant.contains(segmentId)) {
+                    continue;
+                }
+                if (notSegments.contains(segmentId)) { // we do not add the NOT segments to the result
+                    continue;
+                }
+                for (String couldEntry : couldSegments) {
+                    if (couldSegments.contains(segmentId)) {
+                        score += 1 / (couldSegments.size() + 1);
+                    }
+                    if (score > 1) {
+                        LOGGER.warn("Score is larger than 1 - this makes little sense");
+                        score = 1f;
+                    }
+                }
+                // scores.put(segmentId, score);
+                _return.add(new SegmentScoreElement(segmentId, score));
+            }
+        }
+        return _return;
+    }
+
+    private Map<String, Set<String>> createTagSegmentIdsMap(Set<String> mustTagsSet, List<Map<String, PrimitiveTypeProvider>> mustRows) {
+        Map<String, Set<String>> mustMap = new HashMap<>();
+        for (String mustTag : mustTagsSet) {
+            Set<String> segmentIds = new HashSet<>();
+            for (Map<String, PrimitiveTypeProvider> mustRow : mustRows) {
+                String id = mustRow.get("id").getString();
+                String tag = mustRow.get("tagid").getString();
+                if (mustTag.equals(tag)) {
+                    if (mustMap.containsKey(tag)) { // add tag to existing entry for segment map
+                        segmentIds = mustMap.get(tag);
+                    }
+                    segmentIds.add(id);
+                    mustMap.put(mustTag, segmentIds);
+                }
+            }
+        }
+        return mustMap;
+    }
+
+    @Override
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+
+        List<Tag> tags = sc.getTags();
+        if (tags.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        ArrayList<WeightedTag> wtags = new ArrayList<>(tags.size());
+
+        for (Tag t : tags) {
+            if (t instanceof WeightedTag) {
+                wtags.add((WeightedTag) t);
+            } else {
+                wtags.add(new IncompleteTag(t));
+            }
+
+        }
+
+        return getSimilar(wtags, qc);
 
     }
 
-    return getSimilar(wtags, qc);
+    @Override
+    public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
-  }
+        List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
 
-  @Override
-  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+        if (rows.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
+        ArrayList<WeightedTag> wtags = new ArrayList<>(rows.size());
 
-    if (rows.isEmpty()) {
-      return Collections.emptyList();
+        for (Map<String, PrimitiveTypeProvider> row : rows) {
+            wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat(), "preference"));
+        }
+
+        return getSimilar(wtags, qc);
     }
 
-    ArrayList<WeightedTag> wtags = new ArrayList<>(rows.size());
-
-    for (Map<String, PrimitiveTypeProvider> row : rows) {
-      wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
+    @Override
+    public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+        this.phandler = phandlerSupply.get();
+        this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
     }
 
-    return getSimilar(wtags, qc);
-  }
+    @Override
+    public void processSegment(SegmentContainer container) {
+        List<Tag> tags = container.getTags();
 
-  @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
-    this.phandler = phandlerSupply.get();
-    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
-  }
+        for (Tag t : tags) {
+            persist(container.getId(), t);
+        }
 
-  @Override
-  public void processSegment(SegmentContainer container) {
-    List<Tag> tags = container.getTags();
-
-    for (Tag t : tags) {
-      persist(container.getId(), t);
     }
 
-  }
-
-  protected void persist(String segmentId, Tag t) {
-    this.writer.write(new TagInstance(segmentId, t));
-  }
-
-  @Override
-  public void finish() {
-    if (this.writer != null) {
-      this.writer.close();
-      this.writer = null;
+    protected void persist(String segmentId, Tag t) {
+        this.writer.write(new TagInstance(segmentId, t));
     }
 
-    if (this.phandler != null) {
-      this.phandler.close();
-      this.phandler = null;
-    }
+    @Override
+    public void finish() {
+        if (this.writer != null) {
+            this.writer.close();
+            this.writer = null;
+        }
 
-    if (this.selector != null) {
-      this.selector.close();
-      this.selector = null;
+        if (this.phandler != null) {
+            this.phandler.close();
+            this.phandler = null;
+        }
+
+        if (this.selector != null) {
+            this.selector.close();
+            this.selector = null;
+        }
     }
-  }
 
 }

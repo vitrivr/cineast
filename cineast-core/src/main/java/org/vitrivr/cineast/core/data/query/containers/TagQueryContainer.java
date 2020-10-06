@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.util.web.DataURLParser;
 import java.util.*;
 
 
-public class TagQueryContainer extends QueryContainer {
+public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQueryTerm
     /** List of {@link Tag}s contained in this {@link TagQueryContainer}. */
     private final List<Tag> tags;
 
