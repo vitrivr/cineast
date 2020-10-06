@@ -65,6 +65,28 @@ public class CottontailWrapper implements AutoCloseable {
     return stub.createEntity(createMessage);
   }
 
+  public synchronized ListenableFuture<CottontailGrpc.EntityDefinition> entityDetails(Entity entity){
+    return CottonDDLGrpc.newFutureStub(this.channel).entityDetails(entity);
+  }
+
+  public synchronized CottontailGrpc.EntityDefinition entityDetailsBlocking(Entity entity){
+    final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+    try{
+      return stub.entityDetails(entity);
+    }catch(StatusRuntimeException e){
+      if(e.getStatus().getCode() == Status.NOT_FOUND.getCode()){
+        LOGGER.warn("Entity {} was not found", entity);
+        return null;
+      }else{
+        throw LOGGER.throwing(e);
+      }
+    }
+  }
+
+  public static Entity entityByName(String entityName){
+    return CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
+  }
+
   public synchronized boolean createEntityBlocking(EntityDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {

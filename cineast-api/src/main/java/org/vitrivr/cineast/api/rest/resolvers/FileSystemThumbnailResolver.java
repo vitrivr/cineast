@@ -20,11 +20,11 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
     }
 
     String[] split = segmentId.split("_");
-    if(split.length < 2){
+    if(split.length < 3){
       return null;
     }
 
-    File dir = new File(this.baseFoler, split[0]);
+    File dir = new File(this.baseFoler, split[0] + "_" + split[1]);
 
     if(!dir.exists() || !dir.isDirectory()){
       return null;

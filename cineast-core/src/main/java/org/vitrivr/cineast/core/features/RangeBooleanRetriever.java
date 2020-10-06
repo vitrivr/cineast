@@ -28,7 +28,7 @@ public class RangeBooleanRetriever extends BooleanRetriever {
     super(entity, attributes);
   }
 
-  protected RangeBooleanRetriever(Map<String, String> properties) {
+  public RangeBooleanRetriever(LinkedHashMap<String, String> properties) {
     super(properties);
   }
 
@@ -39,19 +39,19 @@ public class RangeBooleanRetriever extends BooleanRetriever {
 
   public PrimitiveTypeProvider getMinimum(String column){
     if (this.attributes.contains(column) && !this.minimumMap.containsKey(column)){
-      populateExtemaMap();
+      populateExtremaMap();
     }
     return minimumMap.get(column);
   }
 
   public PrimitiveTypeProvider getMaximum(String column){
     if (this.attributes.contains(column) && !this.maximumMap.containsKey(column)){
-      populateExtemaMap();
+      populateExtremaMap();
     }
     return maximumMap.get(column);
   }
 
-  private void populateExtemaMap(){
+  private void populateExtremaMap(){
 
     PrimitiveProviderComparator comparator = new PrimitiveProviderComparator();
 
