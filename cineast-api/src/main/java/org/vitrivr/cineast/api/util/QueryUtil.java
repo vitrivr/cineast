@@ -3,20 +3,23 @@ package org.vitrivr.cineast.api.util;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
+import org.vitrivr.cineast.core.features.DescriptionTextSearch;
+import org.vitrivr.cineast.core.features.OCRSearch;
+import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 //TODO maybe this should be moved to core?
 public class QueryUtil {
@@ -135,6 +138,42 @@ public class QueryUtil {
         });
 
         return list;
+    }
+
+    public static List<String> retrieveTagsBySegmentId(String segmentId) {
+        List<String> result = new ArrayList<>();
+        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
+        rows.forEach(row -> result.add(row.get("tagid").getString()));
+        return result;
+    }
+
+    public static List<String> retrieveCaptionBySegmentId(String segmentId) {
+        List<String> result = new ArrayList<>();
+        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        selector.open(DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
+        rows.forEach(row -> result.add(row.get("feature").getString()));
+        return result;
+    }
+
+    public static List<String> retrieveOCRBySegmentId(String segmentId) {
+        List<String> result = new ArrayList<>();
+        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        selector.open(OCRSearch.OCR_TABLE_NAME);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
+        rows.forEach(row -> result.add(row.get("feature").getString()));
+        return result;
+    }
+
+    public static List<String> retrieveASRBySegmentId(String segmentId) {
+        List<String> result = new ArrayList<>();
+        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        selector.open(AudioTranscriptionSearch.AUDIO_TRANSCRIPTION_TABLE_NAME);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
+        rows.forEach(row -> result.add(row.get("feature").getString()));
+        return result;
     }
 
 }

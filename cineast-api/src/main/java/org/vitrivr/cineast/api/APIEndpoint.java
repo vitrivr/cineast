@@ -352,6 +352,11 @@ public class APIEndpoint {
         new FindSegmentsByIdGetHandler(),
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
+        new FindSegmentFeaturesGetHandler(),
+        new FindSegmentTagsGetHandler(),
+        new FindSegmentCaptionsGetHandler(),
+        new FindSegmentOCRGetHandler(),
+        new FindSegmentASRGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),
