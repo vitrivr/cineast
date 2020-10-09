@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.FeatureHelper.resolveTagsById;
+
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,17 +35,19 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.FeatureHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
 
     protected BatchedTagWriter writer;
     protected DBSelector selector;
+    protected DBSelector selectorHelper;
     protected PersistencyWriter<?> phandler;
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
-
+    public static List<Tag> resolvedTags = new ArrayList<>();
     public SegmentTags() {
     }
 
@@ -66,6 +71,7 @@ public class SegmentTags implements Extractor, Retriever {
     @Override
     public void init(DBSelectorSupplier selectorSupply) {
         this.selector = selectorSupply.get();
+        this.selectorHelper = selectorSupply.get();
         this.selector.open(SEGMENT_TAGS_TABLE_NAME);
     }
 
@@ -140,13 +146,38 @@ public class SegmentTags implements Extractor, Retriever {
                 Set<String> noPreferenceSegmentIdSet = new HashSet<>();
                 for (Map<String, PrimitiveTypeProvider> row : rows) {
                     String currentSegmentId = row.get("id").getString();
+                    if (notSegments.contains(currentSegmentId)) { // do not add the 'NOT' segments
+                        continue;
+                    }
                     noPreferenceSegmentIdSet.add(currentSegmentId);
                 }
-                return scoreSegmentsWithoutPreferences(tagids, noPreferenceSegmentIdSet);
+                List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(noPreferenceSegmentIdSet), selectorHelper);
+                return scoreSegmentsWithoutPreferences(couldTagsSet, noPreferenceSegmentIdSet);
             }
             for (String tag : mustTagsSet) {
                 mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
             }
+            List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
+            Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
+            for (String item : allTagIdsInResultSet) {
+                int counter = 1;
+                if (tagCounterMap.containsKey(item)) {
+                    counter = tagCounterMap.get(item) + 1;
+                }
+                tagCounterMap.put(item, counter);
+            }
+            tagCounterMap = tagCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+            LOGGER.debug("calculating top 10 related tags");
+            List<String> keys = new ArrayList<>(tagCounterMap.keySet());
+            Collections.reverse(keys);
+            List<String> topTags = new ArrayList<>();
+            for (int i = 0; i < Math.min(keys.size(), 10); i++) {
+                // LOGGER.debug("tag number i: {}", i);
+                // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
+
+                topTags.add(keys.get(i));
+            }
+            resolvedTags = resolveTagsById(topTags, selectorHelper);
 
             return scoreSegmentsWithPreferences(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
         } else {
@@ -155,8 +186,9 @@ public class SegmentTags implements Extractor, Retriever {
         }
     }
 
-    private List<ScoreElement> scoreSegmentsWithoutPreferences(ArrayList<String> tagids, Set<String> noPreferenceSegmentIdSet) {
-        float score = (float) (1.0 / (tagids.size() + 1));
+
+    private List<ScoreElement> scoreSegmentsWithoutPreferences(Set<String> couldTagsSet, Set<String> noPreferenceSegmentIdSet) {
+        float score = (float) (1.0 / (couldTagsSet.size() + 1));
         List<ScoreElement> _return = new ArrayList<>();
         for (String noPreferenceSegmentId : noPreferenceSegmentIdSet) {
             _return.add(new SegmentScoreElement(noPreferenceSegmentId, score));

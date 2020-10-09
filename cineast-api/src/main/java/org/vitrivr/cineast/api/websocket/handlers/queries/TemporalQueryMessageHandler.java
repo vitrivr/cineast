@@ -16,10 +16,12 @@ import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
+import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -120,6 +122,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                * Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
                */
               if (finalStageIndex == stagedSimilarityQuery.stages.size() - 1) {
+
                 /* Finalize and submit per-container results */
                 List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
                 List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
@@ -173,6 +176,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
+
+    this.write(session, new TopTagsForResult(uuid, SegmentTags.resolvedTags));
+
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.
      */
