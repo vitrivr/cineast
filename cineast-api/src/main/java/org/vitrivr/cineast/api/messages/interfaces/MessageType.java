@@ -15,6 +15,7 @@ import org.vitrivr.cineast.api.messages.result.QueryEnd;
 import org.vitrivr.cineast.api.messages.result.QueryError;
 import org.vitrivr.cineast.api.messages.result.QueryStart;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.api.messages.result.TopCaptionsForResult;
 import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
@@ -37,6 +38,7 @@ public enum MessageType {
   M_LOOKUP(MetadataLookup.class),
   Q_TEMPORAL(TemporalQuery.class),
   QR_TOPTAGS(TopTagsForResult.class),
+  QR_TOPCAPTIONS(TopCaptionsForResult.class),
 
 
   /* Session */

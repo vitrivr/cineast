@@ -16,6 +16,7 @@ import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
+import org.vitrivr.cineast.api.messages.result.TopCaptionsForResult;
 import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -176,8 +177,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
-
+    LOGGER.debug("sending: {}", SegmentTags.resolvedTags);
     this.write(session, new TopTagsForResult(uuid, SegmentTags.resolvedTags));
+    this.write(session, new TopCaptionsForResult(uuid, SegmentTags.topCaptionTerms));
 
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.

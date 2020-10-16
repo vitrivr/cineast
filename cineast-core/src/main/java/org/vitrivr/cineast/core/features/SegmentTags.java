@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import static org.vitrivr.cineast.core.util.FeatureHelper.resolveTagsById;
+import static org.vitrivr.cineast.core.util.FeatureHelper.retrieveCaptionBySegmentId;
 
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
     public static Map<String, Integer> resolvedTags = new HashMap<>();
-    public static Map<String, Float> topCaptionTerms = new HashMap<>();
+    public static Map<String, Integer> topCaptionTerms = new HashMap<>();
 
     public SegmentTags() {
     }
@@ -161,6 +162,7 @@ public class SegmentTags implements Extractor, Retriever {
                     noPreferenceSegmentIdSet.add(currentSegmentId);
                 }
                 getTopTags(noPreferenceSegmentIdSet);
+                getTopCaptionTerms(noPreferenceSegmentIdSet);
                 return scoreSegmentsWithoutPreferences(couldTagsSet, noPreferenceSegmentIdSet);
             }
 
@@ -171,6 +173,36 @@ public class SegmentTags implements Extractor, Retriever {
     }
 
     private void getTopCaptionTerms(Set<String> mustSegmentIdsSet) {
+        Map<String, Set<String>> allCaptions = retrieveCaptionBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
+        Map<String, Integer> captionCounterMap = new LinkedHashMap<>();
+        for (Entry<String, Set<String>> item : allCaptions.entrySet()) {
+            for (String word : item.getValue()) {
+                int counter = 1;
+                if (captionCounterMap.containsKey(word)) {
+                    counter = captionCounterMap.get(word) + 1;
+                }
+                captionCounterMap.put(word, counter);
+            }
+        }
+        captionCounterMap = captionCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        LOGGER.debug("calculating top 10 caption words");
+        List<String> keys = new ArrayList<>(captionCounterMap.keySet());
+        Collections.reverse(keys);
+        keys = keys.stream().limit(10).collect(Collectors.toList());
+
+
+        Map<String, Integer> topCaptions = new LinkedHashMap<>();
+        // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
+
+        for (int i = 0; i < keys.size(); i++) {
+            // LOGGER.debug("tag number i: {}", i);
+            // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
+
+            topCaptions.put(keys.get(i), captionCounterMap.get(keys.get(i)));
+        }
+
+        topCaptionTerms = topCaptions;
 
     }
 
