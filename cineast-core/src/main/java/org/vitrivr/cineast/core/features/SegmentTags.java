@@ -47,7 +47,9 @@ public class SegmentTags implements Extractor, Retriever {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
-    public static List<Tag> resolvedTags = new ArrayList<>();
+    public static Map<String, Integer> resolvedTags = new HashMap<>();
+    public static Map<String, Float> topCaptionTerms = new HashMap<>();
+
     public SegmentTags() {
     }
 
@@ -142,6 +144,13 @@ public class SegmentTags implements Extractor, Retriever {
             Set<String> mustSegmentIdsSet = new HashSet<>();
             if (!mustTagsSet.isEmpty()) {
                 mustSegmentIdsSet.addAll(mustMap.get(mustTagsSet.iterator().next())); // initiate mustSegmentIdsSet to start intersection process
+                for (String tag : mustTagsSet) {
+                    mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
+                }
+                getTopTags(mustSegmentIdsSet);
+                getTopCaptionTerms(mustSegmentIdsSet);
+
+                return scoreSegmentsWithPreferences(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
             } else {
                 Set<String> noPreferenceSegmentIdSet = new HashSet<>();
                 for (Map<String, PrimitiveTypeProvider> row : rows) {
@@ -151,39 +160,48 @@ public class SegmentTags implements Extractor, Retriever {
                     }
                     noPreferenceSegmentIdSet.add(currentSegmentId);
                 }
-                List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(noPreferenceSegmentIdSet), selectorHelper);
+                getTopTags(noPreferenceSegmentIdSet);
                 return scoreSegmentsWithoutPreferences(couldTagsSet, noPreferenceSegmentIdSet);
             }
-            for (String tag : mustTagsSet) {
-                mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
-            }
-            List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
-            Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
-            for (String item : allTagIdsInResultSet) {
-                int counter = 1;
-                if (tagCounterMap.containsKey(item)) {
-                    counter = tagCounterMap.get(item) + 1;
-                }
-                tagCounterMap.put(item, counter);
-            }
-            tagCounterMap = tagCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-            LOGGER.debug("calculating top 10 related tags");
-            List<String> keys = new ArrayList<>(tagCounterMap.keySet());
-            Collections.reverse(keys);
-            List<String> topTags = new ArrayList<>();
-            for (int i = 0; i < Math.min(keys.size(), 10); i++) {
-                // LOGGER.debug("tag number i: {}", i);
-                // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
 
-                topTags.add(keys.get(i));
-            }
-            resolvedTags = resolveTagsById(topTags, selectorHelper);
-
-            return scoreSegmentsWithPreferences(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
         } else {
             LOGGER.error("preferenceMap should never be empty");
             return null;
         }
+    }
+
+    private void getTopCaptionTerms(Set<String> mustSegmentIdsSet) {
+
+    }
+
+    private void getTopTags(Set<String> mustSegmentIdsSet) {
+        List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
+        Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
+        for (String item : allTagIdsInResultSet) {
+            int counter = 1;
+            if (tagCounterMap.containsKey(item)) {
+                counter = tagCounterMap.get(item) + 1;
+            }
+            tagCounterMap.put(item, counter);
+        }
+        tagCounterMap = tagCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+        LOGGER.debug("calculating top 10 related tags");
+        List<String> keys = new ArrayList<>(tagCounterMap.keySet());
+        Collections.reverse(keys);
+        keys = keys.stream().limit(10).collect(Collectors.toList());
+
+        Map<String, Integer> topTags = new LinkedHashMap<>();
+        // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
+
+        for (int i = 0; i < keys.size(); i++) {
+            // LOGGER.debug("tag number i: {}", i);
+            // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
+
+            topTags.put(keys.get(i), tagCounterMap.get(keys.get(i)));
+        }
+
+        resolvedTags = topTags;
+
     }
 
 
