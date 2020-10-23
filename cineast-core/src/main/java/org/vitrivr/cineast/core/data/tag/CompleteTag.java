@@ -9,6 +9,7 @@ public class CompleteTag implements Tag {
         this.name = name;
         this.description = (description == null) ? "" : description;
         this.preference = preference;
+
         if (this.id == null) {
             throw new NullPointerException("id cannot be null for " + this.toString());
         }
@@ -24,9 +25,9 @@ public class CompleteTag implements Tag {
         if (this.name.isEmpty()) {
             throw new IllegalArgumentException("name cannot be empty for " + this.toString());
         }
-        if (this.preference.isEmpty()) {
+/*        if (this.preference.isEmpty()) {
             preference = "could"; // set could as default preference
-        }
+        }*/
     }
 
     @Override

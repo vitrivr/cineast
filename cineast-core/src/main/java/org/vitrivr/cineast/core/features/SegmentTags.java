@@ -1,16 +1,12 @@
 package org.vitrivr.cineast.core.features;
 
-import static org.vitrivr.cineast.core.util.FeatureHelper.retrieveCaptionBySegmentId;
-
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -36,7 +32,6 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.util.FeatureHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
@@ -48,11 +43,10 @@ public class SegmentTags implements Extractor, Retriever {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
-    public static Map<String, Integer> resolvedTags = new HashMap<>();
-    public static Map<String, Integer> topCaptionTerms = new HashMap<>();
 
     public SegmentTags() {
     }
+
 
     @Override
     public List<String> getTableNames() {
@@ -142,14 +136,11 @@ public class SegmentTags implements Extractor, Retriever {
 
             Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet, mustRows); // <tag, Set of segmentIds>
 
-            Set<String> mustSegmentIdsSet = new HashSet<>();
             if (!mustTagsSet.isEmpty()) {
-                mustSegmentIdsSet.addAll(mustMap.get(mustTagsSet.iterator().next())); // initiate mustSegmentIdsSet to start intersection process
+                Set<String> mustSegmentIdsSet = new HashSet<>(mustMap.get(mustTagsSet.iterator().next())); // initiate mustSegmentIdsSet to start intersection process
                 for (String tag : mustTagsSet) {
                     mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
                 }
-                getTopTags(mustSegmentIdsSet);
-                getTopCaptionTerms(mustSegmentIdsSet);
 
                 return scoreSegmentsWithPreferences(qc, notSegments, couldTagsSet, couldSegments, mustMap, mustSegmentIdsSet);
             } else {
@@ -161,8 +152,7 @@ public class SegmentTags implements Extractor, Retriever {
                     }
                     noPreferenceSegmentIdSet.add(currentSegmentId);
                 }
-                getTopTags(noPreferenceSegmentIdSet);
-                getTopCaptionTerms(noPreferenceSegmentIdSet);
+
                 return scoreSegmentsWithoutPreferences(couldTagsSet, noPreferenceSegmentIdSet);
             }
 
@@ -172,73 +162,9 @@ public class SegmentTags implements Extractor, Retriever {
         }
     }
 
-    private void getTopCaptionTerms(Set<String> mustSegmentIdsSet) {
-        Map<String, Set<String>> allCaptions = retrieveCaptionBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
-        Map<String, Integer> captionCounterMap = new LinkedHashMap<>();
-        for (Entry<String, Set<String>> item : allCaptions.entrySet()) {
-            for (String word : item.getValue()) {
-                int counter = 1;
-                if (captionCounterMap.containsKey(word)) {
-                    counter = captionCounterMap.get(word) + 1;
-                }
-                captionCounterMap.put(word, counter);
-            }
-        }
-        captionCounterMap = captionCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-
-        LOGGER.debug("calculating top 10 caption words");
-        List<String> keys = new ArrayList<>(captionCounterMap.keySet());
-        Collections.reverse(keys);
-        keys = keys.stream().limit(10).collect(Collectors.toList());
-
-
-        Map<String, Integer> topCaptions = new LinkedHashMap<>();
-        // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
-
-        for (int i = 0; i < keys.size(); i++) {
-            // LOGGER.debug("tag number i: {}", i);
-            // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
-
-            topCaptions.put(keys.get(i), captionCounterMap.get(keys.get(i)));
-        }
-
-        topCaptionTerms = topCaptions;
-
-    }
-
-    private void getTopTags(Set<String> mustSegmentIdsSet) {
-        List<String> allTagIdsInResultSet = FeatureHelper.retrieveTagsBySegmentId(new ArrayList<>(mustSegmentIdsSet), selectorHelper);
-        Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
-        for (String item : allTagIdsInResultSet) {
-            int counter = 1;
-            if (tagCounterMap.containsKey(item)) {
-                counter = tagCounterMap.get(item) + 1;
-            }
-            tagCounterMap.put(item, counter);
-        }
-        tagCounterMap = tagCounterMap.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-        LOGGER.debug("calculating top 10 related tags");
-        List<String> keys = new ArrayList<>(tagCounterMap.keySet());
-        Collections.reverse(keys);
-        keys = keys.stream().limit(10).collect(Collectors.toList());
-
-        Map<String, Integer> topTags = new LinkedHashMap<>();
-        // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
-
-        for (int i = 0; i < keys.size(); i++) {
-            // LOGGER.debug("tag number i: {}", i);
-            // LOGGER.debug("tagCounterMap.get(keys.get(i)): {}", keys.get(i));
-
-            topTags.put(keys.get(i), tagCounterMap.get(keys.get(i)));
-        }
-
-        resolvedTags = topTags;
-
-    }
-
 
     private List<ScoreElement> scoreSegmentsWithoutPreferences(Set<String> couldTagsSet, Set<String> noPreferenceSegmentIdSet) {
-        float score = (float) (1.0 / (couldTagsSet.size() + 1));
+        float score = (float) (1.0 / (couldTagsSet.size()));
         List<ScoreElement> _return = new ArrayList<>();
         for (String noPreferenceSegmentId : noPreferenceSegmentIdSet) {
             _return.add(new SegmentScoreElement(noPreferenceSegmentId, score));
