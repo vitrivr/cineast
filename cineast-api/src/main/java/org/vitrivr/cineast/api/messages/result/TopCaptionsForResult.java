@@ -5,6 +5,10 @@ import java.util.Map;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
+
+/**
+ * Object that contains the top frequent caption terms and their count in a result set
+ */
 public class TopCaptionsForResult implements Message {
 
     public final String queryId;

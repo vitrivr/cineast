@@ -8,6 +8,10 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.data.tag.Tag;
 
+/**
+ * Map of tags and their count
+ */
+
 public class TopTagsForResult implements Message {
 
     public final String queryId;

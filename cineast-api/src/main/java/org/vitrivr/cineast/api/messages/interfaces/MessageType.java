@@ -6,7 +6,6 @@ import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
@@ -45,7 +44,11 @@ public enum MessageType {
   SESSION_START(StartSessionMessage.class),
 
   /* Query results. */
-  QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(MediaObjectQueryResult.class), QR_METADATA_O(MediaObjectMetadataQueryResult.class), QR_METADATA_S(MediaObjectMetadataQueryResult.class), QR_SEGMENT(MediaSegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
+  QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(
+      MediaObjectQueryResult.class), QR_METADATA_O(
+      MediaObjectMetadataQueryResult.class), QR_METADATA_S(
+      MediaObjectMetadataQueryResult.class), QR_SEGMENT(
+      MediaSegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
   private Class<? extends Message> c;
 
   MessageType(Class<? extends Message> c) {

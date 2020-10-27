@@ -17,6 +17,7 @@ public class GoogleVisionWebTuple {
   }
 
   public GoogleVisionWebTuple(JsonNode node) {
-    this(node.get("id").asText(), node.get("decription").asText(), (float) node.get("score").asDouble(), null);
+    this(node.get("id").asText(), node.get("decription").asText(),
+        (float) node.get("score").asDouble(), null);
   }
 }
