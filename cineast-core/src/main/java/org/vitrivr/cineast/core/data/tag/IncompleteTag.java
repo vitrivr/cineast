@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class IncompleteTag implements WeightedTag {
 
-  private final String id, name, description, preference;
+  private final String id, name, description;
+  private final Preference preference;
   private final float weight;
 
-  public IncompleteTag(String id, String name, String description, String preference) {
+  public IncompleteTag(String id, String name, String description, Preference preference) {
     this(id, name, description, 1f, preference);
   }
 
@@ -26,7 +27,7 @@ public class IncompleteTag implements WeightedTag {
       @JsonProperty(value = "name") String name,
       @JsonProperty(value = "description") String description,
       @JsonProperty(value = "weight", defaultValue = "1.0f") Float weight,
-      @JsonProperty(value = "preference", defaultValue = "could") String preference) {
+      @JsonProperty(value = "preference") Preference preference) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -39,8 +40,10 @@ public class IncompleteTag implements WeightedTag {
         (t != null && t.hasName()) ? t.getName() : null,
         (t != null && t.hasDescription()) ? t.getDescription() : null,
         (t != null && t instanceof WeightedTag) ? ((WeightedTag) t).getWeight() : 1f,
-        (t != null && t.hasPreference()) ? t.getPreference() : null);
+        (t != null && t.hasPreference()) ? (t.getPreference()) : null);
   }
+
+
 
   @Override
   public String getId() {
@@ -74,11 +77,11 @@ public class IncompleteTag implements WeightedTag {
 
   @Override
   public boolean hasPreference() {
-    return this.preference != null && !this.preference.isEmpty();
+    return this.preference != null && !this.preference.toString().isEmpty();
   }
 
   @Override
-  public String getPreference() {
+  public Preference getPreference() {
     return this.preference;
   }
 

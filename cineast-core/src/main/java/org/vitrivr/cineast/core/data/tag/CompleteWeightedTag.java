@@ -2,11 +2,12 @@ package org.vitrivr.cineast.core.data.tag;
 
 public class CompleteWeightedTag implements WeightedTag {
 
-  private final String id, name, description, preference;
+  private final String id, name, description;
+  private final Preference preference;
   private final float weight;
 
   public CompleteWeightedTag(String id, String name, String description, float weight,
-      String preference) {
+      Preference preference) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
@@ -31,11 +32,12 @@ public class CompleteWeightedTag implements WeightedTag {
       throw new IllegalArgumentException("weight " + this.weight + " outside of range (0,1)");
     }
 
-    if (this.preference.isEmpty()) {
-      preference = " ";
+    if (this.preference.toString().isEmpty()) {
+      preference = Preference.COULD; // set could as default preference
     }
+
     if (this.preference == null) {
-      preference = " ";
+      preference = Preference.COULD; // set could as default preference
     }
 
   }
@@ -76,7 +78,7 @@ public class CompleteWeightedTag implements WeightedTag {
   }
 
   @Override
-  public String getPreference() {
+  public Preference getPreference() {
     return preference;
   }
 

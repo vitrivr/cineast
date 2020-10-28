@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /**
- * content: List of all metadata categories such as tags, captions, OCR, ASR etc.
+ * content: List of all feature categories such as tags, captions, OCR, ASR etc.
  * used when all metadata is needed in a single representation
  */
 public class MediaSegmentAllFeaturesQueryResult {

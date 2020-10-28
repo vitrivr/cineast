@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
 
 /**
- * content: List of all entries for a specific metadata category such as tags, captions, OCR or ASR.
+ * content: List of all entries for a specific feature category such as tags, captions, OCR or ASR.
  * used to retrieve entries of a single metadata category
  */
 public class MediaSegmentFeatureQueryResult {

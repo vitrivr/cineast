@@ -14,7 +14,7 @@ public interface Tag {
 
   public boolean hasDescription();
 
-  public String getPreference();
+  public Preference getPreference();
 
   public boolean hasPreference();
 

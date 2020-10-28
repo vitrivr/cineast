@@ -2,9 +2,10 @@ package org.vitrivr.cineast.core.data.tag;
 
 public class CompleteTag implements Tag {
 
-  private final String id, name, description, preference;
+  private final String id, name, description;
+  private final Preference preference;
 
-  public CompleteTag(String id, String name, String description, String preference) {
+  public CompleteTag(String id, String name, String description, Preference preference) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
@@ -44,9 +45,10 @@ public class CompleteTag implements Tag {
   }
 
   @Override
-  public String getPreference() {
+  public Preference getPreference() {
     return preference;
   }
+
 
   @Override
   public int hashCode() {
@@ -116,7 +118,7 @@ public class CompleteTag implements Tag {
 
   @Override
   public boolean hasPreference() {
-    return !this.preference.isEmpty();
+    return !this.description.isEmpty();
   }
 
 }

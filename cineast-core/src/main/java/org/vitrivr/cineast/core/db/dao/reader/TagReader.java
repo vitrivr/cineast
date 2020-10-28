@@ -203,7 +203,8 @@ public class TagReader implements Closeable {
 
     if (!map.containsKey("description")) {
       return new CompleteTag(map.get("id").getString(), map.get("name").getString(), "",
-          map.get("preference").getString());
+          null);
+
     } else {
       return new CompleteTag(map.get("id").getString(), map.get("name").getString(),
           map.get("description").getString(), null);
