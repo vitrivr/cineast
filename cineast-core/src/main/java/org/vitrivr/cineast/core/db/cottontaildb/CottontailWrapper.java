@@ -32,7 +32,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 public class CottontailWrapper implements AutoCloseable {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final InsertStatus INTERRUPTED_INSERT = InsertStatus.newBuilder().setSuccess(false).build();
+  private static final CottontailGrpc.Status INTERRUPTED_INSERT = CottontailGrpc.Status.newBuilder().setSuccess(false).build();
 
   private final ManagedChannel channel;
   private final CottonDDLFutureStub definitionFutureStub;
@@ -60,7 +60,7 @@ public class CottontailWrapper implements AutoCloseable {
     LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
   }
 
-  public synchronized ListenableFuture<SuccessStatus> createEntity(EntityDefinition createMessage) {
+  public synchronized ListenableFuture<CottontailGrpc.Status> createEntity(EntityDefinition createMessage) {
     final CottonDDLFutureStub stub = CottonDDLGrpc.newFutureStub(this.channel);
     return stub.createEntity(createMessage);
   }
@@ -102,7 +102,7 @@ public class CottontailWrapper implements AutoCloseable {
     return false;
   }
 
-  public synchronized boolean createIndexBlocking(CreateIndexMessage createMessage) {
+  public synchronized boolean createIndexBlocking(IndexDefinition createMessage) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
       stub.createIndex(createMessage);
@@ -142,13 +142,13 @@ public class CottontailWrapper implements AutoCloseable {
     return false;
   }
 
-  public synchronized ListenableFuture<SuccessStatus> createSchema(String schama) {
+  public synchronized ListenableFuture<CottontailGrpc.Status> createSchema(String schama) {
     final CottonDDLFutureStub stub = CottonDDLGrpc.newFutureStub(this.channel);
     return stub.createSchema(CottontailMessageBuilder.schema(schama));
   }
 
   public synchronized boolean createSchemaBlocking(String schema) {
-    ListenableFuture<SuccessStatus> future = this.createSchema(schema);
+    ListenableFuture<CottontailGrpc.Status> future = this.createSchema(schema);
     try {
       future.get();
       return true;
@@ -180,10 +180,10 @@ public class CottontailWrapper implements AutoCloseable {
   public boolean insert(List<InsertMessage> messages) {
 
     final boolean[] status = {false, false}; /* {done, error}. */
-    final StreamObserver<InsertStatus> observer = new StreamObserver<InsertStatus>() {
+    final StreamObserver<CottontailGrpc.Status> observer = new StreamObserver<CottontailGrpc.Status>() {
 
       @Override
-      public void onNext(InsertStatus value) {
+      public void onNext(CottontailGrpc.Status value) {
         LOGGER.trace("Tuple received: {}", value.getTimestamp());
       }
 
@@ -264,7 +264,7 @@ public class CottontailWrapper implements AutoCloseable {
   public boolean ping() {
     final CottonDQLBlockingStub stub = CottonDQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      final SuccessStatus status = stub.ping(Empty.getDefaultInstance());
+      final CottontailGrpc.Status status = stub.ping(Empty.getDefaultInstance());
       return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
