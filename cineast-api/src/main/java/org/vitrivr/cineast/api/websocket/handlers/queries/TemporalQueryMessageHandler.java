@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import static org.vitrivr.cineast.core.util.FeatureHelper.resolveTagsById;
-import static org.vitrivr.cineast.core.util.FeatureHelper.retrieveCaptionBySegmentId;
+import static org.vitrivr.cineast.core.util.FeatureHelper.retrieveCaptionWithoutStopwordsBySegmentId;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +23,7 @@ import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.TopCaptionsForResult;
 import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
+import org.vitrivr.cineast.api.util.QueryUtil;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
@@ -31,7 +31,6 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.TagWithCount;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.util.FeatureHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -224,7 +223,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
 
   public Map<String, Integer> getTopCaptionTerms(Set<String> segmentIdsSet) {
-    Map<String, Set<String>> allCaptions = retrieveCaptionBySegmentId(
+    Map<String, Set<String>> allCaptions = retrieveCaptionWithoutStopwordsBySegmentId(
         new ArrayList<>(segmentIdsSet), selectorHelper);
     Map<String, Integer> captionCounterMap = new LinkedHashMap<>();
     for (Entry<String, Set<String>> item : allCaptions.entrySet()) {
@@ -258,8 +257,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   }
 
   public List<TagWithCount> getTopTags(Set<String> segmentIdsSet) {
-    List<String> allTagIdsInResultSet = FeatureHelper
-        .retrieveTagsBySegmentId(new ArrayList<>(segmentIdsSet), selectorHelper);
+    List<String> allTagIdsInResultSet = QueryUtil
+        .retrieveTagsBySegmentId(segmentIdsSet.toArray(new String[0]));
     Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
     for (String item : allTagIdsInResultSet) {
       int counter = 1;
@@ -276,7 +275,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<String> keys = new ArrayList<>(tagCounterMap.keySet());
     Collections.reverse(keys);
     keys = keys.stream().limit(10).collect(Collectors.toList());
-    List<Tag> tags = resolveTagsById(keys, selectorHelper);
+    List<Tag> tags = QueryUtil.resolveTagsById(keys);
 
     List<TagWithCount> topTags = new ArrayList<>();
 

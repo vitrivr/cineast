@@ -2,48 +2,22 @@ package org.vitrivr.cineast.core.util;
 
 import static java.util.Arrays.asList;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.dao.reader.TagReader;
-import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
-import org.vitrivr.cineast.core.features.OCRSearch;
-import org.vitrivr.cineast.core.features.SegmentTags;
 
 
 public class FeatureHelper {
 
-  private static final Logger LOGGER = LogManager.getLogger();
 
-
-  public static List<String> retrieveTagsBySegmentId(List<String> segmentIdList,
-      DBSelector selector) { // for each segment in list, get all associated tags
-    List<String> result = new ArrayList<>();
-    selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", segmentIdList);
-    rows.forEach(row -> result.add(row.get("tagid").getString()));
-    return result;
-  }
-
-
-  public static List<Tag> resolveTagsById(List<String> tagIds,
-      DBSelector selector) { // Q3546843 --> "name", "id", "description"
-    TagReader tagReader = new TagReader(selector);
-    return tagReader.getTagsById(tagIds.toArray(new String[0]));
-  }
-
-  public static Map<String, Set<String>> retrieveCaptionBySegmentId(List<String> segmentIds,
+  public static Map<String, Set<String>> retrieveCaptionWithoutStopwordsBySegmentId(
+      List<String> segmentIds,
       DBSelector selector) {
     Map<String, Set<String>> result = new HashMap<>();
     selector.open(DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME);
@@ -62,7 +36,7 @@ public class FeatureHelper {
   }
 
   private static String[] filterStopWords(String caption) {
-    // Source for stopfwords array: https://gist.github.com/sebleier/554280
+    // Source for stopwords array: https://gist.github.com/sebleier/554280
     Set<String> stopWords = new HashSet<>(Arrays
         .asList("i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours",
             "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers",
@@ -80,24 +54,6 @@ public class FeatureHelper {
 
     return Arrays.stream(caption.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+"))
         .filter(i -> !stopWords.contains(i)).toArray(String[]::new);
-  }
-
-  public static List<String> retrieveOCRBySegmentId(String segmentId, DBSelector selector) {
-    List<String> result = new ArrayList<>();
-    selector.open(OCRSearch.OCR_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("feature").getString()));
-    return result;
-  }
-
-  public static List<String> retrieveASRBySegmentId(String segmentId, DBSelector selector) {
-    List<String> result = new ArrayList<>();
-    selector.open(AudioTranscriptionSearch.AUDIO_TRANSCRIPTION_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("feature").getString()));
-    return result;
   }
 
 }

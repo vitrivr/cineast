@@ -190,7 +190,7 @@ public class SegmentTags implements Extractor, Retriever {
     List<ScoreElement> _return = new ArrayList<>();
     for (TagsPerSegment couldSegment : tagsForSegment) {
       float score = ((float) couldSegment.getTags().size() / (couldTagsSet.size()));
-      _return.add(new SegmentScoreElement(couldSegment.couldSegmentID, score));
+      _return.add(new SegmentScoreElement(couldSegment.segmentID, score));
     }
     return _return;
   }

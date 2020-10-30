@@ -23,7 +23,9 @@ public class FindSegmentFeaturesGetHandler implements
     final String segmentId = parameters.get(OBJECT_ID_NAME);
 
     Map<String, String[]> result = new HashMap<>();
-    result.put("tags", QueryUtil.retrieveTagsBySegmentId(segmentId).toArray(new String[0]));
+
+    result.put("tags",
+        QueryUtil.retrieveTagsBySegmentId(segmentId).toArray(new String[0]));
     result.put("captions", QueryUtil.retrieveCaptionBySegmentId(segmentId).toArray(new String[0]));
     result.put("ocr", QueryUtil.retrieveOCRBySegmentId(segmentId).toArray(new String[0]));
     result.put("asr", QueryUtil.retrieveASRBySegmentId(segmentId).toArray(new String[0]));

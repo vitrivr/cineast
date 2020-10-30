@@ -19,8 +19,8 @@ public class FindSegmentTagsGetHandler implements GetRestHandler<MediaSegmentFea
   public MediaSegmentFeatureQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
     final String segmentId = parameters.get(OBJECT_ID_NAME);
-
-    return new MediaSegmentFeatureQueryResult("", QueryUtil.retrieveTagsBySegmentId(segmentId));
+    return new MediaSegmentFeatureQueryResult("",
+        QueryUtil.retrieveTagsBySegmentId(segmentId));
   }
 
   @Override

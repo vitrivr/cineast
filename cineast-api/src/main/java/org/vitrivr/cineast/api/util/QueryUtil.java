@@ -2,12 +2,11 @@ package org.vitrivr.cineast.api.util;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -17,12 +16,15 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
 import org.vitrivr.cineast.core.features.OCRSearch;
 import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.TagsPerSegment;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -153,17 +155,32 @@ public class QueryUtil {
 
 
   /**
-   * @param segmentId to which we want to find all associated tagIds
+   * @param segmentIds to which we want to find all associated tagIds
    * @return a List of tagIds that are associated with a segmentId
    */
-  public static List<String> retrieveTagsBySegmentId(String segmentId) {
-    Set<String> result = new HashSet<>(); // set of all tags related to a segmentId (eliminate duplicates by using a set)
+  public static List<String> retrieveTagsBySegmentId(String... segmentIds) {
+    List<String> result = new ArrayList<>(); // set of all tags related to a segmentId (eliminate duplicates by using a set)
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
     List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("tagid").getString()));
-    return new ArrayList<>(result);
+        .getRows("id", Arrays.asList(segmentIds));
+
+    Map<String, TagsPerSegment> helperMap = new HashMap<>();
+    rows.forEach(row -> {
+      String segmentId = row.get("id").getString();
+      String tagId = row.get("tagid").getString();
+      TagsPerSegment currentTagsPerSegment = helperMap.get(row.get("id").getString());
+      if (currentTagsPerSegment == null) {
+        helperMap.put(segmentId,
+            new TagsPerSegment(segmentId, tagId));
+      } else {
+        currentTagsPerSegment.addTags(tagId);
+      }
+    });
+
+    helperMap.forEach((id, tags) -> result.addAll(tags.getTags()));
+
+    return result;
   }
 
   /**
@@ -206,6 +223,14 @@ public class QueryUtil {
         .getRows("id", new StringTypeProvider(segmentId));
     rows.forEach(row -> result.add(row.get("feature").getString()));
     return result;
+  }
+
+  public static List<Tag> resolveTagsById(
+      List<String> tagIds) { // Q3546843 --> "name", "id", "description"
+    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
+    TagReader tagReader = new TagReader(selector);
+    return tagReader.getTagsById(tagIds.toArray(new String[0]));
   }
 
 }
