@@ -40,9 +40,7 @@ public class FeatureHelper {
   public static List<Tag> resolveTagsById(List<String> tagIds,
       DBSelector selector) { // Q3546843 --> "name", "id", "description"
     TagReader tagReader = new TagReader(selector);
-
     return tagReader.getTagsById(tagIds.toArray(new String[0]));
-
   }
 
   public static Map<String, Set<String>> retrieveCaptionBySegmentId(List<String> segmentIds,
