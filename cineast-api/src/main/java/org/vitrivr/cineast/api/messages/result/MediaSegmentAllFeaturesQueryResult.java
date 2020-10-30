@@ -1,22 +1,22 @@
 package org.vitrivr.cineast.api.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.List;
+import java.util.Map;
 
 
 /**
- * content: List of all feature categories such as tags, captions, OCR, ASR etc.
- * used when all metadata is needed in a single representation
+ * content: Map of all feature categories such as tags, captions, OCR, ASR etc. with their values.
+ * used when all features are needed in a single representation
  */
 public class MediaSegmentAllFeaturesQueryResult {
 
   public final String queryId;
-  public final List<String[]> content;
+  public final Map<String, String[]> featureMap;
 
   @JsonCreator
-  public MediaSegmentAllFeaturesQueryResult(String queryId, List<String[]> content) {
+  public MediaSegmentAllFeaturesQueryResult(String queryId, Map<String, String[]> featureMap) {
     this.queryId = queryId;
-    this.content = content;
+    this.featureMap = featureMap;
   }
 
 }
