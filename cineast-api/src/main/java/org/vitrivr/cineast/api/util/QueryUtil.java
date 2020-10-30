@@ -4,8 +4,10 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -155,13 +157,13 @@ public class QueryUtil {
    * @return a List of tagIds that are associated with a segmentId
    */
   public static List<String> retrieveTagsBySegmentId(String segmentId) {
-    List<String> result = new ArrayList<>(); // list of all tags related to a segmentId
+    Set<String> result = new HashSet<>(); // set of all tags related to a segmentId (eliminate duplicates by using a set)
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
     List<Map<String, PrimitiveTypeProvider>> rows = selector
         .getRows("id", new StringTypeProvider(segmentId));
     rows.forEach(row -> result.add(row.get("tagid").getString()));
-    return result;
+    return new ArrayList<>(result);
   }
 
   /**
