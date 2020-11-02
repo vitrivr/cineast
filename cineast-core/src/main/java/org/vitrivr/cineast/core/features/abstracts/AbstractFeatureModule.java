@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.entities.SimplePrimitiveTypeProviderFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -24,6 +25,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.dao.writer.PrimitiveTypeProviderFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -33,6 +35,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
     private static final Logger LOGGER = LogManager.getLogger();
     protected SimpleFeatureDescriptorWriter writer;
+    protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
     protected DBSelector selector;
     protected final float maxDist;
     protected final int vectorLength;
@@ -59,6 +62,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
         this.phandler = phandlerSupply.get();
         this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
+        this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
     }
 
     @Override
@@ -70,6 +74,11 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     protected void persist(String shotId, ReadableFloatVector fv) {
         SimpleFeatureDescriptor descriptor = new SimpleFeatureDescriptor(shotId, fv);
         this.writer.write(descriptor);
+    }
+
+    protected void persist(String shotId, PrimitiveTypeProvider fv) {
+        SimplePrimitiveTypeProviderFeatureDescriptor descriptor = new SimplePrimitiveTypeProviderFeatureDescriptor(shotId, fv);
+        this.primitiveWriter.write(descriptor);
     }
 
     protected void persist(String shotId, List<ReadableFloatVector> fvs) {
@@ -137,6 +146,11 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         if (this.writer != null) {
             this.writer.close();
             this.writer = null;
+        }
+
+        if (this.primitiveWriter != null) {
+            this.primitiveWriter.close();
+            this.primitiveWriter = null;
         }
 
         if (this.phandler != null) {
