@@ -119,7 +119,7 @@ public class CottontailWrapper implements AutoCloseable {
   public synchronized boolean optimizeEntityBlocking(Entity entity) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
-      stub.optimizeEntity(entity);
+      stub.optimize(entity);
       return true;
     } catch (StatusRuntimeException e) {
       e.printStackTrace();
