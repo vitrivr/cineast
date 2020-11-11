@@ -183,6 +183,12 @@ public interface DBSelector {
     return Lists.newArrayList(uniques);
   }
 
+  default Map<String, Integer> countDistinctValues(String column) {
+    Map<String, Integer> count = new HashMap<>();
+    this.getAll(column).forEach(el -> count.compute(el.getString(), (k, v) -> v == null ? 1 : v++));
+    return count;
+  }
+
   /**
    * SELECT column from the table. Be careful with large entities
    */

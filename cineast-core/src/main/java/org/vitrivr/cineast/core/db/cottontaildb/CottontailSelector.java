@@ -5,12 +5,11 @@ import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.toDatas;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -179,6 +178,17 @@ public class CottontailSelector implements DBSelector {
         query(entity, CottontailMessageBuilder.projection(Operation.SELECT_DISTINCT, column), null, null, null), null);
     List<QueryResponseMessage> results = this.cottontail.query(queryMessage);
     return toSingleCol(results, column);
+  }
+
+  public Map<String, Integer> countDistinctValues(String column) {
+    QueryMessage queryMessage = queryMessage(
+        query(entity, CottontailMessageBuilder.projection(Operation.SELECT, column), null, null,
+            null), null);
+    Map<String, Integer> count = new HashMap<>();
+    List<QueryResponseMessage> list = this.cottontail.query(queryMessage);
+    list.forEach(row -> row.getResultsList().forEach(tuple -> count
+        .compute(tuple.getDataMap().get(column).getStringData(), (k, v) -> v == null ? 1 : v++)));
+    return count;
   }
 
   @Override
