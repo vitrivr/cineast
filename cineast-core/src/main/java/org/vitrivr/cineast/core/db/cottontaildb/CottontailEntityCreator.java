@@ -134,6 +134,15 @@ public class CottontailEntityCreator implements EntityCreator {
     return true;
   }
 
+  public boolean dropIndex(String entityName, String attribute, IndexType type){
+    Entity entity = CottontailMessageBuilder.entity(entityName);
+    Index index = Index.newBuilder().setEntity(entity)
+        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
+        .setType(type).build();
+    cottontail.dropIndexBlocking(index);
+    return true;
+  }
+
   @Override
   public boolean createSegmentEntity() {
     ArrayList<ColumnDefinition> columns = new ArrayList<>(4);

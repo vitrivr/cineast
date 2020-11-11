@@ -116,6 +116,17 @@ public class CottontailWrapper implements AutoCloseable {
     return false;
   }
 
+  public synchronized boolean dropIndexBlocking(Index index) {
+    final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+    try {
+      stub.dropIndex(index);
+      return true;
+    } catch (StatusRuntimeException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
   public synchronized boolean optimizeEntityBlocking(Entity entity) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
     try {
