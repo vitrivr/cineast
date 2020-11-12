@@ -19,6 +19,10 @@ public class DropTableCommand implements Runnable {
 
   @Override
   public void run() {
+    dropTable(tableName);
+  }
+
+  public static void dropTable(String tableName) {
     final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
       System.out.println("Dropping " + tableName);
