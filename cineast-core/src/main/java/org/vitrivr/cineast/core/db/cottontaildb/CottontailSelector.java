@@ -186,8 +186,9 @@ public class CottontailSelector implements DBSelector {
             null), null);
     Map<String, Integer> count = new HashMap<>();
     List<QueryResponseMessage> list = this.cottontail.query(queryMessage);
-    list.forEach(row -> row.getResultsList().forEach(tuple -> count
-        .compute(tuple.getDataMap().get(column).getStringData(), (k, v) -> v == null ? 1 : v++)));
+    list.forEach(row -> row.getResultsList().forEach(tuple -> {
+      count.merge(tuple.getDataMap().get(column).getStringData(), 1, (old, one) -> old + 1);
+    }));
     return count;
   }
 
