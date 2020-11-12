@@ -65,25 +65,25 @@ public class CottontailWrapper implements AutoCloseable {
     return stub.createEntity(createMessage);
   }
 
-  public synchronized ListenableFuture<CottontailGrpc.EntityDefinition> entityDetails(Entity entity){
+  public synchronized ListenableFuture<CottontailGrpc.EntityDefinition> entityDetails(Entity entity) {
     return CottonDDLGrpc.newFutureStub(this.channel).entityDetails(entity);
   }
 
-  public synchronized CottontailGrpc.EntityDefinition entityDetailsBlocking(Entity entity){
+  public synchronized CottontailGrpc.EntityDefinition entityDetailsBlocking(Entity entity) {
     final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
-    try{
+    try {
       return stub.entityDetails(entity);
-    }catch(StatusRuntimeException e){
-      if(e.getStatus().getCode() == Status.NOT_FOUND.getCode()){
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
         LOGGER.warn("Entity {} was not found", entity);
         return null;
-      }else{
+      } else {
         throw LOGGER.throwing(e);
       }
     }
   }
 
-  public static Entity entityByName(String entityName){
+  public static Entity entityByName(String entityName) {
     return CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
   }
 
@@ -110,6 +110,7 @@ public class CottontailWrapper implements AutoCloseable {
     } catch (StatusRuntimeException e) {
       if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
         LOGGER.warn("Index on {}.{} was not created because it already exists", createMessage.getIndex().getEntity().getName(), createMessage.getColumnsList().toString());
+        return false;
       }
       e.printStackTrace();
     }
@@ -122,6 +123,10 @@ public class CottontailWrapper implements AutoCloseable {
       stub.dropIndex(index);
       return true;
     } catch (StatusRuntimeException e) {
+      if (e.getStatus() == Status.NOT_FOUND) {
+        LOGGER.warn("Index {} was not dropped because it does not exist", index.getName());
+        return false;
+      }
       e.printStackTrace();
     }
     return false;
