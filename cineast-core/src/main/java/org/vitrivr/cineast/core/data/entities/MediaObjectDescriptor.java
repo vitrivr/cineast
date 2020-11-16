@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 
 /**
@@ -26,6 +27,7 @@ public class MediaObjectDescriptor implements ExistenceCheck {
    * Field names in the persistence layer.
    */
   public static final String[] FIELDNAMES = {"objectid", "mediatype", "name", "path"};
+
 
   private final String objectId;
   private final String name, path;

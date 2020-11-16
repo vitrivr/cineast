@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -225,10 +226,17 @@ public class ADAMproEntityCreator implements EntityCreator {
      */
     @Override
     public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+        return this.createEntity(
+                new EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build()
+        );
+    }
+
+    @Override
+    public boolean createEntity(EntityDefinition def){
         final ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-        for (AttributeDefinition attribute : attributes) {
+        for (AttributeDefinition attribute : def.getAttributes()) {
             builder.setName(attribute.getName()).setAttributetype(mapAttributeType(attribute.getType()));
             attribute.ifHintPresent("handler", builder::setHandler);
             //builder.setHandler("cassandra");
@@ -237,13 +245,13 @@ public class ADAMproEntityCreator implements EntityCreator {
             builder.clear();
         }
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(def.getEntityName().toLowerCase()).addAllAttributes(fieldList).build();
         final  AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {
-            LOGGER.info("Successfully created entity '{}'", entityName);
+            LOGGER.info("Successfully created entity '{}'", def.getEntityName());
         } else {
-            LOGGER.error("Error while creating entity {}: '{}'", entityName, ack.getMessage());
+            LOGGER.error("Error while creating entity {}: '{}'", def.getEntityName(), ack.getMessage());
         }
 
         return ack.getCode() == Code.OK;

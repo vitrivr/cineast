@@ -6,6 +6,10 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.db.setup.EntityDefinition;
+
+import javax.management.Attribute;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of a Cineast {@link EntityCreator} on top of the {@link InMemoryStore}.
@@ -87,11 +91,13 @@ public class InMemoryEntityCreator implements EntityCreator {
 
   @Override
   public boolean createEntity(String entityName, AttributeDefinition... attributes) {
-    final String[] columns = new String[attributes.length];
-    for (int i = 0; i<columns.length; i++) {
-      columns[i] = attributes[i].getName();
-    }
-    return this.store.createEntity(entityName, columns).isPresent();
+    return this.createEntity(new EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build());
+  }
+
+  @Override
+  public boolean createEntity(EntityDefinition entityDefinition) {
+    return this.store.createEntity(entityDefinition.getEntityName(),
+            entityDefinition.getAttributes().stream().map(AttributeDefinition::getName).toArray(String[]::new)).isPresent();
   }
 
   @Override

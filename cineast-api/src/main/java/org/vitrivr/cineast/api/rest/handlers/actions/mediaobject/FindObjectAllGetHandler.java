@@ -48,7 +48,7 @@ public class FindObjectAllGetHandler implements GetRestHandler<MediaObjectQueryR
           op.operationId("findObjectsAll");
           op.addTagsItem("Object");
         })
-        .pathParam(TYPE_NAME, String.class, p -> p.description("The type the objects should have"))
+//        .pathParam(TYPE_NAME, String.class, p -> p.description("The type the objects should have"))
         .json("200", outClass());
   }
 }

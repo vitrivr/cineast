@@ -128,6 +128,7 @@ public interface EntityCreator extends AutoCloseable {
 
     boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes);
 
+
     /**
      * Creates and initializes an entity with the provided name and the provided attributes. The new entity will have an additional
      * field prepended, called "id", which is of type "string" and has an index.
@@ -136,7 +137,11 @@ public interface EntityCreator extends AutoCloseable {
      * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
      * @return True on success, false otherwise.
      */
-    boolean createIdEntity(String entityName, AttributeDefinition... attributes);
+    default boolean createIdEntity(String entityName, AttributeDefinition... attributes){
+        return this.createEntity(
+                new org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).withIdAttribute().build()
+        );
+    }
 
     /**
      * Creates and initializes an entity with the provided name and the provided attributes.
@@ -145,7 +150,18 @@ public interface EntityCreator extends AutoCloseable {
      * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
      * @return True on success, false otherwise.
      */
-    boolean createEntity(String entityName, AttributeDefinition... attributes);
+    default boolean createEntity(String entityName, AttributeDefinition... attributes){
+        return this.createEntity(
+                new org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build()
+        );
+    }
+
+    /**
+     * Creates and initilizes an entity with the provided definition.
+     * @param entityDefinition The entity definition
+     * @return TRUE on success, false otherwise
+     */
+    boolean createEntity(EntityDefinition entityDefinition);
 
     /**
      * @param entityName

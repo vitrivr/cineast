@@ -191,10 +191,16 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+    return this.createEntity(
+            new org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build()
+    );
+  }
 
+  @Override
+  public boolean createEntity(org.vitrivr.cineast.core.db.setup.EntityDefinition def) {
     ArrayList<ColumnDefinition> columns = new ArrayList<>();
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
       if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
         builder.setLength(attribute.getLength());
@@ -202,16 +208,16 @@ public class CottontailEntityCreator implements EntityCreator {
       columns.add(builder.build());
       builder.clear();
     }
-    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
+    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, def.getEntityName());
     EntityDefinition message = EntityDefinition.newBuilder()
-        .setEntity(entity)
-        .addAllColumns(columns).build();
+            .setEntity(entity)
+            .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
 
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       if (attribute.getType() == TEXT) {
-        this.createIndex(entityName, attribute.getName(), IndexType.LUCENE);
+        this.createIndex(def.getEntityName(), attribute.getName(), IndexType.LUCENE);
       }
     }
 

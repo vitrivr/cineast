@@ -28,6 +28,12 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc;
  */
 public abstract class DataImportHandler {
 
+
+    /**
+     * Drops the entity if called. This is in order to have clean imports.
+     * @param entityName The entity name to drop
+     * @param taskName The task name during which this dropping occurs. Only for logging purposes
+     */
     protected static void cleanOnDemand(String entityName, String taskName){
         final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
         /* Beware, this drops the table */
@@ -52,6 +58,9 @@ public abstract class DataImportHandler {
             LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
         }
     }
+
+
+
     /**
      * This inner class implements the runnable that actually executes the copy operation.
      */
