@@ -73,4 +73,6 @@ public class RangeBooleanRetriever extends BooleanRetriever {
       this.maximumMap.put(column, max);
     }
   }
+
+
 }

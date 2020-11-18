@@ -14,13 +14,14 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriever;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class BooleanRetriever implements Retriever {
+public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
   protected DBSelector selector;
@@ -111,5 +112,22 @@ public abstract class BooleanRetriever implements Retriever {
 
   public ProviderDataType getColumnType(String column){
     return this.columnTypes.get(column);
+  }
+
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.getClass().getName(), entity, attributes);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj == null){
+      return false;
+    }
+    if(!(obj instanceof BooleanRetriever)){
+      return false;
+    }
+    return this.hashCode() == obj.hashCode();
   }
 }
