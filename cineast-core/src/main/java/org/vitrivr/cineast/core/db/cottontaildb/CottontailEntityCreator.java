@@ -23,6 +23,9 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 public class CottontailEntityCreator implements EntityCreator {
 
+  public static final String COTTONTAIL_PREFIX = "cottontail";
+  public static final String INDEX_HINT = COTTONTAIL_PREFIX+".index";
+
   private final CottontailWrapper cottontail;
 
 
@@ -218,6 +221,11 @@ public class CottontailEntityCreator implements EntityCreator {
     for (AttributeDefinition attribute : def.getAttributes()) {
       if (attribute.getType() == TEXT) {
         this.createIndex(def.getEntityName(), attribute.getName(), IndexType.LUCENE);
+      }
+      // TODO (LS, 18.11.2020) Shouldn't we also have abstract indices in the db abstraction layer?
+      if(attribute.hasHint(INDEX_HINT)){
+        IndexType idx = IndexType.valueOf(attribute.getHint(INDEX_HINT).get());
+        this.createIndex(def.getEntityName(), attribute.getName(), idx);
       }
     }
 

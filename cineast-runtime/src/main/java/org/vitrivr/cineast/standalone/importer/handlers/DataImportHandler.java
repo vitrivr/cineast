@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.cli.DatabaseSetupCommand;
@@ -56,6 +57,20 @@ public abstract class DataImportHandler {
         }else{
             cottontail.createEntityBlocking(entityDefinition);
             LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
+        }
+    }
+
+    protected static void createEntityOnDemand(EntityDefinition def, String taskName){
+        LOGGER.debug("Creating entity: "+def);
+        EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        if(ec.existsEntity(def.getEntityName())){
+            LOGGER.warn("Entity already exists, ignoring");
+            return;
+        }
+        if(ec.createEntity(def)){
+            LOGGER.info("Successfully created entity "+def);
+        }else{
+            LOGGER.error("Could not create entity "+def+" please see the log");
         }
     }
 
@@ -105,8 +120,6 @@ public abstract class DataImportHandler {
             }
         }
 
-
-
         /**
          * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}.
          * Does an APPEND import, i.e. existing entries on that entity are kept.
@@ -117,6 +130,18 @@ public abstract class DataImportHandler {
          */
         public DataImportRunner(Importer<?> importer, String entityName, String taskName) {
             this(importer, entityName, taskName, false);
+        }
+
+        /**
+         * Creates a new import runner for given importer and creates the entity, if not existent.
+         * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}, while creating the entity before hand, using the given {@link EntityDefinition}.
+         * @param importer The importer to run the import of
+         * @param entity The entity definition of the entity to import. If not existent, the entity will be created first
+         * @param taskName The name of the task, possibly human readable
+         */
+        public DataImportRunner(Importer<?> importer, EntityDefinition entity, String taskName){
+            this(importer, entity.getEntityName(), taskName);
+            createEntityOnDemand(entity, taskName);
         }
 
         /**

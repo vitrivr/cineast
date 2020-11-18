@@ -63,6 +63,15 @@ public final class EntityDefinition {
         return oneVectorPerSegment;
     }
 
+    @Override
+    public String toString() {
+        return "EntityDefinition{" +
+                "entityName='" + entityName + '\'' +
+                ", attributes=" + attributes +
+                ", oneVectorPerSegment=" + oneVectorPerSegment +
+                '}';
+    }
+
     /**
      * A builder for {@link EntityDefinition}s
      */
@@ -171,6 +180,7 @@ public final class EntityDefinition {
          * @return the builder
          */
         public EntityDefinitionBuilder withIdAttribute() {
+            // TODO add hash hint
             this.attrs.add(0, new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING));
             return this;
         }
