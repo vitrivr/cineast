@@ -21,6 +21,9 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 public class CottontailEntityCreator implements EntityCreator {
 
+  public static final String COTTONTAIL_PREFIX = "cottontail";
+  public static final String INDEX_HINT = COTTONTAIL_PREFIX+".index";
+
   private final CottontailWrapper cottontail;
 
 
@@ -126,9 +129,8 @@ public class CottontailEntityCreator implements EntityCreator {
   public boolean createIndex(String entityName, String attribute, IndexType type) {
     Entity entity = CottontailMessageBuilder.entity(entityName);
     Index index = Index.newBuilder().setEntity(entity)
-        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
+            .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
-    /* Cottontail ignores index params as of july 19 */
     IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
     return true;
@@ -198,10 +200,16 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+    return this.createEntity(
+            new org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build()
+    );
+  }
 
+  @Override
+  public boolean createEntity(org.vitrivr.cineast.core.db.setup.EntityDefinition def) {
     ArrayList<ColumnDefinition> columns = new ArrayList<>();
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
       if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
         builder.setLength(attribute.getLength());
@@ -209,16 +217,21 @@ public class CottontailEntityCreator implements EntityCreator {
       columns.add(builder.build());
       builder.clear();
     }
-    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
+    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, def.getEntityName());
     EntityDefinition message = EntityDefinition.newBuilder()
-        .setEntity(entity)
-        .addAllColumns(columns).build();
+            .setEntity(entity)
+            .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
 
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       if (attribute.getType() == TEXT) {
-        this.createIndex(entityName, attribute.getName(), IndexType.LUCENE);
+        this.createIndex(def.getEntityName(), attribute.getName(), IndexType.LUCENE);
+      }
+      // TODO (LS, 18.11.2020) Shouldn't we also have abstract indices in the db abstraction layer?
+      if(attribute.hasHint(INDEX_HINT)){
+        IndexType idx = IndexType.valueOf(attribute.getHint(INDEX_HINT).get());
+        this.createIndex(def.getEntityName(), attribute.getName(), idx);
       }
     }
 
