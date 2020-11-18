@@ -158,31 +158,31 @@ public class ADAMproEntityCreator implements EntityCreator {
      * called "id", which is of type "string" and has an index. Also, for each of the provided feature attribute a field of the type "vector"
      * will be created.
      *
-     * @param featurename ame of the new entity.
+     * @param featureEntityName ame of the new entity.
      * @param unique Whether or not the provided feature should be unique per id.
      * @param featureNames List of the feature names.
      * @return True on success, false otherwise.
      */
     @Override
-    public boolean createFeatureEntity(String featurename, boolean unique, int length,
+    public boolean createFeatureEntity(String featureEntityName, boolean unique, int length,
         String... featureNames) {
         final AttributeDefinition[] attributes = Arrays.stream(featureNames)
             .map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR))
             .toArray(AttributeDefinition[]::new);
-        return this.createFeatureEntity(featurename, unique, attributes);
+        return this.createFeatureEntity(featureEntityName, unique, attributes);
     }
 
     /**
      * Creates and initializes a new feature entity with the provided name and the provided attributes. The new entity will have a field
      * called "id", which is of type "string" and has an index.
      *
-     * @param featurename Name of the new entity.
+     * @param featureEntityName Name of the new entity.
      * @param unique Whether or not the provided feature should be unique per id.
      * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
      * @return True on success, false otherwise.
      */
     @Override
-    public boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
+    public boolean createFeatureEntity(String featureEntityName, boolean unique, AttributeDefinition... attributes) {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
         final HashMap<String,String> hints = new HashMap<>(1);
         hints.put("indexed", "true");
@@ -196,7 +196,7 @@ public class ADAMproEntityCreator implements EntityCreator {
         hints.put("handler", handler);
         extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
         System.arraycopy(attributes, 0, extended, 1, attributes.length);
-        return this.createEntity(featurename, extended);
+        return this.createEntity(featureEntityName, extended);
     }
 
     /**

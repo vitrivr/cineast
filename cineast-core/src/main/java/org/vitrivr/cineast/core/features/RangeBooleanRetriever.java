@@ -65,7 +65,7 @@ public class RangeBooleanRetriever extends BooleanRetriever {
         if (comparator.compare(t, min) < 0){
           min = t;
         }
-        if(comparator.compare(max, t) > 0){
+        if(comparator.compare(t, max) > 0){
           max = t;
         }
       }

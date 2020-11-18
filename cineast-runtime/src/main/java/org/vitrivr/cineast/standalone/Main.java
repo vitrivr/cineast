@@ -14,19 +14,16 @@ public class Main {
    */
   public static void main(String[] args) {
     /* (Force) load application config. */
-    if (args.length < 2) {
-      System.err.println("Starting Cineast requires at least two arguments: the path to the configuration file and a command (cineast <config> <command>. Cineast will shutdown...");
-      System.exit(1);
-    }
-
-    /* (Force) load application config. */
     if (Config.loadConfig(args[0]) == null) {
       System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
       System.exit(1);
     }
 
+    if(args.length==1){
+      CLI.start(CineastCli.class);
+    }
     /* Either start Cineast in interactive mode OR execute command directly. */
-    if (args[1].equals("interactive")) {
+    if(args.length==2 && args[1].equals("interactive")){
       CLI.start(CineastCli.class);
     } else {
       com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(CineastCli.class);
