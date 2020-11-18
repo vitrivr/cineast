@@ -129,9 +129,8 @@ public class CottontailEntityCreator implements EntityCreator {
   public boolean createIndex(String entityName, String attribute, IndexType type) {
     Entity entity = CottontailMessageBuilder.entity(entityName);
     Index index = Index.newBuilder().setEntity(entity)
-        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
+            .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
-    /* Cottontail ignores index params as of july 19 */
     IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
     return true;

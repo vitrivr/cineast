@@ -23,7 +23,7 @@ public class ProcessingMetaImportHandler extends DataImportHandler {
     private static final String TABLE_NAME = "features_table_lsc20meta"; // Features is misleading, in future LSC / VBS use different one
     private static Map<String, String> createHintsForId(){
         Map<String, String> map = new HashMap<>();
-        map.put(CottontailEntityCreator.INDEX_HINT, CottontailGrpc.Index.IndexType.HASH.name());
+        map.put(CottontailEntityCreator.INDEX_HINT, CottontailGrpc.IndexType.HASH.name());
         return map;
     }
     private static final EntityDefinition METADATA_TABLE = new EntityDefinition.EntityDefinitionBuilder(TABLE_NAME)

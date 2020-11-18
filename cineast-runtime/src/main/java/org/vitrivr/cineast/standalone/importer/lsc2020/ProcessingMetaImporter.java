@@ -325,7 +325,6 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         TAG_LOOKUP,
         /**
          * Meta as is and certain processed metadata in a conventional table.
-         * Requires the table to be created as {@link org.vitrivr.cineast.core.features.ConventionalTableRetriever} in the config
          */
         META_AS_TABLE
     }
