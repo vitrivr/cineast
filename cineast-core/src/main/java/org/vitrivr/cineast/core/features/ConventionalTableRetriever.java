@@ -61,7 +61,10 @@ import java.util.function.Supplier;
  * </pre>
  *
  * </p>
+ *
+ * @deprecated Usage discouraged. Use {@link org.vitrivr.cineast.core.db.setup.EntityDefinition} during import setup instead.
  */
+@Deprecated
 public class ConventionalTableRetriever implements Retriever {
 
     public static final String ENTITY_NAME_PROPERTY = "entity.name";
