@@ -1,14 +1,20 @@
 package org.vitrivr.cineast.api.util;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
+import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -19,13 +25,10 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
-import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
-import org.vitrivr.cineast.core.features.DescriptionTextSearch;
-import org.vitrivr.cineast.core.features.OCRSearch;
 import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.core.util.MathHelper;
-import org.vitrivr.cineast.core.util.TagsPerSegment;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 //TODO maybe this should be moved to core?
@@ -153,84 +156,76 @@ public class QueryUtil {
     return list;
   }
 
-
   /**
-   * @param segmentIds to which we want to find all associated tagIds
-   * @return a List of tagIds that are associated with a segmentId
+   * Retrieves all tag ids belong to certain elements
+   *
+   * @param ids element ids for which the tags table is to be searched.
+   * @return a list of {@link Tag#getId()} ids
    */
-  public static List<String> retrieveTagsBySegmentId(String... segmentIds) {
-    List<String> result = new ArrayList<>(); // set of all tags related to a segmentId (eliminate duplicates by using a set)
+  public static Set<String> retrieveTagIDs(List<String> ids) {
+    Set<String> _return = new HashSet<>();
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", Arrays.asList(segmentIds));
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", ids);
 
-    Map<String, TagsPerSegment> helperMap = new HashMap<>();
-    rows.forEach(row -> {
-      String segmentId = row.get("id").getString();
-      String tagId = row.get("tagid").getString();
-      TagsPerSegment currentTagsPerSegment = helperMap.get(row.get("id").getString());
-      if (currentTagsPerSegment == null) {
-        helperMap.put(segmentId,
-            new TagsPerSegment(segmentId, tagId));
-      } else {
-        currentTagsPerSegment.addTags(tagId);
-      }
+    rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
+    return _return;
+  }
+
+  /**
+   * Simply assumes all elements retrieved by {@link #retrieveFeaturesForIDByCategory(String, String)} are strings.
+   */
+  public static List<String> retrieveTextFeatureByID(String id, String category) {
+    return retrieveFeaturesForIDByCategory(id, category).stream().map(Object::toString).collect(Collectors.toList());
+  }
+
+  /**
+   * Retrieves all features for a given id (i.e. segment, object id) and a given category.
+   */
+  public static List<Object> retrieveFeaturesForIDByCategory(String id, String category) {
+    final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
+    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+    List<Object> _return = new ArrayList<>();
+    retrievalRuntimeConfig.getRetrieversByCategory(category).forEachKey(retriever -> {
+      retriever.getTableNames().forEach(tableName -> {
+        selector.open(tableName);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(id));
+        rows.stream().map(row ->
+            row.get(FEATURE_COLUMN_QUALIFIER).toObject()
+        ).forEach(_return::add);
+      });
+      return false; //no repeat invocations allowed
     });
-
-    helperMap.forEach((id, tags) -> result.addAll(tags.getTags()));
-
-    return result;
+    return _return;
   }
 
   /**
-   * @param segmentId to which we want to find all associated captions
-   * @return a List of captions that are associated with a segmentId
+   * Returns all tags for a given list of tagsids
    */
-  public static List<String> retrieveCaptionBySegmentId(String segmentId) {
-    List<String> result = new ArrayList<>(); // list of all captions related to a segmentId
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    selector.open(DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("feature").getString()));
-    return result;
-  }
-
-  /**
-   * @param segmentId to which we want to find all associated OCR data
-   * @return a List of OCR strings that are associated with a segmentId
-   */
-  public static List<String> retrieveOCRBySegmentId(String segmentId) {
-    List<String> result = new ArrayList<>(); // list of all OCR related to a segmentId
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    selector.open(OCRSearch.OCR_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("feature").getString()));
-    return result;
-  }
-
-  /**
-   * @param segmentId to which we want to find all associated ASR data
-   * @return a List of ASR strings that are associated with a segmentId
-   */
-  public static List<String> retrieveASRBySegmentId(String segmentId) {
-    List<String> result = new ArrayList<>(); // list of all ASR related to a segmentId
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    selector.open(AudioTranscriptionSearch.AUDIO_TRANSCRIPTION_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector
-        .getRows("id", new StringTypeProvider(segmentId));
-    rows.forEach(row -> result.add(row.get("feature").getString()));
-    return result;
-  }
-
   public static List<Tag> resolveTagsById(
-      List<String> tagIds) { // Q3546843 --> "name", "id", "description"
+      List<String> tagIds) {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-
     TagReader tagReader = new TagReader(selector);
     return tagReader.getTagsById(tagIds.toArray(new String[0]));
+  }
+
+  public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {
+    Map<String, Object[]> features = new HashMap<>();
+    final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
+    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+    retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> {
+      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachKey(retriever -> {
+        List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
+        if (_features.size() == 0) {
+          return false; //no repeat invocations allowed
+        }
+        if (_features.get(0) != null) {
+          features.put(cat, _features.toArray());
+        }
+        return false; //no repeat invocations allowed
+      });
+    });
+    return new FeaturesAllCategoriesQueryResult("", features, id);
   }
 
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object that extends a tag with its number of occurrences
  */
-
 public class TagWithCount extends CompleteTag {
 
   @JsonProperty

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -44,7 +46,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
   @Override
   public void init(PersistencyWriterSupplier supply, int batchSize) {
     super.init(supply, batchSize);
-    this.phandler.setFieldNames("id", "hist", "raster");
+    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "hist", "raster");
   }
 
   protected static int get(Color c) {
@@ -265,7 +267,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
     ArrayList<ScoreElement> scores = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> map : rows) {
-      String id = map.get("id").getString();
+      String id = map.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
       double score = register(raster, map.get("raster").getFloatArray());
       scores.add(new SegmentScoreElement(id, score));
     }
@@ -286,7 +288,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id",  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER,  new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return new ArrayList<>(1);

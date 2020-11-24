@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.example;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -54,6 +56,6 @@ public class PrimitiveFeatureExample extends AbstractFeatureModule {
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-        supply.get().createFeatureEntity(PRIMITIVE_FEATURE_EXAMPLE_TABLE_NAME, true, new AttributeDefinition("feature", AttributeType.FLOAT));
+        supply.get().createFeatureEntity(PRIMITIVE_FEATURE_EXAMPLE_TABLE_NAME, true, new AttributeDefinition(FEATURE_COLUMN_QUALIFIER, AttributeType.FLOAT));
     }
 }

@@ -7,21 +7,16 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 12.01.17
- */
 public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObjectDescriptor> {
 
   @JsonCreator
   public MediaObjectQueryResult(String queryId, List<MediaObjectDescriptor> content) {
     super(queryId, MediaObjectDescriptor.class, content);
   }
-  
+
   @Override
   public MessageType getMessageType() {
     return MessageType.QR_OBJECT;
   }
-  
+
 }

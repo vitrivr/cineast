@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.setup;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -121,7 +123,7 @@ public interface EntityCreator extends AutoCloseable {
      * @param unique      true if the feature module produces at most one vector per segment
      */
     default boolean createFeatureEntity(String featureEntityName, boolean unique, int length) {
-        return createFeatureEntity(featureEntityName, unique, length, "feature");
+        return createFeatureEntity(featureEntityName, unique, length, FEATURE_COLUMN_QUALIFIER);
     }
 
     boolean createFeatureEntity(String featureEntityName, boolean unique, int length, String... featureNames);

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +48,8 @@ public class SegmentTags implements Extractor, Retriever {
 
   public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
+  public static final String TAG_ID_QUALIFIER = "tagid";
+
   public SegmentTags() {
   }
 
@@ -58,11 +62,11 @@ public class SegmentTags implements Extractor, Retriever {
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
     supply.get().createIdEntity(SEGMENT_TAGS_TABLE_NAME,
-        new AttributeDefinition("tagid", AttributeType.STRING),
+        new AttributeDefinition(TAG_ID_QUALIFIER, AttributeType.STRING),
         new AttributeDefinition("score", AttributeType.FLOAT));
 
-    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "tagid");
-    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "id");
+    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, TAG_ID_QUALIFIER);
+    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, GENERIC_ID_COLUMN_QUALIFIER);
   }
 
   @Override
@@ -111,7 +115,7 @@ public class SegmentTags implements Extractor, Retriever {
 
     /* Retrieve all elements matching the provided ids */
     // String is either 'tagid', 'score' or 'id'
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid",
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_QUALIFIER,
         tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
     if (!preferenceMap.isEmpty()) { // should always be the case
@@ -127,8 +131,8 @@ public class SegmentTags implements Extractor, Retriever {
       Map<String, TagsPerSegment> helperMap = new HashMap<>(); // map to summarise tags for each segmentId
 
       for (Map<String, PrimitiveTypeProvider> row : rows) {
-        String currentTagId = row.get("tagid").getString();
-        String currentSegmentId = row.get("id").getString();
+        String currentTagId = row.get(TAG_ID_QUALIFIER).getString();
+        String currentSegmentId = row.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
 
         if (!helperMap.containsKey(currentSegmentId)) {
           helperMap.put(currentSegmentId, new TagsPerSegment(currentSegmentId, new HashSet<>(
@@ -169,7 +173,7 @@ public class SegmentTags implements Extractor, Retriever {
       } else { // only 'could' tags used in query
         Set<String> noPreferenceSegmentIdSet = new HashSet<>();
         for (Map<String, PrimitiveTypeProvider> row : rows) {
-          String currentSegmentId = row.get("id").getString();
+          String currentSegmentId = row.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
           if (notSegments.contains(currentSegmentId)) { // do not add the 'NOT' segments
             continue;
           }
@@ -228,8 +232,8 @@ public class SegmentTags implements Extractor, Retriever {
     for (String mustTag : mustTagsSet) {
       Set<String> segmentIds = new HashSet<>();
       for (Map<String, PrimitiveTypeProvider> mustRow : mustRows) {
-        String id = mustRow.get("id").getString();
-        String tag = mustRow.get("tagid").getString();
+        String id = mustRow.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
+        String tag = mustRow.get(TAG_ID_QUALIFIER).getString();
         if (mustTag.equals(tag)) {
           if (mustMap.containsKey(tag)) { // add tag to existing entry for segment map
             segmentIds = mustMap.get(tag);
@@ -269,7 +273,7 @@ public class SegmentTags implements Extractor, Retriever {
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector
-        .getRows("id", new StringTypeProvider(segmentId));
+        .getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return Collections.emptyList();
@@ -278,7 +282,7 @@ public class SegmentTags implements Extractor, Retriever {
     ArrayList<WeightedTag> wtags = new ArrayList<>(rows.size());
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat(),
+      wtags.add(new IncompleteTag(row.get(TAG_ID_QUALIFIER).getString(), "", "", row.get("score").getFloat(),
           Preference.valueOf("preference")));
     }
 

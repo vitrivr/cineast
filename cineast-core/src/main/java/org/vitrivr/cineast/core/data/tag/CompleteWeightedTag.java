@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.data.tag;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class CompleteWeightedTag implements WeightedTag {
 
   private final String id, name, description;
@@ -31,15 +34,6 @@ public class CompleteWeightedTag implements WeightedTag {
     if (this.weight > 1f || this.weight < 0f) {
       throw new IllegalArgumentException("weight " + this.weight + " outside of range (0,1)");
     }
-
-    if (this.preference.toString().isEmpty()) {
-      preference = Preference.COULD; // set could as default preference
-    }
-
-    if (this.preference == null) {
-      preference = Preference.COULD; // set could as default preference
-    }
-
   }
 
   @Override
@@ -74,7 +68,7 @@ public class CompleteWeightedTag implements WeightedTag {
 
   @Override
   public boolean hasPreference() {
-    return true;
+    return this.preference != null;
   }
 
   @Override
@@ -139,9 +133,7 @@ public class CompleteWeightedTag implements WeightedTag {
 
   @Override
   public String toString() {
-    return String
-        .format("CompleteWeightedTag [id=%s, name=%s, description=%s, weight=%s]", id, name,
-            description, weight);
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
 }

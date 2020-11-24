@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
 import static java.util.Arrays.asList;
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,14 +23,14 @@ public class FeatureHelper {
       DBSelector selector) {
     Map<String, Set<String>> result = new HashMap<>();
     selector.open(DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", segmentIds);
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, segmentIds);
     rows.forEach(row -> {
-      String id = row.get("id").getString();
+      String id = row.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
       Set<String> captionSet = result.get(id);
       if (captionSet == null) {
         captionSet = new HashSet<>();
       }
-      captionSet.addAll(asList(filterStopWords(row.get("feature").getString())));
+      captionSet.addAll(asList(filterStopWords(row.get(FEATURE_COLUMN_QUALIFIER).getString())));
 
       result.put(id, captionSet);
     });

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -68,6 +70,6 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
   @Override
   public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
     super.init(phandlerSupply, batchSize);
-    this.phandler.setFieldNames("id", "frame", "bbox");
+    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame", "bbox");
   }
 }
