@@ -191,7 +191,6 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         int finalStageIndex = stageIndex;
         cache.get(stageIndex).forEach((category, results) -> {
           results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
-          // allResults.addAll(results.stream().map(i -> i.key).collect(Collectors.toList()));
           Thread thread = new Thread(() -> this
               .finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
           thread.setName("finalization-stage" + finalStageIndex + "-" + category);
@@ -243,7 +242,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     LOGGER.debug("calculating top 10 caption words");
     List<String> keys = new ArrayList<>(captionCounterMap.keySet());
     Collections.reverse(keys);
-    keys = keys.stream().limit(10).collect(Collectors.toList());
+    keys = keys.stream().collect(Collectors.toList());
 
     Map<String, Integer> topCaptions = new LinkedHashMap<>();
     // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
@@ -274,7 +273,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     LOGGER.debug("calculating top 10 related tags");
     List<String> keys = new ArrayList<>(tagCounterMap.keySet());
     Collections.reverse(keys);
-    keys = keys.stream().limit(10).collect(Collectors.toList());
+    keys = keys.stream().collect(Collectors.toList());
     List<Tag> tags = QueryUtil.resolveTagsById(keys);
 
     List<TagWithCount> topTags = new ArrayList<>();

@@ -151,7 +151,8 @@ public class SegmentTags implements Extractor, Retriever {
       }
 
       List<TagsPerSegment> tagsForSegment = new ArrayList<>(helperMap.values());
-
+      // eliminate all notSegments from set of mustSegment
+      mustSegments.retainAll(notSegments);
       Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet,
           mustRows); // <tag, Set of segmentIds>
 
@@ -173,7 +174,7 @@ public class SegmentTags implements Extractor, Retriever {
           }
           noPreferenceSegmentIdSet.add(currentSegmentId);
         }
-
+        noPreferenceSegmentIdSet.retainAll(notSegments);
         return scoreSegmentsWithoutPreferences(couldTagsSet, tagsForSegment);
       }
 
