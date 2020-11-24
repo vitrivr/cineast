@@ -56,7 +56,9 @@ public class TagReader implements Closeable {
   }
 
   /**
-   * Returns all {@link Tag}s that match the specified name. For matching, case-insensitive a left and right side truncation comparison is used. The matching tags are returned in order of their expected relevance.
+   * Returns all {@link Tag}s that match the specified name. For matching, case-insensitive a left
+   * and right side truncation comparison is used. The matching tags are returned in order of their
+   * expected relevance.
    *
    * @param name To value with which to match the {@link Tag}s.
    * @return List of matching {@link Tag}s.
@@ -92,7 +94,8 @@ public class TagReader implements Closeable {
    * @return List of matching {@link Tag}s.
    */
   public List<Tag> getTagsByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", new StringTypeProvider(name));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
+        .getRows("name", new StringTypeProvider(name));
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       Tag t = fromMap(row);
@@ -107,7 +110,8 @@ public class TagReader implements Closeable {
     if (id == null) {
       return null;
     }
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(id));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
+        .getRows("id", new StringTypeProvider(id));
     if (rows.isEmpty()) {
       return null;
     }
@@ -141,7 +145,8 @@ public class TagReader implements Closeable {
    * @return List of all {@link Tag}s contained in the database
    */
   public static List<Tag> getAll(DBSelector selector) {
-    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
+    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -197,10 +202,12 @@ public class TagReader implements Closeable {
     }
 
     if (!map.containsKey("description")) {
-      return new CompleteTag(map.get("id").getString(), map.get("name").getString(), "");
+      return new CompleteTag(map.get("id").getString(), map.get("name").getString(), "",
+          null);
+
     } else {
       return new CompleteTag(map.get("id").getString(), map.get("name").getString(),
-          map.get("description").getString());
+          map.get("description").getString(), null);
     }
 
   }

@@ -1,10 +1,15 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import static org.vitrivr.cineast.core.util.FeatureHelper.retrieveCaptionWithoutStopwordsBySegmentId;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -16,10 +21,16 @@ import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
+import org.vitrivr.cineast.api.messages.result.TopCaptionsForResult;
+import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
+import org.vitrivr.cineast.api.util.QueryUtil;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.data.tag.TagWithCount;
+import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -29,25 +40,37 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
+  protected DBSelector selectorHelper;
+  public Set<String> allResults = new HashSet<>(); // We want a set of segmentIds
+
+
   public TemporalQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic) {
     this.continuousRetrievalLogic = retrievalLogic;
+    this.selectorHelper = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
   }
 
   @Override
-  public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
+  public void execute(Session session, QueryConfig qconf, TemporalQuery message,
+      Set<String> segmentIdsForWhichMetadataIsFetched,
+      Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     StopWatch watch = StopWatch.createStarted();
+
 
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
-    final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
+    final int max = qconf.getMaxResults()
+        .orElse(Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);
-    final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
+    final int resultsPerModule =
+        qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever()
+            .getMaxResultsPerModule() : qconf.getResultsPerModule();
     qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
 
     /* We iterate over all components independently, because they have a temporal context.*/
     for (int containerIdx = 0; containerIdx < message.queries.size(); containerIdx++) {
+
       StagedSimilarityQuery stagedSimilarityQuery = message.queries.get(containerIdx);
 
       /* We make a new stagedQueryConfig per stage because the relevant segments will differ for each stage. This also resets the filter (relevant ids in the config)*/
@@ -86,7 +109,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             }
             QueryContainer qc = qt.toContainer();
             if (qc == null) {
-              LOGGER.warn("Likely an empty query, as it could not be converted to a query container. Ignoring it");
+              LOGGER.warn(
+                  "Likely an empty query, as it could not be converted to a query container. Ignoring it");
               return;
             }
             qc.setContainerId(finalContainerIdx);
@@ -96,35 +120,45 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             /* For each category of a specific queryterm, we actually go and retrieve. Be aware that we do not change the relevant ids after this call */
             for (String category : qt.getCategories()) {
               /* Merge partial results with score-map */
-              List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, stageQConf);
+              List<SegmentScoreElement> scores = continuousRetrievalLogic
+                  .retrieve(qc, category, stageQConf);
 
               /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
               final List<StringDoublePair> results = scores.stream()
                   .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
-                  .filter(p -> p.value > 0d)
-                  .sorted(StringDoublePair.COMPARATOR)
-                  .limit(max)
+                  .filter(p -> p.value > 0d).sorted(StringDoublePair.COMPARATOR).limit(max)
                   .collect(Collectors.toList());
 
               if (results.isEmpty()) {
-                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full compoment: {}", category, qt.getType(), finalContainerIdx, stage);
+                LOGGER.warn(
+                    "No results found for category {} and qt {} in stage with id {}. Full compoment: {}",
+                    category, qt.getType(), finalContainerIdx, stage);
               }
               if (cache.get(finalStageIndex).containsKey(category)) {
-                LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, finalStageIndex);
+                LOGGER.error(
+                    "Category {} was used twice in stage {}. This erases the results of the previous category... ",
+                    category, finalStageIndex);
               }
               cache.get(finalStageIndex).put(category, results);
               results.forEach(res -> relevantSegments.add(res.key));
-              LOGGER.trace("Category {} at stage {} executed @ {} ms", category, finalStageIndex, watch.getTime(TimeUnit.MILLISECONDS));
+              LOGGER.trace("Category {} at stage {} executed @ {} ms", category, finalStageIndex,
+                  watch.getTime(TimeUnit.MILLISECONDS));
 
               /* If this is the last stage, we can send relevant results per category back to the UI.
                * Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
                */
               if (finalStageIndex == stagedSimilarityQuery.stages.size() - 1) {
+
                 /* Finalize and submit per-container results */
-                List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
-                List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
-                this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
-                List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+                List<String> segmentIds = results.stream().map(el -> el.key)
+                    .collect(Collectors.toList());
+                List<String> objectIds = this
+                    .submitSegmentAndObjectInformation(session, uuid, segmentIds);
+                allResults.addAll(results.stream().map(k -> k.key).collect(Collectors.toList()));
+                this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(),
+                    results);
+                List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds,
+                    segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
                 metadataRetrievalThreads.addAll(_threads);
               }
             }
@@ -152,12 +186,13 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
       List<Thread> cleanupThreads = new ArrayList<>();
       /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size()-1; stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size() - 1; stageIndex++) {
         int finalContainerIdx = containerIdx;
         int finalStageIndex = stageIndex;
         cache.get(stageIndex).forEach((category, results) -> {
           results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
-          Thread thread = new Thread(() -> this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
+          Thread thread = new Thread(() -> this
+              .finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
           thread.setName("finalization-stage" + finalStageIndex + "-" + category);
           thread.start();
           cleanupThreads.add(thread);
@@ -173,10 +208,81 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
+
+    this.write(session,
+        new TopTagsForResult(uuid, getTopTags(allResults)));
+    this.write(session, new TopCaptionsForResult(uuid, getTopCaptionTerms(allResults)));
+
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.
      */
     watch.stop();
     LOGGER.debug("Query executed in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+  }
+
+
+  public Map<String, Integer> getTopCaptionTerms(Set<String> segmentIdsSet) {
+    Map<String, Set<String>> allCaptions = retrieveCaptionWithoutStopwordsBySegmentId(
+        new ArrayList<>(segmentIdsSet), selectorHelper);
+    Map<String, Integer> captionCounterMap = new LinkedHashMap<>();
+    for (Entry<String, Set<String>> item : allCaptions.entrySet()) {
+      for (String word : item.getValue()) {
+        int counter = 1;
+        if (captionCounterMap.containsKey(word)) {
+          counter = captionCounterMap.get(word) + 1;
+        }
+        captionCounterMap.put(word, counter);
+      }
+    }
+    captionCounterMap = captionCounterMap.entrySet().stream()
+        .sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors
+            .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue,
+                LinkedHashMap::new));
+
+    LOGGER.debug("calculating top 10 caption words");
+    List<String> keys = new ArrayList<>(captionCounterMap.keySet());
+    Collections.reverse(keys);
+    keys = keys.stream().collect(Collectors.toList());
+
+    Map<String, Integer> topCaptions = new LinkedHashMap<>();
+    // List<Tag> tagList = resolveTagsById(keys, selectorHelper);
+
+    for (String key : keys) {
+      topCaptions.put(key, captionCounterMap.get(key));
+    }
+
+    return topCaptions;
+
+  }
+
+  public List<TagWithCount> getTopTags(Set<String> segmentIdsSet) {
+    List<String> allTagIdsInResultSet = QueryUtil
+        .retrieveTagsBySegmentId(segmentIdsSet.toArray(new String[0]));
+    Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
+    for (String item : allTagIdsInResultSet) {
+      int counter = 1;
+      if (tagCounterMap.containsKey(item)) {
+        counter = tagCounterMap.get(item) + 1;
+      }
+      tagCounterMap.put(item, counter);
+    }
+    tagCounterMap = tagCounterMap.entrySet().stream()
+        .sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors
+            .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue,
+                LinkedHashMap::new));
+    LOGGER.debug("calculating top 10 related tags");
+    List<String> keys = new ArrayList<>(tagCounterMap.keySet());
+    Collections.reverse(keys);
+    keys = keys.stream().collect(Collectors.toList());
+    List<Tag> tags = QueryUtil.resolveTagsById(keys);
+
+    List<TagWithCount> topTags = new ArrayList<>();
+
+    for (Tag tag : tags) {
+      topTags.add(new TagWithCount(tag, tagCounterMap.get(tag.getId())));
+    }
+
+    return topTags;
+
   }
 }

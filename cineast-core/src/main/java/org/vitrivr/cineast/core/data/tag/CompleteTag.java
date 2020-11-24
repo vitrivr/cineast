@@ -3,11 +3,14 @@ package org.vitrivr.cineast.core.data.tag;
 public class CompleteTag implements Tag {
 
   private final String id, name, description;
+  private final Preference preference;
 
-  public CompleteTag(String id, String name, String description) {
+  public CompleteTag(String id, String name, String description, Preference preference) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
+    this.preference = preference;
+
     if (this.id == null) {
       throw new NullPointerException("id cannot be null for " + this.toString());
     }
@@ -23,6 +26,7 @@ public class CompleteTag implements Tag {
     if (this.name.isEmpty()) {
       throw new IllegalArgumentException("name cannot be empty for " + this.toString());
     }
+
   }
 
   @Override
@@ -39,6 +43,12 @@ public class CompleteTag implements Tag {
   public String getDescription() {
     return description;
   }
+
+  @Override
+  public Preference getPreference() {
+    return preference;
+  }
+
 
   @Override
   public int hashCode() {
@@ -103,6 +113,11 @@ public class CompleteTag implements Tag {
 
   @Override
   public boolean hasDescription() {
+    return !this.description.isEmpty();
+  }
+
+  @Override
+  public boolean hasPreference() {
     return !this.description.isEmpty();
   }
 

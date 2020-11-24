@@ -3,35 +3,45 @@ package org.vitrivr.cineast.core.data.tag;
 public class CompleteWeightedTag implements WeightedTag {
 
   private final String id, name, description;
+  private final Preference preference;
   private final float weight;
-  
-  public CompleteWeightedTag(String id, String name, String description, float weight){
+
+  public CompleteWeightedTag(String id, String name, String description, float weight,
+      Preference preference) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
     this.weight = weight;
-    if(this.id == null){
+    this.preference = preference;
+    if (this.id == null) {
       throw new NullPointerException("id cannot be null");
     }
-    
-    if(this.id.isEmpty()){
+
+    if (this.id.isEmpty()) {
       throw new IllegalArgumentException("id cannot be empty");
     }
-    
-    if(this.name == null){
+    if (this.name == null) {
       throw new NullPointerException("name cannot be null");
     }
-    
-    if(this.name.isEmpty()){
+
+    if (this.name.isEmpty()) {
       throw new IllegalArgumentException("name cannot be empty");
     }
-    
-    if(this.weight > 1f || this.weight < 0f){
+
+    if (this.weight > 1f || this.weight < 0f) {
       throw new IllegalArgumentException("weight " + this.weight + " outside of range (0,1)");
     }
-    
+
+    if (this.preference.toString().isEmpty()) {
+      preference = Preference.COULD; // set could as default preference
+    }
+
+    if (this.preference == null) {
+      preference = Preference.COULD; // set could as default preference
+    }
+
   }
-  
+
   @Override
   public String getId() {
     return id;
@@ -46,7 +56,7 @@ public class CompleteWeightedTag implements WeightedTag {
   public String getDescription() {
     return description;
   }
-  
+
   @Override
   public boolean hasId() {
     return true;
@@ -61,8 +71,19 @@ public class CompleteWeightedTag implements WeightedTag {
   public boolean hasDescription() {
     return !this.description.isEmpty();
   }
-  
-  public float getWeight(){
+
+  @Override
+  public boolean hasPreference() {
+    return true;
+  }
+
+  @Override
+  public Preference getPreference() {
+    return preference;
+  }
+
+
+  public float getWeight() {
     return this.weight;
   }
 
@@ -118,8 +139,9 @@ public class CompleteWeightedTag implements WeightedTag {
 
   @Override
   public String toString() {
-    return String.format("CompleteWeightedTag [id=%s, name=%s, description=%s, weight=%s]", id, name,
-        description, weight);
+    return String
+        .format("CompleteWeightedTag [id=%s, name=%s, description=%s, weight=%s]", id, name,
+            description, weight);
   }
-  
+
 }

@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.impl.Constants;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +20,7 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.tag.IncompleteTag;
+import org.vitrivr.cineast.core.data.tag.Preference;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -32,12 +33,14 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.TagsPerSegment;
 
 public class SegmentTags implements Extractor, Retriever {
 
+
   protected BatchedTagWriter writer;
   protected DBSelector selector;
+  protected DBSelector selectorHelper;
   protected PersistencyWriter<?> phandler;
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -45,6 +48,7 @@ public class SegmentTags implements Extractor, Retriever {
 
   public SegmentTags() {
   }
+
 
   @Override
   public List<String> getTableNames() {
@@ -69,6 +73,7 @@ public class SegmentTags implements Extractor, Retriever {
   @Override
   public void init(DBSelectorSupplier selectorSupply) {
     this.selector = selectorSupply.get();
+    this.selectorHelper = selectorSupply.get();
     this.selector.open(SEGMENT_TAGS_TABLE_NAME);
   }
 
@@ -76,6 +81,9 @@ public class SegmentTags implements Extractor, Retriever {
   private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
 
     ArrayList<String> tagids = new ArrayList<>();
+    Map<String, Preference> preferenceMap = new HashMap<>();
+    Set<String> mustTagsSet = new HashSet<>();
+    Set<String> couldTagsSet = new HashSet<>();
     TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
     float weightSum = 0f;
 
@@ -83,6 +91,14 @@ public class SegmentTags implements Extractor, Retriever {
     for (WeightedTag wt : tags) {
       tagids.add(wt.getId());
       tagWeights.put(wt.getId(), wt.getWeight());
+      // add tag and its preference to preferenceMap
+      preferenceMap.put(wt.getId(), wt.getPreference());
+      if (wt.getPreference().equals(Preference.MUST)) {
+        mustTagsSet.add(wt.getId());
+      }
+      if (wt.getPreference().equals(Preference.COULD)) {
+        couldTagsSet.add(wt.getId());
+      }
       if (wt.getWeight() > 1) {
         LOGGER.error("Weight is > 1 -- this makes little sense.");
       }
@@ -94,53 +110,136 @@ public class SegmentTags implements Extractor, Retriever {
     }
 
     /* Retrieve all elements matching the provided ids */
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+    // String is either 'tagid', 'score' or 'id'
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid",
+        tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
-    Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
+    if (!preferenceMap.isEmpty()) { // should always be the case
+      /* create 3 seperate sets: one with 'NOT' tags, one with 'COULD' tags, one with 'MUST' tags
+       * split 'row' in couldRows and mustRows for further processing */
+      Set<String> notSegments = new HashSet<>();
+      Set<String> couldSegments = new HashSet<>();
+      Set<String> mustSegments = new HashSet<>();
 
-    /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
-    Set<String> relevant = null;
-    if (qc != null && qc.hasRelevantSegmentIds()) {
-      relevant = qc.getRelevantSegmentIds();
+      List<Map<String, PrimitiveTypeProvider>> couldRows = new ArrayList<>();
+      List<Map<String, PrimitiveTypeProvider>> mustRows = new ArrayList<>();
+
+      Map<String, TagsPerSegment> helperMap = new HashMap<>(); // map to summarise tags for each segmentId
+
+      for (Map<String, PrimitiveTypeProvider> row : rows) {
+        String currentTagId = row.get("tagid").getString();
+        String currentSegmentId = row.get("id").getString();
+
+        if (!helperMap.containsKey(currentSegmentId)) {
+          helperMap.put(currentSegmentId, new TagsPerSegment(currentSegmentId, new HashSet<>(
+              Collections.singleton(currentTagId))));
+        } else {
+          helperMap.get(currentSegmentId).addTags(currentTagId);
+        }
+
+        if (preferenceMap.get(currentTagId).equals(Preference.NOT)) {
+          // add segmentID if NOT tags associated with this segment
+          notSegments.add(currentSegmentId);
+        }
+        if (preferenceMap.get(currentTagId).equals(Preference.COULD)) {
+          couldSegments.add(currentSegmentId);
+          couldRows.add(row);
+        }
+        if (preferenceMap.get(currentTagId).equals(Preference.MUST)) {
+          mustSegments.add(currentSegmentId);
+          mustRows.add(row);
+        }
+      }
+
+      List<TagsPerSegment> tagsForSegment = new ArrayList<>(helperMap.values());
+      // eliminate all notSegments from set of mustSegment
+      mustSegments.retainAll(notSegments);
+      Map<String, Set<String>> mustMap = createTagSegmentIdsMap(mustTagsSet,
+          mustRows); // <tag, Set of segmentIds>
+
+      if (!mustTagsSet.isEmpty()) { // at least one 'must' tag
+        Set<String> mustSegmentIdsSet = new HashSet<>(mustMap.get(mustTagsSet.iterator()
+            .next())); // initiate mustSegmentIdsSet to start intersection process
+        for (String tag : mustTagsSet) {
+          mustSegmentIdsSet.retainAll(mustMap.get(tag)); // intersect all 'MUST' sets
+        }
+
+        return scoreSegmentsWithPreferences(notSegments, couldTagsSet,
+            mustSegmentIdsSet, mustTagsSet, helperMap);
+      } else { // only 'could' tags used in query
+        Set<String> noPreferenceSegmentIdSet = new HashSet<>();
+        for (Map<String, PrimitiveTypeProvider> row : rows) {
+          String currentSegmentId = row.get("id").getString();
+          if (notSegments.contains(currentSegmentId)) { // do not add the 'NOT' segments
+            continue;
+          }
+          noPreferenceSegmentIdSet.add(currentSegmentId);
+        }
+        noPreferenceSegmentIdSet.retainAll(notSegments);
+        return scoreSegmentsWithoutPreferences(couldTagsSet, tagsForSegment);
+      }
+
+    } else {
+      LOGGER.error("preferenceMap should never be empty");
+      return null;
     }
+  }
 
-    /* Iterate over all matches */
-    for (Map<String, PrimitiveTypeProvider> row : rows) {
 
-      String segmentId = row.get("id").getString();
+  private List<ScoreElement> scoreSegmentsWithoutPreferences(Set<String> couldTagsSet,
+      List<TagsPerSegment> tagsForSegment) {
 
-      /* Skip segments which are not desired by the query-config */
-      if (relevant != null && !relevant.contains(segmentId)) {
+    List<ScoreElement> _return = new ArrayList<>();
+    for (TagsPerSegment couldSegment : tagsForSegment) {
+      float score = ((float) couldSegment.getTags().size() / (couldTagsSet.size()));
+      _return.add(new SegmentScoreElement(couldSegment.segmentID, score));
+    }
+    return _return;
+  }
+
+
+  private List<ScoreElement> scoreSegmentsWithPreferences(Set<String> notSegments,
+      Set<String> couldTagsSet, Set<String> mustSegmentIdsSet, Set<String> mustTagsSet,
+      Map<String, TagsPerSegment> helperMap) {
+    /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
+    List<ScoreElement> _return = new ArrayList<>();
+    for (String mustSegmentId : mustSegmentIdsSet) {
+      if (notSegments.contains(mustSegmentId)) { // we do not score the 'NOT' segments to the result
         continue;
       }
-
-      String tagid = row.get("tagid").getString();
-      float score = row.get("score").getFloat()
-          * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
-
-      if (score > 1) {
-        LOGGER.warn("Score is larger than 1 - this makes little sense");
-        score = 1f;
+      float increment = (float) (1.0 / (couldTagsSet.size() + mustTagsSet.size()));
+      float score = increment * mustTagsSet.size();
+      if (!couldTagsSet.isEmpty()) { // the query contains 'could' and 'must' tags
+        Set<String> tagSetForSegment = helperMap.get(mustSegmentId).tags;
+        for (String couldTag : couldTagsSet) {
+          if (tagSetForSegment.contains(couldTag)) {
+            score += increment;
+          }
+        }
       }
+      _return.add(new SegmentScoreElement(mustSegmentId, score));
+    }
+    return _return;
+  }
 
-      /* Update maximum score by tag*/
-      maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
-      float prev = maxScoreByTag.get(segmentId).get(tagid);
-      if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
-        maxScoreByTag.get(segmentId).put(tagid, score);
-      } else {
-        maxScoreByTag.get(segmentId).put(tagid, Math.max(score, prev));
+  private Map<String, Set<String>> createTagSegmentIdsMap(Set<String> mustTagsSet,
+      List<Map<String, PrimitiveTypeProvider>> mustRows) {
+    Map<String, Set<String>> mustMap = new HashMap<>();
+    for (String mustTag : mustTagsSet) {
+      Set<String> segmentIds = new HashSet<>();
+      for (Map<String, PrimitiveTypeProvider> mustRow : mustRows) {
+        String id = mustRow.get("id").getString();
+        String tag = mustRow.get("tagid").getString();
+        if (mustTag.equals(tag)) {
+          if (mustMap.containsKey(tag)) { // add tag to existing entry for segment map
+            segmentIds = mustMap.get(tag);
+          }
+          segmentIds.add(id);
+          mustMap.put(mustTag, segmentIds);
+        }
       }
     }
-
-    ArrayList<ScoreElement> _return = new ArrayList<>();
-
-    final float normalizer = weightSum;
-
-    /* per segment, the max score for all tags is summed and divided by the normalizer */
-    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
-
-    return _return;
+    return mustMap;
   }
 
   @Override
@@ -169,7 +268,8 @@ public class SegmentTags implements Extractor, Retriever {
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
+        .getRows("id", new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return Collections.emptyList();
@@ -178,7 +278,8 @@ public class SegmentTags implements Extractor, Retriever {
     ArrayList<WeightedTag> wtags = new ArrayList<>(rows.size());
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
+      wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat(),
+          Preference.valueOf("preference")));
     }
 
     return getSimilar(wtags, qc);
