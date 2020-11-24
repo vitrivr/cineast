@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.Operation;
@@ -63,7 +64,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
         final List<InsertMessage> messages = tuples.stream()
-            .map(t -> InsertMessage.newBuilder().setEntity(this.entity).setTuple(this.getPersistentRepresentation(t)).build())
+            .map(t -> InsertMessage.newBuilder().setFrom(From.newBuilder().setEntity(this.entity)).setTuple(this.getPersistentRepresentation(t)).build())
             .collect(Collectors.toList());
         return this.cottontail.insert(messages);
     }

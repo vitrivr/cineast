@@ -62,6 +62,7 @@ public class SegmentTags implements Extractor, Retriever {
         new AttributeDefinition("score", AttributeType.FLOAT));
 
     supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "tagid");
+    supply.get().createHashNonUniqueIndex(SEGMENT_TAGS_TABLE_NAME, "id");
   }
 
   @Override

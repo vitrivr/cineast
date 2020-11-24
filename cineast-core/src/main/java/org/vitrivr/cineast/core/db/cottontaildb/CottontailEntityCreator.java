@@ -5,9 +5,7 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Index.IndexType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,8 +129,17 @@ public class CottontailEntityCreator implements EntityCreator {
         .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
     /* Cottontail ignores index params as of july 19 */
-    CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute).build();
+    IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
+    return true;
+  }
+
+  public boolean dropIndex(String entityName, String attribute, IndexType type){
+    Entity entity = CottontailMessageBuilder.entity(entityName);
+    Index index = Index.newBuilder().setEntity(entity)
+        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
+        .setType(type).build();
+    cottontail.dropIndexBlocking(index);
     return true;
   }
 
@@ -162,23 +169,23 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, int length,
+  public boolean createFeatureEntity(String featureEntityName, boolean unique, int length,
       String... featureNames) {
     final AttributeDefinition[] attributes = Arrays.stream(featureNames)
         .map(s -> new AttributeDefinition(s, VECTOR, length))
         .toArray(AttributeDefinition[]::new);
-    return this.createFeatureEntity(featurename, unique, attributes);
+    return this.createFeatureEntity(featureEntityName, unique, attributes);
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique,
+  public boolean createFeatureEntity(String featureEntityName, boolean unique,
       AttributeDefinition... attributes) {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
     final HashMap<String, String> hints = new HashMap<>(1);
 
     extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(featurename, extended);
+    return this.createEntity(featureEntityName, extended);
   }
 
   @Override

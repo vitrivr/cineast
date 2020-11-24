@@ -28,4 +28,5 @@ public class OptimizeEntitiesCommand implements Runnable {
     });
     System.out.println("Finished optimizing all entities");
   }
+
 }
