@@ -157,16 +157,16 @@ public class QueryUtil {
   }
 
   /**
-   * Retrieves all tag ids belong to certain elements
+   * Retrieves all tag ids belong to certain elements. duplicates are a feature
    *
    * @param ids element ids for which the tags table is to be searched.
    * @return a list of {@link Tag#getId()} ids
    */
-  public static Set<String> retrieveTagIDs(List<String> ids) {
-    Set<String> _return = new HashSet<>();
+  public static List<String> retrieveTagIDs(List<String> ids) {
+    List<String> _return = new ArrayList<>();
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", ids);
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
 
     rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
     return _return;

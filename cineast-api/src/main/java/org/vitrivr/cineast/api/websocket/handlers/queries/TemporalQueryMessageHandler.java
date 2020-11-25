@@ -256,7 +256,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   }
 
   public List<TagWithCount> getTopTags(Set<String> segmentIdsSet) {
-    Set<String> allTagIdsInResultSet = QueryUtil.retrieveTagIDs(new ArrayList<>(segmentIdsSet));
+    List<String> allTagIdsInResultSet = QueryUtil.retrieveTagIDs(new ArrayList<>(segmentIdsSet));
     Map<String, Integer> tagCounterMap = new LinkedHashMap<>();
     for (String item : allTagIdsInResultSet) {
       int counter = 1;

@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.messages.result;
 
 import java.util.List;
-import java.util.Set;
 
 public class TagIDsForElementQueryResult {
 

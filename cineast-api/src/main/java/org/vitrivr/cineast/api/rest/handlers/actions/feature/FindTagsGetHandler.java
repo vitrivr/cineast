@@ -7,6 +7,7 @@ import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.TagIDsForElementQueryResult;
@@ -21,7 +22,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagIDsForElementQueryR
   public TagIDsForElementQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
     final String id = parameters.get(ID_QUALIFIER);
-    ArrayList<String> tagIDs = new ArrayList<>(QueryUtil.retrieveTagIDs(Collections.singletonList(id)));
+    List<String> tagIDs = QueryUtil.retrieveTagIDs(Collections.singletonList(id));
     return new TagIDsForElementQueryResult("", tagIDs, id);
   }
 
