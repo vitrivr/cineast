@@ -96,11 +96,15 @@ public class SegmentTags implements Extractor, Retriever {
       tagids.add(wt.getId());
       tagWeights.put(wt.getId(), wt.getWeight());
       // add tag and its preference to preferenceMap
-      preferenceMap.put(wt.getId(), wt.getPreference());
-      if (wt.getPreference().equals(Preference.MUST)) {
+      Preference preference = Preference.COULD;
+      if(wt.hasPreference()){
+        preference = wt.getPreference();
+      }
+      preferenceMap.put(wt.getId(), preference);
+      if (preference.equals(Preference.MUST)) {
         mustTagsSet.add(wt.getId());
       }
-      if (wt.getPreference().equals(Preference.COULD)) {
+      if (preference.equals(Preference.COULD)) {
         couldTagsSet.add(wt.getId());
       }
       if (wt.getWeight() > 1) {

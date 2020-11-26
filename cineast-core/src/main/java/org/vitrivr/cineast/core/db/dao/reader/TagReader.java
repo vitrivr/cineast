@@ -118,11 +118,11 @@ public class TagReader implements Closeable {
 
   public List<Tag> getTagsById(String... ids) {
     if (ids == null) {
-      return null;
+      return new ArrayList<>();
     }
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, Arrays.asList(ids));
     if (rows.isEmpty()) {
-      return null;
+      return new ArrayList<>();
     }
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
