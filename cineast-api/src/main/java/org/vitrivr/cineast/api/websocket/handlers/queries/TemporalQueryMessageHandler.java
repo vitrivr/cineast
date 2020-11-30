@@ -154,6 +154,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                     .collect(Collectors.toList());
                 List<String> objectIds = this
                     .submitSegmentAndObjectInformation(session, uuid, segmentIds);
+                allResults.clear(); // need new set for each api call
+
                 allResults.addAll(results.stream().map(k -> k.key).collect(Collectors.toList()));
                 this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(),
                     results);
