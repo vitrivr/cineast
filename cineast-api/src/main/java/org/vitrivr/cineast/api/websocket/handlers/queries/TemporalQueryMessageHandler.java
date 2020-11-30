@@ -241,7 +241,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue,
                 LinkedHashMap::new));
 
-    LOGGER.debug("calculating top 10 caption words");
+    LOGGER.debug("calculating top caption words");
     List<String> keys = new ArrayList<>(captionCounterMap.keySet());
     Collections.reverse(keys);
     keys = keys.stream().collect(Collectors.toList());
@@ -272,7 +272,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         .sorted(Map.Entry.<String, Integer>comparingByValue()).collect(Collectors
             .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue,
                 LinkedHashMap::new));
-    LOGGER.debug("calculating top 10 related tags");
+    LOGGER.debug("calculating top related tags");
     List<String> keys = new ArrayList<>(tagCounterMap.keySet());
     Collections.reverse(keys);
     keys = keys.stream().collect(Collectors.toList());
