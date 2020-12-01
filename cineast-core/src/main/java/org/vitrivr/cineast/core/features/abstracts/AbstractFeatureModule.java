@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,7 +95,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
     @Override
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-        List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric("id", new StringTypeProvider(segmentId), "feature");
+        List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
         if (list.isEmpty()) {
             LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
             return new ArrayList<>(0);
@@ -102,13 +105,13 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         }
 
         List<float[]> vectors = list.stream().map(FloatArrayProvider::getFloatArray).collect(Collectors.toList());
-        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, "feature", SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
+        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
         CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(correspondence);
         return ScoreElement.filterMaximumScores(DistanceElement.toScore(distances, function).stream());
     }
 
     public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
-        List<PrimitiveTypeProvider> list =  this.selector.getRows("id", segmentIds).stream().map(map -> map.get("feature")).collect(Collectors.toList());
+        List<PrimitiveTypeProvider> list =  this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, segmentIds).stream().map(map -> map.get(FEATURE_COLUMN_QUALIFIER)).collect(Collectors.toList());
 
         if (list.isEmpty()) {
             LOGGER.warn("No feature vectors for segmentIds {} found, returning empty result-list", segmentIds);
@@ -119,7 +122,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         }
 
         List<float[]> vectors = list.stream().map(FloatArrayProvider::getFloatArray).collect(Collectors.toList());
-        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, "feature", SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
+        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
         CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(correspondence);
         return ScoreElement.filterMaximumScores(DistanceElement.toScore(distances, function).stream());
     }
@@ -136,7 +139,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
      */
     protected List<ScoreElement> getSimilar(PrimitiveTypeProvider queryProvider, ReadableQueryConfig qc) {
         ReadableQueryConfig qcc = setQueryConfig(qc);
-        List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), queryProvider, "feature", SegmentDistanceElement.class, qcc);
+        List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), queryProvider, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, qcc);
         CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(correspondence);
         return DistanceElement.toScore(distances, function);
     }

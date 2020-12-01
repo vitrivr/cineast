@@ -18,5 +18,4 @@ public interface Tag {
 
   public boolean hasPreference();
 
-
 }

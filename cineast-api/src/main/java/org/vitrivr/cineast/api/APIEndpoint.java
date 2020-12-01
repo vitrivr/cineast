@@ -43,11 +43,9 @@ import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadata
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataPostHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentASRGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentCaptionsGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentFeaturesGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentOCRGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentTagsGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
@@ -60,7 +58,6 @@ import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DeleteRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -76,17 +73,13 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
- * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling
- * is facilitated by the Spark framework (http://sparkjava.com/).
+ * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is facilitated by the Spark framework (http://sparkjava.com/).
  * <p>
- * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints,
- * depending on the configuration.
+ * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints, depending on the configuration.
  * <p>
- * Incoming requests are routed towards an {@link DocumentedRestHandler} based on the HTTP method
- * and the URL, provided that such a handler hasn been registered beforehand.
+ * Incoming requests are routed towards an {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that such a handler hasn been registered beforehand.
  * <p>
- * WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles incoming
- * packets.
+ * WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles incoming packets.
  *
  * @author rgasser
  * @version 1.1
@@ -111,8 +104,7 @@ public class APIEndpoint {
    * Named context of the RESTful endpoint. Will be appended to the endpoint URL.
    */
   private static final String CONTEXT = "api";
-  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(
-      Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
+  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
   private static APIEndpoint instance = null;
   private WebsocketAPI webSocketApi = null;
   private final List<DocumentedRestHandler> restHandlers = new ArrayList<>();
@@ -205,8 +197,8 @@ public class APIEndpoint {
         if (file.exists()) {
           file.delete();
         }
-        try (FileOutputStream stream = new FileOutputStream(
-            file); PrintWriter writer = new PrintWriter(stream)) {
+        try (FileOutputStream stream = new FileOutputStream(file);
+            PrintWriter writer = new PrintWriter(stream)) {
           writer.print(schema);
           writer.flush();
         }
@@ -218,8 +210,7 @@ public class APIEndpoint {
   }
 
   /**
-   * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the
-   * necessary setup.
+   * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the necessary setup.
    *
    * @param secure If true, the new Service will be setup as secure with TLS enabled.
    * @return {@link Javalin}
@@ -386,14 +377,12 @@ public class APIEndpoint {
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
-        new FindSegmentTagsGetHandler(),
-        new FindSegmentCaptionsGetHandler(),
-        new FindSegmentOCRGetHandler(),
-        new FindSegmentASRGetHandler(),
+        new FindTagsGetHandler(),
+        new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),
-        new FindTagsGetHandler(),
+        new org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler(),
         /* Session */
         new StartSessionHandler(),
         new StartExtractionHandler(),
@@ -412,14 +401,14 @@ public class APIEndpoint {
     // TODO Register these special cases as well with the new model
     if (config.getServeContent()) {
       service.get("/thumbnails/:id", new ResolvedContentRoute(
-          new FileSystemThumbnailResolver(
-              new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
+          new FileSystemThumbnailResolver(new File(Config.sharedConfig().getApi().getThumbnailLocation()))
+      ));
 
       service.get("/objects/:id", new ResolvedContentRoute(
           new FileSystemObjectResolver(
               new File(Config.sharedConfig().getApi().getObjectLocation()),
-              new MediaObjectReader(
-                  Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
+              new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))
+      ));
     }
   }
 

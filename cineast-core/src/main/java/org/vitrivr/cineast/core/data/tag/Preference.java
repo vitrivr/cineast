@@ -5,7 +5,10 @@ public enum Preference {
 
   private String preference;
 
-  private Preference(String s) {
+  Preference(String s) {
+    if (s.isEmpty()) {
+      throw new IllegalArgumentException("Preference " + s + " cannot be null");
+    }
     preference = s;
   }
 

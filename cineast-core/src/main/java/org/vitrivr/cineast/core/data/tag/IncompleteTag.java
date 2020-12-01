@@ -2,6 +2,10 @@ package org.vitrivr.cineast.core.data.tag;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 
 public class IncompleteTag implements WeightedTag {
 
@@ -23,7 +27,7 @@ public class IncompleteTag implements WeightedTag {
    * @param weight      The weight {@link IncompleteTag}, optional, defaults to 1.0
    */
   @JsonCreator
-  public IncompleteTag(@JsonProperty(value = "id", required = true) String id,
+  public IncompleteTag(@JsonProperty(value = TagReader.TAG_ID_COLUMNNAME, required = true) String id,
       @JsonProperty(value = "name") String name,
       @JsonProperty(value = "description") String description,
       @JsonProperty(value = "weight", defaultValue = "1.0f") Float weight,
@@ -42,7 +46,6 @@ public class IncompleteTag implements WeightedTag {
         (t != null && t instanceof WeightedTag) ? ((WeightedTag) t).getWeight() : 1f,
         (t != null && t.hasPreference()) ? (t.getPreference()) : null);
   }
-
 
 
   @Override
@@ -77,7 +80,7 @@ public class IncompleteTag implements WeightedTag {
 
   @Override
   public boolean hasPreference() {
-    return this.preference != null && !this.preference.toString().isEmpty();
+    return this.preference != null;
   }
 
   @Override
@@ -91,61 +94,29 @@ public class IncompleteTag implements WeightedTag {
   }
 
   @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + Float.floatToIntBits(weight);
-    result = prime * result + ((preference == null) ? 0 : preference.hashCode());
-    return result;
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    IncompleteTag that = (IncompleteTag) o;
+    return Float.compare(that.weight, weight) == 0 &&
+        Objects.equals(id, that.id) &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(description, that.description) &&
+        preference == that.preference;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    IncompleteTag other = (IncompleteTag) obj;
-    if (description == null) {
-      if (other.description != null) {
-        return false;
-      }
-    } else if (!description.equals(other.description)) {
-      return false;
-    }
-    if (id == null) {
-      if (other.id != null) {
-        return false;
-      }
-    } else if (!id.equals(other.id)) {
-      return false;
-    }
-    if (name == null) {
-      if (other.name != null) {
-        return false;
-      }
-    } else if (!name.equals(other.name)) {
-      return false;
-    }
-    if (Float.floatToIntBits(weight) != Float.floatToIntBits(other.weight)) {
-      return false;
-    }
-    return true;
+  public int hashCode() {
+    return Objects.hash(id, name, description, preference, weight);
   }
 
   @Override
   public String toString() {
-    return String
-        .format("IncompleteTag [id=%s, name=%s, description=%s, weight=%s]", id, name, description,
-            weight);
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
   }
 
 }

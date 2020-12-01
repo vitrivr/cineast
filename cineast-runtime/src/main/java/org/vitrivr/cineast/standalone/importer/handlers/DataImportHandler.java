@@ -10,12 +10,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.cli.DatabaseSetupCommand;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 /**
  * @author rgasser
@@ -23,6 +28,52 @@ import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
  * @created 01.03.17
  */
 public abstract class DataImportHandler {
+
+
+    /**
+     * Drops the entity if called. This is in order to have clean imports.
+     * @param entityName The entity name to drop
+     * @param taskName The task name during which this dropping occurs. Only for logging purposes
+     */
+    protected static void cleanOnDemand(String entityName, String taskName){
+        final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        /* Beware, this drops the table */
+        CottontailGrpc.EntityDefinition entityDefinition = null;
+        CottontailWrapper cottontail = null;
+        if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+            LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
+        }else{
+            LOGGER.info("Storing entity ({}) details for re-setup", entityName);
+            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
+            entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(entityName));
+        }
+        LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
+        ec.dropEntity(entityName);
+        LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
+        if(entityDefinition == null){
+            LOGGER.warn("Calling command: setup -- This may take a while");
+            DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
+            setupCmd.doSetup();
+        }else{
+            cottontail.createEntityBlocking(entityDefinition);
+            LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
+        }
+    }
+
+    protected static void createEntityOnDemand(EntityDefinition def, String taskName){
+        LOGGER.debug("Creating entity: "+def);
+        EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
+        if(ec.existsEntity(def.getEntityName())){
+            LOGGER.warn("Entity already exists, ignoring");
+            return;
+        }
+        if(ec.createEntity(def)){
+            LOGGER.info("Successfully created entity "+def);
+        }else{
+            LOGGER.error("Could not create entity "+def+" please see the log");
+        }
+    }
+
 
 
     /**
@@ -63,7 +114,10 @@ public abstract class DataImportHandler {
             this.entityName = entityName;
             this.importer = importer;
             this.taskName = taskName;
-            this.clean = false; // TODO only enable again when cottontail supports meta-lookup
+            this.clean = clean;
+            if(clean){
+                cleanOnDemand(this.entityName, this.taskName);
+            }
         }
 
         /**
@@ -79,6 +133,18 @@ public abstract class DataImportHandler {
         }
 
         /**
+         * Creates a new import runner for given importer and creates the entity, if not existent.
+         * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}, while creating the entity before hand, using the given {@link EntityDefinition}.
+         * @param importer The importer to run the import of
+         * @param entity The entity definition of the entity to import. If not existent, the entity will be created first
+         * @param taskName The name of the task, possibly human readable
+         */
+        public DataImportRunner(Importer<?> importer, EntityDefinition entity, String taskName){
+            this(importer, entity.getEntityName(), taskName);
+            createEntityOnDemand(entity, taskName);
+        }
+
+        /**
          * When an object implementing interface <code>Runnable</code> is used to create a thread, starting the thread causes the object's <code>run</code> method to be called in that separately executing thread.
          * <p>
          * The general contract of the method <code>run</code> is that it may take any action whatsoever.
@@ -89,13 +155,6 @@ public abstract class DataImportHandler {
         public void run() {
             try {
                 long start = System.currentTimeMillis();
-                final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
-                /* Beware, this drops the table */
-                if (clean) {
-                    LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
-                    ec.dropEntity(this.entityName);
-                    LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
-                }
                 final Copier copier = new Copier(this.entityName, this.importer);
                 LOGGER.info("Starting progress on entity: {}, task {}...", this.entityName, taskName);
                 copier.copyBatched(DataImportHandler.this.batchsize);

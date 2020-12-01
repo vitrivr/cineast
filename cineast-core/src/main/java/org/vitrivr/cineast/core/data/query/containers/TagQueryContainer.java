@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.util.web.DataURLParser;
 
 
 public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQueryTerm
+
   /**
    * List of {@link Tag}s contained in this {@link TagQueryContainer}.
    */
@@ -21,7 +22,7 @@ public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQ
   /**
    * Constructs an {@link TagQueryContainer} from base 64 encoded JSON data.
    *
-   * @param data The 3D model data that should be converted.
+   * @param data The tag data that should be converted.
    */
   public TagQueryContainer(String data) {
     final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
@@ -34,9 +35,6 @@ public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQ
     }
   }
 
-  /**
-   * @param tags
-   */
   public TagQueryContainer(Collection<Tag> tags) {
     ArrayList<Tag> tmp = new ArrayList<>(tags != null ? tags.size() : 0);
     if (tags != null) {

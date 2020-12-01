@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -38,8 +41,8 @@ import java.util.function.Supplier;
  */
 public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     implements MetadataFeatureExtractor<T>, Retriever {
-  private static final String ID_COLUMN_NAME = "id"; // Constant used in ADAMproEntityCreator
-  private static final String FEATURE_COLUMN_NAME = "feature";
+  private static final String ID_COLUMN_NAME = GENERIC_ID_COLUMN_QUALIFIER;
+  private static final String FEATURE_COLUMN_NAME = FEATURE_COLUMN_QUALIFIER;
 
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;

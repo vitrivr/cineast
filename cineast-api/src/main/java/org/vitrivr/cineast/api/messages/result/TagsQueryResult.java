@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * Object that contains the top frequent tags and their count in a result set
  */
-
 public class TagsQueryResult {
   
   public final String queryId;

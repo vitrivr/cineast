@@ -4,6 +4,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.BITSET;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
 
@@ -20,6 +21,9 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 public class CottontailEntityCreator implements EntityCreator {
+
+  public static final String COTTONTAIL_PREFIX = "cottontail";
+  public static final String INDEX_HINT = COTTONTAIL_PREFIX+".index";
 
   private final CottontailWrapper cottontail;
 
@@ -126,9 +130,8 @@ public class CottontailEntityCreator implements EntityCreator {
   public boolean createIndex(String entityName, String attribute, IndexType type) {
     Entity entity = CottontailMessageBuilder.entity(entityName);
     Index index = Index.newBuilder().setEntity(entity)
-        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
+            .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
         .setType(type).build();
-    /* Cottontail ignores index params as of july 19 */
     IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
     cottontail.createIndexBlocking(idxMessage);
     return true;
@@ -183,7 +186,7 @@ public class CottontailEntityCreator implements EntityCreator {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
     final HashMap<String, String> hints = new HashMap<>(1);
 
-    extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
+    extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
     return this.createEntity(featureEntityName, extended);
   }
@@ -191,17 +194,23 @@ public class CottontailEntityCreator implements EntityCreator {
   @Override
   public boolean createIdEntity(String entityName, AttributeDefinition... attributes) {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
-    extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING);
+    extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
     return this.createEntity(entityName, extended);
   }
 
   @Override
   public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+    return this.createEntity(
+            new org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder(entityName).withAttributes(attributes).build()
+    );
+  }
 
+  @Override
+  public boolean createEntity(org.vitrivr.cineast.core.db.setup.EntityDefinition def) {
     ArrayList<ColumnDefinition> columns = new ArrayList<>();
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
       if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
         builder.setLength(attribute.getLength());
@@ -209,16 +218,21 @@ public class CottontailEntityCreator implements EntityCreator {
       columns.add(builder.build());
       builder.clear();
     }
-    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
+    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, def.getEntityName());
     EntityDefinition message = EntityDefinition.newBuilder()
-        .setEntity(entity)
-        .addAllColumns(columns).build();
+            .setEntity(entity)
+            .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
 
-    for (AttributeDefinition attribute : attributes) {
+    for (AttributeDefinition attribute : def.getAttributes()) {
       if (attribute.getType() == TEXT) {
-        this.createIndex(entityName, attribute.getName(), IndexType.LUCENE);
+        this.createIndex(def.getEntityName(), attribute.getName(), IndexType.LUCENE);
+      }
+      // TODO (LS, 18.11.2020) Shouldn't we also have abstract indices in the db abstraction layer?
+      if(attribute.hasHint(INDEX_HINT)){
+        IndexType idx = IndexType.valueOf(attribute.getHint(INDEX_HINT).get());
+        this.createIndex(def.getEntityName(), attribute.getName(), idx);
       }
     }
 

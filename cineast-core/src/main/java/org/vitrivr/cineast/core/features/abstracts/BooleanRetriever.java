@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,13 +16,14 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriever;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class BooleanRetriever implements Retriever {
+public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
   protected DBSelector selector;
@@ -91,11 +94,11 @@ public abstract class BooleanRetriever implements Retriever {
             be.getOperator(),
             be.getValues()
         )).collect(Collectors.toList()),
-        "id", // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
-        Collections.singletonList("id"),  // we're only interested in the ids
+        GENERIC_ID_COLUMN_QUALIFIER, // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
+        Collections.singletonList(GENERIC_ID_COLUMN_QUALIFIER),  // we're only interested in the ids
         qc);
     // we're returning a boolean score element since the score is always 1 if a query matches here
-    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get("id").getString())).collect(Collectors.toList());
+    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(GENERIC_ID_COLUMN_QUALIFIER).getString())).collect(Collectors.toList());
   }
 
   @Override
@@ -120,5 +123,22 @@ public abstract class BooleanRetriever implements Retriever {
 
   public ProviderDataType getColumnType(String column){
     return this.columnTypes.get(column);
+  }
+
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.getClass().getName(), entity, attributes);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj == null){
+      return false;
+    }
+    if(!(obj instanceof BooleanRetriever)){
+      return false;
+    }
+    return this.hashCode() == obj.hashCode();
   }
 }

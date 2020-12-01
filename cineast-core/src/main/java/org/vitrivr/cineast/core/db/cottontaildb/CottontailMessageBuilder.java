@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Doubles;
@@ -182,7 +183,7 @@ public class CottontailMessageBuilder {
 
     AtomicLiteralBooleanPredicate inList = null;
     if (queryConfig != null && queryConfig.hasRelevantSegmentIds()) {
-      inList = inList("id", queryConfig.getRelevantSegmentIds());
+      inList = inList(GENERIC_ID_COLUMN_QUALIFIER, queryConfig.getRelevantSegmentIds());
     }
 
     List<AtomicLiteralBooleanPredicate> predicates = toAtomicLiteralBooleanPredicates(fieldname, operator, data);
@@ -217,7 +218,7 @@ public class CottontailMessageBuilder {
     }
     AtomicLiteralBooleanPredicate inList = null;
     if (qc != null && qc.hasRelevantSegmentIds()) {
-      inList = inList("id", qc.getRelevantSegmentIds());
+      inList = inList(GENERIC_ID_COLUMN_QUALIFIER, qc.getRelevantSegmentIds());
     }
 
     List<AtomicLiteralBooleanPredicate> predicates = conditions.stream().map(cond -> atomicPredicate(cond.getLeft(), cond.getMiddle(), toDatas(cond.getRight()))).collect(Collectors.toList());

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import georegression.struct.point.Point2D_F32;
 
 import java.util.*;
@@ -125,7 +127,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<float[]> list = this.selector.getFeatureVectors("id", new StringTypeProvider(segmentId), this.fieldName);
+    List<float[]> list = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), this.fieldName);
     if (list.isEmpty()) {
       return new ArrayList<>(1);
     }

@@ -5,7 +5,6 @@ import com.opencsv.exceptions.CsvException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
@@ -24,7 +23,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
     private Set<String> uniqueTags;
 
     private static boolean ignoreColumn(String colName) {
-        return colName.contains(BBOX_IGNORE) || colName.contains("score") || colName.equals(MetaImporter.KEY_MINUTEID) || colName.contains("path");
+        return colName.contains(BBOX_IGNORE) || colName.contains("score") || colName.equals(LSCUtilities.KEY_MINUTEID) || colName.contains("path");
     }
 
     private static String scoreForCategory(String cat) {
@@ -68,7 +67,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
     private void readFile() throws IOException, CsvException {
         LOGGER.info("Reading concepts file...");
         long start = System.currentTimeMillis();
-        Path file = root.resolve(MetaImporter.CONCEPTS_FILE_NAME);
+        Path file = root.resolve(LSCUtilities.CONCEPTS_FILE_NAME);
         CSVReader csvReader = new CSVReader(Files.newBufferedReader(file, StandardCharsets.UTF_8));
         content = csvReader.readAll();
         headers = content.remove(0);
@@ -80,7 +79,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         long start = System.currentTimeMillis();
         Map<String, List<String>> map = new HashMap<>();
         content.forEach(line -> {
-            String imgPath = line[MetaImporter.CONCEPTS_IMAGEPATH_COL];
+            String imgPath = line[LSCUtilities.CONCEPTS_IMAGEPATH_COL];
             String id = LSCUtilities.pathToSegmentId(LSCUtilities.cleanImagePath(imgPath));
             for (int i = 3; i < line.length; i++) {
                 if (ignoreContent(line[i])) {

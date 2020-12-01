@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 public class SimpleFulltextFeatureDescriptor {
 
-  public static final String[] FIELDNAMES = {"id", "feature"};
+  public static final String[] FIELDNAMES = {GENERIC_ID_COLUMN_QUALIFIER, FEATURE_COLUMN_QUALIFIER};
 
   /**
    * ID of the {@link MediaSegmentDescriptor} this {@link SimpleFulltextFeatureDescriptor} belongs to.

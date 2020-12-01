@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.adampro;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import com.google.common.util.concurrent.ListenableFuture;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.*;
@@ -98,7 +100,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
   protected <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
     List<T> result = new ArrayList<>(k);
     for (QueryResultTupleMessage msg : response.getResultsList()) {
-      String id = msg.getDataMap().get("id").getStringData();
+      String id = msg.getDataMap().get(GENERIC_ID_COLUMN_QUALIFIER).getStringData();
       if (id == null) {
         continue;
       }
