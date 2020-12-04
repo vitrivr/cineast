@@ -16,6 +16,13 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.tags.Tag;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,16 +36,33 @@ import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsBy
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.metadata.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByKeyGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByKeyPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.*;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.DeleteRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.PutRestHandler;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
@@ -48,23 +72,12 @@ import org.vitrivr.cineast.standalone.config.APIConfig;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is facilitated by
- * the Spark framework (http://sparkjava.com/).
+ * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is facilitated by the Spark framework (http://sparkjava.com/).
  * <p>
- * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints, depending on the
- * configuration.
+ * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints, depending on the configuration.
  * <p>
- * Incoming requests are routed towards an {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that
- * such a handler hasn been registered beforehand.
+ * Incoming requests are routed towards an {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that such a handler hasn been registered beforehand.
  * <p>
  * WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles incoming packets.
  *
@@ -74,23 +87,24 @@ import java.util.List;
  * @see WebsocketAPI
  */
 public class APIEndpoint {
+
   /**
    * OpenAPI Specification tag for metadata related routes
    */
   public static final String METADATA_OAS_TAG = "Metadata";
-  
+
   private static final Logger LOGGER = LogManager.getLogger();
-  
+
   /**
    * Version of the protocol used by the RESTful endpoint. Will be appended to the endpoint URL.
    */
   private static final String VERSION = "v1";
-  
+
   /**
    * Named context of the RESTful endpoint. Will be appended to the endpoint URL.
    */
   private static final String CONTEXT = "api";
-  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
+  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
   private static APIEndpoint instance = null;
   private WebsocketAPI webSocketApi = null;
   private final List<DocumentedRestHandler> restHandlers = new ArrayList<>();
@@ -102,18 +116,18 @@ public class APIEndpoint {
    * The Javalin OpenAPI plugin that generates the specification and serves the Swagger-UI
    */
   private OpenApiPlugin openApi;
-  
+
   private APIEndpoint() {
     registerRestOperations();
   }
-  
+
   public static APIEndpoint getInstance() {
     if (instance == null) {
       instance = new APIEndpoint();
     }
     return instance;
   }
-  
+
   /**
    * Stops the RESTful / WebSocket API.
    */
@@ -123,7 +137,7 @@ public class APIEndpoint {
     }
     retrievalLogic.shutdown();
   }
-  
+
   /**
    * Concatenates the provided service name into a full URL path.
    *
@@ -135,25 +149,27 @@ public class APIEndpoint {
     return String.format("%s/%s", namespace(), name);
     //        return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
   }
-  
+
   private static String namespace() {
     return String.format("/%s/%s", CONTEXT, VERSION);
   }
-  
+
   /**
    * Starts the RESTful / WebSocket API.
    */
   public void start() {
     /* Start insecure HTTP connection. */
-    if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi().getEnableWebsocket()) {
+    if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi()
+        .getEnableWebsocket()) {
       http = dispatchService(false);
     }
-    
-    if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocketSecure()) {
+
+    if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi()
+        .getEnableWebsocketSecure()) {
       https = dispatchService(true);
     }
   }
-  
+
   public void shutdown() {
     if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi()
         .getEnableWebsocket()) {
@@ -167,7 +183,7 @@ public class APIEndpoint {
       webSocketApi.shutdown();
     }
   }
-  
+
   public void writeOpenApiDocPersistently(final String path) throws IOException {
     try {
       http = dispatchService(false);
@@ -181,7 +197,8 @@ public class APIEndpoint {
         if (file.exists()) {
           file.delete();
         }
-        try (FileOutputStream stream = new FileOutputStream(file); PrintWriter writer = new PrintWriter(stream)) {
+        try (FileOutputStream stream = new FileOutputStream(file);
+            PrintWriter writer = new PrintWriter(stream)) {
           writer.print(schema);
           writer.flush();
         }
@@ -191,7 +208,7 @@ public class APIEndpoint {
       stop();
     }
   }
-  
+
   /**
    * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the necessary setup.
    *
@@ -200,17 +217,17 @@ public class APIEndpoint {
    */
   private Javalin dispatchService(boolean secure) {
     final APIConfig config = Config.sharedConfig().getApi();
-    
+
     final int port = this.validateAndNormalizePort(secure, config);
-    
+
     final Javalin service = Javalin.create(serviceConfig -> {
       /* Configure server (TLS, thread pool, etc.) */
       serviceConfig.enableCorsForAllOrigins();
       serviceConfig.server(() -> {
         QueuedThreadPool threadPool = new QueuedThreadPool(config.getThreadPoolSize(), 2, 30000);
-        
+
         Server server = new Server(threadPool);
-        
+
         ServerConnector connector;
         if (secure) {
           /* Setup TLS if secure flag was set. */
@@ -221,43 +238,43 @@ public class APIEndpoint {
         } else {
           connector = new ServerConnector(server);
         }
-        
+
         if (port > 0) {
           connector.setPort(port);
         }
-        
+
         server.setConnectors(new Connector[]{connector});
-        
+
         return server;
       });
-      
+
       /* Configure OpenAPI/Swagger doc */
       if (config.getEnableLiveDoc()) {
         this.openApi = new OpenApiPlugin(this.getJavalinOpenApiOptions(config));
         serviceConfig.registerPlugin(this.openApi);
-        
+
         /* Enable webjars to serve Swagger-UI */
         serviceConfig.enableWebjars();
       }
     });
-    
+
     /* Enable WebSocket (if configured). */
     if (config.getEnableWebsocket()) {
       this.webSocketApi = new WebsocketAPI();
-      
+
       service.ws(String.format("%s/websocket", namespace()), handler -> {
         handler.onConnect(ctx -> {
           webSocketApi.connected(ctx.session);
         });
-        
+
         handler.onClose(ctx -> {
           webSocketApi.closed(ctx.session, ctx.status(), ctx.reason());
         });
-        
+
         handler.onError(ctx -> {
           webSocketApi.onWebSocketException(ctx.session, ctx.error());
         });
-        
+
         handler.onMessage(ctx -> {
           webSocketApi.message(ctx.session, ctx.message());
         });
@@ -275,23 +292,23 @@ public class APIEndpoint {
             service.redirect.any("/mediaobject/:objectId", "/");
 
         }*/
-    
+
     /* Setup HTTP/RESTful connection (if configured). */
     if (config.getEnableRest() || config.getEnableRestSecure()) {
       this.restHandlers.forEach(handler -> registerRestHandler(service, handler, config));
       this.registerServingRoutes(service, config);
     }
-    
+
     /* Register a general exception handler. TODO: Add fine grained exception handling. */
     service.exception(Exception.class, (ex, ctx) -> {
       ex.printStackTrace();
       LOGGER.error(ex);
     });
-    
+
     /* Some reasonable settings */
     service.config.defaultContentType = "application/json";
     service.config.prefer405over404 = true;
-    
+
     /* Start javalin */
     try {
       if (port > 0) {
@@ -300,13 +317,14 @@ public class APIEndpoint {
         service.start();
       }
     } catch (Exception ex) {
-      LOGGER.log(Level.FATAL, "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
+      LOGGER.log(Level.FATAL,
+          "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
       System.exit(100);
     }
-    
+
     return service;
   }
-  
+
   private int validateAndNormalizePort(boolean secure, APIConfig config) {
     int port = secure ? config.getHttpsPort() : config.getHttpPort();
     if (port <= 0 || port >= 65535) {
@@ -317,22 +335,28 @@ public class APIEndpoint {
     }
     return port;
   }
-  
-  private void registerRestHandler(final Javalin javalin, final DocumentedRestHandler handler, final APIConfig config) {
+
+  private void registerRestHandler(final Javalin javalin, final DocumentedRestHandler handler,
+      final APIConfig config) {
     if (handler instanceof GetRestHandler<?>) {
-      javalin.get(makePath(handler.route()), OpenApiBuilder.documented(handler.docs(), ((GetRestHandler<?>) handler)::get));
+      javalin.get(makePath(handler.route()),
+          OpenApiBuilder.documented(handler.docs(), ((GetRestHandler<?>) handler)::get));
     } else if (handler instanceof PostRestHandler<?>) {
-      javalin.post(makePath(handler.route()), OpenApiBuilder.documented(handler.docs(), ((PostRestHandler<?>) handler)::post));
+      javalin.post(makePath(handler.route()),
+          OpenApiBuilder.documented(handler.docs(), ((PostRestHandler<?>) handler)::post));
     } else if (handler instanceof DeleteRestHandler<?>) {
-      javalin.delete(makePath(handler.route()), OpenApiBuilder.documented(handler.docs(), ((DeleteRestHandler<?>) handler)::delete));
+      javalin.delete(makePath(handler.route()),
+          OpenApiBuilder.documented(handler.docs(), ((DeleteRestHandler<?>) handler)::delete));
     } else if (handler instanceof PutRestHandler<?>) {
-      javalin.put(makePath(handler.route()), OpenApiBuilder.documented(handler.docs(), ((PutRestHandler<?>) handler)::put));
+      javalin.put(makePath(handler.route()),
+          OpenApiBuilder.documented(handler.docs(), ((PutRestHandler<?>) handler)::put));
     } else {
-      throw new IllegalArgumentException("The given handler of type " + handler.getClass() + " has no specified method");
+      throw new IllegalArgumentException(
+          "The given handler of type " + handler.getClass() + " has no specified method");
     }
     /* One would implement the remaining HTTP methods here */
   }
-  
+
   private void registerRestOperations() {
     restHandlers.addAll(Arrays.asList(
         /* Metadata */
@@ -352,10 +376,13 @@ public class APIEndpoint {
         new FindSegmentsByIdGetHandler(),
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
+        new FindSegmentFeaturesGetHandler(),
+        new FindTagsGetHandler(),
+        new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),
-        new FindTagsGetHandler(),
+        new org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler(),
         /* Session */
         new StartSessionHandler(),
         new StartExtractionHandler(),
@@ -369,21 +396,22 @@ public class APIEndpoint {
         new StatusInvocationHandler()
     ));
   }
-  
+
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     // TODO Register these special cases as well with the new model
     if (config.getServeContent()) {
       service.get("/thumbnails/:id", new ResolvedContentRoute(
-          new FileSystemThumbnailResolver(
-              new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
-      
+          new FileSystemThumbnailResolver(new File(Config.sharedConfig().getApi().getThumbnailLocation()))
+      ));
+
       service.get("/objects/:id", new ResolvedContentRoute(
           new FileSystemObjectResolver(
               new File(Config.sharedConfig().getApi().getObjectLocation()),
-              new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
+              new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))
+      ));
     }
   }
-  
+
   /**
    * Creates the Javalin options used to create an OpenAPI specification.
    *
@@ -394,7 +422,7 @@ public class APIEndpoint {
     //Default Javalin JSON mapper includes all null values and breaks spec json
     ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    
+
     return new OpenApiOptions(() -> this.getOpenApi(config))
         .path("/openapi-specs")
         .activateAnnotationScanningFor("org.vitrivr.cineast.api")
@@ -428,7 +456,7 @@ public class APIEndpoint {
 //                        .title("Cineast Swagger Documentation")
 //                        );
   }
-  
+
   /**
    * Creates the base {@link OpenAPI} specification.
    *
@@ -437,11 +465,12 @@ public class APIEndpoint {
    */
   private OpenAPI getOpenApi(APIConfig config) {
     OpenAPI api = new OpenAPI();
-    
+
     api.info(
         new Info()
             .title("Cineast RESTful API")
-            .description("Cineast is vitrivr's content-based multimedia retrieval engine. This is it's RESTful API.")
+            .description(
+                "Cineast is vitrivr's content-based multimedia retrieval engine. This is it's RESTful API.")
             .version(VERSION)
             .license(
                 new License()
@@ -455,21 +484,21 @@ public class APIEndpoint {
                     .email("contact@vitrivr.org")
             )
     );
-    
+
     api.addTagsItem(
         new Tag()
             .name(namespace())
             .description("Cineast Default")
     );
-    
+
     api.addTagsItem(new Tag().name(METADATA_OAS_TAG).description("Metadata related operations"));
-    
+
     api.addServersItem(
         new io.swagger.v3.oas.models.servers.Server()
             .description("Cineast API Address")
             .url(config.getApiAddress())
     );
-    
+
     return api;
   }
 }

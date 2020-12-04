@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.db;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<
   }
   
   protected AbstractPersistencyWriter(){
-    this("id", "feature");
+    this(GENERIC_ID_COLUMN_QUALIFIER, FEATURE_COLUMN_QUALIFIER);
   }
   
   @Override
@@ -31,7 +34,7 @@ public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<
 
   @Override
   public boolean idExists(String id) {
-    return exists("id", id);
+    return exists(GENERIC_ID_COLUMN_QUALIFIER, id);
   }
   
   @Override

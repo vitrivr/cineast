@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.memory;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -69,7 +71,7 @@ public class InMemoryEntityCreator implements EntityCreator {
   @Override
   public boolean createFeatureEntity(String featureEntityName, boolean unique, int length, String... featureNames) {
     final String[] columns = new String[featureNames.length + 1];
-    columns[0] = "id";
+    columns[0] = GENERIC_ID_COLUMN_QUALIFIER;
     System.arraycopy(featureNames, 0, columns, 1, columns.length - 1);
     return this.store.createEntity(featureEntityName, columns).isPresent();
   }
@@ -82,7 +84,7 @@ public class InMemoryEntityCreator implements EntityCreator {
   @Override
   public boolean createIdEntity(String entityName, AttributeDefinition... attributes) {
     final String[] columns = new String[attributes.length + 1];
-    columns[0] = "id";
+    columns[0] = GENERIC_ID_COLUMN_QUALIFIER;
     for (int i = 1; i<columns.length; i++) {
       columns[i] = attributes[i-1].getName();
     }

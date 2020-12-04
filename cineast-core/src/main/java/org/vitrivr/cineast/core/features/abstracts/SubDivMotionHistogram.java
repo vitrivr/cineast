@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -23,7 +25,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   public void init(PersistencyWriterSupplier supply, int batchSize) {
     this.phandler = supply.get();
     this.phandler.open(this.tableName);
-    this.phandler.setFieldNames("id", "sums", "hist");
+    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "sums", "hist");
   }
 
   protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {

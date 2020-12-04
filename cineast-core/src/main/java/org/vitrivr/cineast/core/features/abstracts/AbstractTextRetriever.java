@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,9 +86,9 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr storage handler.
+   * Initializes the persistent layer with two fields: GENERIC_ID_COLUMN_QUALIFIER and FEATURE_COLUMN_QUALIFIER both using the Apache Solr storage handler.
    *
-   * This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
+   * This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The FEATURE_COLUMN_QUALIFIER in this context is the full text for the given segment
    */
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -114,19 +118,19 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId));
     if (rows.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentId);
       return Collections.emptyList();
     }
     List<String> terms = new ArrayList<>();
-    rows.forEach(row -> terms.add(row.get("feature").getString()));
+    rows.forEach(row -> terms.add(row.get(FEATURE_COLUMN_QUALIFIER).getString()));
     return this.getSimilar(qc, terms.toArray(new String[]{}));
   }
 
   @Override
   public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
-    List<String> list = this.selector.getRows("id", segmentIds).stream().map(map -> map.get("feature").getString()).collect(Collectors.toList());
+    List<String> list = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, segmentIds).stream().map(map -> map.get(FEATURE_COLUMN_QUALIFIER).getString()).collect(Collectors.toList());
     if (list.isEmpty()) {
       LOGGER.debug("No rows with segment id {}", segmentIds);
       return Collections.emptyList();
@@ -189,10 +193,10 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     final Map<String, Float> scoreMap = new HashMap<>();
 
     for (Map<String, PrimitiveTypeProvider> result : resultList) {
-      String id = result.get("id").getString();
+      String id = result.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
       scoreMap.putIfAbsent(id, 0f);
       // There is no way to trace from a result to which of the terms it matched. While this is regrettable behavior, averaging is preferable to maxpooling
-      scoreMap.compute(id, (key, val) -> val += result.get("ap_score").getFloat() / terms.length);
+      scoreMap.compute(id, (key, val) -> val += result.get(DB_DISTANCE_VALUE_QUALIFIER).getFloat() / terms.length);
     }
     scoreMap.forEach((key, value) -> {
       double score = f.applyAsDouble(scoreMap.get(key));

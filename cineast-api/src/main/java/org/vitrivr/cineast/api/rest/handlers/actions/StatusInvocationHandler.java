@@ -41,13 +41,7 @@ public class StatusInvocationHandler implements GetRestHandler<Ping> {
   public String route() {
     return ROUTE;
   }
-  
-  @OpenApi(
-      summary = "Get the status of the server",
-      path = ROUTE, method = HttpMethod.GET,
-      responses = @OpenApiResponse(status = "200", content = @OpenApiContent(from = Ping.class)),
-      tags = {"Status"}
-  )
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

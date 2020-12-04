@@ -21,16 +21,7 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
   public static final String ROUTE = "tags/by/id"; // TODO only route not prefixed by find?
   
   private static final TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-  
-  @OpenApi(
-      summary = "Find all tags by ids",
-      path = ROUTE, method = HttpMethod.POST,
-      tags = {"Tag"},
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = IdList.class)),
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
-      }
-  )
+
   @Override
   public TagsQueryResult performPost(IdList context, Context ctx) {
     List<Tag> list = Collections.emptyList();

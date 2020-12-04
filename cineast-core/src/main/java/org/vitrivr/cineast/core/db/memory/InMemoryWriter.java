@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.memory;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import java.util.List;
 import java.util.Optional;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
@@ -41,7 +43,7 @@ public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
 
   @Override
   public boolean exists(String key, String value) {
-    if (key.equals("id")) {
+    if (key.equals(GENERIC_ID_COLUMN_QUALIFIER)) {
       return this.entity.has(value);
     } else {
       return false;
