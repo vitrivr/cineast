@@ -3,8 +3,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
@@ -51,7 +51,7 @@ public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<Medi
           op.summary("Find metadata for specific object id in given domain");
           op.description("Find metadata for specific object id in given domain");
           op.operationId("findMetadataByDomain");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(DOMAIN_NAME, String.class, p -> p.description("The domain of the metadata to find"))
         .pathParam(OBJECT_ID_NAME, String.class, p -> p.description("The object id of the multimedia object to find metadata for"))

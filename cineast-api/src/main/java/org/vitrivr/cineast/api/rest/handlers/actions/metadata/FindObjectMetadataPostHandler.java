@@ -3,10 +3,10 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -58,7 +58,7 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
           op.description("Finds metadata for the given list of object ids");
           op.summary("Finds metadata for the given list of object ids");
           op.operationId("findMetadataForObjectIdBatched");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .body(inClass())
         .json("200", outClass());

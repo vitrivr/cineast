@@ -3,9 +3,9 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
@@ -60,7 +60,7 @@ public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHan
           op.summary("Find metadata in the specified domain for all the given ids");
           op.description("Find metadata in the specified domain for all the given ids");
           op.operationId("findMetadataByDomainBatched");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(DOMAIN_NAME, String.class, p -> p.description("The domain of the metadata to find"))
         .body(inClass())
