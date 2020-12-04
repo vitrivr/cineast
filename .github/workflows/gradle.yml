@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Generate Proto
-      run: ./gradlew generateProto
+      run: ./gradlew cineast-core:generateProto
     - name: Test with Gradle
       run: ./gradlew test
     - name: runtime-jar
