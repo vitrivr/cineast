@@ -57,19 +57,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is facilitated by
- * the Spark framework (http://sparkjava.com/).
+ * This class establishes a HTTP API endpoint listening on the specified port(s).
+ * The HTTP handling is facilitated by the Javalin framework (https://javalin.io/).
  * <p>
  * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints, depending on the
  * configuration.
  * <p>
- * Incoming requests are routed towards an {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that
- * such a handler hasn been registered beforehand.
+ * Incoming requests are routed towards a {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that
+ * such a handler hasn't been registered beforehand.
  * <p>
  * WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles incoming packets.
  *
- * @author rgasser
- * @version 1.1
+ * @author rgasser & loris.sauter
+ * @version 2.1
  * @created 07.12.17
  * @see WebsocketAPI
  */
