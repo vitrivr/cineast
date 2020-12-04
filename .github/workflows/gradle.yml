@@ -22,6 +22,23 @@ jobs:
         java-version: 11.0.6
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+      # https://github.com/actions/cache/blob/main/examples.md#java---gradle
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+      # ADAMpro Protobuf are legacy at this point so they will never change
+    - name: Cache ADAMpro Protobuf
+      id: cache-protobuf
+      uses: actions/cache@v2
+      with:
+        path: cineast-core/build/generated/main
+        key: ${{ runner.os }}-adampro
     - name: Generate Proto
       run: ./gradlew cineast-core:generateProto
     - name: Test with Gradle
