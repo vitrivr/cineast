@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -131,11 +133,13 @@ public class APIEndpoint {
    * @return Full path to the service.
    */
   private static String makePath(String name) {
-//        return String.format("%s/%s", "", name);
     return String.format("%s/%s", namespace(), name);
-    //        return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
   }
-  
+
+  /**
+   * Returns the namespace of the API. Concatenation of /{@link #CONTEXT}/{@link #VERSION}
+   * @return The REST API namespace
+   */
   private static String namespace() {
     return String.format("/%s/%s", CONTEXT, VERSION);
   }
@@ -204,6 +208,7 @@ public class APIEndpoint {
     final int port = this.validateAndNormalizePort(secure, config);
     
     final Javalin service = Javalin.create(serviceConfig -> {
+      serviceConfig.enableDevLogging();
       /* Configure server (TLS, thread pool, etc.) */
       serviceConfig.enableCorsForAllOrigins();
       serviceConfig.server(() -> {
@@ -239,6 +244,19 @@ public class APIEndpoint {
         /* Enable webjars to serve Swagger-UI */
         serviceConfig.enableWebjars();
       }
+      /* Serve the UI if requested statically*/
+      if(config.getServeUI()){
+        serviceConfig.addStaticFiles(config.getUiLocation(), Location.EXTERNAL);
+        serviceConfig.addSinglePageRoot("/", config.getUiLocation()+"/index.html", Location.EXTERNAL);
+        /*Arrays.asList("/gallery",
+                "/list",
+                "/mini-gallery",
+                "/mediaobject",
+                "/mediaobject/:objectId")
+                .forEach(url -> {
+               serviceConfig.addStaticFiles(url, config.getUiLocation(), Location.EXTERNAL);
+        });*/
+      }
     });
     
     /* Enable WebSocket (if configured). */
@@ -264,17 +282,7 @@ public class APIEndpoint {
       });
     }
 
-        /*
-        // TODO re-implement this functionality
-        if(config.getServeUI()){
-          service.staticFiles.externalLocation(config.getUiLocation());
-            service.redirect.any("/gallery", "/");
-            service.redirect.any("/list", "/");
-            service.redirect.any("/mini-gallery", "/");
-            service.redirect.any("/mediaobject", "/");
-            service.redirect.any("/mediaobject/:objectId", "/");
 
-        }*/
     
     /* Setup HTTP/RESTful connection (if configured). */
     if (config.getEnableRest() || config.getEnableRestSecure()) {
@@ -288,7 +296,7 @@ public class APIEndpoint {
       LOGGER.error(ex);
     });
     
-    /* Some reasonable settings */
+    /* General settings */
     service.config.defaultContentType = "application/json";
     service.config.prefer405over404 = true;
     
@@ -380,7 +388,11 @@ public class APIEndpoint {
       service.get("/objects/:id", new ResolvedContentRoute(
           new FileSystemObjectResolver(
               new File(Config.sharedConfig().getApi().getObjectLocation()),
-              new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
+              new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()),
+                  ((baseDir, object) -> {
+                    String ext = object.getPath().substring(object.getPath().lastIndexOf('.'));
+                    return new File(baseDir, object.getObjectId()+ext);
+                  }))));
     }
   }
   
@@ -410,23 +422,6 @@ public class APIEndpoint {
         .modelConverterFactory(() -> new ModelResolver(mapper))
         .swagger(new SwaggerOptions("/swagger-ui").title("Swagger UI for Cineast Documentation"))
         .reDoc(new ReDocOptions("/redoc").title("ReDoc for Cineast Documentation"));
-
-//        return new OpenApiOptions(() -> this.getOpenApi(config))
-//                .activateAnnotationScanningFor("org.vitrivr.cineast.api.rest")
-//                .modelConverterFactory(() -> new ModelResolver(mapper) /*Default JavalinModelResolver breaks with Jackson JSON objects*/)
-//                .jacksonMapper(mapper)
-//                .toJsonMapper(o -> {
-//                    try {
-//                        return mapper.writeValueAsString(o);
-//                    } catch (JsonProcessingException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                })
-//                .path("/openapi-specs")
-//                .swagger(
-//                        new SwaggerOptions("/swagger-ui")
-//                        .title("Cineast Swagger Documentation")
-//                        );
   }
   
   /**
