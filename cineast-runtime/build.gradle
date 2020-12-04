@@ -24,11 +24,18 @@ task fatJar(type: Jar) {
         attributes 'Multi-Release': 'true'
 		attributes 'Implementation-Version': '1.xx'
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
     with jar
 }
 
+/**
+ * See build.gradle in cineast-core on why we cannot use implementation
+ */
 dependencies {
+
     /** Jetty Servlet support. */
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
 
