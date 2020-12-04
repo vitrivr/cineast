@@ -46,7 +46,6 @@ sourceSets {
         }
         proto {
             srcDirs += "adampro-grpc/src/main/protobuf"
-            srcDirs += "cottontaildb-proto/src/main/protobuf"
         }
     }
 }
@@ -56,6 +55,9 @@ sourceSets {
  * With Gradle 6.7 and MacOS, declaring dependencies as implementation means they do not get exposed to other projects
  */
 dependencies {
+    /** THE CottontailDB proto dependency */
+    compile 'org.vitrivr:cottontaildb-proto:0.11.0'
+
     /* Google Json: GSON, since JSON db layer is based on this */
     compile group: 'com.google.code.gson', name: 'gson', version: '2.+'
 
