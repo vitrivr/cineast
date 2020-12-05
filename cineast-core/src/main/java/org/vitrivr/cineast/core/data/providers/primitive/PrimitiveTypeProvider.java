@@ -7,18 +7,27 @@ import java.util.List;
 
 public interface PrimitiveTypeProvider
     extends BooleanProvider,
-        ByteProvider,
-        DoubleProvider,
-        FloatArrayProvider,
-        FloatProvider,
-        IntArrayProvider,
-        IntProvider,
-        LongProvider,
-        ShortProvider,
-        StringProvider,
-        BitSetProvider {
+    ByteProvider,
+    DoubleProvider,
+    FloatArrayProvider,
+    FloatProvider,
+    IntArrayProvider,
+    IntProvider,
+    LongProvider,
+    ShortProvider,
+    StringProvider,
+    BitSetProvider {
 
-  /** Casts an int[] to float[] if need be */
+  /**
+   * Convenience-method to convert to object
+   */
+  default Object toObject() {
+    return PrimitiveTypeProvider.getObject(this);
+  }
+
+  /**
+   * Casts an int[] to float[] if need be
+   */
   public static float[] getSafeFloatArray(PrimitiveTypeProvider provider) {
     if (provider.getType().equals(ProviderDataType.FLOAT_ARRAY)) {
       return provider.getFloatArray();
@@ -31,66 +40,55 @@ public interface PrimitiveTypeProvider
       return query;
     }
     if (provider.getType().equals(ProviderDataType.FLOAT)) {
-      return new float[] {provider.getFloat()};
+      return new float[]{provider.getFloat()};
     }
     if (provider.getType().equals(ProviderDataType.INT)) {
-      return new float[] {provider.getInt()};
+      return new float[]{provider.getInt()};
     }
     if (provider.getType().equals(ProviderDataType.DOUBLE)) {
-      return new float[] {(float) provider.getDouble()};
+      return new float[]{(float) provider.getDouble()};
     }
     if (provider.getType().equals(ProviderDataType.LONG)) {
-      return new float[] {(float) provider.getLong()};
+      return new float[]{(float) provider.getLong()};
     }
     throw new RuntimeException(provider.getType().toString());
   }
 
   public static Object getObject(PrimitiveTypeProvider t) {
     switch (t.getType()) {
-      case BOOLEAN:
-        {
-          return t.getBoolean();
-        }
-      case BYTE:
-        {
-          return t.getByte();
-        }
-      case DOUBLE:
-        {
-          return t.getDouble();
-        }
-      case FLOAT:
-        {
-          return t.getFloat();
-        }
-      case FLOAT_ARRAY:
-        {
-          return t.getFloatArray();
-        }
-      case INT:
-        {
-          return t.getInt();
-        }
-      case INT_ARRAY:
-        {
-          return t.getIntArray();
-        }
-      case LONG:
-        {
-          return t.getLong();
-        }
-      case SHORT:
-        {
-          return t.getShort();
-        }
-      case STRING:
-        {
-          return t.getString();
-        }
-      case BITSET:
-        {
-          return t.getBitSet();
-        }
+      case BOOLEAN: {
+        return t.getBoolean();
+      }
+      case BYTE: {
+        return t.getByte();
+      }
+      case DOUBLE: {
+        return t.getDouble();
+      }
+      case FLOAT: {
+        return t.getFloat();
+      }
+      case FLOAT_ARRAY: {
+        return t.getFloatArray();
+      }
+      case INT: {
+        return t.getInt();
+      }
+      case INT_ARRAY: {
+        return t.getIntArray();
+      }
+      case LONG: {
+        return t.getLong();
+      }
+      case SHORT: {
+        return t.getShort();
+      }
+      case STRING: {
+        return t.getString();
+      }
+      case BITSET: {
+        return t.getBitSet();
+      }
       case UNKNOWN:
       default:
         return null;
@@ -151,7 +149,7 @@ public interface PrimitiveTypeProvider
     if (List.class.isAssignableFrom(c)) {
       List<?> list = (List<?>) o;
       if (list.isEmpty()) {
-        return new FloatArrayTypeProvider(new float[] {});
+        return new FloatArrayTypeProvider(new float[]{});
       }
       Object first = list.get(0);
       outerif:

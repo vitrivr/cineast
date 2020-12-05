@@ -1,8 +1,12 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
+
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Map;
+import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -23,17 +27,17 @@ public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectM
     final MetadataRetrievalService service = new MetadataRetrievalService();
     return new MediaObjectMetadataQueryResult("", service.lookupMultimediaMetadata(objectId));
   }
-  
+
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
@@ -43,8 +47,9 @@ public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectM
           op.summary("Find metadata for the given object id");
           op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
-        .pathParam(OBJECT_ID_NAME, String.class, p -> p.description("The object id to find metadata of"))
+        .pathParam(OBJECT_ID_NAME, String.class,
+            p -> p.description("The object id to find metadata of"))
         .json("200", outClass());
-    
+
   }
 }

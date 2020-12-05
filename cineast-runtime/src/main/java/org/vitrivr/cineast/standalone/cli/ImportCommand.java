@@ -69,7 +69,6 @@ public class ImportCommand implements Runnable {
     switch (type) {
       case PROTO:
         handler = new ProtoDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case JSON:
         handler = new JsonDataImportHandler(this.threads, this.batchsize);

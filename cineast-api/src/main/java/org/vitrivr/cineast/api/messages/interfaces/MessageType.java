@@ -19,10 +19,6 @@ import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 /**
  * Defines the different MessageTypes used by the WebSocket and JSON API.
- *
- * @author rgasser
- * @version 1.0
- * @created 12.01.17
  */
 public enum MessageType {
   /* Messages related to status updates. */
@@ -41,8 +37,16 @@ public enum MessageType {
   SESSION_START(StartSessionMessage.class),
 
   /* Query results. */
-  QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(MediaObjectQueryResult.class), QR_METADATA_O(MediaObjectMetadataQueryResult.class), QR_METADATA_S(MediaObjectMetadataQueryResult.class), QR_SEGMENT(MediaSegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
-  private Class<? extends Message> c;
+  QR_START(QueryStart.class),
+  QR_END(QueryEnd.class),
+  QR_ERROR(QueryError.class),
+  QR_OBJECT(MediaObjectQueryResult.class),
+  QR_METADATA_O(MediaObjectMetadataQueryResult.class),
+  QR_METADATA_S(MediaObjectMetadataQueryResult.class),
+  QR_SEGMENT(MediaSegmentQueryResult.class),
+  QR_SIMILARITY(SimilarityQueryResult.class);
+
+  private final Class<? extends Message> c;
 
   MessageType(Class<? extends Message> c) {
     this.c = c;

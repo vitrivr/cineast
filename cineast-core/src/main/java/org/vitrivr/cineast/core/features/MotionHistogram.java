@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
@@ -18,7 +20,7 @@ import java.util.function.Supplier;
 public class MotionHistogram extends SubDivMotionHistogram {
 
   public MotionHistogram() {
-    super("features_motionhistogram", "feature", MathHelper.SQRT2, 1);
+    super("features_motionhistogram", FEATURE_COLUMN_QUALIFIER, MathHelper.SQRT2, 1);
   }
 
 

@@ -92,7 +92,8 @@ public class TagReader implements Closeable {
    * @return List of matching {@link Tag}s.
    */
   public List<Tag> getTagsByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", new StringTypeProvider(name));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
+        .getRows("name", new StringTypeProvider(name));
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       Tag t = fromMap(row);
@@ -107,7 +108,7 @@ public class TagReader implements Closeable {
     if (id == null) {
       return null;
     }
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", new StringTypeProvider(id));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, new StringTypeProvider(id));
     if (rows.isEmpty()) {
       return null;
     }
@@ -117,11 +118,11 @@ public class TagReader implements Closeable {
 
   public List<Tag> getTagsById(String... ids) {
     if (ids == null) {
-      return null;
+      return new ArrayList<>();
     }
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", Arrays.asList(ids));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, Arrays.asList(ids));
     if (rows.isEmpty()) {
-      return null;
+      return new ArrayList<>();
     }
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
@@ -192,15 +193,16 @@ public class TagReader implements Closeable {
       return null;
     }
 
-    if (!map.containsKey("id") || !map.containsKey("name")) {
+    if (!map.containsKey(TAG_ID_COLUMNNAME) || !map.containsKey(TAG_NAME_COLUMNNAME)) {
       return null;
     }
 
-    if (!map.containsKey("description")) {
-      return new CompleteTag(map.get("id").getString(), map.get("name").getString(), "");
+    if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
+
     } else {
-      return new CompleteTag(map.get("id").getString(), map.get("name").getString(),
-          map.get("description").getString());
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
+          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
     }
 
   }

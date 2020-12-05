@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.adampro;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import com.google.common.collect.ImmutableMap;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
@@ -194,7 +196,7 @@ public class ADAMproEntityCreator implements EntityCreator {
           }
         }
         hints.put("handler", handler);
-        extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
+        extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
         System.arraycopy(attributes, 0, extended, 1, attributes.length);
         return this.createEntity(featureEntityName, extended);
     }

@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
 import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
@@ -139,7 +142,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         QueryConfig qcc = this.defaultQueryConfig(qc);
 
         /* Lookup features. */
-        List<float[]> features = this.selector.getFeatureVectors("id",  new StringTypeProvider(segmentId), "feature");
+        List<float[]> features = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER,  new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
         if (features.isEmpty()) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
             benchmark.end();
@@ -189,9 +192,9 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighboursGeneric(configs.get(0).getResultsPerModule(), features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(configs.get(0).getResultsPerModule(), features.get(0), FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, configs.get(0));
         } else if (features.size() > 1) {
-            partialResults = this.selector.getBatchedNearestNeighbours(configs.get(0).getResultsPerModule(), features, "feature", SegmentDistanceElement.class, configs);
+            partialResults = this.selector.getBatchedNearestNeighbours(configs.get(0).getResultsPerModule(), features, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, configs);
         } else {
             partialResults = new ArrayList<>(0);
         }

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -17,7 +19,7 @@ public class AverageColorRasterReduced15 extends AverageColorRaster {
 		/* TODO: Respect batchSize. */
 		this.phandler = supply.get();
 		this.phandler.open("features_AverageColorRasterReduced15");
-		this.phandler.setFieldNames("id", "raster", "hist");
+		this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "raster", "hist");
 	}
 
 	@Override

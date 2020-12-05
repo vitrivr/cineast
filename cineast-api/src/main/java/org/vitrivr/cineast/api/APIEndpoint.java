@@ -19,6 +19,9 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvocationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
@@ -41,7 +44,6 @@ import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DeleteRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -417,6 +419,9 @@ public class APIEndpoint {
         new FindSegmentsByIdGetHandler(),
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
+        new FindSegmentFeaturesGetHandler(),
+        new FindTagsGetHandler(),
+        new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),

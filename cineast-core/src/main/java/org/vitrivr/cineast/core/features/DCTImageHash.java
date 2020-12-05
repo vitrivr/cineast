@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.features;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import boofcv.abst.distort.FDistort;
 import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.struct.image.GrayF32;
@@ -147,8 +150,8 @@ public class DCTImageHash extends AbstractFeatureModule {
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
     supply.get().createEntity(this.tableName,
-          new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING),
-          new AttributeDefinition("feature", AttributeType.BITSET, 64)
+          new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING),
+          new AttributeDefinition(FEATURE_COLUMN_QUALIFIER, AttributeType.BITSET, 64)
     );
   }
 }

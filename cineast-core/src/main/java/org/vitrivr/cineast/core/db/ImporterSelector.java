@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.db;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -58,7 +61,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     }
     return results.stream()
         .map(m -> DistanceElement.create(
-            distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
+            distanceElementClass, m.get(GENERIC_ID_COLUMN_QUALIFIER).getString(), m.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble()))
         .limit(k)
         .collect(Collectors.toList());
   }
@@ -142,7 +145,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       if (!map.containsKey(column)) {
         continue;
       }
-      if (relevant != null && !relevant.contains(map.get("id"))) {
+      if (relevant != null && !relevant.contains(map.get(GENERIC_ID_COLUMN_QUALIFIER))) {
         continue;
       }
       double d = distance

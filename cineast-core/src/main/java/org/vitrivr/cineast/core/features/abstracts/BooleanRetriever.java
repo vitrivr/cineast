@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,11 +94,11 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
             be.getOperator(),
             be.getValues()
         )).collect(Collectors.toList()),
-        "id", // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
-        Collections.singletonList("id"),  // we're only interested in the ids
+        GENERIC_ID_COLUMN_QUALIFIER, // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
+        Collections.singletonList(GENERIC_ID_COLUMN_QUALIFIER),  // we're only interested in the ids
         qc);
     // we're returning a boolean score element since the score is always 1 if a query matches here
-    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get("id").getString())).collect(Collectors.toList());
+    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(GENERIC_ID_COLUMN_QUALIFIER).getString())).collect(Collectors.toList());
   }
 
   @Override

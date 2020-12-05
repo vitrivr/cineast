@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.importer;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,7 +68,7 @@ public class JsonObjectImporter implements Importer<ObjectNode> {
     Map<String, PrimitiveTypeProvider> map = new HashMap<>(result.size());
 
     for (String key : result.keySet()) {
-      if (key.equals("feature") && result.get(key).toString().startsWith("{") && result.get(key)
+      if (key.equals(FEATURE_COLUMN_QUALIFIER) && result.get(key).toString().startsWith("{") && result.get(key)
           .toString().endsWith("}") && result.get(key).getClass().equals(String.class)) {
         map.put(key, PrimitiveTypeProvider.fromObject(BitSetTypeProvider.fromString(
             (String) result.get(key))));
