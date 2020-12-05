@@ -21,42 +21,18 @@ project.ext.jomlVersion = "1.9.25"
 project.ext.joglVersion = "2.3.2"
 project.ext.ffmpegVersion = "4.1-1.4.4"
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
-    }
-    plugins {
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
-        }
-    }
-    generatedFilesBaseDir = "$projectDir/build/generated/"
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs += "$projectDir/build/generated/main/grpc"
-            srcDirs += "$projectDir/build/generated/main/java"
-        }
-        proto {
-            srcDirs += "adampro-grpc/src/main/protobuf"
-        }
-    }
-}
 
 /**
  * We cannot switch to implementation yet in multi-module setups.
  * With Gradle 6.7 and MacOS, declaring dependencies as implementation means they do not get exposed to other projects
  */
 dependencies {
+
     /** THE CottontailDB proto dependency */
     compile 'org.vitrivr:cottontaildb-proto:0.11.0'
+
+    /** THE ADAMpro proto dependency (legacy)*/
+    compile 'org.vitrivr:adampro-proto:1.0.0'
 
     /* Google Json: GSON, since JSON db layer is based on this */
     compile group: 'com.google.code.gson', name: 'gson', version: '2.+'

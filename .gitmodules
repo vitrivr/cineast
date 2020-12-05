@@ -1,4 +1,0 @@
-[submodule "cineast-core/adampro-grpc"]
-	path = cineast-core/adampro-grpc
-	url = https://github.com/vitrivr/ADAMpro-Protobuf.git
-
