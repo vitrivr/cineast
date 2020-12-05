@@ -425,6 +425,7 @@ public class APIEndpoint {
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),
         new FindTagsGetHandler(),
+        new org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler(),
         /* Session */
         new StartSessionHandler(),
         new StartExtractionHandler(),
