@@ -8,6 +8,7 @@ import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.Map;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
@@ -40,7 +41,7 @@ public class FindSegmentFeaturesGetHandler implements
           op.operationId("findSegFeatById");
           op.description("Find features by the given id");
           op.summary("Find features for the given id");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(ID_QUALIFIER, String.class,
             p -> p.description("The id to find features of"))

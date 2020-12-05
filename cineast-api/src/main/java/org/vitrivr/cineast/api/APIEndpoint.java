@@ -420,7 +420,6 @@ public class APIEndpoint {
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
-        new FindTagsGetHandler(),
         new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
