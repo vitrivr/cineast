@@ -18,34 +18,6 @@ distributions {
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
-    }
-    plugins {
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
-        }
-    }
-    generatedFilesBaseDir = "$projectDir/build/generated/"
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs += "$projectDir/build/generated/main/grpc"
-            srcDirs += "$projectDir/build/generated/main/java"
-        }
-        proto {
-            srcDirs += "cineast-proto/src/main/protobuf"
-        }
-    }
-}
 
 configurations.all {
     // Check for updates every build
@@ -68,6 +40,10 @@ task fatJar(type: Jar) {
 }
 
 dependencies {
+    /** THE CottontailDB proto dependency */
+    compile 'org.vitrivr:cineast-proto:0.1.0'
+
+    /** Javalin - THE HTTP framework in use */
     implementation('io.javalin:javalin-bundle:3.+'){
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
