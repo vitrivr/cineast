@@ -413,7 +413,6 @@ public class APIEndpoint {
         new FindTagsAllGetHandler(),
         new FindTagsByIdsPostHandler(),
         new FindTagsGetHandler(),
-        new FindTagsGetHandler(),
         /* Session */
         new StartSessionHandler(),
         new StartExtractionHandler(),
