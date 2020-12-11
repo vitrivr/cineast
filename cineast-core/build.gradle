@@ -21,6 +21,7 @@ project.ext.jomlVersion = "1.9.25"
 project.ext.joglVersion = "2.3.2"
 project.ext.ffmpegVersion = "4.1-1.4.4"
 
+
 /**
  * We cannot switch to implementation yet in multi-module setups.
  * With Gradle 6.7 and MacOS, declaring dependencies as implementation means they do not get exposed to other projects

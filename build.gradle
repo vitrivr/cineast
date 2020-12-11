@@ -44,6 +44,7 @@ subprojects {
     repositories {
         jcenter()
         mavenCentral()
+
     }
 
     /* Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future. */
