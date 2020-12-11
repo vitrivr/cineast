@@ -19,16 +19,29 @@ distributions {
 
 task fatJar(type: Jar) {
     archiveClassifier = 'full'
-    manifest {
-        attributes 'Main-Class': 'org.vitrivr.cineast.standalone.Main'
-        attributes 'Multi-Release': 'true'
-		attributes 'Implementation-Version': '1.xx'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
+jar{
+    manifest {
+        attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
+        attributes 'Multi-Release': 'true'
+        attributes 'Implementation-Version': '1.xx'
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+/**
+ * See build.gradle in cineast-core on why we cannot use implementation
+ */
 dependencies {
+
     /** Jetty Servlet support. */
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
 

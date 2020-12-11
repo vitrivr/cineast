@@ -128,9 +128,10 @@
     "threadPoolSize": 12,
     "serveContent": true,
     "serveUI": true,
-    "uiLocation": "dist",
+    "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "thumbnails",
-    "objectLocation": "objects"
+    "objectLocation": "objects",
+    "objectsFilesAreIDed": true
   },
 
   "monitoring":{

@@ -19,7 +19,7 @@ import org.vitrivr.cineast.api.messages.result.TopTagsForResult;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 /**
- * Defines the different MessageTypes used by the WebSocket API.
+ * Defines the different MessageTypes used by the WebSocket and JSON API.
  */
 public enum MessageType {
   /* Messages related to status updates. */
@@ -48,7 +48,7 @@ public enum MessageType {
   QR_SEGMENT(MediaSegmentQueryResult.class),
   QR_SIMILARITY(SimilarityQueryResult.class);
 
-  private Class<? extends Message> c;
+  private final Class<? extends Message> c;
 
   MessageType(Class<? extends Message> c) {
     this.c = c;

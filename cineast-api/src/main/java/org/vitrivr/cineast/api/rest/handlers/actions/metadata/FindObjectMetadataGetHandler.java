@@ -8,6 +8,7 @@ import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.Map;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
@@ -41,7 +42,7 @@ public class FindObjectMetadataGetHandler implements
           op.operationId("findMetaById");
           op.description("Find metadata by the given object id");
           op.summary("Find metadata for the given object id");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(OBJECT_ID_NAME, String.class,
             p -> p.description("The object id to find metadata of"))

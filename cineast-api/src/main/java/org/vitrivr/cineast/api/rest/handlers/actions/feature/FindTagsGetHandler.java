@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.TagIDsForElementQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
@@ -43,7 +44,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagIDsForElementQueryR
           op.operationId("findTagsById");
           op.description("Find tag ids for the given id");
           op.summary("Find tag ids for the given id");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(ID_QUALIFIER, String.class, p -> p.description("The id to find tagids of"))
         .json("200", outClass());

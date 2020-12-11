@@ -208,7 +208,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
                     map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
                     map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.web.get().score)));
                     try {
-                        tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description, null));
+                        tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
                     } catch (IllegalArgumentException e) {
                         LOGGER.trace("Error while initalizing tag {}", e.getMessage());
                     }
@@ -226,7 +226,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
                     map.put("id", id);
                     map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
                     map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
-                    tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description, null));
+                    tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
                 }
                 break;
             case OCR:

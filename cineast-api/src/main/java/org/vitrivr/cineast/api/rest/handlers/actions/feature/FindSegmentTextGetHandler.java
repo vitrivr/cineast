@@ -10,6 +10,7 @@ import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.Map;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.FeaturesTextCategoryQueryResult;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
@@ -42,7 +43,7 @@ public class FindSegmentTextGetHandler implements GetRestHandler<FeaturesTextCat
           op.operationId("findTextByIDAndCat");
           op.description("Find Text by the given id and retrieval category");
           op.summary("Find Text for the given id and retrieval category");
-          op.addTagsItem(APIEndpoint.METADATA_OAS_TAG);
+          op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
         .pathParam(ID_QUALIFIER, String.class, p -> p.description("The id to find text of"))
         .pathParam(CATEGORY_NAME, String.class, p -> p.description("The category for which retrieval shall be performed"))

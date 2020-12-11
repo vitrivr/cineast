@@ -198,12 +198,11 @@ public class TagReader implements Closeable {
     }
 
     if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "",
-          null);
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
 
     } else {
       return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
-          map.get(TAG_DESCRIPTION_COLUMNNAME).getString(), null);
+          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
     }
 
   }
