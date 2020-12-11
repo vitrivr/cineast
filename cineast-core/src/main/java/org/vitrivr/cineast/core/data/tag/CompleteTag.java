@@ -9,6 +9,10 @@ public class CompleteTag implements Tag {
   private final String id, name, description;
   private final Preference preference;
 
+  public CompleteTag(String id, String name, String description) {
+    this(id, name, description, null);
+  }
+
   public CompleteTag(String id, String name, String description, Preference preference) {
     this.id = id;
     this.name = name;
