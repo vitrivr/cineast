@@ -6,7 +6,7 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 import java.util.List;
 
 /**
- * Object that contains the top frequent tags and their count in a result set
+ * General-purpose result for any query that expects a list of tags as a result
  */
 public class TagsQueryResult {
   

@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
-public class FindTagsGetHandler implements GetRestHandler<TagIDsForElementQueryResult> {
+public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForElementQueryResult> {
 
   public static final String ROUTE = "find/feature/tags/by/id/:" + ID_QUALIFIER;
 

@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.data.tag;
 
+import java.util.Objects;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,8 +13,7 @@ public class CompleteWeightedTag implements WeightedTag {
   private final Preference preference;
   private final float weight;
 
-  public CompleteWeightedTag(String id, String name, String description, float weight,
-      Preference preference) {
+  public CompleteWeightedTag(String id, String name, String description, float weight, Preference preference) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
@@ -23,6 +26,7 @@ public class CompleteWeightedTag implements WeightedTag {
     if (this.id.isEmpty()) {
       throw new IllegalArgumentException("id cannot be empty");
     }
+
     if (this.name == null) {
       throw new NullPointerException("name cannot be null");
     }
@@ -34,6 +38,7 @@ public class CompleteWeightedTag implements WeightedTag {
     if (this.weight > 1f || this.weight < 0f) {
       throw new IllegalArgumentException("weight " + this.weight + " outside of range (0,1)");
     }
+
   }
 
   @Override
@@ -83,13 +88,7 @@ public class CompleteWeightedTag implements WeightedTag {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + Float.floatToIntBits(weight);
-    return result;
+    return Objects.hash(id, name, description, weight, preference);
   }
 
   @Override
@@ -130,6 +129,7 @@ public class CompleteWeightedTag implements WeightedTag {
     }
     return true;
   }
+
 
   @Override
   public String toString() {

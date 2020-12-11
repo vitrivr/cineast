@@ -34,7 +34,6 @@ public class CompleteTag implements Tag {
     if (this.name.isEmpty()) {
       throw new IllegalArgumentException("name cannot be empty for " + this.toString());
     }
-
   }
 
   @Override
@@ -52,7 +51,6 @@ public class CompleteTag implements Tag {
     return description;
   }
 
-  @Override
   public Preference getPreference() {
     return preference;
   }
@@ -71,6 +69,7 @@ public class CompleteTag implements Tag {
         Objects.equals(description, that.description) &&
         preference == that.preference;
   }
+
 
   @Override
   public int hashCode() {

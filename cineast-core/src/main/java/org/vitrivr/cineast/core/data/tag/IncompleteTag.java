@@ -18,6 +18,7 @@ public class IncompleteTag implements WeightedTag {
   }
 
 
+
   /**
    * Constructor for {@link IncompleteTag}. Used to create object from JSON.
    *
@@ -38,7 +39,6 @@ public class IncompleteTag implements WeightedTag {
     this.weight = (weight == null) ? 1f : weight;
     this.preference = preference;
   }
-
   public IncompleteTag(Tag t) {
     this((t != null && t.hasId()) ? t.getId() : null,
         (t != null && t.hasName()) ? t.getName() : null,

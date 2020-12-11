@@ -12,8 +12,11 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
-public class FindObjectMetadataGetHandler implements
-    GetRestHandler<MediaObjectMetadataQueryResult> {
+import java.util.Map;
+
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
+
+public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
 
   public static final String ROUTE = "find/metadata/by/id/:" + OBJECT_ID_NAME;
 
