@@ -17,9 +17,9 @@ import java.util.Map;
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 public class FindObjectMetadataGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
-  
+
   public static final String ROUTE = "find/metadata/by/id/:" + OBJECT_ID_NAME;
-  
+
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

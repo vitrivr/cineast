@@ -6,7 +6,6 @@ import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
