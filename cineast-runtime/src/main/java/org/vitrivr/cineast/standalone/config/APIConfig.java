@@ -8,11 +8,8 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
 /**
  * The API configuration for cineast.
- *
+ * <p>
  * Settings regarding all aspects of the API are collected in this configuration.
- *
- * @author rgasser & Loris Sauter
- * @version 2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class APIConfig {
@@ -35,11 +32,7 @@ public final class APIConfig {
 
 
   private int grpcPort = 4570;
-  private int maxMessageSize =
-      5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
-
-  private boolean enableLegacy = false;
-  private int legacyPort = 12345;
+  private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
   private boolean allowExtraction = true;
   private boolean enableCLI = false;
@@ -49,10 +42,7 @@ public final class APIConfig {
   private boolean serveContent = false;
 
   /**
-   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()}
-   * to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s
-   * extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved
-   * to be directly under {@link #objectLocation}.
+   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
    */
   private boolean objectsFilesAreIDed = false;
 
@@ -173,24 +163,6 @@ public final class APIConfig {
   }
 
   @JsonProperty
-  public boolean getEnableLegacy() {
-    return enableLegacy;
-  }
-
-  public void setEnableLegacy(boolean enableLegacy) {
-    this.enableLegacy = enableLegacy;
-  }
-
-  @JsonProperty
-  public int getLegacyPort() {
-    return legacyPort;
-  }
-
-  public void setLegacyPort(int legacyPort) {
-    this.legacyPort = legacyPort;
-  }
-
-  @JsonProperty
   public boolean getAllowExtraction() {
     return this.allowExtraction;
   }
@@ -292,18 +264,15 @@ public final class APIConfig {
   }
 
   /**
-   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()}
-   * to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s
-   * extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved
-   * to be directly under {@link #objectLocation}.
+   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
    */
   @JsonProperty
-  public boolean isObjectsFilesAreIDed(){
+  public boolean isObjectsFilesAreIDed() {
     return objectsFilesAreIDed;
   }
 
   @JsonProperty
-  public void setObjectsFilesAreIDed(boolean b){
+  public void setObjectsFilesAreIDed(boolean b) {
     objectsFilesAreIDed = b;
   }
 }
