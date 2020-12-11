@@ -32,6 +32,8 @@ public class CLI {
 
     private static final String PROMPT = "cineast> ";
 
+    private static final String LOGO = "################################################################################\u0085#                                                                              #\u0085#                @@@                           @@@                             #\u0085#                @@@                           @@@                             #\u0085#                     @@@@                                                     #\u0085#   @@@     @@@  @@@  @@@@@@@         @@@@@    @@@  @@@     @@@     @@@@@      #\u0085#   @@@@   @@@@  @@@  @@@@          @@@@@@@@@  @@@  @@@@   @@@@   @@@@@@@@@    #\u0085#     @@@@@@@    @@@  @@@@    @@@  @@@@        @@@    @@@@@@@    @@@@          #\u0085#      @@@@@     @@@   @@@@@@@@@@  @@@@        @@@     @@@@@     @@@@          #\u0085#       @@@      @@@     @@@@@     @@@         @@@      @@@      @@@           #\u0085#                                                                              #\u0085################################################################################";
+
     private CLI() {
     }
 
@@ -67,7 +69,7 @@ public class CLI {
                 .completer(completer)
                 .build();
 
-
+        terminal.writer().println(LOGO.replaceAll("\u0085", "\r\n"));
         terminal.writer().println("Welcome to the interactive Cineast CLI.");
 
 
