@@ -24,17 +24,6 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-
-task fatJar(type: Jar) {
-    archiveClassifier = 'full'
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    with jar
-}
-
 jar{
     manifest {
         attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'

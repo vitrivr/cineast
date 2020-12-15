@@ -87,20 +87,8 @@ project(':cineast-runtime') {
 project(':cineast-api') {
     dependencies {
         compile project(path: ':cineast-runtime', configuration: 'shadow')
-        compile project(path: ':cineast-core', configuration: 'shadow')
+        compile project(path: ':cineast-core')
     }
-}
-
-jar{
-    manifest {
-        attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
-        attributes 'Multi-Release': 'true'
-        attributes 'Implementation-Version': '1.xx'
-    }
-}
-
-shadowJar {
-    mergeServiceFiles()
 }
 
 idea {
