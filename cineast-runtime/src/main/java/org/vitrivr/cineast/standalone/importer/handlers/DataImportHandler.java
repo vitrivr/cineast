@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
@@ -41,11 +42,11 @@ public abstract class DataImportHandler {
         CottontailGrpc.EntityDefinition entityDefinition = null;
         CottontailWrapper cottontail = null;
         if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
-            LOGGER.warn("Other database than cottontaildb in use. Using inconvenient database restore");
+            LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);
             cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
-            entityDefinition = cottontail.entityDetailsBlocking(CottontailWrapper.entityByName(entityName));
+            //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
         }
         LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
         ec.dropEntity(entityName);

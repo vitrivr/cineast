@@ -128,20 +128,16 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   public boolean createIndex(String entityName, String attribute, IndexType type) {
-    Entity entity = CottontailMessageBuilder.entity(entityName);
-    Index index = Index.newBuilder().setEntity(entity)
-            .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
-        .setType(type).build();
-    IndexDefinition idxMessage = IndexDefinition.newBuilder().setIndex(index).addColumns(attribute).build();
+    final EntityName entity = CottontailMessageBuilder.entity(entityName);
+    final IndexName index = IndexName.newBuilder().setEntity(entity).setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute).build();
+    final IndexDefinition idxMessage = IndexDefinition.newBuilder().setType(type).addColumns(CottontailMessageBuilder.column(attribute)).setName(index).build();
     cottontail.createIndexBlocking(idxMessage);
     return true;
   }
 
   public boolean dropIndex(String entityName, String attribute, IndexType type){
-    Entity entity = CottontailMessageBuilder.entity(entityName);
-    Index index = Index.newBuilder().setEntity(entity)
-        .setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute)
-        .setType(type).build();
+    final EntityName entity = CottontailMessageBuilder.entity(entityName);
+    final IndexName index = IndexName.newBuilder().setEntity(entity).setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute).build();
     cottontail.dropIndexBlocking(index);
     return true;
   }
@@ -218,7 +214,7 @@ public class CottontailEntityCreator implements EntityCreator {
       columns.add(builder.build());
       builder.clear();
     }
-    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, def.getEntityName());
+    EntityName entity = CottontailMessageBuilder.entity(def.getEntityName());
     EntityDefinition message = EntityDefinition.newBuilder()
             .setEntity(entity)
             .addAllColumns(columns).build();
@@ -251,7 +247,7 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean dropEntity(String entityName) {
-    cottontail.dropEntityBlocking(CottontailWrapper.entityByName(entityName));
+    cottontail.dropEntityBlocking(CottontailMessageBuilder.entity(entityName));
     return true;
   }
 

@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.standalone.cli;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Schema;
 import com.github.rvesse.airline.annotations.Command;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Selector;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.standalone.config.Config;
 
@@ -22,7 +22,7 @@ public class OptimizeEntitiesCommand implements Runnable {
     }
     System.out.println("Optimizing all entities for schema cineast in Cottontail");
     CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
-    wrapper.listEntities(Schema.newBuilder().setName("cineast").build()).forEach(entity -> {
+    wrapper.listEntities(CottontailMessageBuilder.CINEAST_SCHEMA).forEach(entity -> {
       System.out.println("Optimizing entity " + entity);
       wrapper.optimizeEntityBlocking(entity);
     });

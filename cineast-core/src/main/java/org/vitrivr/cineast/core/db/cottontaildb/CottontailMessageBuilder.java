@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+import static org.vitrivr.cineast.core.db.RelationalOperator.NLIKE;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import com.google.common.primitives.Booleans;
@@ -13,11 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,24 +35,26 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.BoolVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ComparisonOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.CompoundBooleanPredicate;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ConnectionOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.DoubleVector;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.FloatVector;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.IntVector;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn.Distance;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.LongVector;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Schema;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.SchemaName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Vector;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 
@@ -61,100 +62,152 @@ public class CottontailMessageBuilder {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static final Schema CINEAST_SCHEMA = schema("cineast");
+  public static final SchemaName CINEAST_SCHEMA =  SchemaName.newBuilder().setName("cineast").build();
 
-
-  public static Schema schema(String schema) {
-    return Schema.newBuilder().setName(schema).build();
-
+  /**
+   * Returns the [EntityName] object for the given entity name.
+   *
+   * @param name Name of the entity.
+   *
+   * @return [EntityName]
+   */
+  public static EntityName entity(String name) {
+    return EntityName.newBuilder().setSchema(CINEAST_SCHEMA).setName(name).build();
   }
 
-  public static Entity entity(Schema schema, String name) {
-    return Entity.newBuilder().setSchema(schema).setName(name).build();
-
+  /**
+   * Returns the {@link ColumnName} object for the given entity name.
+   *
+   * @param name Name of the entity.
+   *
+   * @return {@link ColumnName}
+   */
+  public static ColumnName column(String name) {
+    return ColumnName.newBuilder().setName(name).build();
   }
 
-  public static Entity entity(String name) {
-    return entity(CINEAST_SCHEMA, name);
+  /**
+   * Generates and returns the {@link From} object for the given entity name.
+   *
+   * @param from {@link EntityName} of the entity to select from.
+   * @return {@link From}
+   */
+  public static From from(EntityName from) {
+    return From.newBuilder().setEntity(from).build();
   }
 
-  public static From from(Entity entity) {
-    return From.newBuilder().setEntity(entity).build();
-  }
-
-  public static Projection projection(Projection.Operation operation, String... attributes) {
+  /**
+   * Generates and returns a {@link Projection} for the given {@link Projection.ProjectionOperation} and list of attributes.
+   *
+   * @param operation {@link Projection.ProjectionOperation}
+   * @param attributes List of attributes (column names).
+   * @return {@link Projection}
+   */
+  public static Projection projection(Projection.ProjectionOperation operation, String... attributes) {
     List<String> attrs = attributes == null ? Collections.emptyList() : Arrays.asList(attributes);
     final Projection.Builder projection = Projection.newBuilder().setOp(operation);
-    attrs.forEach(e -> projection.putAttributes(e, ""));
+    attrs.forEach(e -> projection.addColumns(ProjectionElement.newBuilder().setColumn(column(e))));
     return projection.build();
   }
 
-  public static AtomicLiteralBooleanPredicate.Operator toOperator(RelationalOperator op) {
+  /**
+   * Converts a {@link RelationalOperator} into the {@link ComparisonOperator} equivalent.
+   *
+   * @param op {@link RelationalOperator} to convert
+   * @return {@link ComparisonOperator}
+   */
+  public static ComparisonOperator toOperator(RelationalOperator op) {
     switch (op) {
       case EQ:
       case NEQ: //this has to be not-ed!!
-        return Operator.EQUAL;
+        return ComparisonOperator.EQUAL;
       case GEQ:
-        return Operator.GEQUAL;
+        return ComparisonOperator.GEQUAL;
       case LEQ:
-        return Operator.LEQUAL;
+        return ComparisonOperator.LEQUAL;
       case GREATER:
-        return Operator.GREATER;
+        return ComparisonOperator.GREATER;
       case LESS:
-        return Operator.LESS;
+        return ComparisonOperator.LESS;
       case BETWEEN:
-        return Operator.BETWEEN;
+        return ComparisonOperator.BETWEEN;
       case LIKE:
-      case ILIKE: //TODO map differently?
-      case RLIKE:
-      case NLIKE:
-        return Operator.LIKE;
+      case NLIKE: //this has to be not-ed!!
+        return ComparisonOperator.LIKE;
       case ISNULL:
-        return Operator.ISNULL;
+        return ComparisonOperator.ISNULL;
       case ISNOTNULL:
-        return Operator.ISNOTNULL;
+        return ComparisonOperator.ISNOTNULL;
       case IN:
-        return Operator.IN;
+        return ComparisonOperator.IN;
+      default:
+        throw new UnsupportedOperationException(op.toString());
     }
-    throw new UnsupportedOperationException(op.toString());
   }
 
-  public static AtomicLiteralBooleanPredicate atomicPredicate(String attribute, RelationalOperator operator, Data... data) {
-    AtomicLiteralBooleanPredicate.Builder builder = AtomicLiteralBooleanPredicate.newBuilder().setAttribute(attribute);
+  /**
+   * Generates a {@link AtomicLiteralBooleanPredicate} for the given parameters.
+   *
+   * @param attribute The name of the attribute / column to compare.
+   * @param operator The {@link RelationalOperator} to compare with.
+   * @param data The {@link Literal}(s) to compare to.
+   * @return {@link AtomicLiteralBooleanPredicate}
+   */
+  public static AtomicLiteralBooleanPredicate atomicPredicate(String attribute, RelationalOperator operator, Literal... data) {
+    AtomicLiteralBooleanPredicate.Builder builder = AtomicLiteralBooleanPredicate.newBuilder().setLeft(column(attribute));
     if (data != null) {
-      for (Data d : data) {
-        builder.addData(d);
+      for (Literal d : data) {
+        builder.addRight(d);
       }
     }
     builder.setOp(toOperator(operator));
-    if (operator == NEQ) {
+    if (operator == NEQ || operator == NLIKE) {
       builder.setNot(true);
     }
     return builder.build();
   }
 
-  public static Where atomicWhere(String attribute, RelationalOperator operator, Data... data) {
+  /**
+   * Generates a {@link Where} for the given parameters.
+   *
+   * @param attribute The name of the attribute / column to compare.
+   * @param operator The {@link RelationalOperator} to compare with.
+   * @param data The {@link Literal}(s) to compare to.
+   * @return {@link AtomicLiteralBooleanPredicate}
+   */
+  public static Where atomicWhere(String attribute, RelationalOperator operator, Literal... data) {
     return Where.newBuilder().setAtomic(atomicPredicate(attribute, operator, data)).build();
   }
 
-  public static List<AtomicLiteralBooleanPredicate> toAtomicLiteralBooleanPredicates(String fieldname, RelationalOperator operator, Data... data) {
+  /**
+   * Generates a {@link Where} for the given parameters.
+   *
+   * @param attribute The name of the attribute / column to compare.
+   * @param operator The {@link RelationalOperator} to compare with.
+   * @param data The {@link Literal}(s) to compare to.
+   * @return {@link AtomicLiteralBooleanPredicate}
+   */
+  public static List<AtomicLiteralBooleanPredicate> toAtomicLiteralBooleanPredicates(String attribute, RelationalOperator operator, Literal... data) {
     if (data == null || data.length == 0) {
       return Collections.emptyList();
     }
-
     ArrayList<AtomicLiteralBooleanPredicate> _return = new ArrayList<>(data.length);
-
-    for (Data d : data) {
+    for (Literal d : data) {
       _return.add(
-          atomicPredicate(fieldname, operator, d)
+          atomicPredicate(attribute, operator, d)
       );
     }
-
     return _return;
-
   }
 
-  private static CompoundBooleanPredicate reduce(CompoundBooleanPredicate.Operator op, List<AtomicLiteralBooleanPredicate> predicates) {
+  /**
+   * Generates and returns a {@link CompoundBooleanPredicate} for the given parameters.
+   *
+   * @param op {@link ConnectionOperator} to use.
+   * @param predicates List of {@link AtomicLiteralBooleanPredicate} to connect.
+   * @return {@link CompoundBooleanPredicate}
+   */
+  private static CompoundBooleanPredicate reduce(ConnectionOperator op, List<AtomicLiteralBooleanPredicate> predicates) {
     if (predicates == null || predicates.size() < 2) {
       throw new IllegalArgumentException("CottontailMessageBuilder.reduce needs at least 2 predicates");
     }
@@ -176,14 +229,15 @@ public class CottontailMessageBuilder {
     return _return;
   }
 
-  public static Where compoundWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, CompoundBooleanPredicate.Operator op, Data... data) {
+  public static Where compoundWhere(ReadableQueryConfig queryConfig, String fieldname, RelationalOperator operator, ConnectionOperator op, Literal... data) {
     if (data == null || data.length == 0) {
       throw new IllegalArgumentException("data not set in CottontailMessageBuilder.compoundOrWhere");
     }
 
     AtomicLiteralBooleanPredicate inList = null;
     if (queryConfig != null && queryConfig.hasRelevantSegmentIds()) {
-      inList = inList(GENERIC_ID_COLUMN_QUALIFIER, queryConfig.getRelevantSegmentIds());
+      final List<Literal> segments = toDatas(queryConfig.getRelevantSegmentIds());
+      inList = atomicPredicate(GENERIC_ID_COLUMN_QUALIFIER, RelationalOperator.IN, segments.toArray(new Literal[0]));
     }
 
     List<AtomicLiteralBooleanPredicate> predicates = toAtomicLiteralBooleanPredicates(fieldname, operator, data);
@@ -200,7 +254,7 @@ public class CottontailMessageBuilder {
 
     } else {
       /* A match for the ids is mandatory, that's why there's an and here */
-      CompoundBooleanPredicate.Builder builder = CompoundBooleanPredicate.newBuilder().setAleft(inList).setOp(CompoundBooleanPredicate.Operator.AND);
+      CompoundBooleanPredicate.Builder builder = CompoundBooleanPredicate.newBuilder().setAleft(inList).setOp(ConnectionOperator.AND);
       if (predicates.size() > 1) {
         builder.setCright(reduce(op, predicates));
       } else {
@@ -218,20 +272,21 @@ public class CottontailMessageBuilder {
     }
     AtomicLiteralBooleanPredicate inList = null;
     if (qc != null && qc.hasRelevantSegmentIds()) {
-      inList = inList(GENERIC_ID_COLUMN_QUALIFIER, qc.getRelevantSegmentIds());
+      final List<Literal> segments = toDatas(qc.getRelevantSegmentIds());
+      inList = atomicPredicate(GENERIC_ID_COLUMN_QUALIFIER, RelationalOperator.IN, segments.toArray(new Literal[0]));
     }
 
-    List<AtomicLiteralBooleanPredicate> predicates = conditions.stream().map(cond -> atomicPredicate(cond.getLeft(), cond.getMiddle(), toDatas(cond.getRight()))).collect(Collectors.toList());
+    List<AtomicLiteralBooleanPredicate> predicates = conditions.stream().map(cond -> atomicPredicate(cond.getLeft(), cond.getMiddle(), toData(cond.getRight()))).collect(Collectors.toList());
     if (inList != null) {
       predicates.add(0, inList);
     }
     if (predicates.size() > 1) {
-      return Where.newBuilder().setCompound(reduce(CompoundBooleanPredicate.Operator.AND, predicates)).build();
+      return Where.newBuilder().setCompound(reduce(ConnectionOperator.AND, predicates)).build();
     }
     return Where.newBuilder().setAtomic(predicates.get(0)).build();
   }
 
-  public static Query query(Entity entity, Projection projection, Where where, Knn knn, Integer rows) {
+  public static Query query(EntityName entity, Projection projection, Where where, Knn knn, Integer rows) {
     Query.Builder queryBuilder = Query.newBuilder();
     queryBuilder.setFrom(from(entity)).setProjection(projection);
     if (where != null) {
@@ -246,10 +301,15 @@ public class CottontailMessageBuilder {
     return queryBuilder.build();
   }
 
-  public static Data toData(Object o) {
+  /**
+   * Converts an {@link Object} to a {@link Literal}
+   *
+   * @param o {@link Object} to convert
+   * @return {@link Literal}
+   */
+  public static Literal toData(Object o) {
 
-    Data.Builder dataBuilder = Data.newBuilder();
-    dataBuilder.clear();
+    Literal.Builder dataBuilder = Literal.newBuilder();
 
     if (o == null) {
       return dataBuilder.setStringData("null").build();
@@ -334,20 +394,13 @@ public class CottontailMessageBuilder {
     return dataBuilder.setStringData(o.toString()).build();
   }
 
-  public static Data[] toDatas(Iterable<?> objects) {
-    ArrayList<Data> tmp = new ArrayList<>();
-
-    for (Object o : objects) {
-      tmp.add(toData(o));
-    }
-
-    Data[] _return = new Data[tmp.size()];
-    tmp.toArray(_return);
-
-    return _return;
-  }
-
-  public static PrimitiveTypeProvider fromData(Data d) {
+  /**
+   * Converts a {@link Literal} to a {@link PrimitiveTypeProvider}.
+   *
+   * @param d {@link Literal} to convert
+   * @return {@link PrimitiveTypeProvider}
+   */
+  public static PrimitiveTypeProvider fromData(Literal d) {
     switch (d.getDataCase()) {
       case BOOLEANDATA:
         return new BooleanTypeProvider(d.getBooleanData());
@@ -378,7 +431,6 @@ public class CottontailMessageBuilder {
             return new NothingProvider();
         }
       }
-
       case DATA_NOT_SET:
         return new NothingProvider();
     }
@@ -386,18 +438,36 @@ public class CottontailMessageBuilder {
     return new NothingProvider();
   }
 
+  /**
+   * Converts a array of floats to a {@link Vector}.
+   *
+   * @param vector Float array to convert.
+   * @return {@link Vector}
+   */
   private static Vector toVector(float[] vector) {
     return Vector.newBuilder()
         .setFloatVector(FloatVector.newBuilder().addAllVector(Floats.asList(vector)))
         .build();
   }
 
+  /**
+   * Converts a array of booleans to a {@link Vector}.
+   *
+   * @param vector Boolean array to convert.
+   * @return {@link Vector}
+   */
   private static Vector toVector(boolean[] vector) {
     return Vector.newBuilder()
         .setBoolVector(BoolVector.newBuilder().addAllVector(Booleans.asList(vector)))
         .build();
   }
 
+  /**
+   * Converts a array of floats to a {@link Vector}.
+   *
+   * @param vector Float array to convert.
+   * @return {@link Vector}
+   */
   private static Vector toVector(ReadableFloatVector vector) {
     List<Float> floats = new ArrayList<>();
     for (int i = 0; i < vector.getElementCount(); i++) {
@@ -406,43 +476,55 @@ public class CottontailMessageBuilder {
     return Vector.newBuilder().setFloatVector(FloatVector.newBuilder().addAllVector(floats)).build();
   }
 
-  public static List<Data> toData(Iterable<Object> obs) {
-
-    List<Data> _return = new ArrayList<>();
-
+  public static List<Literal> toDatas(Iterable<?> obs) {
+    final List<Literal> _return = new LinkedList<>();
     for (Object o : obs) {
       _return.add(toData(o));
     }
+    return _return;
+  }
 
+  public static List<Literal> toDatas(Collection<?> obs) {
+    final List<Literal> _return = new ArrayList<>(obs.size());
+    for (Object o : obs) {
+      _return.add(toData(o));
+    }
     return _return;
   }
 
   /**
-   * @param queryId can be null, in which case a random 3-char identifier will be generated.
+   * Generates and returns a {@link QueryMessage} for the given {@link Query}.
+   *
+   * @param query {@link Query}
+   * @return {@link QueryMessage}
    */
-  public static QueryMessage queryMessage(Query query, String queryId) {
-    queryId = queryId == null || queryId.isEmpty() ? "cin-" + RandomStringUtils.randomNumeric(3).toLowerCase() : queryId;
-    return QueryMessage.newBuilder().setQuery(query).setQueryId(queryId).build();
+  public static QueryMessage queryMessage(Query query) {
+    return QueryMessage.newBuilder().setQuery(query).build();
   }
 
-  public static BatchedQueryMessage batchedQueryMessage(Iterable<Query> queries) {
-    return BatchedQueryMessage.newBuilder().addAllQueries(queries).build();
-  }
-
-  public static Map<String, PrimitiveTypeProvider> tupleToMap(Tuple tuple) {
-
+  /**
+   * Converts a {@link Tuple} to a list of cs
+   *
+   * @param tuple {@link Tuple} to convert.
+   * @return List of {@link PrimitiveTypeProvider}s
+   */
+  public static List<PrimitiveTypeProvider> query(Tuple tuple) {
     if (tuple == null) {
       return null;
     }
-
-    Map<String, Data> datamap = tuple.getDataMap();
-    Map<String, PrimitiveTypeProvider> map = new HashMap<>(datamap.size());
-
-    datamap.forEach((key, value) -> map.put(key, fromData(value)));
-
-    return map;
+    return tuple.getDataList().stream().map(CottontailMessageBuilder::fromData).collect(Collectors.toList());
   }
 
+  /**
+   * Generates a {@link Knn} predicate for the given parameters.
+   *
+   * @param attribute Name of the attribute / column to query.
+   * @param vector The query vector.
+   * @param weights The weights vector.
+   * @param k The k in kNN
+   * @param distance The {@link ReadableQueryConfig.Distance} to use.
+   * @return {@link Knn}
+   */
   public static Knn knn(
       String attribute,
       float[] vector,
@@ -450,7 +532,7 @@ public class CottontailMessageBuilder {
       int k,
       ReadableQueryConfig.Distance distance) {
     Knn.Builder knnBuilder = Knn.newBuilder();
-    knnBuilder.clear().setK(k).addQuery(toVector(vector)).setAttribute(attribute);
+    knnBuilder.clear().setK(k).addQuery(toVector(vector)).setAttribute(column(attribute));
 
     if (weights != null) {
       knnBuilder.addWeights(toVector(weights));
@@ -478,10 +560,19 @@ public class CottontailMessageBuilder {
         break;
       }
     }
-
     return knnBuilder.build();
   }
 
+  /**
+   * Generates a batched{@link Knn} predicate for the given parameters.
+   *
+   * @param attribute Name of the attribute / column to query.
+   * @param vectors List of query vectors.
+   * @param weights List of weight vectors.
+   * @param k The k in kNN
+   * @param distance The {@link ReadableQueryConfig.Distance} to use.
+   * @return {@link Knn}
+   */
   public static Knn batchedKnn(
       String attribute,
       List<float[]> vectors,
@@ -490,7 +581,7 @@ public class CottontailMessageBuilder {
       ReadableQueryConfig.Distance distance
   ) {
     Knn.Builder knnBuilder = Knn.newBuilder();
-    knnBuilder.clear().setK(k).setAttribute(attribute);
+    knnBuilder.clear().setK(k).setAttribute(column(attribute));
     vectors.forEach(v -> knnBuilder.addQuery(toVector(v)));
 
     if (weights != null) {
@@ -523,15 +614,6 @@ public class CottontailMessageBuilder {
     return knnBuilder.build();
   }
 
-  public static AtomicLiteralBooleanPredicate inList(String attribute, Collection<String> elements) {
-
-    AtomicLiteralBooleanPredicate.Builder builder = AtomicLiteralBooleanPredicate.newBuilder().setAttribute(attribute);
-    builder.setOp(Operator.IN);
-    builder.addAllData(elements.stream().map(CottontailMessageBuilder::toData).collect(Collectors.toList()));
-    return builder.build();
-
-  }
-
   /**
    * Builds a where clause from a collection of strings. Returns null for an empty collection.
    */
@@ -539,10 +621,8 @@ public class CottontailMessageBuilder {
     if (elements == null || elements.isEmpty()) {
       return null;
     }
-
     Where.Builder builder = Where.newBuilder();
-    builder.setAtomic(inList(attribute, elements));
-
+    builder.setAtomic(atomicPredicate(attribute, RelationalOperator.IN, elements.toArray(new Literal[0])));
     return builder.build();
   }
 }

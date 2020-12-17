@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Data;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Entity;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage.InsertElement;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessageOrBuilder;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.Operation;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionOperation;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +21,7 @@ import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
-public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
+public class CottontailWriter extends AbstractPersistencyWriter<InsertMessage.Builder> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -28,7 +31,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
         this.cottontail = wrapper;
     }
 
-    private Entity entity;
+    private EntityName entity;
 
 
     @Override
@@ -46,42 +49,28 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean exists(String key, String value) {
-
-        Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, key); //TODO replace with exists projection
-        Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
-
-        List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1), ""));
-
-        if (result.isEmpty()) {
-            return false;
-        }
-
-        return result.get(0).getResultsCount() > 0;
-
+        final Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.EXISTS, key); //TODO replace with exists projection
+        final Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
+        final List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1)));
+        return result.get(0).getTuples(0).getData(0).getBooleanData();
     }
 
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
         final List<InsertMessage> messages = tuples.stream()
-            .map(t -> InsertMessage.newBuilder().setFrom(From.newBuilder().setEntity(this.entity)).setTuple(this.getPersistentRepresentation(t)).build())
+            .map(t -> getPersistentRepresentation(t).setFrom(From.newBuilder().setEntity(this.entity)).build())
             .collect(Collectors.toList());
         return this.cottontail.insert(messages);
     }
 
     @Override
-    public Tuple getPersistentRepresentation(PersistentTuple tuple) {
-
-        Tuple.Builder tupleBuilder = Tuple.newBuilder();
-
-        HashMap<String, Data> tmpMap = new HashMap<>();
-        int nameIndex = 0;
-
+    public InsertMessage.Builder getPersistentRepresentation(PersistentTuple tuple) {
+        final InsertMessage.Builder insertBuilder = InsertMessage.newBuilder();
+        int index = 0;
         for (Object o : tuple.getElements()) {
-            tmpMap.put(names[nameIndex++], CottontailMessageBuilder.toData(o));
+            insertBuilder.addInserts(InsertElement.newBuilder().setColumn(ColumnName.newBuilder().setName(this.names[index++]).build()).setValue(CottontailMessageBuilder.toData(o)).build());
         }
-
-        return tupleBuilder.putAllData(tmpMap).build();
-
+        return insertBuilder;
     }
 }
