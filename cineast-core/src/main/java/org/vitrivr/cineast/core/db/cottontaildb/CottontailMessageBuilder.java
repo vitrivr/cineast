@@ -134,6 +134,8 @@ public class CottontailMessageBuilder {
       case LIKE:
       case NLIKE: //this has to be not-ed!!
         return ComparisonOperator.LIKE;
+      case MATCH: // 1:1 relationship between Cottontail DB MATCH and MATCHES
+        return ComparisonOperator.MATCH;
       case ISNULL:
         return ComparisonOperator.ISNULL;
       case ISNOTNULL:

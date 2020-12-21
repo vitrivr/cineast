@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.column;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.query;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.queryMessage;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.toData;
@@ -28,6 +29,7 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionOperation;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
@@ -100,7 +102,7 @@ public class CottontailSelector implements DBSelector {
 
     final List<QueryResponseMessage> results = this.cottontail.query(queryMessage(query(entity, projection, where, null, null)));
     final List<float[]> _return = new ArrayList<>();
-    final ColumnName column = CottontailMessageBuilder.column(vectorName);
+    final ColumnName column = column(vectorName);
     for (QueryResponseMessage response : results) {
       final int index = response.getColumnsList().indexOf(column);
       for (Tuple t : response.getTuplesList()) {
@@ -138,9 +140,14 @@ public class CottontailSelector implements DBSelector {
       int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
 
     /* This includes the filter for segmentids in the where-statement */
-    Where where = CottontailMessageBuilder.compoundWhere(queryConfig, fieldname, RelationalOperator.LIKE, ConnectionOperator.OR, toData(Arrays.asList(terms)));
+    Where where = CottontailMessageBuilder.compoundWhere(queryConfig, fieldname, RelationalOperator.MATCH, ConnectionOperator.OR, toDatas(Arrays.asList(terms)).toArray(new Literal[0]));
 
-    final Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.SELECT, GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER);
+    final Projection projection = Projection.newBuilder()
+        .setOp(ProjectionOperation.SELECT)
+        .addColumns(ProjectionElement.newBuilder().setColumn(column(GENERIC_ID_COLUMN_QUALIFIER)))
+        .addColumns(ProjectionElement.newBuilder().setColumn(column("score")).setAlias(column(DB_DISTANCE_VALUE_QUALIFIER)))
+        .build();
+
     final QueryMessage queryMessage = queryMessage(query(entity, projection, where, null, rows));
     return processResults(this.cottontail.query(queryMessage));
   }
@@ -184,7 +191,7 @@ public class CottontailSelector implements DBSelector {
     final Map<String, Integer> count = new HashMap<>();
     final List<QueryResponseMessage> list = this.cottontail.query(queryMessage);
     for (QueryResponseMessage m : list) {
-      int index = m.getColumnsList().indexOf(CottontailMessageBuilder.column(column));
+      int index = m.getColumnsList().indexOf(column(column));
       for (Tuple t : m.getTuplesList()) {
         count.merge(t.getData(index).getStringData(), 1, (old, one) -> old + 1);
       }
@@ -240,7 +247,7 @@ public class CottontailSelector implements DBSelector {
   private List<PrimitiveTypeProvider> toSingleCol(List<QueryResponseMessage> results, String colName) {
     final List<PrimitiveTypeProvider> _return = new LinkedList<>();
     for (QueryResponseMessage response : results) {
-      int index = response.getColumnsList().indexOf(CottontailMessageBuilder.column(colName));
+      int index = response.getColumnsList().indexOf(column(colName));
       for (Tuple t : response.getTuplesList()) {
         _return.add(CottontailMessageBuilder.fromData(t.getData(index)));
       }
@@ -250,8 +257,8 @@ public class CottontailSelector implements DBSelector {
 
   private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResponseMessage response, Class<? extends T> distanceElementClass) {
     List<T> result = new ArrayList<>();
-    int idIndex = response.getColumnsList().indexOf(CottontailMessageBuilder.column(GENERIC_ID_COLUMN_QUALIFIER));
-    int distanceIndex = response.getColumnsList().indexOf(CottontailMessageBuilder.column("distance"));
+    int idIndex = response.getColumnsList().indexOf(column(GENERIC_ID_COLUMN_QUALIFIER));
+    int distanceIndex = response.getColumnsList().indexOf(column("distance"));
     for (Tuple t : response.getTuplesList()) {
       String id = null;
       final Literal data = t.getData(idIndex);
