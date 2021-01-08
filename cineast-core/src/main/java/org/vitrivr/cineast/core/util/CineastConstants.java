@@ -13,6 +13,11 @@ public class CineastConstants {
   public static final String GENERIC_ID_COLUMN_QUALIFIER = "id";
 
   /**
+   * Use this column qualifier if it might refer to a segment id
+   */
+  public static final String SEGMENT_ID_COLUMN_QUALIFIER = "segmentid";
+
+  /**
    * In some legacy, adampro return "ap_distance" instead of the true distance.
    * In an effort to unify the codebase, use this constant whenever you are expecting a distance or score from a query to the db
    */

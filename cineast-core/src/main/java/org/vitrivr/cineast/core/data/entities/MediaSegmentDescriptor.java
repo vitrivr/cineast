@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -28,7 +30,7 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
      *  - segmentend
      *  - startabs
      */
-    public static final String[] FIELDNAMES = {"segmentid", "objectid", "segmentnumber", "segmentstart", "segmentend", "segmentstartabs", "segmentendabs"};
+    public static final String[] FIELDNAMES = {SEGMENT_ID_COLUMN_QUALIFIER, "objectid", "segmentnumber", "segmentstart", "segmentend", "segmentstartabs", "segmentendabs"};
 
     private final String segmentId, objectId;
     private final int start, end, number;
