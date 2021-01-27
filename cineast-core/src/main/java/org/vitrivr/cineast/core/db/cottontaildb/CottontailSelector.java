@@ -208,7 +208,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean existsEntity(String name) {
-    return this.cottontail.existsEntity(name);
+    return this.cottontail.existsEntity(CottontailMessageBuilder.entity(name));
   }
 
   @Override

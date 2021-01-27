@@ -55,7 +55,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(TagReader.TAG_ENTITY_NAME))
         .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
 
     this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ);
     this.createIndex(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH);
@@ -79,7 +79,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(MediaObjectDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
 
     this.createIndex(MediaObjectDescriptor.ENTITY, MediaObjectDescriptor.FIELDNAMES[0], IndexType.HASH_UQ);
 
@@ -101,7 +101,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(MediaObjectMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
 
     this.createIndex(MediaObjectMetadataDescriptor.ENTITY, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.HASH);
 
@@ -122,7 +122,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(MediaSegmentMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
     this.createIndex(MediaSegmentMetadataDescriptor.ENTITY, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.HASH);
     return true;
   }
@@ -131,14 +131,14 @@ public class CottontailEntityCreator implements EntityCreator {
     final EntityName entity = CottontailMessageBuilder.entity(entityName);
     final IndexName index = IndexName.newBuilder().setEntity(entity).setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute).build();
     final IndexDefinition idxMessage = IndexDefinition.newBuilder().setType(type).addColumns(CottontailMessageBuilder.column(attribute)).setName(index).build();
-    cottontail.createIndexBlocking(idxMessage);
+    cottontail.createIndex(idxMessage);
     return true;
   }
 
   public boolean dropIndex(String entityName, String attribute, IndexType type){
     final EntityName entity = CottontailMessageBuilder.entity(entityName);
     final IndexName index = IndexName.newBuilder().setEntity(entity).setName("index-" + type.name().toLowerCase() + "-" + entity.getSchema().getName() + "_" + entity.getName() + "_" + attribute).build();
-    cottontail.dropIndexBlocking(index);
+    cottontail.dropIndex(index);
     return true;
   }
 
@@ -159,7 +159,7 @@ public class CottontailEntityCreator implements EntityCreator {
         .setEntity(CottontailMessageBuilder.entity(MediaSegmentDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
 
     this.createIndex(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[0], IndexType.HASH_UQ);
     this.createIndex(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[1], IndexType.HASH);
@@ -219,7 +219,7 @@ public class CottontailEntityCreator implements EntityCreator {
             .setEntity(entity)
             .addAllColumns(columns).build();
 
-    cottontail.createEntityBlocking(message);
+    cottontail.createEntity(message);
 
     for (AttributeDefinition attribute : def.getAttributes()) {
       if (attribute.getType() == TEXT) {
@@ -242,24 +242,22 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean existsEntity(String entityName) {
-    return this.cottontail.existsEntity(entityName);
+    return this.cottontail.existsEntity(CottontailMessageBuilder.entity(entityName));
   }
 
   @Override
   public boolean dropEntity(String entityName) {
-    cottontail.dropEntityBlocking(CottontailMessageBuilder.entity(entityName));
+    cottontail.dropEntity(CottontailMessageBuilder.entity(entityName));
     return true;
   }
-
 
   @Override
   public void close() {
     this.cottontail.close();
   }
 
-  public static final Type mapAttributeType(AttributeDefinition.AttributeType type) {
+  public static Type mapAttributeType(AttributeDefinition.AttributeType type) {
     switch (type) {
-
       case BOOLEAN:
         return Type.BOOLEAN;
       case DOUBLE:
@@ -285,5 +283,4 @@ public class CottontailEntityCreator implements EntityCreator {
         throw new RuntimeException("type " + type + " has no matching analogue in CottontailDB");
     }
   }
-
 }

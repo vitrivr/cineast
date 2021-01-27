@@ -19,7 +19,7 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Tuple> {
   @Override
   protected void finishSetup() {
     CottontailWrapper wrapper = getWrapper();
-    wrapper.optimizeEntityBlocking(CottontailMessageBuilder.entity(this.getTestTextTableName()));
+    wrapper.optimizeEntity(CottontailMessageBuilder.entity(this.getTestTextTableName()));
     wrapper.close();
   }
 

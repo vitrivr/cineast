@@ -24,7 +24,7 @@ public class OptimizeEntitiesCommand implements Runnable {
     CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
     wrapper.listEntities(CottontailMessageBuilder.CINEAST_SCHEMA).forEach(entity -> {
       System.out.println("Optimizing entity " + entity);
-      wrapper.optimizeEntityBlocking(entity);
+      wrapper.optimizeEntity(entity);
     });
     System.out.println("Finished optimizing all entities");
   }

@@ -1,34 +1,27 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.entity;
 
 import com.google.protobuf.Empty;
 import org.apache.commons.lang3.time.StopWatch;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
-import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
-import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cottontail.grpc.DDLGrpc;
 import org.vitrivr.cottontail.grpc.DDLGrpc.DDLBlockingStub;
-import org.vitrivr.cottontail.grpc.DDLGrpc.DDLFutureStub;
 import org.vitrivr.cottontail.grpc.DMLGrpc;
-import org.vitrivr.cottontail.grpc.DMLGrpc.DMLStub;
+import org.vitrivr.cottontail.grpc.DMLGrpc.DMLBlockingStub;
 import org.vitrivr.cottontail.grpc.DQLGrpc;
 import org.vitrivr.cottontail.grpc.DQLGrpc.DQLBlockingStub;
 
@@ -37,15 +30,16 @@ public class CottontailWrapper implements AutoCloseable {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private final ManagedChannel channel;
-  private final DDLFutureStub definitionFutureStub;
-  private final DMLStub managementStub;
-  private final DMLStub insertStub;
   private final HashSet<String> ensuredSchemas = new HashSet<>();
 
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
   private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
   private final boolean closeWrapper;
+
+  private final DDLBlockingStub ddlStub;
+  private final DMLBlockingStub dmlStub;
+  private final DQLBlockingStub dqlStub;
 
   public CottontailWrapper(DatabaseConfig config, boolean closeWrapper) {
     StopWatch watch = StopWatch.createStarted();
@@ -55,104 +49,142 @@ public class CottontailWrapper implements AutoCloseable {
       builder = builder.usePlaintext();
     }
     this.channel = builder.build();
-    this.definitionFutureStub = DDLGrpc.newFutureStub(channel);
-    this.managementStub = DMLGrpc.newStub(channel);
-    this.insertStub = DMLGrpc.newStub(channel);
+    this.ddlStub = DDLGrpc.newBlockingStub(this.channel);
+    this.dmlStub = DMLGrpc.newBlockingStub(this.channel);
+    this.dqlStub = DQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     watch.stop();
     LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
   }
 
-  public synchronized ListenableFuture<CottontailGrpc.QueryResponseMessage> createEntity(EntityDefinition definition) {
-    final DDLFutureStub stub = DDLGrpc.newFutureStub(this.channel);
-    return stub.createEntity(CreateEntityMessage.newBuilder().setDefinition(definition).build());
-  }
-
-  public synchronized boolean createEntityBlocking(EntityDefinition defintion) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
+  /**
+   * Creates and schema in Cottontail DB.
+   *
+   * @param schema The {@link SchemaName}.
+   * @return True if entity was created, false otherwise.
+   */
+  public synchronized boolean createSchema(SchemaName schema) {
     try {
-      stub.createEntity(CreateEntityMessage.newBuilder().setDefinition(defintion).build());
+      this.ddlStub.createSchema(CreateSchemaMessage.newBuilder().setSchema(schema).build());
       return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
-        LOGGER.warn("Entity {} was not created because it already exists", defintion.getEntity().getName());
+        LOGGER.debug("Schema {} was not created because it already exists.", schema.getName());
       } else {
-        e.printStackTrace();
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.createSchema: {}", e.getMessage());
       }
+      return false;
     }
-    return false;
   }
 
-  public synchronized boolean createIndexBlocking(IndexDefinition definition) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
+  /**
+   * Creates and entity in Cottontail DB.
+   *
+   * @param definition The {@link EntityDefinition}.
+   * @return True if entity was created, false otherwise.
+   */
+  public synchronized boolean createEntity(EntityDefinition definition) {
     try {
-      stub.createIndex(CreateIndexMessage.newBuilder().setDefinition(definition).build());
+      this.ddlStub.createEntity(CreateEntityMessage.newBuilder().setDefinition(definition).build());
+      return true;
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
+        LOGGER.warn("Entity {} was not created because it already exists", definition.getEntity().getName());
+      } else if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+        LOGGER.warn("Entity {} was not created because schema does not exist.", definition.getEntity().getName());
+      } else {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.createEntity: {}", e.getMessage());
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Drops an entity in Cottontail DB.
+   *
+   * @param entity The {@link EntityName}.
+   * @return True if entity was dropped, false otherwise.
+   */
+  public synchronized boolean dropEntity(EntityName entity) {
+    try {
+      this.ddlStub.dropEntity(DropEntityMessage.newBuilder().setEntity(entity).build());
+      return true;
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+        LOGGER.debug("Entity {} was not dropped because either it does not exist", entity.getName());
+      } else {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.dropEntity: {}", e.getMessage());
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Optimizes an entity in Cottontail DB.
+   *
+   * @param entity The {@link EntityName}.
+   * @return True if entity was optimized, false otherwise.
+   */
+  public synchronized boolean optimizeEntity(EntityName entity) {
+    try {
+      this.ddlStub.optimizeEntity(OptimizeEntityMessage.newBuilder().setEntity(entity).build());
+      return true;
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+        LOGGER.debug("Entity {} was not optimized because it does not exist", entity.getName());
+      } else {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.optimizeIndex: {}", e.getMessage());
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Creates an index in Cottontail DB in a blocking fashion.
+   *
+   * @param definition The {@link IndexDefinition}.
+   * @return True if index was created, false otherwise.
+   */
+  public synchronized boolean createIndex(IndexDefinition definition) {
+    try {
+      this.ddlStub.createIndex(CreateIndexMessage.newBuilder().setDefinition(definition).build());
       return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
         LOGGER.warn("Index on {} was not created because it already exists.", definition.getName().getName());
-        return false;
+      } else if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+        LOGGER.warn("Index on {} was not created because either entity or schema does not exist.", definition.getName().getName());
+      } else {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.createIndex: {}", e.getMessage());
       }
-      e.printStackTrace();
+      return false;
     }
-    return false;
   }
 
-  public synchronized boolean dropIndexBlocking(IndexName index) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
+  /**
+   * Drops an index in Cottontail DB in a blocking fashion.
+   *
+   * @param index The {@link IndexName}.
+   * @return True if index was created, false otherwise.
+   */
+  public synchronized boolean dropIndex(IndexName index) {
     try {
-      stub.dropIndex(DropIndexMessage.newBuilder().setIndex(index).build());
+      this.ddlStub.dropIndex(DropIndexMessage.newBuilder().setIndex(index).build());
       return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.NOT_FOUND) {
         LOGGER.warn("Index {} was not dropped because it does not exist", index.getName());
-        return false;
-      }
-      e.printStackTrace();
-    }
-    return false;
-  }
-
-  public synchronized boolean optimizeEntityBlocking(EntityName entity) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
-    try {
-      stub.optimizeEntity(OptimizeEntityMessage.newBuilder().setEntity(entity).build());
-      return true;
-    } catch (StatusRuntimeException e) {
-      e.printStackTrace();
-    }
-    return false;
-  }
-
-  public synchronized boolean dropEntityBlocking(EntityName entity) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
-    try {
-      stub.dropEntity(DropEntityMessage.newBuilder().setEntity(entity).build());
-      return true;
-    } catch (StatusRuntimeException e) {
-      if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
-        LOGGER.debug("entity {} was not dropped because it does not exist", entity.getName());
       } else {
-        e.printStackTrace();
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.dropIndex: {}", e.getMessage());
       }
+      return false;
     }
-    return false;
   }
 
-  public synchronized boolean createSchemaBlocking(SchemaName schama) {
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel);
-    try {
-      stub.createSchema(CreateSchemaMessage.newBuilder().setSchema(schama).build());
-      return true;
-    } catch (StatusRuntimeException e) {
-      if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
-        LOGGER.debug("Schema {} was not created because it already exists.", schama.getName());
-      } else {
-        e.printStackTrace();
-      }
-    }
-    return false;
-  }
-
+  /**
+   * Ensures existence of schema with given name.
+   *
+   * @param schema Name of the schema.
+   */
   public synchronized void ensureSchemaBlocking(String schema) {
     if (this.ensuredSchemas.contains(schema)) {
       return;
@@ -168,13 +200,9 @@ public class CottontailWrapper implements AutoCloseable {
       });
     });
     if (!schemaExists[0]) {
-      this.createSchemaBlocking(SchemaName.newBuilder().setName(schema).build());
+      this.createSchema(SchemaName.newBuilder().setName(schema).build());
     }
     this.ensuredSchemas.add(schema);
-  }
-
-  public boolean insert(List<InsertMessage> messages) {
-    return false;
   }
 
   /**
@@ -185,9 +213,8 @@ public class CottontailWrapper implements AutoCloseable {
   public List<QueryResponseMessage> query(QueryMessage query) {
     StopWatch watch = StopWatch.createStarted();
     final ArrayList<QueryResponseMessage> results = new ArrayList<>();
-    final DQLBlockingStub stub = DQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_QUERY_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      stub.query(query).forEachRemaining(results::add);
+      this.dqlStub.query(query).forEachRemaining(results::add);
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
         LOGGER.error("CottontailWrapper.query has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
@@ -200,14 +227,37 @@ public class CottontailWrapper implements AutoCloseable {
   }
 
   /**
+   * Inserts a list of {@link InsertMessage}s into Cottontail DB.
+   *
+   * TODO: Currently, each insert is committed immediately. One could use Transaction support here.
+   *
+   * @param messages List of {@link InsertMessage}
+   * @return true upon success.
+   */
+  public boolean insert(List<InsertMessage> messages) {
+    try {
+      for (final InsertMessage m : messages) {
+        final QueryResponseMessage result = this.dmlStub.insert(m);
+      }
+      return true;
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus() == Status.NOT_FOUND) {
+        LOGGER.warn("Insert failed because specified entity does not exist.");
+      } else {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.insert: {}", e.getMessage());
+      }
+      return false;
+    }
+  }
+
+  /**
    * Pings the Cottontail DB endpoint and returns true on success and false otherwise.
    *
    * @return True on success, false otherwise.
    */
   public boolean ping() {
-    final DQLBlockingStub stub = DQLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      stub.ping(Empty.getDefaultInstance());
+      this.dqlStub.ping(Empty.getDefaultInstance());
       return true;
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
@@ -227,9 +277,10 @@ public class CottontailWrapper implements AutoCloseable {
    */
   public List<EntityName> listEntities(SchemaName schema) {
     final ArrayList<EntityName> entities = new ArrayList<>();
-    final DDLBlockingStub stub = DDLGrpc.newBlockingStub(this.channel).withDeadlineAfter(MAX_CALL_TIMEOUT, TimeUnit.MILLISECONDS);
     try {
-      stub.listEntities(ListEntityMessage.newBuilder().setSchema(schema).build()).forEachRemaining(r -> r.getTuplesList().forEach(t -> entities.add(entity(t.getData(0).getStringData()))));
+      this.ddlStub.listEntities(ListEntityMessage.newBuilder().setSchema(schema).build()).forEachRemaining(
+          r -> r.getTuplesList().forEach(t -> entities.add(entity(t.getData(0).getStringData().split("\\.")[2])))
+      );
     } catch (StatusRuntimeException e) {
       if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
         LOGGER.error("CottontailWrapper.listEntities has timed out (timeout = {}ms).", MAX_CALL_TIMEOUT);
@@ -241,23 +292,32 @@ public class CottontailWrapper implements AutoCloseable {
   }
 
   /**
+   * Checks if entity with the given name exists.
    *
+   * @param name {@link EntityName} to check.
+   * @return List of entities.
    */
-  @Override
-  public void close() {
-    if (closeWrapper) {
-      LOGGER.info("Closing connection to cottontail");
-      this.channel.shutdown();
+  public boolean existsEntity(EntityName name) {
+    final EntityDetailsMessage message = EntityDetailsMessage.newBuilder().setEntity(name).build();
+    try {
+      final QueryResponseMessage responseMessage = this.ddlStub.entityDetails(message);
+      return responseMessage.getTuplesCount() > 0;
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus() != Status.NOT_FOUND) {
+        LOGGER.error("Error occurred during invocation of CottontailWrapper.entityDetails: {}", e.getMessage());
+      }
+      return false;
     }
   }
 
-  public boolean existsEntity(String name) {
-    final List<EntityName> entities = this.listEntities(CINEAST_SCHEMA);
-    for (EntityName entity : entities) {
-      if (entity.getName().equals(name)) {
-        return true;
-      }
+  /**
+   * Closes this {@link CottontailWrapper}.
+   */
+  @Override
+  public void close() {
+    if (this.closeWrapper) {
+      LOGGER.info("Closing connection to cottontail");
+      this.channel.shutdown();
     }
-    return false;
   }
 }

@@ -56,7 +56,7 @@ public abstract class DataImportHandler {
             DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
             setupCmd.doSetup();
         }else{
-            cottontail.createEntityBlocking(entityDefinition);
+            cottontail.createEntity(entityDefinition);
             LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
         }
     }
