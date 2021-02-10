@@ -2,16 +2,15 @@
 [![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=master)](https://travis-ci.org/vitrivr/cineast)
 
 # Cineast
-Cineast is a multi-feature content-based mulitmedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
+Cineast is a multi-feature content-based multimedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
 Cineast is written in Java and uses [CottontailDB](https://github.com/vitrivr/cottontaildb) as a storage backend.
 
 ## Building Cineast
 Cineast can be built using [Gradle](https://gradle.org/). Building and running it is as easy as
 ```
-$> git clone --recursive https://github.com/vitrivr/cineast.git cineast
+$> git clone https://github.com/vitrivr/cineast.git
 $> cd cineast
-$> ./gradlew :cineast-core:generateProto
-$> ./gradlew cineast-runtime:fatJar
+$> ./gradlew cineast-runtime:shadowJar
 $> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
 
@@ -20,9 +19,9 @@ For more setup information, consult our [Wiki](https://github.com/vitrivr/cineas
 ## Docker image
 
 There is a Docker image available [on Docker
-Hub](https://hub.docker.com/repository/docker/vitrivr/cineast).
+Hub](https://hub.docker.com/r/vitrivr/cineast).
 
-You can then run the CLI with:
+You can run the CLI with:
 ```
 $> docker run vitrivr/cineast cli cineast.json help
 ```
@@ -50,7 +49,7 @@ As a result, the OAS is stored at `docs/swagger.json`
 ## Prerequisites
 ### System dependencies
 * git
-* JDK 8 or higher
+* JDK 11 or higher
 
 ### 3D rendering
 For 3D rendering (required in order to support 3D models) you either need a video card or Mesa 3D. The JOGL library supports both. Rendering on Headless devices has been successfully tested with Xvfb. The following steps are required to enable
