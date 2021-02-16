@@ -4,6 +4,8 @@ import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.queryMessage;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.toDatas;
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -63,8 +65,8 @@ public class CottontailSelector implements DBSelector {
     Knn knn = CottontailMessageBuilder.knn(column, vector, config.getDistanceWeights().orElse(null), k, config.getDistance().orElse(Distance.manhattan));
     QueryMessage queryMessage = queryMessage(
         query(entity,
-            CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
-            whereInList("id", config.getRelevantSegmentIds()),
+            CottontailMessageBuilder.projection(Operation.SELECT, GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER),
+            whereInList(GENERIC_ID_COLUMN_QUALIFIER, config.getRelevantSegmentIds()),
             knn,
             k),
         config.getQueryId().toString());
@@ -75,8 +77,8 @@ public class CottontailSelector implements DBSelector {
   public <E extends DistanceElement> List<E> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<E> distanceElementClass, List<ReadableQueryConfig> configs) {
     Query query = query(
         entity,
-        CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
-        whereInList("id", configs.get(0).getRelevantSegmentIds()),
+        CottontailMessageBuilder.projection(Operation.SELECT, GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER),
+        whereInList(GENERIC_ID_COLUMN_QUALIFIER, configs.get(0).getRelevantSegmentIds()),
         CottontailMessageBuilder.batchedKnn(column, vectors, null, k, configs.get(0).getDistance().orElse(Distance.manhattan)), null);
 
     return toDistanceElement(this.cottontail.query(queryMessage(query, configs.get(0).getQueryId().toString())), distanceElementClass);
@@ -86,7 +88,7 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
 
     Knn knn = CottontailMessageBuilder.knn(column, vector, config.getDistanceWeights().orElse(null), k, config.getDistance().orElse(Distance.manhattan));
-    QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, whereInList("id", config.getRelevantSegmentIds()), knn, k), config.getQueryId().toString());
+    QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, whereInList(GENERIC_ID_COLUMN_QUALIFIER, config.getRelevantSegmentIds()), knn, k), config.getQueryId().toString());
     return processResults(this.cottontail.query(queryMessage));
   }
 
@@ -142,7 +144,7 @@ public class CottontailSelector implements DBSelector {
     /* This includes the filter for segmentids in the where-statement */
     Where where = CottontailMessageBuilder.compoundWhere(queryConfig, fieldname, RelationalOperator.LIKE, Operator.OR, toDatas(Arrays.asList(terms)));
 
-    final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
+    final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes(GENERIC_ID_COLUMN_QUALIFIER, "").putAttributes("score", DB_DISTANCE_VALUE_QUALIFIER).build();
     QueryMessage queryMessage = queryMessage(query(entity, projection, where, null, rows), null);
     return processResults(this.cottontail.query(queryMessage));
   }
@@ -247,8 +249,8 @@ public class CottontailSelector implements DBSelector {
     List<T> result = new ArrayList<>();
     for (Tuple t : response.getResultsList()) {
       String id = null;
-      Data data = t.getDataMap().get("id");
-      switch (t.getDataMap().get("id").getDataCase()) {
+      Data data = t.getDataMap().get(GENERIC_ID_COLUMN_QUALIFIER);
+      switch (t.getDataMap().get(GENERIC_ID_COLUMN_QUALIFIER).getDataCase()) {
         case BOOLEANDATA:
         case VECTORDATA:
         case DATA_NOT_SET:

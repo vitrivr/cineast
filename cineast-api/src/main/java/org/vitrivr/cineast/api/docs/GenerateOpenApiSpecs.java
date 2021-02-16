@@ -2,9 +2,8 @@ package org.vitrivr.cineast.api.docs;
 
 import java.io.IOException;
 import org.vitrivr.cineast.api.APIEndpoint;
-import org.vitrivr.cineast.standalone.cli.CineastCli;
+import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.util.CLI;
 
 /**
  * Main class for standalone persistent openapi specs generation.
@@ -32,7 +31,7 @@ public class GenerateOpenApiSpecs {
     }
 
     try {
-      APIEndpoint.getInstance().writeOpenApiDocPersistently("docs/openapi.json"); // TODO use config?
+      OpenApiCompatHelper.writeOpenApiDocPersistently(APIEndpoint.getInstance(), "docs/openapi.json"); // TODO use config?
     } catch (IOException e) {
       e.printStackTrace();
     }

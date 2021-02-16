@@ -10,9 +10,17 @@ import java.util.List;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.importer.handlers.*;
+import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.LIREImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.LSCAllTagsImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.OCRImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
@@ -27,7 +35,6 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportH
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
- *
  */
 @Command(name = "import", description = "Starts import of pre-extracted data.")
 public class ImportCommand implements Runnable {
@@ -46,7 +53,7 @@ public class ImportCommand implements Runnable {
   @Option(name = {"-b", "--batchsize"}, description = "The batch size used for the import. Imported data will be persisted in batches of the specified size.")
   private int batchsize = 500;
 
-  @Option(name={"-c", "--clean"}, description = "Cleans, i.e. drops the tables before import. Use with caution, as the already imported data will be lost! Requires the import type to respect this option")
+  @Option(name = {"-c", "--clean"}, description = "Cleans, i.e. drops the tables before import. Use with caution, as the already imported data will be lost! Requires the import type to respect this option")
   private boolean clean = false;
 
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the import. Set this flag when you want more performance with external parallelism.")
@@ -62,7 +69,6 @@ public class ImportCommand implements Runnable {
     switch (type) {
       case PROTO:
         handler = new ProtoDataImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case JSON:
         handler = new JsonDataImportHandler(this.threads, this.batchsize);
@@ -108,29 +114,42 @@ public class ImportCommand implements Runnable {
         handler = new FacesImportHandler(this.threads, this.batchsize);
         break;
       case OBJECTINSTANCE:
-        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, clean);
         break;
       case LSCMETA:
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCCONCEPT:
-        handler = new VisualConceptTagImportHandler(this.threads,this.batchsize);
+        handler = new VisualConceptTagImportHandler(this.threads, this.batchsize);
         break;
       case LSCCAPTION:
         handler = new CaptionImportHandler(this.threads, this.batchsize);
         break;
+      case LSCX:
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, false);
+        break;
+      case LSCTABLE:
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, true);
+        break;
+      case LSC20TAGS:
+        handler = new LSCAllTagsImportHandler(this.threads, this.batchsize, clean);
+        break;
+      case LSCOCR:
+        handler = new OCRImportHandler(this.threads, this.batchsize, clean);
+        break;
     }
-    if(!isGoogleVision){
-      if(handler == null){
-        throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: "+type);
-      }else{
+    if (!isGoogleVision) {
+      if (handler == null) {
+        throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: " + type);
+      } else {
         handler.doImport(path);
-        /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
-        if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
-          handler.waitForCompletion();  
-          OptimizeEntitiesCommand.optimizeAllCottontailEntities();
-        }
       }
+    }
+
+    /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
+    if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
+      handler.waitForCompletion();
+      OptimizeEntitiesCommand.optimizeAllCottontailEntities();
     }
 
     System.out.printf("Completed import of type %s for '%s'.%n", this.type, this.input);
@@ -155,6 +174,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR
   }
 }

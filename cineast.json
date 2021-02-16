@@ -12,8 +12,8 @@
   },
   "retriever": {
     "threadPoolSize": 2,
-    "maxResults": 1000,
-    "resultsPerModule": 1500,
+    "maxResults": 10000,
+    "resultsPerModule": 5000,
     "features": {
       "semantic" : [
         {"feature": "ConceptMasksAde20k", "weight" : 1.0}
@@ -70,6 +70,18 @@
       ],
       "scenecaption": [
         {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      ],
+      "objectInstances": [
+        {"feature":  "ObjectInstances", "weight":  1.0}
+      ],
+      "boolean": [
+        {
+          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "properties": {
+            "entity": "features_table_lsc20meta",
+            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month,p_hour,p_day"
+          }
+        }
       ]
     }
   },
@@ -114,11 +126,12 @@
     "httpsPort": 4568,
     "legacyPort": 12345,
     "threadPoolSize": 12,
-    "serveContent": true,
-    "serveUI": true,
-    "uiLocation": "dist",
+    "serveContent": false,
+    "serveUI": false,
+    "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "thumbnails",
-    "objectLocation": "objects"
+    "objectLocation": "objects",
+    "objectsFilesAreIDed": true
   },
 
   "monitoring":{

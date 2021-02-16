@@ -4,6 +4,8 @@ import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
+import org.vitrivr.cineast.core.features.SegmentTags;
 
 public class BatchedTagWriter extends AbstractBatchedEntityWriter<TagInstance> {
 
@@ -21,7 +23,7 @@ public class BatchedTagWriter extends AbstractBatchedEntityWriter<TagInstance> {
 
   @Override
   public void init() {
-    this.writer.setFieldNames("id", "tagid", "score");
+    this.writer.setFieldNames(TagReader.TAG_ID_COLUMNNAME, SegmentTags.TAG_ID_QUALIFIER, "score");
     this.writer.open(this.entityname);
   }
 

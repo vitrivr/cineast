@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -151,11 +152,6 @@ public class QueryConfig extends ReadableQueryConfig {
     return this;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-  }
-
   public void addRelevantSegmentIds(Collection<String> ids) {
     this.relevantSegmentIds.addAll(ids);
   }
@@ -173,5 +169,19 @@ public class QueryConfig extends ReadableQueryConfig {
   public void setRelevantSegmentIds(Collection<String> relevantSegments) {
     this.relevantSegmentIds.clear();
     this.addRelevantSegmentIds(relevantSegments);
+  }
+
+  @Override
+  public String toString() {
+    return "QueryConfig{" +
+        "distance=" + distance +
+        ", distanceWeights=" + Arrays.toString(distanceWeights) +
+        ", norm=" + norm +
+        ", correspondence=" + correspondence +
+        ", resultsPerModule=" + resultsPerModule +
+        ", maxResults=" + maxResults +
+        ", hints=" + hints +
+        ", relevantSegmentIds (Excerpt)=" + Arrays.toString(relevantSegmentIds.stream().limit(5).toArray()) +
+        '}';
   }
 }

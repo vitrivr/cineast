@@ -152,7 +152,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
       List<Thread> cleanupThreads = new ArrayList<>();
       /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size()-1; stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size() - 1; stageIndex++) {
         int finalContainerIdx = containerIdx;
         int finalStageIndex = stageIndex;
         cache.get(stageIndex).forEach((category, results) -> {

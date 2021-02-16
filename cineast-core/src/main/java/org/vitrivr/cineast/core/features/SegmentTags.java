@@ -43,6 +43,8 @@ public class SegmentTags implements Extractor, Retriever {
 
   public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
 
+  public static final String TAG_ID_QUALIFIER = "tagid";
+
   public SegmentTags() {
   }
 

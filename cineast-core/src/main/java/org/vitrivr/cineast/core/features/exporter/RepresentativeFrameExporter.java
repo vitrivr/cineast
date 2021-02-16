@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -53,7 +55,7 @@ public class RepresentativeFrameExporter implements Extractor {
 	public void init(PersistencyWriterSupplier supply, int batchSize) {
 		this.phandler = supply.get();
 		this.phandler.open("cineast_representativeframes");
-		this.phandler.setFieldNames("id", "frame");
+		this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame");
 		this.folder.mkdirs();
 	}
 

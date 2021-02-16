@@ -11,9 +11,18 @@ public class FileSystemObjectResolver implements ObjectResolver {
   private final MediaObjectReader lookup;
   private final File baseDir;
 
+  private final ObjectToFileResolver object2File;
+
   public FileSystemObjectResolver(File basedir, MediaObjectReader lookup){
     this.lookup = lookup;
     this.baseDir = basedir;
+    object2File = (dir, obj) -> new File(dir, obj.getPath());
+  }
+
+  public FileSystemObjectResolver(File basedir, MediaObjectReader lookup, ObjectToFileResolver transform){
+    this.lookup = lookup;
+    this.baseDir = basedir;
+    object2File = transform;
   }
 
 
@@ -32,7 +41,7 @@ public class FileSystemObjectResolver implements ObjectResolver {
     }
 
     try{
-      return new ResolutionResult(new File(baseDir, descriptor.getPath()));
+      return new ResolutionResult(object2File.resolve(baseDir, descriptor));
     }catch (IOException e){
       e.printStackTrace();
       return null;

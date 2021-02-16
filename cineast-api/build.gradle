@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id "com.google.protobuf" version "0.8.2"
 }
 
 
@@ -19,58 +18,31 @@ distributions {
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
-    }
-    plugins {
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
-        }
-    }
-    generatedFilesBaseDir = "$projectDir/build/generated/"
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs += "$projectDir/build/generated/main/grpc"
-            srcDirs += "$projectDir/build/generated/main/java"
-        }
-        proto {
-            srcDirs += "cineast-proto/src/main/protobuf"
-        }
-    }
-}
 
 configurations.all {
     // Check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-
-task fatJar(type: Jar) {
-    archiveClassifier = 'full'
+jar{
     manifest {
         attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
         attributes 'Multi-Release': 'true'
-		attributes 'Implementation-Version': '1.xx'
+        attributes 'Implementation-Version': '1.xx'
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+}
+
+shadowJar {
+    mergeServiceFiles()
 }
 
 dependencies {
-    compile('io.javalin:javalin-bundle:3.9.1'){
+    compile('io.javalin:javalin-bundle:3.13.3'){
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.10.5'
-    compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.0'
+    compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.+'
+    compile 'org.vitrivr:cineast-proto:0.1.0'
 }
 
 

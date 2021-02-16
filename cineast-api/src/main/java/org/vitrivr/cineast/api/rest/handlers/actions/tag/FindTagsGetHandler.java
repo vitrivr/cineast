@@ -32,19 +32,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
   private static final Logger LOGGER = LogManager.getLogger(FindTagsGetHandler.class);
   
   private static final TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-  
-  @OpenApi(
-      summary = "Find all tags specified by attribute value",
-      path = ROUTE, method = HttpMethod.GET,
-      pathParams = {
-          @OpenApiParam(name = ATTRIBUTE_NAME, description = "The attribute to filter on. One of: id, name, matchingname"),
-          @OpenApiParam(name = VALUE_NAME, description = "The actual value of the attribute to filter")
-      },
-      tags = {"Tag"},
-      responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = TagsQueryResult.class))
-      }
-  )
+
   @Override
   public TagsQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();

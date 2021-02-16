@@ -22,11 +22,19 @@ jobs:
         java-version: 11.0.6
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Generate Proto
-      run: ./gradlew cineast-core:generateProto
+      # https://github.com/actions/cache/blob/main/examples.md#java---gradle
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Test with Gradle
       run: ./gradlew test
     - name: runtime-jar
-      run: ./gradlew cineast-runtime:fatJar
+      run: ./gradlew cineast-runtime:shadowJar
     - name: api-jar
-      run: ./gradlew cineast-api:fatJar
+      run: ./gradlew cineast-api:shadowJar
