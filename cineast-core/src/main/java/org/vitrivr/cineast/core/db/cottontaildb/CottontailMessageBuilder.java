@@ -54,6 +54,7 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Scan;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.SchemaName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Vector;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
@@ -93,7 +94,7 @@ public class CottontailMessageBuilder {
    * @return {@link From}
    */
   public static From from(EntityName from) {
-    return From.newBuilder().setEntity(from).build();
+    return From.newBuilder().setScan(Scan.newBuilder().setEntity(from)).build();
   }
 
   /**

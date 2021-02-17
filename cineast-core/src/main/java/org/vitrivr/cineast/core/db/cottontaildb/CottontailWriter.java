@@ -5,14 +5,11 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage.InsertElement;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessageOrBuilder;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionOperation;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Tuple;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Scan;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +56,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<InsertMessage.Bu
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
         final List<InsertMessage> messages = tuples.stream()
-            .map(t -> getPersistentRepresentation(t).setFrom(From.newBuilder().setEntity(this.entity)).build())
+            .map(t -> getPersistentRepresentation(t).setFrom(From.newBuilder().setScan(Scan.newBuilder().setEntity(this.entity))).build())
             .collect(Collectors.toList());
         return this.cottontail.insert(messages);
     }
