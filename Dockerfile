@@ -4,9 +4,8 @@ RUN apt-get update && \
   apt-get install -y maven
 COPY . /cineast-src
 RUN cd /cineast-src && \
-  ./gradlew :cineast-core:generateProto && \
   ./gradlew getExternalFiles && \
-  ./gradlew fatJar
+  ./gradlew shadowJar
 
 FROM openjdk:14-slim-buster
 
