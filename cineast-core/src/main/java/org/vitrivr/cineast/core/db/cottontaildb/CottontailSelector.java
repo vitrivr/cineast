@@ -1,49 +1,43 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.column;
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.query;
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.queryMessage;
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.toData;
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.toDatas;
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.whereInList;
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import io.grpc.StatusRuntimeException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine.Help.Column;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ConnectionOperator;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
+import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
+import org.vitrivr.cottontail.client.language.dql.Query;
+import org.vitrivr.cottontail.client.language.extensions.And;
+import org.vitrivr.cottontail.client.language.extensions.Literal;
+import org.vitrivr.cottontail.client.language.extensions.Or;
+import org.vitrivr.cottontail.client.language.extensions.Predicate;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionOperation;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage.Tuple;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
 
-public class CottontailSelector implements DBSelector {
+public final class CottontailSelector implements DBSelector {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final Projection SELECT_ALL_PROJECTION = CottontailMessageBuilder.projection(ProjectionOperation.SELECT, "*");
 
+  /** Internal reference to the {@link CottontailWrapper} used by this {@link CottontailSelector}. */
   private final CottontailWrapper cottontail;
-  private EntityName entity;
+
+  /** The fully qualified name of the entity handled by this {@link CottontailSelector}. */
+  private String fqn;
 
   public CottontailSelector(CottontailWrapper wrapper) {
     this.cottontail = wrapper;
@@ -51,7 +45,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean open(String name) {
-    this.entity = CottontailMessageBuilder.entity(name);
+    this.fqn = this.cottontail.fqn(name);
     return true;
   }
 
@@ -66,234 +60,315 @@ public class CottontailSelector implements DBSelector {
    */
   @Override
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
-    Knn knn = CottontailMessageBuilder.knn(column, vector, config.getDistanceWeights().orElse(null), k, config.getDistance().orElse(Distance.manhattan));
-    QueryMessage queryMessage = queryMessage(
-        query(entity,
-          CottontailMessageBuilder.projection(ProjectionOperation.SELECT, GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER),
-          whereInList(GENERIC_ID_COLUMN_QUALIFIER, config.getRelevantSegmentIds()),
-          knn, k));
-    return toDistanceElement(this.cottontail.query(queryMessage), distanceElementClass);
+    final Query query = knn(k, vector, column, config).select(GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER);
+    return handleNearestNeighbourResponse(this.cottontail.client.query(query, null), distanceElementClass);
   }
 
   @Override
   public <E extends DistanceElement> List<E> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<E> distanceElementClass, List<ReadableQueryConfig> configs) {
-    Query query = query(
-        entity,
-        CottontailMessageBuilder.projection(ProjectionOperation.SELECT, GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER),
-        whereInList(GENERIC_ID_COLUMN_QUALIFIER, configs.get(0).getRelevantSegmentIds()),
-        CottontailMessageBuilder.batchedKnn(column, vectors, null, k, configs.get(0).getDistance().orElse(Distance.manhattan)), null);
-
-    return toDistanceElement(this.cottontail.query(queryMessage(query)), distanceElementClass);
+    return new ArrayList<>(0); /* TODO. */
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
-
-    Knn knn = CottontailMessageBuilder.knn(column, vector, config.getDistanceWeights().orElse(null), k, config.getDistance().orElse(Distance.manhattan));
-    QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, whereInList(GENERIC_ID_COLUMN_QUALIFIER, config.getRelevantSegmentIds()), knn, k));
-    return processResults(this.cottontail.query(queryMessage));
+    final Query query = knn(k, vector, column, config).select("*");
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
-
-    Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.SELECT, vectorName);
-    Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
-
-    final List<QueryResponseMessage> results = this.cottontail.query(queryMessage(query(entity, projection, where, null, null)));
-    final List<float[]> _return = new ArrayList<>();
-    final ColumnName column = column(vectorName);
-    for (QueryResponseMessage response : results) {
-      final int index = response.getColumnsList().indexOf(column);
-      for (Tuple t : response.getTuplesList()) {
-        _return.add(CottontailMessageBuilder.fromData(t.getData(index)).getFloatArray());
-      }
+    final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
+    final TupleIterator results = this.cottontail.client.query(query, null);
+    final List<float[]> _return = new LinkedList<>();
+    while (results.hasNext()) {
+      final TupleIterator.Tuple t = results.next();
+      _return.add(t.asFloatVector(vectorName));
     }
     return _return;
   }
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName) {
-    final Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.SELECT, vectorName);
-    final Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
-    final List<QueryResponseMessage> results = this.cottontail.query(queryMessage(query(entity, projection, where, null, null)));
-    return toSingleCol(results, vectorName);
+    final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
+    return toSingleCol(this.cottontail.client.query(query, null), vectorName);
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
-    return getRows(fieldName, toDatas(values).toArray(new Literal[0]));
-  }
-
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Literal... values) {
-    final QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, values), null, null));
-    return processResults(this.cottontail.query(queryMessage));
+    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
+    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values) {
-    return getRows(fieldName, toDatas(values).toArray(new Literal[0]));
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
-      int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
-
-    /* This includes the filter for segmentids in the where-statement */
-    Where where = CottontailMessageBuilder.compoundWhere(queryConfig, fieldname, RelationalOperator.MATCH, ConnectionOperator.OR, toDatas(Arrays.asList(terms)).toArray(new Literal[0]));
-
-    final Projection projection = Projection.newBuilder()
-        .setOp(ProjectionOperation.SELECT)
-        .addColumns(ProjectionElement.newBuilder().setColumn(column(GENERIC_ID_COLUMN_QUALIFIER)))
-        .addColumns(ProjectionElement.newBuilder().setColumn(column("score")).setAlias(column(DB_DISTANCE_VALUE_QUALIFIER)))
-        .build();
-
-    final QueryMessage queryMessage = queryMessage(query(entity, projection, where, null, rows));
-    return processResults(this.cottontail.query(queryMessage));
+    final Object[] mapped = values.toArray();
+    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
-    Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, toDatas(values).toArray(new Literal[0]));
-    QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, where, null, null));
-    return processResults(this.cottontail.query(queryMessage));
+    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
+    final Pair<String,Boolean> op = toOperator(operator);
+    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, op.first, mapped, op.second));
+    return processResults(this.cottontail.client.query(query, null));
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
+    /* Prepare plain query. */
+    final Query query = new Query(this.fqn)
+        .select(
+            new kotlin.Pair(GENERIC_ID_COLUMN_QUALIFIER, null),
+            new kotlin.Pair("score", DB_DISTANCE_VALUE_QUALIFIER)
+        );
+
+    /* Process predicates. */
+    final List<Predicate> atomics = Arrays.stream(terms).map(t -> new Literal(fieldname, "MATCH", t)).collect(Collectors.toList());
+    final Optional<Predicate> predicates = atomics.stream().reduce(Or::new);
+    if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
+      final Set<String> relevant = queryConfig.getRelevantSegmentIds();
+      final Literal segmentIds = new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
+      if (predicates.isPresent()) {
+        query.where(new And(segmentIds, predicates.get()));
+      } else {
+        query.where(segmentIds);
+      }
+    } else {
+      predicates.ifPresent(query::where);
+    }
+
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
+    /* Prepare plain query. */
+    final Query query = new Query(this.fqn);
+    if (projection.isEmpty()) {
+      query.select("*");
+    } else {
+      query.select(projection.toArray(new String[]{}));
+    }
 
-    Projection proj = projection.isEmpty() ? SELECT_ALL_PROJECTION : CottontailMessageBuilder.projection(ProjectionOperation.SELECT, projection.toArray(new String[]{}));
-    Where where = CottontailMessageBuilder.compoundWhere(qc, conditions);
-    QueryMessage queryMessage = queryMessage(query(entity, proj, where, null, null));
-    return processResults(this.cottontail.query(queryMessage));
+    /* Process predicates. */
+    final List<Predicate> atomics = conditions.stream().map(c -> {
+      final Pair<String,Boolean> op = toOperator(c.getMiddle());
+      return new Literal(c.getLeft(), op.first, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray(), op.second);
+    }).collect(Collectors.toList());
+    final Optional<Predicate> predicates = atomics.stream().reduce(Or::new);
+    if (qc != null && !qc.getRelevantSegmentIds().isEmpty()) {
+      final Set<String> relevant = qc.getRelevantSegmentIds();
+      final Literal segmentIds = new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
+      if (predicates.isPresent()) {
+        query.where(new And(segmentIds, predicates.get()));
+      } else {
+        query.where(segmentIds);
+      }
+    } else {
+      predicates.ifPresent(query::where);
+    }
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.SELECT, column);
-    QueryMessage queryMessage = queryMessage(query(entity, projection, null, null, null));
-    List<QueryResponseMessage> results = this.cottontail.query(queryMessage);
-
-    return toSingleCol(results, column);
+    final Query query = new Query(this.fqn).select(column);
+    return toSingleCol(this.cottontail.client.query(query, null), column);
   }
 
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
-    QueryMessage queryMessage = queryMessage(
-        query(entity, CottontailMessageBuilder.projection(ProjectionOperation.SELECT_DISTINCT, column), null, null, null));
-    List<QueryResponseMessage> results = this.cottontail.query(queryMessage);
-    return toSingleCol(results, column);
+    final Query query = new Query(this.fqn).distinct(column);
+    return toSingleCol(this.cottontail.client.query(query, null), column);
   }
 
   public Map<String, Integer> countDistinctValues(String column) {
-    final QueryMessage queryMessage = queryMessage(
-        query(entity, CottontailMessageBuilder.projection(ProjectionOperation.SELECT, column), null, null, null));
+    final Query query = new Query(this.fqn).select("*");
     final Map<String, Integer> count = new HashMap<>();
-    final List<QueryResponseMessage> list = this.cottontail.query(queryMessage);
-    for (QueryResponseMessage m : list) {
-      int index = m.getColumnsList().indexOf(column(column));
-      for (Tuple t : m.getTuplesList()) {
-        count.merge(t.getData(index).getStringData(), 1, (old, one) -> old + 1);
-      }
+    final TupleIterator results = this.cottontail.client.query(query, null);
+    while (results.hasNext()) {
+      final TupleIterator.Tuple t = results.next();
+      count.merge(t.asString(column), 1, (old, one) -> old + 1);
     }
     return count;
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
-    QueryMessage queryMessage = queryMessage(query(entity, SELECT_ALL_PROJECTION, null, null, null));
-    return processResults(this.cottontail.query(queryMessage));
-
+    final Query query = new Query(this.fqn).select("*");
+    return processResults(this.cottontail.client.query(query, null));
   }
 
   @Override
   public boolean existsEntity(String name) {
-    return this.cottontail.existsEntity(CottontailMessageBuilder.entity(name));
+    final AboutEntity about = new AboutEntity(this.cottontail.fqn(name));
+    final TupleIterator results = this.cottontail.client.about(about, null);
+    return results.hasNext();
   }
 
   @Override
-  public boolean ping() { // currently not supported
-    return this.cottontail.ping();
+  public boolean ping() {
+    try {
+      this.cottontail.client.ping();
+      return true;
+    } catch (StatusRuntimeException e) {
+      return false;
+    }
   }
 
-  public static List<Map<String, PrimitiveTypeProvider>> processResults(List<QueryResponseMessage> queryResponses) {
+  /**
+   * Creates and returns a basic {@link Query} object for the given kNN parameters.
+   *
+   * @param k The k parameter used for kNN
+   * @param vector The query vector (= float array).
+   * @param column The name of the column that should be queried.
+   * @param config The {@link ReadableQueryConfig} with additional parameters.
+   * @return {@link Query}
+   */
+  private Query knn(int k, float[] vector, String column, ReadableQueryConfig config) {
+    final Optional<float[]> weights = config.getDistanceWeights();
+    final Set<String> relevant = config.getRelevantSegmentIds();
+    final String distance = toDistance(config.getDistance().orElse(Distance.manhattan));
+    final Query query = new Query(this.fqn);
+
+    /* Add weights (optional). */
+    if (weights.isPresent()) {
+      query.knn(column, k, distance, vector, weights.get());
+    } else {
+      query.knn(column, k, distance, vector, null);
+    }
+
+    /* Add relevant segments (optional). */
+    if (!relevant.isEmpty()) {
+      query.where(new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray()));
+    }
+
+    return query;
+  }
+
+  /**
+   * Converts a {@link TupleIterator} response generated by Cottontail DB into a {@link List} {@link Map}s that contain the results.
+   *
+   * @param results {@link TupleIterator} to gather the results from.
+   * @return {@link List} of {@link Map}s that contains the results.
+   */
+  private static List<Map<String, PrimitiveTypeProvider>> processResults(TupleIterator results) {
     final List<Map<String, PrimitiveTypeProvider>> _return = new LinkedList<>();
     final StopWatch watch = StopWatch.createStarted();
-
-    for (QueryResponseMessage response : queryResponses) {
-      for (Tuple t : response.getTuplesList()) {
-          final Map<String,PrimitiveTypeProvider> map = new HashMap<>(response.getColumnsCount());
-          int i = 0;
-          for (ColumnName c : response.getColumnsList()) {
-            map.put(c.getName(), CottontailMessageBuilder.fromData(t.getData(i++)));
-          }
-          _return.add(map);
+    final Collection<String> columns = results.getColumns();
+    while (results.hasNext()) {
+      final TupleIterator.Tuple t = results.next();
+      final Map<String,PrimitiveTypeProvider> map = new HashMap<>(results.getNumberOfColumns());
+      for (String c : columns) {
+        map.put(c, PrimitiveTypeProvider.fromObject(t.get(c)));
       }
+      _return.add(map);
     }
     LOGGER.trace("Processed {} results in {} ms", _return.size(), watch.getTime(TimeUnit.MILLISECONDS));
     return _return;
   }
 
-  private <E extends DistanceElement> List<E> toDistanceElement(List<QueryResponseMessage> results, Class<E> distanceElementClass) {
-    List<E> _return = new ArrayList<>();
-
-    for (QueryResponseMessage r : results) {
-      _return.addAll(handleNearestNeighbourResponse(r, distanceElementClass));
-    }
-
-    return _return;
-  }
-
-  private List<PrimitiveTypeProvider> toSingleCol(List<QueryResponseMessage> results, String colName) {
+  /**
+   * Converts a {@link TupleIterator} response generated by Cottontail DB into a {@link List} {@link PrimitiveTypeProvider}s that contain the results of a single column.
+   *
+   * @param results {@link TupleIterator} to gather the results from.
+   * @param colName The name of the column that should be collected.
+   * @return {@link List} of {@link Map}s that contains the results.
+   */
+  private List<PrimitiveTypeProvider> toSingleCol(TupleIterator results, String colName) {
     final List<PrimitiveTypeProvider> _return = new LinkedList<>();
-    for (QueryResponseMessage response : results) {
-      int index = response.getColumnsList().indexOf(column(colName));
-      for (Tuple t : response.getTuplesList()) {
-        _return.add(CottontailMessageBuilder.fromData(t.getData(index)));
-      }
+    while (results.hasNext()) {
+      final TupleIterator.Tuple t = results.next();
+      _return.add(PrimitiveTypeProvider.fromObject(t.get(colName)));
     }
     return _return;
   }
 
-  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResponseMessage response, Class<? extends T> distanceElementClass) {
-    List<T> result = new ArrayList<>();
-    int idIndex = response.getColumnsList().indexOf(column(GENERIC_ID_COLUMN_QUALIFIER));
-    int distanceIndex = response.getColumnsList().indexOf(column("distance"));
-    for (Tuple t : response.getTuplesList()) {
-      String id = null;
-      final Literal data = t.getData(idIndex);
-      switch (data.getDataCase()) {
-        case BOOLEANDATA:
-        case VECTORDATA:
-        case DATA_NOT_SET:
-        case NULLDATA:
-          continue;
-        case INTDATA:
-          id = String.valueOf(data.getIntData());
-          break;
-        case LONGDATA:
-          id = String.valueOf(data.getLongData());
-          break;
-        case FLOATDATA:
-          id = String.valueOf(data.getFloatData());
-          break;
-        case DOUBLEDATA:
-          id = String.valueOf(data.getDoubleData());
-          break;
-        case STRINGDATA:
-          id = data.getStringData();
-          break;
+  /**
+   * Converts a {@link TupleIterator} response generated by Cottontail DB into a {@link List} of {@link DistanceElement}s.
+   *
+   * @param response {@link TupleIterator} to gather the results from.
+   * @param distanceElementClass The type of {@link DistanceElement} to create.
+   * @return {@link List} of {@link DistanceElement}s.
+   */
+  private static <T extends DistanceElement> List<T> handleNearestNeighbourResponse(TupleIterator response, Class<? extends T> distanceElementClass) {
+    final List<T> result = new LinkedList<>();
+    while (response.hasNext()) {
+      try {
+        final TupleIterator.Tuple t = response.next();
+        final String id = t.get(GENERIC_ID_COLUMN_QUALIFIER).toString(); /* This should be fine. */
+        double distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER);
+        T e = DistanceElement.create(distanceElementClass, id, distance);
+        result.add(e);
+      } catch (NullPointerException e) {
+        LOGGER.warn("Encountered null entry (id, distance) is nearest neighbor search response!");
       }
-      if (id == null) {
-        continue;
-      }
-      double distance = t.getData(distanceIndex).getDoubleData();
-      T e = DistanceElement.create(distanceElementClass, id, distance);
-      result.add(e);
     }
-
     return result;
   }
 
+  /**
+   * Converts a Cineast {@link Distance} into the corresponding Cottontail DB representation.
+   *
+   * @param distance {@link Distance} to convert.
+   * @return {@link String} Name of Cottontail DB distance.
+   */
+  private static String toDistance(Distance distance) {
+    switch (distance) {
+      case manhattan:
+        return Knn.Distance.L1.toString();
+      case euclidean:
+        return Knn.Distance.L2.toString();
+      case squaredeuclidean:
+        return Knn.Distance.L2SQUARED.toString();
+      case chisquared:
+        return Knn.Distance.CHISQUARED.toString();
+      case cosine:
+        return Knn.Distance.COSINE.toString();
+      default:
+        LOGGER.error("distance '{}' not supported by cottontail", distance);
+        throw new IllegalArgumentException("Distance '"+ distance.toString() + "' not supported by Cottontail DB.");
+    }
+  }
 
+  /**
+   * Converts a Cineast {@link RelationalOperator} into the corresponding Cottontail DB representation.
+   *
+   * @param op {@link RelationalOperator} to convert.
+   * @return {@link String} Name of Cottontail DB distance.
+   */
+  private static Pair<String, Boolean> toOperator(RelationalOperator op) {
+    switch (op) {
+      case EQ:
+        return new Pair<>("==", false);
+      case NEQ:
+        return new Pair<>("==", true);
+      case GEQ:
+        return new Pair<>(">=", false);
+      case LEQ:
+        return new Pair<>("<=", false);
+      case GREATER:
+        return new Pair<>(">", false);
+      case LESS:
+        return new Pair<>("<", false);
+      case BETWEEN:
+        return new Pair<>("BETWEEN", false);
+      case LIKE:
+        return new Pair<>("LIKE", false);
+      case NLIKE:
+        return new Pair<>("LIKE", true);
+      case MATCH:
+        return new Pair<>("MATCH", false);
+      case ISNULL:
+        return new Pair<>("IS NULL", false);
+      case ISNOTNULL:
+        return new Pair<>("IS NULL", true);
+      case IN:
+        return new Pair<>("IN", false);
+      default:
+        throw new IllegalArgumentException("Operator '"+ op.toString() + "' not supported by Cottontail DB.");
+    }
+  }
 }

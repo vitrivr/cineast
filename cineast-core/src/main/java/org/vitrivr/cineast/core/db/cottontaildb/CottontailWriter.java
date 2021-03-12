@@ -1,39 +1,30 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.InsertMessage.InsertElement;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionOperation;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Scan;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Where;
+
+import io.grpc.StatusRuntimeException;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.RelationalOperator;
+import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.language.dml.Insert;
+import org.vitrivr.cottontail.client.language.dql.Query;
+import org.vitrivr.cottontail.client.language.extensions.Literal;
 
-public class CottontailWriter extends AbstractPersistencyWriter<InsertMessage.Builder> {
+public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
+    /** Internal reference to the {@link CottontailWrapper} used by this {@link CottontailWriter}. */
     private final CottontailWrapper cottontail;
+
+    /** The fully qualified name of the entity handled by this {@link CottontailWriter}. */
+    private String fqn;
 
     public CottontailWriter(CottontailWrapper wrapper) {
         this.cottontail = wrapper;
     }
 
-    private EntityName entity;
-
-
     @Override
     public boolean open(String name) {
-        this.entity = CottontailMessageBuilder.entity(name);
+        this.fqn = this.cottontail.fqn(name);
         return true;
     }
 
@@ -43,31 +34,40 @@ public class CottontailWriter extends AbstractPersistencyWriter<InsertMessage.Bu
         return true;
     }
 
-
     @Override
     public boolean exists(String key, String value) {
-        final Projection projection = CottontailMessageBuilder.projection(ProjectionOperation.EXISTS, key); //TODO replace with exists projection
-        final Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
-        final List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null, 1)));
-        return result.get(0).getTuples(0).getData(0).getBooleanData();
+        final Query query = new Query(this.fqn).exists().where(new Literal(key, "=", value));
+        final TupleIterator results = this.cottontail.client.query(query, null);
+        final Boolean b = results.next().asBoolean("exists_" + key);
+        if (b != null) {
+            return b;
+        } else {
+            throw new IllegalArgumentException("Unexpected value in result set.");
+        }
     }
-
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
-        final List<InsertMessage> messages = tuples.stream()
-            .map(t -> getPersistentRepresentation(t).setFrom(From.newBuilder().setScan(Scan.newBuilder().setEntity(this.entity))).build())
-            .collect(Collectors.toList());
-        return this.cottontail.insert(messages);
+        final long txId = this.cottontail.client.begin();
+        try {
+            for (PersistentTuple t : tuples) {
+                this.cottontail.client.insert(getPersistentRepresentation(t), txId);
+            }
+            this.cottontail.client.commit(txId);
+            return true;
+        } catch (StatusRuntimeException e) {
+            this.cottontail.client.rollback(txId);
+            return false;
+        }
     }
 
     @Override
-    public InsertMessage.Builder getPersistentRepresentation(PersistentTuple tuple) {
-        final InsertMessage.Builder insertBuilder = InsertMessage.newBuilder();
+    public Insert getPersistentRepresentation(PersistentTuple tuple) {
+        final Insert insert = new Insert(this.fqn);
         int index = 0;
         for (Object o : tuple.getElements()) {
-            insertBuilder.addInserts(InsertElement.newBuilder().setColumn(ColumnName.newBuilder().setName(this.names[index++]).build()).setValue(CottontailMessageBuilder.toData(o)).build());
+            insert.value(this.names[index++], o);
         }
-        return insertBuilder;
+        return insert;
     }
 }

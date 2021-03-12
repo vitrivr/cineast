@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
@@ -21,6 +20,7 @@ import org.vitrivr.cineast.standalone.cli.DatabaseSetupCommand;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
+import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 /**
@@ -39,25 +39,25 @@ public abstract class DataImportHandler {
     protected static void cleanOnDemand(String entityName, String taskName){
         final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
         /* Beware, this drops the table */
-        CottontailGrpc.EntityDefinition entityDefinition = null;
+        CreateEntity createEntity = null;
         CottontailWrapper cottontail = null;
         if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
             LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);
-            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), true);
+            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
             //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
         }
         LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
         ec.dropEntity(entityName);
         LOGGER.info("{} - Finished dropping table for entity {}", taskName, entityName);
-        if(entityDefinition == null){
+        if (createEntity == null) {
             LOGGER.warn("Calling command: setup -- This may take a while");
             DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
             setupCmd.doSetup();
-        }else{
-            cottontail.createEntity(entityDefinition);
-            LOGGER.info("Re-created entity: {}", entityDefinition.getEntity().getName());
+        } else {
+            cottontail.client.create(createEntity, null);
+            LOGGER.info("Re-created entity: {}", createEntity.getBuilder().getDefinition().getEntity().getName());
         }
     }
 
