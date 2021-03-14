@@ -267,7 +267,7 @@ public final class CottontailEntityCreator implements EntityCreator {
   public boolean createHashNonUniqueIndex(String entityName, String column) {
     final long txId = this.cottontail.client.begin();
     try {
-      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + MediaObjectDescriptor.ENTITY;
+      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
       this.createIndex(fqn, column, IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
