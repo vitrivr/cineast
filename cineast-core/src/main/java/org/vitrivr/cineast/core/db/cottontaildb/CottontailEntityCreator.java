@@ -78,7 +78,7 @@ public final class CottontailEntityCreator implements EntityCreator {
     final long txId = this.cottontail.client.begin();
     try {
       /* Create entity. */
-      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." +TagReader.TAG_ENTITY_NAME;
+      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + TagReader.TAG_ENTITY_NAME;
       final CreateEntity create = new CreateEntity(entityName)
           .column(TagReader.TAG_ID_COLUMNNAME, Type.STRING, -1, false)
           .column(TagReader.TAG_NAME_COLUMNNAME, Type.STRING, -1, false)
@@ -288,7 +288,7 @@ public final class CottontailEntityCreator implements EntityCreator {
   public boolean dropEntity(String entityName) {
     final long txId = this.cottontail.client.begin();
     try {
-      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + MediaObjectDescriptor.ENTITY;
+      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
       this.cottontail.client.drop(new DropEntity(fqn), txId);
       this.cottontail.client.commit(txId);
       return true;
