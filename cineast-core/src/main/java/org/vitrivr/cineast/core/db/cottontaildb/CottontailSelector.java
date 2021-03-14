@@ -61,7 +61,12 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     final Query query = knn(k, vector, column, config).select(GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER);
-    return handleNearestNeighbourResponse(this.cottontail.client.query(query, null), distanceElementClass);
+    try {
+      return handleNearestNeighbourResponse(this.cottontail.client.query(query, null), distanceElementClass);
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
@@ -72,39 +77,64 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
     final Query query = knn(k, vector, column, config).select("*");
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getNearestNeighbourRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
     final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
-    final TupleIterator results = this.cottontail.client.query(query, null);
-    final List<float[]> _return = new LinkedList<>();
-    while (results.hasNext()) {
-      final TupleIterator.Tuple t = results.next();
-      _return.add(t.asFloatVector(vectorName));
+    try {
+      final TupleIterator results = this.cottontail.client.query(query, null);
+      final List<float[]> _return = new LinkedList<>();
+      while (results.hasNext()) {
+        final TupleIterator.Tuple t = results.next();
+        _return.add(t.asFloatVector(vectorName));
+      }
+      return _return;
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+      return new ArrayList<>(0);
     }
-    return _return;
   }
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName) {
     final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
-    return toSingleCol(this.cottontail.client.query(query, null), vectorName);
+    try {
+      return toSingleCol(this.cottontail.client.query(query, null), vectorName);
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getFeatureVectorsGeneric(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
     final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values) {
     final Object[] mapped = values.toArray();
     final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
@@ -112,17 +142,21 @@ public final class CottontailSelector implements DBSelector {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
     final Pair<String,Boolean> op = toOperator(operator);
     final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, op.first, mapped, op.second));
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     /* Prepare plain query. */
-    final Query query = new Query(this.fqn)
-        .select(
-            new kotlin.Pair(GENERIC_ID_COLUMN_QUALIFIER, null),
-            new kotlin.Pair("score", DB_DISTANCE_VALUE_QUALIFIER)
-        );
+    final Query query = new Query(this.fqn).select(
+        new kotlin.Pair<String, String>(GENERIC_ID_COLUMN_QUALIFIER, null),
+        new kotlin.Pair<String, String>("score", DB_DISTANCE_VALUE_QUALIFIER)
+    );
 
     /* Process predicates. */
     final List<Predicate> atomics = Arrays.stream(terms).map(t -> new Literal(fieldname, "MATCH", t)).collect(Collectors.toList());
@@ -139,7 +173,12 @@ public final class CottontailSelector implements DBSelector {
       predicates.ifPresent(query::where);
     }
 
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getFulltextRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
@@ -169,43 +208,72 @@ public final class CottontailSelector implements DBSelector {
     } else {
       predicates.ifPresent(query::where);
     }
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getRowsAND(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
     final Query query = new Query(this.fqn).select(column);
-    return toSingleCol(this.cottontail.client.query(query, null), column);
+    try {
+      return toSingleCol(this.cottontail.client.query(query, null), column);
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     final Query query = new Query(this.fqn).distinct(column);
-    return toSingleCol(this.cottontail.client.query(query, null), column);
+    try {
+      return toSingleCol(this.cottontail.client.query(query, null), column);
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getUniqueValues(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   public Map<String, Integer> countDistinctValues(String column) {
     final Query query = new Query(this.fqn).select("*");
     final Map<String, Integer> count = new HashMap<>();
-    final TupleIterator results = this.cottontail.client.query(query, null);
-    while (results.hasNext()) {
-      final TupleIterator.Tuple t = results.next();
-      count.merge(t.asString(column), 1, (old, one) -> old + 1);
+    try {
+      final TupleIterator results = this.cottontail.client.query(query, null);
+      while (results.hasNext()) {
+        final TupleIterator.Tuple t = results.next();
+        count.merge(t.asString(column), 1, (old, one) -> old + 1);
+      }
+      return count;
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in countDistinctValues(): {}", e.getMessage());
+      return new HashMap<>(0);
     }
-    return count;
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     final Query query = new Query(this.fqn).select("*");
-    return processResults(this.cottontail.client.query(query, null));
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
   }
 
   @Override
   public boolean existsEntity(String name) {
     final AboutEntity about = new AboutEntity(this.cottontail.fqn(name));
-    final TupleIterator results = this.cottontail.client.about(about, null);
-    return results.hasNext();
+    try {
+      final TupleIterator results = this.cottontail.client.about(about, null);
+      return results.hasNext();
+    } catch (StatusRuntimeException e) {
+      return false;
+    }
   }
 
   @Override
