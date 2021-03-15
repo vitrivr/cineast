@@ -155,7 +155,7 @@ public final class CottontailSelector implements DBSelector {
     /* Prepare plain query. */
     final Query query = new Query(this.fqn).select(
         new kotlin.Pair<String, String>(GENERIC_ID_COLUMN_QUALIFIER, null),
-        new kotlin.Pair<String, String>("score", "ap_score")
+        new kotlin.Pair<String, String>("score", DB_DISTANCE_VALUE_QUALIFIER)
     );
 
     /* Process predicates. */

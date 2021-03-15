@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -368,9 +369,9 @@ public abstract class DBIntegrationTest<R> {
     Assertions.assertEquals(3, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
-    float score = results.get(0).get("ap_score").getFloat();
-    Assertions.assertEquals(score, results.get(1).get("ap_score").getFloat(), 0.01);
-    Assertions.assertEquals(score, results.get(2).get("ap_score").getFloat(), 0.01);
+    float score = results.get(0).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat();
+    Assertions.assertEquals(score, results.get(1).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
+    Assertions.assertEquals(score, results.get(2).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
   }
 
   @Test
