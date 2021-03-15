@@ -280,8 +280,12 @@ public final class CottontailEntityCreator implements EntityCreator {
   @Override
   public boolean existsEntity(String entityName) {
     final AboutEntity about = new AboutEntity(this.cottontail.fqn(entityName));
-    final TupleIterator results = this.cottontail.client.about(about, null);
-    return results.hasNext();
+    try {
+      final TupleIterator results = this.cottontail.client.about(about, null);
+      return results.hasNext();
+    } catch (StatusRuntimeException e) {
+      return false;
+    }
   }
 
   @Override
