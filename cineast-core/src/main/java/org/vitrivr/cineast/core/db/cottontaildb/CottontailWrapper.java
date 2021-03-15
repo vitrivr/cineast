@@ -48,7 +48,12 @@ public final class CottontailWrapper implements AutoCloseable {
   public void close() {
     if (!this.keepOpen) {
       LOGGER.info("Closing connection to Cottontail DB.");
-      this.channel.shutdown();
+      try {
+        this.channel.shutdown();
+        this.channel.awaitTermination(5000, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        LOGGER.warn("Thread was interrupted while waiting for gRPC channel to close (timeout = 5s).");
+      }
     }
   }
 }
