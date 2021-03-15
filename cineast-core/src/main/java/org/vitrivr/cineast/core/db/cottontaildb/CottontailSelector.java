@@ -279,8 +279,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public boolean ping() {
     try {
-      this.cottontail.client.ping();
-      return true;
+      return this.cottontail.client.ping();
     } catch (StatusRuntimeException e) {
       return false;
     }
