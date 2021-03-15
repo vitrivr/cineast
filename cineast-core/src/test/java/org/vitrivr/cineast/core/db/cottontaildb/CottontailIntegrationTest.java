@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import org.junit.jupiter.api.Test;
 import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
@@ -15,6 +16,11 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
   public CottontailIntegrationTest() {
     config = new DatabaseConfig();
     config.setPort(1865);
+  }
+
+  @Test
+  protected void simpleTest(){
+    //no-op
   }
 
   @Override
