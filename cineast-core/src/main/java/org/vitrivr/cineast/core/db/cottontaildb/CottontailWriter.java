@@ -38,7 +38,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     public boolean exists(String key, String value) {
         final Query query = new Query(this.fqn).exists().where(new Literal(key, "=", value));
         final TupleIterator results = this.cottontail.client.query(query, null);
-        final Boolean b = results.next().asBoolean("exists_" + key);
+        final Boolean b = results.next().asBoolean("exists");
         if (b != null) {
             return b;
         } else {
