@@ -15,7 +15,6 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
   public CottontailIntegrationDBProvider() {
     config = new DatabaseConfig();
     config.setPort(1865);
-    //config.setHost("10.34.58.87");
   }
 
 
