@@ -55,12 +55,15 @@ public abstract class DBIntegrationTest<R> {
   private static final String TEXT_COL_NAME = "text";
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private IntegrationDBProvider<R> provider;
+
   @BeforeEach
   void setupTest() {
-    selector = getSelector();
+    provider = provider();
+    selector = provider.getSelector();
     assumeTrue(selector.ping(), "Connection to database could not be established");
-    writer = getPersistencyWriter();
-    ec = getEntityCreator();
+    writer = provider.getPersistencyWriter();
+    ec = provider.getEntityCreator();
     testTextTableName = getTestTextTableName();
     testVectorTableName = getTestVectorTableName();
     queryConfig = getQueryConfig();
@@ -71,13 +74,15 @@ public abstract class DBIntegrationTest<R> {
     finishSetup();
   }
 
+  protected abstract void finishSetup();
+
   protected QueryConfig getQueryConfig() {
     QueryConfig qc = new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());
     qc.setDistanceIfEmpty(Distance.euclidean);
     return qc;
   }
 
-  protected abstract void finishSetup();
+  protected abstract IntegrationDBProvider<R> provider();
 
   @AfterEach
   void tearDownTest() {
@@ -138,11 +143,6 @@ public abstract class DBIntegrationTest<R> {
   }
 
   /**
-   * @return an {@link PersistencyWriter} which will be used to fill data into the underlying database
-   */
-  protected abstract PersistencyWriter<R> getPersistencyWriter();
-
-  /**
    * Create both a table for vector retrieval & text retrieval
    */
   protected void createTables() {
@@ -165,13 +165,6 @@ public abstract class DBIntegrationTest<R> {
     }
   }
 
-  /**
-   * As implementing test, you are responsible on whether this returns a new selector instance or a previously reused selector instance.
-   */
-  protected abstract DBSelector getSelector();
-
-  public abstract EntityCreator getEntityCreator();
-
   protected String getTestTextTableName() {
     return "test_feature_text";
   }
@@ -183,7 +176,7 @@ public abstract class DBIntegrationTest<R> {
   @Test
   @DisplayName("Ping the database")
   void ping() {
-    Assertions.assertTrue(getSelector().ping());
+    Assertions.assertTrue(provider.getSelector().ping());
   }
 
   @Test
@@ -203,7 +196,7 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Verify elements exist")
+  @DisplayName("Verify elements exist by id")
   void entriesExistById() {
     writer.open(testVectorTableName);
     for (int i = 0; i < MAX_VECTOR_ID; i++) {
