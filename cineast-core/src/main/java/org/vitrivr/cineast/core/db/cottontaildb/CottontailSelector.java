@@ -140,8 +140,8 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-    final Pair<String,Boolean> op = toOperator(operator);
-    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, op.first, mapped, op.second));
+    final String op = toOperator(operator);
+    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, op, mapped));
     try {
       return processResults(this.cottontail.client.query(query, null));
     } catch (StatusRuntimeException e) {
@@ -193,8 +193,8 @@ public final class CottontailSelector implements DBSelector {
 
     /* Process predicates. */
     final List<Predicate> atomics = conditions.stream().map(c -> {
-      final Pair<String,Boolean> op = toOperator(c.getMiddle());
-      return new Literal(c.getLeft(), op.first, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray(), op.second);
+      final String op = toOperator(c.getMiddle());
+      return new Literal(c.getLeft(), op, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray());
     }).collect(Collectors.toList());
     final Optional<Predicate> predicates = atomics.stream().reduce(Or::new);
     if (qc != null && !qc.getRelevantSegmentIds().isEmpty()) {
@@ -406,34 +406,34 @@ public final class CottontailSelector implements DBSelector {
    * @param op {@link RelationalOperator} to convert.
    * @return {@link String} Name of Cottontail DB distance.
    */
-  private static Pair<String, Boolean> toOperator(RelationalOperator op) {
+  private static String toOperator(RelationalOperator op) {
     switch (op) {
       case EQ:
-        return new Pair<>("==", false);
+        return "=";
       case NEQ:
-        return new Pair<>("==", true);
+        return "!=";
       case GEQ:
-        return new Pair<>(">=", false);
+        return ">=";
       case LEQ:
-        return new Pair<>("<=", false);
+        return "<=";
       case GREATER:
-        return new Pair<>(">", false);
+        return ">";
       case LESS:
-        return new Pair<>("<", false);
+        return "<";
       case BETWEEN:
-        return new Pair<>("BETWEEN", false);
+        return "BETWEEN";
       case LIKE:
-        return new Pair<>("LIKE", false);
+        return "LIKE";
       case NLIKE:
-        return new Pair<>("LIKE", true);
+        return "NOT LIKE";
       case MATCH:
-        return new Pair<>("MATCH", false);
+        return "MATCH";
       case ISNULL:
-        return new Pair<>("IS NULL", false);
+        return "IS NULL";
       case ISNOTNULL:
-        return new Pair<>("IS NULL", true);
+        return "IS NOT NULL";
       case IN:
-        return new Pair<>("IN", false);
+        return"IN";
       default:
         throw new IllegalArgumentException("Operator '"+ op.toString() + "' not supported by Cottontail DB.");
     }
