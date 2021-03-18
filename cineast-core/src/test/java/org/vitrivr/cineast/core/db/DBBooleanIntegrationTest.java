@@ -1,14 +1,12 @@
 package org.vitrivr.cineast.core.db;
 
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import jdk.jfr.Relational;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -163,11 +161,11 @@ public abstract class DBBooleanIntegrationTest<R> {
     /**
      * Skipped since
      selector.open(testTableName);
-    int idToCheck = TABLE_CARD - 1;
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), -idToCheck + TABLE_CARD);
+     int idToCheck = TABLE_CARD - 1;
+     List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
+     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
+     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
+     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), -idToCheck + TABLE_CARD);
      */
   }
 
@@ -177,9 +175,9 @@ public abstract class DBBooleanIntegrationTest<R> {
     selector.open(testTableName);
     int idToCheck = TABLE_CARD - 1;
     List<PrimitiveTypeProvider> values = new ArrayList<>();
-    values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    values.add(PrimitiveTypeProvider.fromObject(idToCheck - 1));
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_3, values);
+    values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
+    values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck-1)));
   }
@@ -190,11 +188,11 @@ public abstract class DBBooleanIntegrationTest<R> {
     selector.open(testTableName);
     int idToCheck = TABLE_CARD - 1;
     List<PrimitiveTypeProvider> values = new ArrayList<>();
-    values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    values.add(PrimitiveTypeProvider.fromObject(idToCheck - 1));
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_3, RelationalOperator.BETWEEN, values);
+    values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
+    values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck-1)));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
   }
 
 }
