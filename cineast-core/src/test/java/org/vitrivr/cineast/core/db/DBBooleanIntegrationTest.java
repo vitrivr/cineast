@@ -100,7 +100,7 @@ public abstract class DBBooleanIntegrationTest<R> {
    */
   protected void createTables() {
     // TODO Text retrieval fails on windows
-    ec.createEntity(testTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_1, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_2, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_3, AttributeType.INT));
+    ec.createEntity(testTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_1, AttributeType.TEXT), new AttributeDefinition(DATA_COL_NAME_2, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_3, AttributeType.INT));
   }
 
   protected void fillData() {
@@ -109,8 +109,8 @@ public abstract class DBBooleanIntegrationTest<R> {
     List<PersistentTuple> vectors = new ArrayList<>();
 
     for (int i = 0; i < TABLE_CARD; i++) {
-      //vectors.add(writer.generateTuple(i, "string-data-" + i, -i, i + TABLE_CARD));
-      vectors.add(writer.generateTuple(i, i, -i, i + TABLE_CARD));
+      vectors.add(writer.generateTuple(i, "string-data-" + i, -i, i + TABLE_CARD));
+      //vectors.add(writer.generateTuple(i, i, -i, i + TABLE_CARD));
     }
     writer.persist(vectors);
   }
@@ -157,16 +157,12 @@ public abstract class DBBooleanIntegrationTest<R> {
   @Test
   @DisplayName("test fulltext query")
   void testFulltextQuery() {
-    Assumptions.assumeTrue(false);
-    /**
-     * Skipped since
      selector.open(testTableName);
      int idToCheck = TABLE_CARD - 1;
      List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
      Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
      Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
      Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), -idToCheck + TABLE_CARD);
-     */
   }
 
   @Test
