@@ -71,7 +71,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     }
   }
 
-  private String getTestTableName() {
+  protected String getTestTableName() {
     return "test_boolean_table";
   }
 
