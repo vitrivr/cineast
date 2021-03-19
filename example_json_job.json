@@ -28,7 +28,7 @@
 	],
 	"exporters":[
 		{
-			"name": "ShotThumbNails",
+			"name": "ShotThumbnailsExporter",
 			"properties": {
 				"destination":"thumbnails/"
 			}

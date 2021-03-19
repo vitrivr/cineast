@@ -64,8 +64,8 @@ subprojects {
         compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.12.0'
 
         /** Jackson (JSON conversion) */
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9'
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.0'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.0'
 
         /** Test dependencies (JUnit 5) */
         testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.0'
@@ -117,3 +117,4 @@ task generateOpenApiSpecs(type: JavaExec){
 
     args("${config}")
 }
+

@@ -4,9 +4,8 @@ RUN apt-get update && \
   apt-get install -y maven
 COPY . /cineast-src
 RUN cd /cineast-src && \
-  ./gradlew :cineast-core:generateProto && \
   ./gradlew getExternalFiles && \
-  ./gradlew fatJar
+  ./gradlew shadowJar
 
 FROM openjdk:14-slim-buster
 
@@ -17,11 +16,11 @@ COPY --from=build \
   /opt/cineast/cineast.json
 
 COPY --from=build \
-  /cineast-src/cineast-runtime/build/libs/cineast-runtime-*-full.jar \
+  /cineast-src/cineast-runtime/build/libs/cineast-runtime-*-all.jar \
   /opt/cineast/cineast-cli.jar
 
 COPY --from=build \
-  /cineast-src/cineast-api/build/libs/cineast-api-*-full.jar \
+  /cineast-src/cineast-api/build/libs/cineast-api-*-all.jar \
   /opt/cineast/cineast-api.jar
 
 COPY --from=build \

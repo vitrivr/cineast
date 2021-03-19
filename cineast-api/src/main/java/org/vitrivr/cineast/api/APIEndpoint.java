@@ -32,6 +32,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadata
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
@@ -399,6 +400,7 @@ public class APIEndpoint {
         new FindObjectMetadataByDomainPostHandler(),
         new FindObjectMetadataByKeyGetHandler(),
         new FindObjectMetadataByKeyPostHandler(),
+        new FindSegmentMetadataGetHandler(),
         /* Media Object */
         new FindObjectAllGetHandler(),
         new FindObjectByIdPostHandler(),
@@ -449,7 +451,8 @@ public class APIEndpoint {
             new MediaObjectReader(
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()),
             ((baseDir, object) -> {
-              String ext = object.getPath().substring(object.getPath().lastIndexOf('.'));
+//              String ext = object.getPath().substring(object.getPath().lastIndexOf('.'));
+              String ext = "."+Config.sharedConfig().getApi().getVideoExtension();
               return new File(baseDir, object.getObjectId() + ext);
             }));
       } else {
