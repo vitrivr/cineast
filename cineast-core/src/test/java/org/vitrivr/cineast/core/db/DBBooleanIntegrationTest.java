@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -157,12 +156,12 @@ public abstract class DBBooleanIntegrationTest<R> {
   @Test
   @DisplayName("test fulltext query")
   void testFulltextQuery() {
-     selector.open(testTableName);
-     int idToCheck = TABLE_CARD - 1;
-     List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
-     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
-     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
-     Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), -idToCheck + TABLE_CARD);
+    selector.open(testTableName);
+    int idToCheck = TABLE_CARD - 1;
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
+    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
+    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
+    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), (idToCheck + TABLE_CARD));
   }
 
   @Test
@@ -175,7 +174,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck-1)));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
   }
 
   @Test

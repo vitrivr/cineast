@@ -14,7 +14,6 @@ public class CottontailBooleanIntegrationTest extends DBBooleanIntegrationTest<I
 
   @Override
   protected void finishSetup() {
-
   }
 
   @Override
