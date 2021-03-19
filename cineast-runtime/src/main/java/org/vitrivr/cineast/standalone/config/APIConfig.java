@@ -46,6 +46,21 @@ public final class APIConfig {
    */
   private boolean objectsFilesAreIDed = false;
 
+  @JsonProperty
+  public String getVideoExtension() {
+    return videoExtension;
+  }
+
+  @JsonProperty
+  public void setVideoExtension(String videoExtension) {
+    this.videoExtension = videoExtension;
+  }
+
+  /**
+   * A hack to use mp4 for object servings
+   */
+  private String videoExtension = "mp4";
+
 
   private boolean serveUI = false;
   private String thumbnailLocation = "";
