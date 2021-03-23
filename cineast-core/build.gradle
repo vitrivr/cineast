@@ -2,6 +2,13 @@ plugins {
     id 'maven'
 }
 
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+
 if (!project.hasProperty("build_version")) {
     ext.dbisNexusUsername = "no"
     ext.dbisNexusPassword = "no"
@@ -29,7 +36,7 @@ project.ext.ffmpegVersion = "4.1-1.4.4"
 dependencies {
 
     /** THE CottontailDB proto dependency */
-    compile 'org.vitrivr:cottontaildb-proto:0.11.0'
+    compile group: 'org.vitrivr', name: 'cottontaildb-proto', version: '0.12.1-SNAPSHOT'
 
     /** THE ADAMpro proto dependency (legacy)*/
     compile 'org.vitrivr:adampro-proto:1.0.0'

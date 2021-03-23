@@ -77,7 +77,7 @@ public final class DatabaseConfig {
 
   private synchronized void ensureCottontailWrapper(){
       if (this.cottontailWrapper == null){
-          this.cottontailWrapper = new CottontailWrapper(this, false);
+          this.cottontailWrapper = new CottontailWrapper(this, true);
       }
   }
 
@@ -165,7 +165,7 @@ public final class DatabaseConfig {
               ensureCottontailWrapper();
               return () -> new CottontailWriter(this.cottontailWrapper);
           }
-          return () -> new CottontailWriter(new CottontailWrapper(this, true));
+          return () -> new CottontailWriter(new CottontailWrapper(this, false));
       }
       case INMEMORY: {
         return InMemoryWriter::new;
@@ -202,7 +202,7 @@ public final class DatabaseConfig {
               ensureCottontailWrapper();
               return () -> new CottontailSelector(this.cottontailWrapper);
           }
-          return () -> new CottontailSelector(new CottontailWrapper(this, true));
+          return () -> new CottontailSelector(new CottontailWrapper(this, false));
       }
       default:
         throw new IllegalStateException("No supplier for selector " + this.selector);
@@ -227,7 +227,7 @@ public final class DatabaseConfig {
               ensureCottontailWrapper();
               return () -> new CottontailEntityCreator(this.cottontailWrapper);
           }
-          return () -> new CottontailEntityCreator(new CottontailWrapper(this, true));
+          return () -> new CottontailEntityCreator(new CottontailWrapper(this, false));
       }
       case INMEMORY:
         return InMemoryEntityCreator::new;

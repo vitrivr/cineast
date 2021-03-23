@@ -14,6 +14,17 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # Setup Cottontail DB service container
+    services:
+      cottontail:
+        image: docker.pkg.github.com/vitrivr/cottontaildb/cottontaildb:0.12.1
+        credentials:
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+        ports:
+          - 1865:1865
+
+    # Start actual job.
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
