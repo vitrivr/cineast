@@ -98,7 +98,7 @@ public abstract class DBIntegrationTest<R> {
   private static final int DUPLICATE_ID = MAX_TEXT_ID - 4;
   private static final int HELLO_ID = MAX_TEXT_ID - 3;
   private static final int WORLD_ID = MAX_TEXT_ID - 2;
-  private static final int HELLO_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
+  private static final int HELLO_WORLD_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
 
   protected void fillTextData() {
     writer.open(testTextTableName);
@@ -111,7 +111,7 @@ public abstract class DBIntegrationTest<R> {
     vectors.add(writer.generateTuple(HELLO_ID, "hello"));
     vectors.add(writer.generateTuple(DUPLICATE_ID, "duplicate"));
     vectors.add(writer.generateTuple(WORLD_ID, "world"));
-    vectors.add(writer.generateTuple(HELLO_MY_NAME_IS_CINEAST_ID, "hello world my name is cineast"));
+    vectors.add(writer.generateTuple(HELLO_WORLD_MY_NAME_IS_CINEAST_ID, "hello world my name is cineast"));
     writer.persist(vectors);
   }
 
@@ -288,7 +288,7 @@ public abstract class DBIntegrationTest<R> {
     Assertions.assertEquals(3, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
   }
 
   /**
@@ -300,7 +300,7 @@ public abstract class DBIntegrationTest<R> {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "name my");
     Assertions.assertEquals(1, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
   }
 
 
@@ -314,7 +314,7 @@ public abstract class DBIntegrationTest<R> {
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "\"hello world\"");
     Assertions.assertEquals(2, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
   }
 
   /**
@@ -329,7 +329,7 @@ public abstract class DBIntegrationTest<R> {
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLA_WORLD_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
   }
 
   @Test
@@ -380,7 +380,7 @@ public abstract class DBIntegrationTest<R> {
     checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
   }
 
 }
