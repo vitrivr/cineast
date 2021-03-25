@@ -18,9 +18,6 @@ jobs:
     services:
       cottontail:
         image: vitrivr/cottontaildb:0.12.5
-        credentials:
-          username: ${{ github.repository_owner }}
-          password: ${{ github.token }}
         ports:
           - 1865:1865
 
