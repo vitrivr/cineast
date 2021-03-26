@@ -20,6 +20,7 @@ jobs:
         image: vitrivr/cottontaildb:0.12.5
         ports:
           - 1865:1865
+        options: -it
 
     # Start actual job.
     steps:
