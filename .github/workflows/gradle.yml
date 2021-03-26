@@ -41,7 +41,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./gradlew test -i
     - name: runtime-jar
       run: ./gradlew cineast-runtime:shadowJar
     - name: api-jar
