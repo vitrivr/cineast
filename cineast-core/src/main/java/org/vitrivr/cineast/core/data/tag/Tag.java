@@ -14,5 +14,8 @@ public interface Tag {
 
   public boolean hasDescription();
 
+  public TagPriority getPriority();
+
+  public void setPriority(TagPriority priority);
 
 }

@@ -8,6 +8,9 @@ public class CompleteTag implements Tag {
 
   private final String id, name, description;
 
+  /** only used in querying */
+  private TagPriority priority;
+
   public CompleteTag(String id, String name, String description) {
     this.id = id;
     this.name = name;
@@ -81,6 +84,16 @@ public class CompleteTag implements Tag {
   @Override
   public boolean hasDescription() {
     return !this.description.isEmpty();
+  }
+
+  @Override
+  public TagPriority getPriority() {
+    return this.priority;
+  }
+
+  @Override
+  public void setPriority(TagPriority priority) {
+    this.priority = priority;
   }
 
 }
