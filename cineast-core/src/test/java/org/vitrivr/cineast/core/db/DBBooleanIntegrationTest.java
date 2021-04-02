@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import static java.util.Arrays.asList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
@@ -188,6 +191,81 @@ public abstract class DBBooleanIntegrationTest<R> {
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
+  }
+
+  @Test
+  @DisplayName("test Greater() query")
+  void testGreaterQuery() {
+    selector.open(testTableName);
+    int idToCheck = TABLE_CARD - 1;
+    List<PrimitiveTypeProvider> values = new ArrayList<>();
+    values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 17)));
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.GREATER, values);
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 19)));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 18)));
+  }
+
+  @Test
+  @DisplayName("test Less() query")
+  void testLessQuery() {
+    selector.open(testTableName);
+    int idToCheck = TABLE_CARD - 1;
+    List<PrimitiveTypeProvider> values = new ArrayList<>();
+    values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.LESS, values);
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
+  }
+
+
+  @Test
+  @DisplayName("test BETWEEN() AND BETWEEN() query")
+  void testBetweenANDBetweenQuery() {
+    selector.open(testTableName);
+    int idToCheck = TABLE_CARD - 1;
+
+    //The result range is between -x and -x+1
+    List<PrimitiveTypeProvider> values1 = new ArrayList<>();
+    values1.add(PrimitiveTypeProvider.fromObject(-(idToCheck)));
+    values1.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>  element1 = new ImmutableTriple<>(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values1);
+
+    //The result range is between -x+1 and -x+2
+    List<PrimitiveTypeProvider> values2 = new ArrayList<>();
+    values2.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    values2.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 2)));
+    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>  element2 = new ImmutableTriple<>(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values2);
+
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), DATA_COL_NAME_2, asList(DATA_COL_NAME_2), null);
+
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(DATA_COL_NAME_2).getString()).collect(Collectors.toList()), hasItem(String.valueOf(-(idToCheck))));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(DATA_COL_NAME_2).getString()).collect(Collectors.toList()), hasItem(String.valueOf(-(idToCheck - 1))));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(DATA_COL_NAME_2).getString()).collect(Collectors.toList()), hasItem(String.valueOf(-(idToCheck - 2))));
+  }
+
+
+
+  @Test
+  @DisplayName("test BETWEEN() AND IN() query")
+  void testBetweenANDInQuery() {
+    selector.open(testTableName);
+    int idToCheck = TABLE_CARD - 1;
+
+    //The result -x+1, because -x-3 is out of range.
+    List<PrimitiveTypeProvider> values1 = new ArrayList<>();
+    values1.add(PrimitiveTypeProvider.fromObject(-(idToCheck+3)));
+    values1.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>  element1 = new ImmutableTriple<>(DATA_COL_NAME_2, RelationalOperator.IN, values1);
+
+    //The result range is between -x+1 and -x+2
+    List<PrimitiveTypeProvider> values2 = new ArrayList<>();
+    values2.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
+    values2.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 2)));
+    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>  element2 = new ImmutableTriple<>(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values2);
+
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), DATA_COL_NAME_2, asList(DATA_COL_NAME_2), null);
+
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(DATA_COL_NAME_2).getString()).collect(Collectors.toList()), hasItem(String.valueOf(-(idToCheck - 1))));
+    MatcherAssert.assertThat(result.stream().map(el -> el.get(DATA_COL_NAME_2).getString()).collect(Collectors.toList()), hasItem(String.valueOf(-(idToCheck - 2))));
   }
 
 }
