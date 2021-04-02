@@ -333,11 +333,6 @@ public class ADAMproMessageBuilder {
                     this.wmBuilder.setOp(">");
                     this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
-                case ILIKE:
-                    this.wmBuilder.setAttribute("lower(" + key + ")");
-                    this.wmBuilder.setOp("LIKE");
-                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v.toLowerCase() + "%").build()).collect(Collectors.toList()));
-                    break;
                 case LIKE:
                     this.wmBuilder.setAttribute(key);
                     this.wmBuilder.setOp("LIKE");
@@ -348,9 +343,9 @@ public class ADAMproMessageBuilder {
                     this.wmBuilder.setOp("NOT LIKE");
                     this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
                     break;
-                case RLIKE:
+                case MATCH:
                     this.wmBuilder.setAttribute(key);
-                    this.wmBuilder.setOp("RLIKE");
+                    this.wmBuilder.setOp("MATCH");
                     break;
                 default:
                     this.wmBuilder.setAttribute(key);

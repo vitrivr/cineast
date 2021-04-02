@@ -1,44 +1,35 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Tuple;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.db.DBSelector;
+import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.db.DBIntegrationTest;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.db.IntegrationDBProvider;
+import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
+import org.vitrivr.cottontail.client.language.dml.Insert;
 
-public class CottontailIntegrationTest extends DBIntegrationTest<Tuple> {
+public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
 
-  private final DatabaseConfig config;
+
+  private final CottontailIntegrationDBProvider _provider;
 
   public CottontailIntegrationTest() {
-    config = new DatabaseConfig();
-    config.setPort(1865);
+    _provider = new CottontailIntegrationDBProvider();
   }
 
   @Override
-  protected void finishSetup() {
-    CottontailWrapper wrapper = getWrapper();
-    wrapper.optimizeEntityBlocking(CottontailMessageBuilder.entity(this.getTestTextTableName()));
+  public void finishSetup() {
+    final CottontailWrapper wrapper = _provider.getWrapper();
+    final String fqn = wrapper.fqn(this.getTestTextTableName());
+    wrapper.client.optimize(new OptimizeEntity(fqn), null);
     wrapper.close();
   }
 
-  private CottontailWrapper getWrapper() {
-    return new CottontailWrapper(config, true);
+  @Test
+  protected void simpleTest() {
+    //no-op
   }
 
   @Override
-  protected PersistencyWriter<Tuple> getPersistencyWriter() {
-    return new CottontailWriter(getWrapper());
-  }
-
-  @Override
-  protected DBSelector getSelector() {
-    return new CottontailSelector(getWrapper());
-  }
-
-  @Override
-  public EntityCreator getEntityCreator() {
-    return new CottontailEntityCreator(getWrapper());
+  protected IntegrationDBProvider<Insert> provider() {
+    return _provider;
   }
 }

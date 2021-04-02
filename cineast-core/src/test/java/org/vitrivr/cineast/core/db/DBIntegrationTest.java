@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -53,12 +55,15 @@ public abstract class DBIntegrationTest<R> {
   private static final String TEXT_COL_NAME = "text";
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private IntegrationDBProvider<R> provider;
+
   @BeforeEach
   void setupTest() {
-    selector = getSelector();
+    provider = provider();
+    selector = provider.getSelector();
     assumeTrue(selector.ping(), "Connection to database could not be established");
-    writer = getPersistencyWriter();
-    ec = getEntityCreator();
+    writer = provider.getPersistencyWriter();
+    ec = provider.getEntityCreator();
     testTextTableName = getTestTextTableName();
     testVectorTableName = getTestVectorTableName();
     queryConfig = getQueryConfig();
@@ -69,13 +74,15 @@ public abstract class DBIntegrationTest<R> {
     finishSetup();
   }
 
+  protected abstract void finishSetup();
+
   protected QueryConfig getQueryConfig() {
     QueryConfig qc = new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());
     qc.setDistanceIfEmpty(Distance.euclidean);
     return qc;
   }
 
-  protected abstract void finishSetup();
+  protected abstract IntegrationDBProvider<R> provider();
 
   @AfterEach
   void tearDownTest() {
@@ -136,11 +143,6 @@ public abstract class DBIntegrationTest<R> {
   }
 
   /**
-   * @return an {@link PersistencyWriter} which will be used to fill data into the underlying database
-   */
-  protected abstract PersistencyWriter<R> getPersistencyWriter();
-
-  /**
    * Create both a table for vector retrieval & text retrieval
    */
   protected void createTables() {
@@ -163,13 +165,6 @@ public abstract class DBIntegrationTest<R> {
     }
   }
 
-  /**
-   * As implementing test, you are responsible on whether this returns a new selector instance or a previously reused selector instance.
-   */
-  protected abstract DBSelector getSelector();
-
-  public abstract EntityCreator getEntityCreator();
-
   protected String getTestTextTableName() {
     return "test_feature_text";
   }
@@ -181,7 +176,7 @@ public abstract class DBIntegrationTest<R> {
   @Test
   @DisplayName("Ping the database")
   void ping() {
-    Assertions.assertTrue(getSelector().ping());
+    Assertions.assertTrue(provider.getSelector().ping());
   }
 
   @Test
@@ -201,7 +196,7 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Verify elements exist")
+  @DisplayName("Verify elements exist by id")
   void entriesExistById() {
     writer.open(testVectorTableName);
     for (int i = 0; i < MAX_VECTOR_ID; i++) {
@@ -235,23 +230,24 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
+  @Disabled /* TODO: Currently not supported in Cottontail DB v0.12.0. Re-activate, once support is back. */
   @DisplayName("Batched KNN search")
   void batchedKnnSearch() {
-    selector.open(testVectorTableName);
-    List<float[]> queries = new ArrayList<>();
-    queries.add(new float[]{0.001f, 1, 0});
-    queries.add(new float[]{3.1f, 1, 0});
-    queries.add(new float[]{4.8f, 1, 0});
-    queryConfig.setDistanceIfEmpty(Distance.manhattan);
-    List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
-    List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
-    Assertions.assertEquals(3, result.size());
-    Assertions.assertEquals("0", result.get(0).getSegmentId());
-    Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
-    Assertions.assertEquals("3", result.get(1).getSegmentId());
-    Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
-    Assertions.assertEquals("5", result.get(2).getSegmentId());
-    Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
+      selector.open(testVectorTableName);
+      List<float[]> queries = new ArrayList<>();
+      queries.add(new float[]{0.001f, 1, 0});
+      queries.add(new float[]{3.1f, 1, 0});
+      queries.add(new float[]{4.8f, 1, 0});
+      queryConfig.setDistanceIfEmpty(Distance.manhattan);
+      List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
+      List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
+      Assertions.assertEquals(3, result.size());
+      Assertions.assertEquals("0", result.get(0).getSegmentId());
+      Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
+      Assertions.assertEquals("3", result.get(1).getSegmentId());
+      Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
+      Assertions.assertEquals("5", result.get(2).getSegmentId());
+      Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
   }
 
 
@@ -366,9 +362,9 @@ public abstract class DBIntegrationTest<R> {
     Assertions.assertEquals(3, results.size());
     checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
     checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
-    float score = results.get(0).get("ap_score").getFloat();
-    Assertions.assertEquals(score, results.get(1).get("ap_score").getFloat(), 0.01);
-    Assertions.assertEquals(score, results.get(2).get("ap_score").getFloat(), 0.01);
+    float score = results.get(0).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat();
+    Assertions.assertEquals(score, results.get(1).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
+    Assertions.assertEquals(score, results.get(2).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
   }
 
   @Test

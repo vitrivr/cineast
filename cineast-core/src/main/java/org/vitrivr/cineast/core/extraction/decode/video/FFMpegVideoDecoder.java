@@ -208,7 +208,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     private Long getFrameTimestamp(int stream) {
         AVRational timebase = this.pFormatCtx.streams(stream).time_base();
-        return Math.floorDiv((this.pFrame.best_effort_timestamp() * timebase.num() * 1000), timebase.den());
+        return Math.floorDiv((this.pFrame.best_effort_timestamp() * timebase.num() * 1000), (long)timebase.den());
     }
 
     /**
