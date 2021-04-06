@@ -48,6 +48,9 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+    - name: core-jar
+      run: ./gradlew cineast-core:shadowJar
+    - name: api-jar
     - name: runtime-jar
       run: ./gradlew cineast-runtime:shadowJar
     - name: api-jar
