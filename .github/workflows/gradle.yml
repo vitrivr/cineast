@@ -47,6 +47,7 @@ jobs:
     - name: api-jar
       run: ./gradlew cineast-api:shadowJar
     - name: Test with Gradle
+      timeout-minutes: 5
       run: ./gradlew test --info
     - name: Cleanup Gradle Cache
       # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
