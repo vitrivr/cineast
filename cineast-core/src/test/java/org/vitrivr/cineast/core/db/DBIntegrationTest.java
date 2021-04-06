@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -56,6 +57,15 @@ public abstract class DBIntegrationTest<R> {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private IntegrationDBProvider<R> provider;
+
+  @BeforeAll
+  void checkConnection(){
+    provider = provider();
+    selector = provider.getSelector();
+    LOGGER.info("Trying to establish connection to Database");
+    assumeTrue(selector.ping(), "Connection to database could not be established");
+    LOGGER.info("Connection to Database established");
+  }
 
   @BeforeEach
   void setupTest() {
