@@ -232,10 +232,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
                 int emissionTimeout = 1000;
 
                 while (!this.pipeline.emit(container, emissionTimeout)) {
-                  LOGGER.warn(
+                  LOGGER.debug(
                       "ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");
                   Thread.sleep(emissionTimeout);
-                  emissionTimeout += 500;
+                  //emissionTimeout += 500;
                 }
 
                 segmentNumber += 1;
