@@ -140,7 +140,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             try {
                 SegmentContainer s = this.segmentQueue.poll(500, TimeUnit.MILLISECONDS);
                 if (s != null) {
-                    LOGGER.info("Segment {} is being handed to the extraction pipeline.", s.getId());
+                    LOGGER.debug("Segment {} is being handed to the extraction pipeline.", s.getId());
                     for (Extractor f : extractors) {
                         try {
                             this.executorService.execute(new ExtractionTask(f, s, this));
