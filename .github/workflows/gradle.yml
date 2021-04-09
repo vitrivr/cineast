@@ -39,15 +39,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       # https://github.com/actions/cache/blob/main/examples.md#java---gradle
-    - name: Cache Gradle packages
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
     - name: core-jar
       run: ./gradlew cineast-core:shadowJar
     - name: runtime-jar
