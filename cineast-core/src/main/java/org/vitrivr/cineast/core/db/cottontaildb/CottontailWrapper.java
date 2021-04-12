@@ -31,6 +31,7 @@ public final class CottontailWrapper implements AutoCloseable {
   public CottontailWrapper(DatabaseConfig config, boolean keepOpen) {
     StopWatch watch = StopWatch.createStarted();
     this.keepOpen = keepOpen;
+    LOGGER.debug("Starting to connect to cottontail at {}:{}", config.getHost(), config.getPort());
     final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort());
     if (config.getPlaintext()) {
       builder.usePlaintext();

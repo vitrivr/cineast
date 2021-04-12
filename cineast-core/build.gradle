@@ -156,6 +156,13 @@ dependencies {
     compile group: 'javax.activation', name: 'activation', version: '1.1.1'
 }
 
+shadowJar{
+    mergeServiceFiles()
+}
+
 test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
