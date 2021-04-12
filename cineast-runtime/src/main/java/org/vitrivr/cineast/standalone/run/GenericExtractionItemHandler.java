@@ -59,7 +59,7 @@ import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
 
 /**
  * This class is used to extract a continuous list of {@link ExtractionItemContainer}s.
- *
+ * <p>
  * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
  *
  * @author silvan on 16.04.18.
@@ -101,8 +101,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
   /**
    * @param pathProvider where the {@link ExtractionItemContainer}s will be coming from
-   * @param context context for this extraction run
-   * @param mediaType can be null. if provided, will be used for all given items
+   * @param context      context for this extraction run
+   * @param mediaType    can be null. if provided, will be used for all given items
    */
   public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, IngestConfig context, MediaType mediaType) {
     this.context = context;
@@ -383,6 +383,11 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         if (handlerCache.get(mediaType).getKey().supportedFiles().contains(type)) {
           return new ImmutablePair<>(item, mediaType);
         }
+        if (mediaType == MediaType.IMAGE_SEQUENCE && handlerCache.get(mediaType).getKey() instanceof ImageSequenceDecoder) {
+          LOGGER.trace("Ignoring file {} for ImageSequenceDecoder", item.getPathForExtraction().toString());
+          /* for ImageSequenceDecoders, it is expected that there might be images arriving which are not supported. The decoder reads folders and hands the images within to the extractors. */
+          continue;
+        }
         /* if not, log an  error and move on */
         LOGGER.error("Media Type {} does not support file type {} for file {}", mediaType, type, item.getPathForExtraction().toString());
         continue;
@@ -505,9 +510,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
   /**
    * create a new descriptor based on the provided one.
-   *
+   * <p>
    * if an id is already given in the descriptor, it takes precedence over generating a new one. if a new path is provided as an argument, it takes precedence over one which might already be existing in the descriptor. if a new type is provided as an argument, it takes precedence over one which might already be existing in the descriptor.
-   *
+   * <p>
    * The exists variable is taken from the provided descriptor, since that is more current than the one provided in the item
    */
   public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
