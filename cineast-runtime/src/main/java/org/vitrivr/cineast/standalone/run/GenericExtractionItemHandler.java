@@ -166,7 +166,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     /* Process until there's nothing left*/
     while ((pair = this.nextItem()) != null) {
       try {
-        LOGGER.info("Processing path {} and mediatype {}", pair.getLeft(), pair.getRight());
+        LOGGER.debug("Processing path {} and mediatype {}", pair.getLeft(), pair.getRight());
 
         if (handlerCache.get(pair.getRight()) == null) {
           LOGGER.error("Unknown mediatype {}, exiting extraction", pair.getRight());
