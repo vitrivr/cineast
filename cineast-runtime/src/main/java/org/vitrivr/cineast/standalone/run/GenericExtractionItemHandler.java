@@ -384,7 +384,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
           return new ImmutablePair<>(item, mediaType);
         }
         /* if not, log an  error and move on */
-        LOGGER.error("Media Type {} does not support file type {}", mediaType, type);
+        LOGGER.error("Media Type {} does not support file type {} for file {}", mediaType, type, item.getPathForExtraction().toString());
         continue;
       }
 
