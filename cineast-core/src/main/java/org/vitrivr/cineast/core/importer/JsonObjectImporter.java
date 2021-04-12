@@ -57,7 +57,7 @@ public class JsonObjectImporter implements Importer<ObjectNode> {
       }
     } catch (IOException e) {
       LOGGER.error("error while reading json file '{}'", this.inputFile.getAbsolutePath());
-      LOGGER.error(e);
+      LOGGER.warn("While extracting data, it is not possible to read from JSON-Files. You may need to set your selector to NONE in your extraction config file.");
     }
     return null;
   }
