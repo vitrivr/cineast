@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api.rest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
@@ -59,6 +60,7 @@ public class OpenApiCompatHelper {
         //Default Javalin JSON mapper includes all null values and breaks spec json
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         return new OpenApiOptions(() -> getOpenApi(config))
                 .path("/openapi-specs")
