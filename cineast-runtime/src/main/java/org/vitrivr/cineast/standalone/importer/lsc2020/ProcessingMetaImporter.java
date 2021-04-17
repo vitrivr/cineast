@@ -239,7 +239,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(3);
         map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
         map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag));
-        map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(""));
+        map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(tag)); // LSC Context no description of tags available. Use tag name as "description"
         return map;
     }
 

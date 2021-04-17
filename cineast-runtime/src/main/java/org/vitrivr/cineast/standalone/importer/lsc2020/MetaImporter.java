@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.features.SpatialDistance;
 import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.IOException;
@@ -112,11 +113,12 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     }
 
     private HashMap<String, PrimitiveTypeProvider> parseMeta(String path, String[] items, int index) {
-        return parseMeta(path, items, index, LSCUtilities.DEFAULT_DOMAIN);
-    }
-
-    private HashMap<String, PrimitiveTypeProvider> parseMeta(String path, String[] items, int index, String domain) {
-        return meta(path, domain, LSCUtilities.META_NAMES[index], items[index]);
+        String name = LSCUtilities.META_NAMES[index];
+        if(name.equalsIgnoreCase(LSCUtilities.META_LAT_NAME) || name.equalsIgnoreCase(LSCUtilities.META_LON_NAME)){
+            return meta(path, "LOCATION" /*SpatialDistance.METADATA_DOMAIN*/, LSCUtilities.META_NAMES[index], items[index]);
+        }else{
+            return meta(path, LSCUtilities.DEFAULT_DOMAIN, LSCUtilities.META_NAMES[index], items[index]);
+        }
     }
 
     @Override

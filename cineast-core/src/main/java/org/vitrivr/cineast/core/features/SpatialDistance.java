@@ -27,8 +27,8 @@ import java.util.Optional;
  * sets.
  */
 public class SpatialDistance extends MetadataFeatureModule<Location> {
-  private static final String METADATA_DOMAIN = "LOCATION";
-  private static final String FEATURE_NAME = "features_SpatialDistance";
+  public static final String METADATA_DOMAIN = "LOCATION";
+  public static final String FEATURE_NAME = "features_SpatialDistance";
 
   // TODO: Find most suitable maximum distance, maybe even as a property to the feature
   private static final double HALF_SIMILARITY_DISTANCE = 1000.0/3.0; // distance in meters where similarity equals 50%

@@ -174,7 +174,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         Map<String, PrimitiveTypeProvider> map = new HashMap<>();
         map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(data[0]));
         map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(data[1]));
-        map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(data[2]));
+        map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(data[1])); // LSC Context: No description available. Use label instead
         return map;
     }
 
