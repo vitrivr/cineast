@@ -8,10 +8,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Location;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.providers.LocationProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.features.SpatialDistance;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
@@ -51,6 +55,11 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
     String lat = data[LSCUtilities.META_LAT_COL];
     String lon = data[LSCUtilities.META_LON_COL];
 
+    if(LSCUtilities.isAnyMetaBlank(lat, lon)){
+      LOGGER.warn("Either lat or long for {} is blank. Ignoring.",key);
+      return Optional.empty();
+    }
+
     boolean ignore = false;
     float fLat = Float.NaN, fLon = Float.NaN;
     try{
@@ -69,11 +78,14 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
       return Optional.empty();
     }
 
+    Location location = Location.of(fLat, fLon);
+    FloatArrayTypeProvider vector = new FloatArrayTypeProvider(ReadableFloatVector.toArray(location));
+
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
     // id
     map.put("id", PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(key)));
     // feature
-    map.put("feature", PrimitiveTypeProvider.fromObject(Location.of(fLat, fLon)));
+    map.put("feature", vector);
     return Optional.of(map);
   }
 
@@ -96,4 +108,5 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
   public Map<String, PrimitiveTypeProvider> convert(Map<String, PrimitiveTypeProvider> data) {
     return data;
   }
+
 }

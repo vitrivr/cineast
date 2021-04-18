@@ -355,6 +355,19 @@ public class LSCUtilities {
         }
     }
 
+    public static boolean isMetaBlank(String meta){
+        return StringUtils.isBlank(meta) || "NULL".equalsIgnoreCase(meta);
+    }
+
+    public static boolean isAnyMetaBlank(String... meta){
+        for(String m : meta){
+            if(isMetaBlank(m)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void readMetadata() throws IOException, CsvException {
         LOGGER.info("Reading metadata file...");

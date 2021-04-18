@@ -21,6 +21,7 @@ import org.vitrivr.cineast.standalone.importer.lsc2020.LSCAllTagsImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.OCRImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.SpatialImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
@@ -137,6 +138,9 @@ public class ImportCommand implements Runnable {
       case LSCOCR:
         handler = new OCRImportHandler(this.threads, this.batchsize, clean);
         break;
+      case LSCSPATIAL:
+        handler = new SpatialImportHandler(this.threads, this.batchsize);
+        break;
     }
     if (!isGoogleVision) {
       if (handler == null) {
@@ -174,6 +178,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR, LSCSPATIAL
   }
 }
