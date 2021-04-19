@@ -3,6 +3,7 @@ package org.vitrivr.cineast.standalone.importer.lsc2020;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
@@ -57,9 +58,10 @@ public class LSCAllTagsImportHandler extends DataImportHandler {
     this.futures.add(this.service.submit(new DataImportRunner(new VisualConceptTagImporter(path),
         SegmentTags.SEGMENT_TAGS_TABLE_NAME, "lsc-visualConceptsTags")));
     // Mysceal lsc21 tags
-    this.futures.add(this.service.submit(new DataImportRunner(new MyscealTagImporter(path, true),
+    this.futures.add(this.service.submit(new DataImportRunner(new MyscealTagImporter(
+        Paths.get(path.toString(), "mysceal-tags.json"), true),
         TagReader.TAG_ENTITY_NAME, "lsc-mysceal-tags-unique")));
-    this.futures.add(this.service.submit(new DataImportRunner(new MyscealTagImporter(path, false),
+    this.futures.add(this.service.submit(new DataImportRunner(new MyscealTagImporter(Paths.get(path.toString(), "mysceal-tags.json"), false),
         SegmentTags.SEGMENT_TAGS_TABLE_NAME, "lsc-mysceal-tags-segment")));
   }
 }

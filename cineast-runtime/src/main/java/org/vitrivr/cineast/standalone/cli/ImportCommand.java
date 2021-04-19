@@ -133,7 +133,7 @@ public class ImportCommand implements Runnable {
       case LSCTABLE:
         handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, true);
         break;
-      case LSC20TAGS:
+      case LSCTAGSALL:
         handler = new LSCAllTagsImportHandler(this.threads, this.batchsize, clean);
         break;
       case LSCOCR:
@@ -182,6 +182,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR, LSCSPATIAL, LSC21TAGS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }
