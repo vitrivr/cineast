@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.vitrivr.cottontail.client.BatchInsertClient;
 import org.vitrivr.cottontail.client.stub.SimpleClient;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
@@ -21,6 +22,9 @@ public final class CottontailWrapper implements AutoCloseable {
   /** The {@link SimpleClient} instance that facilitates access to Cottontail DB. */
   public final SimpleClient client;
 
+  /** The {@link BatchInsertClient} instance that facilitates batch inserts to Cottontail DB. */
+  public final BatchInsertClient batchClient;
+
   /** Flag indicating that his {@link CottontailWrapper}'s {@link ManagedChannel} should be kept open. */
   public final boolean keepOpen;
 
@@ -38,6 +42,7 @@ public final class CottontailWrapper implements AutoCloseable {
     }
     this.channel = builder.build();
     this.client = new SimpleClient(this.channel);
+    this.batchClient = new BatchInsertClient(config.getHost(), config.getPort());
     watch.stop();
     LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
   }

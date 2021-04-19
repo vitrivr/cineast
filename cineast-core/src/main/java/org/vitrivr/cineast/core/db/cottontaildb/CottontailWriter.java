@@ -48,15 +48,15 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
-        final long txId = this.cottontail.client.begin();
+        //final long txId = this.cottontail.client.begin();
         try {
             for (PersistentTuple t : tuples) {
-                this.cottontail.client.insert(getPersistentRepresentation(t), txId);
+                this.cottontail.batchClient.insert(getPersistentRepresentation(t));
             }
-            this.cottontail.client.commit(txId);
+            this.cottontail.batchClient.complete();
             return true;
         } catch (StatusRuntimeException e) {
-            this.cottontail.client.rollback(txId);
+            this.cottontail.batchClient.abort();
             return false;
         }
     }
