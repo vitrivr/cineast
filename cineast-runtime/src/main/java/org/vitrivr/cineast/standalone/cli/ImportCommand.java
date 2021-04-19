@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.importer.lsc2020.MyscealTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
@@ -141,6 +142,9 @@ public class ImportCommand implements Runnable {
       case LSCSPATIAL:
         handler = new SpatialImportHandler(this.threads, this.batchsize);
         break;
+      case LSC21TAGS:
+        handler = new MyscealTagImportHandler(this.threads, this.batchsize);
+        break;
     }
     if (!isGoogleVision) {
       if (handler == null) {
@@ -178,6 +182,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR, LSCSPATIAL
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }
