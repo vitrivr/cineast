@@ -5,6 +5,7 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cottontail.client.BatchInsertClient;
 import org.vitrivr.cottontail.client.TupleIterator;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
@@ -48,15 +49,16 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
-        final long txId = this.cottontail.client.begin();
+        //final long txId = this.cottontail.client.begin();
+        BatchInsertClient client = this.cottontail.startBatchInsert();
         try {
             for (PersistentTuple t : tuples) {
-                this.cottontail.client.insert(getPersistentRepresentation(t), txId);
+                client.insert(getPersistentRepresentation(t));
             }
-            this.cottontail.client.commit(txId);
+            client.complete();
             return true;
         } catch (StatusRuntimeException e) {
-            this.cottontail.client.rollback(txId);
+            client.abort();
             return false;
         }
     }
