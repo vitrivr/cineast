@@ -34,7 +34,7 @@ public class ImportTaskMonitor {
         batchImportTime = Summary.build().name("cineast_batchinserttime")
                 .help("Time for import of items on entity")
                 .labelNames("Entity", "Items").quantile(0.5, 0.05).quantile(0.9, 0.01).register();
-        importProgress = Gauge.build().name("cineast_importgrogress")
+        importProgress = Gauge.build().name("cineast_importprogress")
                 .labelNames("Entity")
                 .help("Progress on specific entity").register();
     }
