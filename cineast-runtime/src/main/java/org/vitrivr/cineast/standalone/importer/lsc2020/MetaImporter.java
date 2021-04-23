@@ -48,8 +48,12 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
             throw new RuntimeException("Failed to prepare metadata readout", e);
         }
         try {
-            Files.createFile(root.resolve(LSCUtilities.META_NO_PATH_FILE));
-            Files.createFile(root.resolve(LSCUtilities.WRITTEN_FILE));
+            if(!Files.exists(root.resolve(LSCUtilities.META_NO_PATH_FILE))){
+                Files.createFile(root.resolve(LSCUtilities.META_NO_PATH_FILE));
+            }
+            if(!Files.exists(root.resolve(LSCUtilities.WRITTEN_FILE))){
+                Files.createFile(root.resolve(LSCUtilities.WRITTEN_FILE));
+            }
         } catch (IOException e) {
             LOGGER.error("Could not open important housekeeping files", e);
         }
