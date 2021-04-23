@@ -154,9 +154,9 @@ public class ImportCommand implements Runnable {
       }
     }
 
+    handler.waitForCompletion();
     /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
     if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
-      handler.waitForCompletion();
       OptimizeEntitiesCommand.optimizeAllCottontailEntities();
     }
 
