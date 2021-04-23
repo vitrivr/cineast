@@ -100,6 +100,7 @@ public class Copier implements AutoCloseable {
         ArrayList<PersistentTuple> tupleCache = new ArrayList<>(batchSize);
 
         long start = System.currentTimeMillis();
+        ImportTaskMonitor.reportImportProgress(0, entityName, 0);
         do {
             for (i = 0; i < names.length; ++i) {
                 objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
