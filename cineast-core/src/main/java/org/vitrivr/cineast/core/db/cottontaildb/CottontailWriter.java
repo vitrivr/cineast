@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import io.grpc.StatusRuntimeException;
 import java.util.List;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cottontail.client.BatchInsertClient;
@@ -68,7 +69,11 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
         final Insert insert = new Insert(this.fqn);
         int index = 0;
         for (Object o : tuple.getElements()) {
-            insert.value(this.names[index++], o);
+            if(o instanceof ReadableFloatVector){
+                insert.value(this.names[index++], ReadableFloatVector.toArray((ReadableFloatVector)o));
+            } else {
+                insert.value(this.names[index++], o);
+            }
         }
         return insert;
     }
