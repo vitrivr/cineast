@@ -1,10 +1,15 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
 import org.tensorflow.Session.Runner;
 import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.types.TFloat32;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphBuilder;
@@ -180,7 +185,7 @@ public class Inception5h implements AutoCloseable {
 
   private final Graph classificationGraph, preprocessingGraph;
   private final Session classificationSession, preProcessingSession;
-  private final Output<Float> output;
+  private final Output<TFloat32> output;
   private final ArrayList<String> outputOperations;
 
   public Inception5h() {
@@ -189,7 +194,7 @@ public class Inception5h implements AutoCloseable {
 
   public Inception5h(List<String> outputOperations) {
 
-    byte[] graphDef = new byte[0];
+    byte[] graphDef;
     try {
       graphDef = Files
           .readAllBytes((Paths.get("resources/inception5h/tensorflow_inception_graph.pb")));
@@ -198,7 +203,11 @@ public class Inception5h implements AutoCloseable {
           "could not load graph for Inception5h: " + LogHelper.getStackTrace(e));
     }
     classificationGraph = new Graph();
-    classificationGraph.importGraphDef(graphDef);
+    try {
+      classificationGraph.importGraphDef(GraphDef.parseFrom(graphDef));
+    } catch (InvalidProtocolBufferException e) {
+      e.printStackTrace();
+    }
     classificationSession = new Session(classificationGraph);
 
     preprocessingGraph = new Graph();
@@ -208,7 +217,7 @@ public class Inception5h implements AutoCloseable {
     final int H = 224;
     final int W = 224;
 
-    Output<Float> imageFloat = b.placeholder("T", Float.class);
+    Output<TFloat32> imageFloat = b.placeholder("T", DataType.DT_FLOAT);
     output =
         b.resizeBilinear(
             b.expandDims(
@@ -232,12 +241,10 @@ public class Inception5h implements AutoCloseable {
 
   public HashMap<String, float[]> transform(MultiImage img) {
 
-    Tensor<Float> imageTensor = readImage(img);
+    TFloat32 imageTensor = readImage(img);
 
-    Tensor<Float> image = preProcessingSession.runner().feed("T", imageTensor)
-        .fetch(output.op().name()).run()
-        .get(0)
-        .expect(Float.class);
+    TFloat32 image = (TFloat32) preProcessingSession.runner().feed("T", imageTensor)
+        .fetch(output.op().name()).run().get(0);
     imageTensor.close();
 
     Runner runner = classificationSession.runner().feed("input", image);
@@ -246,13 +253,13 @@ public class Inception5h implements AutoCloseable {
       runner.fetch(operation);
     }
 
-    List<Tensor<?>> results = runner.run();
+    List<Tensor> results = runner.run();
 
     HashMap<String, float[]> _return = new HashMap<>();
 
     for (int i = 0; i < this.outputOperations.size(); ++i) {
-      Tensor<Float> result = results.get(i).expect(Float.class);
-      FloatBuffer floatBuffer = FloatBuffer.allocate(result.numElements());
+      TFloat32 result = (TFloat32) results.get(i);
+      FloatBuffer floatBuffer = FloatBuffer.allocate((int) result.size());
       _return.put(this.outputOperations.get(i), floatBuffer.array());
       result.close();
     }
@@ -270,8 +277,8 @@ public class Inception5h implements AutoCloseable {
 
   }
 
-  private static Tensor<Float> readImage(MultiImage img) {
-    float[][][] fimg = new float[img.getHeight()][img.getWidth()][3];
+  private static TFloat32 readImage(MultiImage img) {
+    TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(img.getHeight(), img.getWidth(), 3));
 
     double sum = 0d;
 
@@ -280,12 +287,15 @@ public class Inception5h implements AutoCloseable {
     for (int y = 0; y < img.getHeight(); ++y) {
       for (int x = 0; x < img.getWidth(); ++x) {
         int c = colors[x + img.getWidth() * y];
-        fimg[y][x][0] = (float) RGBContainer.getRed(c);
-        fimg[y][x][1] = (float) RGBContainer.getGreen(c);
-        fimg[y][x][2] = (float) RGBContainer.getBlue(c);
+        float r = (float) RGBContainer.getRed(c);
+        float g = (float) RGBContainer.getGreen(c);
+        float b = (float) RGBContainer.getBlue(c);
 
-        sum += fimg[y][x][0] + fimg[y][x][1] + fimg[y][x][2];
+        imageTensor.setFloat(r, y, x, 0);
+        imageTensor.setFloat(g, y, x, 1);
+        imageTensor.setFloat(b, y, x, 2);
 
+        sum += r + g + b;
       }
     }
 
@@ -293,14 +303,13 @@ public class Inception5h implements AutoCloseable {
 
     for (int y = 0; y < img.getHeight(); ++y) {
       for (int x = 0; x < img.getWidth(); ++x) {
-        fimg[y][x][0] -= sum;
-        fimg[y][x][1] -= sum;
-        fimg[y][x][2] -= sum;
-
+        for (int c = 0; c < 3; ++c) {
+          imageTensor.setFloat((float) (imageTensor.getFloat(y, x, c) - sum), y, x, c);
+        }
       }
     }
 
-    return Tensor.create(fimg, Float.class);
+    return imageTensor;
 
   }
 }

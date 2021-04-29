@@ -1,13 +1,19 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo;
 
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.commons.math3.analysis.function.Sigmoid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.types.TFloat32;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphBuilder;
@@ -19,7 +25,6 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.MathHelper.ArgMaxResult;
 
 import java.io.IOException;
-import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,8 +39,7 @@ import java.util.PriorityQueue;
 public class YOLO implements AutoCloseable {
 
   private final static float OVERLAP_THRESHOLD = 0.5f;
-  private final static double anchors[] = {1.08, 1.19, 3.42, 4.41, 6.63, 11.38, 9.42, 5.11, 16.62,
-      10.52};
+  private final static double[] anchors = {1.08, 1.19, 3.42, 4.41, 6.63, 11.38, 9.42, 5.11, 16.62, 10.52};
   private final static int SIZE = 13;
   private final static int MAX_RECOGNIZED_CLASSES = 24;
   private final static float THRESHOLD = 0.5f;
@@ -54,7 +58,7 @@ public class YOLO implements AutoCloseable {
   private final Session yoloSession;
 
   public YOLO() {
-    byte[] GRAPH_DEF = new byte[0];
+    byte[] GRAPH_DEF;
     try {
       GRAPH_DEF = Files
           .readAllBytes((Paths.get("resources/YOLO/yolo-voc.pb")));
@@ -63,18 +67,22 @@ public class YOLO implements AutoCloseable {
           "could not load graph for YOLO: " + LogHelper.getStackTrace(e));
     }
     yoloGraph = new Graph();
-    yoloGraph.importGraphDef(GRAPH_DEF);
+    try {
+      yoloGraph.importGraphDef(GraphDef.parseFrom(GRAPH_DEF));
+    } catch (InvalidProtocolBufferException e) {
+      e.printStackTrace();
+    }
     yoloSession = new Session(yoloGraph);
 
     preprocessingGraph = new Graph();
 
     GraphBuilder graphBuilder = new GraphBuilder(preprocessingGraph);
 
-    Output<Float> imageFloat = graphBuilder.placeholder("T", Float.class);
+    Output<TFloat32> imageFloat = graphBuilder.placeholder("T", DataType.DT_FLOAT);
 
     final int[] size = new int[]{416, 416};
 
-    final Output<Float> output =
+    final Output<TFloat32> output =
 
         graphBuilder.resizeBilinear( // Resize using bilinear interpolation
             graphBuilder.expandDims( // Increase the output tensors dimension
@@ -89,22 +97,21 @@ public class YOLO implements AutoCloseable {
 
   }
 
-  private static Tensor<Float> readImage(MultiImage img) {
-
-    float[][][] fimg = new float[img.getHeight()][img.getWidth()][3];
+  private static TFloat32 readImage(MultiImage img) {
+    TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(img.getHeight(), img.getWidth(), 3));
 
     int[] colors = img.getColors();
 
     for (int x = 0; x < img.getWidth(); ++x) {
       for (int y = 0; y < img.getHeight(); ++y) {
         int c = colors[x + img.getWidth() * y];
-        fimg[y][x][0] = ((float) RGBContainer.getRed(c)) / 255f;
-        fimg[y][x][1] = ((float) RGBContainer.getGreen(c)) / 255f;
-        fimg[y][x][2] = ((float) RGBContainer.getBlue(c)) / 255f;
+        imageTensor.setFloat(((float) RGBContainer.getRed(c)) / 255f, y, x, 0);
+        imageTensor.setFloat(((float) RGBContainer.getGreen(c)) / 255f, y, x, 1);
+        imageTensor.setFloat(((float) RGBContainer.getBlue(c)) / 255f, y, x, 2);
       }
     }
 
-    return Tensor.create(fimg, Float.class);
+    return imageTensor;
   }
 
   /**
@@ -113,16 +120,16 @@ public class YOLO implements AutoCloseable {
    * @param result - the tensorflow output
    * @return the number of classes
    */
-  private int getOutputSizeByShape(Tensor<Float> result) {
-    return (int) (result.shape()[3] * Math.pow(SIZE, 2));
+  private int getOutputSizeByShape(TFloat32 result) {
+    return (int) (result.shape().size(3) * Math.pow(SIZE, 2));
   }
 
   /**
    * It classifies the object/objects on the image
    *
    * @param tensorFlowOutput output from the TensorFlow, it is a 13x13x((num_class +1) * 5) tensor
-   * 125 = (numClass +  Tx, Ty, Tw, Th, To) * 5 - cause we have 5 boxes per each cell
-   * @param labels a string vector with the labels
+   *                         125 = (numClass +  Tx, Ty, Tw, Th, To) * 5 - cause we have 5 boxes per each cell
+   * @param labels           a string vector with the labels
    * @return a list of recognition objects
    */
   private List<Recognition> classifyImage(final float[] tensorFlowOutput, final String[] labels) {
@@ -148,7 +155,7 @@ public class YOLO implements AutoCloseable {
   }
 
   private BoundingBox getModel(final float[] tensorFlowOutput, int cx, int cy, int b, int numClass,
-      int offset) {
+                               int offset) {
     BoundingBox model = new BoundingBox();
     Sigmoid sigmoid = new Sigmoid();
     model.setX((cx + sigmoid.value(tensorFlowOutput[offset])) * 32);
@@ -167,8 +174,8 @@ public class YOLO implements AutoCloseable {
   }
 
   private void calculateTopPredictions(final BoundingBox boundingBox,
-      final PriorityQueue<Recognition> predictionQueue,
-      final String[] labels) {
+                                       final PriorityQueue<Recognition> predictionQueue,
+                                       final String[] labels) {
     for (int i = 0; i < boundingBox.getClasses().length; i++) {
 
       ArgMaxResult argMax = MathHelper.argMax(MathHelper.softmax(boundingBox.getClasses()));
@@ -238,7 +245,7 @@ public class YOLO implements AutoCloseable {
 
   public List<Recognition> detect(MultiImage img) {
 
-    try (Tensor<Float> normalizedImage = normalizeImage(img)) {
+    try (TFloat32 normalizedImage = normalizeImage(img)) {
       return classifyImage(executeYOLOGraph(normalizedImage), LABELS);
     }
   }
@@ -248,11 +255,10 @@ public class YOLO implements AutoCloseable {
    *
    * @return Tensor<Float> with shape [1][416][416][3]
    */
-  private Tensor<Float> normalizeImage(MultiImage img) {
+  private TFloat32 normalizeImage(MultiImage img) {
 
-    try (Tensor<Float> image = readImage(img)) {
-      return preprocessingSession.runner().feed("T", image).fetch(imageOutName).run().get(0)
-          .expect(Float.class);
+    try (TFloat32 image = readImage(img)) {
+      return (TFloat32) preprocessingSession.runner().feed("T", image).fetch(imageOutName).run().get(0);
     }
   }
 
@@ -262,17 +268,15 @@ public class YOLO implements AutoCloseable {
    * @param image preprocessed image
    * @return output tensor returned by tensorFlow
    */
-  private float[] executeYOLOGraph(final Tensor<Float> image) {
+  private float[] executeYOLOGraph(final TFloat32 image) {
 
-    Tensor<Float> result = yoloSession.runner().feed("input", image).fetch("output").run().get(0)
-        .expect(Float.class);
+    TFloat32 result = (TFloat32) yoloSession.runner().feed("input", image).fetch("output").run().get(0);
 
     float[] outputTensor = new float[getOutputSizeByShape(result)];
-    FloatBuffer floatBuffer = FloatBuffer.wrap(outputTensor);
-    result.writeTo(floatBuffer);
+    FloatDataBuffer floatBuffer = DataBuffers.of(outputTensor);
+    result.write(floatBuffer);
     result.close();
     return outputTensor;
-
   }
 
   // Intentionally reversed to put high confidence at the head of the queue.
