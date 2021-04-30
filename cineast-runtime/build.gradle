@@ -35,22 +35,22 @@ shadowJar {
 dependencies {
 
     /** Jetty Servlet support. */
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: version_jetty
+    implementation group: 'org.eclipse.jetty', name: 'jetty-servlet', version: version_jetty
 
     /** Airline (CLI parsing) */
-    compile group: 'com.github.rvesse', name: 'airline', version: version_airline
+    implementation group: 'com.github.rvesse', name: 'airline', version: version_airline
     
     /** JLine 3 */
-    compile group: 'org.jline', name: 'jline', version: version_jline
+    implementation group: 'org.jline', name: 'jline', version: version_jline
 
     /** OpenCSV for simple, yet effective CSV parsing */
-    compile group: 'com.opencsv', name: 'opencsv', version: version_opencsv
+    implementation group: 'com.opencsv', name: 'opencsv', version: version_opencsv
 
 
     /** Prometheus */
-    compile group: 'io.prometheus', name: 'simpleclient', version: version_prometheus
-    compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: version_prometheus
-    compile group: 'io.prometheus', name: 'simpleclient_httpserver', version: version_prometheus
-    compile group: 'io.prometheus', name: 'simpleclient_pushgateway', version: version_prometheus
-    compile group: 'io.prometheus', name: 'simpleclient_servlet', version: version_prometheus
+    implementation group: 'io.prometheus', name: 'simpleclient', version: version_prometheus
+    implementation group: 'io.prometheus', name: 'simpleclient_hotspot', version: version_prometheus
+    implementation group: 'io.prometheus', name: 'simpleclient_httpserver', version: version_prometheus
+    implementation group: 'io.prometheus', name: 'simpleclient_pushgateway', version: version_prometheus
+    implementation group: 'io.prometheus', name: 'simpleclient_servlet', version: version_prometheus
 }
