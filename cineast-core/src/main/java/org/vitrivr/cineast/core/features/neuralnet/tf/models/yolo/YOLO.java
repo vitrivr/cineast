@@ -274,7 +274,7 @@ public class YOLO implements AutoCloseable {
 
     float[] outputTensor = new float[getOutputSizeByShape(result)];
     FloatDataBuffer floatBuffer = DataBuffers.of(outputTensor);
-    result.write(floatBuffer);
+    result.read(floatBuffer);
     result.close();
     return outputTensor;
   }
