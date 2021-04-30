@@ -260,6 +260,7 @@ public class Inception5h implements AutoCloseable {
     for (int i = 0; i < this.outputOperations.size(); ++i) {
       TFloat32 result = (TFloat32) results.get(i);
       FloatBuffer floatBuffer = FloatBuffer.allocate((int) result.size());
+      // FIXME: This function never actually uses the result values! This cannot be intentional!
       _return.put(this.outputOperations.get(i), floatBuffer.array());
       result.close();
     }

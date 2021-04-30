@@ -62,6 +62,7 @@ public class GraphBuilder {
         .output(0);
   }
 
+  // FIXME: This method used to take a byte array as input, but as it is never used its correctness cannot be verified!
   public Output<TString> constant(String name, String value) {
     return this.constant(name, TString.scalarOf(value));
   }
