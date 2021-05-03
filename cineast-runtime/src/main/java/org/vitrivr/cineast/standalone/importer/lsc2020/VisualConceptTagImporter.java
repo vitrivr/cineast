@@ -19,7 +19,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static final String BBOX_IGNORE = "bbox";
-    private List<String[]> content;
+    private Iterator<String[]> content;
     private Set<String> uniqueTags;
 
     private static boolean ignoreColumn(String colName) {
@@ -57,7 +57,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
             }else{
                 readFileTagsPerSegment();
             }
-            LOGGER.info("Finished initalisation. Importing now...");
+            LOGGER.info("Finished initialization.");
         } catch (CsvException | IOException e) {
             LOGGER.fatal("Error in reading file", e);
             LOGGER.throwing(new RuntimeException("Could not initialise importer due to exception in startup", e));
@@ -69,8 +69,9 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         long start = System.currentTimeMillis();
         Path file = root.resolve(LSCUtilities.CONCEPTS_FILE_NAME);
         CSVReader csvReader = new CSVReader(Files.newBufferedReader(file, StandardCharsets.UTF_8));
-        content = csvReader.readAll();
-        headers = content.remove(0);
+        content = csvReader.iterator();
+        /* get headers */
+        headers = content.next();
         LOGGER.info("Finished reading in " + (System.currentTimeMillis() - start) + "ms");
     }
 
@@ -78,7 +79,8 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         LOGGER.info("Parsing tags per segment");
         long start = System.currentTimeMillis();
         Map<String, List<String>> map = new HashMap<>();
-        content.forEach(line -> {
+        while(content.hasNext()){
+            String[] line = content.next();
             String imgPath = line[LSCUtilities.CONCEPTS_IMAGEPATH_COL];
             String id = LSCUtilities.pathToSegmentId(LSCUtilities.cleanImagePath(imgPath));
             for (int i = 3; i < line.length; i++) {
@@ -94,7 +96,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
                     }
                 }
             }
-        });
+        }
         mapIterator = map.entrySet().iterator();
         LOGGER.info("Finished parsing tags per segment in " + (System.currentTimeMillis() - start) + "ms");
     }
@@ -107,7 +109,9 @@ public class VisualConceptTagImporter implements Importer<String[]> {
         LOGGER.info("Parsing tags...");
         long start = System.currentTimeMillis();
         uniqueTags = new HashSet<>();
-        content.forEach(l -> {
+
+        while(content.hasNext()){
+            String[] l = content.next();
             for(int i =3; i<l.length;i++){
                 if(ignoreColumn(headers[i])){
                     continue;
@@ -117,7 +121,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
                     }
                 }
             }
-        });
+        }
         tagIterator = uniqueTags.iterator();
         LOGGER.info("Finished parsing tags in " + (System.currentTimeMillis() - start) + "ms");
     }
