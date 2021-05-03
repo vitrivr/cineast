@@ -93,6 +93,7 @@ idea {
         excludeDirs += file('data')
         excludeDirs += file('thumbnails')
         excludeDirs += file('output')
+        excludeDirs += file('logs')
     }
 }
 
