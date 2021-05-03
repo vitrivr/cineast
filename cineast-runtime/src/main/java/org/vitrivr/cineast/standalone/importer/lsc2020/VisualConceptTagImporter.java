@@ -49,7 +49,7 @@ public class VisualConceptTagImporter implements Importer<String[]> {
     public VisualConceptTagImporter(Path root, boolean tagReaderOnly) {
         this.root = root;
         this.tagReaderOnly = tagReaderOnly;
-        LOGGER.info("LSC 2020 Visual Concept Importer "+(tagReaderOnly ? "Tag Lookup" : "Tag Import"));
+        LOGGER.info("Initializing LSC Visual Concept Importer "+(tagReaderOnly ? "Tag Lookup" : "Tag Import"));
         try {
             readFile();
             if(tagReaderOnly){
