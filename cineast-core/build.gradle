@@ -99,10 +99,10 @@ dependencies {
 
     /** THE CottontailDB proto dependency */
     compile group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE ADAMpro proto dependency (legacy) */
     compile group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro
-
 
     /* Google Json: GSON, since JSON db layer is based on this */
     compile group: 'com.google.code.gson', name: 'gson', version: version_gson
