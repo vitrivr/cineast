@@ -59,7 +59,8 @@ public final class CottontailEntityCreator implements EntityCreator {
       final TupleIterator iterator = this.cottontail.client.list(list, txId);
       boolean exists = false;
       while (iterator.hasNext()) {
-        if (Objects.equals(iterator.next().asString(Constants.COLUMN_NAME_DBO), CottontailWrapper.CINEAST_SCHEMA)) {
+        TupleIterator.Tuple next = iterator.next();
+        if (Objects.equals(next.asString(Constants.COLUMN_NAME_DBO), CottontailWrapper.CINEAST_SCHEMA)) {
           exists = true;
           break;
         }
@@ -69,6 +70,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       }
       this.cottontail.client.commit(txId);
     } catch (StatusRuntimeException e) {
+      LOGGER.error("Error during initialization", e);
       this.cottontail.client.rollback(txId);
     }
   }
