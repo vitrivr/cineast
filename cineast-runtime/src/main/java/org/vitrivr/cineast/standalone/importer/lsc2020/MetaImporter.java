@@ -75,7 +75,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
 
     private Optional<List<Map<String, PrimitiveTypeProvider>>> parseLine(String filename, String[] items) {
         if (items.length != LSCUtilities.META_NAMES.length) {
-            LOGGER.error("THe line's number of entries is illegal. Expected={}, Found={}. Line={}", LSCUtilities.META_NAMES.length, items.length, items);
+            LOGGER.error("The line's number of entries is illegal. Expected={}, Found={}. Line={}", LSCUtilities.META_NAMES.length, items.length, items);
             throw new RuntimeException("Too few metadata entries.");
         }
         String minuteId = LSCUtilities.filenameToMinuteId(filename).get();
@@ -130,19 +130,19 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
         // Has to read new line
         do {
             if (this.currentDataIterator == null && this.iterator.hasNext()) {
-                LOGGER.trace("Init / Next: dataIt==null && it.hasNext");
+                //LOGGER.trace("Init / Next: dataIt==null && it.hasNext");
                 Map.Entry<String, String> entry = iterator.next();
                 Optional<List<Map<String, PrimitiveTypeProvider>>> parsed = parseLine(entry.getKey(), metadataMap.get(entry.getValue()));
                 parsed.ifPresent(maps -> this.currentDataIterator = maps.iterator());
             }
             if (this.currentDataIterator != null && this.currentDataIterator.hasNext()) {
-                LOGGER.trace("dataNext: dataIt.hasNext");
+                //LOGGER.trace("dataNext: dataIt.hasNext");
                 Map<String, PrimitiveTypeProvider> out = this.currentDataIterator.next();
                 if (!currentDataIterator.hasNext()) {
                     // reset, so Init / Next occurs
                     currentDataIterator = null;
                 }
-                LOGGER.trace("Returning metadata: {}", out);
+                //LOGGER.trace("Returning metadata: {}", out);
                 writeLogs();
                 return out;
             }

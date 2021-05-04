@@ -262,19 +262,19 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
         // Has to read new line
         do {
             if (this.currentDataIterator == null && this.iterator.hasNext()) {
-                LOGGER.trace("Init / Next: dataIt==null && it.hasNext");
+                // LOGGER.trace("Init / Next: dataIt==null && it.hasNext");
                 Map.Entry<String, String> next = this.iterator.next();
                 Optional<List<Map<String, PrimitiveTypeProvider>>> parsed = parseLine(next.getKey(), metaPerMinuteId.get(next.getValue()));
                 parsed.ifPresent(maps -> this.currentDataIterator = maps.iterator());
             }
             if (this.currentDataIterator != null && this.currentDataIterator.hasNext()) {
-                LOGGER.trace("dataNext: dataIt.hasNext");
+                // LOGGER.trace("dataNext: dataIt.hasNext");
                 Map<String, PrimitiveTypeProvider> out = this.currentDataIterator.next();
                 if (!currentDataIterator.hasNext()) {
                     // reset, so Init / Next occurs
                     currentDataIterator = null;
                 }
-                LOGGER.trace("Returning metadata: {}", out);
+                // LOGGER.trace("Returning metadata: {}", out);
                 return out;
             }
         } while (this.currentDataIterator == null && this.iterator.hasNext());
