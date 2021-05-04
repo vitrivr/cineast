@@ -97,12 +97,12 @@ signing {
  */
 dependencies {
 
-    /** THE CottontailDB proto dependency */
+    /** THE Cottontail DB proto dependency */
     implementation group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE ADAMpro proto dependency (legacy) */
     implementation group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro
-
 
     /* Google Json: GSON, since JSON db layer is based on this */
     implementation group: 'com.google.code.gson', name: 'gson', version: version_gson

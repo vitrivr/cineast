@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.vitrivr.cottontail.client.BatchInsertClient;
-import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.stub.SimpleClient;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
@@ -36,8 +34,6 @@ public final class CottontailWrapper implements AutoCloseable {
    * open.
    */
   public final boolean keepOpen;
-  @org.jetbrains.annotations.NotNull
-  private final DatabaseConfig config;
 
   public String fqnInput(String entity) {
     return CINEAST_SCHEMA + "." + entity;
@@ -48,7 +44,6 @@ public final class CottontailWrapper implements AutoCloseable {
   }
 
   public CottontailWrapper(DatabaseConfig config, boolean keepOpen) {
-    this.config = config;
     StopWatch watch = StopWatch.createStarted();
     this.keepOpen = keepOpen;
     LOGGER.debug("Starting to connect to cottontail at {}:{}", config.getHost(), config.getPort());
@@ -79,9 +74,5 @@ public final class CottontailWrapper implements AutoCloseable {
             .warn("Thread was interrupted while waiting for gRPC channel to close (timeout = 5s).");
       }
     }
-  }
-
-  public BatchInsertClient startBatchInsert() {
-    return new BatchInsertClient(channel, 1000);
   }
 }

@@ -6,8 +6,9 @@ import java.util.List;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cottontail.client.BatchInsertClient;
 import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.language.basics.Constants;
+import org.vitrivr.cottontail.client.language.dml.BatchInsert;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
@@ -50,16 +51,31 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
-        //final long txId = this.cottontail.client.begin();
-        BatchInsertClient client = this.cottontail.startBatchInsert();
+        final long txId = this.cottontail.client.begin();
         try {
-            for (PersistentTuple t : tuples) {
-                client.insert(getPersistentRepresentation(t));
+            BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names);
+            while (!tuples.isEmpty()) {
+                final PersistentTuple tuple = tuples.remove(0);
+                final Object[] values = tuple.getElements().stream().map(o -> {
+                    if(o instanceof ReadableFloatVector){
+                        return ReadableFloatVector.toArray((ReadableFloatVector)o);
+                    } else {
+                        return o;
+                    }
+                }).toArray();
+                insert.append(values);
+                if (insert.size() >= Constants.MAX_PAGE_SIZE_BYTES) {
+                    this.cottontail.client.insert(insert, txId);
+                    insert = new BatchInsert().into(this.fqn).columns(this.names);
+                }
             }
-            client.complete();
+            if (insert.getBuilder().getInsertsCount() > 0) {
+                this.cottontail.client.insert(insert, txId);
+            }
+            this.cottontail.client.commit(txId);
             return true;
-        } catch (StatusRuntimeException e) {
-            client.abort();
+        }  catch (StatusRuntimeException e) {
+            this.cottontail.client.rollback(txId);
             return false;
         }
     }
