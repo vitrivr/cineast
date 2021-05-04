@@ -55,7 +55,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public boolean open(String name) {
-    this.fqn = this.cottontail.fqn(name);
+    this.fqn = this.cottontail.fqnInput(name);
     return true;
   }
 
@@ -279,7 +279,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public boolean existsEntity(String name) {
-    final AboutEntity about = new AboutEntity(this.cottontail.fqn(name));
+    final AboutEntity about = new AboutEntity(this.cottontail.fqnInput(name));
     try {
       final TupleIterator results = this.cottontail.client.about(about, null);
       return results.hasNext();

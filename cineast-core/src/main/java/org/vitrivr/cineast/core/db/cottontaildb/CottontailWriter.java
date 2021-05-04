@@ -26,7 +26,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
     @Override
     public boolean open(String name) {
-        this.fqn = this.cottontail.fqn(name);
+        this.fqn = this.cottontail.fqnInput(name);
         return true;
     }
 
