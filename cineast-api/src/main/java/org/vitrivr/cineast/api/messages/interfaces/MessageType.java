@@ -7,6 +7,7 @@ import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
+import org.vitrivr.cineast.api.messages.query.TemporalQueryV2;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
@@ -30,6 +31,7 @@ public enum MessageType {
   Q_SEG(SegmentQuery.class),
   M_LOOKUP(MetadataLookup.class),
   Q_TEMPORAL(TemporalQuery.class),
+  Q_TEMPORALV2(TemporalQueryV2.class),
 
 
   /* Session */
