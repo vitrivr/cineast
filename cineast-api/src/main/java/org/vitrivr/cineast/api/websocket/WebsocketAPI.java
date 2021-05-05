@@ -48,6 +48,7 @@ public class WebsocketAPI {
     static {
         STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_TEMPORAL, new TemporalQueryMessageHandler(APIEndpoint.retrievalLogic));
+        STATELESS_HANDLERS.put(MessageType.Q_TEMPORALV2, new TemporalQueryMessageHandlerV2(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
