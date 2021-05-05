@@ -240,6 +240,20 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
+    final Query query = new Query(this.fqn).select(columns.toArray(new String[]{}));
+    if (limit > 0) {
+      query.limit(limit);
+    }
+    try {
+      return processResults(this.cottontail.client.query(query, null));
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
+  }
+
+  @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     final Query query = new Query(this.fqn).distinct(column);
     try {
