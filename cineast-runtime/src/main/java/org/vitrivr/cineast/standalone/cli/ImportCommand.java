@@ -22,6 +22,7 @@ import org.vitrivr.cineast.standalone.importer.lsc2020.LSCAllTagsImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.OCRImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler.Mode;
 import org.vitrivr.cineast.standalone.importer.lsc2020.SpatialImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
@@ -128,10 +129,10 @@ public class ImportCommand implements Runnable {
         handler = new CaptionImportHandler(this.threads, this.batchsize);
         break;
       case LSCX:
-        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, false);
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, Mode.TAGS, clean);
         break;
       case LSCTABLE:
-        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, true);
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, Mode.TABLE, clean);
         break;
       case LSCTAGSALL:
         handler = new LSCAllTagsImportHandler(this.threads, this.batchsize, clean);
