@@ -34,7 +34,7 @@ public class SegmentQuery extends Query {
   }
 
   /**
-   * Getter for {@link SegmentQuery#segmentId}
+   * Getter for {@link SegmentQuery#segmentId}.
    *
    * @return String
    */

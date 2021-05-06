@@ -3,34 +3,63 @@ package org.vitrivr.cineast.api.messages.result;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
+/**
+ * Message for a query error to communicate an error occurred during querying.
+ *
+ * @author rgasser
+ * @version 1.0
+ * @created 03.06.17
+ */
 public class QueryError implements Message {
 
   /**
-   * ID of the query.
+   * The query ID to which this query start message belongs.
    */
   private final String queryId;
 
   /**
-   * Error message.
+   * The error message to communicate the error occurred.
    */
   private final String message;
 
+  /**
+   * Constructor for the QueryError object.
+   *
+   * @param queryId String representing the ID of the query to which this part of the result
+   *                message.
+   * @param message String representing the error message.
+   */
   public QueryError(String queryId, String message) {
     this.queryId = queryId;
     this.message = message;
   }
 
-  @Override
-  public MessageType getMessageType() {
-    return MessageType.QR_ERROR;
-  }
-
+  /**
+   * Getter for queryId.
+   *
+   * @return String
+   */
   public String getQueryId() {
     return queryId;
   }
 
+  /**
+   * Getter for error message.
+   *
+   * @return String
+   */
   public String getErrorMessage() {
     return this.message;
+  }
+
+  /**
+   * Returns the type of particular message. Expressed as MessageTypes enum.
+   *
+   * @return {@link MessageType}
+   */
+  @Override
+  public MessageType getMessageType() {
+    return MessageType.QR_ERROR;
   }
 
   @Override
