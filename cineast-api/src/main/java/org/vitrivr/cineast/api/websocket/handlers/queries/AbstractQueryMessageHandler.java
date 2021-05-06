@@ -25,9 +25,11 @@ import org.vitrivr.cineast.api.messages.result.QueryEnd;
 import org.vitrivr.cineast.api.messages.result.QueryError;
 import org.vitrivr.cineast.api.messages.result.QueryStart;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -241,6 +243,21 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   }
 
   /**
+   * Submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) to
+   * the UI. Should be executed before sending results.
+   */
+  protected void submitSegmentAndObjectDescriptors(Session session, String queryId,
+      List<MediaObjectDescriptor> objectDescriptors,
+      List<MediaSegmentDescriptor> segmentDescriptors) {
+    if (objectDescriptors.isEmpty() || segmentDescriptors.isEmpty()) {
+      LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
+    }
+
+    this.write(session, new MediaObjectQueryResult(queryId, objectDescriptors));
+    this.write(session, new MediaSegmentQueryResult(queryId, segmentDescriptors));
+  }
+
+  /**
    * Loads and Submits all the metadata (e.g. {@link MediaSegmentMetadataDescriptor}, {@link MediaObjectMetadataQueryResult}) associated with a collection of segment IDs for which the metadata was fetched.
    *
    * @param session                             The {@link Session} object used to transmit the results.
@@ -277,5 +294,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     watch.stop();
     LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));
     return futures;
+  }
+
+  protected void finalizeAndSubmitTemporalResults(Session session, String queryId,
+      List<TemporalObject> raw) {
+    final int stride = 50_000;
+    for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
+      final List<TemporalObject> sub = raw
+          .subList(i * stride, Math.min((i + 1) * stride, raw.size()));
+
+      this.write(session, new TemporalQueryResult(queryId, sub));
+    }
   }
 }
