@@ -11,9 +11,11 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
- * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
- *
+ * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link
+ * QueryContainer}s are created out of it.
+ * <p>
  * These all have the {@link QueryComponent#containerId} of their parent.
+ *
  * @deprecated use {@link TemporalQuery} instead
  */
 @Deprecated
@@ -35,7 +37,8 @@ public class QueryComponent {
    * Constructor for QueryComponent.
    */
   @JsonCreator
-  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms, @JsonProperty("containerId") int containerId) {
+  public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms,
+      @JsonProperty("containerId") int containerId) {
     this.terms = terms;
     this.containerId = containerId;
   }
@@ -50,11 +53,14 @@ public class QueryComponent {
   }
 
   /**
-   * Converts the provided collection of QueryComponent objects to a map that maps feature categories defined in the query-terms to @{@link QueryContainer} derived from the {@link QueryTerm}.
+   * Converts the provided collection of QueryComponent objects to a map that maps feature
+   * categories defined in the query-terms to @{@link QueryContainer} derived from the {@link
+   * QueryTerm}.
    *
    * @return Category map.
    */
-  public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(Collection<QueryComponent> components) {
+  public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(
+      Collection<QueryComponent> components) {
     final HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
     if (components.isEmpty()) {
       LOGGER.warn("Empty components collection, returning empty map");
@@ -87,11 +93,13 @@ public class QueryComponent {
   }
 
   /**
-   * Converts the provided collection of {@link QueryComponent} object to a map of {@link QueryContainer} and their categories.
+   * Converts the provided collection of {@link QueryComponent} object to a map of {@link
+   * QueryContainer} and their categories.
    *
    * @return A map of querycontainers with their associated categories
    */
-  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components) {
+  public static HashMap<QueryContainer, List<String>> toContainerMap(
+      Collection<QueryComponent> components) {
     final HashMap<QueryContainer, List<String>> map = new HashMap<>();
     if (components.isEmpty()) {
       LOGGER.warn("Empty components collection, returning empty list of containers");

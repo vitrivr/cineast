@@ -3,13 +3,14 @@ package org.vitrivr.cineast.api.messages.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
-import java.util.List;
-
 /**
+ * Contains the data of a particular {@link QueryTerm}.
+ *
  * @author rgasser
  * @version 1.0
  * @created 11.01.17
@@ -18,7 +19,8 @@ import java.util.List;
 public class QueryTerm {
 
   /**
-   * List of categories defined as part of this {@link QueryTerm}. This ultimately determines the features used for retrieval.
+   * List of categories defined as part of this {@link QueryTerm}. This ultimately determines the
+   * features used for retrieval.
    */
   private final List<String> categories;
 
@@ -28,7 +30,8 @@ public class QueryTerm {
   private final QueryTermType type;
 
   /**
-   * String representation of the query object associated with this query term. Usually base 64 encoded.
+   * String representation of the query object associated with this query term. Usually base 64
+   * encoded.
    */
   private final String data;
 
@@ -43,7 +46,11 @@ public class QueryTerm {
   }
 
   /**
+   * Constructor for the QueryTerm object.
    *
+   * @param type       The {@link QueryTermType} of the {@link QueryTerm}.
+   * @param data       The actual data of the {@link QueryTerm}
+   * @param categories List of categories of the {@link QueryTerm}
    */
   @JsonCreator
   public QueryTerm(@JsonProperty("type") QueryTermType type,
@@ -74,9 +81,12 @@ public class QueryTerm {
 
 
   /**
-   * Converts the {@link QueryTerm} to a {@link QueryContainer} that can be processed by the retrieval pipeline. This includes conversion of query-objects from the Base64 encoded representation.
+   * Converts the {@link QueryTerm} to a {@link QueryContainer} that can be processed by the
+   * retrieval pipeline. This includes conversion of query-objects from the Base64 encoded
+   * representation.
    *
-   * <strong>IMPORTANT:</strong> Subsequent calls to this method return a cached version of the original {@link QueryContainer}.
+   * <strong>IMPORTANT:</strong> Subsequent calls to this method return a cached version of the
+   * original {@link QueryContainer}.
    *
    * @return {@link QueryContainer} representation of the {@link QueryTerm}.
    */

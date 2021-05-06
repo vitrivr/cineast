@@ -18,6 +18,13 @@ import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
 
+/**
+ * A {@link QueryTermType} represents the types of query terms used.
+ *
+ * @author rgasser
+ * @version 1.0
+ * @created 27.01.17
+ */
 public enum QueryTermType {
 
   IMAGE(ImageQueryContainer.class),
@@ -31,7 +38,8 @@ public enum QueryTermType {
   SEMANTIC(SemanticMapQueryContainer.class),
 
   /**
-   * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
+   * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over
+   * the @link {@link MoreLikeThisQuery} in REST calls.
    */
   ID(IdQueryContainer.class),
   BOOLEAN(BooleanQueryContainer.class);
@@ -43,16 +51,25 @@ public enum QueryTermType {
    */
   private final Class<? extends QueryContainer> c;
 
+  /**
+   * Constructor of a class that extends {@link QueryContainer} that represents this {@link
+   * QueryTermType}.
+   */
   QueryTermType(Class<? extends QueryContainer> clazz) {
     this.c = clazz;
   }
 
+  /**
+   * Getter of the Instance of the {@link QueryContainer} class that represents this {@link
+   * QueryTermType}.
+   */
   public Class<? extends QueryContainer> getContainerClass() {
     return this.c;
   }
 
   /**
-   * Constructs a new instance of the {@link QueryContainer} associated with the current {@link QueryTermType} using the provided raw data (usually base 64 encoded).
+   * Constructs a new instance of the {@link QueryContainer} associated with the current {@link
+   * QueryTermType} using the provided raw data (usually base 64 encoded).
    *
    * @param data Data from which to construct a {@link QueryContainer}
    */
