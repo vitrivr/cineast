@@ -15,6 +15,7 @@ import org.vitrivr.cineast.api.messages.result.QueryEnd;
 import org.vitrivr.cineast.api.messages.result.QueryError;
 import org.vitrivr.cineast.api.messages.result.QueryStart;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 /**
@@ -45,7 +46,8 @@ public enum MessageType {
   QR_METADATA_O(MediaObjectMetadataQueryResult.class),
   QR_METADATA_S(MediaObjectMetadataQueryResult.class),
   QR_SEGMENT(MediaSegmentQueryResult.class),
-  QR_SIMILARITY(SimilarityQueryResult.class);
+  QR_SIMILARITY(SimilarityQueryResult.class),
+  QR_TEMPORAL(TemporalQueryResult.class);
 
   private final Class<? extends Message> c;
 
