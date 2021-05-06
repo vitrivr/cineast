@@ -68,79 +68,66 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
 
         QueryStage stage = stagedSimilarityQuery.stages.get(stageIndex);
 
-        List<Thread> qtThreads = new ArrayList<>();
-
         for (int i = 0; i < stage.terms.size(); i++) {
           QueryTerm qt = stage.terms.get(i);
 
-          final int currentContainerIdx = containerIdx;
-          final int currentStageIndex = stageIndex;
-          Thread qtRetrievalThread = new Thread(() -> {
-            if (qt == null) {
-              LOGGER.warn("QueryTerm was null for stage {}", stage);
-              return;
-            }
-            QueryContainer qc = qt.toContainer();
-            if (qc == null) {
+          if (qt == null) {
+            LOGGER.warn("QueryTerm was null for stage {}", stage);
+            return;
+          }
+          QueryContainer qc = qt.toContainer();
+          if (qc == null) {
+            LOGGER.warn(
+                "Likely an empty query, as it could not be converted to a query container. Ignoring it");
+            return;
+          }
+          qc.setContainerId(containerIdx);
+
+          for (String category : qt.getCategories()) {
+            List<SegmentScoreElement> scores = continuousRetrievalLogic
+                .retrieve(qc, category, stageQConf);
+
+            final List<StringDoublePair> results = scores.stream()
+                .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
+                .filter(p -> p.value > 0d)
+                .collect(Collectors.toList());
+
+            if (results.isEmpty()) {
               LOGGER.warn(
-                  "Likely an empty query, as it could not be converted to a query container. Ignoring it");
-              return;
+                  "No results found for category {} and qt {} in stage with id {}. Full compoment: {}",
+                  category, qt.getType(), containerIdx, stage);
             }
-            qc.setContainerId(currentContainerIdx);
-
-            List<Thread> categoryThreads = new ArrayList<>();
-
-            for (String category : qt.getCategories()) {
-              List<SegmentScoreElement> scores = continuousRetrievalLogic
-                  .retrieve(qc, category, stageQConf);
-
-              final List<StringDoublePair> results = scores.stream()
-                  .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
-                  .filter(p -> p.value > 0d)
-                  .collect(Collectors.toList());
-
-              if (results.isEmpty()) {
-                LOGGER.warn(
-                    "No results found for category {} and qt {} in stage with id {}. Full compoment: {}",
-                    category, qt.getType(), currentContainerIdx, stage);
-              }
-              if (cache.get(currentStageIndex).containsKey(category)) {
-                LOGGER.error(
-                    "Category {} was used twice in stage {}. This erases the results of the previous category... ",
-                    category, currentStageIndex);
-              }
-              cache.get(currentStageIndex).put(category, results);
-              results.forEach(res -> relevantSegments.add(res.key));
-
-              List<String> stageSegmentIds = results.stream().map(el -> el.key)
-                  .collect(Collectors.toList());
-              List<MediaSegmentDescriptor> stageSegments = this.loadSegments(stageSegmentIds);
-              List<String> stageObjectIds = stageSegments.stream()
-                  .map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-              List<MediaObjectDescriptor> stageObjects = this.loadObjects(stageObjectIds);
-
-              segments.addAll(stageSegments);
-              objects.addAll(stageObjects);
-              stageResults.addAll(results);
-              this.submitSegmentAndObjectDescriptors(session, uuid, stageObjects, stageSegments);
-
-              List<StringDoublePair> limitedResults = results.stream().sorted(StringDoublePair.COMPARATOR)
-                  .limit(max)
-                  .collect(Collectors.toList());
-              this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults);
-              List<Thread> _threads = this
-                  .submitMetadata(session, uuid, stageSegmentIds, stageObjectIds,
-                      segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
-              metadataRetrievalThreads.addAll(_threads);
+            if (cache.get(stageIndex).containsKey(category)) {
+              LOGGER.error(
+                  "Category {} was used twice in stage {}. This erases the results of the previous category... ",
+                  category, stageIndex);
             }
-          });
-          qtRetrievalThread.setName("qt-stage" + stageIndex + "-" + qt.getType().name());
-          qtThreads.add(qtRetrievalThread);
-          qtRetrievalThread.start();
-        }
+            cache.get(stageIndex).put(category, results);
+            results.forEach(res -> relevantSegments.add(res.key));
 
-        for (Thread thread : qtThreads) {
-          thread.join();
+            List<String> stageSegmentIds = results.stream().map(el -> el.key)
+                .collect(Collectors.toList());
+            List<MediaSegmentDescriptor> stageSegments = this.loadSegments(stageSegmentIds);
+            List<String> stageObjectIds = stageSegments.stream()
+                .map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+            List<MediaObjectDescriptor> stageObjects = this.loadObjects(stageObjectIds);
+
+            segments.addAll(stageSegments);
+            objects.addAll(stageObjects);
+            stageResults.addAll(results);
+            this.submitSegmentAndObjectDescriptors(session, uuid, stageObjects, stageSegments);
+
+            List<StringDoublePair> limitedResults = results.stream()
+                .sorted(StringDoublePair.COMPARATOR)
+                .limit(max)
+                .collect(Collectors.toList());
+            this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(),
+                limitedResults);
+            List<Thread> _threads = this
+                .submitMetadata(session, uuid, stageSegmentIds, stageObjectIds,
+                    segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+            metadataRetrievalThreads.addAll(_threads);
+          }
         }
 
         if (relevantSegments.size() == 0) {
