@@ -7,36 +7,25 @@ import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
-public class TemporalScoring {
+public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgorithm {
 
   private final Map<String, MediaObjectDescriptor> objectMap;
   private final Map<String, MediaSegmentDescriptor> segmentMap;
   private final List<List<StringDoublePair>> containerResults;
-  private final List<Float> timeDistances;
   private final Float maxLength;
 
-  public TemporalScoring(Map<String, MediaObjectDescriptor> objectMap,
+  SequentialTemporalScoringAlgorithm(Map<String, MediaObjectDescriptor> objectMap,
       Map<String, MediaSegmentDescriptor> segmentMap,
       List<List<StringDoublePair>> containerResults,
-      List<Float> timeDistances,
       Float maxLength) {
     this.objectMap = objectMap;
     this.segmentMap = segmentMap;
     this.containerResults = containerResults;
-    this.timeDistances = timeDistances;
     this.maxLength = maxLength;
   }
 
+  @Override
   public List<TemporalObject> score() {
-    TemporalScoringAlgorithm temporalScoringAlgorithm;
-    if (this.timeDistances.size() > 0) {
-      temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(
-          this.objectMap, this.segmentMap, this.containerResults, this.timeDistances,
-          this.maxLength);
-    } else {
-      temporalScoringAlgorithm = new SequentialTemporalScoringAlgorithm(
-          this.objectMap, this.segmentMap, this.containerResults, this.maxLength);
-    }
-    return temporalScoringAlgorithm.score();
+    return null;
   }
 }
