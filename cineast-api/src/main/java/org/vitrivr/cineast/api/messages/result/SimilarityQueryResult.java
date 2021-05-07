@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
  * of a temporal container.
  *
  * @author rgasser
- * @version 1.0
  * @created 11.01.17
  */
 public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoublePair> {

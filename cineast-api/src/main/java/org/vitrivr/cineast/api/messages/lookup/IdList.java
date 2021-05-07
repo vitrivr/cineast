@@ -11,7 +11,6 @@ import java.util.List;
  * Object to store a list of string IDs.
  *
  * @author lucaro
- * @version 1.0
  * @created 10.05.17
  */
 public class IdList {

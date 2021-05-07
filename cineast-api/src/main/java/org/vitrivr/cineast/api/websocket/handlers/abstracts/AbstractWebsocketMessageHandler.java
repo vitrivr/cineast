@@ -20,7 +20,6 @@ import org.vitrivr.cineast.core.util.json.JsonWriter;
  * stream.
  *
  * @author rgasser
- * @version 1.0
  * @created 22.01.17
  */
 public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMessageHandler<A> {

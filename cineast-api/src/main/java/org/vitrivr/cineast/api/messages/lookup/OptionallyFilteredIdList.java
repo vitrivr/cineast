@@ -16,7 +16,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * still realise that there are unknown properties</p>
  *
  * @author loris.sauter
- * @version 1.0
  * @created 04.08.18
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

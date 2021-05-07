@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
  * Contains the data of a particular {@link QueryTerm}.
  *
  * @author rgasser
- * @version 1.0
  * @created 11.01.17
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

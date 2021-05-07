@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
  * of the result message. It combines several results to be posted to the API.
  *
  * @author lucaro
- * @version 1.0
  * @created 12.05.17
  */
 public class SimilarityQueryResultBatch {

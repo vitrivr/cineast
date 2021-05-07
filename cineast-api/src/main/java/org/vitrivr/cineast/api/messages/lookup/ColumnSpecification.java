@@ -12,7 +12,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message from the requester to transfer table and column information of a request.
  *
  * @author silvanheller
- * @version 1.0
  * @created 22.07.20
  */
 public class ColumnSpecification implements Message {

@@ -9,7 +9,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message object for an error message.
  *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public class Error implements Message {

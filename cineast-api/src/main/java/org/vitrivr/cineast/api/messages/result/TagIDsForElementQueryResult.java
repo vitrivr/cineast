@@ -7,7 +7,6 @@ import java.util.List;
  * result.
  *
  * @author silvanheller
- * @version 1.0
  * @created 04.12.20
  */
 public class TagIDsForElementQueryResult {

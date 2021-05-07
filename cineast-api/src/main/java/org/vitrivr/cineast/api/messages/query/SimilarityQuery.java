@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
  * similarity-query message, i.e. a request for a similarity-search.
  *
  * @author rgasser
- * @version 1.0
  * @created 27.04.17
  */
 public class SimilarityQuery extends Query {

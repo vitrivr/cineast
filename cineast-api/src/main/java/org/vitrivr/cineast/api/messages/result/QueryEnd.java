@@ -7,7 +7,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message for a query result end to communicate the end of a query result.
  *
  * @author rgasser
- * @version 1.0
  * @created 22.01.17
  */
 public class QueryEnd implements Message {

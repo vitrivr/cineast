@@ -9,7 +9,6 @@ import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMe
  * messages of type {@link Ping}.
  *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public class StatusMessageHandler extends StatelessWebsocketMessageHandler<Ping> {

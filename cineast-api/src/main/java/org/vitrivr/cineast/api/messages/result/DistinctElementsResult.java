@@ -7,7 +7,6 @@ import java.util.List;
  * A {@link DistinctElementsResult} contains a list of distinct element IDs.
  *
  * @author silvanheller
- * @version 1.0
  * @created 22.07.20
  */
 public class DistinctElementsResult {

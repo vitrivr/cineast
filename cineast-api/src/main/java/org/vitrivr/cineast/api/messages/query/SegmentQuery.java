@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
  * specified.
  *
  * @author rgasser
- * @version 1.0
  * @created 28.12.18
  */
 public class SegmentQuery extends Query {

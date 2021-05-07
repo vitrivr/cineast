@@ -9,7 +9,6 @@ import java.util.List;
  * String features (e.g. OCR, ASR) queries.
  *
  * @author silvanheller
- * @version 1.0
  * @created 04.12.20
  */
 public class FeaturesTextCategoryQueryResult {

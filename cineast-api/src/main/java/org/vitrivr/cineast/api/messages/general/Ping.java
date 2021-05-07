@@ -8,7 +8,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message object for an ping message.
  *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public class Ping implements Message {

@@ -8,7 +8,6 @@ import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
  * result for a metadata lookup.
  *
  * @author rgasser
- * @version 1.0
  * @created 22.01.17
  */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {

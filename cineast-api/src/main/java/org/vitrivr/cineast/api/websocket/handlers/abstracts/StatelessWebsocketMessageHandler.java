@@ -7,7 +7,6 @@ package org.vitrivr.cineast.api.websocket.handlers.abstracts;
  * instance of the message handler can be used to handle messages from different sessions.</p>
  *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public abstract class StatelessWebsocketMessageHandler<A> extends

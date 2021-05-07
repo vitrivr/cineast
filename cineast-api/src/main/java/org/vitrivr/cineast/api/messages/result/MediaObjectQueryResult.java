@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
  * the result message. It is part of a response for queries.
  *
  * @author rgasser
- * @version 1.0
  * @created 22.01.17
  */
 public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObjectDescriptor> {

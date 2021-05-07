@@ -9,7 +9,6 @@ import java.util.Map;
  * Used when all features are needed in a single representation.
  *
  * @author silvanheller
- * @version 1.0
  * @created 04.12.20
  */
 public class FeaturesAllCategoriesQueryResult {

@@ -6,7 +6,6 @@ import java.util.List;
  * Defines the abstracts structure of a QueryResultMessage.
  *
  * @author rgasser
- * @version 1.0
  * @created 11.01.17
  */
 public interface QueryResultMessage<T> extends Message {

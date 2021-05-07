@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Credentials of an API session.
  *
  * @author lucaro
- * @version 1.0
  * @created 08.05.17
  */
 public class Credentials {

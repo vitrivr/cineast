@@ -25,7 +25,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * keywords.</p>
  *
  * @author loris.sauter
- * @version 1.0
  * @created 04.08.18
  */
 @JsonTypeInfo(

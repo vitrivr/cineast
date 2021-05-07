@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
  * {@link StagedSimilarityQuery}.
  *
  * @author silvanheller
- * @version 1.0
  * @created 17.02.20
  */
 public class QueryStage {

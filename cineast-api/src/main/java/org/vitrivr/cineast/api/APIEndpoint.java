@@ -62,13 +62,18 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
- * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is facilitated by the Javalin framework (https://javalin.io/).
- * <p>
- * The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API endpoints, depending on the configuration.
- * <p>
- * Incoming requests are routed towards a {@link DocumentedRestHandler} based on the HTTP method and the URL, provided that such a handler hasn't been registered beforehand.
- * <p>
- * WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles incoming packets.
+ * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling
+ * is facilitated by the Javalin framework (https://javalin.io/).
+ *
+ * <p>The {@link APIEndpoint} class supports setup for both the WebSocket and RestFul API
+ * endpoints,
+ * depending on the configuration.</p>
+ * <p> Incoming requests are routed towards a {@link DocumentedRestHandler} based on the HTTP method
+ * and
+ * the URL, provided that such a handler hasn't been registered beforehand.</p>
+ * <p> WebSocket communication is forwarded to the {@link WebsocketAPI} class, which handles
+ * incoming
+ * packets.</p>
  *
  * @see WebsocketAPI
  */
@@ -80,7 +85,9 @@ public class APIEndpoint {
   public static final String VERSION = "v1";
 
   /**
-   * The Logger used by the api to log general things. It is recommended that {@link org.vitrivr.cineast.api.rest.handlers.interfaces.RestHandler}s provide own loggers for more logging control.
+   * The Logger used by the api to log general things. It is recommended that {@link
+   * org.vitrivr.cineast.api.rest.handlers.interfaces.RestHandler}s provide own loggers for more
+   * logging control.
    */
   private static final Logger LOGGER = LogManager.getLogger();
   /**
@@ -159,7 +166,8 @@ public class APIEndpoint {
    * Returns the non-secure {@link Javalin} instance this API uses
    *
    * <p>
-   * *   <b>Warning</b> This is only exposed for {@link OpenApiCompatHelper} and might be removed * in a future update * </p>
+   * *   <b>Warning</b> This is only exposed for {@link OpenApiCompatHelper} and might be removed *
+   * in a future update * </p>
    *
    * @return The non-secure http instance this API uses
    */
@@ -223,7 +231,8 @@ public class APIEndpoint {
   }
 
   /**
-   * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the necessary setup.
+   * Dispatches a new Jetty {@link Javalin} (HTTP endpoint). The method takes care of all the
+   * necessary setup.
    *
    * @param secure If true, the new Service will be setup as secure with TLS enabled.
    * @return {@link Javalin}
@@ -356,7 +365,8 @@ public class APIEndpoint {
   }
 
   /**
-   * Registers a {@link DocumentedRestHandler} according its specialisation with the corresponding http method. Currently, there are four specialisations:
+   * Registers a {@link DocumentedRestHandler} according its specialisation with the corresponding
+   * http method. Currently, there are four specialisations:
    * <ul>
    *   <li>{@link GetRestHandler} for HTTP method <code>GET</code></li>
    *   <li>{@link PostRestHandler} for HTTP method <code>POST</code></li>
@@ -434,7 +444,8 @@ public class APIEndpoint {
   }
 
   /**
-   * If configured, this registers two special routes that serve the media objects as media content and additionally a thumbnails endpoint for them.
+   * If configured, this registers two special routes that serve the media objects as media content
+   * and additionally a thumbnails endpoint for them.
    *
    * @param service
    * @param config
@@ -454,7 +465,7 @@ public class APIEndpoint {
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()),
             ((baseDir, object) -> {
 //              String ext = object.getPath().substring(object.getPath().lastIndexOf('.'));
-              String ext = "."+Config.sharedConfig().getApi().getVideoExtension();
+              String ext = "." + Config.sharedConfig().getApi().getVideoExtension();
               return new File(baseDir, object.getObjectId() + ext);
             }));
       } else {

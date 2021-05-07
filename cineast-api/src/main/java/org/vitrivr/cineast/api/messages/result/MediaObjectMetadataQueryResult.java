@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * queries.
  *
  * @author rgasser
- * @version 1.0
  * @created 14.02.17
  */
 public class MediaObjectMetadataQueryResult extends

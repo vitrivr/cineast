@@ -17,7 +17,6 @@ import org.vitrivr.cineast.api.messages.query.SegmentQuery;
  * type {@link SegmentQuery}.
  *
  * @author rgasser
- * @version 1.0
  * @created 28.12.18
  */
 public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<SegmentQuery> {

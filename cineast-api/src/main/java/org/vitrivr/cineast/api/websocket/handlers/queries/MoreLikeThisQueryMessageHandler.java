@@ -18,7 +18,6 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
  * type {@link MoreLikeThisQuery}.
  *
  * @author rgasser
- * @version 1.0
  * @created 27.04.17
  */
 public class MoreLikeThisQueryMessageHandler extends

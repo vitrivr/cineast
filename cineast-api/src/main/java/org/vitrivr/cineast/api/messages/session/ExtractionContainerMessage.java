@@ -14,7 +14,6 @@ import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
  * ExtractionItemContainer} as a body of the message.
  *
  * @author silvanheller
- * @version 1.0
  * @created 22.01.18
  */
 public class ExtractionContainerMessage implements Message {

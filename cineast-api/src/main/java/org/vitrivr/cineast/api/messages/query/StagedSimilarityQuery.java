@@ -9,7 +9,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
  * filter for the next one.
  *
  * @author lucaro
- * @version 1.0
  * @created 18.01.20
  */
 public class StagedSimilarityQuery {

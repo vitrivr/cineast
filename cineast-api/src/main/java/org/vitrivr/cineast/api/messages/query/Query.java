@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
  * similarity-search.
  *
  * @author rgasser
- * @version 1.0
  * @created 22.01.17
  */
 public abstract class Query implements Message {

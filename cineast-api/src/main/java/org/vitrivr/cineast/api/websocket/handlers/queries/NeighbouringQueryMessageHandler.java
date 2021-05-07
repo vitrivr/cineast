@@ -16,7 +16,6 @@ import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
  * messages of type {@link NeighboringSegmentQuery}.
  *
  * @author rgasser
- * @version 1.0
  * @created 24.01.18
  */
 public class NeighbouringQueryMessageHandler extends

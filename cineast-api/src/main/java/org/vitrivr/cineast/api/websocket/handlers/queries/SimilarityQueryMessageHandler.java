@@ -23,7 +23,6 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
  * type {@link SimilarityQuery}.
  *
  * @author rgasser
- * @version 1.0
  * @created 12.01.17
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {

@@ -10,7 +10,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message from the requester to transfer the access credentials of the current session.
  *
  * @author lucaro
- * @version 1.0
  * @created 08.05.17
  */
 public class StartSessionMessage implements Message {

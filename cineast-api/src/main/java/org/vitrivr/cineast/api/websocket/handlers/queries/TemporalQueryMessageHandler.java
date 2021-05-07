@@ -29,7 +29,6 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
  * type {@link TemporalQuery}.
  *
  * @author silvanheller
- * @version 1.0
  * @created 17.02.20
  */
 public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<TemporalQuery> {

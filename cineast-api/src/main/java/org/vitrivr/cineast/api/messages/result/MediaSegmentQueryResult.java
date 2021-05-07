@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
  * of the result message. It is part of a response for queries.
  *
  * @author rgasser
- * @version 1.0
  * @created 12.01.17
  */
 public class MediaSegmentQueryResult extends AbstractQueryResultMessage<MediaSegmentDescriptor> {

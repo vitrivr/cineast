@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
  * given item.
  *
  * @author rgasser
- * @version 1.0
  * @created 27.04.17
  */
 public class MoreLikeThisQuery extends Query {

@@ -9,7 +9,6 @@ import org.vitrivr.cineast.api.session.SessionType;
  * This object stores the session state of a session with a requester.
  *
  * @author lucaro
- * @version 1.0
  * @created 08.05.17
  */
 public class SessionState {

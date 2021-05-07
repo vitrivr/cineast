@@ -46,7 +46,6 @@ import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
  * and write back to the websocket.
  *
  * @author rgasser
- * @version 1.0
  * @created 27.04.17
  */
 public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {

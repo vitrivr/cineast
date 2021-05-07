@@ -14,7 +14,6 @@ import org.vitrivr.cineast.standalone.config.Config;
  * messages of type {@link MetadataLookup}.
  *
  * @author rgasser
- * @version 1.0
  * @created 10.02.17
  */
 public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandler<MetadataLookup> {

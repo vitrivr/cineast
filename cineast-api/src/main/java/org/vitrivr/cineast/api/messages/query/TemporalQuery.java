@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
  * represents a query in a total temporal ordering.
  *
  * @author silvanheller
- * @version 1.0
  * @created 17.02.20
  */
 public class TemporalQuery extends Query {

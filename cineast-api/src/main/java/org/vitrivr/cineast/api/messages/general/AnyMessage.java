@@ -8,7 +8,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * Message type for a non-particular message that implements the message interface.
  *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public class AnyMessage implements Message {

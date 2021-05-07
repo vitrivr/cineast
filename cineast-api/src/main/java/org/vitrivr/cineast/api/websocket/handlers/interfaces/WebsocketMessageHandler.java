@@ -15,7 +15,6 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
  * source of the message.</p>
  *
  * @author rgasser
- * @version 1.0
  * @created 12.01.17
  * @see Message
  */
