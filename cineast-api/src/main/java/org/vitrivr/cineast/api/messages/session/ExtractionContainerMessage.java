@@ -10,8 +10,8 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 
 /**
- * This object represents a response to an extract item query and contains {@link
- * ExtractionItemContainer} as a body to be returned in the response message.
+ * This object represents a container for multiple extract item requests and contains {@link
+ * ExtractionItemContainer} as a body of the message.
  *
  * @author silvanheller
  * @version 1.0
@@ -65,9 +65,7 @@ public class ExtractionContainerMessage implements Message {
   }
 
   /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
-   *
-   * @return {@link MessageType}
+   * {@inheritDoc}
    */
   @Override
   public MessageType getMessageType() {

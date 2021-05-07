@@ -36,9 +36,7 @@ public class TemporalQuery extends Query {
   }
 
   /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
-   *
-   * @return {@link MessageType}
+   * {@inheritDoc}
    */
   public MessageType getMessageType() {
     return MessageType.Q_TEMPORAL;

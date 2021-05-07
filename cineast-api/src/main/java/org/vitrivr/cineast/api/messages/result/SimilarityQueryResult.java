@@ -65,9 +65,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
   }
 
   /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
-   *
-   * @return {@link MessageType}
+   * {@inheritDoc}
    */
   @Override
   public MessageType getMessageType() {

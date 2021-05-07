@@ -6,7 +6,7 @@ import org.vitrivr.cineast.api.session.Session;
 import org.vitrivr.cineast.api.session.SessionType;
 
 /**
- * This object stores the session state of a request to both the WebSocket and RESTful API.
+ * This object stores the session state of a session with a requester.
  *
  * @author lucaro
  * @version 1.0

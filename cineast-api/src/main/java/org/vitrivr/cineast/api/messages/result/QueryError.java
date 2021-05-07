@@ -53,9 +53,7 @@ public class QueryError implements Message {
   }
 
   /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
-   *
-   * @return {@link MessageType}
+   * {@inheritDoc}
    */
   @Override
   public MessageType getMessageType() {
