@@ -33,8 +33,9 @@ public abstract class Query implements Message {
   }
 
   /**
-   * JSON: the config field is specified in subclasses The JsonIgnore is needed because the actual
-   * field is not called queryconfig
+   * JSON: the config field is specified in subclasses.
+   *
+   * <p>The JsonIgnore is needed because the actual field is not called queryconfig</p>
    */
   @JsonIgnore
   public final QueryConfig getQueryConfig() {

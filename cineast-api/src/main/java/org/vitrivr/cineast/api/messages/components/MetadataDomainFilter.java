@@ -1,27 +1,39 @@
 package org.vitrivr.cineast.api.messages.components;
 
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-
 import java.util.Arrays;
 import java.util.function.Predicate;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * Filter for metadata, based on the domain.
  *
- * This class servers as filter descriptor and as actual filter.
+ * <p> This class servers as filter descriptor and as actual filter.</p>
  *
  * @author loris.sauter
+ * @version 1.0
+ * @created 04.08.18
  */
 public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor implements
     Predicate<MediaObjectMetadataDescriptor> {
 
-
+  /**
+   * Test filter to get a keywords list as lowercase to be applied on a {@link
+   * MediaObjectMetadataDescriptor}.
+   *
+   * @return boolean
+   */
   @Override
   public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
-    return getKeywordsAsListLowercase().contains(mediaObjectMetadataDescriptor.getDomain().toLowerCase());
+    return getKeywordsAsListLowercase()
+        .contains(mediaObjectMetadataDescriptor.getDomain().toLowerCase());
   }
 
-  public static MetadataDomainFilter createForKeywords(String...keywords){
+  /**
+   * Create a metadata domain filter instance for the given keywords.
+   *
+   * @return {@link MetadataDomainFilter}
+   */
+  public static MetadataDomainFilter createForKeywords(String... keywords) {
     MetadataDomainFilter filter = new MetadataDomainFilter();
     filter.setKeywords(keywords);
     return filter;
@@ -30,7 +42,7 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
   @Override
   public String toString() {
     return "MetadataDomainFilter{" +
-            "keywords=" + Arrays.toString(keywords.toArray()) +
-            '}';
+        "keywords=" + Arrays.toString(keywords.toArray()) +
+        '}';
   }
 }
