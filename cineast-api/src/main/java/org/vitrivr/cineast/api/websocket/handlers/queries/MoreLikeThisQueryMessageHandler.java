@@ -14,11 +14,15 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
+ * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of
+ * type {@link MoreLikeThisQuery}.
+ *
  * @author rgasser
  * @version 1.0
  * @created 27.04.17
  */
-public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler<MoreLikeThisQuery> {
+public class MoreLikeThisQueryMessageHandler extends
+    AbstractQueryMessageHandler<MoreLikeThisQuery> {
 
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
@@ -27,14 +31,17 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
   }
 
   /**
-   * Executes a {@link MoreLikeThisQuery} message. Performs a similarity query based on the segmentId specified the {@link MoreLikeThisQuery} object.
+   * Executes a {@link MoreLikeThisQuery} message. Performs a similarity query based on the
+   * segmentId specified the {@link MoreLikeThisQuery} object.
    *
    * @param session WebSocket session the invocation is associated with.
-   * @param qconf The {@link QueryConfig} that contains additional specifications.
+   * @param qconf   The {@link QueryConfig} that contains additional specifications.
    * @param message Instance of {@link MoreLikeThisQuery}
    */
   @Override
-  public void execute(Session session, QueryConfig qconf, MoreLikeThisQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
+  public void execute(Session session, QueryConfig qconf, MoreLikeThisQuery message,
+      Set<String> segmentIdsForWhichMetadataIsFetched,
+      Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Extract categories from MoreLikeThisQuery. */
     final String queryId = qconf.getQueryId().toString();
     final HashSet<String> categoryMap = new HashSet<>(message.getCategories());
@@ -43,7 +50,8 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
     List<CompletableFuture<Void>> futures = new ArrayList<>();
     /* Retrieve per-category results and return them. */
     for (String category : categoryMap) {
-      final List<StringDoublePair> results = continuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
+      final List<StringDoublePair> results = continuousRetrievalLogic
+          .retrieve(message.getSegmentId(), category, qconf).stream()
           .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
           .sorted(StringDoublePair.COMPARATOR)
           .limit(Config.sharedConfig().getRetriever().getMaxResults())
@@ -54,7 +62,8 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
       /* Finalize and submit per-category results. */
       futures.addAll(this.finalizeAndSubmitResults(session, queryId, category, -1, results));
 
-      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds,
+          segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
       threads.addAll(_threads);
     }
     futures.forEach(CompletableFuture::join);

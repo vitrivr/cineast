@@ -15,7 +15,9 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.json.JsonWriter;
 
 /**
- * This abstract class implements the WebsocketMessageHandler interface and provides basic functionality like a convenience method to write information back to the underlying WebSocket stream.
+ * This abstract class implements the WebsocketMessageHandler interface and provides basic
+ * functionality like a convenience method to write information back to the underlying WebSocket
+ * stream.
  *
  * @author rgasser
  * @version 1.0
@@ -38,7 +40,8 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
     StopWatch watch = StopWatch.createStarted();
     String json = this.writer.toJson(message);
     if (message.getMessageType() != MessageType.PING) {
-      LOGGER.trace("Serialization for {} in {} ms", message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
+      LOGGER.trace("Serialization for {} in {} ms", message.getMessageType(),
+          watch.getTime(TimeUnit.MILLISECONDS));
     }
     String callbackName = Thread.currentThread().getName();
     CompletableFuture<Void> future = new CompletableFuture<>();
@@ -56,7 +59,8 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
           return;
         }
         watch.stop();
-        LOGGER.trace("{}: Successfully wrote message {} in {} ms", callbackName, message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
+        LOGGER.trace("{}: Successfully wrote message {} in {} ms", callbackName,
+            message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
       }
     });
     return future;

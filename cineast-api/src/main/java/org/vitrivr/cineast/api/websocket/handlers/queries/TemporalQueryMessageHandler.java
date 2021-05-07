@@ -24,6 +24,14 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
+/**
+ * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of
+ * type {@link TemporalQuery}.
+ *
+ * @author silvanheller
+ * @version 1.0
+ * @created 17.02.20
+ */
 public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<TemporalQuery> {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -34,6 +42,18 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     this.continuousRetrievalLogic = retrievalLogic;
   }
 
+  /**
+   * Executes a {@link TemporalQuery}. Performs the staged similarity queries in temporal order
+   * based on the {@link QueryStage} objects provided in the {@link TemporalQuery}.
+   *
+   * @param session                             WebSocket session the invocation is associated
+   *                                            with.
+   * @param qconf                               The {@link QueryConfig} that contains additional
+   *                                            specifications.
+   * @param message                             Instance of {@link TemporalQuery}
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which metadata is fetched
+   * @param objectIdsForWhichMetadataIsFetched  Object IDs for which metadata is fetched
+   */
   @Override
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     StopWatch watch = StopWatch.createStarted();
@@ -119,7 +139,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               LOGGER.trace("Category {} at stage {} executed @ {} ms", category, finalStageIndex, watch.getTime(TimeUnit.MILLISECONDS));
 
               /* If this is the last stage, we can send relevant results per category back to the UI.
-               * Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
+              Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
                */
               if (finalStageIndex == stagedSimilarityQuery.stages.size() - 1) {
                 /* Finalize and submit per-container results */

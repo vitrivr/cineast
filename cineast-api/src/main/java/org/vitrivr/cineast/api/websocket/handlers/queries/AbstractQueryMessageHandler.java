@@ -41,6 +41,10 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 
 /**
+ * This abstract class extends the {@link StatelessWebsocketMessageHandler} abstract class and
+ * provides various methods for the concrete implementations of message handlers to handle messages
+ * and write back to the websocket.
+ *
  * @author rgasser
  * @version 1.0
  * @created 27.04.17
@@ -119,7 +123,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   protected abstract void execute(Session session, QueryConfig qconf, T message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception;
 
   /**
-   * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and returns a list of the {@link MediaSegmentDescriptor}s that were found.
+   * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and
+   * returns a list of the {@link MediaSegmentDescriptor}s that were found.
    *
    * @param segmentIds List of segment IDs that should be looked up.
    * @return List of found {@link MediaSegmentDescriptor}
@@ -132,7 +137,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   }
 
   /**
-   * Performs a lookup for the {@link MediaObjectDescriptor} identified by the provided object IDs and returns a list of the {@link MediaSegmentDescriptor}s that were found.
+   * Performs a lookup for the {@link MediaObjectDescriptor} identified by the provided object IDs
+   * and returns a list of the {@link MediaSegmentDescriptor}s that were found.
    *
    * @param objectIds List of object IDs that should be looked up.
    * @return List of found {@link MediaObjectDescriptor}
@@ -192,7 +198,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     List<Thread> threads = new ArrayList<>();
     segmentIds.removeAll(segmentIdsForWhichMetadataIsFetched);
     segmentIdsForWhichMetadataIsFetched.addAll(segmentIds);
-    //chunk for memory safety-purposes
+    /* Chunk for memory safety-purposes. */
     if (segmentIds.size() > 100_000) {
       return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
     }
@@ -221,7 +227,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   }
 
   /**
-   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) to the UI. Should be executed before sending results.
+   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link
+   * MediaSegmentDescriptor}) to the UI. Should be executed before sending results.
    *
    * @return objectIds retrieved for the segmentIds
    */
@@ -246,19 +253,37 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     return objectIds;
   }
 
-  protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched) {
-    /* Load and transmit segment & object metadata. */
-    List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched);
-    List<Thread> objectThreads = this.loadAndWriteObjectMetadata(session, queryId, objectIds, objectIdsForWhichMetadataIsFetched);
+  /**
+   * Loads and Submits all the metadata (e.g. {@link MediaSegmentMetadataDescriptor}, {@link
+   * MediaObjectMetadataQueryResult}) associated with a collection of segment IDs for which the
+   * metadata was fetched.
+   *
+   * @param session                             The {@link Session} object used to transmit the
+   *                                            results.
+   * @param queryId                             ID of the running query.
+   * @param segmentIds                          Segment IDs of the metadata results.
+   * @param objectIds                           Object IDs of the metadata result.
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which the metadata was fetched and
+   *                                            transferred.
+   */
+  protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds,
+      List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched,
+      Collection<String> objectIdsForWhichMetadataIsFetched) {
+    List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds,
+        segmentIdsForWhichMetadataIsFetched);
+    List<Thread> objectThreads = this.loadAndWriteObjectMetadata(session, queryId, objectIds,
+        objectIdsForWhichMetadataIsFetched);
     segmentThreads.addAll(objectThreads);
     return segmentThreads;
   }
 
   /**
-   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the raw results produced by a similarity search in a specific category. q
-   *  @param session  The {@link Session} object used to transmit the results.
+   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the raw results produced by a similarity search in a specific category.
+   *
+   * @param session  The {@link Session} object used to transmit the results.
    * @param queryId  ID of the running query.
    * @param category Name of the query category.
+   * @param raw      List of raw per-category results (segmentId -> score).
    * @param raw      List of raw per-category results (segmentId -> score).
    * @return
    */
