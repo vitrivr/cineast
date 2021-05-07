@@ -152,7 +152,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     Map<String, MediaSegmentDescriptor> segmentMap = segments.stream()
         .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x));
     TemporalScoring temporalScoring = new TemporalScoring(objectMap, segmentMap, containerResults,
-        qconf, message.getTimeDistances(), message.getMaxLength());
+        message.getTimeDistances(), message.getMaxLength());
 
     List<TemporalObject> results = temporalScoring.score();
 
