@@ -5,40 +5,56 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
+ * Message object for an ping message.
+ *
  * @author rgasser
  * @version 1.0
  * @created 19.01.17
  */
 public class Ping implements Message {
-    public enum StatusEnum {
-        UNKNOWN,OK,ERROR
-    }
 
-    /** */
-    private StatusEnum status = StatusEnum.UNKNOWN;
+  /**
+   * Enum of the Ping status.
+   */
+  public enum StatusEnum {
+    UNKNOWN, OK, ERROR
+  }
 
-    @JsonProperty
-    public StatusEnum getStatus() {
-        return status;
-    }
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
+  /**
+   * Status of the Ping.
+   */
+  private StatusEnum status = StatusEnum.UNKNOWN;
 
-    /**
-     * Returns the type of particular message. Expressed as MessageTypes enum.
-     *
-     * @return
-     */
-    @Override
-    public MessageType getMessageType() {
-        return MessageType.PING;
-    }
+  /**
+   * Setter for status.
+   */
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
 
-    @Override
-    public String toString() {
-        return "Ping{" +
-                "status=" + status +
-                '}';
-    }
+  /**
+   * Getter for status.
+   *
+   * @return {@link StatusEnum}
+   */
+  @JsonProperty
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public MessageType getMessageType() {
+    return MessageType.PING;
+  }
+
+  @Override
+  public String toString() {
+    return "Ping{" +
+        "status=" + status +
+        '}';
+  }
 }
