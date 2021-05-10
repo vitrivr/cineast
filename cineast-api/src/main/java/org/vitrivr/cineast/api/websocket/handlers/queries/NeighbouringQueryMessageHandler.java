@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -44,9 +45,13 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
         final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.getCount(), segment.getSequenceNumber() + message.getCount());
 
         /* Write segments to stream. */
-        this.write(session, new MediaSegmentQueryResult(uuid, segments));
+        CompletableFuture<Void> future = this.write(session, new MediaSegmentQueryResult(uuid, segments));
 
         /* Load and transmit segment metadata. */
-        this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched);
+        List<Thread> threads = this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched);
+        for (Thread thread : threads) {
+            thread.join();
+        }
+        future.join();
     }
 }

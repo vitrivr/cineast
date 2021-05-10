@@ -2,6 +2,7 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -52,6 +53,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
 
     List<Thread> threads = new ArrayList<>();
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
     /* Execute similarity queries for all QueryContainer -> Category combinations in the map */
     for (QueryContainer qc : containerCategoryMap.keySet()) {
       for (String category : containerCategoryMap.get(qc)) {
@@ -69,11 +71,12 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         /* Finalize and submit per-container results */
         List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
         List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
-        this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
+        futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results));
         List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
         threads.addAll(_threads);
       }
     }
+    futures.forEach(CompletableFuture::join);
     for (Thread thread : threads) {
       try {
         thread.join();

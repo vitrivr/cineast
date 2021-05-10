@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
@@ -45,6 +46,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
 
     /* We iterate over all components independently, because they have a temporal context.*/
     for (int containerIdx = 0; containerIdx < message.queries.size(); containerIdx++) {
@@ -123,7 +125,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                 /* Finalize and submit per-container results */
                 List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
                 List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
-                this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
+                futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results));
                 List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
                 metadataRetrievalThreads.addAll(_threads);
               }
@@ -157,7 +159,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         int finalStageIndex = stageIndex;
         cache.get(stageIndex).forEach((category, results) -> {
           results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
-          Thread thread = new Thread(() -> this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
+          Thread thread = new Thread(() -> {
+            List<CompletableFuture<Void>> finalizingFutures = this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results);
+            finalizingFutures.forEach(CompletableFuture::join);
+          });
           thread.setName("finalization-stage" + finalStageIndex + "-" + category);
           thread.start();
           cleanupThreads.add(thread);
@@ -173,6 +178,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
+    futures.forEach(CompletableFuture::join);
+
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.
      */

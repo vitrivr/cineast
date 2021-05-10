@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
@@ -37,12 +38,19 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
         final List<MediaObjectDescriptor> object = this.loadObjects(objectId);
         if (object.isEmpty()) return;
 
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        List<Thread> threads = new ArrayList<>();
+
         /* Write segments and objects to results stream. */
-        this.write(session, new MediaSegmentQueryResult(uuid, segment));
-        this.write(session, new MediaObjectQueryResult(uuid, object));
+        futures.add(this.write(session, new MediaSegmentQueryResult(uuid, segment)));
+        futures.add(this.write(session, new MediaObjectQueryResult(uuid, object)));
 
         /* Load and transmit segment & object metadata. */
-        this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched);
-        this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched);
+        threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched));
+        threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched));
+        for (Thread thread : threads) {
+            thread.join();
+        }
+        futures.forEach(CompletableFuture::join);
     }
 }
