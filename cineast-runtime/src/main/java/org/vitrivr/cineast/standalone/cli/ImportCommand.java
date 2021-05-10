@@ -106,18 +106,16 @@ public class ImportCommand implements Runnable {
         break;
       case V3C1CLASSIFICATIONS:
         handler = new ClassificationsImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
         break;
       case V3C1FACES:
         handler = new FacesImportHandler(this.threads, this.batchsize);
         break;
       case OBJECTINSTANCE:
-        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, clean);
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCMETA:
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
@@ -166,17 +164,25 @@ public class ImportCommand implements Runnable {
 
   private void doVisionImport(Path path) {
     List<GoogleVisionImportHandler> handlers = new ArrayList<>();
+    GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, 40_000, GoogleVisionCategory.OCR, false);
+    _handler.doImport(path);
+    handlers.add(_handler);
+
+    handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
+    /*
+    * We import neither full-text tags nor tags in general from the google-vision api from vbs21+ since we have expanded tags in a separate file
     for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
       GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, 40_000, category, false);
       _handler.doImport(path);
       handlers.add(_handler);
-      if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
+       if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
         GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(this.threads, 40_000, category, true);
         _handlerTrue.doImport(path);
         handlers.add(_handlerTrue);
       }
+
     }
-    handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
+    */
   }
 
   /**
