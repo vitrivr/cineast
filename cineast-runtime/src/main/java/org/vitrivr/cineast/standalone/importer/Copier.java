@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.standalone.importer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -19,6 +21,7 @@ public class Copier implements AutoCloseable {
     private final String entityName;
     private final Importer<?> importer;
     private final PersistencyWriter<?> writer;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public Copier(String entityName, Importer<?> importer) {
         this(entityName, importer, Config.sharedConfig().getDatabase().getWriterSupplier().get());
@@ -110,6 +113,7 @@ public class Copier implements AutoCloseable {
             if (tupleCache.size() >= batchSize) {
                 this.writer.persist(tupleCache);
                 long stop = System.currentTimeMillis();
+                LOGGER.trace("Inserted {} elements in {} ms", tupleCache.size(), stop-start);
                 ImportTaskMonitor.reportImportProgress(tupleCache.size(), entityName, stop - start);
                 tupleCache.clear();
                 start = System.currentTimeMillis();
@@ -119,6 +123,7 @@ public class Copier implements AutoCloseable {
 
         this.writer.persist(tupleCache);
         long stop = System.currentTimeMillis();
+        LOGGER.trace("Inserted {} elements in {} ms", tupleCache.size(), stop-start);
         ImportTaskMonitor.reportImportProgress(tupleCache.size(), entityName, stop - start);
 
     }
