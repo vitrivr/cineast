@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,6 +51,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
+
     List<List<StringDoublePair>> containerResults = new ArrayList<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
     Set<MediaObjectDescriptor> objects = new HashSet<>();
@@ -121,8 +124,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
                 .sorted(StringDoublePair.COMPARATOR)
                 .limit(max)
                 .collect(Collectors.toList());
-            this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(),
-                limitedResults);
+            futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults));
             List<Thread> _threads = this
                 .submitMetadata(session, uuid, stageSegmentIds, stageObjectIds,
                     segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
@@ -146,6 +148,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
+    futures.forEach(CompletableFuture::join);
 
     Map<String, MediaObjectDescriptor> objectMap = objects.stream()
         .collect(Collectors.toMap(MediaObjectDescriptor::getObjectId, x -> x));
