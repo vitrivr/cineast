@@ -18,6 +18,14 @@ public class TemporalObject {
     this.score = score;
   }
 
+  public String getObjectId() {
+    return objectId;
+  }
+
+  public double getScore() {
+    return score;
+  }
+
   @Override
   public String toString() {
     return "TemporalObject(" + objectId + ", " + score + ")";
