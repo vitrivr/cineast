@@ -150,10 +150,10 @@ public class ImportCommand implements Runnable {
         throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: " + type);
       } else {
         handler.doImport(path);
+        handler.waitForCompletion();
       }
     }
 
-    handler.waitForCompletion();
     /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
     if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
       OptimizeEntitiesCommand.optimizeAllCottontailEntities();
