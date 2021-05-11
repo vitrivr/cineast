@@ -32,9 +32,7 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
@@ -101,15 +99,9 @@ public class ImportCommand implements Runnable {
         doVisionImport(path);
         isGoogleVision = true;
         break;
-      case V3C1CLASSIFICATIONS:
-        handler = new ClassificationsImportHandler(this.threads, this.batchsize);
-        break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        break;
-      case V3C1FACES:
-        handler = new FacesImportHandler(this.threads, this.batchsize);
         break;
       case OBJECTINSTANCE:
         handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
@@ -186,6 +178,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }
