@@ -23,9 +23,7 @@ public class CaptionImportHandler extends DataImportHandler {
 
     @Override
     public void doImport(Path path) {
-        LOGGER.info("Startin caption import");
+        LOGGER.info("Starting caption import");
         this.futures.add(this.service.submit(new DataImportRunner(new CaptionImporter(path), DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME, "lsc-caption")));
-        this.waitForCompletion();
-        LOGGER.info("Completed caption import");
     }
 }

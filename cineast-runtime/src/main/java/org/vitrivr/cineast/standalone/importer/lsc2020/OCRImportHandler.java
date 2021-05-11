@@ -36,7 +36,7 @@ public class OCRImportHandler extends DataImportHandler {
             LOGGER.fatal("Error in init", e);
             return;
         }
-        LOGGER.info("Startin LSC OCR import from {}", path);
+        LOGGER.info("Starting LSC OCR import from {}", path);
         this.futures.add(this.service.submit(new DataImportRunner(new OCRImporter(path), OCRSearch.OCR_TABLE_NAME, "lsc-ocr", clean)));
     }
 }
