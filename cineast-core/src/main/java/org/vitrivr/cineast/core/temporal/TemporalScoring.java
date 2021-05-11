@@ -6,6 +6,8 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.temporal.sequential.SequentialTemporalScoringAlgorithm;
+import org.vitrivr.cineast.core.temporal.timedistance.TimeDistanceTemporalScoringAlgorithm;
 
 public class TemporalScoring {
 
@@ -35,7 +37,7 @@ public class TemporalScoring {
           this.maxLength);
     } else {
       temporalScoringAlgorithm = new SequentialTemporalScoringAlgorithm(
-          this.objectMap, this.segmentMap, this.containerResults, this.maxLength);
+          this.segmentMap, this.containerResults, this.maxLength);
     }
     return temporalScoringAlgorithm.score();
   }
