@@ -873,6 +873,35 @@
         }
       }
     },
+    "/api/v1/find/boolean/table/select" : {
+      "post" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Find all elements of given columns",
+        "description" : "Find all elements of given columns",
+        "operationId" : "SelectFromTable",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SelectSpecification"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SelectResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/status" : {
       "get" : {
         "tags" : [ "Status" ],
@@ -888,6 +917,44 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/thumbnails/{id}" : {
+      "get" : {
+        "summary" : "Get thumbnails with id",
+        "operationId" : "getThumbnailsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
+          }
+        }
+      }
+    },
+    "/objects/{id}" : {
+      "get" : {
+        "summary" : "Get objects with id",
+        "operationId" : "getObjectsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
           }
         }
       }
@@ -979,15 +1046,15 @@
               "type" : "string"
             }
           },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          },
           "idList" : {
             "type" : "array",
             "items" : {
               "type" : "string"
             }
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
           }
         }
       },
@@ -1109,11 +1176,11 @@
             "type" : "number",
             "format" : "float"
           },
-          "count" : {
+          "sequenceNumber" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "sequenceNumber" : {
+          "count" : {
             "type" : "integer",
             "format" : "int32"
           }
@@ -1200,13 +1267,10 @@
               "type" : "string"
             }
           },
-          "normIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "correspondenceFunctionIfEmpty" : {
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "distanceWeightsIfEmpty" : {
@@ -1214,6 +1278,9 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1362,6 +1429,9 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
+          "description" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -1370,9 +1440,6 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
-            "type" : "string"
-          },
-          "description" : {
             "type" : "string"
           }
         }
@@ -1508,6 +1575,38 @@
             "type" : "array",
             "items" : {
               "type" : "string"
+            }
+          }
+        }
+      },
+      "SelectSpecification" : {
+        "type" : "object",
+        "properties" : {
+          "table" : {
+            "type" : "string"
+          },
+          "columns" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "limit" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "SelectResult" : {
+        "type" : "object",
+        "properties" : {
+          "columns" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
             }
           }
         }
