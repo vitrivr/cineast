@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Comparator;
 import java.util.List;
 
 public class TemporalObject {
@@ -11,8 +12,7 @@ public class TemporalObject {
   private final double score;
 
   @JsonCreator
-  public TemporalObject(@JsonProperty("segments") List<String> segments,
-      @JsonProperty("objectId") String objectId, @JsonProperty("score") double score) {
+  public TemporalObject(@JsonProperty("segments") List<String> segments, @JsonProperty("objectId") String objectId, @JsonProperty("score") double score) {
     this.segments = segments;
     this.objectId = objectId;
     this.score = score;
@@ -31,5 +31,10 @@ public class TemporalObject {
     return "TemporalObject(" + objectId + ", " + score + ")";
   }
 
+  public static final Comparator<TemporalObject> COMPARATOR = new Comparator<TemporalObject>() {
+    public int compare(TemporalObject o1, TemporalObject o2) {
+      return Double.compare(o2.getScore(), o1.getScore());
+    }
+  };
 
 }
