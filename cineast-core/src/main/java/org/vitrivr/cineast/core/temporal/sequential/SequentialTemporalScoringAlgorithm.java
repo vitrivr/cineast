@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.temporal.ScoredSegment;
 import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
 
 /**
@@ -23,71 +23,13 @@ import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
  * @author vGsteiger
  * @created 11.05.2021
  */
-public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgorithm {
+public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm {
 
-  private final Map<String, MediaSegmentDescriptor> segmentMap;
-  private final Map<String, TreeSet<ScoredSegment>> scoredSegmentSets;
-  private final float maxLength;
   private final Map<String, List<SequentialPath>> objectPaths;
-  private final Map<String, List<ScoredSegment>> scoredSegmentStorage;
-  private final int maxContainerId;
 
   public SequentialTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, float maxLength) {
-    this.segmentMap = segmentMap;
-    this.maxLength = maxLength;
+    super(segmentMap, containerResults, maxLength);
     this.objectPaths = new HashMap<>();
-    this.maxContainerId = containerResults.size() - 1;
-
-    scoredSegmentStorage = new HashMap<>();
-
-    /*
-    Assign the values to the scoredSegmentStorage to have a map of segmentIds to a list of
-    ScoredSegments at the index of the containerId.
-     */
-    for (List<StringDoublePair> currentContainerResults : containerResults) {
-      for (StringDoublePair stringDoublePair : currentContainerResults) {
-        /*
-        Get the current media segment descriptor to save the necessary information in the
-        ScoredSegment.
-        */
-        MediaSegmentDescriptor segmentDescriptor = segmentMap.get(stringDoublePair.key);
-        /*
-        If there is such a segment as found in a string double pair, add this to the
-        scoredSegmentStorage for later usage.
-         */
-        if (segmentDescriptor != null) {
-          int currentContainerId = containerResults.indexOf(currentContainerResults);
-          if (scoredSegmentStorage.containsKey(segmentDescriptor.getSegmentId())) {
-            try {
-              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
-            } catch (IndexOutOfBoundsException e) {
-              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).add(currentContainerId, new ScoredSegment(stringDoublePair.key, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
-            }
-          } else {
-            List<ScoredSegment> segmentList = new ArrayList<>();
-            segmentList.add(new ScoredSegment(segmentDescriptor.getSegmentId(), stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
-            scoredSegmentStorage.put(segmentDescriptor.getSegmentId(), segmentList);
-          }
-        }
-      }
-    }
-
-    /*
-    Assign the scored segments to the tree sets corresponding to their objectId.
-     */
-    this.scoredSegmentSets = new HashMap<>();
-    for (Map.Entry<String, List<ScoredSegment>> entry : scoredSegmentStorage.entrySet()) {
-      String objectId = segmentMap.get(entry.getKey()).getObjectId();
-      for (ScoredSegment scoredSegment : entry.getValue()) {
-        if (this.scoredSegmentSets.containsKey(objectId)) {
-          this.scoredSegmentSets.get(objectId).add(scoredSegment);
-        } else {
-          TreeSet<ScoredSegment> tmpSet = new TreeSet<>();
-          tmpSet.add(scoredSegment);
-          this.scoredSegmentSets.put(objectId, tmpSet);
-        }
-      }
-    }
   }
 
   /**
@@ -97,9 +39,7 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
    */
   @Override
   public List<TemporalObject> score() {
-    /*
-    Calculate the best path for every segment in the result set given to the class.
-     */
+    /* Calculate the best path for every segment in the result set given to the class. */
     for (MediaSegmentDescriptor mediaSegmentDescriptor : segmentMap.values()) {
       for (ScoredSegment scoredSegment : scoredSegmentStorage.get(mediaSegmentDescriptor.getSegmentId())) {
         SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
@@ -135,17 +75,13 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
       results.add(temporalObject);
     }
 
-    /*
-    Return the sorted temporal objects.
-     */
+    /* Return the sorted temporal objects. */
     return results.stream()
         .sorted(Comparator.comparingDouble(TemporalObject::getScore))
         .collect(Collectors.toList());
   }
 
-  /*
-  Calculate the best path possible for a segment.
-   */
+  /* Calculate the best path possible for a segment. */
   private SequentialPath getBestPathForSegment(MediaSegmentDescriptor mediaSegmentDescriptor, ScoredSegment scoredSegment) {
     PriorityQueue<SequentialPath> pathQueue = new PriorityQueue<>();
 
@@ -154,17 +90,13 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
     SequentialPath bestPath = initPath;
     pathQueue.add(initPath);
 
-    /*
-    Create new paths until there are no more possible paths for a segment.
-     */
+    /* Create new paths until there are no more possible paths for a segment. */
     while (!pathQueue.isEmpty()) {
       SequentialPath path = pathQueue.remove();
 
       ScoredSegment lastHighestSegment = path.getCurrentLastSegment();
 
-      /*
-      Get the potential following segments from the scored segments sets tree set
-       */
+      /* Get the potential following segments from the scored segments sets tree set */
       Set<ScoredSegment> potentialFollowingSegments = scoredSegmentSets.get(mediaSegmentDescriptor.getObjectId()).tailSet(lastHighestSegment);
       for (ScoredSegment candidate : potentialFollowingSegments) {
         /*
