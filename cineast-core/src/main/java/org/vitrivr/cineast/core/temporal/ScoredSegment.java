@@ -1,20 +1,31 @@
-package org.vitrivr.cineast.core.temporal.sequential;
+package org.vitrivr.cineast.core.temporal;
 
 import org.jetbrains.annotations.NotNull;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 public class ScoredSegment implements Comparable<ScoredSegment> {
 
+  private final String objectId;
   private final String segmentId;
   private double score;
   private final int containerId;
   private final float segmentLength;
 
-  public ScoredSegment(String segmentId, double score, int containerId, float segmentLength) {
-    this.segmentId = segmentId;
+  public ScoredSegment(MediaSegmentDescriptor mediaSegmentDescriptor, double score, int containerId, float segmentLength) {
+    this.objectId = mediaSegmentDescriptor.getObjectId();
+    this.segmentId = mediaSegmentDescriptor.getSegmentId();
     this.score = score;
     this.containerId = containerId;
     this.segmentLength = segmentLength;
+  }
+
+  public ScoredSegment(ScoredSegment scoredSegment) {
+    this.objectId = scoredSegment.getObjectId();
+    this.segmentId = scoredSegment.getSegmentId();
+    this.score = scoredSegment.getScore();
+    this.containerId = scoredSegment.getContainerId();
+    this.segmentLength = scoredSegment.getSegmentLength();
   }
 
   public boolean addScore(StringDoublePair stringDoublePair) {
@@ -40,6 +51,10 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
 
   public float getSegmentLength() {
     return segmentLength;
+  }
+
+  public String getObjectId() {
+    return objectId;
   }
 
   @Override

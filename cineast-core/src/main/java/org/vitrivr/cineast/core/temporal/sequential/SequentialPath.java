@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.temporal.sequential;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.vitrivr.cineast.core.temporal.ScoredSegment;
 
 public class SequentialPath {
 
