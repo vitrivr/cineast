@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.temporal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public abstract class TemporalScoringAlgorithm {
 
   protected final Map<String, MediaSegmentDescriptor> segmentMap;
   protected final Map<String, TreeSet<ScoredSegment>> scoredSegmentSets;
-  protected final Map<String, List<ScoredSegment>> scoredSegmentStorage;
+  protected final Map<String, Map<Integer, ScoredSegment>> scoredSegmentStorage;
   protected final float maxLength;
   protected final int maxContainerId;
 
@@ -36,6 +35,7 @@ public abstract class TemporalScoringAlgorithm {
     Assign the values to the scoredSegmentStorage to have a map of segmentIds to a list of
     ScoredSegments at the index of the containerId.
      */
+    int currentContainerId = 0;
     for (List<StringDoublePair> currentContainerResults : containerResults) {
       for (StringDoublePair stringDoublePair : currentContainerResults) {
         /*
@@ -48,26 +48,26 @@ public abstract class TemporalScoringAlgorithm {
         scoredSegmentStorage for later usage.
          */
         if (segmentDescriptor != null) {
-          int currentContainerId = containerResults.indexOf(currentContainerResults);
           if (scoredSegmentStorage.containsKey(segmentDescriptor.getSegmentId())) {
-            try {
+            if (scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).containsKey(currentContainerId)) {
               scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
-            } catch (IndexOutOfBoundsException e) {
-              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).add(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
+            } else {
+              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
             }
           } else {
-            List<ScoredSegment> segmentList = new ArrayList<>();
-            segmentList.add(new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
-            scoredSegmentStorage.put(segmentDescriptor.getSegmentId(), segmentList);
+            Map<Integer, ScoredSegment> tmpSegmentMap = new HashMap<>();
+            tmpSegmentMap.put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
+            scoredSegmentStorage.put(segmentDescriptor.getSegmentId(), tmpSegmentMap);
           }
         }
       }
+      currentContainerId++;
     }
 
     /* Assign the scored segments to the tree sets corresponding to their objectId. */
-    for (Map.Entry<String, List<ScoredSegment>> entry : scoredSegmentStorage.entrySet()) {
+    for (Map.Entry<String, Map<Integer, ScoredSegment>> entry : scoredSegmentStorage.entrySet()) {
       String objectId = segmentMap.get(entry.getKey()).getObjectId();
-      for (ScoredSegment scoredSegment : entry.getValue()) {
+      for (ScoredSegment scoredSegment : entry.getValue().values()) {
         if (this.scoredSegmentSets.containsKey(objectId)) {
           this.scoredSegmentSets.get(objectId).add(scoredSegment);
         } else {

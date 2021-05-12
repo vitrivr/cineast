@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
@@ -40,8 +41,9 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
   @Override
   public List<TemporalObject> score() {
     /* Calculate the best path for every segment in the result set given to the class. */
-    for (MediaSegmentDescriptor mediaSegmentDescriptor : segmentMap.values()) {
-      for (ScoredSegment scoredSegment : scoredSegmentStorage.get(mediaSegmentDescriptor.getSegmentId())) {
+    for (TreeSet<ScoredSegment> segments : scoredSegmentSets.values()) {
+      for (ScoredSegment scoredSegment : segments) {
+        MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.getSegmentId());
         SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
         if (this.objectPaths.containsKey(mediaSegmentDescriptor.getObjectId())) {
           this.objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
@@ -64,7 +66,7 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
       List<SequentialPath> paths = entry.getValue();
       double max = paths
           .stream()
-          .mapToDouble(SequentialPath::getScore)
+          .mapToDouble(n -> (n.getScore() / (this.maxContainerId + 1)))
           .max()
           .orElse(-1D);
       List<String> segmentIds = paths.stream()
@@ -72,12 +74,14 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
           .sorted()
           .distinct().collect(Collectors.toList());
       TemporalObject temporalObject = new TemporalObject(segmentIds, objectId, max);
-      results.add(temporalObject);
+      if (max > 0d) {
+        results.add(temporalObject);
+      }
     }
 
     /* Return the sorted temporal objects. */
     return results.stream()
-        .sorted(Comparator.comparingDouble(TemporalObject::getScore))
+        .sorted(Comparator.comparingDouble(TemporalObject::getScore).reversed())
         .collect(Collectors.toList());
   }
 
@@ -104,13 +108,13 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
         compareTo of ScoredSegment that allows to classify segments with the same containerId but
         higher segmentId as being higher.
          */
-        if (candidate.getContainerId() > lastHighestSegment.getContainerId()) {
+        if (candidate.getContainerId() > lastHighestSegment.getContainerId() && candidate.getStartAbs() >= lastHighestSegment.getEndAbs()) {
           /*
           If we have reached the end of possible temporal paths we either store it and a new best
           if it is shorter than max length and has a higher score or ignore the path.
            */
           if (candidate.getContainerId() == this.maxContainerId) {
-            if (bestPath.getScore() < candidate.getScore() + path.getScore() && path.getPathLength() + candidate.getSegmentLength() < this.maxLength) {
+            if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1)) + path.getScore() && candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
               bestPath = new SequentialPath(path);
               bestPath.addSegment(candidate);
             }
@@ -121,10 +125,10 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
             the queue to be reevaluated in the next round as a longer path that is potentially
             better.
              */
-            if (path.getPathLength() + candidate.getSegmentLength() < this.maxLength) {
+            if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
               SequentialPath candidatePath = new SequentialPath(path);
               candidatePath.addSegment(candidate);
-              if (bestPath.getScore() < candidatePath.getScore()) {
+              if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1))) {
                 bestPath = candidatePath;
               }
               pathQueue.add(candidatePath);

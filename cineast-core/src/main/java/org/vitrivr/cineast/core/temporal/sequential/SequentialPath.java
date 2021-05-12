@@ -3,15 +3,17 @@ package org.vitrivr.cineast.core.temporal.sequential;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.vitrivr.cineast.core.temporal.ScoredSegment;
 
-public class SequentialPath {
+public class SequentialPath implements Comparable<SequentialPath> {
 
   private final String objectId;
   private double score;
   private final List<ScoredSegment> segments;
   private int currentContainerId;
-  private float pathLength;
+  private final float startAbs;
+  private float currentEndAbs;
 
   public SequentialPath(String objectId, ScoredSegment initSegment) {
     this.objectId = objectId;
@@ -20,7 +22,7 @@ public class SequentialPath {
     this.currentContainerId = -1;
     this.addSegment(initSegment);
     this.currentContainerId = initSegment.getContainerId();
-    this.pathLength = initSegment.getSegmentLength();
+    this.startAbs = initSegment.getStartAbs();
   }
 
   public SequentialPath(SequentialPath sequentialPath) {
@@ -28,6 +30,8 @@ public class SequentialPath {
     this.segments = new ArrayList<>(sequentialPath.segments);
     this.currentContainerId = sequentialPath.getCurrentContainerId();
     this.score = sequentialPath.getScore();
+    this.startAbs = sequentialPath.getStartAbs();
+    this.currentEndAbs = sequentialPath.getCurrentEndAbs();
   }
 
   public boolean addSegment(ScoredSegment segment) {
@@ -35,7 +39,7 @@ public class SequentialPath {
       this.segments.add(segment);
       this.currentContainerId = segment.getContainerId();
       this.score += segment.getScore();
-      this.pathLength += segment.getSegmentLength();
+      this.currentEndAbs = segment.getEndAbs();
       return true;
     } else {
       return false;
@@ -58,15 +62,24 @@ public class SequentialPath {
     return segments;
   }
 
-  public float getPathLength() {
-    return pathLength;
-  }
-
   public List<String> getSegmentIds() {
     return segments.stream().map(ScoredSegment::getSegmentId).collect(Collectors.toList());
   }
 
   public ScoredSegment getCurrentLastSegment() {
     return this.segments.get(this.segments.size() - 1);
+  }
+
+  public float getStartAbs() {
+    return startAbs;
+  }
+
+  public float getCurrentEndAbs() {
+    return currentEndAbs;
+  }
+
+  @Override
+  public int compareTo(@NotNull SequentialPath o) {
+    return Double.compare(this.score, o.getScore());
   }
 }
