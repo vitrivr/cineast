@@ -26,6 +26,10 @@ public class TemporalObject {
     return score;
   }
 
+  public List<String> getSegments() {
+    return segments;
+  }
+
   @Override
   public String toString() {
     return "TemporalObject(" + objectId + ", " + score + ")";

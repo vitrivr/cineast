@@ -8,16 +8,20 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
 
   private final String objectId;
   private final String segmentId;
-  private double score;
   private final int containerId;
   private final float segmentLength;
+  private final float startAbs;
+  private final float endAbs;
+  private double score;
 
   public ScoredSegment(MediaSegmentDescriptor mediaSegmentDescriptor, double score, int containerId, float segmentLength) {
     this.objectId = mediaSegmentDescriptor.getObjectId();
     this.segmentId = mediaSegmentDescriptor.getSegmentId();
-    this.score = score;
+    this.startAbs = mediaSegmentDescriptor.getStartabs();
+    this.endAbs = mediaSegmentDescriptor.getEndabs();
     this.containerId = containerId;
     this.segmentLength = segmentLength;
+    this.score = score;
   }
 
   public ScoredSegment(ScoredSegment scoredSegment) {
@@ -26,6 +30,8 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.score = scoredSegment.getScore();
     this.containerId = scoredSegment.getContainerId();
     this.segmentLength = scoredSegment.getSegmentLength();
+    this.startAbs = scoredSegment.getStartAbs();
+    this.endAbs = scoredSegment.getEndAbs();
   }
 
   public boolean addScore(StringDoublePair stringDoublePair) {
@@ -55,6 +61,14 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
 
   public String getObjectId() {
     return objectId;
+  }
+
+  public float getStartAbs() {
+    return startAbs;
+  }
+
+  public float getEndAbs() {
+    return endAbs;
   }
 
   @Override

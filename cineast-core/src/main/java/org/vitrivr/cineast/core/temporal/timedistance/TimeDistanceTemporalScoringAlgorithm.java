@@ -49,7 +49,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorit
     }
     /* Return the sorted temporal objects. */
     return results.stream()
-        .sorted(Comparator.comparingDouble(TemporalObject::getScore))
+        .sorted(Comparator.comparingDouble(TemporalObject::getScore).reversed())
         .collect(Collectors.toList());
   }
 
@@ -79,12 +79,14 @@ public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorit
 
       /* Go through all candidates from the currentSegment */
       for (ScoredSegment candidate : setFromElement) {
-        if (candidate.getContainerId() == innerContainerId && candidate.getSegmentLength() + currentTemporalObjectLength < this.maxLength) {
+        if (candidate.getContainerId() == innerContainerId && candidate.getSegmentLength() + currentTemporalObjectLength <= this.maxLength) {
           MediaSegmentDescriptor innerDescriptor = this.segmentMap.get(candidate.getSegmentId());
           if (innerDescriptor == null) {
             continue;
           }
+          /* Calculate the inverse decay score of the candidate */
           double innerScore = calculateInverseDecayScore(currentEndAbs, candidate, this.timeDistances.get(innerContainerId - 1), innerDescriptor);
+          // TODO: Should we cut off any values below a certain score to not be considered?
           if (innerScore > bestScore) {
             bestSegment = candidate;
           }
@@ -101,7 +103,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorit
       score += bestScore;
     }
 
-    return new TemporalObject(segments, item.getObjectId(), score);
+    return new TemporalObject(segments, item.getObjectId(), score / (this.maxContainerId + 1));
   }
 
   private double calculateInverseDecayScore(float currentSegmentEndTime, ScoredSegment nextSegment, float timeDifference, MediaSegmentDescriptor segmentDescriptor) {
