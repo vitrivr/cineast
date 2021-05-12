@@ -90,7 +90,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       /* Create index. */
       this.createIndex(entityName, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ, txId);
       this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH, txId);
-      this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE, txId);
+      //this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
