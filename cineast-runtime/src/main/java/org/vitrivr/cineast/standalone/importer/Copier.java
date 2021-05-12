@@ -111,20 +111,21 @@ public class Copier implements AutoCloseable {
             PersistentTuple tuple = this.writer.generateTuple(objects);
             tupleCache.add(tuple);
             if (tupleCache.size() >= batchSize) {
+                int size = tupleCache.size();
                 this.writer.persist(tupleCache);
                 long stop = System.currentTimeMillis();
-                LOGGER.trace("Inserted {} elements in {} ms", tupleCache.size(), stop-start);
-                ImportTaskMonitor.reportImportProgress(tupleCache.size(), entityName, stop - start);
+                LOGGER.trace("Inserted {} elements in {} ms", size, stop-start);
+                ImportTaskMonitor.reportImportProgress(size, entityName, stop - start);
                 tupleCache.clear();
                 start = System.currentTimeMillis();
             }
 
         } while ((map = importer.readNextAsMap()) != null);
-
+        int size = tupleCache.size();
         this.writer.persist(tupleCache);
         long stop = System.currentTimeMillis();
-        LOGGER.trace("Inserted {} elements in {} ms", tupleCache.size(), stop-start);
-        ImportTaskMonitor.reportImportProgress(tupleCache.size(), entityName, stop - start);
+        LOGGER.trace("Inserted {} elements in {} ms", size, stop-start);
+        ImportTaskMonitor.reportImportProgress(size, entityName, stop - start);
 
     }
 
