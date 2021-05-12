@@ -32,11 +32,7 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
   private final Map<String, List<ScoredSegment>> scoredSegmentStorage;
   private final int maxContainerId;
 
-  public SequentialTemporalScoringAlgorithm(
-      Map<String, MediaSegmentDescriptor> segmentMap,
-      List<List<StringDoublePair>> containerResults,
-      float maxLength
-  ) {
+  public SequentialTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, float maxLength) {
     this.segmentMap = segmentMap;
     this.maxLength = maxLength;
     this.objectPaths = new HashMap<>();
@@ -63,28 +59,13 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
           int currentContainerId = containerResults.indexOf(currentContainerResults);
           if (scoredSegmentStorage.containsKey(segmentDescriptor.getSegmentId())) {
             try {
-              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId)
-                  .addScore(stringDoublePair);
+              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
             } catch (IndexOutOfBoundsException e) {
-              scoredSegmentStorage.get(segmentDescriptor.getSegmentId())
-                  .add(currentContainerId,
-                      new ScoredSegment(
-                          stringDoublePair.key,
-                          stringDoublePair.value,
-                          currentContainerId,
-                          (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs()))
-                  );
+              scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).add(currentContainerId, new ScoredSegment(stringDoublePair.key, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
             }
           } else {
             List<ScoredSegment> segmentList = new ArrayList<>();
-            segmentList
-                .add(
-                    new ScoredSegment(
-                        segmentDescriptor.getSegmentId(),
-                        stringDoublePair.value,
-                        currentContainerId,
-                        (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())
-                    ));
+            segmentList.add(new ScoredSegment(segmentDescriptor.getSegmentId(), stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
             scoredSegmentStorage.put(segmentDescriptor.getSegmentId(), segmentList);
           }
         }
@@ -110,8 +91,7 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
   }
 
   /**
-   * Score the information given to the class upon the creation of the class according to the
-   * sequential scoring algorithm.
+   * Score the information given to the class upon the creation of the class according to the sequential scoring algorithm.
    *
    * @return List of {@link TemporalObject}
    */
@@ -121,10 +101,8 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
     Calculate the best path for every segment in the result set given to the class.
      */
     for (MediaSegmentDescriptor mediaSegmentDescriptor : segmentMap.values()) {
-      for (ScoredSegment scoredSegment : scoredSegmentStorage
-          .get(mediaSegmentDescriptor.getSegmentId())) {
-        SequentialPath sequentialPath = this
-            .getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
+      for (ScoredSegment scoredSegment : scoredSegmentStorage.get(mediaSegmentDescriptor.getSegmentId())) {
+        SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
         if (this.objectPaths.containsKey(mediaSegmentDescriptor.getObjectId())) {
           this.objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
         } else {
@@ -147,11 +125,12 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
       double max = paths
           .stream()
           .mapToDouble(SequentialPath::getScore)
-          .max().orElse(-1D);
+          .max()
+          .orElse(-1D);
       List<String> segmentIds = paths.stream()
-          .flatMap(listContainer -> listContainer.getSegmentIds().stream()).sorted()
-          .distinct().collect(
-              Collectors.toList());
+          .flatMap(listContainer -> listContainer.getSegmentIds().stream())
+          .sorted()
+          .distinct().collect(Collectors.toList());
       TemporalObject temporalObject = new TemporalObject(segmentIds, objectId, max);
       results.add(temporalObject);
     }
@@ -159,25 +138,18 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
     /*
     Return the sorted temporal objects.
      */
-    return results.stream().sorted(
-        Comparator.comparingDouble(TemporalObject::getScore))
-        .collect(
-            Collectors.toList());
+    return results.stream()
+        .sorted(Comparator.comparingDouble(TemporalObject::getScore))
+        .collect(Collectors.toList());
   }
 
   /*
   Calculate the best path possible for a segment.
    */
-  private SequentialPath getBestPathForSegment(
-      MediaSegmentDescriptor mediaSegmentDescriptor,
-      ScoredSegment scoredSegment
-  ) {
+  private SequentialPath getBestPathForSegment(MediaSegmentDescriptor mediaSegmentDescriptor, ScoredSegment scoredSegment) {
     PriorityQueue<SequentialPath> pathQueue = new PriorityQueue<>();
 
-    SequentialPath initPath = new SequentialPath(
-        mediaSegmentDescriptor.getObjectId(),
-        scoredSegment
-    );
+    SequentialPath initPath = new SequentialPath(mediaSegmentDescriptor.getObjectId(), scoredSegment);
 
     SequentialPath bestPath = initPath;
     pathQueue.add(initPath);
@@ -193,8 +165,7 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
       /*
       Get the potential following segments from the scored segments sets tree set
        */
-      Set<ScoredSegment> potentialFollowingSegments = scoredSegmentSets
-          .get(mediaSegmentDescriptor.getObjectId()).tailSet(lastHighestSegment);
+      Set<ScoredSegment> potentialFollowingSegments = scoredSegmentSets.get(mediaSegmentDescriptor.getObjectId()).tailSet(lastHighestSegment);
       for (ScoredSegment candidate : potentialFollowingSegments) {
         /*
         Only look at a candidate if their containerId is higher than the current one. Due to the
@@ -207,8 +178,7 @@ public class SequentialTemporalScoringAlgorithm implements TemporalScoringAlgori
           if it is shorter than max length and has a higher score or ignore the path.
            */
           if (candidate.getContainerId() == this.maxContainerId) {
-            if (bestPath.getScore() < candidate.getScore() + path.getScore()
-                && path.getPathLength() + candidate.getSegmentLength() < this.maxLength) {
+            if (bestPath.getScore() < candidate.getScore() + path.getScore() && path.getPathLength() + candidate.getSegmentLength() < this.maxLength) {
               bestPath = new SequentialPath(path);
               bestPath.addSegment(candidate);
             }

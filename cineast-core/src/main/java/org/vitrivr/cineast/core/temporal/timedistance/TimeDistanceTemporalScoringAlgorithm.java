@@ -11,18 +11,12 @@ import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
 
 public class TimeDistanceTemporalScoringAlgorithm implements TemporalScoringAlgorithm {
 
-  private final Map<String, MediaObjectDescriptor> objectMap;
   private final Map<String, MediaSegmentDescriptor> segmentMap;
   private final List<List<StringDoublePair>> containerResults;
   private final List<Float> timeDistances;
   private final Float maxLength;
 
-  public TimeDistanceTemporalScoringAlgorithm(Map<String, MediaObjectDescriptor> objectMap,
-      Map<String, MediaSegmentDescriptor> segmentMap,
-      List<List<StringDoublePair>> containerResults,
-      List<Float> timeDistances,
-      Float maxLength) {
-    this.objectMap = objectMap;
+  public TimeDistanceTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, List<Float> timeDistances, Float maxLength) {
     this.segmentMap = segmentMap;
     this.containerResults = containerResults;
     this.timeDistances = timeDistances;
