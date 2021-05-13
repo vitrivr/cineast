@@ -23,7 +23,7 @@ import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
  * <p>Scores with provided time distances between the segments</p>
  *
  * @author vGsteiger
- * @created 12.05.2021
+ * @created 07.05.2021
  */
 public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorithm {
 
@@ -101,6 +101,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorit
           bestSegment = candidate;
         }
       }
+      /* If there is a best segment, store it and update current End abs, otherwise update end abs with time distances */
       if (bestSegment != null) {
         currentSegment = bestSegment;
         currentEndAbs = this.segmentMap.get(bestSegment.getSegmentId()).getEndabs();
@@ -126,7 +127,8 @@ public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorit
     return score;
   }
 
-  private class ResultStorage {
+  /* Storage class for the results for easier result transformation. */
+  private static class ResultStorage {
 
     private Set<String> segments = new TreeSet<>();
     private double score;
