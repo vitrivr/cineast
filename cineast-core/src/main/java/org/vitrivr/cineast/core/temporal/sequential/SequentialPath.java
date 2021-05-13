@@ -6,6 +6,14 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.vitrivr.cineast.core.temporal.ScoredSegment;
 
+/**
+ * Class to store a sequential scoring path.
+ *
+ * <p>Contains the score and segments and other relevant information for the path</p>
+ *
+ * @author vGsteiger
+ * @created 07.05.2021
+ */
 public class SequentialPath implements Comparable<SequentialPath> {
 
   private final String objectId;
@@ -15,6 +23,9 @@ public class SequentialPath implements Comparable<SequentialPath> {
   private final float startAbs;
   private float currentEndAbs;
 
+  /**
+   * Constructor to initiate a sequential path.
+   */
   public SequentialPath(String objectId, ScoredSegment initSegment) {
     this.objectId = objectId;
     this.segments = new ArrayList<>();
@@ -25,6 +36,9 @@ public class SequentialPath implements Comparable<SequentialPath> {
     this.startAbs = initSegment.getStartAbs();
   }
 
+  /**
+   * Copy constructor to create a new instance of a sequential path.
+   */
   public SequentialPath(SequentialPath sequentialPath) {
     this.objectId = sequentialPath.getObjectId();
     this.segments = new ArrayList<>(sequentialPath.segments);
@@ -34,6 +48,9 @@ public class SequentialPath implements Comparable<SequentialPath> {
     this.currentEndAbs = sequentialPath.getCurrentEndAbs();
   }
 
+  /**
+   * Add a new scored segment to the path.
+   */
   public boolean addSegment(ScoredSegment segment) {
     if (segment.getContainerId() > currentContainerId) {
       this.segments.add(segment);

@@ -4,6 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
+/**
+ * Class to store the information of a scored segment.
+ *
+ * <p>Stores relevant information and score of a segment of a container</p>
+ *
+ * @author vGsteiger
+ * @created 11.05.2021
+ */
 public class ScoredSegment implements Comparable<ScoredSegment> {
 
   private final String objectId;
@@ -14,6 +22,9 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   private final float endAbs;
   private double score;
 
+  /**
+   * Constructor to create a scored segment.
+   */
   public ScoredSegment(MediaSegmentDescriptor mediaSegmentDescriptor, double score, int containerId, float segmentLength) {
     this.objectId = mediaSegmentDescriptor.getObjectId();
     this.segmentId = mediaSegmentDescriptor.getSegmentId();
@@ -24,6 +35,9 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.score = score;
   }
 
+  /**
+   * Copy constructor to create a new instance with the same values.
+   */
   public ScoredSegment(ScoredSegment scoredSegment) {
     this.objectId = scoredSegment.getObjectId();
     this.segmentId = scoredSegment.getSegmentId();
@@ -34,12 +48,12 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.endAbs = scoredSegment.getEndAbs();
   }
 
-  public boolean addScore(StringDoublePair stringDoublePair) {
+  /**
+   * Add a score to this segment, meaning this segment appeared more than once in a container.
+   */
+  public void addScore(StringDoublePair stringDoublePair) {
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
       this.score += stringDoublePair.value;
-      return true;
-    } else {
-      return false;
     }
   }
 

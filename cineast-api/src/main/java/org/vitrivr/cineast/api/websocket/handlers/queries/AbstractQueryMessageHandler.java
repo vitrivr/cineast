@@ -243,18 +243,25 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   }
 
   /**
-   * Submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) to
-   * the UI. Should be executed before sending results.
+   * Submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) from Ids to the UI. Should be executed before sending results.
    */
-  protected void submitSegmentAndObjectDescriptors(Session session, String queryId,
-      List<MediaObjectDescriptor> objectDescriptors,
-      List<MediaSegmentDescriptor> segmentDescriptors) {
-    if (objectDescriptors.isEmpty() || segmentDescriptors.isEmpty()) {
+  void submitSegmentAndObjectInformationFromIds(Session session, String queryId, List<String> segmentIds, List<String> objectIds) {
+    /* Load segment & object information. */
+    LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+
+    LOGGER.trace("Loading object information");
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+
+    if (segments.isEmpty() || objects.isEmpty()) {
       LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
     }
 
-    this.write(session, new MediaObjectQueryResult(queryId, objectDescriptors));
-    this.write(session, new MediaSegmentQueryResult(queryId, segmentDescriptors));
+    LOGGER.trace("Writing results to the websocket");
+
+    /* Write segments, objects and similarity search data to stream. */
+    this.write(session, new MediaObjectQueryResult(queryId, objects));
+    this.write(session, new MediaSegmentQueryResult(queryId, segments));
   }
 
   /**

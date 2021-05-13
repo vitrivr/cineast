@@ -50,9 +50,12 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     List<CompletableFuture<Void>> futures = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    List<List<StringDoublePair>> containerResults = new ArrayList<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new HashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
     Set<MediaObjectDescriptor> objects = new HashSet<>();
+
+    Set<String> sentSegmentIds = new HashSet<>();
+    Set<String> sentObjectIds = new HashSet<>();
 
     /* Iterate over all temporal query containers independently */
     for (int containerIdx = 0; containerIdx < message.getQueries().size(); containerIdx++) {
@@ -150,8 +153,9 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
               List<String> limitedSegmentIds = limitedResults.stream()
                   .map(el -> el.key)
                   .collect(Collectors.toList());
+              sentSegmentIds.addAll(limitedSegmentIds);
               List<String> limitedObjectIds = this.submitSegmentAndObjectInformation(session, uuid, limitedSegmentIds);
-
+              sentObjectIds.addAll(limitedObjectIds);
               futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults));
               List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
               metadataRetrievalThreads.addAll(_threads);
@@ -199,7 +203,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
       }
 
       /* There should be no carry-over from this block since temporal queries are executed independently */
-      containerResults.add(containerIdx, stageResults);
+      containerResults.put(containerIdx, stageResults);
     }
 
     for (Thread thread : metadataRetrievalThreads) {
@@ -211,7 +215,15 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     Map<String, MediaSegmentDescriptor> segmentMap = segments.stream()
         .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x));
     /* Initialise the temporal scoring algorithms depending on timeDistances list */
-    TemporalScoring temporalScoring = new TemporalScoring(segmentMap, containerResults, message.getTimeDistances(), message.getMaxLength());
+    List<List<StringDoublePair>> tmpContainerResults = new ArrayList<>();
+    for (int containerIdx = 0; containerIdx < message.getQueries().size(); containerIdx++) {
+      if (containerResults.containsKey(containerIdx)) {
+        tmpContainerResults.add(containerResults.get(containerIdx));
+      } else {
+        tmpContainerResults.add(new ArrayList<>());
+      }
+    }
+    TemporalScoring temporalScoring = new TemporalScoring(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
 
     /* Score and retrieve the results */
     List<TemporalObject> results = temporalScoring.score();
@@ -221,9 +233,27 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
         .limit(max)
         .collect(Collectors.toList());
 
-    // TODO: Check if metadata and object/segment data has already been sent
+    /* Retrieve the segment Ids of the newly scored segments */
+    List<String> segmentIds = finalResults.stream().map(TemporalObject::getSegments).flatMap(List::stream).collect(Collectors.toList());
 
+    /* Send potential information not already sent  */
+    segmentIds = segmentIds.stream().filter(s -> !sentSegmentIds.contains(s)).collect(Collectors.toList());
+    List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+    objectIds = objectIds.stream().filter(s -> !sentObjectIds.contains(s)).collect(Collectors.toList());
+
+    /* Send to the UI */
+    this.submitSegmentAndObjectInformationFromIds(session, uuid, segmentIds, objectIds);
+
+    /* Retrieve and send metadata for items not already sent */
+    List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+    metadataRetrievalThreads.addAll(_threads);
+
+    /* Send scoring results to the frontend */
     this.finalizeAndSubmitTemporalResults(session, uuid, finalResults);
+
+    for (Thread thread : metadataRetrievalThreads) {
+      thread.join();
+    }
   }
 
 }
