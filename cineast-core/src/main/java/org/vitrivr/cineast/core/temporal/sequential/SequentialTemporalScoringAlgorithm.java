@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
@@ -41,8 +40,8 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
   @Override
   public List<TemporalObject> score() {
     /* Calculate the best path for every segment in the result set given to the class. */
-    for (TreeSet<ScoredSegment> segments : scoredSegmentSets.values()) {
-      for (ScoredSegment scoredSegment : segments) {
+    for (Map<Integer, ScoredSegment> segments : scoredSegmentStorage.values()) {
+      for (ScoredSegment scoredSegment : segments.values()) {
         MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.getSegmentId());
         SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
         if (this.objectPaths.containsKey(mediaSegmentDescriptor.getObjectId())) {
@@ -128,7 +127,7 @@ public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm
             if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
               SequentialPath candidatePath = new SequentialPath(path);
               candidatePath.addSegment(candidate);
-              if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1))) {
+              if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {
                 bestPath = candidatePath;
               }
               pathQueue.add(candidatePath);
