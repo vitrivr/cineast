@@ -38,11 +38,7 @@ public class TemporalQueryV2 extends Query {
    * @param maxLength     A {@link Float}. May be null!
    */
   @JsonCreator
-  public TemporalQueryV2(
-      @JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries,
-      @JsonProperty(value = "config", required = false) QueryConfig config,
-      @JsonProperty(value = "timeDistances", required = false) List<Float> timeDistances,
-      @JsonProperty(value = "maxLength", required = false) Float maxLength) {
+  public TemporalQueryV2(@JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries, @JsonProperty(value = "config", required = false) QueryConfig config, @JsonProperty(value = "timeDistances", required = false) List<Float> timeDistances, @JsonProperty(value = "maxLength", required = false) Float maxLength) {
     super(config);
     this.queries = queries;
     this.timeDistances = timeDistances;

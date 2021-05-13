@@ -303,14 +303,13 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     return futures;
   }
 
-  protected void finalizeAndSubmitTemporalResults(Session session, String queryId,
-      List<TemporalObject> raw) {
+  protected List<CompletableFuture<Void>> finalizeAndSubmitTemporalResults(Session session, String queryId, List<TemporalObject> raw) {
     final int stride = 50_000;
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
     for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
-      final List<TemporalObject> sub = raw
-          .subList(i * stride, Math.min((i + 1) * stride, raw.size()));
-
-      this.write(session, new TemporalQueryResult(queryId, sub));
+      final List<TemporalObject> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
+      futures.add(this.write(session, new TemporalQueryResult(queryId, sub)));
     }
+    return futures;
   }
 }

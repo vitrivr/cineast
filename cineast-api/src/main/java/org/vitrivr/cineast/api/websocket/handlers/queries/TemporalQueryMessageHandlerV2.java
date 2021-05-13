@@ -189,8 +189,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
         cache.get(stageIndex).forEach((category, results) -> {
           results.removeIf(pair -> !limitedStageQConf.getRelevantSegmentIds().contains(pair.key));
           Thread thread = new Thread(() -> {
-            List<CompletableFuture<Void>> finalizingFutures = this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results);
-            finalizingFutures.forEach(CompletableFuture::join);
+            futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
           });
           thread.setName("finalization-stage" + finalStageIndex + "-" + category);
           thread.start();
@@ -209,7 +208,6 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
-    futures.forEach(CompletableFuture::join);
 
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
     Map<String, MediaSegmentDescriptor> segmentMap = segments.stream()
@@ -249,7 +247,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     metadataRetrievalThreads.addAll(_threads);
 
     /* Send scoring results to the frontend */
-    this.finalizeAndSubmitTemporalResults(session, uuid, finalResults);
+    futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
+    futures.forEach(CompletableFuture::join);
 
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
