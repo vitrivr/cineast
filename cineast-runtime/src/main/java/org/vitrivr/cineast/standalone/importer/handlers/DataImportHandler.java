@@ -216,6 +216,7 @@ public abstract class DataImportHandler {
                 LOGGER.warn("Future returned {}, still returning true", o);
                 return true;
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 LOGGER.error("Execution of one of the tasks could not be completed!");
                 return true;
             }
