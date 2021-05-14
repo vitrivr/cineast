@@ -23,6 +23,11 @@ public class TemporalScoring {
 
   /**
    * Constructor to create a temporal scoring instance.
+   *
+   * @param segmentMap       map of the segment ids and their respective {@link MediaSegmentDescriptor}s to retrieve the necessary information for temporal scoring
+   * @param containerResults list of lists of the retrieval results where at the index of the outer list we have the result list of the corresponding temporal query in sequence
+   * @param timeDistances    time distances between the temporal segments, may be empty
+   * @param maxLength        the maximal length of the temporal sequences to be scored
    */
   public TemporalScoring(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, List<Float> timeDistances, Float maxLength) {
     this.segmentMap = segmentMap;
@@ -32,10 +37,10 @@ public class TemporalScoring {
   }
 
   /**
-   * Begin scoring the information provided at the constructor with either the time distance method or sequential depending on time distances provided.
+   * Score the information provided at the constructor with either the time distance method or sequential depending on time distances provided.
    */
   public List<TemporalObject> score() {
-    TemporalScoringAlgorithm temporalScoringAlgorithm;
+    AbstractTemporalScoringAlgorithm temporalScoringAlgorithm;
     if (this.timeDistances.size() > 0) {
       temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, this.timeDistances, this.maxLength);
     } else {

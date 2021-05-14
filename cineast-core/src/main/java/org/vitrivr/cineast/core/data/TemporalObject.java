@@ -37,7 +37,7 @@ public class TemporalObject {
 
   public static final Comparator<TemporalObject> COMPARATOR = new Comparator<TemporalObject>() {
     public int compare(TemporalObject o1, TemporalObject o2) {
-      return Double.compare(o2.getScore(), o1.getScore());
+      return Double.compare(o1.getScore(), o2.getScore());
     }
   };
 

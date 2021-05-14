@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import io.netty.util.collection.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,9 +51,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     List<CompletableFuture<Void>> futures = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    Map<Integer, List<StringDoublePair>> containerResults = new HashMap<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
-    Set<MediaObjectDescriptor> objects = new HashSet<>();
 
     Set<String> sentSegmentIds = new HashSet<>();
     Set<String> sentObjectIds = new HashSet<>();
@@ -142,7 +142,6 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
 
               /* Store the segments and results for this staged query to be used in the temporal querying. */
               segments.addAll(stageSegments);
-              objects.addAll(stageObjects);
               stageResults.addAll(results);
 
               /* We limit the results to be sent back to the requester to the max limit. This is so that the original view is not affected by the changes of temporal query version 2 */

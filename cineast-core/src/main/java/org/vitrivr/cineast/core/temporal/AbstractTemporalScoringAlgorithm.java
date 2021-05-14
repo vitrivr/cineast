@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.temporal;
 
+import io.netty.util.collection.IntObjectHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
  * @author vGsteiger
  * @created 12.05.2021
  */
-public abstract class TemporalScoringAlgorithm {
+public abstract class AbstractTemporalScoringAlgorithm {
 
   protected final Map<String, MediaSegmentDescriptor> segmentMap;
   protected final Map<String, TreeSet<ScoredSegment>> scoredSegmentSets;
@@ -24,7 +25,7 @@ public abstract class TemporalScoringAlgorithm {
   protected final float maxLength;
   protected final int maxContainerId;
 
-  protected TemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, float maxLength) {
+  protected AbstractTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, float maxLength) {
     this.segmentMap = segmentMap;
     this.scoredSegmentSets = new HashMap<>();
     this.scoredSegmentStorage = new HashMap<>();
@@ -55,7 +56,7 @@ public abstract class TemporalScoringAlgorithm {
               scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
             }
           } else {
-            Map<Integer, ScoredSegment> tmpSegmentMap = new HashMap<>();
+            Map<Integer, ScoredSegment> tmpSegmentMap = new IntObjectHashMap<>();
             tmpSegmentMap.put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
             scoredSegmentStorage.put(segmentDescriptor.getSegmentId(), tmpSegmentMap);
           }

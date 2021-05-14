@@ -19,7 +19,7 @@ public class SequentialPath implements Comparable<SequentialPath> {
   private final String objectId;
   private double score;
   private final List<ScoredSegment> segments;
-  private int currentContainerId;
+  private int lastContainerId;
   private final float startAbs;
   private float currentEndAbs;
 
@@ -30,9 +30,9 @@ public class SequentialPath implements Comparable<SequentialPath> {
     this.objectId = objectId;
     this.segments = new ArrayList<>();
 
-    this.currentContainerId = -1;
+    this.lastContainerId = -1;
     this.addSegment(initSegment);
-    this.currentContainerId = initSegment.getContainerId();
+    this.lastContainerId = initSegment.getContainerId();
     this.startAbs = initSegment.getStartAbs();
   }
 
@@ -42,7 +42,7 @@ public class SequentialPath implements Comparable<SequentialPath> {
   public SequentialPath(SequentialPath sequentialPath) {
     this.objectId = sequentialPath.getObjectId();
     this.segments = new ArrayList<>(sequentialPath.segments);
-    this.currentContainerId = sequentialPath.getCurrentContainerId();
+    this.lastContainerId = sequentialPath.getCurrentContainerId();
     this.score = sequentialPath.getScore();
     this.startAbs = sequentialPath.getStartAbs();
     this.currentEndAbs = sequentialPath.getCurrentEndAbs();
@@ -52,9 +52,9 @@ public class SequentialPath implements Comparable<SequentialPath> {
    * Add a new scored segment to the path.
    */
   public boolean addSegment(ScoredSegment segment) {
-    if (segment.getContainerId() > currentContainerId) {
+    if (segment.getContainerId() > lastContainerId) {
       this.segments.add(segment);
-      this.currentContainerId = segment.getContainerId();
+      this.lastContainerId = segment.getContainerId();
       this.score += segment.getScore();
       this.currentEndAbs = segment.getEndAbs();
       return true;
@@ -72,7 +72,7 @@ public class SequentialPath implements Comparable<SequentialPath> {
   }
 
   public int getCurrentContainerId() {
-    return currentContainerId;
+    return lastContainerId;
   }
 
   public List<ScoredSegment> getSegments() {

@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.temporal.AbstractTemporalScoringAlgorithm;
 import org.vitrivr.cineast.core.temporal.ScoredSegment;
-import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
 
 /**
  * Implementation of the time distance scoring algorithm to score a result set from a temporal query.
@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
  * @author vGsteiger
  * @created 07.05.2021
  */
-public class TimeDistanceTemporalScoringAlgorithm extends TemporalScoringAlgorithm {
+public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScoringAlgorithm {
 
   private final List<Float> timeDistances;
 

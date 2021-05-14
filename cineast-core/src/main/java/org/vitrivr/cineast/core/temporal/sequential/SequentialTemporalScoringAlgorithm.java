@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.temporal.AbstractTemporalScoringAlgorithm;
 import org.vitrivr.cineast.core.temporal.ScoredSegment;
-import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
 
 /**
  * Implementation of the sequential scoring algorithm to score a result set from a temporal query.
@@ -23,7 +23,7 @@ import org.vitrivr.cineast.core.temporal.TemporalScoringAlgorithm;
  * @author vGsteiger
  * @created 11.05.2021
  */
-public class SequentialTemporalScoringAlgorithm extends TemporalScoringAlgorithm {
+public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringAlgorithm {
 
   private final Map<String, List<SequentialPath>> objectPaths;
 

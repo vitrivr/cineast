@@ -85,6 +85,14 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     return endAbs;
   }
 
+  /*
+  * The comparator first compares the container Id of the items.
+  * If the container Id is larger, then the other segment clearly comes after the current segment.
+  * However, as we use the Scored Segments in the Temporal scoring algorithms also in the TreeSets,
+  * we don't want to loose item that have the same container Id. Therefore we then have to also
+  * compare the segment ids to distinguish. Within a tree set there shouldn't be duplicates
+  * (here same container Id and same segment Id).
+  */
   @Override
   public int compareTo(@NotNull ScoredSegment o) {
     int comparison = Integer.compare(this.containerId, o.getContainerId());

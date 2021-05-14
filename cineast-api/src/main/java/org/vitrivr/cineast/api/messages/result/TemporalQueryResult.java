@@ -18,11 +18,4 @@ public class TemporalQueryResult extends AbstractQueryResultMessage<TemporalObje
     return MessageType.QR_TEMPORAL;
   }
 
-  @Override
-  public String toString() {
-    return "TemporalQueryResult{" +
-        "queryId=" + getQueryId() + '\'' +
-        '}';
-  }
-
 }
