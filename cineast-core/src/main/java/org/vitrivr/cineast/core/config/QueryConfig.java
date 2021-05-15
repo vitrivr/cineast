@@ -122,7 +122,7 @@ public class QueryConfig extends ReadableQueryConfig {
     return new QueryConfig(qc, null);
   }
 
-  protected QueryConfig setDistance(Distance distance) {
+  public QueryConfig setDistance(Distance distance) {
     this.distance = distance;
     if (distance == Distance.euclidean) {
       this.norm = 2f;

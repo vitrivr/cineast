@@ -8,6 +8,7 @@ import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -27,18 +28,20 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   /**
    * Embedding network from text to intermediary embedding.
    */
-  private final SavedModelBundle textEmbedding;
+  private static SavedModelBundle textEmbedding;
   /**
    * Embedding network from text intermediary embedding to visual-text co-embedding.
    */
-  private final SavedModelBundle textCoEmbedding;
+  private static SavedModelBundle textCoEmbedding;
 
-  protected VisualTextCoEmbedding() {
-    super("features_visualtextcoembedding", 2f, EMBEDDING_SIZE);
+  public VisualTextCoEmbedding() {
+    super("features_visualtextcoembedding", EMBEDDING_SIZE, EMBEDDING_SIZE);
     // If the separation of extract from visual, query by text is strict, the models can be loaded in the respective
     // init methods.
-    textEmbedding = SavedModelBundle.load("resources/VisualTextCoEmbedding/universal-sentence-encoder_4");
-    textCoEmbedding = SavedModelBundle.load("resources/VisualTextCoEmbedding/text-co-embedding");
+    if (textEmbedding == null)
+      textEmbedding = SavedModelBundle.load("resources/VisualTextCoEmbedding/universal-sentence-encoder_4");
+    if (textCoEmbedding == null)
+      textCoEmbedding = SavedModelBundle.load("resources/VisualTextCoEmbedding/text-co-embedding");
   }
 
   @Override
@@ -50,9 +53,12 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     String text = sc.getText();
 
+    QueryConfig queryConfig = QueryConfig.clone(qc);
+    queryConfig.setDistance(ReadableQueryConfig.Distance.euclidean);
+
     float[] embeddingArray = embedText(text);
 
-    return getSimilar(embeddingArray, qc);
+    return getSimilar(embeddingArray, queryConfig);
   }
 
   private float[] embedText(String text) {
@@ -79,6 +85,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     textTensor.close();
     intermediaryEmbedding.close();
     embedding.close();
+
+    // TODO: Find solution to memory leak, ideally without having to persist loaded models
 
     return embeddingArray;
   }
