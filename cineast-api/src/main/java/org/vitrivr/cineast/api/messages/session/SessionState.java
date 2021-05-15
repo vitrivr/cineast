@@ -12,36 +12,32 @@ public class SessionState {
   private String id;
   private long validUntil;
   private SessionType type;
-  
+
   @JsonCreator
-  public SessionState(@JsonProperty("id")String id, @JsonProperty("validUntil")long validUntil, @JsonProperty("type")SessionType type){
+  public SessionState(@JsonProperty("id") String id, @JsonProperty("validUntil") long validUntil, @JsonProperty("type") SessionType type) {
     this.id = id;
     this.validUntil = validUntil;
     this.type = type;
   }
-  
-  public SessionState(Session session){
+
+  public SessionState(Session session) {
     this(session.getSessionId(), session.getEndTimeStamp(), session.getSessionType());
   }
-  
-  public String getSessionId(){
+
+  public String getSessionId() {
     return this.id;
   }
-  
-  public long getValidUntil(){
+
+  public long getValidUntil() {
     return this.validUntil;
   }
-  
-  public SessionType getType(){
+
+  public SessionType getType() {
     return this.type;
   }
 
   @Override
   public String toString() {
-    return "SessionState{" +
-            "id='" + id + '\'' +
-            ", validUntil=" + validUntil +
-            ", type=" + type +
-            '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

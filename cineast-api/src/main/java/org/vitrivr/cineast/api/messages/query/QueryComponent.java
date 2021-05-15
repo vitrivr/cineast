@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
@@ -114,9 +116,6 @@ public class QueryComponent {
 
   @Override
   public String toString() {
-    return "QueryComponent{" +
-        "terms=" + terms +
-        ", containerId=" + containerId +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Map;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 
 /**
@@ -27,4 +29,8 @@ public class FeaturesAllCategoriesQueryResult {
     this.elementID = elementID;
   }
 
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+  }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 
 public class SimilarityQueryResultBatch {
@@ -34,9 +36,6 @@ public class SimilarityQueryResultBatch {
 
   @Override
   public String toString() {
-    return "SimilarityQueryResultBatch{" +
-        "categories=" + categories +
-        ", results=" + results +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }
