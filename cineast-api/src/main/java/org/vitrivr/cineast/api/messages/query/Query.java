@@ -28,7 +28,7 @@ public abstract class Query implements Message {
     }
 
     @Override
-    public String toString(){
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 }

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.messages.credentials;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Credentials {
 
@@ -23,7 +25,6 @@ private String username, password; //more options to come
 
   @Override
   public String toString() {
-    return String.format("Credentials [username=%s, password=%s]", username, password);
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
-  
 }

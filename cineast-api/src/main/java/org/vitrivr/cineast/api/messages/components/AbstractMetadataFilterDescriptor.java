@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 import java.util.Arrays;
@@ -73,5 +75,10 @@ public abstract class AbstractMetadataFilterDescriptor implements
   @JsonIgnore
   public List<String> getKeywordsAsListLowercase() {
     return getKeywords().stream().map(String::toLowerCase).collect(Collectors.toList());
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

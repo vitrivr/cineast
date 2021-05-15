@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.components;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 import java.util.Arrays;
@@ -29,8 +31,6 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
 
   @Override
   public String toString() {
-    return "MetadataDomainFilter{" +
-            "keywords=" + Arrays.toString(keywords.toArray()) +
-            '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

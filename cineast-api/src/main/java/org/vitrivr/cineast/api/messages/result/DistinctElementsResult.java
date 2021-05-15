@@ -2,7 +2,8 @@ package org.vitrivr.cineast.api.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
-import org.vitrivr.cineast.core.data.tag.Tag;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class DistinctElementsResult {
 
@@ -13,5 +14,10 @@ public class DistinctElementsResult {
   public DistinctElementsResult(String queryId, List<String> distinctElements) {
     this.queryId = queryId;
     this.distinctElements = distinctElements;
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

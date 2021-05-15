@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.abstracts;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
 
 import java.util.List;
@@ -44,9 +46,6 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
 
   @Override
   public String toString() {
-    return "AbstractQueryResultMessage{" +
-        "content=" + content +
-        ", queryId='" + queryId + '\'' +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

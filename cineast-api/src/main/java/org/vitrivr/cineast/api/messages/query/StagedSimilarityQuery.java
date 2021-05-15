@@ -2,6 +2,8 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.config.QueryConfig;
 
 /**
@@ -16,5 +18,10 @@ public class StagedSimilarityQuery {
       @JsonProperty(value = "config", required = false) QueryConfig config) {
     this.stages = stages;
     this.config = config;
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

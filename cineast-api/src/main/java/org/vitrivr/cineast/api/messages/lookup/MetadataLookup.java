@@ -53,9 +53,6 @@ public class MetadataLookup implements Message {
 
     @Override
     public String toString() {
-        return "MetadataLookup{" +
-                "objectIds=" + Arrays.toString(objectIds) +
-                ", domains=" + Arrays.toString(domains) +
-                '}';
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 }

@@ -66,9 +66,6 @@ public class OptionallyFilteredIdList implements Message {
 
   @Override
   public String toString() {
-    return "OptionallyFilteredIdList{" +
-            "filters=" + Arrays.toString(filters.toArray()) +
-            ", ids=" + Arrays.toString(ids.toArray()) +
-            '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

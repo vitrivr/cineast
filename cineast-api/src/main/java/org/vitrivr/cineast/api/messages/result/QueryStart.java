@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.result;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
@@ -28,8 +30,6 @@ public class QueryStart implements Message {
 
   @Override
   public String toString() {
-    return "QueryStart{" +
-        "queryId='" + queryId + '\'' +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }
