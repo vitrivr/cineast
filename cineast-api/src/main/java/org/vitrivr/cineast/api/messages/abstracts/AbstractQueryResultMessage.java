@@ -1,11 +1,16 @@
 package org.vitrivr.cineast.api.messages.abstracts;
 
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
 
-import java.util.List;
-
+/**
+ * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented i.e. a result for a metadata lookup.
+ *
+ * @author rgasser
+ * @created 22.01.17
+ */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
 
   private List<T> content;
@@ -14,6 +19,13 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
 
   private final String queryId;
 
+  /**
+   * Constructor for the AbstractQueryResultMessage object.
+   *
+   * @param queryId     The query ID of the query corresponding to this result.
+   * @param contentType Content type of the result.
+   * @param content     Result of the query.
+   */
   public AbstractQueryResultMessage(String queryId, Class<T> contentType, List<T> content) {
     this.queryId = queryId;
     this.contentType = contentType;

@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -15,13 +18,10 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
+ * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link SimilarityQuery}.
+ *
  * @author rgasser
- * @version 1.0
  * @created 12.01.17
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {
@@ -36,11 +36,12 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
 
   /**
    * Executes a {@link SimilarityQuery}. Performs the similarity query based on the {@link QueryContainer} objects provided in the {@link SimilarityQuery}.
-   *  @param session WebSocket session the invocation is associated with.
-   * @param qconf The {@link QueryConfig} that contains additional specifications.
-   * @param message Instance of {@link SimilarityQuery}
-   * @param segmentIdsForWhichMetadataIsFetched
-   * @param objectIdsForWhichMetadataIsFetched
+   *
+   * @param session                             WebSocket session the invocation is associated with.
+   * @param qconf                               The {@link QueryConfig} that contains additional specifications.
+   * @param message                             Instance of {@link SimilarityQuery}
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which metadata is fetched
+   * @param objectIdsForWhichMetadataIsFetched  Object IDs for which metadata is fetched
    */
   @Override
   public void execute(Session session, QueryConfig qconf, SimilarityQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) {

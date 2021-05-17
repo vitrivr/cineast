@@ -14,8 +14,9 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
+ * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link MoreLikeThisQuery}.
+ *
  * @author rgasser
- * @version 1.0
  * @created 27.04.17
  */
 public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler<MoreLikeThisQuery> {
@@ -30,7 +31,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
    * Executes a {@link MoreLikeThisQuery} message. Performs a similarity query based on the segmentId specified the {@link MoreLikeThisQuery} object.
    *
    * @param session WebSocket session the invocation is associated with.
-   * @param qconf The {@link QueryConfig} that contains additional specifications.
+   * @param qconf   The {@link QueryConfig} that contains additional specifications.
    * @param message Instance of {@link MoreLikeThisQuery}
    */
   @Override

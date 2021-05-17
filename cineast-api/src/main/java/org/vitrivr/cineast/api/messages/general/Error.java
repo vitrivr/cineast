@@ -8,49 +8,62 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
+ * Message object for an error message.
+ *
  * @author rgasser
- * @version 1.0
  * @created 19.01.17
  */
 public class Error implements Message {
 
-    private String message;
-    private long timestamp;
+  /**
+   * Message content of the error.
+   */
+  private String message;
 
-    @JsonCreator
-    public Error(String message) {
-        this.message = message;
-        this.timestamp = System.currentTimeMillis();
-    }
+  /**
+   * Timestamp when the error was recorded.
+   */
+  private long timestamp;
 
-    @JsonProperty
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  /**
+   * Constructor for the Error object. Saves the timestamp of the creation of this error message.
+   *
+   * @param message Error message.
+   */
+  @JsonCreator
+  public Error(String message) {
+    this.message = message;
+    this.timestamp = System.currentTimeMillis();
+  }
 
-    @JsonProperty
-    public long getTimestamp() {
-        return timestamp;
-    }
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+  @JsonProperty
+  public String getMessage() {
+    return message;
+  }
 
-    /**
-     * Returns the type of particular message. Expressed as MessageTypes enum.
-     *
-     * @return
-     */
-    @Override
-    public MessageType getMessageType() {
-        return null;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-    }
+  @JsonProperty
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public MessageType getMessageType() {
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+  }
 }

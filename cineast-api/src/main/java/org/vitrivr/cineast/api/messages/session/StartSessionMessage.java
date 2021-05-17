@@ -8,19 +8,41 @@ import org.vitrivr.cineast.api.messages.credentials.Credentials;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
+/**
+ * Message from the requester to transfer the access credentials of the current session.
+ *
+ * @author lucaro
+ * @created 08.05.17
+ */
 public class StartSessionMessage implements Message {
 
-  private Credentials credentials;
+  /**
+   * {@link Credentials} of the session with the user.
+   */
+  private final Credentials credentials;
 
+  /**
+   * Constructor for the StartSessionMessage object.
+   *
+   * @param credentials Credentials of the current session from the user.
+   */
   @JsonCreator
   public StartSessionMessage(@JsonProperty("credentials") Credentials credentials) {
     this.credentials = credentials;
   }
 
+  /**
+   * Getter for credentials.
+   *
+   * @return {@link Credentials}
+   */
   public Credentials getCredentials() {
     return this.credentials;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public MessageType getMessageType() {
     return MessageType.SESSION_START;
