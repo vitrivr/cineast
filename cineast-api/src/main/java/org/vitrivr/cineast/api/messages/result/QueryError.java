@@ -34,20 +34,10 @@ public class QueryError implements Message {
     this.message = message;
   }
 
-  /**
-   * Getter for queryId.
-   *
-   * @return String
-   */
   public String getQueryId() {
     return queryId;
   }
 
-  /**
-   * Getter for error message.
-   *
-   * @return String
-   */
   public String getErrorMessage() {
     return this.message;
   }

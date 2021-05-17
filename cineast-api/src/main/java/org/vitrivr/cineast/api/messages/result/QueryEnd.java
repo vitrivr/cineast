@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 public class QueryEnd implements Message {
 
   /**
-   * The query ID to which this query start message belongs.
+   * The query ID to which this query end message belongs.
    */
   private final String queryId;
 
@@ -27,11 +27,6 @@ public class QueryEnd implements Message {
     this.queryId = queryId;
   }
 
-  /**
-   * Getter for queryId.
-   *
-   * @return String
-   */
   public String getQueryId() {
     return queryId;
   }

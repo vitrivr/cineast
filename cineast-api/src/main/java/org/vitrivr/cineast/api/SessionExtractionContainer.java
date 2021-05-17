@@ -16,8 +16,7 @@ import java.util.Arrays;
 
 
 /**
- * Singleton Structure. Intended to be an access points across multiple sessions. Can be closed and
- * opened if you care about memory leaks
+ * Singleton Structure. Intended to be an access points across multiple sessions. Can be closed and opened if you care about memory leaks
  *
  * @author silvan on 22.01.18.
  */

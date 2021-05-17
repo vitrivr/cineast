@@ -43,11 +43,6 @@ public class QueryComponent {
     this.containerId = containerId;
   }
 
-  /**
-   * Getter for terms.
-   *
-   * @return List of QueryTerms
-   */
   public List<QueryTerm> getTerms() {
     return this.terms;
   }

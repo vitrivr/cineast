@@ -31,11 +31,6 @@ public class SegmentQuery extends Query {
     this.segmentId = segmentId;
   }
 
-  /**
-   * Getter for {@link SegmentQuery#segmentId}
-   *
-   * @return String
-   */
   public String getSegmentId() {
     return segmentId;
   }

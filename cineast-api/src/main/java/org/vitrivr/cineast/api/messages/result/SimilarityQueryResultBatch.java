@@ -51,20 +51,10 @@ public class SimilarityQueryResultBatch {
     }
   }
 
-  /**
-   * Getter for categories.
-   *
-   * @return List of String
-   */
   public List<String> getCategories() {
     return this.categories;
   }
 
-  /**
-   * Getter for results.
-   *
-   * @return List of {@link SimilarityQueryResult}
-   */
   public List<SimilarityQueryResult> getResults() {
     return this.results;
   }

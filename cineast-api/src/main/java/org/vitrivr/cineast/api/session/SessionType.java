@@ -5,5 +5,5 @@ public enum SessionType {
   UNAUTHENTICATED,
   USER,
   ADMIN
-  
+
 }

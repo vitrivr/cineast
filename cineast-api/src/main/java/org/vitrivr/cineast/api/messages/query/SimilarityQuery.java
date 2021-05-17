@@ -35,8 +35,6 @@ public class SimilarityQuery extends Query {
 
   /**
    * Getter for containers.
-   *
-   * @return List of {@link QueryComponent}
    */
   public List<QueryComponent> getComponents() {
     return this.components;

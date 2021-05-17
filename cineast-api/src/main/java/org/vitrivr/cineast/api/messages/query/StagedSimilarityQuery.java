@@ -36,11 +36,6 @@ public class StagedSimilarityQuery {
     this.config = config;
   }
 
-  /**
-   * Getter for stages.
-   *
-   * @return List of {@link QueryStage}
-   */
   public List<QueryStage> getStages() {
     return stages;
   }

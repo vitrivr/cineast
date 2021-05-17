@@ -53,29 +53,14 @@ public class SessionState {
     this(session.getSessionId(), session.getEndTimeStamp(), session.getSessionType());
   }
 
-  /**
-   * Getter for session ID.
-   *
-   * @return String
-   */
   public String getSessionId() {
     return this.id;
   }
 
-  /**
-   * Getter for validUntil.
-   *
-   * @return long
-   */
   public long getValidUntil() {
     return this.validUntil;
   }
 
-  /**
-   * Getter for session type.
-   *
-   * @return {@link SessionType}
-   */
   public SessionType getType() {
     return this.type;
   }

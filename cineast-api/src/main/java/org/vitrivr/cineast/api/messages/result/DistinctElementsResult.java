@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
 
 /**
- * A {@link DistinctElementsResult} contains a list of distinct element IDs.
+ * A {@link DistinctElementsResult} contains the response to a {@link FindDistinctElementsByColumnPostHandler} request. It contains a list of elements which can be considered as a set.
  *
  * @author silvanheller
  * @created 22.07.20
@@ -26,8 +27,7 @@ public class DistinctElementsResult {
   /**
    * Constructor for the FeaturesTextCategoryQueryResult object.
    *
-   * @param queryId          String representing the ID of the query to which this part of the
-   *                         result message.
+   * @param queryId          String representing the ID of the query to which this part of the result message.
    * @param distinctElements List of Strings containing distinct elements.
    */
   @JsonCreator

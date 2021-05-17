@@ -32,10 +32,8 @@ public class FeaturesAllCategoriesQueryResult {
   /**
    * Constructor for the FeaturesTextCategoryQueryResult object.
    *
-   * @param queryId    String representing the ID of the query to which this part of the result
-   *                   message.
-   * @param featureMap Map that maps strings to all features for this category for a given element
-   *                   ID.
+   * @param queryId    String representing the ID of the query to which this part of the result message.
+   * @param featureMap Map that maps strings to all features for this category for a given element ID.
    * @param elementID  Element for which the feature values were requested.
    */
   @JsonCreator

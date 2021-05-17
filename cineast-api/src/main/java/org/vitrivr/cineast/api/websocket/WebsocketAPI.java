@@ -42,9 +42,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 @WebSocket
 public class WebsocketAPI {
 
-  /**
-   * Logging facility.
-   */
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**

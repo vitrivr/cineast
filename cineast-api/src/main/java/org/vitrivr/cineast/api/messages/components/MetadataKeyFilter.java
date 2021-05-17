@@ -17,8 +17,7 @@ public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implemen
     Predicate<MediaObjectMetadataDescriptor> {
 
   /**
-   * Test filter to get a keywords list as lowercase to be applied on a {@link
-   * MediaObjectMetadataDescriptor}.
+   * Test filter to get a keywords list as lowercase to be applied on a {@link MediaObjectMetadataDescriptor}.
    *
    * @return boolean
    */

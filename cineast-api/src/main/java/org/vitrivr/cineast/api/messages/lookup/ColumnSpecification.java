@@ -8,7 +8,7 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
- * Message from the requester to transfer table and column information of a request.
+ * Message from the requester specifying from which table and which column information should be fetched.
  *
  * @author silvanheller
  * @created 22.07.20

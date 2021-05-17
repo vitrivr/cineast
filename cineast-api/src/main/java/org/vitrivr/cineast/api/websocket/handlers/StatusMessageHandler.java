@@ -14,8 +14,7 @@ import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMe
 public class StatusMessageHandler extends StatelessWebsocketMessageHandler<Ping> {
 
   /**
-   * Invoked when a Message of type Ping arrives and requires handling. Sets the Ping status of the
-   * message to OK and writes it back on the WebSocket.
+   * Invoked when a Message of type Ping arrives and requires handling. Sets the Ping status of the message to OK and writes it back on the WebSocket.
    *
    * @param session WebSocketSession for which the message arrived.
    * @param message Message of type a that needs to be handled.

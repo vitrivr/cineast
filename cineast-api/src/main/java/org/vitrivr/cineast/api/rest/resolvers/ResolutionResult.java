@@ -12,7 +12,7 @@ public class ResolutionResult {
   public final String mimeType;
   public final InputStream stream;
 
-  public ResolutionResult(String mimeType, InputStream stream){
+  public ResolutionResult(String mimeType, InputStream stream) {
     this.mimeType = mimeType;
     this.stream = stream;
   }

@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 public class MoreLikeThisQuery extends Query {
 
   /**
-   * ID of the segment that serves as example for the MLT query.
+   * ID of the segment that serves as basis for the MLT query.
    */
   private final String segmentId;
 
@@ -41,20 +41,10 @@ public class MoreLikeThisQuery extends Query {
     this.categories = categories;
   }
 
-  /**
-   * Getter for segmentId.
-   *
-   * @return String
-   */
   public String getSegmentId() {
     return segmentId;
   }
 
-  /**
-   * Getter for categories.
-   *
-   * @return List of String
-   */
   public List<String> getCategories() {
     return this.categories;
   }

@@ -4,9 +4,10 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
 /**
- * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented i.e. a result for a metadata lookup.
+ * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
  *
  * @author rgasser
  * @created 22.01.17

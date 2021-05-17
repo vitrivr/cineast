@@ -43,20 +43,10 @@ public class ExtractionContainerMessage implements Message {
     this.items = items;
   }
 
-  /**
-   * Getter for items.
-   *
-   * @return @return List of {@link ExtractionItemContainer}
-   */
   public List<ExtractionItemContainer> getItems() {
     return this.items;
   }
 
-  /**
-   * Getter for items as an Array.
-   *
-   * @return @return Array of {@link ExtractionItemContainer}
-   */
   @JsonIgnore
   public ExtractionItemContainer[] getItemsAsArray() {
     return this.items.toArray(new ExtractionItemContainer[0]);

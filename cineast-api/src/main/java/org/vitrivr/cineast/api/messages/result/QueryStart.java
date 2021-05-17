@@ -19,7 +19,7 @@ public class QueryStart implements Message {
   private final String queryId;
 
   /**
-   * Default constructor; generates the QueryId as random UUID. Constructor for the QueryStart object.
+   * Constructor for the QueryStart object.
    *
    * @param queryId String representing the ID of the query to which this part of the result message.
    */
@@ -27,11 +27,6 @@ public class QueryStart implements Message {
     this.queryId = queryId;
   }
 
-  /**
-   * Getter for queryId.
-   *
-   * @return String
-   */
   public String getQueryId() {
     return queryId;
   }

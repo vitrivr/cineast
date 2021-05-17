@@ -454,7 +454,7 @@ public class APIEndpoint {
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()),
             ((baseDir, object) -> {
 //              String ext = object.getPath().substring(object.getPath().lastIndexOf('.'));
-              String ext = "."+Config.sharedConfig().getApi().getVideoExtension();
+              String ext = "." + Config.sharedConfig().getApi().getVideoExtension();
               return new File(baseDir, object.getObjectId() + ext);
             }));
       } else {

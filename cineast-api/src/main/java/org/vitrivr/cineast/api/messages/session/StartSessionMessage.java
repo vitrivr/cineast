@@ -31,11 +31,6 @@ public class StartSessionMessage implements Message {
     this.credentials = credentials;
   }
 
-  /**
-   * Getter for credentials.
-   *
-   * @return {@link Credentials}
-   */
   public Credentials getCredentials() {
     return this.credentials;
   }
