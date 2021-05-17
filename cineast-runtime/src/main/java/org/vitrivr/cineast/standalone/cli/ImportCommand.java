@@ -151,27 +151,15 @@ public class ImportCommand implements Runnable {
     System.out.printf("Completed import of type %s for '%s'.%n", this.type, this.input);
   }
 
+  /**
+   * From VBS 21+ on, in uniqueTagInstances.tsv we have all google vision tags deduplicated
+   */
   private void doVisionImport(Path path) {
     List<GoogleVisionImportHandler> handlers = new ArrayList<>();
-    GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, 40_000, GoogleVisionCategory.OCR, false);
+    GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, this.batchsize, GoogleVisionCategory.OCR, false);
     _handler.doImport(path);
     handlers.add(_handler);
-
     handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
-    /*
-    * We import neither full-text tags nor tags in general from the google-vision api from vbs21+ since we have expanded tags in a separate file
-    for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-      GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, 40_000, category, false);
-      _handler.doImport(path);
-      handlers.add(_handler);
-       if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
-        GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(this.threads, 40_000, category, true);
-        _handlerTrue.doImport(path);
-        handlers.add(_handlerTrue);
-      }
-
-    }
-    */
   }
 
   /**
