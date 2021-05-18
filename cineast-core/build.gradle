@@ -113,7 +113,7 @@ dependencies {
     implementation group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
 
     /** Tensorflow (Java). */
-    implementation group: "org.tensorflow", name: "tensorflow", version: version_tensorflow
+    implementation group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
 
     /** Apache Commons Libraries */
     implementation group: "org.apache.commons", name: "commons-lang3", version: version_commonslang3

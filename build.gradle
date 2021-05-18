@@ -102,15 +102,27 @@ task getExternalFiles {
         def fileList = new File("externalFiles.csv")
         fileList.eachLine { String line ->
             def split = line.split(",")
+            def destination = split[1]
             download {
                 src split[0]
-                dest split[1]
+                dest destination
             }
+            if (destination.endsWith(".tar.gz")) {
+                def compressed = file(destination)
+                def target = file(destination.substring(0, destination.length() - 7))
+
+                copy {
+                    from tarTree(compressed)
+                    into target
+                }
+                delete(compressed)
+            }
+            return
         }
     }
 }
 
-task generateOpenApiSpecs(type: JavaExec){
+task generateOpenApiSpecs(type: JavaExec) {
     classpath = project(":cineast-api").sourceSets.main.runtimeClasspath
     main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
 
