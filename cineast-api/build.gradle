@@ -102,12 +102,12 @@ shadowJar {
 }
 
 dependencies {
-    compile("io.javalin:javalin-bundle:$version_javalin"){
+    implementation("io.javalin:javalin-bundle:$version_javalin"){
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson
-    compile group: 'de.svenkubiak', name: 'jBCrypt', version: version_jbcrypt
-    compile group: 'org.vitrivr', name: 'cineast-proto', version: version_cineast_proto
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson
+    implementation group: 'de.svenkubiak', name: 'jBCrypt', version: version_jbcrypt
+    implementation group: 'org.vitrivr', name: 'cineast-proto', version: version_cineast_proto
 }
 
 

@@ -16,15 +16,19 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
+@TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBBooleanIntegrationTest<R> {
 
   private static final int TABLE_CARD = 20;
@@ -43,6 +47,14 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  @BeforeAll
+  void checkConnection(){
+    provider = provider();
+    selector = provider.getSelector();
+    LOGGER.info("Trying to establish connection to Database");
+    assumeTrue(selector.ping(), "Connection to database could not be established");
+    LOGGER.info("Connection to Database established");
+  }
 
   @BeforeEach
   void setupTest() {

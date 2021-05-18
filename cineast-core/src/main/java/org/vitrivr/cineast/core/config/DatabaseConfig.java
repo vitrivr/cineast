@@ -28,7 +28,7 @@ public final class DatabaseConfig {
    * Default value for batchsize.
    */
   public static final int DEFAULT_BATCH_SIZE = 1000;
-  public static final String DEFAULT_HOST = "127.0.0.1";
+  public static final String DEFAULT_HOST = "localhost";
   public static final int DEFAULT_PORT = 5890;
   public static final boolean DEFAULT_PLAINTEXT = true;
   public static final boolean SINGLE_CONNECTION = true;

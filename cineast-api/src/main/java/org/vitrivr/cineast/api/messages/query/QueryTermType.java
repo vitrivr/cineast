@@ -18,6 +18,9 @@ import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
 
+/**
+ * A {@link QueryTermType} represents the types of query terms used.
+ */
 public enum QueryTermType {
 
   IMAGE(ImageQueryContainer.class),

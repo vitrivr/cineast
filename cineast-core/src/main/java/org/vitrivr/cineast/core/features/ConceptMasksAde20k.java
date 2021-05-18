@@ -2,8 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tensorflow.Tensor;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TUint8;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -36,10 +35,8 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
 
   private static List<DeepLabLabel> linearize(DeepLabLabel[][] labels) {
     ArrayList<DeepLabLabel> list = new ArrayList<>(labels.length * labels[0].length);
-    for (int i = 0; i < labels.length; ++i) {
-      for (int j = 0; j < labels[0].length; ++j) {
-        list.add(labels[i][j]);
-      }
+    for (DeepLabLabel[] label : labels) {
+      list.addAll(Arrays.asList(label).subList(0, labels[0].length));
     }
     return list;
   }
@@ -53,17 +50,16 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
       return;
     }
 
-    if(this.ade20k == null){
-      try{
+    if (this.ade20k == null) {
+      try {
         this.ade20k = new DeepLabAde20k();
-      }catch (RuntimeException e){
+      } catch (RuntimeException e) {
         LOGGER.error(LogHelper.getStackTrace(e));
         return;
       }
     }
 
-    Tensor<UInt8> inputTensor = DeepLab
-        .prepareImage(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
+    TUint8 inputTensor = DeepLab.prepareImage(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
 
     int[][] tmp = this.ade20k.processImage(inputTensor);
 
@@ -93,7 +89,7 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
 
 
     Optional<SemanticMap> optional = sc.getSemanticMap();
-    if (!optional.isPresent()){
+    if (!optional.isPresent()) {
       return Collections.emptyList();
     }
 

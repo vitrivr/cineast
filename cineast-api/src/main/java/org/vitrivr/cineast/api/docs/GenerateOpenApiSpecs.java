@@ -7,8 +7,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * Main class for standalone persistent openapi specs generation.
- *
- * @author loris.sauter
  */
 public class GenerateOpenApiSpecs {
 

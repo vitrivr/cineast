@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -40,9 +41,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 
 /**
- * @author rgasser
- * @version 1.0
- * @created 27.04.17
+ * This abstract class extends the {@link StatelessWebsocketMessageHandler} abstract class and provides various methods for the concrete implementations of message handlers to handle messages and write back to the websocket.
  */
 public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {
 
@@ -84,7 +83,10 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       final String uuid = qconf.getQueryId().toString();
       Thread.currentThread().setName("query-msg-handler-" + uuid.substring(0, 3));
       try {
-        /* Begin of Query: Send QueryStart Message to Client. */
+        /* Begin of Query: Send QueryStart Message to Client.
+         *  We could wait for future-completion here, but there will likely never be a case where a simple write would fall behind the first message we send to the client.
+         * Additionally, QR_START is informational - the client already knows that they sent a request.
+         */
         this.write(session, new QueryStart(uuid));
         /* Execute actual query. */
         LOGGER.trace("Executing query from message {}", message);
@@ -107,8 +109,9 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Executes the actual query specified by the {@link Query} object.
-   *  @param session WebSocket session the invocation is associated with.
-   * @param qconf The {@link QueryConfig} that contains additional specifications.
+   *
+   * @param session WebSocket session the invocation is associated with.
+   * @param qconf   The {@link QueryConfig} that contains additional specifications.
    * @param message {@link Query} that must be executed.
    */
   protected abstract void execute(Session session, QueryConfig qconf, T message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception;
@@ -141,8 +144,9 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Performs a lookup for {@link MediaObjectMetadataReader} identified by the provided segment IDs.
-   *  @param session The WebSocket session to write the data to.
-   * @param queryId The current query id used for transmitting data back.
+   *
+   * @param session   The WebSocket session to write the data to.
+   * @param queryId   The current query id used for transmitting data back.
    * @param objectIds List of object IDs for which to lookup metadata.
    */
   protected synchronized List<Thread> loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds, Collection<String> objectIdsForWhichMetadataIsFetched) {
@@ -159,7 +163,12 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       if (objectMetadata.isEmpty()) {
         return;
       }
-      Lists.partition(objectMetadata, 100_000).forEach(list -> this.write(session, new MediaObjectMetadataQueryResult(queryId, list)));
+      /*
+       * Partition metadata list so that message size does not get too big, and then wait until all metadata has been sent
+       */
+      List<CompletableFuture<Void>> futures = new ArrayList<>();
+      Lists.partition(objectMetadata, 100_000).forEach(list -> futures.add(this.write(session, new MediaObjectMetadataQueryResult(queryId, list))));
+      futures.forEach(CompletableFuture::join);
     });
     thread.setName("metadata-retrieval-objects");
     thread.start();
@@ -168,9 +177,10 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Performs a lookup for {@link MediaSegmentMetadataDescriptor} identified by the provided segment IDs and writes them to the WebSocket stream.
-   * @param session The WebSocket session to write the data to.
-   * @param queryId The current query id used for transmitting data back.
-   * @param segmentIds List of segment IDs for which to lookup metadata.
+   *
+   * @param session                             The WebSocket session to write the data to.
+   * @param queryId                             The current query id used for transmitting data back.
+   * @param segmentIds                          List of segment IDs for which to lookup metadata.
    * @param segmentIdsForWhichMetadataIsFetched segmentids for which metadata is already fetched
    */
   protected synchronized List<Thread> loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds, Collection<String> segmentIdsForWhichMetadataIsFetched) {
@@ -184,6 +194,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     if (segmentIds.size() > 100_000) {
       return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
     }
+    CompletableFuture<Void> future = new CompletableFuture<>();
     Thread thread = new Thread(() -> {
       final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
       if (segmentMetadata.isEmpty()) {
@@ -192,15 +203,17 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       AtomicInteger i = new AtomicInteger(0);
       Lists.partition(segmentMetadata, 100_000).forEach(list -> {
         Thread writing = new Thread(() -> {
-          this.write(session, new MediaSegmentMetadataQueryResult(queryId, list));
+          this.write(session, new MediaSegmentMetadataQueryResult(queryId, list)).join();
         });
         writing.setName("metadata-ws-write-" + i.getAndIncrement());
         writing.start();
         threads.add(writing);
       });
+      future.complete(null);
     });
     thread.setName("metadata-retrieval-segments");
     thread.start();
+    future.join();
     threads.add(thread);
     return threads;
   }
@@ -211,7 +224,6 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @return objectIds retrieved for the segmentIds
    */
   protected List<String> submitSegmentAndObjectInformation(Session session, String queryId, List<String> segmentIds) {
-    StopWatch watch = StopWatch.createStarted();
     /* Load segment & object information. */
     LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
     final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
@@ -232,6 +244,15 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     return objectIds;
   }
 
+  /**
+   * Loads and Submits all the metadata (e.g. {@link MediaSegmentMetadataDescriptor}, {@link MediaObjectMetadataQueryResult}) associated with a collection of segment IDs for which the metadata was fetched.
+   *
+   * @param session                             The {@link Session} object used to transmit the results.
+   * @param queryId                             ID of the running query.
+   * @param segmentIds                          Segment IDs of the metadata results.
+   * @param objectIds                           Object IDs of the metadata result.
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which the metadata was fetched and transferred.
+   */
   protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched) {
     /* Load and transmit segment & object metadata. */
     List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched);
@@ -243,20 +264,22 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   /**
    * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the raw results produced by a similarity search in a specific category. q
    *
-   * @param session The {@link Session} object used to transmit the results.
-   * @param queryId ID of the running query.
+   * @param session  The {@link Session} object used to transmit the results.
+   * @param queryId  ID of the running query.
    * @param category Name of the query category.
-   * @param raw List of raw per-category results (segmentId -> score).
+   * @param raw      List of raw per-category results (segmentId -> score).
+   * @return
    */
-  protected void finalizeAndSubmitResults(Session session, String queryId, String category, int containerId, List<StringDoublePair> raw) {
+  protected List<CompletableFuture<Void>> finalizeAndSubmitResults(Session session, String queryId, String category, int containerId, List<StringDoublePair> raw) {
     StopWatch watch = StopWatch.createStarted();
     final int stride = 50_000;
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
     for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
       final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
-
-      this.write(session, new SimilarityQueryResult(queryId, category, containerId, sub));
+      futures.add(this.write(session, new SimilarityQueryResult(queryId, category, containerId, sub)));
     }
     watch.stop();
     LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+    return futures;
   }
 }

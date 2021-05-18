@@ -58,31 +58,31 @@ subprojects {
 
     dependencies {
         /** Log4j 2 */
-        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: version_log4j2
-        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: version_log4j2
-        compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: version_log4j2
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: version_log4j2
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: version_log4j2
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: version_log4j2
 
         /** Jackson (JSON conversion) */
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: version_jackson
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: version_jackson
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
 
         /** Test dependencies (JUnit 5) */
-        testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version_junit
-        testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: version_junit
-        testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: version_junit_platform
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version_junit
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: version_junit
+        testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: version_junit_platform
     }
 }
 
 project(':cineast-runtime') {
     dependencies {
-        compile project(path: ':cineast-core', configuration: 'shadow')
+        implementation project(path: ':cineast-core', configuration: 'shadow')
     }
 }
 
 project(':cineast-api') {
     dependencies {
-        compile project(path: ':cineast-runtime', configuration: 'shadow')
-        compile project(path: ':cineast-core')
+        implementation project(path: ':cineast-runtime', configuration: 'shadow')
+        implementation project(path: ':cineast-core')
     }
 }
 
@@ -92,6 +92,8 @@ idea {
 
         excludeDirs += file('data')
         excludeDirs += file('thumbnails')
+        excludeDirs += file('output')
+        excludeDirs += file('logs')
     }
 }
 
@@ -100,15 +102,27 @@ task getExternalFiles {
         def fileList = new File("externalFiles.csv")
         fileList.eachLine { String line ->
             def split = line.split(",")
+            def destination = split[1]
             download {
                 src split[0]
-                dest split[1]
+                dest destination
             }
+            if (destination.endsWith(".tar.gz")) {
+                def compressed = file(destination)
+                def target = file(destination.substring(0, destination.length() - 7))
+
+                copy {
+                    from tarTree(compressed)
+                    into target
+                }
+                delete(compressed)
+            }
+            return
         }
     }
 }
 
-task generateOpenApiSpecs(type: JavaExec){
+task generateOpenApiSpecs(type: JavaExec) {
     classpath = project(":cineast-api").sourceSets.main.runtimeClasspath
     main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
 

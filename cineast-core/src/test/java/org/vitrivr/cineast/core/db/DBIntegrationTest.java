@@ -16,10 +16,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -35,6 +38,7 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
  *
  * @param <R> The type of Element that can be persisted to this database
  */
+@TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBIntegrationTest<R> {
 
   private DBSelector selector;
@@ -56,6 +60,15 @@ public abstract class DBIntegrationTest<R> {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private IntegrationDBProvider<R> provider;
+
+  @BeforeAll
+  void checkConnection(){
+    provider = provider();
+    selector = provider.getSelector();
+    LOGGER.info("Trying to establish connection to Database");
+    assumeTrue(selector.ping(), "Connection to database could not be established");
+    LOGGER.info("Connection to Database established");
+  }
 
   @BeforeEach
   void setupTest() {
