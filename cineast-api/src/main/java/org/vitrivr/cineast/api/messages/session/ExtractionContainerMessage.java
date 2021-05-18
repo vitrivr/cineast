@@ -12,16 +12,29 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 
 /**
- * @author silvan on 22.01.18.
+ * This object represents a container for multiple extract item requests and contains {@link ExtractionItemContainer} as a body of the message.
  */
 public class ExtractionContainerMessage implements Message {
 
-  private List<ExtractionItemContainer> items;
+  /**
+   * List of {@link ExtractionItemContainer} items that are part of this extraction container message.
+   */
+  private final List<ExtractionItemContainer> items;
 
+  /**
+   * Constructor for the ExtractionContainerMessage object.
+   *
+   * @param items Items that should be sent back with this message.
+   */
   public ExtractionContainerMessage(ExtractionItemContainer[] items) {
     this.items = Arrays.asList(items);
   }
 
+  /**
+   * Constructor for the ExtractionContainerMessage object able to create a JSON file from an instance of this class created by this constructor.
+   *
+   * @param items Items that should be sent back with this message.
+   */
   @JsonCreator
   public ExtractionContainerMessage(@JsonProperty("items") List<ExtractionItemContainer> items) {
     this.items = items;
@@ -36,6 +49,9 @@ public class ExtractionContainerMessage implements Message {
     return this.items.toArray(new ExtractionItemContainer[0]);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public MessageType getMessageType() {
     return null;

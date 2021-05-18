@@ -9,17 +9,14 @@ public class Session {
   private long validUntil;
 
   /**
-   * 
-   * @param id
-   *          unique session id
-   * @param lifetime
-   *          session life time in seconds
+   * @param id       unique session id
+   * @param lifetime session life time in seconds
    */
   protected Session(String id, SessionType type, long lifetime) {
-    if(id == null){
+    if (id == null) {
       throw new NullPointerException("session id cannot be null");
     }
-    if(type == null){
+    if (type == null) {
       throw new NullPointerException("session type cannot be null");
     }
     this.id = id;
@@ -54,8 +51,8 @@ public class Session {
   public long getEndTimeStamp() {
     return this.validUntil;
   }
-  
-  public SessionType getSessionType(){
+
+  public SessionType getSessionType() {
     return this.type;
   }
 

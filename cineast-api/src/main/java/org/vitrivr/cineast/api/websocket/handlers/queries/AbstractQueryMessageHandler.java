@@ -41,9 +41,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 
 /**
- * @author rgasser
- * @version 1.0
- * @created 27.04.17
+ * This abstract class extends the {@link StatelessWebsocketMessageHandler} abstract class and provides various methods for the concrete implementations of message handlers to handle messages and write back to the websocket.
  */
 public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {
 
@@ -246,6 +244,15 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     return objectIds;
   }
 
+  /**
+   * Loads and Submits all the metadata (e.g. {@link MediaSegmentMetadataDescriptor}, {@link MediaObjectMetadataQueryResult}) associated with a collection of segment IDs for which the metadata was fetched.
+   *
+   * @param session                             The {@link Session} object used to transmit the results.
+   * @param queryId                             ID of the running query.
+   * @param segmentIds                          Segment IDs of the metadata results.
+   * @param objectIds                           Object IDs of the metadata result.
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which the metadata was fetched and transferred.
+   */
   protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched) {
     /* Load and transmit segment & object metadata. */
     List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched);
@@ -256,7 +263,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
 
   /**
    * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the raw results produced by a similarity search in a specific category. q
-   *  @param session  The {@link Session} object used to transmit the results.
+   *
+   * @param session  The {@link Session} object used to transmit the results.
    * @param queryId  ID of the running query.
    * @param category Name of the query category.
    * @param raw      List of raw per-category results (segmentId -> score).

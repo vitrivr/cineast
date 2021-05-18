@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.feature;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 import static org.vitrivr.cineast.api.util.APIConstants.CATEGORY_NAME;
 import static org.vitrivr.cineast.api.util.APIConstants.ID_QUALIFIER;
 
@@ -8,7 +7,6 @@ import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.Map;
-import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.FeaturesTextCategoryQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;

@@ -1,22 +1,21 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.KEY_NAME;
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
+
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Map;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
-import java.util.Map;
-
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.KEY_NAME;
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
-
 public class FindObjectMetadataByKeyGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
-  
+
   public static final String ROUTE = "find/metadata/with/:" + KEY_NAME + "/by/id/:" + OBJECT_ID_NAME;
-  
+
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -25,17 +24,17 @@ public class FindObjectMetadataByKeyGetHandler implements GetRestHandler<MediaOb
     final MetadataRetrievalService service = new MetadataRetrievalService();
     return new MediaObjectMetadataQueryResult("", service.findByKey(objectId, key));
   }
-  
+
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

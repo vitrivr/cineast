@@ -11,13 +11,34 @@ import org.vitrivr.cineast.core.config.QueryConfig;
  */
 public class StagedSimilarityQuery {
 
-  public final List<QueryStage> stages;
-  public final QueryConfig config;
+  /**
+   * List of {@link QueryStage}s that are part of this {@link StagedSimilarityQuery}.
+   */
+  private final List<QueryStage> stages;
 
+  /**
+   * The {@link QueryConfig} that should be used to configure the query. May be null!
+   */
+  private final QueryConfig config;
+
+  /**
+   * Constructor for the StagedSimilarityQuery object.
+   *
+   * @param stages List of {@link QueryStage}s.
+   * @param config The {@link QueryConfig}. May be null!
+   */
   public StagedSimilarityQuery(@JsonProperty(value = "stages", required = true) List<QueryStage> stages,
       @JsonProperty(value = "config", required = false) QueryConfig config) {
     this.stages = stages;
     this.config = config;
+  }
+
+  public List<QueryStage> getStages() {
+    return stages;
+  }
+
+  public QueryConfig getConfig() {
+    return config;
   }
 
   @Override

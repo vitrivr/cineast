@@ -8,25 +8,25 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
   private final File baseFoler;
 
-  public FileSystemThumbnailResolver(File baseFolder){
+  public FileSystemThumbnailResolver(File baseFolder) {
     this.baseFoler = baseFolder;
   }
 
   @Override
   public ResolutionResult resolve(String segmentId) {
 
-    if(segmentId == null){
+    if (segmentId == null) {
       return null;
     }
 
     String[] split = segmentId.split("_");
-    if(split.length < 3){
+    if (split.length < 3) {
       return null;
     }
 
     File dir = new File(this.baseFoler, split[0] + "_" + split[1]);
 
-    if(!dir.exists() || !dir.isDirectory()){
+    if (!dir.exists() || !dir.isDirectory()) {
       return null;
     }
 
@@ -37,7 +37,7 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
       }
     });
 
-    if (candidates.length == 0){
+    if (candidates.length == 0) {
       return null;
     }
 
