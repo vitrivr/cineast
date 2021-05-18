@@ -6,4 +6,6 @@ http://data.vitrivr.org/codebooks/mirflickr25k-256.surfcb,resources/codebooks/mi
 http://data.vitrivr.org/codebooks/mirflickr25k-512.hogcb,resources/codebooks/mirflickr25k-512.hogcb
 http://data.vitrivr.org/codebooks/mirflickr25k-512.surfcb,resources/codebooks/mirflickr25k-512.surfcb
 http://data.vitrivr.org/codebooks/mirflickr25k-2000.surfcb,resources/codebooks/mirflickr25k-2000.surfcb
+http://data.vitrivr.org/VisualTextCoEmbedding/text-co-embedding.tar.gz,resources/VisualTextCoEmbedding/text-co-embedding.tar.gz
+http://data.vitrivr.org/VisualTextCoEmbedding/visual-co-embedding.tar.gz,resources/VisualTextCoEmbedding/visual-co-embedding.tar.gz
 https://tfhub.dev/google/universal-sentence-encoder/4?tf-hub-format=compressed,resources/VisualTextCoEmbedding/universal-sentence-encoder_4.tar.gz
