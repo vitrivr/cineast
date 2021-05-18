@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.api.rest.resolvers;
 
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
-
 import java.io.File;
 import java.io.IOException;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 
 public class FileSystemObjectResolver implements ObjectResolver {
 

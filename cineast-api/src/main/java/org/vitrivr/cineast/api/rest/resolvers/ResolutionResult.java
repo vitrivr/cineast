@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.api.rest.resolvers;
 
-import org.vitrivr.cineast.core.util.MimeTypeHelper;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 public class ResolutionResult {
 

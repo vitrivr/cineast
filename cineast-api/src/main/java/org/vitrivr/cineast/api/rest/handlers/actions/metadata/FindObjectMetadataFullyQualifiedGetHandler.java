@@ -3,12 +3,11 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Map;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
-
-import java.util.Map;
 
 /**
  * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.

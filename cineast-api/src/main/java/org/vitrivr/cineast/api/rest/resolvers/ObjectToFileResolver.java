@@ -1,8 +1,7 @@
 package org.vitrivr.cineast.api.rest.resolvers;
 
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-
 import java.io.File;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
 /**
  * Functional interface to map {@link MediaObjectDescriptor} to a filename.

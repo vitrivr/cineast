@@ -3,6 +3,10 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -13,11 +17,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<SimilarityQuery, SimilarityQueryResultBatch> {
 

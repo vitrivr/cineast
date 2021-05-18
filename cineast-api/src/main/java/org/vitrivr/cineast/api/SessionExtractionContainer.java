@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.api;
 
 import io.prometheus.client.Counter;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -9,10 +12,6 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.run.ExtractionDispatcher;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 
 
 /**

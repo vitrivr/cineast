@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.tag;
 
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.annotations.*;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.result.TagsQueryResult;
@@ -11,10 +13,6 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.standalone.config.Config;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
 

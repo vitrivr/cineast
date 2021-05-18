@@ -2,10 +2,9 @@ package org.vitrivr.cineast.api.rest.routes;
 
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import java.util.Map;
 import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
 import org.vitrivr.cineast.api.rest.resolvers.Resolver;
-
-import java.util.Map;
 
 public class ResolvedContentRoute implements Handler {
 

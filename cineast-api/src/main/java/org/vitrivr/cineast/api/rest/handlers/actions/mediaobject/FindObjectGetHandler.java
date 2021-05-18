@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
@@ -11,8 +12,6 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.Config;
-
-import java.util.Map;
 
 public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResult> {
 

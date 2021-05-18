@@ -3,6 +3,9 @@ package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
@@ -10,10 +13,6 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
 

@@ -1,19 +1,18 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
+import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
+
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.Map;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
-
-import java.util.ArrayList;
-import java.util.Map;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.

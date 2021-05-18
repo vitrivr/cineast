@@ -3,12 +3,11 @@ package org.vitrivr.cineast.api.rest.handlers.actions.session;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Map;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
-
-import java.util.Map;
 
 public class EndSessionHandler implements GetRestHandler<SessionState> {
 
