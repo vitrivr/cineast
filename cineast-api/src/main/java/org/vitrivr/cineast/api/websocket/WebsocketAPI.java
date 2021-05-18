@@ -28,6 +28,7 @@ import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessa
 import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.TemporalQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.TemporalQueryMessageHandlerV2;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -54,21 +55,21 @@ public class WebsocketAPI {
    */
   private static final ExecutorService EXECUTORS = new ThreadPoolExecutor(2, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
 
-    /**
-     * List of stateless {@link WebsocketMessageHandler} classes for the API.
-     */
-    private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
+  /**
+   * List of stateless {@link WebsocketMessageHandler} classes for the API.
+   */
+  private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
 
-    static {
-        STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
-        STATELESS_HANDLERS.put(MessageType.Q_TEMPORAL, new TemporalQueryMessageHandler(APIEndpoint.retrievalLogic));
-        STATELESS_HANDLERS.put(MessageType.Q_TEMPORALV2, new TemporalQueryMessageHandlerV2(APIEndpoint.retrievalLogic));
-        STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
-        STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
-        STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
-        STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
-        STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
-    }
+  static {
+    STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
+    STATELESS_HANDLERS.put(MessageType.Q_TEMPORAL, new TemporalQueryMessageHandler(APIEndpoint.retrievalLogic));
+    STATELESS_HANDLERS.put(MessageType.Q_TEMPORALV2, new TemporalQueryMessageHandlerV2(APIEndpoint.retrievalLogic));
+    STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
+    STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
+    STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
+    STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
+    STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
+  }
 
   /* */
   private JacksonJsonProvider reader = new JacksonJsonProvider();

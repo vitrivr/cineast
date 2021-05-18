@@ -19,7 +19,6 @@ import org.vitrivr.cineast.api.messages.query.TemporalQueryV2;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -49,6 +48,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
     List<CompletableFuture<Void>> futures = new ArrayList<>();
+    List<Thread> cleanupThreads = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
     Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
@@ -78,11 +78,11 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
       List<StringDoublePair> stageResults = new ArrayList<>();
 
       /* Iterate over all stages in their respective order as each term of one stage will be used as a filter for its successors */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size(); stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size(); stageIndex++) {
         /* Create hashmap for this stage as cache */
         cache.add(stageIndex, new HashMap<>());
 
-        QueryStage stage = stagedSimilarityQuery.stages.get(stageIndex);
+        QueryStage stage = stagedSimilarityQuery.getStages().get(stageIndex);
 
         /*
          * Iterate over all QueryTerms for this stage and add their results to the list of relevant segments for the next query stage.
@@ -129,16 +129,12 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
              * If this is the last stage, we can collect the results and send relevant results per category back the the requester.
              * Otherwise we shouldn't yet send since we might send results to the requester that would be filtered at a later stage.
              */
-            if (stageIndex == stagedSimilarityQuery.stages.size() - 1) {
+            if (stageIndex == stagedSimilarityQuery.getStages().size() - 1) {
               /* Finalize and submit per-container stage and object descriptors */
               List<String> stageSegmentIds = results.stream()
                   .map(el -> el.key)
                   .collect(Collectors.toList());
               List<MediaSegmentDescriptor> stageSegments = this.loadSegments(stageSegmentIds);
-              List<String> stageObjectIds = stageSegments.stream()
-                  .map(MediaSegmentDescriptor::getObjectId)
-                  .collect(Collectors.toList());
-              List<MediaObjectDescriptor> stageObjects = this.loadObjects(stageObjectIds);
 
               /* Store the segments and results for this staged query to be used in the temporal querying. */
               segments.addAll(stageSegments);
@@ -174,9 +170,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
       }
       limitedStageQConf.setRelevantSegmentIds(limitedRelevantSegments);
 
-      List<Thread> cleanupThreads = new ArrayList<>();
       /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size() - 1; stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size() - 1; stageIndex++) {
         int finalContainerIdx = containerIdx;
         int finalStageIndex = stageIndex;
         /* Add the results from the last filter from all previous stages also to the list of results */
@@ -196,16 +191,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
         });
       }
 
-      for (Thread cleanupThread : cleanupThreads) {
-        cleanupThread.join();
-      }
-
       /* There should be no carry-over from this block since temporal queries are executed independently */
       containerResults.put(containerIdx, stageResults);
-    }
-
-    for (Thread thread : metadataRetrievalThreads) {
-      thread.join();
     }
 
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
@@ -234,6 +221,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     List<String> segmentIds = finalResults.stream().map(TemporalObject::getSegments).flatMap(List::stream).collect(Collectors.toList());
 
     /* Send potential information not already sent  */
+    /* Maybe change from list to set? */
     segmentIds = segmentIds.stream().filter(s -> !sentSegmentIds.contains(s)).collect(Collectors.toList());
     List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
     objectIds = objectIds.stream().filter(s -> !sentObjectIds.contains(s)).collect(Collectors.toList());
@@ -248,6 +236,10 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     /* Send scoring results to the frontend */
     futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
     futures.forEach(CompletableFuture::join);
+
+    for (Thread cleanupThread : cleanupThreads) {
+      cleanupThread.join();
+    }
 
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();

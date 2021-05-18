@@ -41,10 +41,14 @@ public class TemporalScoring {
    */
   public List<TemporalObject> score() {
     AbstractTemporalScoringAlgorithm temporalScoringAlgorithm;
+    float maxLength = this.maxLength;
+    if (maxLength < 0) {
+      maxLength = Float.MAX_VALUE;
+    }
     if (this.timeDistances.size() > 0) {
-      temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, this.timeDistances, this.maxLength);
+      temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, this.timeDistances, maxLength);
     } else {
-      temporalScoringAlgorithm = new SequentialTemporalScoringAlgorithm(this.segmentMap, this.containerResults, this.maxLength);
+      temporalScoringAlgorithm = new SequentialTemporalScoringAlgorithm(this.segmentMap, this.containerResults, maxLength);
     }
     return temporalScoringAlgorithm.score();
   }
