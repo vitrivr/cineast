@@ -11,9 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Object to store a list of string IDs.
- *
- * @author lucaro
- * @created 10.05.17
  */
 public class IdList {
 

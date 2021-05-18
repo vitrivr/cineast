@@ -8,9 +8,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link FeaturesAllCategoriesQueryResult} contains a list of Strings as content of the result message. Map of all feature categories such as tags, captions, OCR, ASR etc. with their values. Used when all features are needed in a single representation.
- *
- * @author silvanheller
- * @created 04.12.20
  */
 public class FeaturesAllCategoriesQueryResult {
 

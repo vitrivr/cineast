@@ -8,9 +8,6 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 
 /**
  * General-purpose result for any query that expects a list of tags as a result.
- *
- * @author sauterl
- * @created 06.05.20
  */
 public class TagsQueryResult {
 

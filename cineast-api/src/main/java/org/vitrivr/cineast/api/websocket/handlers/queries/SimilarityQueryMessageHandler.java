@@ -20,9 +20,6 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
  * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link SimilarityQuery}.
- *
- * @author rgasser
- * @created 12.01.17
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {
 

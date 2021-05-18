@@ -16,8 +16,6 @@ import java.util.Map;
  * <h3>GET</h3>
  * This action's resource should have the following structure: {@code find/metadata/of/:id/in/:domain/with/:key}. It returns then all metadata of the object with this id, belonging to that domain with the specified key.
  * </p>
- *
- * @author loris.sauter
  */
 public class FindObjectMetadataFullyQualifiedGetHandler implements
     GetRestHandler<MediaObjectMetadataQueryResult> {

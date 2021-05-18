@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
  * Contains the data of a particular {@link QueryTerm}.
- *
- * @author rgasser
- * @created 11.01.17
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QueryTerm {

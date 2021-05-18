@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
  * This will write the result of this handler's {@link #doDelete(Context)} as JSON to the context.
  *
  * @param <T> The type the handler will return.
- * @author loris.sauter
- * @version 1.1
  */
 public interface DeleteRestHandler<T> extends RestHandler {
 

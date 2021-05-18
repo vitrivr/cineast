@@ -7,8 +7,6 @@ import io.javalin.http.Context;
  *
  * @param <I> The input type for this handler. Incoming requests' body will be parsed as this type
  * @param <O> The output type of this handler. This handler will produce a result of this type.
- * @author loris.sauter
- * @version 1.1
  */
 public interface ParsingPostRestHandler<I, O> extends PostRestHandler<O> {
 

@@ -28,9 +28,6 @@ import java.util.List;
 
 /**
  * Helper class for openapi compatibility.
- *
- * @author Loris Sauter
- * @version 1.0
  */
 public class OpenApiCompatHelper {
 

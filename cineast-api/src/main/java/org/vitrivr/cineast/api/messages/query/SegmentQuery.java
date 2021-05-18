@@ -8,9 +8,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 /**
  * A {@link SegmentQuery} represents a segment-query message, i.e. a lookup for a segment ID specified.
- *
- * @author rgasser
- * @created 28.12.18
  */
 public class SegmentQuery extends Query {
 

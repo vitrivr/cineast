@@ -8,9 +8,6 @@ import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
 /**
  * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
- *
- * @author rgasser
- * @created 22.01.17
  */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
 

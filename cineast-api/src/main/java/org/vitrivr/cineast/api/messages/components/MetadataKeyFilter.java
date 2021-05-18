@@ -9,9 +9,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * Filter for metadata, based on the key.
  * <p>
  * This class servers as filter descriptor and as actual filter.
- *
- * @author loris.sauter
- * @created 04.08.18
  */
 public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implements
     Predicate<MediaObjectMetadataDescriptor> {

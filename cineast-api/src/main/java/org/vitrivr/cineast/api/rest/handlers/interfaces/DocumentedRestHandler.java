@@ -18,9 +18,6 @@ import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
  *    .pathParam("id", String.class, param -> param.description("The id of the object")) // the route would have to have the id prefixed with colon: route/to/this/handler/:id
  *    .json("200", ResultClass.class)
  * </pre>
- *
- * @author loris.sauter
- * @version 1.0
  */
 public interface DocumentedRestHandler extends RestHandler {
 

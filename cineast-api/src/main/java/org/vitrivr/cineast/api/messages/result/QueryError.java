@@ -7,9 +7,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message for a query error to communicate an error occurred during querying.
- *
- * @author rgasser
- * @created 03.06.17
  */
 public class QueryError implements Message {
 

@@ -8,9 +8,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 
 /**
  * A {@link TemporalQuery} contains a list of {@link StagedSimilarityQuery}s. Each of them represents a query in a total temporal ordering.
- *
- * @author silvanheller
- * @created 17.02.20
  */
 public class TemporalQuery extends Query {
 

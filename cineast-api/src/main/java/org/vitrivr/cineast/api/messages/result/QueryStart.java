@@ -7,9 +7,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message for a query result start to establish the context of the following messages.
- *
- * @author rgasser
- * @created 22.01.17
  */
 public class QueryStart implements Message {
 

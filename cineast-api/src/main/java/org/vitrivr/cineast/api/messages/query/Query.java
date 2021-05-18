@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 /**
  * A {@link Query} represents an abstract Query to be implemented i.e. a request for a similarity-search.
- *
- * @author rgasser
- * @created 22.01.17
  */
 public abstract class Query implements Message {
 

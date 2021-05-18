@@ -8,8 +8,6 @@ import org.vitrivr.cineast.api.messages.interfaces.Message;
  * <p>
  * The assumption behind this class is that another class routes incoming WebSocket messages towards the correct WebsocketMessageHandler instance. That instance then carries out all the necessary steps to create an appropriate response for the incoming message and sends that response to the source of the message.
  *
- * @author rgasser
- * @created 12.01.17
  * @see Message
  */
 public interface WebsocketMessageHandler<A> {

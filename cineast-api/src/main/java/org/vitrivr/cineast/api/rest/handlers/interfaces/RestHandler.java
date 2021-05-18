@@ -4,9 +4,6 @@ import io.javalin.http.Handler;
 
 /**
  * A {@link Handler} with an associated route.
- *
- * @author loris.sauter
- * @version 1.2
  */
 public interface RestHandler extends Handler {
 

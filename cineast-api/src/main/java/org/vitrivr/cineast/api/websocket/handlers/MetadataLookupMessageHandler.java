@@ -11,9 +11,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * This class extends the {@link StatelessWebsocketMessageHandler} abstract class and handles messages of type {@link MetadataLookup}.
- *
- * @author rgasser
- * @created 10.02.17
  */
 public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandler<MetadataLookup> {
 

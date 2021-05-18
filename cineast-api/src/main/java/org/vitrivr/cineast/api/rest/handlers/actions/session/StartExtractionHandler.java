@@ -9,9 +9,6 @@ import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
 
-/**
- * @author silvan on 23.01.18.
- */
 public class StartExtractionHandler implements PostRestHandler<SessionState> {
 
   // FIXME this needs cleanup / rework

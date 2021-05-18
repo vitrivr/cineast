@@ -13,9 +13,6 @@ import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 
 /**
  * This object represents a container for multiple extract item requests and contains {@link ExtractionItemContainer} as a body of the message.
- *
- * @author silvanheller
- * @created 22.01.18
  */
 public class ExtractionContainerMessage implements Message {
 

@@ -8,9 +8,6 @@ import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsBy
 
 /**
  * A {@link DistinctElementsResult} contains the response to a {@link FindDistinctElementsByColumnPostHandler} request. It contains a list of elements which can be considered as a set.
- *
- * @author silvanheller
- * @created 22.07.20
  */
 public class DistinctElementsResult {
 

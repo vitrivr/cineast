@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 /**
  * A {@link MediaSegmentQueryResult} contains a list of {@link MediaSegmentDescriptor}s as content of the result message. It is part of a response for queries.
- *
- * @author rgasser
- * @created 12.01.17
  */
 public class MediaSegmentQueryResult extends AbstractQueryResultMessage<MediaSegmentDescriptor> {
 

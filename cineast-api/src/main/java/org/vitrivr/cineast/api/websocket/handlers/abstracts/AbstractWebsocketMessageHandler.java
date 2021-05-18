@@ -16,10 +16,6 @@ import org.vitrivr.cineast.core.util.json.JsonWriter;
 
 /**
  * This abstract class implements the WebsocketMessageHandler interface and provides basic functionality like a convenience method to write information back to the underlying WebSocket stream.
- *
- * @author rgasser
- * @version 1.0
- * @created 22.01.17
  */
 public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMessageHandler<A> {
 

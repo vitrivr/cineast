@@ -9,9 +9,6 @@ import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 
 /**
  * Message type for a non-particular message that implements the message interface. Is used in the {@link WebsocketAPI} to find out the {@link MessageType} of arriving messages
- *
- * @author rgasser
- * @created 19.01.17
  */
 public class AnyMessage implements Message {
 

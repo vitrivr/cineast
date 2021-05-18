@@ -9,9 +9,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 /**
  * A {@link SimilarityQuery} contains a list of {@link QueryComponent}s. This object represents a similarity-query message, i.e. a request for a similarity-search.
- *
- * @author rgasser
- * @created 27.04.17
  */
 public class SimilarityQuery extends Query {
 

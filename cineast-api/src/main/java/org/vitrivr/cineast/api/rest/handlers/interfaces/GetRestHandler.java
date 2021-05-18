@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
  * Ultimately, this is a {@link io.javalin.http.Handler} whose {@link io.javalin.http.Handler#handle(Context)} method is overridden, such that this handler's {@link #get(Context)} is called, which will write the result of this handler's {@link #doGet(Context)} as JSON to the context.
  *
  * @param <T> The type the handler will return.
- * @author loris.sauter
- * @version 1.1
  */
 public interface GetRestHandler<T> extends DocumentedRestHandler {
 

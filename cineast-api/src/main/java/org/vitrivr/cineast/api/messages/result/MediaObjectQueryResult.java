@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
 /**
  * A {@link MediaObjectQueryResult} contains a list of {@link MediaObjectDescriptor}s as content of the result message. It is part of a response for queries.
- *
- * @author rgasser
- * @created 22.01.17
  */
 public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObjectDescriptor> {
 

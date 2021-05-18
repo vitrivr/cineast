@@ -9,9 +9,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 
 /**
  * A {@link QueryStage} contains a list of {@link QueryTerm}s. This object represents a stage in a {@link StagedSimilarityQuery}.
- *
- * @author silvanheller
- * @created 17.02.20
  */
 public class QueryStage {
 

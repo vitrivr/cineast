@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * A {@link MediaSegmentMetadataQueryResult} contains a list of {@link MediaObjectMetadataDescriptor}s as content of the result message. It is part of a response for queries.
- *
- * @author rgasser
- * @created 14.02.17
  */
 public class MediaObjectMetadataQueryResult extends AbstractQueryResultMessage<MediaObjectMetadataDescriptor> {
 

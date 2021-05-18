@@ -8,9 +8,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 
 /**
  * A {@link StagedSimilarityQuery} contains a list of {@link QueryStage}s. Each of them is used as a filter for the next one.
- *
- * @author lucaro
- * @created 18.01.20
  */
 public class StagedSimilarityQuery {
 

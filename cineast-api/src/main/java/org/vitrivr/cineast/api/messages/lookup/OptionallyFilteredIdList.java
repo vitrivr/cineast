@@ -16,9 +16,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * <p>ignoreUnknown = true ignores unknown json properties, e.g. may contain no filter at all.</p>
  * <p>https://layer4.fr/blog/2013/08/19/how-to-map-unknown-json-properties-with-jackson/ how to
  * still realise that there are unknown properties</p>
- *
- * @author loris.sauter
- * @created 04.08.18
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OptionallyFilteredIdList implements Message {

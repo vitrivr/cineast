@@ -12,9 +12,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message of a metadata lookup query by a requester.
- *
- * @author rgasser
- * @created 10.02.17
  */
 public class MetadataLookup implements Message {
 

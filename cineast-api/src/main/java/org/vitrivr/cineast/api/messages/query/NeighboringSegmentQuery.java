@@ -8,9 +8,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 /**
  * A {@link NeighboringSegmentQuery} represents a query for neighbors of a given segment ID.
- *
- * @author rgasser
- * @created 04.01.18
  */
 public class NeighboringSegmentQuery extends Query {
 

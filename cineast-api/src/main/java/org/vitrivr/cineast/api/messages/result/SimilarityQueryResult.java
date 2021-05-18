@@ -9,11 +9,7 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 
 /**
- * A {@link SimilarityQueryResult} contains a list of {@link StringDoublePair}s as content of the result message, with the Pair representing a segmentid to score mapping
- * It is a response for a similarity query as well as a temporal query as a result of a temporal container.
- *
- * @author rgasser
- * @created 11.01.17
+ * A {@link SimilarityQueryResult} contains a list of {@link StringDoublePair}s as content of the result message, with the Pair representing a segmentid to score mapping It is a response for a similarity query as well as a temporal query as a result of a temporal container.
  */
 public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoublePair> {
 

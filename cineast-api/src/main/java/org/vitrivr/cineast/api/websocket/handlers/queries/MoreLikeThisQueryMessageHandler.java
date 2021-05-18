@@ -15,9 +15,6 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 /**
  * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link MoreLikeThisQuery}.
- *
- * @author rgasser
- * @created 27.04.17
  */
 public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler<MoreLikeThisQuery> {
 

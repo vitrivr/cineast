@@ -24,9 +24,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * Subclasses must implement {@link Predicate#test(Object)}, in which the filtering takes place.
  * <p>
  * The ultimate goal is to list keywords, on which a list of {@link MediaObjectMetadataDescriptor}s is filtered. Subclasses define on how to apply these keywords.
- *
- * @author loris.sauter
- * @created 04.08.18
  */
 @JsonTypeInfo(
     use = Id.NAME,

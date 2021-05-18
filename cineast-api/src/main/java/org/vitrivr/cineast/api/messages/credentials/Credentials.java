@@ -7,9 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Credentials of an API session.
- *
- * @author lucaro
- * @created 08.05.17
  */
 public class Credentials {
 

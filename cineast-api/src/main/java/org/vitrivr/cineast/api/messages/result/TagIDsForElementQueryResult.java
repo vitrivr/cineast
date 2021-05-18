@@ -6,9 +6,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * General-purpose result for any query that expects a list of tag IDs for an element ID as a result.
- *
- * @author silvanheller
- * @created 04.12.20
  */
 public class TagIDsForElementQueryResult {
 

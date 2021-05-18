@@ -13,9 +13,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 /**
  * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link NeighboringSegmentQuery}.
- *
- * @author rgasser
- * @created 24.01.18
  */
 public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler<NeighboringSegmentQuery> {
 

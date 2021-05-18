@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 
 /**
  * A {@link SimilarityQueryResultBatch} contains a list of {@link SimilarityQueryResult}s as content of the result message. It combines several results to be posted to the API.
- *
- * @author lucaro
- * @created 12.05.17
  */
 public class SimilarityQueryResultBatch {
 

@@ -18,9 +18,6 @@ import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 /**
  * Defines the different MessageTypes used by the WebSocket and JSON API.
- *
- * @author rgasser
- * @created 22.01.17
  */
 public enum MessageType {
   /* Messages related to status updates. */

@@ -42,9 +42,6 @@ import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 
 /**
  * This abstract class extends the {@link StatelessWebsocketMessageHandler} abstract class and provides various methods for the concrete implementations of message handlers to handle messages and write back to the websocket.
- *
- * @author rgasser
- * @created 27.04.17
  */
 public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {
 

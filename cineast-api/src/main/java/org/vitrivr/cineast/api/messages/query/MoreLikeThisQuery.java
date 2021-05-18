@@ -9,9 +9,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 /**
  * This object represents a MoreLikeThisQuery message, i.e. a request for a similarity-search.
- *
- * @author rgasser
- * @created 27.04.17
  */
 public class MoreLikeThisQuery extends Query {
 

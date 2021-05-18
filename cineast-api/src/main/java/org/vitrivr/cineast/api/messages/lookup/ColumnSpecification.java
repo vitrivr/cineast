@@ -9,9 +9,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message from the requester specifying from which table and which column information should be fetched.
- *
- * @author silvanheller
- * @created 22.07.20
  */
 public class ColumnSpecification implements Message {
 

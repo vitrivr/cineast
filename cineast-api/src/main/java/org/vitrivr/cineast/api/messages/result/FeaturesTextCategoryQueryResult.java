@@ -7,9 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link FeaturesTextCategoryQueryResult} contains a list of Strings as content of the result message. All features for a given category and element (i.e. segment, object). Only used for String features (e.g. OCR, ASR) queries.
- *
- * @author silvanheller
- * @created 04.12.20
  */
 public class FeaturesTextCategoryQueryResult {
 
