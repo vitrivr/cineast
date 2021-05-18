@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -36,6 +38,7 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
  *
  * @param <R> The type of Element that can be persisted to this database
  */
+@TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBIntegrationTest<R> {
 
   private DBSelector selector;
