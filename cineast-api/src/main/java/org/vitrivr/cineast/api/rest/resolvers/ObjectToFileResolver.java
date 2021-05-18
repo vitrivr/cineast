@@ -10,5 +10,5 @@ import java.io.File;
 @FunctionalInterface
 public interface ObjectToFileResolver {
 
-    File resolve(File baseDir, MediaObjectDescriptor object);
+  File resolve(File baseDir, MediaObjectDescriptor object);
 }

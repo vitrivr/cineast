@@ -16,34 +16,34 @@ import java.util.Arrays;
  * @author silvan on 19.01.18.
  */
 public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionContainerMessage, SessionState> {
-  
+
   public static final String ROUTE = "session/extract/new";
   private static final Logger LOGGER = LogManager.getLogger();
-  
+
   @Override
   public SessionState performPost(ExtractionContainerMessage context, Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
-    
+
     LOGGER.debug("Received items {}", Arrays.toString(context.getItemsAsArray()));
     SessionExtractionContainer.addPaths(context.getItemsAsArray());
     return state;
   }
-  
+
   @Override
   public Class<ExtractionContainerMessage> inClass() {
     return ExtractionContainerMessage.class;
   }
-  
+
   @Override
   public Class<SessionState> outClass() {
     return SessionState.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

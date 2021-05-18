@@ -18,25 +18,25 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
  * @created 09.01.17
  */
 public class StatusInvocationHandler implements GetRestHandler<Ping> {
-  
+
   public static final String ROUTE = "status";
-  
-  
+
+
   @Override
   public Ping doGet(Context ctx) {
     return new Ping();
   }
-  
-  
+
+
   public String getDescription(RestHttpMethod method) {
     return "Get the status of the server";
   }
-  
+
   @Override
   public Class<Ping> outClass() {
     return Ping.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;

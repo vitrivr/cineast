@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
  * For example, it would be useful to know all available timezones for the column $table.timezone
  */
 public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestHandler<ColumnSpecification, DistinctElementsResult> {
-  
+
   public static final String ROUTE = "find/boolean/column/distinct";
-  
+
   private static final Logger LOGGER = LogManager.getLogger();
-  
+
   private static final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-  
+
   private static final Map<String, List<String>> cache = new HashMap<String, List<String>>();
-  
-  
+
+
   @Override
   public DistinctElementsResult performPost(ColumnSpecification specification, Context ctx) {
     List<String> distinct = new ArrayList<>();
@@ -54,24 +54,24 @@ public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestH
     LOGGER.trace("Retrieved unique values for {} in {} ms", specification.getTable() + "." + specification.getColumn(), watch.getTime(TimeUnit.MILLISECONDS));
     return new DistinctElementsResult("", distinct);
   }
-  
+
   @Override
   public Class<ColumnSpecification> inClass() {
     return ColumnSpecification.class;
   }
-  
-  
+
+
   @Override
   public Class<DistinctElementsResult> outClass() {
     return DistinctElementsResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
-  
+
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

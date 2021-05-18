@@ -15,11 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, TagsQueryResult> {
-  
+
   // TODO CAUTION: This route has a breaking change in response signature
-  
+
   public static final String ROUTE = "tags/by/id"; // TODO only route not prefixed by find?
-  
+
   private static final TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
   @Override
@@ -32,22 +32,22 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
     }
     return new TagsQueryResult("", list);
   }
-  
+
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
   }
-  
+
   @Override
   public Class<TagsQueryResult> outClass() {
     return TagsQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

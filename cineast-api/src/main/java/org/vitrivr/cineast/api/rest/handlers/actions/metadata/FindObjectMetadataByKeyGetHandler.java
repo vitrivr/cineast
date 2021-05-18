@@ -14,9 +14,9 @@ import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectM
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
 
 public class FindObjectMetadataByKeyGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
-  
+
   public static final String ROUTE = "find/metadata/with/:" + KEY_NAME + "/by/id/:" + OBJECT_ID_NAME;
-  
+
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -25,17 +25,17 @@ public class FindObjectMetadataByKeyGetHandler implements GetRestHandler<MediaOb
     final MetadataRetrievalService service = new MetadataRetrievalService();
     return new MediaObjectMetadataQueryResult("", service.findByKey(objectId, key));
   }
-  
+
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

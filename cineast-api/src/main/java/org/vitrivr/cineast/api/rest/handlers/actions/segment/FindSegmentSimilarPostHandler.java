@@ -20,48 +20,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<SimilarityQuery, SimilarityQueryResultBatch> {
-  
+
   public static final String ROUTE = "find/segments/similar";
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
-  
+
   public FindSegmentSimilarPostHandler(ContinuousRetrievalLogic continuousRetrievalLogic) {
     this.continuousRetrievalLogic = continuousRetrievalLogic;
   }
-  
+
   @Override
   public SimilarityQueryResultBatch performPost(SimilarityQuery query, Context ctx) {
-    
+
     HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
     /*
      * Prepare map that maps categories to QueryTerm components.
      */
     HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryUtil.groupComponentsByCategory(query.getComponents());
-    
+
     ReadableQueryConfig qconf = new ConstrainedQueryConfig();
-    
+
     for (String category : categoryMap.keySet()) {
       List<Pair<QueryContainer, ReadableQueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, qconf)).collect(Collectors.toList());
       returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category));
     }
-    
+
     return new SimilarityQueryResultBatch(returnMap, qconf.getQueryId().toString());
   }
-  
+
   @Override
   public Class<SimilarityQuery> inClass() {
     return SimilarityQuery.class;
   }
-  
+
   @Override
   public Class<SimilarityQueryResultBatch> outClass() {
     return SimilarityQueryResultBatch.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

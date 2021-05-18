@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList, MediaObjectQueryResult> {
-  
+
   public static final String ROUTE = "find/object/by/id";
-  
+
   @Override
   public MediaObjectQueryResult performPost(IdList context, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -29,22 +29,22 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
     ol.close();
     return new MediaObjectQueryResult("", new ArrayList<>(objects.values()));
   }
-  
+
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
   }
-  
+
   @Override
   public Class<MediaObjectQueryResult> outClass() {
     return MediaObjectQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
-  
+
   public static final String ROUTE = "find/metadata/by/id";
-  
+
   @Override
   public MediaObjectMetadataQueryResult performPost(OptionallyFilteredIdList ids, Context ctx) {
     if (ids == null || ids.getIds().length == 0) {
@@ -35,22 +35,22 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
     }
     return new MediaObjectMetadataQueryResult("", descriptors);
   }
-  
+
   @Override
   public Class<OptionallyFilteredIdList> inClass() {
     return OptionallyFilteredIdList.class;
   }
-  
+
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

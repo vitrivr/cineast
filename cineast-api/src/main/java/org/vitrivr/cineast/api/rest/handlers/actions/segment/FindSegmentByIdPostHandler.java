@@ -15,10 +15,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList, MediaSegmentQueryResult> {
-  
+
   public static final String ROUTE = "find/segments/by/id";
-  
-  
+
+
   @Override
   public MediaSegmentQueryResult performPost(IdList ids, Context ctx) {
     if (ids == null || ids.getIds().length == 0) {
@@ -29,22 +29,22 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
     sl.close();
     return new MediaSegmentQueryResult("", new ArrayList<>(segments.values()));
   }
-  
+
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
   }
-  
+
   @Override
   public Class<MediaSegmentQueryResult> outClass() {
     return MediaSegmentQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

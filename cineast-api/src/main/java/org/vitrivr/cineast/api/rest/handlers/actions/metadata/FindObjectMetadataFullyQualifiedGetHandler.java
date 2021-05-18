@@ -14,21 +14,20 @@ import java.util.Map;
  * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.
  * <p>
  * <h3>GET</h3>
- * This action's resource should have the following structure: {@code find/metadata/of/:id/in/:domain/with/:key}. It
- * returns then all metadata of the object with this id, belonging to that domain with the specified key.
+ * This action's resource should have the following structure: {@code find/metadata/of/:id/in/:domain/with/:key}. It returns then all metadata of the object with this id, belonging to that domain with the specified key.
  * </p>
  *
  * @author loris.sauter
  */
 public class FindObjectMetadataFullyQualifiedGetHandler implements
     GetRestHandler<MediaObjectMetadataQueryResult> {
-  
+
   public static final String OBJECT_ID_NAME = "id";
   public static final String DOMAIN_NAME = "domain";
   public static final String KEY_NAME = "key";
-  
+
   public static final String ROUTE = "find/metadata/of/:" + OBJECT_ID_NAME + "/in/:" + DOMAIN_NAME + "/with/:" + KEY_NAME;
-  
+
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -39,7 +38,7 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
     return new MediaObjectMetadataQueryResult("", service.find(objectId, domain, key)
     );
   }
-  
+
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
@@ -57,16 +56,16 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
         .pathParam(KEY_NAME, String.class, param -> param.description("Metadata key"))
         .json("200", outClass());
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
   }
-  
+
   /* TODO Actually, there is a lot of refactoring potential in this entire package */
 }

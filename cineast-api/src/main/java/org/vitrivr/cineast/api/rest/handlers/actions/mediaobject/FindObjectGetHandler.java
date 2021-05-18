@@ -15,25 +15,25 @@ import org.vitrivr.cineast.standalone.config.Config;
 import java.util.Map;
 
 public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResult> {
-  
+
   public static final String ATTRIBUTE_NAME = "attribute";
   public static final String VALUE_NAME = "value";
-  
+
   public static final String ROUTE = "find/object/by/:" + ATTRIBUTE_NAME + "/:" + VALUE_NAME;
-  
+
   private static final Logger LOGGER = LogManager.getLogger(FindObjectGetHandler.class);
-  
-  
+
+
   @Override
   public MediaObjectQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
-    
+
     final String attribute = parameters.get(ATTRIBUTE_NAME);
     final String value = parameters.get(VALUE_NAME);
-    
+
     final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     MediaObjectDescriptor object = null;
-    
+
     switch (attribute.toLowerCase()) {
       case "id": {
         object = ol.lookUpObjectById(value);
@@ -51,21 +51,21 @@ public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResu
         LOGGER.error("Unknown attribute '{}' in FindObjectByActionHandler", attribute);
       }
     }
-    
+
     ol.close();
     return new MediaObjectQueryResult("", Lists.newArrayList(object));
   }
-  
+
   @Override
   public Class<MediaObjectQueryResult> outClass() {
     return MediaObjectQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
