@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Comparator;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class TemporalObject {
 
@@ -30,15 +32,14 @@ public class TemporalObject {
     return segments;
   }
 
-  @Override
-  public String toString() {
-    return "TemporalObject(" + objectId + ", " + score + ")";
-  }
-
   public static final Comparator<TemporalObject> COMPARATOR = new Comparator<TemporalObject>() {
     public int compare(TemporalObject o1, TemporalObject o2) {
       return Double.compare(o1.getScore(), o2.getScore());
     }
   };
 
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+  }
 }

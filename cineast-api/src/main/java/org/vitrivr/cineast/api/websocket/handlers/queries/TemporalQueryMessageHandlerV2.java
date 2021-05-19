@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -200,13 +201,9 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
         .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x));
     /* Initialise the temporal scoring algorithms depending on timeDistances list */
     List<List<StringDoublePair>> tmpContainerResults = new ArrayList<>();
-    for (int containerIdx = 0; containerIdx < message.getQueries().size(); containerIdx++) {
-      if (containerResults.containsKey(containerIdx)) {
-        tmpContainerResults.add(containerResults.get(containerIdx));
-      } else {
-        tmpContainerResults.add(new ArrayList<>());
-      }
-    }
+
+    IntStream.range(0, message.getQueries().size()).forEach(idx -> tmpContainerResults.add(containerResults.getOrDefault(idx, new ArrayList<>())));
+
     TemporalScoring temporalScoring = new TemporalScoring(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
 
     /* Score and retrieve the results */

@@ -1,15 +1,18 @@
 package org.vitrivr.cineast.core.temporal.timedistance;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -21,15 +24,14 @@ import org.vitrivr.cineast.core.temporal.ScoredSegment;
  *
  * <p>Scores the {@link StringDoublePair}s in their container order</p>
  * <p>Scores with provided time distances between the segments</p>
- *
- * @author vGsteiger
- * @created 07.05.2021
+ * <p>The {@link TimeDistanceTemporalScoringAlgorithm} iteratively builds temporal sequences from the result containers corresponding to a temporal query that are in the right order and with the correct distance. We penalize segments that are not within the correct distance with an inverse decay function.</p>
+ * <p>If a segment is missing in the result containers, this segment simply gets skipped and the next suitable segment is looked for.</p>
  */
 public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScoringAlgorithm {
 
   private final List<Float> timeDistances;
 
-  public TimeDistanceTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, List<Float> timeDistances, Float maxLength) {
+  public TimeDistanceTemporalScoringAlgorithm(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, Float maxLength, List<Float> timeDistances) {
     super(segmentMap, containerResults, maxLength);
     this.timeDistances = timeDistances;
   }
@@ -43,25 +45,25 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
   public List<TemporalObject> score() {
     /* Calculate the best temporal object linearly for all segments given and assigned in the constructor. */
     Map<String, ResultStorage> resultMap = new HashMap<>();
-    for (TreeSet<ScoredSegment> set : this.scoredSegmentSets.values()) {
-      for (ScoredSegment segment : set) {
-        TemporalObject best = getBestTemporalObject(segment, segment.getContainerId());
+    this.scoredSegmentSets.values().forEach(set -> {
+      set.forEach(segment -> {
+        TemporalObject best = getBestTemporalObject(segment);
         if (resultMap.containsKey(best.getObjectId())) {
           resultMap.get(best.getObjectId()).addSegmentsAndScore(best.getSegments(), best.getScore());
         } else {
           resultMap.put(best.getObjectId(), new ResultStorage(best.getScore(), best.getSegments(), best.getObjectId()));
         }
-      }
-    }
-    List<TemporalObject> results = new ArrayList<>();
-    results = resultMap.values().stream().map(n -> new TemporalObject(n.getSegments(), n.getObjectId(), n.getScore())).collect(Collectors.toList());
+      });
+    });
+    Stream<TemporalObject> resultStream;
+    resultStream = resultMap.values().stream().map(ResultStorage::toTemporalObject);
     /* Return the sorted temporal objects. */
-    return results.stream()
+    return resultStream
         .sorted(Comparator.comparingDouble(TemporalObject::getScore).reversed())
         .collect(Collectors.toList());
   }
 
-  private TemporalObject getBestTemporalObject(ScoredSegment item, int containerId) throws NoSuchElementException {
+  private TemporalObject getBestTemporalObject(ScoredSegment item) throws NoSuchElementException {
     List<String> segments = new ArrayList<>();
     segments.add(item.getSegmentId());
     MediaSegmentDescriptor currentDescriptor = segmentMap.get(item.getSegmentId());
@@ -77,9 +79,9 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
     ScoredSegment currentSegment = new ScoredSegment(item);
 
     /* Go through all container ids and calculate the element that maximizes the score of the element */
-    for (int innerContainerId = containerId + 1; innerContainerId <= this.maxContainerId; innerContainerId++) {
+    for (int innerContainerId = item.getContainerId() + 1; innerContainerId <= this.maxContainerId; innerContainerId++) {
       final int lambdaInnerId = innerContainerId;
-      /* Get the set of values with a higher container id or a higher segment id. This has to be redone as currentSegment may change if a fitting segment has been found */
+      /* Get the set of values with a higher container id or a higher segment id. */
       SortedSet<ScoredSegment> setFromElement = this.scoredSegmentSets.get(currentSegment.getObjectId()).tailSet(item);
       List<ScoredSegment> candidates = setFromElement.stream().filter(c -> c.getContainerId() == lambdaInnerId).filter(c -> c.getEndAbs() - item.getStartAbs() >= 0).filter(c -> c.getEndAbs() - item.getStartAbs() <= this.maxLength).filter(c -> !c.getSegmentId().equals(item.getSegmentId())).collect(Collectors.toList());
       if (candidates.size() == 0) {
@@ -116,21 +118,22 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
   }
 
   private double calculateInverseDecayScore(float currentSegmentEndTime, ScoredSegment nextSegment, float timeDifference, MediaSegmentDescriptor segmentDescriptor) {
-    double score = 0D;
     if (segmentDescriptor.getStartabs() >= currentSegmentEndTime && segmentDescriptor.getStartabs() < currentSegmentEndTime + timeDifference) {
-      score = Math.exp((0.1f * (segmentDescriptor.getStartabs() - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
-    } else if (segmentDescriptor.getStartabs() >= currentSegmentEndTime && segmentDescriptor.getStartabs() > currentSegmentEndTime + timeDifference) {
-      score = Math.exp((-0.1f * (segmentDescriptor.getStartabs() - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
-    } else if (segmentDescriptor.getStartabs() == currentSegmentEndTime + timeDifference) {
-      score = nextSegment.getScore();
+      return Math.exp((0.1f * (segmentDescriptor.getStartabs() - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
     }
-    return score;
+    if (segmentDescriptor.getStartabs() >= currentSegmentEndTime && segmentDescriptor.getStartabs() > currentSegmentEndTime + timeDifference) {
+      return Math.exp((-0.1f * (segmentDescriptor.getStartabs() - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
+    }
+    if (segmentDescriptor.getStartabs() == currentSegmentEndTime + timeDifference) {
+      return nextSegment.getScore();
+    }
+    return 0D;
   }
 
   /* Storage class for the results for easier result transformation. */
   private static class ResultStorage {
 
-    private Set<String> segments = new TreeSet<>();
+    private Set<String> segments = new HashSet<>();
     private double score;
     private final String objectId;
 
@@ -145,6 +148,12 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
       if (this.score < update) {
         this.score = update;
       }
+    }
+
+    public TemporalObject toTemporalObject() {
+      List<String> segments = this.getSegments();
+      Collections.sort(segments);
+      return new TemporalObject(segments, this.objectId, this.score);
     }
 
     public List<String> getSegments() {

@@ -258,10 +258,6 @@ public class TemporalTestCases {
   private MediaSegmentDescriptor descriptor2_6 = new MediaSegmentDescriptor("Test2", "Test2_6", 0, 50, 60, 50f, 60f, true);
   private MediaSegmentDescriptor descriptor2_7 = new MediaSegmentDescriptor("Test2", "Test2_7", 0, 60, 70, 60f, 70f, true);
 
-  private MediaSegmentDescriptor descriptor3_1 = new MediaSegmentDescriptor("Test3", "Test3_1", 0, 0, 10, 0f, 10f, true);
-  private MediaSegmentDescriptor descriptor3_2 = new MediaSegmentDescriptor("Test3", "Test3_2", 0, 10, 20, 10f, 20f, true);
-  private MediaSegmentDescriptor descriptor3_3 = new MediaSegmentDescriptor("Test3", "Test3_3", 0, 20, 30, 20f, 30f, true);
-  private MediaSegmentDescriptor descriptor3_4 = new MediaSegmentDescriptor("Test3", "Test3_4", 0, 30, 40, 30f, 40f, true);
   private MediaSegmentDescriptor descriptor3_5 = new MediaSegmentDescriptor("Test3", "Test3_5", 0, 40, 50, 40f, 50f, true);
   private MediaSegmentDescriptor descriptor3_6 = new MediaSegmentDescriptor("Test3", "Test3_6", 0, 50, 60, 50f, 60f, true);
   private MediaSegmentDescriptor descriptor3_7 = new MediaSegmentDescriptor("Test3", "Test3_7", 0, 60, 70, 60f, 70f, true);

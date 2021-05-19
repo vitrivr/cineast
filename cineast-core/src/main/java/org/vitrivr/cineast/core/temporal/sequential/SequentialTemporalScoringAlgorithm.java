@@ -19,9 +19,8 @@ import org.vitrivr.cineast.core.temporal.ScoredSegment;
  *
  * <p>Scores the {@link StringDoublePair}s in their container order</p>
  * <p>Scores without provided time distances between the segments</p>
- *
- * @author vGsteiger
- * @created 11.05.2021
+ * <p>The Algorithm builds temporal paths by creating paths from a starting segment and creating a path from this segment and putting it in a queue. While the queue is not empty it then pops a path from the queue and creates new paths for each of the segments following the last to the path added segment.</p>
+ * <p>It then saves the best path created in the before mentioned fashion and scores a segment according to this.</p>
  */
 public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringAlgorithm {
 
@@ -44,25 +43,18 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
       for (ScoredSegment scoredSegment : segments.values()) {
         MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.getSegmentId());
         SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
-        if (this.objectPaths.containsKey(mediaSegmentDescriptor.getObjectId())) {
-          this.objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
-        } else {
-          List<SequentialPath> tmpList = new ArrayList<>();
-          tmpList.add(sequentialPath);
-          this.objectPaths.put(mediaSegmentDescriptor.getObjectId(), tmpList);
-        }
+
+        objectPaths.putIfAbsent(mediaSegmentDescriptor.getObjectId(), new ArrayList<>());
+        this.objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
       }
     }
 
     List<TemporalObject> results = new ArrayList<>();
 
     /*
-    Calculate the max value of a segment of every objectId and remove duplicates from the result
-    list and sort by segmentId.
+    Calculate the max value of a segment of every objectId and remove duplicates from the result list and sort by segmentId. We are maxpooling scores and declare all segments of an object as a path and we ignore all previous information from the individual paths of all segments.
      */
-    for (Map.Entry<String, List<SequentialPath>> entry : this.objectPaths.entrySet()) {
-      String objectId = entry.getKey();
-      List<SequentialPath> paths = entry.getValue();
+    this.objectPaths.forEach((objectId, paths) -> {
       double max = paths
           .stream()
           .mapToDouble(n -> (n.getScore() / (this.maxContainerId + 1)))
@@ -76,7 +68,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
       if (max > 0d) {
         results.add(temporalObject);
       }
-    }
+    });
 
     /* Return the sorted temporal objects. */
     return results.stream()
@@ -107,32 +99,33 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
         compareTo of ScoredSegment that allows to classify segments with the same containerId but
         higher segmentId as being higher.
          */
-        if (candidate.getContainerId() > lastHighestSegment.getContainerId() && candidate.getStartAbs() >= lastHighestSegment.getEndAbs()) {
-          /*
-          If we have reached the end of possible temporal paths we either store it and a new best
-          if it is shorter than max length and has a higher score or ignore the path.
-           */
-          if (candidate.getContainerId() == this.maxContainerId) {
-            if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1)) + path.getScore() && candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
-              bestPath = new SequentialPath(path);
-              bestPath.addSegment(candidate);
-            }
-          } else {
-            /*
-            Otherwise we look if the candidate together with the existing path is valid (shorter
-            than max length) and if yes maybe update best path if it is better and then add it to
-            the queue to be reevaluated in the next round as a longer path that is potentially
-            better.
-             */
-            if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
-              SequentialPath candidatePath = new SequentialPath(path);
-              candidatePath.addSegment(candidate);
-              if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {
-                bestPath = candidatePath;
-              }
-              pathQueue.add(candidatePath);
-            }
+        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStartAbs() < lastHighestSegment.getEndAbs()) {
+          continue;
+        }
+        /*
+         If we have reached the end of possible temporal paths we either store it and a new best
+         if it is shorter than max length and has a higher score or ignore the path.
+        */
+        if (candidate.getContainerId() == this.maxContainerId) {
+          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1)) + path.getScore() && candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
+            bestPath = new SequentialPath(path);
+            bestPath.addSegment(candidate);
           }
+          continue;
+        }
+        /*
+         Otherwise we look if the candidate together with the existing path is valid (shorter
+         than max length) and if yes maybe update best path if it is better and then add it to
+         the queue to be reevaluated in the next round as a longer path that is potentially
+         better.
+        */
+        if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
+          SequentialPath candidatePath = new SequentialPath(path);
+          candidatePath.addSegment(candidate);
+          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {
+            bestPath = candidatePath;
+          }
+          pathQueue.add(candidatePath);
         }
       }
     }

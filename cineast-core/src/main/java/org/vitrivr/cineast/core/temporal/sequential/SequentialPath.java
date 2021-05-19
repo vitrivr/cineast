@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.temporal.ScoredSegment;
  * Class to store a sequential scoring path.
  *
  * <p>Contains the score and segments and other relevant information for the path</p>
- *
- * @author vGsteiger
- * @created 07.05.2021
  */
 public class SequentialPath implements Comparable<SequentialPath> {
 
@@ -49,7 +46,7 @@ public class SequentialPath implements Comparable<SequentialPath> {
   }
 
   /**
-   * Add a new scored segment to the path.
+   * Add a new scored segment to the path. Segments with a lower container Id are not accepted as paths can only be built sequentially from the first to the last element. If we would allow for other elements then there could be the possibility of mixing up the order of a temporal sequence.
    */
   public boolean addSegment(ScoredSegment segment) {
     if (segment.getContainerId() > lastContainerId) {

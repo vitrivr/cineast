@@ -17,7 +17,7 @@ public class TimeDistanceTemporalScoringAlgorithmTest {
   public void testSanity() {
     Map<String, MediaSegmentDescriptor> emptyMap = new HashMap<>();
     List<List<StringDoublePair>> emptyList = new ArrayList<>();
-    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(emptyMap, emptyList, new ArrayList<>(), -1f);
+    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(emptyMap, emptyList, -1f, new ArrayList<>());
     List<TemporalObject> result = testAlgorithm.score();
     assert result.size() == 0;
   }
@@ -27,7 +27,7 @@ public class TimeDistanceTemporalScoringAlgorithmTest {
   public void testTemporalTestCase1() {
     TemporalTestCases temporalTestCases = new TemporalTestCases();
     temporalTestCases.buildTestCase1();
-    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getTimeDistances(), temporalTestCases.getMaxLength());
+    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getMaxLength(), temporalTestCases.getTimeDistances());
     List<TemporalObject> result = testAlgorithm.score();
 
     assert temporalTestCases.assertListSame(temporalTestCases.getExpectedResults(), result);
@@ -39,7 +39,7 @@ public class TimeDistanceTemporalScoringAlgorithmTest {
   public void testTemporalTestCase2() {
     TemporalTestCases temporalTestCases = new TemporalTestCases();
     temporalTestCases.buildTestCase2();
-    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getTimeDistances(), temporalTestCases.getMaxLength());
+    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getMaxLength(), temporalTestCases.getTimeDistances());
     List<TemporalObject> result = testAlgorithm.score();
 
     assert temporalTestCases.assertListSame(temporalTestCases.getExpectedResults(), result);
@@ -51,7 +51,7 @@ public class TimeDistanceTemporalScoringAlgorithmTest {
   public void testTemporalTestCase3() {
     TemporalTestCases temporalTestCases = new TemporalTestCases();
     temporalTestCases.buildTestCase3();
-    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getTimeDistances(), temporalTestCases.getMaxLength());
+    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getMaxLength(), temporalTestCases.getTimeDistances());
     List<TemporalObject> result = testAlgorithm.score();
 
     assert temporalTestCases.assertListSame(temporalTestCases.getExpectedResults(), result);
@@ -63,7 +63,7 @@ public class TimeDistanceTemporalScoringAlgorithmTest {
   public void testTemporalTestCase4() {
     TemporalTestCases temporalTestCases = new TemporalTestCases();
     temporalTestCases.buildTestCase4();
-    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getTimeDistances(), temporalTestCases.getMaxLength());
+    TimeDistanceTemporalScoringAlgorithm testAlgorithm = new TimeDistanceTemporalScoringAlgorithm(temporalTestCases.getSegmentMap(), temporalTestCases.getContainerResults(), temporalTestCases.getMaxLength(), temporalTestCases.getTimeDistances());
     List<TemporalObject> result = testAlgorithm.score();
 
     assert temporalTestCases.assertListSame(temporalTestCases.getExpectedResults(), result);

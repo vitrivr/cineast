@@ -8,9 +8,9 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
  * Class to store the information of a scored segment.
  *
  * <p>Stores relevant information and score of a segment of a container</p>
- *
- * @author vGsteiger
- * @created 11.05.2021
+ * <p>Utilized in all instances of the {@link AbstractTemporalScoringAlgorithm} to add up all scores of a certain segment scored in a certain container</p>
+ * <p>Provides functions to compare two scored segments with each other according to their container id and segment id</p>
+ * <p>Each scored segment is the result of adding up all scores of all results from one SimilarityQuery concerning one segment Id</p>
  */
 public class ScoredSegment implements Comparable<ScoredSegment> {
 
@@ -86,13 +86,10 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   }
 
   /*
-  * The comparator first compares the container Id of the items.
-  * If the container Id is larger, then the other segment clearly comes after the current segment.
-  * However, as we use the Scored Segments in the Temporal scoring algorithms also in the TreeSets,
-  * we don't want to loose item that have the same container Id. Therefore we then have to also
-  * compare the segment ids to distinguish. Within a tree set there shouldn't be duplicates
-  * (here same container Id and same segment Id).
-  */
+   * The comparator first compares the container Id of the items.
+   * If the container Id is larger, then the scored segment with the according score should come first in a temporal sequence.
+   * However, as we use the Scored Segments in the Temporal scoring algorithms also in the TreeSets, we don't want to loose item that have the same container Id. Therefore we then have to also compare the segment ids to distinguish. Within a tree set there shouldn't be duplicates (here same container Id and same segment Id).
+   */
   @Override
   public int compareTo(@NotNull ScoredSegment o) {
     int comparison = Integer.compare(this.containerId, o.getContainerId());

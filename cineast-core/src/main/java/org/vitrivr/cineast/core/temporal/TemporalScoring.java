@@ -11,8 +11,9 @@ import org.vitrivr.cineast.core.temporal.timedistance.TimeDistanceTemporalScorin
 /**
  * Class to evaluate temporal sequences either with a time distance temporal algorithm or with a sequential temporal algorithm, depending on the provided information.
  *
- * @author vGsteiger
- * @created 06.05.2021
+ * <p>The currently two different temporal scoring algorithms, sequential and time distance, differ in the usage of the user provided time distances</p>
+ * <p>Sequential temporal scoring builds sequences of {@link ScoredSegment}s that satisfy the order provided by the similarity queries of the temporal query where it builds the best possible paths and adds up the scores of the participating segments to calculate an aggregated score</p>
+ * <p>Time Distance temporal scoring also builds sequences of objects that have the same order than the similarity queries, however, it additionally provides the means to the user to define time distances between the segments and penalizes sequences that do not have the correct time distances between the segments</p>
  */
 public class TemporalScoring {
 
@@ -46,7 +47,7 @@ public class TemporalScoring {
       maxLength = Float.MAX_VALUE;
     }
     if (this.timeDistances.size() > 0) {
-      temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, this.timeDistances, maxLength);
+      temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, maxLength, this.timeDistances);
     } else {
       temporalScoringAlgorithm = new SequentialTemporalScoringAlgorithm(this.segmentMap, this.containerResults, maxLength);
     }
