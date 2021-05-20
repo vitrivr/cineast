@@ -35,7 +35,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private static SavedModelBundle textCoEmbedding;
 
   public VisualTextCoEmbedding() {
-    super("features_visualtextcoembedding", EMBEDDING_SIZE, EMBEDDING_SIZE);
+    super("features_visualtextcoembedding", 2f, EMBEDDING_SIZE);
     // If the separation of extract from visual, query by text is strict, the models can be loaded in the respective
     // init methods.
     if (textEmbedding == null)
