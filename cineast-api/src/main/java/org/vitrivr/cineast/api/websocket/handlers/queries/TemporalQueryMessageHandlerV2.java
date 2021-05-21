@@ -31,6 +31,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private static final int stageLimit = 15000;
+
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
   public TemporalQueryMessageHandlerV2(ContinuousRetrievalLogic retrievalLogic) {
@@ -134,6 +136,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
               /* Finalize and submit per-container stage and object descriptors */
               List<String> stageSegmentIds = results.stream()
                   .map(el -> el.key)
+                  .limit(stageLimit)
                   .collect(Collectors.toList());
               List<MediaSegmentDescriptor> stageSegments = this.loadSegments(stageSegmentIds);
 
@@ -150,7 +153,9 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
                   .map(el -> el.key)
                   .collect(Collectors.toList());
               sentSegmentIds.addAll(limitedSegmentIds);
+              LOGGER.warn("SegmentIds: {}", limitedSegmentIds);
               List<String> limitedObjectIds = this.submitSegmentAndObjectInformation(session, uuid, limitedSegmentIds);
+              LOGGER.warn("ObjectIds: {}", limitedObjectIds);
               sentObjectIds.addAll(limitedObjectIds);
               futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults));
               List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
@@ -223,12 +228,14 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
     objectIds = objectIds.stream().filter(s -> !sentObjectIds.contains(s)).collect(Collectors.toList());
 
-    /* Send to the UI */
-    this.submitSegmentAndObjectInformationFromIds(session, uuid, segmentIds, objectIds);
+    /* If necessary, send to the UI */
+    if (segmentIds.size() != 0 && objectIds.size() != 0) {
+      this.submitSegmentAndObjectInformationFromIds(session, uuid, segmentIds, objectIds);
 
-    /* Retrieve and send metadata for items not already sent */
-    List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
-    metadataRetrievalThreads.addAll(_threads);
+      /* Retrieve and send metadata for items not already sent */
+      List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+      metadataRetrievalThreads.addAll(_threads);
+    }
 
     /* Send scoring results to the frontend */
     futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));

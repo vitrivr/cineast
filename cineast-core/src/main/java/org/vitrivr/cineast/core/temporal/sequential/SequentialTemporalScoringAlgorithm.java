@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -59,12 +61,13 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
           .stream()
           .mapToDouble(n -> (n.getScore() / (this.maxContainerId + 1)))
           .max()
-          .orElse(-1D);
+          .orElse(0D);
       List<String> segmentIds = paths.stream()
           .flatMap(listContainer -> listContainer.getSegmentIds().stream())
-          .sorted()
           .distinct().collect(Collectors.toList());
-      TemporalObject temporalObject = new TemporalObject(segmentIds, objectId, max);
+      List<Float> startAbs = this.getStartAbs(segmentIds);
+      List<String> sortedSegments = new ArrayList<>(IntStream.range(0, segmentIds.size()).boxed().collect(Collectors.toMap(startAbs::get, segmentIds::get, (s, a) -> s + ", " + a, TreeMap::new)).values());
+      TemporalObject temporalObject = new TemporalObject(sortedSegments, objectId, max);
       if (max > 0d) {
         results.add(temporalObject);
       }

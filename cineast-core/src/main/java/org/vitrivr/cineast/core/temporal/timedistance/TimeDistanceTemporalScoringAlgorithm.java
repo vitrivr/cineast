@@ -1,17 +1,15 @@
 package org.vitrivr.cineast.core.temporal.timedistance;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
@@ -48,11 +46,10 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
     this.scoredSegmentSets.values().forEach(set -> {
       set.forEach(segment -> {
         TemporalObject best = getBestTemporalObject(segment);
-        if (resultMap.containsKey(best.getObjectId())) {
-          resultMap.get(best.getObjectId()).addSegmentsAndScore(best.getSegments(), best.getScore());
-        } else {
-          resultMap.put(best.getObjectId(), new ResultStorage(best.getScore(), best.getSegments(), best.getObjectId()));
-        }
+        resultMap.putIfAbsent(best.getObjectId(), new ResultStorage(best.getObjectId()));
+        List<String> bestSegmentIds = best.getSegments();
+        List<Float> bestStartAbs = this.getStartAbs(bestSegmentIds);
+        resultMap.get(best.getObjectId()).addSegmentsAndScore(IntStream.range(0, bestSegmentIds.size()).boxed().collect(Collectors.toMap(bestStartAbs::get, bestSegmentIds::get)), best.getScore());
       });
     });
     Stream<TemporalObject> resultStream;
@@ -133,31 +130,28 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
   /* Storage class for the results for easier result transformation. */
   private static class ResultStorage {
 
-    private Set<String> segments = new HashSet<>();
-    private double score;
+    /* Mapping the startAbs to the segmentId, we utilise a tree map to easily retrieve the values sorted by key */
+    private Map<Float, String> segments = new TreeMap<>();
+    private double score = 0D;
     private final String objectId;
 
-    public ResultStorage(double score, List<String> segments, String objectId) {
-      this.segments.addAll(segments);
-      this.score = score;
+    public ResultStorage(String objectId) {
       this.objectId = objectId;
     }
 
-    public void addSegmentsAndScore(List<String> segments, double update) {
-      this.segments.addAll(segments);
+    public void addSegmentsAndScore(Map<Float, String> segments, double update) {
+      this.segments.putAll(segments);
       if (this.score < update) {
         this.score = update;
       }
     }
 
     public TemporalObject toTemporalObject() {
-      List<String> segments = this.getSegments();
-      Collections.sort(segments);
-      return new TemporalObject(segments, this.objectId, this.score);
+      return new TemporalObject(new ArrayList<>(segments.values()), this.objectId, this.score);
     }
 
-    public List<String> getSegments() {
-      return new ArrayList<>(segments);
+    public Map<Float, String> getSegments() {
+      return new HashMap<>(segments);
     }
 
     public double getScore() {

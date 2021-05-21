@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -80,5 +81,9 @@ public abstract class AbstractTemporalScoringAlgorithm {
   }
 
   public abstract List<TemporalObject> score();
+
+  protected List<Float> getStartAbs(List<String> segments) {
+    return segments.stream().map(segmentId -> segmentMap.get(segmentId).getStartabs()).collect(Collectors.toList());
+  }
 
 }

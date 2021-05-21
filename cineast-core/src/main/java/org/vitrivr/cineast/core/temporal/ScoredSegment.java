@@ -96,7 +96,7 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     if (comparison != 0) {
       return comparison;
     } else {
-      return this.segmentId.compareTo(o.getSegmentId());
+      return Float.compare(this.startAbs, o.getStartAbs());
     }
   }
 }
