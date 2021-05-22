@@ -8,14 +8,27 @@ public class ImageRequestBuilder {
 
     public static final String REGION_PERCENTAGE = "pct:";
 
-    private final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
+    private final String baseUrl;
 
     private final IMAGE_API_VERSION apiVersion;
 
     private String region;
 
-    public ImageRequestBuilder(IMAGE_API_VERSION apiVersion) {
+    public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
         this.apiVersion = apiVersion;
+        this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011" +
+                ".jp2";
+    }
+
+    public static String toFloatString(float value) {
+        String strValue = "";
+        if (value % 1 == 0) {
+            int intValue = (int) value;
+            strValue = Integer.toString(intValue);
+        } else {
+            strValue = Float.toString(value);
+        }
+        return strValue;
     }
 
     public ImageRequestBuilder setRegion(REGION regionType) {
@@ -28,17 +41,19 @@ public class ImageRequestBuilder {
     }
 
     public ImageRequestBuilder setRegion(REGION regionType, float x, float y, float w, float h) {
+        String coordinates = toFloatString(x) + "," + toFloatString(y) + "," +
+                toFloatString(w) + "," + toFloatString(h);
         if (regionType == REGION.ABSOLUTE) {
-            this.region = REGION_FULL;
-        } else if (regionType == REGION.SQUARE) {
-            this.region = REGION_SQUARE;
+            this.region = coordinates;
+        } else if (regionType == REGION.PERCENTAGE) {
+            this.region = REGION_PERCENTAGE + coordinates;
         }
         return this;
     }
 
     public ImageRequest build() {
         ImageRequest imageRequest = new ImageRequest();
-        imageRequest.setBaseUrl(this.BASE_URL);
+        imageRequest.setBaseUrl(this.baseUrl);
         imageRequest.setRegion(this.region);
         return imageRequest;
     }
