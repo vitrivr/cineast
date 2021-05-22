@@ -153,9 +153,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
                   .map(el -> el.key)
                   .collect(Collectors.toList());
               sentSegmentIds.addAll(limitedSegmentIds);
-              LOGGER.warn("SegmentIds: {}", limitedSegmentIds);
               List<String> limitedObjectIds = this.submitSegmentAndObjectInformation(session, uuid, limitedSegmentIds);
-              LOGGER.warn("ObjectIds: {}", limitedObjectIds);
               sentObjectIds.addAll(limitedObjectIds);
               futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults));
               List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
@@ -202,8 +200,8 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     }
 
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
-    Map<String, MediaSegmentDescriptor> segmentMap = segments.stream()
-        .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x));
+    Map<String, MediaSegmentDescriptor> segmentMap = segments.stream().distinct()
+        .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x, (x1, x2) -> x1));
     /* Initialise the temporal scoring algorithms depending on timeDistances list */
     List<List<StringDoublePair>> tmpContainerResults = new ArrayList<>();
 
@@ -238,8 +236,10 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     }
 
     /* Send scoring results to the frontend */
-    futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
-    futures.forEach(CompletableFuture::join);
+    if (finalResults.size() > 0) {
+      futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
+      futures.forEach(CompletableFuture::join);
+    }
 
     for (Thread cleanupThread : cleanupThreads) {
       cleanupThread.join();

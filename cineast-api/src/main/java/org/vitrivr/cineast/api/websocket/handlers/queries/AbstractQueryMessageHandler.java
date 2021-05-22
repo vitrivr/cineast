@@ -226,7 +226,6 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
     final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
 
-    LOGGER.trace("Loading object information");
     final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
     final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
 
