@@ -428,6 +428,8 @@ public final class CottontailSelector implements DBSelector {
         return Knn.Distance.CHISQUARED.toString();
       case cosine:
         return Knn.Distance.COSINE.toString();
+      case haversine:
+        return Knn.Distance.HAVERSINE.toString();
       default:
         LOGGER.error("distance '{}' not supported by cottontail", distance);
         throw new IllegalArgumentException("Distance '" + distance.toString() + "' not supported by Cottontail DB.");
