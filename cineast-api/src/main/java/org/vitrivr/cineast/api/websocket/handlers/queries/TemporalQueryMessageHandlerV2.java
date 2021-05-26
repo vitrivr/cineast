@@ -213,7 +213,7 @@ public class TemporalQueryMessageHandlerV2 extends AbstractQueryMessageHandler<T
     List<TemporalObject> results = temporalScoring.score();
 
     List<TemporalObject> finalResults = results.stream()
-        .sorted(TemporalObject.COMPARATOR)
+        .sorted(TemporalObject.COMPARATOR.reversed())
         .limit(max)
         .collect(Collectors.toList());
 
