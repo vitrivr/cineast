@@ -21,6 +21,11 @@ public class ExtractorConfig {
      */
     private HashMap<String, String> properties = new HashMap<>();
 
+    /**
+     * IIIF configuration used to fetch media files from remote servers.
+     */
+    private IIIFConfig iiifConfig;
+
     @JsonProperty(required = true)
     public String getName() {
         return name;
