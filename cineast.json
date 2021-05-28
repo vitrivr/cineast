@@ -111,7 +111,10 @@
 
   "extractor": {
     "threadPoolSize": 4,
-    "outputLocation": "out"
+    "outputLocation": "out",
+    "iiif": {
+      "resourceUrl": []
+    }
   },
 
   "api": {
