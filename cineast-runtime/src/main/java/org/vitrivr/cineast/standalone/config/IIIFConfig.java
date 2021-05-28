@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,17 +11,17 @@ import java.util.List;
  */
 public class IIIFConfig {
 
-    /**
-     * List of IIIF resource URLs
-     */
-    private List<String> resourceUrlList = new LinkedList<>();
+  /**
+   * List of IIIF resource URLs
+   */
+  private List<String> resourceUrlList = new LinkedList<>();
 
-    public List<String> getResourceUrlList() {
-        return resourceUrlList;
-    }
+  public List<String> getResourceUrlList() {
+    return resourceUrlList;
+  }
 
-    @JsonProperty(required = false)
-    public void setResourceUrlList(List<String> resourceUrlList) {
-        this.resourceUrlList = resourceUrlList;
-    }
+  @JsonProperty(required = false)
+  public void setResourceUrlList(List<String> resourceUrlList) {
+    this.resourceUrlList = resourceUrlList;
+  }
 }
