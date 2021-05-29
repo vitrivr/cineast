@@ -19,12 +19,17 @@ public class ImageRequestBuilder {
   public static final String SIZE_FULL = "full";
   public static final String SIZE_MAX = "max";
   public static final String SIZE_PERCENTAGE = "pct:";
+  public static final String QUALITY_COLOR = "color";
+  public static final String QUALITY_GRAY = "gray";
+  public static final String QUALITY_BITONAL = "bitonal";
+  public static final String QUALITY_DEFAULT = "default";
 
   private final IMAGE_API_VERSION apiVersion;
   private final String baseUrl;
   private String region;
   private String size;
   private String rotation;
+  private String quality;
 
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
     this.apiVersion = apiVersion;
@@ -153,13 +158,25 @@ public class ImageRequestBuilder {
     return this;
   }
 
+  /**
+   * This method is used to specify the quality of the image.
+   *
+   * @param quality The quality of the image
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setQuality(String quality) {
+    this.quality = quality;
+    return this;
+  }
+
   public ImageRequest build() {
-    ImageRequest imageRequest = new ImageRequest();
-    imageRequest.setBaseUrl(this.baseUrl);
-    imageRequest.setRegion(this.region == null ? REGION_FULL : this.region);
-    imageRequest.setSize(this.size == null ? SIZE_FULL : this.size);
-    imageRequest.setRotation(this.rotation == null ? "0" : this.rotation);
-    return imageRequest;
+    return new ImageRequest(
+        this.baseUrl,
+        this.region == null ? REGION_FULL : this.region,
+        this.size == null ? SIZE_FULL : this.size,
+        this.rotation == null ? "0" : this.rotation,
+        this.quality == null ? QUALITY_DEFAULT : this.quality
+    );
   }
 
   /**
@@ -175,4 +192,5 @@ public class ImageRequestBuilder {
     ABSOLUTE,
     PERCENTAGE
   }
+
 }
