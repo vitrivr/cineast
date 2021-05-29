@@ -23,6 +23,13 @@ public class ImageRequestBuilder {
   public static final String QUALITY_GRAY = "gray";
   public static final String QUALITY_BITONAL = "bitonal";
   public static final String QUALITY_DEFAULT = "default";
+  public static final String EXTENSION_JPG = "jpg";
+  public static final String EXTENSION_TIF = "tif";
+  public static final String EXTENSION_PNG = "png";
+  public static final String EXTENSION_GIF = "gif";
+  public static final String EXTENSION_JP2 = "jp2";
+  public static final String EXTENSION_PDF = "pdf";
+  public static final String EXTENSION_WEBP = "webp";
 
   private final IMAGE_API_VERSION apiVersion;
   private final String baseUrl;
@@ -30,6 +37,7 @@ public class ImageRequestBuilder {
   private String size;
   private String rotation;
   private String quality;
+  private String extension;
 
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
     this.apiVersion = apiVersion;
@@ -169,14 +177,25 @@ public class ImageRequestBuilder {
     return this;
   }
 
+  /**
+   * This method is used to specify the file extension of the image.
+   *
+   * @param extension The file extension of the image
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setExtension(String extension) {
+    this.extension = extension;
+    return this;
+  }
+
   public ImageRequest build() {
     return new ImageRequest(
         this.baseUrl,
         this.region == null ? REGION_FULL : this.region,
         this.size == null ? SIZE_FULL : this.size,
         this.rotation == null ? "0" : this.rotation,
-        this.quality == null ? QUALITY_DEFAULT : this.quality
-    );
+        this.quality == null ? QUALITY_DEFAULT : this.quality,
+        this.extension == null ? EXTENSION_JPG : this.extension);
   }
 
   /**

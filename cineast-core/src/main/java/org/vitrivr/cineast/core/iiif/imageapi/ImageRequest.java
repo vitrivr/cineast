@@ -14,13 +14,15 @@ public class ImageRequest {
   private final String size;
   private final String rotation;
   private final String quality;
+  private final String extension;
 
-  public ImageRequest(String baseUrl, String region, String size, String rotation, String quality) {
+  public ImageRequest(String baseUrl, String region, String size, String rotation, String quality, String extension) {
     this.baseUrl = baseUrl;
     this.region = region;
     this.size = size;
     this.rotation = rotation;
     this.quality = quality;
+    this.extension = extension;
   }
 
   public String getBaseUrl() {
@@ -43,6 +45,10 @@ public class ImageRequest {
     return quality;
   }
 
+  public String getExtension() {
+    return extension;
+  }
+
   // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
   public String getUrl() {
     StringBuilder url = new StringBuilder(baseUrl);
@@ -52,7 +58,9 @@ public class ImageRequest {
         .append(FORWARD_SLASH_DELIMITER)
         .append(size)
         .append(FORWARD_SLASH_DELIMITER)
-        .append(rotation);
+        .append(rotation)
+        .append(FORWARD_SLASH_DELIMITER)
+        .append(extension);
     return url.toString();
   }
 
