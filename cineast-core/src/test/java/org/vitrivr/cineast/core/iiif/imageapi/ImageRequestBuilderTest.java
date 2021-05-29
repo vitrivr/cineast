@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.EXTENSION_TIF;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.ABSOLUTE;
@@ -245,6 +246,21 @@ class ImageRequestBuilderTest {
       ImageRequest request = builder.setQuality(QUALITY_BITONAL).build();
       assertNotNull(request);
       assertEquals(QUALITY_BITONAL, request.getQuality());
+    }
+  }
+
+  /**
+   * Unit tests for methods that set the file extension of the image
+   */
+  @Nested
+  class setExtensionTests {
+
+    @DisplayName("setExtension test")
+    @Test
+    void setExtension() {
+      ImageRequest request = builder.setExtension(EXTENSION_TIF).build();
+      assertNotNull(request);
+      assertEquals(EXTENSION_TIF, request.getExtension());
     }
   }
 
