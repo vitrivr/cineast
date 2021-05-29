@@ -63,6 +63,9 @@ public final class IngestConfig implements ExtractionContextProvider {
     /** Configuration for extraction-pipeline. Defaults to global configuration. */
     private final CacheConfig cacheConfig;
 
+    /** IIIF configuration used to fetch media files from remote servers. */
+    private IIIFConfig iiifConfig;
+
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
      *
