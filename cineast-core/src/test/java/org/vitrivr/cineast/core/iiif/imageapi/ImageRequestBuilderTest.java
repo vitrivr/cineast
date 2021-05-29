@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.ABSOLUTE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.FULL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.PERCENTAGE;
@@ -229,6 +230,21 @@ class ImageRequestBuilderTest {
       assertThrows(IllegalArgumentException.class, () -> {
         builder.setRotation(rotation, true).build();
       });
+    }
+  }
+
+  /**
+   * Unit tests for methods that set the quality of the image
+   */
+  @Nested
+  class setQualityTests {
+
+    @DisplayName("setQuality test")
+    @Test
+    void setQuality() {
+      ImageRequest request = builder.setQuality(QUALITY_BITONAL).build();
+      assertNotNull(request);
+      assertEquals(QUALITY_BITONAL, request.getQuality());
     }
   }
 

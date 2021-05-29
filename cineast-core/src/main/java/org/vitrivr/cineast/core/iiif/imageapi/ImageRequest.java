@@ -9,44 +9,38 @@ package org.vitrivr.cineast.core.iiif.imageapi;
  */
 public class ImageRequest {
 
-  private String baseUrl;
+  private final String baseUrl;
+  private final String region;
+  private final String size;
+  private final String rotation;
+  private final String quality;
 
-  private String region;
-
-  private String size;
-
-  private String rotation;
-
-  public String getRotation() {
-    return rotation;
-  }
-
-  public void setRotation(String rotation) {
+  public ImageRequest(String baseUrl, String region, String size, String rotation, String quality) {
+    this.baseUrl = baseUrl;
+    this.region = region;
+    this.size = size;
     this.rotation = rotation;
+    this.quality = quality;
   }
 
   public String getBaseUrl() {
     return baseUrl;
   }
 
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
   public String getRegion() {
     return region;
-  }
-
-  public void setRegion(String region) {
-    this.region = region;
   }
 
   public String getSize() {
     return size;
   }
 
-  public void setSize(String size) {
-    this.size = size;
+  public String getRotation() {
+    return rotation;
+  }
+
+  public String getQuality() {
+    return quality;
   }
 
   // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
