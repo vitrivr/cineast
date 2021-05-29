@@ -198,4 +198,38 @@ class ImageRequestBuilderTest {
 
   }
 
+  /**
+   * Unit tests for methods that set the rotation of the image
+   */
+  @Nested
+  class setRotationTests {
+
+    @DisplayName("setRotation no mirroring test")
+    @Test
+    void setRotationNoMirroring() {
+      float rotation = 23.450f;
+      ImageRequest request = builder.setRotation(rotation, false).build();
+      assertNotNull(request);
+      assertEquals(toSimplifiedFloatString(rotation), request.getRotation());
+    }
+
+    @DisplayName("setRotation with mirroring test")
+    @Test
+    void setRotationWithMirroring() {
+      float rotation = 23.450f;
+      ImageRequest request = builder.setRotation(rotation, true).build();
+      assertNotNull(request);
+      assertEquals("!" + toSimplifiedFloatString(rotation), request.getRotation());
+    }
+
+    @DisplayName("setRotation with invalid rotation degrees test")
+    @Test
+    void setRotationWithInvalidRotation() {
+      float rotation = -423.94f;
+      assertThrows(IllegalArgumentException.class, () -> {
+        builder.setRotation(rotation, true).build();
+      });
+    }
+  }
+
 }

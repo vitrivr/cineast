@@ -24,6 +24,7 @@ public class ImageRequestBuilder {
   private final String baseUrl;
   private String region;
   private String size;
+  private String rotation;
 
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
     this.apiVersion = apiVersion;
@@ -137,11 +138,27 @@ public class ImageRequestBuilder {
     return this;
   }
 
+  /**
+   * This method is used to specify the mirroring and rotation applied to the image.
+   *
+   * @param degree Represents the number of degrees of clockwise rotation, and may be any floating point number from 0 to 360.
+   * @param mirror Indicates if that the image should be mirrored by reflection on the vertical axis before any rotation is applied.
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setRotation(float degree, boolean mirror) {
+    if (degree < 0 || degree > 360) {
+      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+    }
+    this.rotation = (mirror ? "!" : "") + toSimplifiedFloatString(degree);
+    return this;
+  }
+
   public ImageRequest build() {
     ImageRequest imageRequest = new ImageRequest();
     imageRequest.setBaseUrl(this.baseUrl);
     imageRequest.setRegion(this.region == null ? REGION_FULL : this.region);
     imageRequest.setSize(this.size == null ? SIZE_FULL : this.size);
+    imageRequest.setRotation(this.rotation == null ? "0" : this.rotation);
     return imageRequest;
   }
 

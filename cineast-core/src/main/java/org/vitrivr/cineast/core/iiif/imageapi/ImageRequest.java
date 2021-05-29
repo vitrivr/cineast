@@ -15,6 +15,16 @@ public class ImageRequest {
 
   private String size;
 
+  private String rotation;
+
+  public String getRotation() {
+    return rotation;
+  }
+
+  public void setRotation(String rotation) {
+    this.rotation = rotation;
+  }
+
   public String getBaseUrl() {
     return baseUrl;
   }
@@ -46,7 +56,9 @@ public class ImageRequest {
     url.append(FORWARD_SLASH_DELIMITER)
         .append(region)
         .append(FORWARD_SLASH_DELIMITER)
-        .append(size);
+        .append(size)
+        .append(FORWARD_SLASH_DELIMITER)
+        .append(rotation);
     return url.toString();
   }
 
