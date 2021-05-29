@@ -1,15 +1,19 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
 /**
+ * Class definition of a single IIIF Image Api Request
+ *
  * @author singaltanmay
  * @version 1.0
- * @created 28.05.21
+ * @created 29.05.21
  */
 public class ImageRequest {
 
   private String baseUrl;
 
   private String region;
+
+  private String size;
 
   public String getBaseUrl() {
     return baseUrl;
@@ -27,11 +31,22 @@ public class ImageRequest {
     this.region = region;
   }
 
+  public String getSize() {
+    return size;
+  }
+
+  public void setSize(String size) {
+    this.size = size;
+  }
+
   // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
   public String getUrl() {
     StringBuilder url = new StringBuilder(baseUrl);
-    url.append("/")
-        .append(region);
+    String FORWARD_SLASH_DELIMITER = "/";
+    url.append(FORWARD_SLASH_DELIMITER)
+        .append(region)
+        .append(FORWARD_SLASH_DELIMITER)
+        .append(size);
     return url.toString();
   }
 
