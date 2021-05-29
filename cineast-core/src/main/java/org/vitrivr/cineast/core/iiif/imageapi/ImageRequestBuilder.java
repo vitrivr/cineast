@@ -21,8 +21,7 @@ public class ImageRequestBuilder {
 
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
     this.apiVersion = apiVersion;
-    this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011" +
-        ".jp2";
+    this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
   }
 
   public static String toFloatString(float value) {
