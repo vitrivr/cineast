@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 13.01.17
  */
-public final class IngestConfig implements ExtractionContextProvider {
+public class IngestConfig implements ExtractionContextProvider {
     /** MediaType for the Extraction run. */
     private final MediaType type;
 
@@ -65,9 +65,6 @@ public final class IngestConfig implements ExtractionContextProvider {
 
     /** Configuration for extraction-pipeline. Defaults to global configuration. */
     private final CacheConfig cacheConfig;
-
-    /** IIIF configuration used to fetch media files from remote servers. */
-    private IIIFConfig iiifConfig;
 
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
