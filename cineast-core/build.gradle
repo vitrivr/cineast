@@ -112,6 +112,13 @@ dependencies {
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
 
+    /** Lombok to generate getters and setters at runtime */
+    def lombok_version = "1.18.20";
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
+
     /** Tensorflow (Java). */
     api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
 

@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author singaltanmay
@@ -16,26 +16,29 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem;
  */
 public class ImageInformationRequest {
 
-  public static void main(String[] args) throws IOException {
-    ImageInformation imageInformation = fetchImageInformation("https://libimages.princeton.edu/loris/pudl0001%2F5138415%2F00000011.jp2/info.json");
-    System.out.println(imageInformation);
-//    String level = (String) imageInformation.profile.get(0);
-//    ProfileItem profileItem = (ProfileItem) imageInformation.profile.get(1);
-//    System.out.println(level);
-//    System.out.println(profileItem);
-  }
-
-  private static ImageInformation fetchImageInformation(String url) throws IOException {
+  /**
+   * @param url The Image Information request URL used to make a request to the IIIF server.
+   * @return Received Image Information deserialized into {@link ImageInformation}
+   * @throws IOException if an HTTP connection was not established successfully.
+   */
+  public static ImageInformation fetchImageInformation(String url) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setRequestProperty("accept", "application/json");
     InputStream responseStream = connection.getInputStream();
-
-    ObjectMapper mapper = new ObjectMapper();
     String response = IOUtils.toString(responseStream, StandardCharsets.UTF_8);
+    return parseImageInformationJson(response);
+  }
 
+  /**
+   * This has been created as a separate function to help with unit testing.
+   * @param response The JSON response received from the server
+   * @return {@link ImageInformation}
+   */
+  @Nullable
+  public static ImageInformation parseImageInformationJson(String response) {
     ImageInformation imageInformation = null;
     try {
-      imageInformation = mapper.readValue(response, ImageInformation.class);
+      imageInformation = new ObjectMapper().readValue(response, ImageInformation.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
