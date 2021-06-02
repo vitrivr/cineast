@@ -5,6 +5,8 @@ import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
@@ -27,7 +29,6 @@ public class ExtractionCommand implements Runnable {
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the extraction. Set this flag when you want more performance with external parallelism.")
   private final boolean doNotFinalize = false;
 
-
   @Override
   public void run() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
@@ -36,22 +37,27 @@ public class ExtractionCommand implements Runnable {
       try {
         final JacksonJsonProvider reader = new JacksonJsonProvider();
         final IngestConfig context = reader.toObject(file, IngestConfig.class);
-        final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
-        if (dispatcher.initialize(provider, context)) {
-          /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
-          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
-            dispatcher.registerListener(new ExtractionCompleteListener() {
-              @Override
-              public void extractionComplete() {
-                OptimizeEntitiesCommand.optimizeAllCottontailEntities();
-              }
-            });
-          }
-          dispatcher.registerListener((ExtractionCompleteListener) provider);
-          dispatcher.start();
-          dispatcher.block();
+        if (context != null && isURL(context.getInput().getPath())) {
+          // TODO implement extraction for an IIIF job
+          System.out.println("IIIF extraction job detected");
         } else {
-          System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file);
+          final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
+          if (dispatcher.initialize(provider, context)) {
+            /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
+            if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
+              dispatcher.registerListener(new ExtractionCompleteListener() {
+                @Override
+                public void extractionComplete() {
+                  OptimizeEntitiesCommand.optimizeAllCottontailEntities();
+                }
+              });
+            }
+            dispatcher.registerListener((ExtractionCompleteListener) provider);
+            dispatcher.start();
+            dispatcher.block();
+          } else {
+            System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file);
+          }
         }
       } catch (IOException e) {
         System.err.printf("Could not start handleExtraction with configuration file '%s' due to a IO error.%n", file);
@@ -61,6 +67,16 @@ public class ExtractionCommand implements Runnable {
       }
     } else {
       System.err.printf("Could not start handleExtraction with configuration file '%s'; the file does not exist!%n", file);
+    }
+  }
+
+  /** Helper method to detect if the path in InputConfig is that of an IIIF job or the local filesystem */
+  public static boolean isURL(String url) {
+    try {
+      new URI(url);
+      return true;
+    } catch (URISyntaxException e) {
+      return false;
     }
   }
 }
