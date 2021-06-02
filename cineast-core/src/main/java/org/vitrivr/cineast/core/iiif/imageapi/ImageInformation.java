@@ -57,52 +57,96 @@ public class ImageInformation {
   @JsonProperty
   private List<SizesItem> sizes;
 
-  /**
-   * Inner class used to parse the Image Information JSON response.
-   */
-  public class TilesItem {
-
-    @JsonProperty
-    public Integer width;
-
-    @JsonProperty
-    public List<Integer> scaleFactors;
+  @Override
+  public String toString() {
+    return "ImageInformation{" +
+        "profile=" + profile +
+        ", atContext='" + atContext + '\'' +
+        ", atId='" + atId + '\'' +
+        ", atType='" + atType + '\'' +
+        ", protocol='" + protocol + '\'' +
+        ", width='" + width + '\'' +
+        ", height='" + height + '\'' +
+        ", tiles=" + tiles +
+        ", sizes=" + sizes +
+        '}';
   }
 
   /**
    * Inner class used to parse the Image Information JSON response.
    */
-  public class SizesItem {
+  public static class SizesItem {
 
     @JsonProperty
     public Integer width;
-
     @JsonProperty
     public Integer height;
+
+    public SizesItem() {
+    }
+
+    @Override
+    public String toString() {
+      return "SizesItem{" +
+          "width=" + width +
+          ", height=" + height +
+          '}';
+    }
   }
 
   /**
    * Inner class used to parse the 0+ indexed item in "profile" array of the Image Information JSON response.
    */
-  public class ProfileItem {
+  public static class ProfileItem {
 
     /**
      * List of operations that the server supports such as rotation, mirroring, regionSquare etc.
      */
     @JsonProperty
     public List<String> supports;
-
     /**
      * List of qualities made available by the server.
      */
     @JsonProperty
     public List<String> qualities;
-
     /**
      * List of formats supported by the server
      */
     @JsonProperty
     public List<String> formats;
+
+    public ProfileItem() {
+    }
+
+    @Override
+    public String toString() {
+      return "ProfileItem{" +
+          "supports=" + supports +
+          ", qualities=" + qualities +
+          ", formats=" + formats +
+          '}';
+    }
   }
 
+  /**
+   * Inner class used to parse the Image Information JSON response.
+   */
+  public static class TilesItem {
+
+    @JsonProperty
+    public Integer width;
+    @JsonProperty
+    public List<Integer> scaleFactors;
+
+    public TilesItem() {
+    }
+
+    @Override
+    public String toString() {
+      return "TilesItem{" +
+          "width=" + width +
+          ", scaleFactors=" + scaleFactors +
+          '}';
+    }
+  }
 }
