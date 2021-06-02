@@ -1,5 +1,42 @@
 {
-  "resourceUrls": [
-    "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2"
-  ]
+  "input":{
+    "path": "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2",
+    "depth": 3,
+    "skip": 0,
+    "id": {
+      "name": "SequentialObjectIdGenerator",
+      "properties": {}
+    }
+  },
+  "extractors":[
+    {"name": "AverageColor"},
+    {"name": "AverageColorARP44"},
+    {"name": "AverageColorCLD"},
+    {"name": "AverageColorGrid8"},
+    {"name": "AverageColorRaster"},
+    {"name": "AverageFuzzyHist"},
+    {"name": "AverageColorGrid8Reduced15"},
+    {"name": "CLD"},
+    {"name": "EdgeARP88"},
+    {"name": "EdgeGrid16"},
+    {"name": "EHD"},
+    {"name": "HPCP12Shingle"},
+    {"name": "MedianColor"},
+    {"name": "MedianColorGrid8"},
+    {"name": "HOGMirflickr25K512"},
+    {"name": "SURFMirflickr25K512"}
+  ],
+  "exporters":[
+    {
+      "name": "ShotThumbnailsExporter",
+      "properties": {
+        "destination":"thumbnails/"
+      }
+    }
+  ],
+  "database":{
+    "host": "output/",
+    "writer": "JSON",
+    "selector": "NONE"
+  }
 }
