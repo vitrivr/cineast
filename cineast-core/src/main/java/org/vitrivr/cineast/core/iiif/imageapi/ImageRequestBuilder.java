@@ -58,28 +58,62 @@ public class ImageRequestBuilder {
     return strValue;
   }
 
-  public ImageRequestBuilder setRegion(REGION regionType) {
-    if (regionType == REGION.FULL) {
-      this.region = REGION_FULL;
-    } else if (regionType == REGION.SQUARE) {
-      this.region = REGION_SQUARE;
-    }
+
+  /**
+   * The complete image is returned, without any cropping.
+   *
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setRegionFull() {
+    this.region = REGION_FULL;
     return this;
   }
 
-  public ImageRequestBuilder setRegion(REGION regionType, float x, float y, float w, float h) {
+  /**
+   * The region is defined as an area where the width and height are both equal to the length of the shorter dimension of the complete image. The region may be positioned anywhere in the longer dimension of the image content at the server’s discretion, and centered is often a reasonable default.
+   *
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setRegionSquare() {
+    this.region = REGION_SQUARE;
+    return this;
+  }
+
+  /**
+   * The region of the full image to be returned is specified in terms of absolute pixel values.
+   *
+   * @param x Represents the number of pixels from the 0 position on the horizontal axis
+   * @param y Represents the number of pixels from the 0 position on the vertical axis
+   * @param w Represents the width of the region
+   * @param h Represents the height of the region in pixels
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setRegionAbsolute(float x, float y, float w, float h) {
+    this.region = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + "," +
+        toSimplifiedFloatString(w) + "," + toSimplifiedFloatString(h);
+    return this;
+  }
+
+  /**
+   * The region to be returned is specified as a sequence of percentages of the full image’s dimensions, as reported in the image information document.
+   *
+   * @param x Represents the number of pixels from the 0 position on the horizontal axis, calculated as a percentage of the reported width
+   * @param y Represents the number of pixels from the 0 position on the vertical axis, calculated as a percentage of the reported height
+   * @param w Represents the width of the region, calculated as a percentage of the reported width
+   * @param h Represents the height of the region, calculated as a percentage of the reported height
+   * @return this {@link ImageRequestBuilder}
+   */
+  public ImageRequestBuilder setRegionPercentage(float x, float y, float w, float h) {
     String coordinates = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + "," +
         toSimplifiedFloatString(w) + "," + toSimplifiedFloatString(h);
-    if (regionType == REGION.ABSOLUTE) {
-      this.region = coordinates;
-    } else if (regionType == REGION.PERCENTAGE) {
-      this.region = REGION_PERCENTAGE + coordinates;
-    }
+    this.region = REGION_PERCENTAGE + coordinates;
     return this;
   }
 
   /**
    * The image or region is not scaled, and is returned at its full size. Deprecation Warning : The size keyword full will be replaced in favor of max in version 3.0. Until that time, the w, syntax should be considered the canonical form of request for the max size, unless max is equivalent to full.
+   *
+   * @return this {@link ImageRequestBuilder}
    */
   @Deprecated
   public ImageRequestBuilder setSizeFull() {
@@ -89,6 +123,8 @@ public class ImageRequestBuilder {
 
   /**
    * The image or region is returned at the maximum size available, as indicated by maxWidth, maxHeight, maxArea in the profile description. This is the same as full if none of these properties are provided.
+   *
+   * @return this {@link ImageRequestBuilder}
    */
   public ImageRequestBuilder setSizeMax() {
     this.size = SIZE_MAX;
@@ -97,6 +133,8 @@ public class ImageRequestBuilder {
 
   /**
    * The width and height of the returned image is scaled to n% of the width and height of the extracted region. The aspect ratio of the returned image is the same as that of the extracted region.
+   *
+   * @return this {@link ImageRequestBuilder}
    */
   public ImageRequestBuilder setSizePercentage(float n) {
     this.size = SIZE_PERCENTAGE + n;
@@ -105,6 +143,8 @@ public class ImageRequestBuilder {
 
   /**
    * Returns an image scaled to the exact dimensions given in the parameters. If only height or width are provided then image is scaled to that dimension while maintaining the aspect ratio. If both height and width are given then image is scaled to those dimensions by ignoring the aspect ratio.
+   *
+   * @return this {@link ImageRequestBuilder}
    */
   public ImageRequestBuilder setSizeScaledExact(Float width, Float height) throws IllegalArgumentException {
     boolean isWidthValid = width != null && !width.isNaN() && !width.isInfinite();
@@ -127,6 +167,8 @@ public class ImageRequestBuilder {
 
   /**
    * The image content is scaled for the best fit such that the resulting width and height are less than or equal to the requested width and height. The exact scaling may be determined by the service provider, based on characteristics including image quality and system performance. The dimensions of the returned image content are calculated to maintain the aspect ratio of the extracted region.
+   *
+   * @return this {@link ImageRequestBuilder}
    */
   public ImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
     // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
@@ -203,13 +245,6 @@ public class ImageRequestBuilder {
    */
   public enum IMAGE_API_VERSION {
     TWO_POINT_ONE_POINT_ONE
-  }
-
-  public enum REGION {
-    FULL,
-    SQUARE,
-    ABSOLUTE,
-    PERCENTAGE
   }
 
 }
