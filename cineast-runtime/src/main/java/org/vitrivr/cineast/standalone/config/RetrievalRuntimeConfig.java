@@ -136,9 +136,9 @@ public final class RetrievalRuntimeConfig {
 			Retriever rev;
 
 			if(config.getProperties() == null){
-			    rev = ReflectionHelper.instanciate(config.getRetrieverClass());
+			    rev = ReflectionHelper.instantiate(config.getRetrieverClass());
             } else {
-                rev = ReflectionHelper.instanciate(config.getRetrieverClass(), config.getProperties());
+                rev = ReflectionHelper.instantiate(config.getRetrieverClass(), config.getProperties());
             }
 
 			if(rev != null){
@@ -158,9 +158,9 @@ public final class RetrievalRuntimeConfig {
             Retriever retriever;
 
             if(config.getProperties() == null){
-                retriever = ReflectionHelper.instanciate(config.getRetrieverClass());
+                retriever = ReflectionHelper.instantiate(config.getRetrieverClass());
             } else {
-                retriever = ReflectionHelper.instanciate(config.getRetrieverClass(), config.getProperties());
+                retriever = ReflectionHelper.instantiate(config.getRetrieverClass(), config.getProperties());
             }
 
           if (retriever != null) {
