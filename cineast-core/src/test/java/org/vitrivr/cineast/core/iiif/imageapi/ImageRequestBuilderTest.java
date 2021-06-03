@@ -6,10 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.EXTENSION_TIF;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.ABSOLUTE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.PERCENTAGE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION.SQUARE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_FULL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_PERCENTAGE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_SQUARE;
@@ -49,7 +45,7 @@ class ImageRequestBuilderTest {
     @DisplayName("setRegion(FULL) test")
     @Test
     void setRegionFull() {
-      ImageRequest request = builder.setRegion(FULL).build();
+      ImageRequest request = builder.setRegionFull().build();
       assertNotNull(request);
       assertEquals(REGION_FULL, request.getRegion());
     }
@@ -57,7 +53,7 @@ class ImageRequestBuilderTest {
     @DisplayName("setRegion(SQUARE) test")
     @Test
     void setRegionSquare() {
-      ImageRequest request = builder.setRegion(SQUARE).build();
+      ImageRequest request = builder.setRegionSquare().build();
       assertNotNull(request);
       assertEquals(REGION_SQUARE, request.getRegion());
     }
@@ -69,7 +65,7 @@ class ImageRequestBuilderTest {
       final float y = 15f;
       final float w = 120f;
       final float h = 140f;
-      ImageRequest request = builder.setRegion(ABSOLUTE, x, y, w, h).build();
+      ImageRequest request = builder.setRegionAbsolute(x, y, w, h).build();
       assertNotNull(request);
       String coordinates = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + ","
           + toSimplifiedFloatString(w) + "," + toSimplifiedFloatString(h);
@@ -83,7 +79,7 @@ class ImageRequestBuilderTest {
       final float y = 15f;
       final float w = 120f;
       final float h = 140f;
-      ImageRequest request = builder.setRegion(PERCENTAGE, x, y, w, h).build();
+      ImageRequest request = builder.setRegionPercentage(x, y, w, h).build();
       String s = request.getUrl();
       assertNotNull(request);
       String coordinates = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + ","
