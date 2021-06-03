@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+
 /**
  * Class definition of a single IIIF Image Api Request
  *
@@ -60,8 +66,17 @@ public class ImageRequest {
         .append(FORWARD_SLASH_DELIMITER)
         .append(rotation)
         .append(FORWARD_SLASH_DELIMITER)
+        .append(quality)
+        .append(".")
         .append(extension);
     return url.toString();
+  }
+
+  public void saveToFile(String filePath, String fileName) throws IOException {
+    URL url = new URL(this.getUrl());
+    BufferedImage img = ImageIO.read(url);
+    File file = new File(filePath + fileName + "." + this.getExtension());
+    ImageIO.write(img, this.getExtension(), file);
   }
 
   @Override

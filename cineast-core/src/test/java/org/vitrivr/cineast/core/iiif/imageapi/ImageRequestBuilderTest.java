@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
  */
 class ImageRequestBuilderTest {
 
-  private static final String BASE_URL = "https://baseurl.com/imageapi";
+  private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
 
   ImageRequestBuilder builder;
 
@@ -38,6 +38,7 @@ class ImageRequestBuilderTest {
   void setup() {
     builder = new ImageRequestBuilder(TWO_POINT_ONE_POINT_ONE, BASE_URL);
   }
+
 
   /**
    * Unit tests for methods that set the region of the image
