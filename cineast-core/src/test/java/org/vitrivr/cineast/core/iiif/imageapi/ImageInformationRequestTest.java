@@ -3,11 +3,14 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
@@ -21,11 +24,19 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
 class ImageInformationRequestTest {
 
   String JSON_RESPONSE = "{\"profile\": [\"http://iiif.io/api/image/2/level2.json\", {\"supports\": [\"canonicalLinkHeader\", \"profileLinkHeader\", \"mirroring\", \"rotationArbitrary\", \"regionSquare\", \"sizeAboveFull\"], \"qualities\": [\"default\", \"bitonal\", \"gray\", \"color\"], \"formats\": [\"jpg\", \"png\", \"gif\", \"webp\"]}], \"tiles\": [{\"width\": 1024, \"scaleFactors\": [1, 2, 4, 8, 16, 32]}], \"protocol\": \"http://iiif.io/api/image\", \"sizes\": [{\"width\": 168, \"height\": 225}, {\"width\": 335, \"height\": 450}, {\"width\": 669, \"height\": 900}, {\"width\": 1338, \"height\": 1800}, {\"width\": 2676, \"height\": 3600}, {\"width\": 5351, \"height\": 7200}], \"height\": 7200, \"width\": 5351, \"@context\": \"http://iiif.io/api/image/2/context.json\", \"@id\": \"https://libimages.princeton.edu/loris/pudl0001%2F5138415%2F00000011.jp2\"}";
+  private ImageInformationRequest imageInformationRequest;
+
+  @BeforeEach
+  void setup() throws IOException {
+    imageInformationRequest = Mockito.mock(ImageInformationRequest.class);
+    Mockito.when(imageInformationRequest.fetchImageInformation()).thenReturn(JSON_RESPONSE);
+    Mockito.when(imageInformationRequest.getImageInformation(JSON_RESPONSE)).thenCallRealMethod();
+  }
 
   @DisplayName("parseImageInformationJson test")
   @Test
   void parseImageInformationJson() {
-    ImageInformation imageInformation = ImageInformationRequest.parseImageInformationJson(JSON_RESPONSE);
+    ImageInformation imageInformation = imageInformationRequest.getImageInformation(JSON_RESPONSE);
     assertNotNull(imageInformation);
     assertEquals("http://iiif.io/api/image", imageInformation.getProtocol());
     assertEquals(7200, imageInformation.getHeight());
