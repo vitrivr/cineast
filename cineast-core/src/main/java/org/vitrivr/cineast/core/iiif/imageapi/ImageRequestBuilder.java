@@ -32,7 +32,7 @@ public class ImageRequestBuilder {
   public static final String EXTENSION_WEBP = "webp";
 
   private final IMAGE_API_VERSION apiVersion;
-  private String baseUrl;
+  private final String baseUrl;
   private ImageInformation imageInformation;
   private String region;
   private String size;
@@ -48,7 +48,7 @@ public class ImageRequestBuilder {
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, ImageInformation imageInformation) {
     this.apiVersion = apiVersion;
     this.imageInformation = imageInformation;
-    if(imageInformation == null){
+    if (imageInformation == null) {
       throw new IllegalArgumentException("ImageInformation cannot be null!");
     }
     this.baseUrl = this.imageInformation.getAtId();
