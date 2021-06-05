@@ -24,9 +24,11 @@ public class ImageInformationRequest {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private final String url;
+  private final String imageInformation;
 
-  public ImageInformationRequest(String url) {
+  public ImageInformationRequest(String url) throws IOException {
     this.url = url;
+    this.imageInformation = this.fetchImageInformation();
   }
 
   /**
@@ -36,8 +38,9 @@ public class ImageInformationRequest {
    * @return {@link ImageInformation}
    */
   @Nullable
-  public static ImageInformation parseImageInformationJson(String response) {
+  public ImageInformation getImageInformation(String response) {
     ImageInformation imageInformation = null;
+    if(response == null || response.isEmpty()) response = this.imageInformation;
     try {
       imageInformation = new ObjectMapper().readValue(response, ImageInformation.class);
     } catch (IOException e) {
@@ -52,7 +55,6 @@ public class ImageInformationRequest {
    * @throws IOException If the Http request or writing to file fails
    */
   public void saveToFile(String filePath, String fileName) throws IOException {
-    String imageInformation = this.fetchImageInformation();
     File file = new File(filePath + "/" + fileName + ".json");
     FileOutputStream fileOutputStream = new FileOutputStream(file);
     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);

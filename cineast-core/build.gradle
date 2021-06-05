@@ -119,6 +119,9 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
 
+    /** Mockito for unit testing */
+    implementation 'org.mockito:mockito-core:3.11.0'
+
     /** Tensorflow (Java). */
     api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
 
