@@ -132,45 +132,45 @@ public class ImageInformation {
   public static class ProfileItem {
 
     // The base URI of the service will redirect to the image information document.
-    public static final String BASE_URI_REDIRECT = "baseUriRedirect";
+    public static final String SUPPORTS_BASE_URI_REDIRECT = "baseUriRedirect";
     // The canonical image URI HTTP link header is provided on image responses.
-    public static final String CANONICAL_LINK_HEADER = "canonicalLinkHeader";
+    public static final String SUPPORTS_CANONICAL_LINK_HEADER = "canonicalLinkHeader";
     // The CORS HTTP header is provided on all responses.
-    public static final String CORS = "cors";
+    public static final String SUPPORTS_CORS = "cors";
     // The JSON-LD media type is provided when JSON-LD is requested.
-    public static final String JSONLD_MEDIA_TYPE = "jsonldMediaType";
+    public static final String SUPPORTS_JSONLD_MEDIA_TYPE = "jsonldMediaType";
     // The image may be rotated around the vertical axis, resulting in a left-to-right mirroring of the content.
-    public static final String MIRRORING = "mirroring";
+    public static final String SUPPORTS_MIRRORING = "mirroring";
     // The profile HTTP link header is provided on image responses.
-    public static final String PROFILE_LINK_HEADER = "profileLinkHeader";
+    public static final String SUPPORTS_PROFILE_LINK_HEADER = "profileLinkHeader";
     // Regions of images may be requested by percentage.
-    public static final String REGION_BY_PCT = "regionByPct";
+    public static final String SUPPORTS_REGION_BY_PCT = "regionByPct";
     // Regions of images may be requested by pixel dimensions.
-    public static final String REGION_BY_PX = "regionByPx";
+    public static final String SUPPORTS_REGION_BY_PX = "regionByPx";
     // A square region where the width and height are equal to the shorter dimension of the complete image content.
-    public static final String REGION_SQUARE = "regionSquare";
+    public static final String SUPPORTS_REGION_SQUARE = "regionSquare";
     // Rotation of images may be requested by degrees other than multiples of 90.
-    public static final String ROTATION_ARBITRARY = "rotationArbitrary";
+    public static final String SUPPORTS_ROTATION_ARBITRARY = "rotationArbitrary";
     // Rotation of images may be requested by degrees in multiples of 90.
-    public static final String ROTATION_BY_90s = "rotationBy90s";
+    public static final String SUPPORTS_ROTATION_BY_90s = "rotationBy90s";
     // Size of images may be requested larger than the “full” size. See warning.
-    public static final String SIZE_ABOVE_FULL = "sizeAboveFull";
+    public static final String SUPPORTS_SIZE_ABOVE_FULL = "sizeAboveFull";
     // Size of images may be requested in the form “!w,h”.
-    public static final String SIZE_BY_CONFINED_WH = "sizeByConfinedWh";
+    public static final String SUPPORTS_SIZE_BY_CONFINED_WH = "sizeByConfinedWh";
     // Size of images may be requested in the form “w,h”, including sizes that would distort the image.
-    public static final String SIZE_BY_DISTORTED_WH = "sizeByDistortedWh";
+    public static final String SUPPORTS_SIZE_BY_DISTORTED_WH = "sizeByDistortedWh";
     // Size of images may be requested in the form “,h”.
-    public static final String SIZE_BY_H = "sizeByH";
+    public static final String SUPPORTS_SIZE_BY_H = "sizeByH";
     // Size of images may be requested in the form “pct:n”.
-    public static final String SIZE_BY_PCT = "sizeByPct";
+    public static final String SUPPORTS_SIZE_BY_PCT = "sizeByPct";
     // Size of images may be requested in the form “w,”.
-    public static final String SIZE_BY_W = "sizeByW";
+    public static final String SUPPORTS_SIZE_BY_W = "sizeByW";
     // Size of images may be requested in the form “w,h” where the supplied w and h preserve the aspect ratio.
-    public static final String SIZE_BY_WH = "sizeByWh";
+    public static final String SUPPORTS_SIZE_BY_WH = "sizeByWh";
     @Deprecated
-    public static final String SIZE_BY_WH_LISTED = "sizeByWhListed";
+    public static final String SUPPORTS_SIZE_BY_WH_LISTED = "sizeByWhListed";
     @Deprecated
-    public static final String SIZE_BY_FORCED_WH = "sizeByForcedWh";
+    public static final String SUPPORTS_SIZE_BY_FORCED_WH = "sizeByForcedWh";
 
     /**
      * List of operations that the server supports such as rotation, mirroring, regionSquare etc.
