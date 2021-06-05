@@ -32,7 +32,8 @@ public class ImageRequestBuilder {
   public static final String EXTENSION_WEBP = "webp";
 
   private final IMAGE_API_VERSION apiVersion;
-  private final String baseUrl;
+  private String baseUrl;
+  private ImageInformation imageInformation;
   private String region;
   private String size;
   private String rotation;
@@ -42,6 +43,15 @@ public class ImageRequestBuilder {
   public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, String baseUrl) {
     this.apiVersion = apiVersion;
     this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
+  }
+
+  public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, ImageInformation imageInformation) {
+    this.apiVersion = apiVersion;
+    this.imageInformation = imageInformation;
+    if(imageInformation == null){
+      throw new IllegalArgumentException("ImageInformation cannot be null!");
+    }
+    this.baseUrl = this.imageInformation.getAtId();
   }
 
   /**
@@ -57,7 +67,6 @@ public class ImageRequestBuilder {
     }
     return strValue;
   }
-
 
   /**
    * The complete image is returned, without any cropping.
