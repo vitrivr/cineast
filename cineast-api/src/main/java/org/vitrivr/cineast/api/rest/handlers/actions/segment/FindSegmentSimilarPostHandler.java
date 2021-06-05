@@ -36,7 +36,7 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
      */
     HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryUtil.groupComponentsByCategory(query.getComponents());
 
-    ReadableQueryConfig qconf = new ConstrainedQueryConfig();
+    ReadableQueryConfig qconf = new ConstrainedQueryConfig(query.getQueryConfig());
 
     for (String category : categoryMap.keySet()) {
       List<Pair<QueryContainer, ReadableQueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, qconf)).collect(Collectors.toList());
