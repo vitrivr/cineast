@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder;
@@ -98,29 +99,41 @@ public class ExtractionCommand implements Runnable {
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */
   private void configureIIIFExtractionJob(IngestConfig context, String directoryPath) throws IOException {
-    String url = context.getInput().getPath();
+    final String url = context.getInput().getPath();
     if (isURL(url)) {
       LOGGER.info("IIIF extraction job detected");
     } else {
       LOGGER.debug("IIIF extraction not job detected");
       return;
     }
-    Path jobDirectory = Paths.get(directoryPath);
+    final Path jobDirectory = Paths.get(directoryPath);
     if (!Files.exists(jobDirectory)) {
       Files.createDirectories(jobDirectory);
     }
-    String imageName = "iiif_image_" + System.currentTimeMillis();
-    ImageInformationRequest informationRequest = new ImageInformationRequest(url);
-    informationRequest.saveToFile(jobDirectory.toString(), imageName);
-    ImageRequestBuilder imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, url);
-    ImageRequest imageRequest = imageRequestBuilder
+
+    final String jobDirectoryString = jobDirectory.toString();
+    final String imageName = "iiif_image_" + System.currentTimeMillis();
+
+    final ImageInformationRequest informationRequest = new ImageInformationRequest(url);
+    informationRequest.saveToFile(jobDirectoryString, imageName);
+    final ImageInformation imageInformation = informationRequest.getImageInformation(null);
+
+    final ImageRequestBuilder imageRequestBuilder;
+    if (imageInformation == null) {
+      imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, url);
+    } else {
+      imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageInformation);
+    }
+
+    final ImageRequest imageRequest = imageRequestBuilder
         .setRegionFull()
         .setSizeFull()
         .setRotation(0, false)
         .setQuality(ImageRequestBuilder.QUALITY_DEFAULT)
         .setExtension(ImageRequestBuilder.EXTENSION_JPG)
         .build();
-    imageRequest.saveToFile(jobDirectory.toString(), imageName);
-    context.getInput().setPath(jobDirectory.toString());
+    imageRequest.saveToFile(jobDirectoryString, imageName);
+
+    context.getInput().setPath(jobDirectoryString);
   }
 }
