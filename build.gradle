@@ -2,7 +2,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'de.undercouch.download' version "4.1.1"
     id 'com.google.osdetector' version '1.6.2'
-    id 'java'
+    id 'java-library'
     id 'idea'
 }
 
@@ -13,7 +13,7 @@ allprojects {
     /* Our current version */
     version = '3.0.3-SNAPSHOT'
 
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 }
@@ -21,7 +21,6 @@ allprojects {
 subprojects {
     buildscript {
         repositories {
-            jcenter()
             mavenCentral()
             maven {
                 url "https://plugins.gradle.org/m2"
@@ -73,18 +72,18 @@ subprojects {
     }
 }
 
-project(':cineast-runtime') {
-    dependencies {
-        implementation project(path: ':cineast-core', configuration: 'shadow')
-    }
-}
-
-project(':cineast-api') {
-    dependencies {
-        implementation project(path: ':cineast-runtime', configuration: 'shadow')
-        implementation project(path: ':cineast-core')
-    }
-}
+//project(':cineast-runtime') {
+//    dependencies {
+//        api project(':cineast-core')
+//    }
+//}
+//
+//project(':cineast-api') {
+//    dependencies {
+//        api project(':cineast-runtime')
+//        api project(':cineast-core')
+//    }
+//}
 
 idea {
     module {
