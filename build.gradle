@@ -72,19 +72,6 @@ subprojects {
     }
 }
 
-//project(':cineast-runtime') {
-//    dependencies {
-//        api project(':cineast-core')
-//    }
-//}
-//
-//project(':cineast-api') {
-//    dependencies {
-//        api project(':cineast-runtime')
-//        api project(':cineast-core')
-//    }
-//}
-
 idea {
     module {
         downloadJavadoc = true
@@ -93,6 +80,7 @@ idea {
         excludeDirs += file('thumbnails')
         excludeDirs += file('output')
         excludeDirs += file('logs')
+        excludeDirs += file('resources')
     }
 }
 
