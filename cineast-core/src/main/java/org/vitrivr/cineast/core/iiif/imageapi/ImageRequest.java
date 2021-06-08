@@ -1,5 +1,13 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Class definition of a single IIIF Image Api Request
  *
@@ -8,6 +16,8 @@ package org.vitrivr.cineast.core.iiif.imageapi;
  * @created 29.05.21
  */
 public class ImageRequest {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private final String baseUrl;
   private final String region;
@@ -60,8 +70,18 @@ public class ImageRequest {
         .append(FORWARD_SLASH_DELIMITER)
         .append(rotation)
         .append(FORWARD_SLASH_DELIMITER)
+        .append(quality)
+        .append(".")
         .append(extension);
     return url.toString();
+  }
+
+  public void saveToFile(String filePath, String fileName) throws IOException {
+    URL url = new URL(this.getUrl());
+    BufferedImage img = ImageIO.read(url);
+    File file = new File(filePath + "/" + fileName + "." + this.getExtension());
+    ImageIO.write(img, this.getExtension(), file);
+    LOGGER.debug("Image downloaded and written to file successfully. Image url:\t" + url);
   }
 
   @Override

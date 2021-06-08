@@ -66,3 +66,6 @@ index*
 output/
 logs/
 resources/
+
+#IIIF
+iiif-media/
