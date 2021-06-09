@@ -1,11 +1,20 @@
 {
-  "input":{
-    "path": "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2",
+  "input": {
+    "path": "iiif-media",
     "depth": 3,
     "skip": 0,
     "id": {
       "name": "SequentialObjectIdGenerator",
       "properties": {}
+    },
+    "iiif": {
+      "url": "https://libimages.princeton.edu/loris/pudl0001/5138415",
+      "items": [
+        {
+          "identifier": "00000011.jp2",
+          "rotation" : "90"
+        }
+      ]
     }
   },
   "extractors":[
