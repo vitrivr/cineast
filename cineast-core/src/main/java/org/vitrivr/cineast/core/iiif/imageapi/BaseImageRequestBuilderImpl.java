@@ -31,6 +31,10 @@ public class BaseImageRequestBuilderImpl implements BaseImageRequestBuilder {
     return strValue;
   }
 
+  public static boolean isImageDimenValidFloat(Float quantity) {
+    return quantity != null && !quantity.isNaN() && !quantity.isInfinite();
+  }
+
   public BaseImageRequestBuilderImpl setRegionFull() {
     this.region = REGION_FULL;
     return this;
@@ -59,10 +63,50 @@ public class BaseImageRequestBuilderImpl implements BaseImageRequestBuilder {
     return this;
   }
 
-  public BaseImageRequestBuilderImpl setRotation(float degree, boolean mirror) {
-    if (degree < 0 || degree > 360) {
-      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+  public BaseImageRequestBuilderImpl setSizeScaledExact(Float width, Float height) {
+    boolean isWidthValid = isImageDimenValidFloat(width);
+    boolean isHeightValid = isImageDimenValidFloat(height);
+    StringBuilder sizeString = new StringBuilder();
+    if (isWidthValid) {
+      sizeString.append(toSimplifiedFloatString(width));
     }
+    sizeString.append(",");
+    if (isHeightValid) {
+      sizeString.append(toSimplifiedFloatString(height));
+    }
+    this.size = sizeString.toString();
+    return this;
+  }
+
+  public BaseImageRequestBuilderImpl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+    // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
+    if (!isWidthOverridable && !isHeightOverridable) {
+      return setSizeScaledExact(width, height);
+    }
+    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
+    if (isWidthOverridable && isHeightOverridable) {
+      throw new IllegalArgumentException("Both width and height cannot be overridable!");
+    }
+    StringBuilder sizeString = new StringBuilder();
+    if (isWidthOverridable) {
+      sizeString.append("!");
+    }
+    sizeString.append(toSimplifiedFloatString(width));
+    sizeString.append(",");
+    if (isHeightOverridable) {
+      sizeString.append("!");
+    }
+    sizeString.append(toSimplifiedFloatString(height));
+    this.size = sizeString.toString();
+    return this;
+  }
+
+  public BaseImageRequestBuilderImpl setSizePercentage(float n) {
+    this.size = SIZE_PERCENTAGE + n;
+    return this;
+  }
+
+  public BaseImageRequestBuilderImpl setRotation(float degree, boolean mirror) {
     this.rotation = (mirror ? "!" : "") + toSimplifiedFloatString(degree);
     return this;
   }
