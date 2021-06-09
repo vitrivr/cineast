@@ -15,10 +15,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder;
+import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1;
+import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1_Impl;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IIIFConfig;
 import org.vitrivr.cineast.standalone.config.IIIFConfig.IIIFItem;
@@ -132,11 +133,11 @@ public class ExtractionCommand implements Runnable {
         informationRequest.saveToFile(jobDirectoryString, imageName);
         final ImageInformation imageInformation = informationRequest.getImageInformation(null);
 
-        final ImageRequestBuilder imageRequestBuilder;
+        final ImageRequestBuilder_v2_1_1 imageRequestBuilder;
         if (imageInformation == null) {
-          imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, url);
+          imageRequestBuilder = new ImageRequestBuilder_v2_1_1_Impl(url);
         } else {
-          imageRequestBuilder = new ImageRequestBuilder(imageInformation);
+          imageRequestBuilder = new ImageRequestBuilder_v2_1_1_Impl(imageInformation);
         }
 
         float rotationDegree;
