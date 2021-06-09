@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  * @version 1.0
  * @created 09.06.21
  */
-class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1_1 {
+public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1_1 {
 
   private final BaseImageRequestBuilder baseBuilder;
   private ImageInformation imageInformation;
