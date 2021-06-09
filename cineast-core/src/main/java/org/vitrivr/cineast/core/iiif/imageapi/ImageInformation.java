@@ -20,6 +20,9 @@ import org.vitrivr.cineast.core.data.Pair;
 @ToString
 public class ImageInformation {
 
+  /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 2.1.1 **/
+  private final String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/context.json";
+
   /**
    * A list of profiles, indicated by either a URI or an object describing the features supported. The first entry in the list must be a compliance level URI.
    */
@@ -98,6 +101,23 @@ public class ImageInformation {
       profileItemList.add(profileItem);
     }
     return new Pair<>(apiLevelString, profileItemList);
+  }
+
+  public IMAGE_API_VERSION getImageApiVersion() {
+    String apiLevelString = this.getProfile().first;
+    switch (apiLevelString) {
+      case IMAGE_API_VERSION_2_1_1:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+      default:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+    }
+  }
+
+  /**
+   * Enum to hold the various Image Api specification versions supported by the builder
+   */
+  public enum IMAGE_API_VERSION {
+    TWO_POINT_ONE_POINT_ONE
   }
 
   /**

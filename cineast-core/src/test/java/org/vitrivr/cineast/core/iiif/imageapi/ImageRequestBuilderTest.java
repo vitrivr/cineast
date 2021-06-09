@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.EXTENSION_TIF;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_FULL;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_PERCENTAGE;
@@ -34,7 +34,6 @@ class ImageRequestBuilderTest {
   void setup() {
     builder = new ImageRequestBuilder(TWO_POINT_ONE_POINT_ONE, BASE_URL);
   }
-
 
   /**
    * Unit tests for methods that set the region of the image
@@ -80,7 +79,7 @@ class ImageRequestBuilderTest {
       final float w = 120f;
       final float h = 140f;
       ImageRequest request = builder.setRegionPercentage(x, y, w, h).build();
-      String s = request.getUrl();
+      String s = request.generateIIIFRequestUrl();
       assertNotNull(request);
       String coordinates = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + ","
           + toSimplifiedFloatString(w) + "," + toSimplifiedFloatString(h);

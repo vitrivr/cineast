@@ -27,7 +27,7 @@ public class ImageRequestTest {
   @Test
   public void saveToFile() {
     ImageRequest imageRequest = new ImageRequest(BASE_URL, REGION_FULL, SIZE_FULL, "0", QUALITY_DEFAULT, EXTENSION_JPG);
-    System.out.println(imageRequest.getUrl());
+    System.out.println(imageRequest.generateIIIFRequestUrl());
     /** File path needs to be manually configured based on platform */
     String filePath = null;
     assertDoesNotThrow(() -> imageRequest.saveToFile(filePath, "testdefault"));

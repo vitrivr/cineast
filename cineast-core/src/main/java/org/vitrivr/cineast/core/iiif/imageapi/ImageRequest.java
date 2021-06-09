@@ -19,12 +19,15 @@ public class ImageRequest {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private final String baseUrl;
-  private final String region;
-  private final String size;
-  private final String rotation;
-  private final String quality;
-  private final String extension;
+  private String baseUrl = null;
+  private String region = null;
+  private String size = null;
+  private String rotation = null;
+  private String quality = null;
+  private String extension = null;
+
+  public ImageRequest() {
+  }
 
   public ImageRequest(String baseUrl, String region, String size, String rotation, String quality, String extension) {
     this.baseUrl = baseUrl;
@@ -39,28 +42,58 @@ public class ImageRequest {
     return baseUrl;
   }
 
+  public ImageRequest setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
+    return this;
+  }
+
   public String getRegion() {
     return region;
+  }
+
+  public ImageRequest setRegion(String region) {
+    this.region = region;
+    return this;
   }
 
   public String getSize() {
     return size;
   }
 
+  public ImageRequest setSize(String size) {
+    this.size = size;
+    return this;
+  }
+
   public String getRotation() {
     return rotation;
+  }
+
+  public ImageRequest setRotation(String rotation) {
+    this.rotation = rotation;
+    return this;
   }
 
   public String getQuality() {
     return quality;
   }
 
+  public ImageRequest setQuality(String quality) {
+    this.quality = quality;
+    return this;
+  }
+
   public String getExtension() {
     return extension;
   }
 
+  public ImageRequest setExtension(String extension) {
+    this.extension = extension;
+    return this;
+  }
+
   // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
-  public String getUrl() {
+  public String generateIIIFRequestUrl() {
     StringBuilder url = new StringBuilder(baseUrl);
     String FORWARD_SLASH_DELIMITER = "/";
     url.append(FORWARD_SLASH_DELIMITER)
@@ -77,7 +110,7 @@ public class ImageRequest {
   }
 
   public void saveToFile(String filePath, String fileName) throws IOException {
-    URL url = new URL(this.getUrl());
+    URL url = new URL(this.generateIIIFRequestUrl());
     BufferedImage img = ImageIO.read(url);
     File file = new File(filePath + "/" + fileName + "." + this.getExtension());
     ImageIO.write(img, this.getExtension(), file);
@@ -86,6 +119,6 @@ public class ImageRequest {
 
   @Override
   public String toString() {
-    return getUrl();
+    return generateIIIFRequestUrl();
   }
 }

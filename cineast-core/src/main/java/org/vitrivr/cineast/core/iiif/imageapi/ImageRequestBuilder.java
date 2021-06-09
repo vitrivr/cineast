@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
+
 /**
  * Builder class to generate a single IIIF Image Api request
  *
@@ -45,13 +47,13 @@ public class ImageRequestBuilder {
     this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
   }
 
-  public ImageRequestBuilder(IMAGE_API_VERSION apiVersion, ImageInformation imageInformation) {
-    this.apiVersion = apiVersion;
+  public ImageRequestBuilder(ImageInformation imageInformation) {
     this.imageInformation = imageInformation;
     if (imageInformation == null) {
       throw new IllegalArgumentException("ImageInformation cannot be null!");
     }
     this.baseUrl = this.imageInformation.getAtId();
+    this.apiVersion = this.imageInformation.getImageApiVersion();
   }
 
   /**
@@ -247,13 +249,6 @@ public class ImageRequestBuilder {
         this.rotation == null ? "0" : this.rotation,
         this.quality == null ? QUALITY_DEFAULT : this.quality,
         this.extension == null ? EXTENSION_JPG : this.extension);
-  }
-
-  /**
-   * Enum to hold the various Image Api specification versions supported by the builder
-   */
-  public enum IMAGE_API_VERSION {
-    TWO_POINT_ONE_POINT_ONE
   }
 
 }
