@@ -102,6 +102,7 @@ shadowJar {
 }
 
 dependencies {
+    implementation project(':cineast-runtime')
     implementation("io.javalin:javalin-bundle:$version_javalin"){
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
