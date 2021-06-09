@@ -11,6 +11,7 @@ public interface BaseImageRequestBuilder {
   String REGION_SQUARE = "square";
   String REGION_PERCENTAGE = "pct:";
   String SIZE_MAX = "max";
+  String SIZE_PERCENTAGE = "pct:";
   String QUALITY_COLOR = "color";
   String QUALITY_GRAY = "gray";
   String QUALITY_BITONAL = "bitonal";
@@ -65,6 +66,28 @@ public interface BaseImageRequestBuilder {
    * @return this {@link BaseImageRequestBuilder}
    */
   BaseImageRequestBuilder setSizeMax();
+
+  /**
+   * Returns an image scaled to the exact dimensions given in the parameters. If only height or width are provided then image is scaled to that dimension while maintaining the aspect ratio. If both height and width are given then image is scaled to those dimensions by ignoring the aspect ratio.
+   *
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  BaseImageRequestBuilder setSizeScaledExact(Float width, Float height);
+
+  /**
+   * The image content is scaled for the best fit such that the resulting width and height are less than or equal to the requested width and height. The exact scaling may be determined by the service provider, based on characteristics including image quality and system performance. The dimensions of the returned image content are calculated to maintain the aspect ratio of the extracted region.
+   *
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  BaseImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException;
+
+
+  /**
+   * The width and height of the returned image is scaled to n% of the width and height of the extracted region. The aspect ratio of the returned image is the same as that of the extracted region.
+   *
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  BaseImageRequestBuilder setSizePercentage(float n);
 
   /**
    * This method is used to specify the mirroring and rotation applied to the image.
