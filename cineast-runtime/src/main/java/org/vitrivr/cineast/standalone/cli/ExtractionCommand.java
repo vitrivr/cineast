@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
@@ -19,7 +20,10 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.standalone.config.IIIFConfig;
+import org.vitrivr.cineast.standalone.config.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
+import org.vitrivr.cineast.standalone.config.InputConfig;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionDispatcher;
@@ -60,8 +64,19 @@ public class ExtractionCommand implements Runnable {
         final JacksonJsonProvider reader = new JacksonJsonProvider();
         final IngestConfig context = reader.toObject(file, IngestConfig.class);
         if (context != null) {
-          String directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media";
-          configureIIIFExtractionJob(context, directoryPath);
+          InputConfig inputConfig = context.getInput();
+          IIIFConfig iiifConfig = inputConfig.getIiif();
+          if (iiifConfig != null) {
+            String directoryPath;
+            String iiifConfigPath = inputConfig.getPath();
+            if (iiifConfigPath == null || iiifConfigPath.isEmpty()) {
+              directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media";
+              inputConfig.setPath(directoryPath);
+            } else {
+              directoryPath = iiifConfigPath;
+            }
+            configureIIIFExtractionJob(iiifConfig, directoryPath);
+          }
         }
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
         if (dispatcher.initialize(provider, context)) {
@@ -94,46 +109,57 @@ public class ExtractionCommand implements Runnable {
   /**
    * Configures an IIIF extraction job by downloading all specified images from the server onto to the filesystem and pointing the {@link ExtractionContainerProvider} to that directory.
    *
-   * @param context The extraction config parsed as an {@link IngestConfig}
+   * @param iiifConfig The IIIF config parsed as an {@link IIIFConfig}
    * @param directoryPath The path where the downloaded IIIF content should be stored
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */
-  private void configureIIIFExtractionJob(IngestConfig context, String directoryPath) throws IOException {
-    final String url = context.getInput().getPath();
-    if (isURL(url)) {
-      LOGGER.info("IIIF extraction job detected");
-    } else {
-      LOGGER.debug("IIIF extraction not job detected");
-      return;
-    }
+  private void configureIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
+    final String url = iiifConfig.getBaseUrl();
     final Path jobDirectory = Paths.get(directoryPath);
     if (!Files.exists(jobDirectory)) {
       Files.createDirectories(jobDirectory);
     }
 
     final String jobDirectoryString = jobDirectory.toString();
-    final String imageName = "iiif_image_" + System.currentTimeMillis();
 
-    final ImageInformationRequest informationRequest = new ImageInformationRequest(url);
-    informationRequest.saveToFile(jobDirectoryString, imageName);
-    final ImageInformation imageInformation = informationRequest.getImageInformation(null);
+    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+    if (iiifItems != null) {
+      for (final IIIFItem iiifItem : iiifItems) {
+        String identifier = iiifItem.getIdentifier();
+        final String imageName = "iiif_image_" + identifier;
 
-    final ImageRequestBuilder imageRequestBuilder;
-    if (imageInformation == null) {
-      imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, url);
-    } else {
-      imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageInformation);
+        final ImageInformationRequest informationRequest = new ImageInformationRequest(url + "/" + identifier);
+        informationRequest.saveToFile(jobDirectoryString, imageName);
+        final ImageInformation imageInformation = informationRequest.getImageInformation(null);
+
+        final ImageRequestBuilder imageRequestBuilder;
+        if (imageInformation == null) {
+          imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, url);
+        } else {
+          imageRequestBuilder = new ImageRequestBuilder(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageInformation);
+        }
+
+        float rotationDegree;
+        if (iiifItem.getRotation() != null) {
+          try {
+            rotationDegree = Float.parseFloat(iiifItem.getRotation());
+          } catch (NumberFormatException e) {
+            e.printStackTrace();
+            continue;
+          }
+        } else {
+          rotationDegree = 0;
+        }
+
+        final ImageRequest imageRequest = imageRequestBuilder
+            .setRegionFull()
+            .setSizeFull()
+            .setRotation(rotationDegree, false)
+            .setQuality(ImageRequestBuilder.QUALITY_DEFAULT)
+            .setExtension(ImageRequestBuilder.EXTENSION_JPG)
+            .build();
+        imageRequest.saveToFile(jobDirectoryString, imageName);
+      }
     }
-
-    final ImageRequest imageRequest = imageRequestBuilder
-        .setRegionFull()
-        .setSizeFull()
-        .setRotation(0, false)
-        .setQuality(ImageRequestBuilder.QUALITY_DEFAULT)
-        .setExtension(ImageRequestBuilder.EXTENSION_JPG)
-        .build();
-    imageRequest.saveToFile(jobDirectoryString, imageName);
-
-    context.getInput().setPath(jobDirectoryString);
   }
 }
