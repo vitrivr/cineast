@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.iiif.IIIFConfig;
 
 
 public class InputConfig {

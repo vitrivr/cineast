@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.config;
+package org.vitrivr.cineast.core.iiif;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -15,8 +15,20 @@ public class IIIFConfig {
   @JsonProperty(value = "url", required = true)
   private String baseUrl;
 
+  @JsonProperty
+  private String imageApiVersion = "2.1.1";
+
   @JsonProperty(value = "items")
   private List<IIIFItem> iiifItems;
+
+  public String getImageApiVersion() {
+    return imageApiVersion;
+  }
+
+  public IIIFConfig setImageApiVersion(String imageApiVersion) {
+    this.imageApiVersion = imageApiVersion;
+    return this;
+  }
 
   public String getBaseUrl() {
     return baseUrl;
