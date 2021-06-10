@@ -9,23 +9,9 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  */
 public interface ImageRequestBuilder_v2_1_1 {
 
-  String SIZE_FULL = "full";
-  String REGION_FULL = "full";
-  String REGION_SQUARE = "square";
-  String REGION_PERCENTAGE = "pct:";
   String SIZE_MAX = "max";
   String SIZE_PERCENTAGE = "pct:";
-  String QUALITY_COLOR = "color";
-  String QUALITY_GRAY = "gray";
-  String QUALITY_BITONAL = "bitonal";
-  String QUALITY_DEFAULT = "default";
-  String EXTENSION_JPG = "jpg";
-  String EXTENSION_TIF = "tif";
-  String EXTENSION_PNG = "png";
-  String EXTENSION_GIF = "gif";
-  String EXTENSION_JP2 = "jp2";
-  String EXTENSION_PDF = "pdf";
-  String EXTENSION_WEBP = "webp";
+  String SIZE_FULL = "full";
 
   /** The image or region is not scaled, and is returned at its full size. */
   ImageRequestBuilder_v2_1_1 setSizeFull();
