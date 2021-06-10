@@ -3,16 +3,14 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.EXTENSION_TIF;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_PERCENTAGE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_MAX;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_PERCENTAGE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.toSimplifiedFloatString;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.EXTENSION_TIF;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_BITONAL;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_PERCENTAGE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_MAX;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_PERCENTAGE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.toSimplifiedFloatString;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,15 +22,15 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  * @created 29.05.21
  */
-class ImageRequestBuilderTest {
+public class BaseImageRequestBuilderTest {
 
   private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
 
-  ImageRequestBuilder builder;
+  public BaseImageRequestBuilder builder;
 
   @BeforeEach
-  void setup() {
-    builder = new ImageRequestBuilder(TWO_POINT_ONE_POINT_ONE, BASE_URL);
+  public void setup() {
+    builder = new BaseImageRequestBuilderImpl(BASE_URL);
   }
 
   /**
@@ -93,14 +91,6 @@ class ImageRequestBuilderTest {
   @Nested
   class setSizeTests {
 
-    @DisplayName("setSizeFull test")
-    @Test
-    void setSizeFull() {
-      ImageRequest request = builder.setSizeFull().build();
-      assertNotNull(request);
-      assertEquals(SIZE_FULL, request.getSize());
-    }
-
     @DisplayName("setSizeMax test")
     @Test
     void setSizeMax() {
@@ -149,9 +139,9 @@ class ImageRequestBuilderTest {
     @DisplayName("setSizeScaledExact neither width not height test")
     @Test
     void setSizeScaledExactNeitherWidthNorHeight() {
-      assertThrows(IllegalArgumentException.class, () -> {
-        builder.setSizeScaledExact(null, null).build();
-      });
+      ImageRequest request = builder.setSizeScaledExact(null, null).build();
+      assertNotNull(request);
+      assertEquals(",", request.getSize());
     }
 
     @DisplayName("setSizeScaledBestFit width overridable")
@@ -220,13 +210,13 @@ class ImageRequestBuilderTest {
       assertEquals("!" + toSimplifiedFloatString(rotation), request.getRotation());
     }
 
-    @DisplayName("setRotation with invalid rotation degrees test")
+    @DisplayName("setRotation with negative rotation degrees test")
     @Test
-    void setRotationWithInvalidRotation() {
+    void setRotationWithNegativeRotation() {
       float rotation = -423.94f;
-      assertThrows(IllegalArgumentException.class, () -> {
-        builder.setRotation(rotation, true).build();
-      });
+      ImageRequest request = builder.setRotation(rotation, true).build();
+      assertNotNull(request);
+      assertEquals("!" + toSimplifiedFloatString(rotation), request.getRotation());
     }
   }
 
