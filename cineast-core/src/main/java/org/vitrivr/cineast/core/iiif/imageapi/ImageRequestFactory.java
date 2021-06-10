@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.EXTENSION_JPG;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_DEFAULT;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,8 +76,8 @@ public class ImageRequestFactory {
           .setRegionFull()
           .setSizeFull()
           .setRotation(rotationDegree, false)
-          .setQuality(ImageRequestBuilder.QUALITY_DEFAULT)
-          .setExtension(ImageRequestBuilder.EXTENSION_JPG)
+          .setQuality(QUALITY_DEFAULT)
+          .setExtension(EXTENSION_JPG)
           .build();
 
       try {
