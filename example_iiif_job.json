@@ -9,6 +9,7 @@
     },
     "iiif": {
       "url": "https://libimages.princeton.edu/loris/pudl0001/5138415",
+      "imageApiVersion" : "2.1.1",
       "items": [
         {
           "identifier": "00000011.jp2",
