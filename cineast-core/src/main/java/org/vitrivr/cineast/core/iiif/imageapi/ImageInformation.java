@@ -21,7 +21,9 @@ import org.vitrivr.cineast.core.data.Pair;
 public class ImageInformation {
 
   /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 2.1.1 **/
-  private final String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/context.json";
+  private final String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/level2.json";
+  /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 3.0 **/
+  private final String IMAGE_API_VERSION_3_0 = "http://iiif.io/api/image/3/level1.json";
 
   /**
    * A list of profiles, indicated by either a URI or an object describing the features supported. The first entry in the list must be a compliance level URI.
@@ -108,16 +110,28 @@ public class ImageInformation {
     switch (apiLevelString) {
       case IMAGE_API_VERSION_2_1_1:
         return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+      case IMAGE_API_VERSION_3_0:
+        return IMAGE_API_VERSION.THREE_POINT_ZERO;
       default:
         return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
     }
+  }
+
+  public static IMAGE_API_VERSION getImageApiVersionNumeric(String input){
+    if (input.equals("2.1.1")){
+      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+    } else if (input.equals("3.0") || input.equals("3.0.0")){
+      return IMAGE_API_VERSION.THREE_POINT_ZERO;
+    }
+    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
   }
 
   /**
    * Enum to hold the various Image Api specification versions supported by the builder
    */
   public enum IMAGE_API_VERSION {
-    TWO_POINT_ONE_POINT_ONE
+    TWO_POINT_ONE_POINT_ONE,
+    THREE_POINT_ZERO
   }
 
   /**

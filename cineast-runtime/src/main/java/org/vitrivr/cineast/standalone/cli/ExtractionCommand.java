@@ -10,19 +10,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1_Impl;
+import org.vitrivr.cineast.core.iiif.IIIFConfig;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-import org.vitrivr.cineast.standalone.config.IIIFConfig;
-import org.vitrivr.cineast.standalone.config.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.config.InputConfig;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
@@ -115,52 +108,13 @@ public class ExtractionCommand implements Runnable {
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */
   private void configureIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
-    final String url = iiifConfig.getBaseUrl();
     final Path jobDirectory = Paths.get(directoryPath);
     if (!Files.exists(jobDirectory)) {
       Files.createDirectories(jobDirectory);
     }
-
     final String jobDirectoryString = jobDirectory.toString();
-
-    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
-    if (iiifItems != null) {
-      for (final IIIFItem iiifItem : iiifItems) {
-        String identifier = iiifItem.getIdentifier();
-        final String imageName = "iiif_image_" + identifier;
-
-        final ImageInformationRequest informationRequest = new ImageInformationRequest(url + "/" + identifier);
-        informationRequest.saveToFile(jobDirectoryString, imageName);
-        final ImageInformation imageInformation = informationRequest.getImageInformation(null);
-
-        final ImageRequestBuilder_v2_1_1 imageRequestBuilder;
-        if (imageInformation == null) {
-          imageRequestBuilder = new ImageRequestBuilder_v2_1_1_Impl(url);
-        } else {
-          imageRequestBuilder = new ImageRequestBuilder_v2_1_1_Impl(imageInformation);
-        }
-
-        float rotationDegree;
-        if (iiifItem.getRotation() != null) {
-          try {
-            rotationDegree = Float.parseFloat(iiifItem.getRotation());
-          } catch (NumberFormatException e) {
-            e.printStackTrace();
-            continue;
-          }
-        } else {
-          rotationDegree = 0;
-        }
-
-        final ImageRequest imageRequest = imageRequestBuilder
-            .setRegionFull()
-            .setSizeFull()
-            .setRotation(rotationDegree, false)
-            .setQuality(ImageRequestBuilder.QUALITY_DEFAULT)
-            .setExtension(ImageRequestBuilder.EXTENSION_JPG)
-            .build();
-        imageRequest.saveToFile(jobDirectoryString, imageName);
-      }
-    }
+    String itemPrefixString = "iiif_image_";
+    ImageRequestFactory imageRequestFactory = new ImageRequestFactory(iiifConfig);
+    imageRequestFactory.createImageRequests(jobDirectoryString, itemPrefixString);
   }
 }
