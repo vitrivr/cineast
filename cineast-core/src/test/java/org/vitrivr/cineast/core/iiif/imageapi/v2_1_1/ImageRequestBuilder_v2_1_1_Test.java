@@ -8,10 +8,10 @@ import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUA
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_FULL;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_PERCENTAGE;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_MAX;
-import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_PERCENTAGE;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.toSimplifiedFloatString;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_MAX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_PERCENTAGE;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

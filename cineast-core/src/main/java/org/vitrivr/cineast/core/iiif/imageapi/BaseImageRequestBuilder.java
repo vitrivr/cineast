@@ -10,8 +10,6 @@ public interface BaseImageRequestBuilder {
   String REGION_FULL = "full";
   String REGION_SQUARE = "square";
   String REGION_PERCENTAGE = "pct:";
-  String SIZE_MAX = "max";
-  String SIZE_PERCENTAGE = "pct:";
   String QUALITY_COLOR = "color";
   String QUALITY_GRAY = "gray";
   String QUALITY_BITONAL = "bitonal";
