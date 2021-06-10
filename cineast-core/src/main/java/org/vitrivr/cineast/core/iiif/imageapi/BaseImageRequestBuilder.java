@@ -27,14 +27,14 @@ public interface BaseImageRequestBuilder {
   /**
    * The complete image is returned, without any cropping.
    *
-   * @return this {@link ImageRequestBuilder}
+   * @return this {@link BaseImageRequestBuilder}
    */
   BaseImageRequestBuilder setRegionFull();
 
   /**
    * The region is defined as an area where the width and height are both equal to the length of the shorter dimension of the complete image. The region may be positioned anywhere in the longer dimension of the image content at the server’s discretion, and centered is often a reasonable default.
    *
-   * @return this {@link ImageRequestBuilder}
+   * @return this {@link BaseImageRequestBuilder}
    */
   BaseImageRequestBuilder setRegionSquare();
 
@@ -45,7 +45,7 @@ public interface BaseImageRequestBuilder {
    * @param y Represents the number of pixels from the 0 position on the vertical axis
    * @param w Represents the width of the region
    * @param h Represents the height of the region in pixels
-   * @return this {@link ImageRequestBuilder}
+   * @return this {@link BaseImageRequestBuilder}
    */
   BaseImageRequestBuilder setRegionAbsolute(float x, float y, float w, float h);
 
@@ -56,7 +56,7 @@ public interface BaseImageRequestBuilder {
    * @param y Represents the number of pixels from the 0 position on the vertical axis, calculated as a percentage of the reported height
    * @param w Represents the width of the region, calculated as a percentage of the reported width
    * @param h Represents the height of the region, calculated as a percentage of the reported height
-   * @return this {@link ImageRequestBuilder}
+   * @return this {@link BaseImageRequestBuilder}
    */
   BaseImageRequestBuilder setRegionPercentage(float x, float y, float w, float h);
 
