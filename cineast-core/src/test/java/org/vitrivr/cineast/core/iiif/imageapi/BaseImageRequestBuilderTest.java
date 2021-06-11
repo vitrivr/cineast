@@ -244,7 +244,7 @@ public class BaseImageRequestBuilderTest {
     @DisplayName("setExtension test")
     @Test
     void setExtension() {
-      ImageRequest request = builder.setExtension(EXTENSION_TIF).build();
+      ImageRequest request = builder.setFormat(EXTENSION_TIF).build();
       assertNotNull(request);
       assertEquals(EXTENSION_TIF, request.getExtension());
     }

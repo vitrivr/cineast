@@ -76,10 +76,10 @@ public class ImageRequestBuilder_v2_1_1_Test {
     @DisplayName("setRegion(PERCENTAGE) test")
     @Test
     void setRegionPercentage() {
-      final float x = 125f;
+      final float x = 75f;
       final float y = 15f;
-      final float w = 120f;
-      final float h = 140f;
+      final float w = 20f;
+      final float h = 40f;
       ImageRequest request = builder.setRegionPercentage(x, y, w, h).build();
       String s = request.generateIIIFRequestUrl();
       assertNotNull(request);
@@ -257,7 +257,7 @@ public class ImageRequestBuilder_v2_1_1_Test {
     @DisplayName("setExtension test")
     @Test
     void setExtension() {
-      ImageRequest request = builder.setExtension(EXTENSION_TIF).build();
+      ImageRequest request = builder.setFormat(EXTENSION_TIF).build();
       assertNotNull(request);
       assertEquals(EXTENSION_TIF, request.getExtension());
     }
