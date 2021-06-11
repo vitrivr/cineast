@@ -137,7 +137,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param extension The file extension of the image
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setExtension(String extension);
+  ImageRequestBuilder_v3_0 setFormat(String extension);
 
   /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
   ImageRequest build();
