@@ -77,7 +77,7 @@ public class ImageRequestFactory {
           .setSizeFull()
           .setRotation(rotationDegree, false)
           .setQuality(QUALITY_DEFAULT)
-          .setExtension(EXTENSION_JPG)
+          .setFormat(EXTENSION_JPG)
           .build();
 
       try {

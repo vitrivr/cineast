@@ -119,8 +119,8 @@ public class BaseImageRequestBuilderImpl implements BaseImageRequestBuilder {
     return this;
   }
 
-  public BaseImageRequestBuilderImpl setExtension(String extension) {
-    this.extension = extension;
+  public BaseImageRequestBuilderImpl setFormat(String format) {
+    this.extension = format;
     return this;
   }
 
