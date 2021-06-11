@@ -105,12 +105,12 @@ public interface BaseImageRequestBuilder {
   BaseImageRequestBuilder setQuality(String quality);
 
   /**
-   * This method is used to specify the file extension of the image.
+   * This method is used to specify the file format of the image.
    *
-   * @param extension The file extension of the image
+   * @param format The file format of the image
    * @return this {@link BaseImageRequestBuilder}
    */
-  BaseImageRequestBuilder setExtension(String extension);
+  BaseImageRequestBuilder setFormat(String format);
 
   /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
   ImageRequest build();
