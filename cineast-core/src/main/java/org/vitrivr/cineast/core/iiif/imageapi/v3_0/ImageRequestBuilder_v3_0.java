@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
 
+import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -26,7 +27,7 @@ public interface ImageRequestBuilder_v3_0 {
    *
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setRegionSquare();
+  ImageRequestBuilder_v3_0 setRegionSquare() throws OperationNotSupportedException;
 
   /**
    * The region of the full image to be returned is specified in terms of absolute pixel values.
@@ -37,7 +38,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param h Represents the height of the region in pixels
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setRegionAbsolute(float x, float y, float w, float h);
+  ImageRequestBuilder_v3_0 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException;
 
   /**
    * The region to be returned is specified as a sequence of percentages of the full image’s dimensions, as reported in the image information document.
@@ -48,7 +49,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param h Represents the height of the region, calculated as a percentage of the reported height
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setRegionPercentage(float x, float y, float w, float h);
+  ImageRequestBuilder_v3_0 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException;
 
   /**
    * The extracted region is scaled to the maximum size permitted by maxWidth, maxHeight, or maxArea. If the resulting dimensions are greater than the pixel width and height of the extracted region, the extracted region is upscaled.
@@ -121,7 +122,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param mirror Indicates if that the image should be mirrored by reflection on the vertical axis before any rotation is applied.
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setRotation(float degree, boolean mirror);
+  ImageRequestBuilder_v3_0 setRotation(float degree, boolean mirror) throws OperationNotSupportedException;
 
   /**
    * This method is used to specify the quality of the image.
@@ -129,7 +130,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param quality The quality of the image
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setQuality(String quality);
+  ImageRequestBuilder_v3_0 setQuality(String quality) throws OperationNotSupportedException;
 
   /**
    * This method is used to specify the file extension of the image.
@@ -137,7 +138,7 @@ public interface ImageRequestBuilder_v3_0 {
    * @param extension The file extension of the image
    * @return this {@link ImageRequestBuilder_v3_0}
    */
-  ImageRequestBuilder_v3_0 setFormat(String extension);
+  ImageRequestBuilder_v3_0 setFormat(String extension) throws OperationNotSupportedException;
 
   /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
   ImageRequest build();

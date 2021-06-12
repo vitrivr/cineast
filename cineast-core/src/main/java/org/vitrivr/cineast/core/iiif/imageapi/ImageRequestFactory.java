@@ -6,6 +6,7 @@ import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUA
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
@@ -72,13 +73,18 @@ public class ImageRequestFactory {
         rotationDegree = 0;
       }
 
-      ImageRequest imageRequest = builder
-          .setRegionFull()
-          .setSizeFull()
-          .setRotation(rotationDegree, false)
-          .setQuality(QUALITY_DEFAULT)
-          .setFormat(EXTENSION_JPG)
-          .build();
+      ImageRequest imageRequest = null;
+      try {
+        imageRequest = builder
+            .setRegionFull()
+            .setSizeFull()
+            .setRotation(rotationDegree, false)
+            .setQuality(QUALITY_DEFAULT)
+            .setFormat(EXTENSION_JPG)
+            .build();
+      } catch (OperationNotSupportedException e) {
+        e.printStackTrace();
+      }
 
       try {
         imageRequest.saveToFile(jobDirectoryString, imageName);
