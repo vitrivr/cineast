@@ -109,6 +109,9 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
     if (validators != null) {
       validators.validateSetRotation(degree, mirror);
     }
+    if (degree < 0 || degree > 360) {
+      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+    }
     baseBuilder.setRotation(degree, mirror);
     return this;
   }

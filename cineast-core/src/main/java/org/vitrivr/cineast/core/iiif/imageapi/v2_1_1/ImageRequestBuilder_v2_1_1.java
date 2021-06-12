@@ -89,7 +89,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param mirror Indicates if that the image should be mirrored by reflection on the vertical axis before any rotation is applied.
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setRotation(float degree, boolean mirror);
+  ImageRequestBuilder_v2_1_1 setRotation(float degree, boolean mirror) throws IllegalArgumentException;
 
   /**
    * This method is used to specify the quality of the image.
