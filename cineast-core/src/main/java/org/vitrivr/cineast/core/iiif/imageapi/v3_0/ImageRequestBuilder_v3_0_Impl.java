@@ -1,8 +1,10 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_COLOR;
+import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PCT;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_SQUARE;
 
+import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
@@ -26,7 +28,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v3_0_Impl(ImageInformation imageInformation) {
+  public ImageRequestBuilder_v3_0_Impl(ImageInformation imageInformation) throws OperationNotSupportedException {
     this(imageInformation.getAtId());
     validators = new Validators(imageInformation);
   }
@@ -38,7 +40,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionSquare() {
+  public ImageRequestBuilder_v3_0 setRegionSquare() throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFeature(SUPPORTS_REGION_SQUARE, "Server does not support explicitly requesting square regions of images");
     }
@@ -47,7 +49,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionAbsolute(float x, float y, float w, float h) {
+  public ImageRequestBuilder_v3_0 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsRegionAbsolute(w, h);
     }
@@ -56,9 +58,18 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionPercentage(float x, float y, float w, float h) {
+  public ImageRequestBuilder_v3_0 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException {
+    if (x < 0 || x > 100 || y < 0 || y > 100) {
+      throw new IllegalArgumentException("Value should lie between 0 and 100");
+    }
+    if (x == 100 || y == 100) {
+      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
+    }
+    if (w <= 0 || w > 100 || h <= 0 || h > 100) {
+      throw new IllegalArgumentException("Height and width of the image must belong in the range (0, 100]");
+    }
     if (validators != null) {
-      validators.validateServerSupportsRegionPercentage(x, y, w, h);
+      validators.validateServerSupportsFeature(SUPPORTS_REGION_BY_PCT, "Server does not support requests for regions of images by percentage.");
     }
     baseBuilder.setRegionPercentage(x, y, w, h);
     return this;
@@ -105,7 +116,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRotation(float degree, boolean mirror) {
+  public ImageRequestBuilder_v3_0 setRotation(float degree, boolean mirror) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateSetRotation(degree, mirror);
     }
@@ -117,7 +128,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setQuality(String quality) {
+  public ImageRequestBuilder_v3_0 setQuality(String quality) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsQuality(quality);
     }
@@ -126,7 +137,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setFormat(String format) {
+  public ImageRequestBuilder_v3_0 setFormat(String format) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFormat(format);
     }
@@ -143,13 +154,13 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
 
     private final ImageInformation imageInformation;
 
-    public Validators(ImageInformation imageInformation) {
+    public Validators(ImageInformation imageInformation) throws IllegalArgumentException {
       super(imageInformation);
       this.imageInformation = imageInformation;
     }
 
     @Override
-    public void validateServerSupportsQuality(String quality) {
+    public void validateServerSupportsQuality(String quality) throws OperationNotSupportedException {
       // Server can return any quality for a color request but doesn't have to list the color quality in the profiles data
       if (quality.equals(QUALITY_COLOR)) {
         return;

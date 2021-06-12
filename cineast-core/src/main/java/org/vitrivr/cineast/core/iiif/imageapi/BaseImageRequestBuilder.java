@@ -77,7 +77,7 @@ public interface BaseImageRequestBuilder {
    *
    * @return this {@link BaseImageRequestBuilder}
    */
-  BaseImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException;
+  BaseImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable);
 
 
   /**

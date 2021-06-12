@@ -81,14 +81,10 @@ public class BaseImageRequestBuilderImpl implements BaseImageRequestBuilder {
     return this;
   }
 
-  public BaseImageRequestBuilderImpl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+  public BaseImageRequestBuilderImpl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) {
     // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
     if (!isWidthOverridable && !isHeightOverridable) {
       return setSizeScaledExact(width, height);
-    }
-    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
-    if (isWidthOverridable && isHeightOverridable) {
-      throw new IllegalArgumentException("Both width and height cannot be overridable!");
     }
     StringBuilder sizeString = new StringBuilder();
     if (isWidthOverridable) {
