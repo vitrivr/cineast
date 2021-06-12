@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.EXTENSION_TIF;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_BITONAL;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_FULL;
@@ -173,17 +172,6 @@ public class BaseImageRequestBuilderTest {
       assertNotNull(request);
       assertEquals(toSimplifiedFloatString(width) + "," + toSimplifiedFloatString(height), request.getSize());
     }
-
-    @DisplayName("setSizeScaledBestFit both width and height are overridable")
-    @Test
-    void setSizeScaledBestFitBothOverridable() {
-      float width = 37.40f;
-      float height = 467.65f;
-      assertThrows(IllegalArgumentException.class, () -> {
-        builder.setSizeScaledBestFit(width, height, true, true).build();
-      });
-    }
-
   }
 
   /**

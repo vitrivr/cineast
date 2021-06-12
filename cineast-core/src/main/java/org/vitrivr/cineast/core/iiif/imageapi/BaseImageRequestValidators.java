@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_MIRRORING;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PCT;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PX;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
 import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_ROTATION_BY_90s;
 
 import java.util.List;
+import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem;
@@ -21,70 +21,51 @@ public class BaseImageRequestValidators {
   private static final Logger LOGGER = LogManager.getLogger();
   private final ImageInformation imageInformation;
 
-  public BaseImageRequestValidators(ImageInformation imageInformation) {
+  public BaseImageRequestValidators(ImageInformation imageInformation) throws IllegalArgumentException {
     if (imageInformation == null) {
       throw new IllegalArgumentException("ImageInformation cannot be null");
     }
     this.imageInformation = imageInformation;
   }
 
-  public boolean validateServerSupportsFeature(String featureName, String errorMessage) {
-    boolean isSupported = false;
+  public boolean validateServerSupportsFeature(String featureName, String errorMessage) throws OperationNotSupportedException {
+    boolean isSupported;
     try {
       isSupported = imageInformation.isFeatureSupported(featureName);
       if (!isSupported) {
-        throw new IllegalArgumentException(errorMessage);
+        throw new OperationNotSupportedException(errorMessage);
       }
-    } catch (UnsupportedOperationException e) {
+    } catch (NullPointerException e) {
       LOGGER.debug(e.getMessage());
+      isSupported = true;
     }
     return isSupported;
   }
 
-  public void validateServerSupportsRegionAbsolute(float w, float h) {
-    if (imageInformation != null) {
-      validateServerSupportsFeature(SUPPORTS_REGION_BY_PX, "Server does not support requesting regions of images using pixel dimensions");
-    }
-    if (w <= 0 || h <= 0) {
-      throw new IllegalArgumentException("Width and height must be greater than 0");
-    }
-    if (imageInformation != null && (w > imageInformation.getWidth() && h > imageInformation.getHeight())) {
-      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
+  public void validateServerSupportsRegionAbsolute(float w, float h) throws OperationNotSupportedException {
+    validateServerSupportsFeature(SUPPORTS_REGION_BY_PX, "Server does not support requesting regions of images using pixel dimensions");
+    if (w > imageInformation.getWidth() && h > imageInformation.getHeight()) {
+      throw new OperationNotSupportedException("Request region is entirely outside the image's reported dimensional bounds");
     }
   }
 
-  public void validateServerSupportsRegionPercentage(float x, float y, float w, float h) {
-    if (imageInformation != null) {
-      validateServerSupportsFeature(SUPPORTS_REGION_BY_PCT, "Server does not support requests for regions of images by percentage.");
-    }
-    if (x < 0 || x > 100 || y < 0 || y > 100) {
-      throw new IllegalArgumentException("Value should lie between 0 and 100");
-    }
-    if (x == 100 || y == 100) {
-      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
-    }
-    if (w <= 0 || w > 100 || h <= 0 || h > 100) {
-      throw new IllegalArgumentException("Height and width of the image must belong in the range (0, 100]");
-    }
-  }
-
-  public void validateServerSupportsQuality(String quality) {
+  public void validateServerSupportsQuality(String quality) throws OperationNotSupportedException {
     List<ProfileItem> profiles = imageInformation.getProfile().second;
     boolean isQualitySupported = profiles.stream().anyMatch(item -> item.getQualities().stream().anyMatch(q -> q.equals(quality)));
     if (!isQualitySupported) {
-      throw new IllegalArgumentException("Requested quality is not supported by the server");
+      throw new OperationNotSupportedException("Requested quality is not supported by the server");
     }
   }
 
-  public void validateServerSupportsFormat(String format) {
+  public void validateServerSupportsFormat(String format) throws OperationNotSupportedException {
     List<ProfileItem> profiles = imageInformation.getProfile().second;
     boolean isExtensionSupported = profiles.stream().anyMatch(item -> item.getFormats().stream().anyMatch(q -> q.equals(format)));
     if (!isExtensionSupported) {
-      throw new IllegalArgumentException("Requested format is not supported by the server");
+      throw new OperationNotSupportedException("Requested format is not supported by the server");
     }
   }
 
-  public void validateSetRotation(float degree, boolean mirror) {
+  public void validateSetRotation(float degree, boolean mirror) throws OperationNotSupportedException {
     if (mirror) {
       validateServerSupportsFeature(SUPPORTS_MIRRORING, "Mirroring of images is not supported by the server");
     }
@@ -103,10 +84,10 @@ public class BaseImageRequestValidators {
           } else {
             message = "Server does not support rotating the image by specified amount";
           }
-          throw new IllegalArgumentException(message);
+          throw new OperationNotSupportedException(message);
         }
       }
-    } catch (UnsupportedOperationException e) {
+    } catch (NullPointerException e) {
       LOGGER.debug(e.getMessage());
     }
   }

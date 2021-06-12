@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
 
+import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -28,7 +29,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    *
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setRegionSquare();
+  ImageRequestBuilder_v2_1_1 setRegionSquare() throws OperationNotSupportedException;
 
   /**
    * The region of the full image to be returned is specified in terms of absolute pixel values.
@@ -39,7 +40,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param h Represents the height of the region in pixels
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setRegionAbsolute(float x, float y, float w, float h);
+  ImageRequestBuilder_v2_1_1 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException;
 
   /**
    * The region to be returned is specified as a sequence of percentages of the full image’s dimensions, as reported in the image information document.
@@ -50,7 +51,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param h Represents the height of the region, calculated as a percentage of the reported height
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setRegionPercentage(float x, float y, float w, float h);
+  ImageRequestBuilder_v2_1_1 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException;
 
   /**
    * The image or region is returned at the maximum size available, as indicated by maxWidth, maxHeight, maxArea in the profile description. This is the same as full if none of these properties are provided.
@@ -65,7 +66,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @return this {@link ImageRequestBuilder_v2_1_1}
    * @throws IllegalArgumentException If both height and width are undefined then an IllegalArgumentException is thrown
    */
-  ImageRequestBuilder_v2_1_1 setSizeScaledExact(Float width, Float height) throws IllegalArgumentException;
+  ImageRequestBuilder_v2_1_1 setSizeScaledExact(Float width, Float height) throws IllegalArgumentException, OperationNotSupportedException;
 
   /**
    * The image content is scaled for the best fit such that the resulting width and height are less than or equal to the requested width and height. The exact scaling may be determined by the service provider, based on characteristics including image quality and system performance. The dimensions of the returned image content are calculated to maintain the aspect ratio of the extracted region.
@@ -73,14 +74,14 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @return this {@link ImageRequestBuilder_v2_1_1_Impl}
    * @throws IllegalArgumentException Behaviour of server when both width and height are overridable is undefined
    */
-  ImageRequestBuilder_v2_1_1 setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException;
+  ImageRequestBuilder_v2_1_1 setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException;
 
   /**
    * The width and height of the returned image is scaled to n% of the width and height of the extracted region. The aspect ratio of the returned image is the same as that of the extracted region.
    *
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setSizePercentage(float n);
+  ImageRequestBuilder_v2_1_1 setSizePercentage(float n) throws OperationNotSupportedException;
 
   /**
    * This method is used to specify the mirroring and rotation applied to the image.
@@ -89,7 +90,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param mirror Indicates if that the image should be mirrored by reflection on the vertical axis before any rotation is applied.
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setRotation(float degree, boolean mirror) throws IllegalArgumentException;
+  ImageRequestBuilder_v2_1_1 setRotation(float degree, boolean mirror) throws IllegalArgumentException, OperationNotSupportedException;
 
   /**
    * This method is used to specify the quality of the image.
@@ -97,7 +98,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param quality The quality of the image
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setQuality(String quality);
+  ImageRequestBuilder_v2_1_1 setQuality(String quality) throws OperationNotSupportedException;
 
   /**
    * This method is used to specify the file extension of the image.
@@ -105,7 +106,7 @@ public interface ImageRequestBuilder_v2_1_1 {
    * @param extension The file extension of the image
    * @return this {@link ImageRequestBuilder_v2_1_1}
    */
-  ImageRequestBuilder_v2_1_1 setFormat(String extension);
+  ImageRequestBuilder_v2_1_1 setFormat(String extension) throws OperationNotSupportedException;
 
   /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
   ImageRequest build();
