@@ -109,9 +109,6 @@ public class BaseImageRequestValidators {
     } catch (UnsupportedOperationException e) {
       LOGGER.debug(e.getMessage());
     }
-    if (degree < 0 || degree > 360) {
-      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
-    }
   }
 
 }
