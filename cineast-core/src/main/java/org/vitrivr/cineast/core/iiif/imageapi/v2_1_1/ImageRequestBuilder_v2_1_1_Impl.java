@@ -84,16 +84,30 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   public ImageRequestBuilder_v2_1_1_Impl setSizeScaledExact(Float width, Float height) throws IllegalArgumentException {
+    boolean isWidthValid = isImageDimenValidFloat(width);
+    boolean isHeightValid = isImageDimenValidFloat(height);
+    // Behaviour of server when neither width or height are provided is undefined. Thus, user should be forced to some other method such as setSizeMax.
+    if (!isWidthValid && !isHeightValid) {
+      throw new IllegalArgumentException("Either width or height must be a valid float value!");
+    }
     if (validators != null) {
-      validators.validateSizeScaledExact(width, height);
+      validators.validateSizeScaledExact(width, height, isWidthValid, isHeightValid);
     }
     baseBuilder.setSizeScaledExact(width, height);
     return this;
   }
 
   public ImageRequestBuilder_v2_1_1_Impl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
-    if (validators != null && validators.validateSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable)) {
+    if (validators != null) {
+      validators.validateSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable);
+    }
+    // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
+    if (!isWidthOverridable && !isHeightOverridable) {
       return this.setSizeScaledExact(width, height);
+    }
+    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
+    if (isWidthOverridable && isHeightOverridable) {
+      throw new IllegalArgumentException("Both width and height cannot be overridable!");
     }
     baseBuilder.setSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable);
     return this;
@@ -112,6 +126,9 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   public ImageRequestBuilder_v2_1_1_Impl setRotation(float degree, boolean mirror) throws IllegalArgumentException {
     if (validators != null) {
       validators.validateSetRotation(degree, mirror);
+    }
+    if (degree < 0 || degree > 360) {
+      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
     }
     baseBuilder.setRotation(degree, mirror);
     return this;
@@ -179,25 +196,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
       if (isWidthOverridable || isHeightOverridable) {
         validateServerSupportsFeature(SUPPORTS_SIZE_BY_CONFINED_WH, "Server does not support requesting images with overridable width or height parameters");
       }
-      // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
-      if (!isWidthOverridable && !isHeightOverridable) {
-        return true;
-      }
-      // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
-      if (isWidthOverridable && isHeightOverridable) {
-        throw new IllegalArgumentException("Both width and height cannot be overridable!");
-      }
       return false;
-    }
-
-    private void validateSizeScaledExact(Float width, Float height) {
-      boolean isWidthValid = isImageDimenValidFloat(width);
-      boolean isHeightValid = isImageDimenValidFloat(height);
-      // Behaviour of server when neither width or height are provided is undefined. Thus, user should be forced to some other method such as setSizeMax.
-      if (!isWidthValid && !isHeightValid) {
-        throw new IllegalArgumentException("Either width or height must be a valid float value!");
-      }
-      validateSizeScaledExact(width, height, isWidthValid, isHeightValid);
     }
 
     public void validateSizePercentage(float n) {
