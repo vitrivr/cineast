@@ -142,83 +142,44 @@ public class ImageRequestBuilder_v2_1_1_Test {
         builder.setSizeScaledExact(122f, 532f).build();
       });
     }
-//
-//    @DisplayName("setSizeScaledBestFit width overridable")
-//    @Test
-//    void setSizeScaledBestFitWidthOverridable() {
-//      float width = 37.40f;
-//      float height = 467.65f;
-//      ImageRequest request = builder.setSizeScaledBestFit(width, height, true, false).build();
-//      assertNotNull(request);
-//      assertEquals("!" + toSimplifiedFloatString(width) + "," + toSimplifiedFloatString(height), request.getSize());
-//    }
-//
-//    @DisplayName("setSizeScaledBestFit height overridable")
-//    @Test
-//    void setSizeScaledBestFitHeightOverridable() {
-//      float width = 37.40f;
-//      float height = 467.65f;
-//      ImageRequest request = builder.setSizeScaledBestFit(width, height, false, true).build();
-//      assertNotNull(request);
-//      assertEquals(toSimplifiedFloatString(width) + "," + "!" + toSimplifiedFloatString(height), request.getSize());
-//    }
-//
-//    @DisplayName("setSizeScaledBestFit neither width nor height are overridable")
-//    @Test
-//    void setSizeScaledBestFitNeitherOverridable() {
-//      float width = 37.40f;
-//      float height = 467.65f;
-//      ImageRequest request = builder.setSizeScaledBestFit(width, height, false, false).build();
-//      assertNotNull(request);
-//      assertEquals(toSimplifiedFloatString(width) + "," + toSimplifiedFloatString(height), request.getSize());
-//    }
-//
-//    @DisplayName("setSizeScaledBestFit both width and height are overridable")
-//    @Test
-//    void setSizeScaledBestFitBothOverridable() {
-//      float width = 37.40f;
-//      float height = 467.65f;
-//      assertThrows(IllegalArgumentException.class, () -> {
-//        builder.setSizeScaledBestFit(width, height, true, true).build();
-//      });
-//    }
+
+    @DisplayName("setSizeScaledBestFit both width and height are overridable")
+    @Test
+    void setSizeScaledBestFitBothOverridable() {
+      float width = 37.40f;
+      float height = 467.65f;
+      assertThrows(IllegalArgumentException.class, () -> {
+        builder.setSizeScaledBestFit(width, height, true, true).build();
+      });
+    }
+
+    @DisplayName("setSizeScaledBestFit not supported by server")
+    @Test
+    void setSizeScaledBestFitNotSupported() {
+      float width = 37.40f;
+      float height = 467.65f;
+      assertThrows(OperationNotSupportedException.class, () -> {
+        builder.setSizeScaledBestFit(width, height, true, false).build();
+      });
+    }
 
   }
 
-//  /**
-//   * Unit tests for methods that set the rotation of the image
-//   */
-//  @Nested
-//  class setRotationTests {
-//
-//    @DisplayName("setRotation no mirroring test")
-//    @Test
-//    void setRotationNoMirroring() {
-//      float rotation = 23.450f;
-//      ImageRequest request = builder.setRotation(rotation, false).build();
-//      assertNotNull(request);
-//      assertEquals(toSimplifiedFloatString(rotation), request.getRotation());
-//    }
-//
-//    @DisplayName("setRotation with mirroring test")
-//    @Test
-//    void setRotationWithMirroring() {
-//      float rotation = 23.450f;
-//      ImageRequest request = builder.setRotation(rotation, true).build();
-//      assertNotNull(request);
-//      assertEquals("!" + toSimplifiedFloatString(rotation), request.getRotation());
-//    }
-//
-//    @DisplayName("setRotation with invalid rotation degrees test")
-//    @Test
-//    void setRotationWithInvalidRotation() {
-//      float rotation = -423.94f;
-//      assertThrows(IllegalArgumentException.class, () -> {
-//        builder.setRotation(rotation, true).build();
-//      });
-//    }
-//  }
-//
+  /**
+   * Unit tests for methods that set the rotation of the image
+   */
+  @Nested
+  class setRotationTests {
+
+    @DisplayName("setRotation with invalid rotation degrees test")
+    @Test
+    void setRotationWithInvalidRotation() {
+      float rotation = -423.94f;
+      assertThrows(IllegalArgumentException.class, () -> {
+        builder.setRotation(rotation, true).build();
+      });
+    }
+  }
 
   /**
    * Unit tests for methods that set the quality of the image
