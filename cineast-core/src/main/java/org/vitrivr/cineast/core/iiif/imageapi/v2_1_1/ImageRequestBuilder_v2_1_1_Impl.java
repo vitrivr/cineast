@@ -112,16 +112,16 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   public ImageRequestBuilder_v2_1_1_Impl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
+    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
+    if (isWidthOverridable && isHeightOverridable) {
+      throw new IllegalArgumentException("Both width and height cannot be overridable!");
+    }
     if (validators != null) {
       validators.validateSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable);
     }
     // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
     if (!isWidthOverridable && !isHeightOverridable) {
       return this.setSizeScaledExact(width, height);
-    }
-    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
-    if (isWidthOverridable && isHeightOverridable) {
-      throw new IllegalArgumentException("Both width and height cannot be overridable!");
     }
     baseBuilder.setSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable);
     return this;
@@ -141,11 +141,11 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
 
   @Override
   public ImageRequestBuilder_v2_1_1_Impl setRotation(float degree, boolean mirror) throws IllegalArgumentException, OperationNotSupportedException {
-    if (validators != null) {
-      validators.validateSetRotation(degree, mirror);
-    }
     if (degree < 0 || degree > 360) {
       throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+    }
+    if (validators != null) {
+      validators.validateSetRotation(degree, mirror);
     }
     baseBuilder.setRotation(degree, mirror);
     return this;
