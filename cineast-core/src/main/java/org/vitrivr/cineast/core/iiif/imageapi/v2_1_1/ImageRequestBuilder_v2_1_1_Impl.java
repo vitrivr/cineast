@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.isImageDimenValidFloat;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_ABOVE_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_H;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_W;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_SIZE_BY_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_ABOVE_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_H;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_W;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_WH;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -36,7 +35,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v2_1_1_Impl(ImageInformation imageInformation) throws IllegalArgumentException {
+  public ImageRequestBuilder_v2_1_1_Impl(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
     this(imageInformation.getAtId());
     this.validators = new Validators(imageInformation);
   }
@@ -180,9 +179,9 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
 
   private static class Validators extends BaseImageRequestValidators {
 
-    private final ImageInformation imageInformation;
+    private final ImageInformation_v2_1_1 imageInformation;
 
-    public Validators(ImageInformation imageInformation) throws IllegalArgumentException {
+    public Validators(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
       super(imageInformation);
       this.imageInformation = imageInformation;
     }
