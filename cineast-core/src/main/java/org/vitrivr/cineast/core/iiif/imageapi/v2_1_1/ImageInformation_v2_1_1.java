@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi;
+package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -10,20 +10,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
+ * import com.fasterxml.jackson.annotation.JsonProperty; import java.util.ArrayList; import java.util.LinkedHashMap; import java.util.LinkedList; import java.util.List; import lombok.EqualsAndHashCode; import lombok.Getter; import lombok.NoArgsConstructor; import lombok.Setter; import lombok.ToString; import org.vitrivr.cineast.core.data.Pair; import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation; /**
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 29.05.21
  */
 @ToString
-public class ImageInformation {
+public class ImageInformation_v2_1_1 implements ImageInformation {
 
-  /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 2.1.1 **/
-  private final String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/level2.json";
-  /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 3.0 **/
-  private final String IMAGE_API_VERSION_3_0 = "http://iiif.io/api/image/3/level1.json";
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * A list of profiles, indicated by either a URI or an object describing the features supported. The first entry in the list must be a compliance level URI.
@@ -115,21 +117,34 @@ public class ImageInformation {
   }
 
   public IMAGE_API_VERSION getImageApiVersion() {
-    String apiLevelString = this.getProfile().first;
-    switch (apiLevelString) {
-      case IMAGE_API_VERSION_2_1_1:
-        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-      case IMAGE_API_VERSION_3_0:
-        return IMAGE_API_VERSION.THREE_POINT_ZERO;
-      default:
-        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    }
+    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
   }
 
-  /**
-   * @param feature String denoting a feature whose support needs to be checked
-   * @return true if server supports the feature
-   */
+  @Override
+  public boolean isQualitySupported(String quality) {
+    boolean isSupported = true;
+    try {
+      List<ProfileItem> profiles = getProfile().second;
+      isSupported = profiles.stream().anyMatch(item -> item.getQualities().stream().anyMatch(q -> q.equals(quality)));
+    } catch (NullPointerException e) {
+      LOGGER.debug("The server has not advertised the qualities supported by it");
+    }
+    return isSupported;
+  }
+
+  @Override
+  public boolean isFormatSupported(String format) {
+    boolean isSupported = true;
+    try {
+      List<ProfileItem> profiles = getProfile().second;
+      isSupported = profiles.stream().anyMatch(item -> item.getFormats().stream().anyMatch(q -> q.equals(format)));
+    } catch (NullPointerException e) {
+      LOGGER.debug("The server has not advertised the formats supported by it");
+    }
+    return isSupported;
+  }
+
+  @Override
   public boolean isFeatureSupported(String feature) {
     List<ProfileItem> profiles = this.getProfile().second;
     return profiles.stream().anyMatch(item -> {
@@ -139,14 +154,6 @@ public class ImageInformation {
       }
       return supports.stream().anyMatch(q -> q.equals(feature));
     });
-  }
-
-  /**
-   * Enum to hold the various Image Api specification versions supported by the builder
-   */
-  public enum IMAGE_API_VERSION {
-    TWO_POINT_ONE_POINT_ONE,
-    THREE_POINT_ZERO
   }
 
   /**

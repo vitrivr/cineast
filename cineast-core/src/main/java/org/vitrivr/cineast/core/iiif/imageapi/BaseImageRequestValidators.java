@@ -1,15 +1,13 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_MIRRORING;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PX;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_ROTATION_BY_90s;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_MIRRORING;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_ROTATION_BY_90s;
 
-import java.util.List;
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem;
 
 /**
  * @author singaltanmay
@@ -50,17 +48,13 @@ public class BaseImageRequestValidators {
   }
 
   public void validateServerSupportsQuality(String quality) throws OperationNotSupportedException {
-    List<ProfileItem> profiles = imageInformation.getProfile().second;
-    boolean isQualitySupported = profiles.stream().anyMatch(item -> item.getQualities().stream().anyMatch(q -> q.equals(quality)));
-    if (!isQualitySupported) {
+    if (!imageInformation.isQualitySupported(quality)) {
       throw new OperationNotSupportedException("Requested quality is not supported by the server");
     }
   }
 
   public void validateServerSupportsFormat(String format) throws OperationNotSupportedException {
-    List<ProfileItem> profiles = imageInformation.getProfile().second;
-    boolean isExtensionSupported = profiles.stream().anyMatch(item -> item.getFormats().stream().anyMatch(q -> q.equals(format)));
-    if (!isExtensionSupported) {
+    if (!imageInformation.isFormatSupported(format)) {
       throw new OperationNotSupportedException("Requested format is not supported by the server");
     }
   }
