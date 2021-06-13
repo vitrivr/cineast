@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
 
 /**
  * @author singaltanmay
@@ -35,14 +36,16 @@ public class ImageInformationRequest {
    * This has been created as a separate function to help with unit testing.
    *
    * @param response The JSON response received from the server
-   * @return {@link ImageInformation}
+   * @return {@link ImageInformation_v2_1_1}
    */
   @Nullable
-  public ImageInformation getImageInformation(String response) {
-    ImageInformation imageInformation = null;
-    if(response == null || response.isEmpty()) response = this.imageInformation;
+  public ImageInformation_v2_1_1 getImageInformation(String response) {
+    ImageInformation_v2_1_1 imageInformation = null;
+    if (response == null || response.isEmpty()) {
+      response = this.imageInformation;
+    }
     try {
-      imageInformation = new ObjectMapper().readValue(response, ImageInformation.class);
+      imageInformation = new ObjectMapper().readValue(response, ImageInformation_v2_1_1.class);
     } catch (IOException e) {
       e.printStackTrace();
     }

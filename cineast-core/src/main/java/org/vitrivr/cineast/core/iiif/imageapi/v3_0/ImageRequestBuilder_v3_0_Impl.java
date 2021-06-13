@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_COLOR;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.ProfileItem.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_SQUARE;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
+import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
 
 /**
  * @author singaltanmay
@@ -28,7 +28,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v3_0_Impl(ImageInformation imageInformation) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3_0_Impl(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
     this(imageInformation.getAtId());
     validators = new Validators(imageInformation);
   }
@@ -152,9 +152,9 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
 
   private static class Validators extends BaseImageRequestValidators {
 
-    private final ImageInformation imageInformation;
+    private final ImageInformation_v2_1_1 imageInformation;
 
-    public Validators(ImageInformation imageInformation) throws IllegalArgumentException {
+    public Validators(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
       super(imageInformation);
       this.imageInformation = imageInformation;
     }

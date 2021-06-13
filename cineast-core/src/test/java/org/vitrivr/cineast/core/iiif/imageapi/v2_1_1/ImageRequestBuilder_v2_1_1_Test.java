@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -34,7 +33,7 @@ public class ImageRequestBuilder_v2_1_1_Test {
 
   @BeforeEach
   public void setup() {
-    ImageInformation imageInformation = mock(ImageInformation.class);
+    ImageInformation_v2_1_1 imageInformation = mock(ImageInformation_v2_1_1.class);
     when(imageInformation.getAtId()).thenReturn(BASE_URL);
     when(imageInformation.isFeatureSupported(any())).thenReturn(false);
     builder = new ImageRequestBuilder_v2_1_1_Impl(imageInformation);
@@ -190,7 +189,7 @@ public class ImageRequestBuilder_v2_1_1_Test {
     @DisplayName("setQuality not supported test")
     @Test
     void setQuality() {
-      assertThrows(NullPointerException.class, () -> builder.setQuality(QUALITY_BITONAL));
+      assertThrows(OperationNotSupportedException.class, () -> builder.setQuality(QUALITY_BITONAL));
     }
   }
 
@@ -198,12 +197,12 @@ public class ImageRequestBuilder_v2_1_1_Test {
    * Unit tests for methods that set the file extension of the image
    */
   @Nested
-  class setExtensionTests {
+  class setFormatTest {
 
-    @DisplayName("setExtension not supported by server test")
+    @DisplayName("setFormat not supported by server test")
     @Test
-    void setExtension() {
-      assertThrows(NullPointerException.class, () -> builder.setFormat(EXTENSION_TIF));
+    void setFormat() {
+      assertThrows(OperationNotSupportedException.class, () -> builder.setFormat(EXTENSION_TIF));
     }
   }
 
