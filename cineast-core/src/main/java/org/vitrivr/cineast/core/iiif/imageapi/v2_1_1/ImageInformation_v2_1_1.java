@@ -90,15 +90,6 @@ public class ImageInformation_v2_1_1 implements ImageInformation {
   @JsonProperty
   private List<SizesItem> sizes;
 
-  public static IMAGE_API_VERSION getImageApiVersionNumeric(String input) {
-    if (input.equals("2.1.1")) {
-      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals("3.0") || input.equals("3.0.0")) {
-      return IMAGE_API_VERSION.THREE_POINT_ZERO;
-    }
-    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-  }
-
   /**
    * Custom getter for getProfile that converts List<Object> into a Pair<String, List<ProfileItem>>
    */

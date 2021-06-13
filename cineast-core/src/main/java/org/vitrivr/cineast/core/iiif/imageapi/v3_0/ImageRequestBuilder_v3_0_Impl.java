@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
 
 /**
  * @author singaltanmay
@@ -28,8 +28,8 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v3_0_Impl(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
-    this(imageInformation.getAtId());
+  public ImageRequestBuilder_v3_0_Impl(ImageInformation_v3_0 imageInformation) throws IllegalArgumentException {
+    this(imageInformation.getId());
     validators = new Validators(imageInformation);
   }
 
@@ -152,9 +152,9 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
 
   private static class Validators extends BaseImageRequestValidators {
 
-    private final ImageInformation_v2_1_1 imageInformation;
+    private final ImageInformation imageInformation;
 
-    public Validators(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
+    public Validators(ImageInformation imageInformation) throws IllegalArgumentException {
       super(imageInformation);
       this.imageInformation = imageInformation;
     }
