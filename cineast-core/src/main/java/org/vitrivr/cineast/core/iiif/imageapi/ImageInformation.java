@@ -10,6 +10,15 @@ public interface ImageInformation {
   String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/level2.json";
   String IMAGE_API_VERSION_3_0 = "http://iiif.io/api/image/3/level1.json";
 
+  static IMAGE_API_VERSION getImageApiVersionNumeric(String input) {
+    if (input.equals("2.1.1")) {
+      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+    } else if (input.equals("3.0") || input.equals("3.0.0")) {
+      return IMAGE_API_VERSION.THREE_POINT_ZERO;
+    }
+    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+  }
+
   default String getImageApiVersionString(IMAGE_API_VERSION apiVersion) {
     if (apiVersion.equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
       return IMAGE_API_VERSION_2_1_1;
@@ -51,5 +60,4 @@ public interface ImageInformation {
     TWO_POINT_ONE_POINT_ONE,
     THREE_POINT_ZERO
   }
-
 }

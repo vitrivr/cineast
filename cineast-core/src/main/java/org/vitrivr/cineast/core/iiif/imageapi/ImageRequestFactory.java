@@ -13,6 +13,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1;
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1_Impl;
+import org.vitrivr.cineast.core.iiif.imageapi.v3_0.ImageRequestBuilder_v3_0;
+import org.vitrivr.cineast.core.iiif.imageapi.v3_0.ImageRequestBuilder_v3_0_Impl;
 
 /**
  * @author singaltanmay
@@ -26,12 +28,14 @@ public class ImageRequestFactory {
 
   public ImageRequestFactory(IIIFConfig iiifConfig) {
     this.iiifConfig = iiifConfig;
-    imageApiVersion = ImageInformation_v2_1_1.getImageApiVersionNumeric(iiifConfig.getImageApiVersion());
+    imageApiVersion = ImageInformation.getImageApiVersionNumeric(iiifConfig.getImageApiVersion());
   }
 
   public List<ImageRequest> createImageRequests(String jobDirectoryString, String itemPrefixString) {
     if (imageApiVersion == IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE) {
       return runImageApi_v2_1_1_job(jobDirectoryString, itemPrefixString);
+    } else if (imageApiVersion == IMAGE_API_VERSION.THREE_POINT_ZERO) {
+      runImageApi_v3_0_job(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
   }
@@ -79,6 +83,70 @@ public class ImageRequestFactory {
         imageRequest = builder
             .setRegionFull()
             .setSizeFull()
+            .setRotation(rotationDegree, false)
+            .setQuality(QUALITY_DEFAULT)
+            .setFormat(EXTENSION_JPG)
+            .build();
+      } catch (OperationNotSupportedException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        if (imageRequest != null) {
+          imageRequest.saveToFile(jobDirectoryString, imageName);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      imageRequests.add(imageRequest);
+    }
+    return imageRequests;
+  }
+
+  private List<ImageRequest> runImageApi_v3_0_job(String jobDirectoryString, String itemPrefixString) {
+    List<ImageRequest> imageRequests = new LinkedList<>();
+    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+    if (iiifItems == null) {
+      return imageRequests;
+    }
+    for (final IIIFItem iiifItem : iiifItems) {
+      String identifier = iiifItem.getIdentifier();
+      final String imageName = itemPrefixString + identifier;
+
+      ImageInformation imageInformation = null;
+      try {
+        final ImageInformationRequest informationRequest = new ImageInformationRequest(iiifConfig.getBaseUrl() + "/" + identifier);
+        informationRequest.saveToFile(jobDirectoryString, imageName);
+        imageInformation = informationRequest.getImageInformation(null);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      ImageRequestBuilder_v3_0 builder;
+      if (imageInformation != null) {
+        // TODO use image information v3
+        builder = new ImageRequestBuilder_v3_0_Impl("");
+      } else {
+        builder = new ImageRequestBuilder_v3_0_Impl(iiifConfig.getBaseUrl());
+      }
+
+      float rotationDegree;
+      if (iiifItem.getRotation() != null) {
+        try {
+          rotationDegree = Float.parseFloat(iiifItem.getRotation());
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+          continue;
+        }
+      } else {
+        rotationDegree = 0;
+      }
+
+      ImageRequest imageRequest = null;
+      try {
+        imageRequest = builder
+            .setRegionFull()
+            .setSizeMaxUpscaled()
             .setRotation(rotationDegree, false)
             .setQuality(QUALITY_DEFAULT)
             .setFormat(EXTENSION_JPG)
