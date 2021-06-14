@@ -36,7 +36,7 @@ public class ImageRequestBuilder_v2_Test {
     ImageInformation_v2 imageInformation = mock(ImageInformation_v2.class);
     when(imageInformation.getAtId()).thenReturn(BASE_URL);
     when(imageInformation.isFeatureSupported(any())).thenReturn(false);
-    builder = new ImageRequestBuilder_v2_Impl(imageInformation);
+    builder = new ImageRequestBuilder_v2(imageInformation);
   }
 
   /**

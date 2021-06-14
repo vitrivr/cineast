@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
-import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2_Impl;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3_Impl;
 
@@ -62,9 +61,9 @@ public class ImageRequestFactory {
 
       ImageRequestBuilder_v2 builder;
       if (imageInformation != null) {
-        builder = new ImageRequestBuilder_v2_Impl(imageInformation);
+        builder = new ImageRequestBuilder_v2(imageInformation);
       } else {
-        builder = new ImageRequestBuilder_v2_Impl(iiifConfig.getBaseUrl());
+        builder = new ImageRequestBuilder_v2(iiifConfig.getBaseUrl());
       }
 
       float rotationDegree;
