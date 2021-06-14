@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
@@ -231,6 +233,11 @@ public class ImageRequestBuilder_v3 {
   /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
   public ImageRequest build() {
     return baseBuilder.build();
+  }
+
+  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }
 
   private static class Validators extends BaseImageRequestValidators {
