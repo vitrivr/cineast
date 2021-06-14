@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -67,14 +66,14 @@ public class ImageInformation_v2 implements ImageInformation {
   @Getter
   @Setter
   @JsonProperty(required = true)
-  private Integer width;
+  private long width;
   /**
    * The height in pixels of the full image content, given as an integer.
    */
   @Getter
   @Setter
   @JsonProperty(required = true)
-  private Integer height;
+  private long height;
   /**
    * A set of descriptions of the parameters to use to request regions of the image (tiles) that are efficient for the server to deliver. Each description gives a width, optionally a height for non-square tiles, and a set of scale factors at which tiles of those dimensions are available.
    */
@@ -149,30 +148,6 @@ public class ImageInformation_v2 implements ImageInformation {
   }
 
   /**
-   * Inner class used to parse the Image Information JSON response.
-   */
-  @NoArgsConstructor
-  @ToString
-  @EqualsAndHashCode
-  public static class SizesItem {
-
-    @Getter
-    @Setter
-    @JsonProperty
-    public Integer width;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    public Integer height;
-
-    public SizesItem(int width, int height) {
-      this.width = width;
-      this.height = height;
-    }
-  }
-
-  /**
    * Inner class used to parse the 0+ indexed item in "profile" array of the Image Information JSON response.
    */
   @NoArgsConstructor
@@ -243,23 +218,5 @@ public class ImageInformation_v2 implements ImageInformation {
     @Setter
     @JsonProperty
     public List<String> formats;
-  }
-
-  /**
-   * Inner class used to parse the Image Information JSON response.
-   */
-  @NoArgsConstructor
-  @ToString
-  public static class TilesItem {
-
-    @Getter
-    @Setter
-    @JsonProperty
-    public Integer width;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    public List<Integer> scaleFactors;
   }
 }
