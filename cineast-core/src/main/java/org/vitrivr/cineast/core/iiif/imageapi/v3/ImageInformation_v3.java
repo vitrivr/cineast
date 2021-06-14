@@ -3,6 +3,8 @@ package org.vitrivr.cineast.core.iiif.imageapi.v3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
@@ -79,7 +81,7 @@ public class ImageInformation_v3 implements ImageInformation {
   }
 
   @Override
-  public IMAGE_API_VERSION getImageApiVersion() {
-    return null;
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }
 }

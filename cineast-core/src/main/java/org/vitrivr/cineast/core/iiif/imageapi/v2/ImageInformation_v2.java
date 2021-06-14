@@ -13,11 +13,11 @@ import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
- * import com.fasterxml.jackson.annotation.JsonProperty; import java.util.ArrayList; import java.util.LinkedHashMap; import java.util.LinkedList; import java.util.List; import lombok.EqualsAndHashCode; import lombok.Getter; import lombok.NoArgsConstructor; import lombok.Setter; import lombok.ToString; import org.vitrivr.cineast.core.data.Pair; import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation; /**
- *
  * @author singaltanmay
  * @version 1.0
  * @created 29.05.21
@@ -107,8 +107,9 @@ public class ImageInformation_v2 implements ImageInformation {
     return new Pair<>(apiLevelString, profileItemList);
   }
 
-  public IMAGE_API_VERSION getImageApiVersion() {
-    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+  @Override
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
   }
 
   @Override

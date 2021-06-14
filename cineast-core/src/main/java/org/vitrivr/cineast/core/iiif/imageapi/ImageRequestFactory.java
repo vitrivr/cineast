@@ -9,7 +9,7 @@ import java.util.List;
 import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
@@ -22,18 +22,18 @@ import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
  */
 public class ImageRequestFactory {
 
-  private final IMAGE_API_VERSION imageApiVersion;
+  private final ImageApiVersion imageApiVersion;
   private final IIIFConfig iiifConfig;
 
   public ImageRequestFactory(IIIFConfig iiifConfig) {
     this.iiifConfig = iiifConfig;
-    imageApiVersion = ImageInformation.getImageApiVersionNumeric(iiifConfig.getImageApiVersion());
+    imageApiVersion = iiifConfig.getImageApiVersion();
   }
 
   public List<ImageRequest> createImageRequests(String jobDirectoryString, String itemPrefixString) {
-    if (imageApiVersion == IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE) {
+    if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
       return runImageApi_v2_1_1_job(jobDirectoryString, itemPrefixString);
-    } else if (imageApiVersion == IMAGE_API_VERSION.THREE_POINT_ZERO) {
+    } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
       runImageApi_v3_0_job(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
