@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.iiif;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 
 /**
  * IIIF configuration used to fetch media files from remote servers.
@@ -21,8 +22,8 @@ public class IIIFConfig {
   @JsonProperty(value = "items")
   private List<IIIFItem> iiifItems;
 
-  public String getImageApiVersion() {
-    return imageApiVersion;
+  public ImageApiVersion getImageApiVersion() {
+    return ImageApiVersion.fromNumericString(imageApiVersion);
   }
 
   public IIIFConfig setImageApiVersion(String imageApiVersion) {
