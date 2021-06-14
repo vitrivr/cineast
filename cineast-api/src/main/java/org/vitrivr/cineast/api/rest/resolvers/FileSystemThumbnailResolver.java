@@ -6,10 +6,10 @@ import java.io.FilenameFilter;
 
 public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
-  private final File baseFoler;
+  private final File baseFolder;
 
   public FileSystemThumbnailResolver(File baseFolder) {
-    this.baseFoler = baseFolder;
+    this.baseFolder = baseFolder;
   }
 
   @Override
@@ -24,7 +24,9 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
       return null;
     }
 
-    File dir = new File(this.baseFoler, split[0] + "_" + split[1]);
+    String fileName = segmentId.substring(0, segmentId.lastIndexOf("_"));
+
+    File dir = new File(this.baseFolder, fileName);
 
     if (!dir.exists() || !dir.isDirectory()) {
       return null;
