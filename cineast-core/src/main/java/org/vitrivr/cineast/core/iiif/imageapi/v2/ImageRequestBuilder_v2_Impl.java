@@ -1,15 +1,15 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
+package org.vitrivr.cineast.core.iiif.imageapi.v2;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.isImageDimenValidFloat;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_ABOVE_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_H;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_W;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_SIZE_BY_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_ABOVE_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_H;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_W;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_WH;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
@@ -24,30 +24,30 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  * @version 1.0
  * @created 09.06.21
  */
-public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1_1 {
+public class ImageRequestBuilder_v2_Impl implements ImageRequestBuilder_v2 {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
   private String size;
   private Validators validators;
 
-  public ImageRequestBuilder_v2_1_1_Impl(String baseUrl) {
+  public ImageRequestBuilder_v2_Impl(String baseUrl) {
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v2_1_1_Impl(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
+  public ImageRequestBuilder_v2_Impl(ImageInformation_v2 imageInformation) throws IllegalArgumentException {
     this(imageInformation.getAtId());
     this.validators = new Validators(imageInformation);
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setRegionFull() {
+  public ImageRequestBuilder_v2_Impl setRegionFull() {
     baseBuilder.setRegionFull();
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setRegionSquare() throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setRegionSquare() throws IllegalArgumentException, OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFeature(SUPPORTS_REGION_SQUARE, "Server does not support explicitly requesting square regions of images");
     }
@@ -56,7 +56,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setRegionAbsolute(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setRegionAbsolute(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
     if (w <= 0 || h <= 0) {
       throw new IllegalArgumentException("Width and height must be greater than 0");
     }
@@ -68,7 +68,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setRegionPercentage(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setRegionPercentage(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
     if (x < 0 || x > 100 || y < 0 || y > 100) {
       throw new IllegalArgumentException("Value should lie between 0 and 100");
     }
@@ -85,18 +85,18 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
     return this;
   }
 
-  public ImageRequestBuilder_v2_1_1_Impl setSizeFull() {
+  public ImageRequestBuilder_v2_Impl setSizeFull() {
     this.size = SIZE_FULL;
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setSizeMax() {
+  public ImageRequestBuilder_v2_Impl setSizeMax() {
     baseBuilder.setSizeMax();
     return this;
   }
 
-  public ImageRequestBuilder_v2_1_1_Impl setSizeScaledExact(Float width, Float height) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setSizeScaledExact(Float width, Float height) throws IllegalArgumentException, OperationNotSupportedException {
     boolean isWidthValid = isImageDimenValidFloat(width);
     boolean isHeightValid = isImageDimenValidFloat(height);
     // Behaviour of server when neither width or height are provided is undefined. Thus, user should be forced to some other method such as setSizeMax.
@@ -110,7 +110,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
     return this;
   }
 
-  public ImageRequestBuilder_v2_1_1_Impl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
     // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
     if (isWidthOverridable && isHeightOverridable) {
       throw new IllegalArgumentException("Both width and height cannot be overridable!");
@@ -127,7 +127,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setSizePercentage(float n) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setSizePercentage(float n) throws IllegalArgumentException, OperationNotSupportedException {
     if (n <= 0) {
       throw new IllegalArgumentException("Percentage value has to be greater than 0");
     }
@@ -139,7 +139,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setRotation(float degree, boolean mirror) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setRotation(float degree, boolean mirror) throws IllegalArgumentException, OperationNotSupportedException {
     if (degree < 0 || degree > 360) {
       throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
     }
@@ -151,7 +151,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setQuality(String quality) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setQuality(String quality) throws IllegalArgumentException, OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsQuality(quality);
     }
@@ -160,7 +160,7 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
   }
 
   @Override
-  public ImageRequestBuilder_v2_1_1_Impl setFormat(String format) throws IllegalArgumentException, OperationNotSupportedException {
+  public ImageRequestBuilder_v2_Impl setFormat(String format) throws IllegalArgumentException, OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFormat(format);
     }
@@ -179,9 +179,9 @@ public class ImageRequestBuilder_v2_1_1_Impl implements ImageRequestBuilder_v2_1
 
   private static class Validators extends BaseImageRequestValidators {
 
-    private final ImageInformation_v2_1_1 imageInformation;
+    private final ImageInformation_v2 imageInformation;
 
-    public Validators(ImageInformation_v2_1_1 imageInformation) throws IllegalArgumentException {
+    public Validators(ImageInformation_v2 imageInformation) throws IllegalArgumentException {
       super(imageInformation);
       this.imageInformation = imageInformation;
     }

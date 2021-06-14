@@ -1,8 +1,8 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
+package org.vitrivr.cineast.core.iiif.imageapi.v3;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_COLOR;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_SQUARE;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
@@ -18,29 +18,29 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  * @version 1.0
  * @created 11.06.21
  */
-public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
+public class ImageRequestBuilder_v3_Impl implements ImageRequestBuilder_v3 {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
   private Validators validators;
 
-  public ImageRequestBuilder_v3_0_Impl(String baseUrl) {
+  public ImageRequestBuilder_v3_Impl(String baseUrl) {
     this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
   }
 
-  public ImageRequestBuilder_v3_0_Impl(ImageInformation_v3_0 imageInformation) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3_Impl(ImageInformation_v3 imageInformation) throws IllegalArgumentException {
     this(imageInformation.getId());
     validators = new Validators(imageInformation);
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionFull() {
+  public ImageRequestBuilder_v3 setRegionFull() {
     baseBuilder.setRegionFull();
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionSquare() throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setRegionSquare() throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFeature(SUPPORTS_REGION_SQUARE, "Server does not support explicitly requesting square regions of images");
     }
@@ -49,7 +49,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsRegionAbsolute(w, h);
     }
@@ -58,7 +58,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException {
     if (x < 0 || x > 100 || y < 0 || y > 100) {
       throw new IllegalArgumentException("Value should lie between 0 and 100");
     }
@@ -76,47 +76,47 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeMaxUpscaled() {
+  public ImageRequestBuilder_v3 setSizeMaxUpscaled() {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeMaxNotUpscaled() {
+  public ImageRequestBuilder_v3 setSizeMaxNotUpscaled() {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeScaledExactUpscaled(Float w, Float h) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledExactUpscaled(Float w, Float h) throws IllegalArgumentException {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeScaledExactNotUpscaled(Float w, Float h) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledExactNotUpscaled(Float w, Float h) throws IllegalArgumentException {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeScaledBestFitNotUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledBestFitNotUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizeScaledBestFitUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledBestFitUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizePercentageNotUpscaled(float n) {
+  public ImageRequestBuilder_v3 setSizePercentageNotUpscaled(float n) {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setSizePercentageUpscaled(float n) {
+  public ImageRequestBuilder_v3 setSizePercentageUpscaled(float n) {
     return this;
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setRotation(float degree, boolean mirror) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setRotation(float degree, boolean mirror) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateSetRotation(degree, mirror);
     }
@@ -128,7 +128,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setQuality(String quality) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setQuality(String quality) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsQuality(quality);
     }
@@ -137,7 +137,7 @@ public class ImageRequestBuilder_v3_0_Impl implements ImageRequestBuilder_v3_0 {
   }
 
   @Override
-  public ImageRequestBuilder_v3_0 setFormat(String format) throws OperationNotSupportedException {
+  public ImageRequestBuilder_v3 setFormat(String format) throws OperationNotSupportedException {
     if (validators != null) {
       validators.validateServerSupportsFormat(format);
     }

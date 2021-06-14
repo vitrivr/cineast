@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
+package org.vitrivr.cineast.core.iiif.imageapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
  * @created 29.05.21
  */
 @ToString
-public class ImageInformation_v2_1_1 implements ImageInformation {
+public class ImageInformation_v2 implements ImageInformation {
 
   private static final Logger LOGGER = LogManager.getLogger();
 

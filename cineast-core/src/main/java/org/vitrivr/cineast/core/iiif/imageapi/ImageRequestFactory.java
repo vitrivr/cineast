@@ -10,12 +10,12 @@ import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformationRequest_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1_Impl;
-import org.vitrivr.cineast.core.iiif.imageapi.v3_0.ImageRequestBuilder_v3_0;
-import org.vitrivr.cineast.core.iiif.imageapi.v3_0.ImageRequestBuilder_v3_0_Impl;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2_Impl;
+import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
+import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3_Impl;
 
 /**
  * @author singaltanmay
@@ -51,20 +51,20 @@ public class ImageRequestFactory {
       String identifier = iiifItem.getIdentifier();
       final String imageName = itemPrefixString + identifier;
 
-      ImageInformation_v2_1_1 imageInformation = null;
+      ImageInformation_v2 imageInformation = null;
       try {
-        final ImageInformationRequest_v2_1_1 informationRequest = new ImageInformationRequest_v2_1_1(iiifConfig.getBaseUrl() + "/" + identifier);
+        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(iiifConfig.getBaseUrl() + "/" + identifier);
         informationRequest.saveToFile(jobDirectoryString, imageName);
         imageInformation = informationRequest.parseImageInformation(null);
       } catch (IOException e) {
         e.printStackTrace();
       }
 
-      ImageRequestBuilder_v2_1_1 builder;
+      ImageRequestBuilder_v2 builder;
       if (imageInformation != null) {
-        builder = new ImageRequestBuilder_v2_1_1_Impl(imageInformation);
+        builder = new ImageRequestBuilder_v2_Impl(imageInformation);
       } else {
-        builder = new ImageRequestBuilder_v2_1_1_Impl(iiifConfig.getBaseUrl());
+        builder = new ImageRequestBuilder_v2_Impl(iiifConfig.getBaseUrl());
       }
 
       float rotationDegree;
@@ -116,19 +116,19 @@ public class ImageRequestFactory {
 
       ImageInformation imageInformation = null;
       try {
-        final ImageInformationRequest_v2_1_1 informationRequest = new ImageInformationRequest_v2_1_1(iiifConfig.getBaseUrl() + "/" + identifier);
+        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(iiifConfig.getBaseUrl() + "/" + identifier);
         informationRequest.saveToFile(jobDirectoryString, imageName);
         imageInformation = informationRequest.parseImageInformation(null);
       } catch (IOException e) {
         e.printStackTrace();
       }
 
-      ImageRequestBuilder_v3_0 builder;
+      ImageRequestBuilder_v3 builder;
       if (imageInformation != null) {
         // TODO use image information v3
-        builder = new ImageRequestBuilder_v3_0_Impl("");
+        builder = new ImageRequestBuilder_v3_Impl("");
       } else {
-        builder = new ImageRequestBuilder_v3_0_Impl(iiifConfig.getBaseUrl());
+        builder = new ImageRequestBuilder_v3_Impl(iiifConfig.getBaseUrl());
       }
 
       float rotationDegree;

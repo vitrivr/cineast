@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_MAX;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_PERCENTAGE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_MAX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_PERCENTAGE;
 
 /**
  * Base builder class to generate a single IIIF Image Api request

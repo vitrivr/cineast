@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
+package org.vitrivr.cineast.core.iiif.imageapi.v3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
  * @version 1.0
  * @created 13.06.21
  */
-public class ImageInformation_v3_0 implements ImageInformation {
+public class ImageInformation_v3 implements ImageInformation {
 
   /**
    * The base URI of the image as defined in URI Syntax, including scheme, server, prefix and identifier without a trailing slash.
