@@ -168,6 +168,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isFeatureSupported(String feature) {
+    if(ImageApiCompliance_v3.isFeatureSupported(feature, profile)) return true;
     boolean isSupported = true;
     if (extraFeatures != null && extraFeatures.size() != 0) {
       isSupported = extraFeatures.stream().anyMatch(it -> it.equals(feature));
@@ -177,6 +178,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isQualitySupported(String quality) {
+    if(ImageApiCompliance_v3.isQualitySupported(quality, profile)) return true;
     boolean isSupported = true;
     if (extraQualities != null && extraQualities.size() != 0) {
       isSupported = extraQualities.stream().anyMatch(it -> it.equals(quality));
@@ -186,6 +188,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isFormatSupported(String format) {
+    if(ImageApiCompliance_v3.isFormatSupported(format, profile)) return true;
     boolean isSupported = true;
     if (extraFormats != null && extraFormats.size() != 0) {
       isSupported = extraFormats.stream().anyMatch(it -> it.equals(format));
