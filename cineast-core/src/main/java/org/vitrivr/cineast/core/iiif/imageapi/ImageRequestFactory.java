@@ -10,6 +10,7 @@ import javax.naming.OperationNotSupportedException;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION;
+import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformationRequest_v2_1_1;
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1;
 import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1_Impl;
@@ -52,9 +53,9 @@ public class ImageRequestFactory {
 
       ImageInformation_v2_1_1 imageInformation = null;
       try {
-        final ImageInformationRequest informationRequest = new ImageInformationRequest(iiifConfig.getBaseUrl() + "/" + identifier);
+        final ImageInformationRequest_v2_1_1 informationRequest = new ImageInformationRequest_v2_1_1(iiifConfig.getBaseUrl() + "/" + identifier);
         informationRequest.saveToFile(jobDirectoryString, imageName);
-        imageInformation = informationRequest.getImageInformation(null);
+        imageInformation = informationRequest.parseImageInformation(null);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -115,9 +116,9 @@ public class ImageRequestFactory {
 
       ImageInformation imageInformation = null;
       try {
-        final ImageInformationRequest informationRequest = new ImageInformationRequest(iiifConfig.getBaseUrl() + "/" + identifier);
+        final ImageInformationRequest_v2_1_1 informationRequest = new ImageInformationRequest_v2_1_1(iiifConfig.getBaseUrl() + "/" + identifier);
         informationRequest.saveToFile(jobDirectoryString, imageName);
-        imageInformation = informationRequest.getImageInformation(null);
+        imageInformation = informationRequest.parseImageInformation(null);
       } catch (IOException e) {
         e.printStackTrace();
       }
