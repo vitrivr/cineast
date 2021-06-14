@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
+package org.vitrivr.cineast.core.iiif.imageapi.v2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.EXTENSION_TIF;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_BITONAL;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_MAX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_MAX;
 
 import javax.naming.OperationNotSupportedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,18 +25,18 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  * @version 1.0
  * @created 10.06.21
  */
-public class ImageRequestBuilder_v2_1_1_Test {
+public class ImageRequestBuilder_v2_Test {
 
   private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
 
-  public ImageRequestBuilder_v2_1_1 builder;
+  public ImageRequestBuilder_v2 builder;
 
   @BeforeEach
   public void setup() {
-    ImageInformation_v2_1_1 imageInformation = mock(ImageInformation_v2_1_1.class);
+    ImageInformation_v2 imageInformation = mock(ImageInformation_v2.class);
     when(imageInformation.getAtId()).thenReturn(BASE_URL);
     when(imageInformation.isFeatureSupported(any())).thenReturn(false);
-    builder = new ImageRequestBuilder_v2_1_1_Impl(imageInformation);
+    builder = new ImageRequestBuilder_v2_Impl(imageInformation);
   }
 
   /**
