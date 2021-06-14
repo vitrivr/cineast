@@ -15,6 +15,41 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
  */
 public class ImageInformation_v3 implements ImageInformation {
 
+  // The base URI of the service will redirect to the image information document.
+  public static final String SUPPORTS_BASE_URI_REDIRECT = "baseUriRedirect";
+  // The canonical image URI HTTP link header is provided on image responses.
+  public static final String SUPPORTS_CANONICAL_LINK_HEADER = "canonicalLinkHeader";
+  // The CORS HTTP header is provided on all responses.
+  public static final String SUPPORTS_CORS = "cors";
+  // The JSON-LD media type is provided when JSON-LD is requested.
+  public static final String SUPPORTS_JSONLD_MEDIA_TYPE = "jsonldMediaType";
+  // The image may be rotated around the vertical axis, resulting in a left-to-right mirroring of the content.
+  public static final String SUPPORTS_MIRRORING = "mirroring";
+  // The profile HTTP link header is provided on image responses.
+  public static final String SUPPORTS_PROFILE_LINK_HEADER = "profileLinkHeader";
+  // Regions of images may be requested by percentage.
+  public static final String SUPPORTS_REGION_BY_PCT = "regionByPct";
+  // Regions of images may be requested by pixel dimensions.
+  public static final String SUPPORTS_REGION_BY_PX = "regionByPx";
+  // A square region where the width and height are equal to the shorter dimension of the complete image content.
+  public static final String SUPPORTS_REGION_SQUARE = "regionSquare";
+  // Rotation of images may be requested by degrees other than multiples of 90.
+  public static final String SUPPORTS_ROTATION_ARBITRARY = "rotationArbitrary";
+  // Rotation of images may be requested by degrees in multiples of 90.
+  public static final String SUPPORTS_ROTATION_BY_90s = "rotationBy90s";
+  // Size of images may be requested in the form “!w,h”.
+  public static final String SUPPORTS_SIZE_BY_CONFINED_WH = "sizeByConfinedWh";
+  // Size of images may be requested in the form “,h”.
+  public static final String SUPPORTS_SIZE_BY_H = "sizeByH";
+  // Size of images may be requested in the form “pct:n”.
+  public static final String SUPPORTS_SIZE_BY_PCT = "sizeByPct";
+  // Size of images may be requested in the form “w,”.
+  public static final String SUPPORTS_SIZE_BY_W = "sizeByW";
+  // Size of images may be requested in the form “w,h” where the supplied w and h preserve the aspect ratio.
+  public static final String SUPPORTS_SIZE_BY_WH = "sizeByWh";
+  // Image sizes prefixed with ^ may be requested.
+  public static final String SUPPORTS_SIZE_UPSCALING = "sizeUpscaling";
+
   /** The maximum area in pixels supported for this image. Clients must not expect requests with a width*height greater than this value to be supported. */
   @Getter
   @Setter
@@ -93,6 +128,36 @@ public class ImageInformation_v3 implements ImageInformation {
   @JsonProperty
   private List<TilesItem> tiles;
 
+  /** The JSON response may have the preferredFormats property, which lists one or more format parameter values for this image service. This allows the publisher to express a preference for the format a client requests, for example to encourage use of a more efficient format such as webp, or to suggest a format that will give better results for the image content, such as lossless webp or png for line art or graphics. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private List<String> preferredFormats;
+
+  /** A string that identifies a license or rights statement that applies to the content of this image. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private String rights;
+
+  /** An array of strings that can be used as the quality parameter, in addition to default. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private List<String> extraQualities;
+
+  /** An array of strings that can be used as the format parameter, in addition to the ones specified in the referenced profile. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private List<String> extraFormats;
+
+  /** An array of strings identifying features supported by the service */
+  @Getter
+  @Setter
+  @JsonProperty
+  private List<String> extraFeatures;
+
   public long getMaxHeight() {
     // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
     if (maxHeight == 0 && maxWidth != 0) {
@@ -103,17 +168,29 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isFeatureSupported(String feature) {
-    return false;
+    boolean isSupported = true;
+    if (extraFeatures != null && extraFeatures.size() != 0) {
+      isSupported = extraFeatures.stream().anyMatch(it -> it.equals(feature));
+    }
+    return isSupported;
   }
 
   @Override
   public boolean isQualitySupported(String quality) {
-    return false;
+    boolean isSupported = true;
+    if (extraQualities != null && extraQualities.size() != 0) {
+      isSupported = extraQualities.stream().anyMatch(it -> it.equals(quality));
+    }
+    return isSupported;
   }
 
   @Override
   public boolean isFormatSupported(String format) {
-    return false;
+    boolean isSupported = true;
+    if (extraFormats != null && extraFormats.size() != 0) {
+      isSupported = extraFormats.stream().anyMatch(it -> it.equals(format));
+    }
+    return isSupported;
   }
 
   @Override
