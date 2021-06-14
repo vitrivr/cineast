@@ -8,7 +8,6 @@ import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
-import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
@@ -29,7 +28,7 @@ public class ImageRequestBuilder_v3 {
   private Validators validators;
 
   public ImageRequestBuilder_v3(String baseUrl) {
-    this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
+    this.baseBuilder = new BaseImageRequestBuilder(baseUrl);
   }
 
   public ImageRequestBuilder_v3(ImageInformation_v3 imageInformation) throws IllegalArgumentException {

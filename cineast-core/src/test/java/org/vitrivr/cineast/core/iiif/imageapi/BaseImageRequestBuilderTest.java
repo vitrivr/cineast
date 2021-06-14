@@ -7,7 +7,7 @@ import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUA
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_FULL;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_PERCENTAGE;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.toSimplifiedFloatString;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.toSimplifiedFloatString;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_MAX;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_PERCENTAGE;
 
@@ -29,7 +29,7 @@ public class BaseImageRequestBuilderTest {
 
   @BeforeEach
   public void setup() {
-    builder = new BaseImageRequestBuilderImpl(BASE_URL);
+    builder = new BaseImageRequestBuilder(BASE_URL);
   }
 
   /**

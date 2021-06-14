@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v2;
 
-import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.isImageDimenValidFloat;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.isImageDimenValidFloat;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PCT;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_SQUARE;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_ABOVE_FULL;
@@ -15,7 +15,6 @@ import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
-import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
@@ -35,7 +34,7 @@ public class ImageRequestBuilder_v2 {
   private Validators validators;
 
   public ImageRequestBuilder_v2(String baseUrl) {
-    this.baseBuilder = new BaseImageRequestBuilderImpl(baseUrl);
+    this.baseBuilder = new BaseImageRequestBuilder(baseUrl);
   }
 
   public ImageRequestBuilder_v2(ImageInformation_v2 imageInformation) throws IllegalArgumentException {
