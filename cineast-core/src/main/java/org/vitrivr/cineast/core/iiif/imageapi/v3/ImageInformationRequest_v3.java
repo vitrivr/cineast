@@ -8,6 +8,8 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
@@ -52,5 +54,10 @@ public class ImageInformationRequest_v3 implements ImageInformationRequest {
     bufferedOutputStream.close();
     fileOutputStream.close();
     LOGGER.debug("Image information request's json response data written to file successfully. Request url:\t" + url);
+  }
+
+  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }
 }

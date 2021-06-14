@@ -16,6 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder;
 import org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestValidators;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -238,6 +240,11 @@ public class ImageRequestBuilder_v2 {
       imageRequest.setSize(this.size);
     }
     return imageRequest;
+  }
+
+  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
   }
 
   private static class Validators extends BaseImageRequestValidators {
