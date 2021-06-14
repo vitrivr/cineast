@@ -13,25 +13,25 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformationRequest_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.SizesItem;
-import org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.TilesItem;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.SizesItem;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.TilesItem;
 
 /**
  * @author singaltanmay
  * @version 1.0
  * @created 02.06.21
  */
-class ImageInformation_v2_1_1_RequestTest {
+class ImageInformation_v2_RequestTest {
 
   String JSON_RESPONSE = "{\"profile\": [\"http://iiif.io/api/image/2/level2.json\", {\"supports\": [\"canonicalLinkHeader\", \"profileLinkHeader\", \"mirroring\", \"rotationArbitrary\", \"regionSquare\", \"sizeAboveFull\"], \"qualities\": [\"default\", \"bitonal\", \"gray\", \"color\"], \"formats\": [\"jpg\", \"png\", \"gif\", \"webp\"]}], \"tiles\": [{\"width\": 1024, \"scaleFactors\": [1, 2, 4, 8, 16, 32]}], \"protocol\": \"http://iiif.io/api/image\", \"sizes\": [{\"width\": 168, \"height\": 225}, {\"width\": 335, \"height\": 450}, {\"width\": 669, \"height\": 900}, {\"width\": 1338, \"height\": 1800}, {\"width\": 2676, \"height\": 3600}, {\"width\": 5351, \"height\": 7200}], \"height\": 7200, \"width\": 5351, \"@context\": \"http://iiif.io/api/image/2/context.json\", \"@id\": \"https://libimages.princeton.edu/loris/pudl0001%2F5138415%2F00000011.jp2\"}";
-  private ImageInformationRequest_v2_1_1 imageInformationRequestV211;
+  private ImageInformationRequest_v2 imageInformationRequestV211;
 
   @BeforeEach
   void setup() throws IOException {
-    imageInformationRequestV211 = Mockito.mock(ImageInformationRequest_v2_1_1.class);
+    imageInformationRequestV211 = Mockito.mock(ImageInformationRequest_v2.class);
     Mockito.when(imageInformationRequestV211.fetchImageInformation(ArgumentMatchers.any())).thenReturn(JSON_RESPONSE);
     Mockito.when(imageInformationRequestV211.parseImageInformation(JSON_RESPONSE)).thenCallRealMethod();
   }
@@ -39,7 +39,7 @@ class ImageInformation_v2_1_1_RequestTest {
   @DisplayName("parseImageInformationJson test")
   @Test
   void parseImageInformationJson() {
-    ImageInformation_v2_1_1 imageInformation = imageInformationRequestV211.parseImageInformation(JSON_RESPONSE);
+    ImageInformation_v2 imageInformation = imageInformationRequestV211.parseImageInformation(JSON_RESPONSE);
     assertNotNull(imageInformation);
     assertEquals("http://iiif.io/api/image", imageInformation.getProtocol());
     assertEquals(7200, imageInformation.getHeight());
@@ -51,7 +51,7 @@ class ImageInformation_v2_1_1_RequestTest {
     assertSizesValid(imageInformation);
   }
 
-  private void assertProfileValid(ImageInformation_v2_1_1 imageInformation) {
+  private void assertProfileValid(ImageInformation_v2 imageInformation) {
     Pair<String, List<ProfileItem>> profile = imageInformation.getProfile();
     assertNotNull(profile);
     assertEquals("http://iiif.io/api/image/2/level2.json", profile.first);
@@ -82,7 +82,7 @@ class ImageInformation_v2_1_1_RequestTest {
     assertEquals(Arrays.asList(formatsList), profileItem.getFormats());
   }
 
-  private void assertTilesValid(ImageInformation_v2_1_1 imageInformation) {
+  private void assertTilesValid(ImageInformation_v2 imageInformation) {
     List<TilesItem> tilesItemList = imageInformation.getTiles();
     assertNotNull(tilesItemList);
     assertEquals(1, tilesItemList.size());
@@ -92,7 +92,7 @@ class ImageInformation_v2_1_1_RequestTest {
     assertEquals(Arrays.asList(scaleFactorsList), tilesItem.scaleFactors);
   }
 
-  private void assertSizesValid(ImageInformation_v2_1_1 imageInformation) {
+  private void assertSizesValid(ImageInformation_v2 imageInformation) {
     List<SizesItem> sizesItemList = imageInformation.getSizes();
     assertNotNull(sizesItemList);
     assertEquals(6, sizesItemList.size());

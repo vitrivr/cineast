@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_MIRRORING;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_REGION_BY_PX;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageInformation_v2_1_1.ProfileItem.SUPPORTS_ROTATION_BY_90s;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_MIRRORING;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_ROTATION_BY_90s;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;

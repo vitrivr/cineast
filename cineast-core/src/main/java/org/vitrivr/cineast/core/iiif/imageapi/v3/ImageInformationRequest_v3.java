@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi.v3_0;
+package org.vitrivr.cineast.core.iiif.imageapi.v3;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedOutputStream;
@@ -15,27 +15,27 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
  * @version 1.0
  * @created 14.06.21
  */
-public class ImageInformationRequest_v3_0 implements ImageInformationRequest {
+public class ImageInformationRequest_v3 implements ImageInformationRequest {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   private final String url;
   private final String imageInformation;
 
-  public ImageInformationRequest_v3_0(String url) throws IOException {
+  public ImageInformationRequest_v3(String url) throws IOException {
     this.url = url;
     this.imageInformation = this.fetchImageInformation(url);
   }
 
   @Nullable
   @Override
-  public ImageInformation_v3_0 parseImageInformation(String response) {
-    ImageInformation_v3_0 imageInformation = null;
+  public ImageInformation_v3 parseImageInformation(String response) {
+    ImageInformation_v3 imageInformation = null;
     if (response == null || response.isEmpty()) {
       response = this.imageInformation;
     }
     try {
-      imageInformation = new ObjectMapper().readValue(response, ImageInformation_v3_0.class);
+      imageInformation = new ObjectMapper().readValue(response, ImageInformation_v3.class);
     } catch (IOException e) {
       e.printStackTrace();
     }

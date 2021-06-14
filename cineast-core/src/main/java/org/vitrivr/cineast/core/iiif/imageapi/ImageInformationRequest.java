@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ImageInformationRequest {
 
-
   /**
    * This has been created as a separate function to help with unit testing.
    *
