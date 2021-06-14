@@ -68,14 +68,13 @@ public interface ImageInformation {
     }
   }
 
-
   /**
    * Inner class used to parse the Image Information JSON response.
    */
   @NoArgsConstructor
   @ToString
   @EqualsAndHashCode
-  public static class TilesItem {
+  class TilesItem {
 
     @Getter
     @Setter

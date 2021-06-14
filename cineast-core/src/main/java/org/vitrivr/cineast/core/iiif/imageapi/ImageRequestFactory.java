@@ -13,6 +13,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
+import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformationRequest_v3;
+import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
 
 /**
@@ -112,9 +114,9 @@ public class ImageRequestFactory {
       String identifier = iiifItem.getIdentifier();
       final String imageName = itemPrefixString + identifier;
 
-      ImageInformation imageInformation = null;
+      ImageInformation_v3 imageInformation = null;
       try {
-        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(iiifConfig.getBaseUrl() + "/" + identifier);
+        final ImageInformationRequest_v3 informationRequest = new ImageInformationRequest_v3(iiifConfig.getBaseUrl() + "/" + identifier);
         informationRequest.saveToFile(jobDirectoryString, imageName);
         imageInformation = informationRequest.parseImageInformation(null);
       } catch (IOException e) {
@@ -123,8 +125,7 @@ public class ImageRequestFactory {
 
       ImageRequestBuilder_v3 builder;
       if (imageInformation != null) {
-        // TODO use image information v3
-        builder = new ImageRequestBuilder_v3("");
+        builder = new ImageRequestBuilder_v3(imageInformation);
       } else {
         builder = new ImageRequestBuilder_v3(iiifConfig.getBaseUrl());
       }
