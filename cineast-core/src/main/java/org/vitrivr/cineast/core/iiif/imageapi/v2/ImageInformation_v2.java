@@ -113,9 +113,13 @@ public class ImageInformation_v2 implements ImageInformation {
 
   @Override
   public boolean isQualitySupported(String quality) {
+    Pair<String, List<ProfileItem>> profile = getProfile();
+    if (ImageApiCompliance_v2.isQualitySupported(quality, profile.first)) {
+      return true;
+    }
     boolean isSupported = true;
     try {
-      List<ProfileItem> profiles = getProfile().second;
+      List<ProfileItem> profiles = profile.second;
       isSupported = profiles.stream().anyMatch(item -> item.getQualities().stream().anyMatch(q -> q.equals(quality)));
     } catch (NullPointerException e) {
       LOGGER.debug("The server has not advertised the qualities supported by it");
@@ -125,9 +129,13 @@ public class ImageInformation_v2 implements ImageInformation {
 
   @Override
   public boolean isFormatSupported(String format) {
+    Pair<String, List<ProfileItem>> profile = getProfile();
+    if (ImageApiCompliance_v2.isFormatSupported(format, profile.first)) {
+      return true;
+    }
     boolean isSupported = true;
     try {
-      List<ProfileItem> profiles = getProfile().second;
+      List<ProfileItem> profiles = profile.second;
       isSupported = profiles.stream().anyMatch(item -> item.getFormats().stream().anyMatch(q -> q.equals(format)));
     } catch (NullPointerException e) {
       LOGGER.debug("The server has not advertised the formats supported by it");
@@ -137,7 +145,11 @@ public class ImageInformation_v2 implements ImageInformation {
 
   @Override
   public boolean isFeatureSupported(String feature) {
-    List<ProfileItem> profiles = this.getProfile().second;
+    Pair<String, List<ProfileItem>> profile = getProfile();
+    if (ImageApiCompliance_v2.isFeatureSupported(feature, profile.first)) {
+      return true;
+    }
+    List<ProfileItem> profiles = profile.second;
     return profiles.stream().anyMatch(item -> {
       List<String> supports = item.getSupports();
       if (supports == null) {
