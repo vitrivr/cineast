@@ -194,27 +194,19 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     if (segmentIds.size() > 100_000) {
       return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
     }
-    CompletableFuture<Void> future = new CompletableFuture<>();
-    Thread thread = new Thread(() -> {
-      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
-      if (segmentMetadata.isEmpty()) {
-        return;
-      }
-      AtomicInteger i = new AtomicInteger(0);
-      Lists.partition(segmentMetadata, 100_000).forEach(list -> {
-        Thread writing = new Thread(() -> {
-          this.write(session, new MediaSegmentMetadataQueryResult(queryId, list)).join();
-        });
-        writing.setName("metadata-ws-write-" + i.getAndIncrement());
-        writing.start();
-        threads.add(writing);
+    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+    if (segmentMetadata.isEmpty()) {
+      return threads;
+    }
+    AtomicInteger i = new AtomicInteger(0);
+    Lists.partition(segmentMetadata, 100_000).forEach(list -> {
+      Thread writing = new Thread(() -> {
+        this.write(session, new MediaSegmentMetadataQueryResult(queryId, list)).join();
       });
-      future.complete(null);
+      writing.setName("metadata-ws-write-" + i.getAndIncrement());
+      writing.start();
+      threads.add(writing);
     });
-    thread.setName("metadata-retrieval-segments");
-    thread.start();
-    future.join();
-    threads.add(thread);
     return threads;
   }
 
