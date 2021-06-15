@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_MAX;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_PERCENTAGE;
-
 /**
  * Base builder class to generate a single IIIF Image API request
  *
@@ -15,6 +12,8 @@ public class BaseImageRequestBuilder {
   public static final String REGION_FULL = "full";
   public static final String REGION_SQUARE = "square";
   public static final String REGION_PERCENTAGE = "pct:";
+  public static final String SIZE_MAX = "max";
+  public static final String SIZE_PERCENTAGE = "pct:";
   public static final String QUALITY_COLOR = "color";
   public static final String QUALITY_GRAY = "gray";
   public static final String QUALITY_BITONAL = "bitonal";
@@ -110,7 +109,17 @@ public class BaseImageRequestBuilder {
    * @return this {@link BaseImageRequestBuilder}
    */
   public BaseImageRequestBuilder setSizeMax() {
-    this.size = SIZE_MAX;
+    return setSizeMax(null);
+  }
+
+  /**
+   * The image or region is returned at the maximum size available, as indicated by maxWidth, maxHeight, maxArea in the profile description. This is the same as full if none of these properties are provided.
+   *
+   * @param prefix Optional prefix added to the start of the string
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  public BaseImageRequestBuilder setSizeMax(String prefix) {
+    this.size = (prefix != null ? prefix : "") + SIZE_MAX;
     return this;
   }
 
@@ -120,9 +129,19 @@ public class BaseImageRequestBuilder {
    * @return this {@link BaseImageRequestBuilder}
    */
   public BaseImageRequestBuilder setSizeScaledExact(Float width, Float height) {
+    return setSizeScaledExact(width, height, null);
+  }
+
+  /**
+   * Returns an image scaled to the exact dimensions given in the parameters. If only height or width are provided then image is scaled to that dimension while maintaining the aspect ratio. If both height and width are given then image is scaled to those dimensions by ignoring the aspect ratio.
+   *
+   * @param prefix Optional prefix added to the start of the string
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  public BaseImageRequestBuilder setSizeScaledExact(Float width, Float height, String prefix) {
     boolean isWidthValid = isImageDimenValidFloat(width);
     boolean isHeightValid = isImageDimenValidFloat(height);
-    StringBuilder sizeString = new StringBuilder();
+    StringBuilder sizeString = new StringBuilder(prefix != null ? prefix : "");
     if (isWidthValid) {
       sizeString.append(toSimplifiedFloatString(width));
     }
@@ -140,11 +159,21 @@ public class BaseImageRequestBuilder {
    * @return this {@link BaseImageRequestBuilder}
    */
   public BaseImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) {
+    return setSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable, null);
+  }
+
+  /**
+   * The image content is scaled for the best fit such that the resulting width and height are less than or equal to the requested width and height. The exact scaling may be determined by the service provider, based on characteristics including image quality and system performance. The dimensions of the returned image content are calculated to maintain the aspect ratio of the extracted region.
+   *
+   * @param prefix Optional prefix added to the start of the string
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  public BaseImageRequestBuilder setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable, String prefix) {
     // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
     if (!isWidthOverridable && !isHeightOverridable) {
       return setSizeScaledExact(width, height);
     }
-    StringBuilder sizeString = new StringBuilder();
+    StringBuilder sizeString = new StringBuilder(prefix != null ? prefix : "");
     if (isWidthOverridable) {
       sizeString.append("!");
     }
@@ -164,7 +193,17 @@ public class BaseImageRequestBuilder {
    * @return this {@link BaseImageRequestBuilder}
    */
   public BaseImageRequestBuilder setSizePercentage(float n) {
-    this.size = SIZE_PERCENTAGE + n;
+    return setSizePercentage(n, null);
+  }
+
+  /**
+   * The width and height of the returned image is scaled to n% of the width and height of the extracted region. The aspect ratio of the returned image is the same as that of the extracted region.
+   *
+   * @param prefix Optional prefix added to the start of the string
+   * @return this {@link BaseImageRequestBuilder}
+   */
+  public BaseImageRequestBuilder setSizePercentage(float n, String prefix) {
+    this.size = (prefix != null ? prefix : "") + SIZE_PERCENTAGE + n;
     return this;
   }
 
@@ -202,7 +241,9 @@ public class BaseImageRequestBuilder {
     return this;
   }
 
-  /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
+  /**
+   * This method builds a new ImageRequest with the parameters set using the dedicated setter methods
+   */
   public ImageRequest build() {
     return new ImageRequest()
         .setBaseUrl(this.baseUrl)
