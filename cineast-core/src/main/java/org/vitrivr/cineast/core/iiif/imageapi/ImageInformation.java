@@ -55,14 +55,14 @@ public interface ImageInformation {
     @Getter
     @Setter
     @JsonProperty
-    public Integer width;
+    public Long width;
 
     @Getter
     @Setter
     @JsonProperty
-    public Integer height;
+    public Long height;
 
-    public SizesItem(int width, int height) {
+    public SizesItem(long width, long height) {
       this.width = width;
       this.height = height;
     }
