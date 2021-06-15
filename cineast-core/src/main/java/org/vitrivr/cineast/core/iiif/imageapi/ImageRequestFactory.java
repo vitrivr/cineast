@@ -146,7 +146,7 @@ public class ImageRequestFactory {
       try {
         imageRequest = builder
             .setRegionFull()
-            .setSizeMaxUpscaled()
+            .setSizeMaxNotUpscaled()
             .setRotation(rotationDegree, false)
             .setQuality(QUALITY_DEFAULT)
             .setFormat(EXTENSION_JPG)

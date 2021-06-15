@@ -14,10 +14,10 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
 
 /**
  * @author singaltanmay

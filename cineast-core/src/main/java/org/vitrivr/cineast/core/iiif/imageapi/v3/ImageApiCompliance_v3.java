@@ -81,7 +81,6 @@ public class ImageApiCompliance_v3 {
       case SUPPORTS_CORS:
       case SUPPORTS_JSONLD_MEDIA_TYPE:
         return level.equals(LEVEL_1) || level.equals(LEVEL_2);
-
     }
     return false;
   }
