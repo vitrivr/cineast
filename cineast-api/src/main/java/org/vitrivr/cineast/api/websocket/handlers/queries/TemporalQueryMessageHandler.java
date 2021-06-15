@@ -52,10 +52,6 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
-    final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-    qconf.setMaxResults(max);
-    final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
-    qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
     List<CompletableFuture<Void>> futures = new ArrayList<>();
