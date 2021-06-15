@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +37,28 @@ public class ImageRequest {
     this.rotation = rotation;
     this.quality = quality;
     this.extension = extension;
+  }
+
+  /**
+   * Percent encodes "/","?","#","[","]","@" and "%" to their corresponding ASCII reserved characters
+   */
+  public static String percentEncode(String toEncode) {
+    HashMap<Character, String> mapping = new HashMap<>();
+    mapping.put('/', "%2F");
+    mapping.put('?', "%3F");
+    mapping.put('#', "%23");
+    mapping.put('[', "%5B");
+    mapping.put(']', "%5D");
+    mapping.put('@', "%40");
+    mapping.put('%', "%25");
+    if (toEncode == null) {
+      return null;
+    }
+    StringBuilder encoded = new StringBuilder(toEncode.length());
+    for (Character c : toEncode.toCharArray()) {
+      encoded.append(mapping.getOrDefault(c, c.toString()));
+    }
+    return encoded.toString();
   }
 
   public String getBaseUrl() {
@@ -92,21 +115,21 @@ public class ImageRequest {
     return this;
   }
 
-  // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
+  /**
+   * Generates an IIIF Image Request URL of the ordering {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format} where each parameter is percent escaped
+   */
   public String generateIIIFRequestUrl() {
-    StringBuilder url = new StringBuilder(baseUrl);
     String FORWARD_SLASH_DELIMITER = "/";
-    url.append(FORWARD_SLASH_DELIMITER)
-        .append(region)
-        .append(FORWARD_SLASH_DELIMITER)
-        .append(size)
-        .append(FORWARD_SLASH_DELIMITER)
-        .append(rotation)
-        .append(FORWARD_SLASH_DELIMITER)
-        .append(quality)
-        .append(".")
-        .append(extension);
-    return url.toString();
+    return baseUrl + FORWARD_SLASH_DELIMITER
+        + percentEncode(region)
+        + FORWARD_SLASH_DELIMITER
+        + percentEncode(size)
+        + FORWARD_SLASH_DELIMITER
+        + percentEncode(rotation)
+        + FORWARD_SLASH_DELIMITER
+        + percentEncode(quality)
+        + "."
+        + percentEncode(extension);
   }
 
   public void saveToFile(String filePath, String fileName) throws IOException {
