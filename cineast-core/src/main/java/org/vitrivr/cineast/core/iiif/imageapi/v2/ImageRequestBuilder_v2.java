@@ -27,8 +27,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  */
 public class ImageRequestBuilder_v2 {
 
-  public static final String SIZE_MAX = "max";
-  public static final String SIZE_PERCENTAGE = "pct:";
   public static final String SIZE_FULL = "full";
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
@@ -77,9 +75,7 @@ public class ImageRequestBuilder_v2 {
    * @return this {@link ImageRequestBuilder_v2}
    */
   public ImageRequestBuilder_v2 setRegionAbsolute(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
-    if (w <= 0 || h <= 0) {
-      throw new IllegalArgumentException("Width and height must be greater than 0");
-    }
+    BaseImageRequestValidators.validateWidthAndHeightGreaterThanZero(w, h);
     if (validators != null) {
       validators.validateServerSupportsRegionAbsolute(w, h);
     }
@@ -97,15 +93,7 @@ public class ImageRequestBuilder_v2 {
    * @return this {@link ImageRequestBuilder_v2}
    */
   public ImageRequestBuilder_v2 setRegionPercentage(float x, float y, float w, float h) throws IllegalArgumentException, OperationNotSupportedException {
-    if (x < 0 || x > 100 || y < 0 || y > 100) {
-      throw new IllegalArgumentException("Value should lie between 0 and 100");
-    }
-    if (x == 100 || y == 100) {
-      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
-    }
-    if (w <= 0 || w > 100 || h <= 0 || h > 100) {
-      throw new IllegalArgumentException("Height and width of the image must belong in the range (0, 100]");
-    }
+    BaseImageRequestValidators.validatePercentageBoundsValid(x, y, w, h);
     if (validators != null) {
       validators.validateServerSupportsFeature(SUPPORTS_REGION_BY_PCT, "Server does not support requests for regions of images by percentage.");
     }
@@ -113,7 +101,9 @@ public class ImageRequestBuilder_v2 {
     return this;
   }
 
-  /** The image or region is not scaled, and is returned at its full size. */
+  /**
+   * The image or region is not scaled, and is returned at its full size.
+   */
   public ImageRequestBuilder_v2 setSizeFull() {
     this.size = SIZE_FULL;
     return this;
@@ -136,14 +126,9 @@ public class ImageRequestBuilder_v2 {
    * @throws IllegalArgumentException If both height and width are undefined then an IllegalArgumentException is thrown
    */
   public ImageRequestBuilder_v2 setSizeScaledExact(Float width, Float height) throws IllegalArgumentException, OperationNotSupportedException {
-    boolean isWidthValid = isImageDimenValidFloat(width);
-    boolean isHeightValid = isImageDimenValidFloat(height);
-    // Behaviour of server when neither width or height are provided is undefined. Thus, user should be forced to some other method such as setSizeMax.
-    if (!isWidthValid && !isHeightValid) {
-      throw new IllegalArgumentException("Either width or height must be a valid float value!");
-    }
+    BaseImageRequestValidators.validateWidthAndHeightImageDimenFloats(width, height);
     if (validators != null) {
-      validators.validateSizeScaledExact(width, height, isWidthValid, isHeightValid);
+      validators.validateSizeScaledExact(width, height);
     }
     baseBuilder.setSizeScaledExact(width, height);
     return this;
@@ -156,10 +141,7 @@ public class ImageRequestBuilder_v2 {
    * @throws IllegalArgumentException Behaviour of server when both width and height are overridable is undefined
    */
   public ImageRequestBuilder_v2 setSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
-    // Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
-    if (isWidthOverridable && isHeightOverridable) {
-      throw new IllegalArgumentException("Both width and height cannot be overridable!");
-    }
+    BaseImageRequestValidators.validateBothWidthAndHeightNotOverridable(isWidthOverridable, isHeightOverridable);
     if (validators != null) {
       validators.validateSizeScaledBestFit(width, height, isWidthOverridable, isHeightOverridable);
     }
@@ -177,9 +159,7 @@ public class ImageRequestBuilder_v2 {
    * @return this {@link ImageRequestBuilder_v2}
    */
   public ImageRequestBuilder_v2 setSizePercentage(float n) throws IllegalArgumentException, OperationNotSupportedException {
-    if (n <= 0) {
-      throw new IllegalArgumentException("Percentage value has to be greater than 0");
-    }
+    BaseImageRequestValidators.validatePercentageValueGreaterThanZero(n);
     if (validators != null) {
       validators.validateSizePercentage(n);
     }
@@ -195,11 +175,9 @@ public class ImageRequestBuilder_v2 {
    * @return this {@link ImageRequestBuilder_v2}
    */
   public ImageRequestBuilder_v2 setRotation(float degree, boolean mirror) throws IllegalArgumentException, OperationNotSupportedException {
-    if (degree < 0 || degree > 360) {
-      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
-    }
+    BaseImageRequestValidators.validateRotationDegrees(degree);
     if (validators != null) {
-      validators.validateSetRotation(degree, mirror);
+      validators.validateServerSupportsRotation(degree, mirror);
     }
     baseBuilder.setRotation(degree, mirror);
     return this;
@@ -233,7 +211,9 @@ public class ImageRequestBuilder_v2 {
     return this;
   }
 
-  /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
+  /**
+   * This method builds a new ImageRequest with the parameters set using the dedicated setter methods
+   */
   public ImageRequest build() {
     ImageRequest imageRequest = baseBuilder.build();
     if (this.size != null && !this.size.isEmpty()) {
@@ -242,12 +222,16 @@ public class ImageRequestBuilder_v2 {
     return imageRequest;
   }
 
-  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  /**
+   * Get the {@link ImageApiVersion} of the ImageInformation
+   */
   public ImageApiVersion getImageApiVersion() {
     return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
   }
 
   private static class Validators extends BaseImageRequestValidators {
+
+    private static final String ERROR_UPSCALING_NOT_SUPPORTED = "Server does not support requesting for image sizes larger than the image's full size";
 
     private final ImageInformation_v2 imageInformation;
 
@@ -256,7 +240,9 @@ public class ImageRequestBuilder_v2 {
       this.imageInformation = imageInformation;
     }
 
-    private void validateSizeScaledExact(Float width, Float height, boolean isWidthValid, boolean isHeightValid) throws OperationNotSupportedException {
+    private void validateSizeScaledExact(Float width, Float height) throws OperationNotSupportedException {
+      boolean isWidthValid = isImageDimenValidFloat(width);
+      boolean isHeightValid = isImageDimenValidFloat(height);
       if (!isWidthValid) {
         validateServerSupportsFeature(SUPPORTS_SIZE_BY_H, "Server does not support requesting for image sizes by height alone");
       }
@@ -264,7 +250,7 @@ public class ImageRequestBuilder_v2 {
         validateServerSupportsFeature(SUPPORTS_SIZE_BY_W, "Server does not support requesting for image sizes by width alone");
       }
       if (width > imageInformation.getWidth() || height > imageInformation.getHeight()) {
-        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, "Server does not support requesting for image sizes about the image's full size");
+        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, ERROR_UPSCALING_NOT_SUPPORTED);
       }
       float requestAspectRatio = width / height;
       float originalAspectRatio = (float) imageInformation.getWidth() / imageInformation.getHeight();
@@ -277,7 +263,7 @@ public class ImageRequestBuilder_v2 {
 
     public boolean validateSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws OperationNotSupportedException {
       if (width > imageInformation.getWidth() || height > imageInformation.getHeight()) {
-        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, "Server does not support requesting for image sizes about the image's full size");
+        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, ERROR_UPSCALING_NOT_SUPPORTED);
       }
       if (isWidthOverridable || isHeightOverridable) {
         validateServerSupportsFeature(SUPPORTS_SIZE_BY_CONFINED_WH, "Server does not support requesting images with overridable width or height parameters");
@@ -288,7 +274,7 @@ public class ImageRequestBuilder_v2 {
     public void validateSizePercentage(float n) throws OperationNotSupportedException {
       validateServerSupportsFeature(SUPPORTS_SIZE_BY_PCT, "Server does not support requesting for image size using percentages");
       if (n > 100) {
-        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, "Server does not support requesting for image sizes about the image's full size");
+        validateServerSupportsFeature(SUPPORTS_SIZE_ABOVE_FULL, ERROR_UPSCALING_NOT_SUPPORTED);
       }
     }
   }

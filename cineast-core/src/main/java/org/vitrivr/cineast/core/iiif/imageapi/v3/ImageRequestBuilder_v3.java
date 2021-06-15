@@ -1,8 +1,15 @@
 package org.vitrivr.cineast.core.iiif.imageapi.v3;
 
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_COLOR;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.isImageDimenValidFloat;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_CONFINED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_H;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_W;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_UPSCALING;
 
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +28,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  */
 public class ImageRequestBuilder_v3 {
 
-  public static final String SIZE_MAX_NOT_UPSCALED = "max";
-  public static final String SIZE_MAX_UPSCALED = "^max";
-  public static final String SIZE_PERCENTAGE_NOT_UPSCALED = "pct:";
-  public static final String SIZE_PERCENTAGE_UPSCALED = "^pct:";
+  private static final String PREFIX_UPSCALING_MODIFIER = "^";
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
   private Validators validators;
@@ -72,6 +76,7 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    */
   public ImageRequestBuilder_v3 setRegionAbsolute(float x, float y, float w, float h) throws OperationNotSupportedException {
+    BaseImageRequestValidators.validateWidthAndHeightGreaterThanZero(w, h);
     if (validators != null) {
       validators.validateServerSupportsRegionAbsolute(w, h);
     }
@@ -89,15 +94,7 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    */
   public ImageRequestBuilder_v3 setRegionPercentage(float x, float y, float w, float h) throws OperationNotSupportedException {
-    if (x < 0 || x > 100 || y < 0 || y > 100) {
-      throw new IllegalArgumentException("Value should lie between 0 and 100");
-    }
-    if (x == 100 || y == 100) {
-      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
-    }
-    if (w <= 0 || w > 100 || h <= 0 || h > 100) {
-      throw new IllegalArgumentException("Height and width of the image must belong in the range (0, 100]");
-    }
+    BaseImageRequestValidators.validatePercentageBoundsValid(x, y, w, h);
     if (validators != null) {
       validators.validateServerSupportsFeature(SUPPORTS_REGION_BY_PCT, "Server does not support requests for regions of images by percentage.");
     }
@@ -110,8 +107,11 @@ public class ImageRequestBuilder_v3 {
    *
    * @return this {@link ImageRequestBuilder_v3}
    */
-  public ImageRequestBuilder_v3 setSizeMaxUpscaled() {
-    this.size = SIZE_MAX_UPSCALED;
+  public ImageRequestBuilder_v3 setSizeMaxUpscaled() throws OperationNotSupportedException {
+    if (validators != null) {
+      validators.validateSizeMax(true);
+    }
+    baseBuilder.setSizeMax(PREFIX_UPSCALING_MODIFIER);
     return this;
   }
 
@@ -121,6 +121,7 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    */
   public ImageRequestBuilder_v3 setSizeMaxNotUpscaled() {
+    baseBuilder.setSizeMax();
     return this;
   }
 
@@ -132,7 +133,12 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    * @throws IllegalArgumentException If both height and width are undefined then an IllegalArgumentException is thrown
    */
-  public ImageRequestBuilder_v3 setSizeScaledExactUpscaled(Float w, Float h) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledExactUpscaled(Float w, Float h) throws IllegalArgumentException, OperationNotSupportedException {
+    BaseImageRequestValidators.validateWidthAndHeightImageDimenFloats(w, h);
+    if (validators != null) {
+      validators.validateSizeScaledExact(w, h, true);
+    }
+    baseBuilder.setSizeScaledExact(w, h, PREFIX_UPSCALING_MODIFIER);
     return this;
   }
 
@@ -144,7 +150,12 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    * @throws IllegalArgumentException If both height and width are undefined or greater than maxHeight or maxWidth then an IllegalArgumentException is thrown
    */
-  public ImageRequestBuilder_v3 setSizeScaledExactNotUpscaled(Float w, Float h) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledExactNotUpscaled(Float w, Float h) throws IllegalArgumentException, OperationNotSupportedException {
+    BaseImageRequestValidators.validateWidthAndHeightImageDimenFloats(w, h);
+    if (validators != null) {
+      validators.validateSizeScaledExact(w, h, false);
+    }
+    baseBuilder.setSizeScaledExact(w, h);
     return this;
   }
 
@@ -154,7 +165,16 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    * @throws IllegalArgumentException Behaviour of server when both width and height are overridable is undefined
    */
-  public ImageRequestBuilder_v3 setSizeScaledBestFitNotUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledBestFitNotUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
+    BaseImageRequestValidators.validateBothWidthAndHeightNotOverridable(isWidthOverridable, isHeightOverridable);
+    if (validators != null) {
+      validators.validateSizeScaledBestFit(w, h, isWidthOverridable, isHeightOverridable, false);
+    }
+    // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
+    if (!isWidthOverridable && !isHeightOverridable) {
+      return this.setSizeScaledExactNotUpscaled(w, h);
+    }
+    baseBuilder.setSizeScaledBestFit(w, h, isWidthOverridable, isHeightOverridable);
     return this;
   }
 
@@ -164,7 +184,16 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    * @throws IllegalArgumentException Behaviour of server when both width and height are overridable is undefined
    */
-  public ImageRequestBuilder_v3 setSizeScaledBestFitUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException {
+  public ImageRequestBuilder_v3 setSizeScaledBestFitUpscaled(float w, float h, boolean isWidthOverridable, boolean isHeightOverridable) throws IllegalArgumentException, OperationNotSupportedException {
+    BaseImageRequestValidators.validateBothWidthAndHeightNotOverridable(isWidthOverridable, isHeightOverridable);
+    if (validators != null) {
+      validators.validateSizeScaledBestFit(w, h, isWidthOverridable, isHeightOverridable, true);
+    }
+    // If both width and height cannot be overridden by the server then it is the same case as exact scaling.
+    if (!isWidthOverridable && !isHeightOverridable) {
+      return this.setSizeScaledExactUpscaled(w, h);
+    }
+    baseBuilder.setSizeScaledBestFit(w, h, isWidthOverridable, isHeightOverridable, PREFIX_UPSCALING_MODIFIER);
     return this;
   }
 
@@ -173,7 +202,12 @@ public class ImageRequestBuilder_v3 {
    *
    * @return this {@link ImageRequestBuilder_v3}
    */
-  public ImageRequestBuilder_v3 setSizePercentageNotUpscaled(float n) {
+  public ImageRequestBuilder_v3 setSizePercentageNotUpscaled(float n) throws OperationNotSupportedException {
+    BaseImageRequestValidators.validatePercentageValueGreaterThanZero(n);
+    if (validators != null) {
+      validators.validateSizePercentage(n, false);
+    }
+    baseBuilder.setSizePercentage(n);
     return this;
   }
 
@@ -182,7 +216,12 @@ public class ImageRequestBuilder_v3 {
    *
    * @return this {@link ImageRequestBuilder_v3}
    */
-  public ImageRequestBuilder_v3 setSizePercentageUpscaled(float n) {
+  public ImageRequestBuilder_v3 setSizePercentageUpscaled(float n) throws OperationNotSupportedException {
+    BaseImageRequestValidators.validatePercentageValueGreaterThanZero(n);
+    if (validators != null) {
+      validators.validateSizePercentage(n, true);
+    }
+    baseBuilder.setSizePercentage(n, PREFIX_UPSCALING_MODIFIER);
     return this;
   }
 
@@ -194,11 +233,9 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    */
   public ImageRequestBuilder_v3 setRotation(float degree, boolean mirror) throws OperationNotSupportedException {
+    BaseImageRequestValidators.validateRotationDegrees(degree);
     if (validators != null) {
-      validators.validateSetRotation(degree, mirror);
-    }
-    if (degree < 0 || degree > 360) {
-      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+      validators.validateServerSupportsRotation(degree, mirror);
     }
     baseBuilder.setRotation(degree, mirror);
     return this;
@@ -237,7 +274,7 @@ public class ImageRequestBuilder_v3 {
    */
   public ImageRequest build() {
     ImageRequest build = baseBuilder.build();
-    if (this.size != null){
+    if (this.size != null) {
       build.setSize(this.size);
     }
     return build;
@@ -252,6 +289,8 @@ public class ImageRequestBuilder_v3 {
 
   private static class Validators extends BaseImageRequestValidators {
 
+    private static final String ERROR_UPSCALING_NOT_SUPPORTED = "Server does not support requesting for image sizes larger than the image's max size";
+
     private final ImageInformation imageInformation;
 
     public Validators(ImageInformation imageInformation) throws IllegalArgumentException {
@@ -261,11 +300,53 @@ public class ImageRequestBuilder_v3 {
 
     @Override
     public void validateServerSupportsQuality(String quality) throws OperationNotSupportedException {
-      // Server can return any quality for a color request but doesn't have to list the color quality in the profiles data
+      // Server can return any quality (the quality with the most color data available) for a color request but doesn't have to explicitly list the color quality in the profiles data
       if (quality.equals(QUALITY_COLOR)) {
         return;
       }
       super.validateServerSupportsQuality(quality);
     }
+
+    public boolean validateSizeMax(boolean upscaling) throws OperationNotSupportedException {
+      if (upscaling) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_UPSCALING, ERROR_UPSCALING_NOT_SUPPORTED);
+      }
+      return true;
+    }
+
+    public boolean validateSizeScaledExact(Float width, Float height, boolean upscaling) throws OperationNotSupportedException {
+      boolean isWidthValid = isImageDimenValidFloat(width);
+      boolean isHeightValid = isImageDimenValidFloat(height);
+      if (!isWidthValid) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_BY_H, "Server does not support requesting for image sizes by height alone");
+      }
+      if (!isHeightValid) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_BY_W, "Server does not support requesting for image sizes by width alone");
+      }
+      if (upscaling && width > imageInformation.getWidth() || height > imageInformation.getHeight()) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_UPSCALING, ERROR_UPSCALING_NOT_SUPPORTED);
+      }
+      validateServerSupportsFeature(SUPPORTS_SIZE_BY_WH, "Server does not support requesting for image sizes using width and height parameters");
+      return true;
+    }
+
+    public boolean validateSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable, boolean upscaling) throws OperationNotSupportedException {
+      if (upscaling && (width > imageInformation.getWidth() || height > imageInformation.getHeight())) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_UPSCALING, ERROR_UPSCALING_NOT_SUPPORTED);
+      }
+      if (isWidthOverridable || isHeightOverridable) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_BY_CONFINED_WH, "Server does not support requesting images with overridable width or height parameters");
+      }
+      return true;
+    }
+
+    public boolean validateSizePercentage(float n, boolean upscaling) throws OperationNotSupportedException {
+      validateServerSupportsFeature(SUPPORTS_SIZE_BY_PCT, "Server does not support requesting for image size using percentages");
+      if (upscaling && n > 100) {
+        validateServerSupportsFeature(SUPPORTS_SIZE_UPSCALING, ERROR_UPSCALING_NOT_SUPPORTED);
+      }
+      return true;
+    }
+
   }
 }

@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.isImageDimenValidFloat;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_MIRRORING;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PX;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_ROTATION_ARBITRARY;
@@ -24,6 +25,71 @@ public class BaseImageRequestValidators {
       throw new IllegalArgumentException("ImageInformation cannot be null");
     }
     this.imageInformation = imageInformation;
+  }
+
+  /**
+   * Validates that the width and height of the image are greater than zero
+   */
+  public static boolean validateWidthAndHeightGreaterThanZero(float w, float h) throws IllegalArgumentException {
+    if (w <= 0 || h <= 0) {
+      throw new IllegalArgumentException("Width and height must be greater than 0");
+    }
+    return true;
+  }
+
+  /**
+   * Validates that at least some portion of the requested image lies in the bounds of the original image
+   */
+  public static boolean validatePercentageBoundsValid(float x, float y, float w, float h) {
+    if (x < 0 || x > 100 || y < 0 || y > 100) {
+      throw new IllegalArgumentException("Value should lie between 0 and 100");
+    }
+    if (x == 100 || y == 100) {
+      throw new IllegalArgumentException("Request region is entirely outside the image's reported dimensional bounds");
+    }
+    if (w <= 0 || w > 100 || h <= 0 || h > 100) {
+      throw new IllegalArgumentException("Height and width of the image must belong in the range (0, 100]");
+    }
+    return true;
+  }
+
+  /**
+   * Validates that width and height Floats pass isImageDimenValidFloat()
+   */
+  public static boolean validateWidthAndHeightImageDimenFloats(Float width, Float height) {
+    boolean isWidthValid = isImageDimenValidFloat(width);
+    boolean isHeightValid = isImageDimenValidFloat(height);
+    // Behaviour of server when neither width or height are provided is undefined. Thus, user should be forced to some other method such as setSizeMax.
+    if (!isWidthValid && !isHeightValid) {
+      throw new IllegalArgumentException("Either width or height must be a valid float value!");
+    }
+    return true;
+  }
+
+  /**
+   * Behaviour of server when both width and height are overridable is undefined. Thus, user should be forced to some other method such as setSizeMax.
+   */
+  public static boolean validateBothWidthAndHeightNotOverridable(boolean isWidthOverridable, boolean isHeightOverridable) {
+    if (isWidthOverridable && isHeightOverridable) {
+      throw new IllegalArgumentException("Both width and height cannot be overridable!");
+    }
+    return true;
+  }
+
+  /** Validates that the float value of a percentage is greater than zero */
+  public static boolean validatePercentageValueGreaterThanZero(float n){
+    if (n <= 0) {
+      throw new IllegalArgumentException("Percentage value has to be greater than 0");
+    }
+    return true;
+  }
+
+  /** Validates that the degree of rotation is >= 0 and < 360 */
+  public static boolean validateRotationDegrees(float degree){
+    if (degree < 0 || degree > 360) {
+      throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+    }
+    return true;
   }
 
   public boolean validateServerSupportsFeature(String featureName, String errorMessage) throws OperationNotSupportedException {
@@ -59,7 +125,7 @@ public class BaseImageRequestValidators {
     }
   }
 
-  public void validateSetRotation(float degree, boolean mirror) throws OperationNotSupportedException {
+  public void validateServerSupportsRotation(float degree, boolean mirror) throws OperationNotSupportedException {
     if (mirror) {
       validateServerSupportsFeature(SUPPORTS_MIRRORING, "Mirroring of images is not supported by the server");
     }
