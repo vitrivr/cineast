@@ -11,10 +11,14 @@ import lombok.Getter;
  */
 public class ImageApiVersion {
 
-  public static final String IIIF_LEVEL_IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/level2.json";
-  public static final String IIIF_LEVEL_IMAGE_API_VERSION_3_0 = "http://iiif.io/api/image/3/level1.json";
+  public static final String IMAGE_API_VERSION_2_1_1_COMPLIANCE_LEVEL_2 = "http://iiif.io/api/image/2/level2.json";
+  public static final String IMAGE_API_VERSION_2_1_1_NUMERIC = "2.1.1";
+  public static final String IMAGE_API_VERSION_3_0_COMPLIANCE_LEVEL_1 = "http://iiif.io/api/image/3/level1.json";
+  public static final String IMAGE_API_VERSION_3_0_NUMERIC = "3.0";
 
-  /** Variable to hold the Image API version of this object */
+  /**
+   * Variable to hold the Image API version of this object
+   */
   @Getter
   private final IMAGE_API_VERSION version;
 
@@ -34,58 +38,56 @@ public class ImageApiVersion {
   }
 
   /**
-   * Create a new {@link ImageApiVersion} object using IIIF level string usually obtained from the {@link ImageInformation}
+   * Create a new {@link ImageApiVersion} object using the API compliance level string usually obtained from the {@link ImageInformation}
    */
-  public static ImageApiVersion fromIIIFImageLevelString(String imageLevelString) {
-    IMAGE_API_VERSION imageApiVersionEnum = iiifImageLevelToEnum(imageLevelString);
+  public static ImageApiVersion fromApiComplianceLevelString(String imageLevelString) {
+    IMAGE_API_VERSION imageApiVersionEnum = apiComplianceLevelToEnum(imageLevelString);
     if (imageApiVersionEnum == null) {
-      throw new IllegalArgumentException(imageLevelString + " is not a supported IIIF Image API level");
+      throw new IllegalArgumentException(imageLevelString + " is not a supported IIIF Image API Compliance level");
     }
     return new ImageApiVersion(imageApiVersionEnum);
   }
 
-  /** Converts numeric version number string into an enum item */
+  /**
+   * Converts numeric version number string into an enum item
+   */
   private static IMAGE_API_VERSION numericStringToEnum(String input) {
-    if (input.equals("2.1.1")) {
+    if (input.equals(IMAGE_API_VERSION_2_1_1_NUMERIC)) {
       return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals("3.0") || input.equals("3.0.0")) {
+    } else if (input.equals(IMAGE_API_VERSION_3_0_NUMERIC) || input.equals("3.0.0")) {
       return IMAGE_API_VERSION.THREE_POINT_ZERO;
     }
     return null;
   }
 
-  /** Converts IIIF Image API level string into an enum item */
-  private static IMAGE_API_VERSION iiifImageLevelToEnum(String input) {
-    if (input.equals(IIIF_LEVEL_IMAGE_API_VERSION_2_1_1)) {
+  /**
+   * Converts IIIF Image API level string into an enum item
+   */
+  private static IMAGE_API_VERSION apiComplianceLevelToEnum(String input) {
+    if (input.equals(IMAGE_API_VERSION_2_1_1_COMPLIANCE_LEVEL_2)) {
       return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals(IIIF_LEVEL_IMAGE_API_VERSION_3_0)) {
+    } else if (input.equals(IMAGE_API_VERSION_3_0_COMPLIANCE_LEVEL_1)) {
       return IMAGE_API_VERSION.THREE_POINT_ZERO;
     }
     return null;
   }
 
-  /** Returns the IIIF Image API Level string of this object's version */
-  public String toIIIFImageLevelString() {
-    if (this.version.equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
-      return IIIF_LEVEL_IMAGE_API_VERSION_2_1_1;
-    } else if (this.version.equals(IMAGE_API_VERSION.THREE_POINT_ZERO)) {
-      return IIIF_LEVEL_IMAGE_API_VERSION_3_0;
-    }
-    return null;
-  }
-
-  /** Returns the numeric string of this object's version */
+  /**
+   * Returns the numeric string of this object's version
+   */
   public String toNumericString() {
     switch (this.version) {
       case TWO_POINT_ONE_POINT_ONE:
-        return "2.1.1";
+        return IMAGE_API_VERSION_2_1_1_NUMERIC;
       case THREE_POINT_ZERO:
-        return "3.0";
+        return IMAGE_API_VERSION_3_0_NUMERIC;
     }
     return null;
   }
 
-  /** Checks whether two {@link ImageApiVersion} represent the same {@link IMAGE_API_VERSION} */
+  /**
+   * Checks whether two {@link ImageApiVersion} represent the same {@link IMAGE_API_VERSION}
+   */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof ImageApiVersion) {
