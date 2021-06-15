@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.imageapi;
+package org.vitrivr.cineast.core.iiif.imageapi.v2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,31 +15,31 @@ import org.mockito.Mockito;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
-import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
-import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem;
 
 /**
+ * Tests the parsing of JSON response received for an "info.json" into an ImageInformation_v2 object
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 02.06.21
  */
-class ImageInformation_v2_RequestTest {
+class ImageInformationRequest_v2_Test {
 
   String JSON_RESPONSE = "{\"profile\": [\"http://iiif.io/api/image/2/level2.json\", {\"supports\": [\"canonicalLinkHeader\", \"profileLinkHeader\", \"mirroring\", \"rotationArbitrary\", \"regionSquare\", \"sizeAboveFull\"], \"qualities\": [\"default\", \"bitonal\", \"gray\", \"color\"], \"formats\": [\"jpg\", \"png\", \"gif\", \"webp\"]}], \"tiles\": [{\"width\": 1024, \"scaleFactors\": [1, 2, 4, 8, 16, 32]}], \"protocol\": \"http://iiif.io/api/image\", \"sizes\": [{\"width\": 168, \"height\": 225}, {\"width\": 335, \"height\": 450}, {\"width\": 669, \"height\": 900}, {\"width\": 1338, \"height\": 1800}, {\"width\": 2676, \"height\": 3600}, {\"width\": 5351, \"height\": 7200}], \"height\": 7200, \"width\": 5351, \"@context\": \"http://iiif.io/api/image/2/context.json\", \"@id\": \"https://libimages.princeton.edu/loris/pudl0001%2F5138415%2F00000011.jp2\"}";
-  private ImageInformationRequest_v2 imageInformationRequestV211;
+  private ImageInformationRequest_v2 imageInformationRequest_v2;
 
   @BeforeEach
   void setup() throws IOException {
-    imageInformationRequestV211 = Mockito.mock(ImageInformationRequest_v2.class);
-    Mockito.when(imageInformationRequestV211.fetchImageInformation(ArgumentMatchers.any())).thenReturn(JSON_RESPONSE);
-    Mockito.when(imageInformationRequestV211.parseImageInformation(JSON_RESPONSE)).thenCallRealMethod();
+    imageInformationRequest_v2 = Mockito.mock(ImageInformationRequest_v2.class);
+    Mockito.when(imageInformationRequest_v2.fetchImageInformation(ArgumentMatchers.any())).thenReturn(JSON_RESPONSE);
+    Mockito.when(imageInformationRequest_v2.parseImageInformation(JSON_RESPONSE)).thenCallRealMethod();
   }
 
   @DisplayName("parseImageInformationJson test")
   @Test
   void parseImageInformationJson() {
-    ImageInformation_v2 imageInformation = imageInformationRequestV211.parseImageInformation(JSON_RESPONSE);
+    ImageInformation_v2 imageInformation = imageInformationRequest_v2.parseImageInformation(JSON_RESPONSE);
     assertNotNull(imageInformation);
     assertEquals("http://iiif.io/api/image", imageInformation.getProtocol());
     assertEquals(7200, imageInformation.getHeight());
