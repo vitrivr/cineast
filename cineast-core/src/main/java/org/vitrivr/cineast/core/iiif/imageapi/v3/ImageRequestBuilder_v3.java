@@ -28,6 +28,7 @@ public class ImageRequestBuilder_v3 {
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
   private Validators validators;
+  private String size;
 
   public ImageRequestBuilder_v3(String baseUrl) {
     this.baseBuilder = new BaseImageRequestBuilder(baseUrl);
@@ -110,6 +111,7 @@ public class ImageRequestBuilder_v3 {
    * @return this {@link ImageRequestBuilder_v3}
    */
   public ImageRequestBuilder_v3 setSizeMaxUpscaled() {
+    this.size = SIZE_MAX_UPSCALED;
     return this;
   }
 
@@ -230,12 +232,20 @@ public class ImageRequestBuilder_v3 {
     return this;
   }
 
-  /** This method builds a new ImageRequest with the parameters set using the dedicated setter methods */
+  /**
+   * This method builds a new ImageRequest with the parameters set using the dedicated setter methods
+   */
   public ImageRequest build() {
-    return baseBuilder.build();
+    ImageRequest build = baseBuilder.build();
+    if (this.size != null){
+      build.setSize(this.size);
+    }
+    return build;
   }
 
-  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  /**
+   * Get the {@link ImageApiVersion} of the ImageInformation
+   */
   public ImageApiVersion getImageApiVersion() {
     return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }
