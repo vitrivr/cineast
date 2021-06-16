@@ -7,12 +7,17 @@ import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REG
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_MAX;
 import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.SIZE_FULL;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import javax.naming.OperationNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
@@ -30,12 +35,18 @@ import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
  */
 public class ImageRequestFactory {
 
-  private final ImageApiVersion imageApiVersion;
+  private static final Logger LOGGER = LogManager.getLogger();
   private final IIIFConfig iiifConfig;
+  private ImageApiVersion imageApiVersion;
 
   public ImageRequestFactory(IIIFConfig iiifConfig) {
     this.iiifConfig = iiifConfig;
-    imageApiVersion = iiifConfig.getImageApiVersion();
+    try {
+      imageApiVersion = iiifConfig.getImageApiVersion();
+    } catch (IllegalArgumentException e) {
+      LOGGER.debug("No valid Image API version specified in the config file");
+      imageApiVersion = null;
+    }
   }
 
   private static boolean isParamStringValid(String configRegion) {
@@ -43,12 +54,61 @@ public class ImageRequestFactory {
   }
 
   public List<ImageRequest> createImageRequests(String jobDirectoryString, String itemPrefixString) {
+    // If Image API version is not specified then auto-detect the highest API version supported by the server
+    if (imageApiVersion == null) {
+      LOGGER.debug("Image API version not specified. Starting detection of highest Image API version supported by the server.");
+      ImageApiVersion highestSupportedApiVersion = determineHighestSupportedApiVersion();
+      if (highestSupportedApiVersion == null) {
+        LOGGER.error("The Image API version could not be auto detected and thus Image Requests could not be created.");
+        return Collections.emptyList();
+      } else {
+        this.imageApiVersion = highestSupportedApiVersion;
+        LOGGER.debug("The highest supported Image API version was autodetected to version " + this.imageApiVersion.toNumericString());
+      }
+    }
     if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
       return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
     } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
       return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
+  }
+
+  /**
+   * Determines the highest version of the Image API supported by the server by making an Image Information request and trying to parse as different versions of the {@link ImageInformation} starting with the highest version {@link ImageInformation_v3} and moving downwards
+   */
+  @Nullable
+  public ImageApiVersion determineHighestSupportedApiVersion() {
+    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+    if (iiifItems != null) {
+      Optional<IIIFItem> iiifItem = iiifItems.stream().findAny();
+      if (iiifItem.isPresent()) {
+        String identifier = iiifItem.get().getIdentifier();
+        String response = null;
+        String url = iiifConfig.getBaseUrl() + "/" + identifier;
+        try {
+          response = ImageInformationRequest.fetchImageInformation(url);
+        } catch (IOException e) {
+          LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
+          e.printStackTrace();
+        }
+        if (response != null) {
+          try {
+            new ObjectMapper().readValue(response, ImageInformation_v3.class);
+            return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
+          } catch (JsonProcessingException e) {
+            LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
+          }
+          try {
+            new ObjectMapper().readValue(response, ImageInformation_v2.class);
+            return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
+          } catch (JsonProcessingException e) {
+            LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
+          }
+        }
+      }
+    }
+    return null;
   }
 
   private static class ApiJob_v2 {

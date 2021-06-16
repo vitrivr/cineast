@@ -20,7 +20,7 @@ public class IIIFConfig {
 
   @Setter
   @JsonProperty
-  private String imageApiVersion = "2.1.1";
+  private String imageApiVersion;
 
   @Getter
   @Setter
@@ -58,6 +58,9 @@ public class IIIFConfig {
   private List<IIIFItem> iiifItems;
 
   public ImageApiVersion getImageApiVersion() {
+    if (imageApiVersion == null) {
+      throw new IllegalArgumentException("Image API Version is not defined!");
+    }
     return ImageApiVersion.fromNumericString(imageApiVersion);
   }
 
