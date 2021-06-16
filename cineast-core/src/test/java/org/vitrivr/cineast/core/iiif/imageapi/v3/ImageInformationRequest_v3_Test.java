@@ -24,6 +24,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
  * Tests the parsing of JSON response received for an "info.json" into an ImageInformation_v3 object
@@ -68,9 +69,8 @@ public class ImageInformationRequest_v3_Test {
   private ImageInformationRequest_v3 imageInformationRequest_v3;
 
   @BeforeEach
-  void setup() throws IOException {
+  void setup() {
     imageInformationRequest_v3 = Mockito.mock(ImageInformationRequest_v3.class);
-    Mockito.when(imageInformationRequest_v3.fetchImageInformation(ArgumentMatchers.any())).thenReturn(JSON_RESPONSE);
     Mockito.when(imageInformationRequest_v3.parseImageInformation(JSON_RESPONSE)).thenCallRealMethod();
   }
 

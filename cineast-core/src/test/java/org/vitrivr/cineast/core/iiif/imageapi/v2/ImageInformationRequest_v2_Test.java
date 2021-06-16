@@ -3,14 +3,12 @@ package org.vitrivr.cineast.core.iiif.imageapi.v2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
@@ -30,9 +28,8 @@ class ImageInformationRequest_v2_Test {
   private ImageInformationRequest_v2 imageInformationRequest_v2;
 
   @BeforeEach
-  void setup() throws IOException {
+  void setup() {
     imageInformationRequest_v2 = Mockito.mock(ImageInformationRequest_v2.class);
-    Mockito.when(imageInformationRequest_v2.fetchImageInformation(ArgumentMatchers.any())).thenReturn(JSON_RESPONSE);
     Mockito.when(imageInformationRequest_v2.parseImageInformation(JSON_RESPONSE)).thenCallRealMethod();
   }
 

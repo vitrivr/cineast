@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
  */
 public class BaseImageRequestBuilderTest {
 
-  private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
+  private static final String BASE_URL = "https://www.example.com";
 
   public BaseImageRequestBuilder builder;
 
