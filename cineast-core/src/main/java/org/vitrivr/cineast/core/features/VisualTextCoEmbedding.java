@@ -81,22 +81,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   public VisualTextCoEmbedding() {
     super(TABLE_NAME, 2f, EMBEDDING_SIZE);
-    // TODO: Move initialization into separate methods only called when using the respective models
-    // If the separation of extract from visual, query by text is strict, the models can be loaded in the respective
-    // init methods.
-    if (textEmbedding == null) {
-      textEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_EMBEDDING_MODEL);
-    }
-    if (textCoEmbedding == null) {
-      textCoEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_CO_EMBEDDING_MODEL);
-    }
-
-    if (visualEmbedding == null) {
-      visualEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_EMBEDDING_MODEL);
-    }
-    if (visualCoEmbedding == null) {
-      visualCoEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_CO_EMBEDDING_MODEL);
-    }
   }
 
   @Override
@@ -125,37 +109,56 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return getSimilar(embeddingArray, queryConfig);
   }
 
+  private void initializeTextEmbedding() {
+    if (textEmbedding == null) {
+      textEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_EMBEDDING_MODEL);
+    }
+    if (textCoEmbedding == null) {
+      textCoEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_CO_EMBEDDING_MODEL);
+    }
+  }
+
+  private void initializeVisualEmbedding() {
+    if (visualEmbedding == null) {
+      visualEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_EMBEDDING_MODEL);
+    }
+    if (visualCoEmbedding == null) {
+      visualCoEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_CO_EMBEDDING_MODEL);
+    }
+  }
+
   private float[] embedText(String text) {
-    TString textTensor = TString.tensorOf(NdArrays.vectorOfObjects(text));
+    initializeTextEmbedding();
 
-    HashMap<String, Tensor> inputMap = new HashMap<>();
-    inputMap.put(TEXT_EMBEDDING_INPUT, textTensor);
+    try (TString textTensor = TString.tensorOf(NdArrays.vectorOfObjects(text))) {
 
-    Map<String, Tensor> resultMap = textEmbedding.call(inputMap);
+      HashMap<String, Tensor> inputMap = new HashMap<>();
+      inputMap.put(TEXT_EMBEDDING_INPUT, textTensor);
 
-    TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT);
+      Map<String, Tensor> resultMap = textEmbedding.call(inputMap);
 
-    inputMap.clear();
-    inputMap.put(TEXT_CO_EMBEDDING_INPUT, intermediaryEmbedding);
+      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT)) {
 
-    resultMap = textCoEmbedding.call(inputMap);
-    TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT);
+        inputMap.clear();
+        inputMap.put(TEXT_CO_EMBEDDING_INPUT, intermediaryEmbedding);
 
-    float[] embeddingArray = new float[EMBEDDING_SIZE];
-    FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
-    // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
-    embedding.read(floatBuffer);
-    // Close tensors manually
-    textTensor.close();
-    intermediaryEmbedding.close();
-    embedding.close();
+        resultMap = textCoEmbedding.call(inputMap);
+        try (TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT)) {
 
-    // TODO: Also convert into auto-closing try-catch blocks
+          float[] embeddingArray = new float[EMBEDDING_SIZE];
+          FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+          // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
+          embedding.read(floatBuffer);
 
-    return embeddingArray;
+          return embeddingArray;
+        }
+      }
+    }
   }
 
   private float[] embedImage(BufferedImage image) {
+    initializeVisualEmbedding();
+
     if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
       image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
@@ -204,6 +207,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return processedColors;
   }
 
+  /**
+   * Converts an integer colors array storing ARGB values in each integer into an integer array where each integer stores R, G or B value.
+   */
   private static int[] colorsToRGB(int[] colors) {
     int[] rgb = new int[colors.length * 3];
 
@@ -218,6 +224,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return rgb;
   }
 
+  /**
+   * Rescales a buffered image using bilinear interpolation.
+   */
   private static BufferedImage rescale(BufferedImage image, int width, int height) {
     BufferedImage scaledImage = new BufferedImage(width, height, image.getType());
 
