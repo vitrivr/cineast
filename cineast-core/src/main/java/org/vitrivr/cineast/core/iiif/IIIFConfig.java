@@ -2,6 +2,10 @@ package org.vitrivr.cineast.core.iiif;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 
 /**
@@ -11,14 +15,45 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
  * @version 1.0
  * @created 28.05.21
  */
+@ToString
 public class IIIFConfig {
 
+  @Setter
+  @JsonProperty
+  private final String imageApiVersion = "2.1.1";
+
+  @Getter
+  @Setter
   @JsonProperty(value = "url", required = true)
   private String baseUrl;
 
+  @Getter
+  @Setter
   @JsonProperty
-  private String imageApiVersion = "2.1.1";
+  private String region;
 
+  @Getter
+  @Setter
+  @JsonProperty
+  private String size;
+
+  @Getter
+  @Setter
+  @JsonProperty
+  private Float rotation;
+
+  @Getter
+  @Setter
+  @JsonProperty
+  private String quality;
+
+  @Getter
+  @Setter
+  @JsonProperty
+  private String format;
+
+  @Getter
+  @Setter
   @JsonProperty(value = "items")
   private List<IIIFItem> iiifItems;
 
@@ -26,52 +61,39 @@ public class IIIFConfig {
     return ImageApiVersion.fromNumericString(imageApiVersion);
   }
 
-  public IIIFConfig setImageApiVersion(String imageApiVersion) {
-    this.imageApiVersion = imageApiVersion;
-    return this;
-  }
-
-  public String getBaseUrl() {
-    return baseUrl;
-  }
-
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
-  public List<IIIFItem> getIiifItems() {
-    return iiifItems;
-  }
-
-  public void setIiifItems(List<IIIFItem> iiifItems) {
-    this.iiifItems = iiifItems;
-  }
-
+  @ToString
+  @NoArgsConstructor
   public static class IIIFItem {
 
+    @Getter
+    @Setter
+    @JsonProperty
     private String identifier;
-    private String rotation;
 
-    public IIIFItem() {
-    }
-
+    @Getter
+    @Setter
     @JsonProperty
-    public String getIdentifier() {
-      return identifier;
-    }
+    private String region;
 
-    public void setIdentifier(String identifier) {
-      this.identifier = identifier;
-    }
-
+    @Getter
+    @Setter
     @JsonProperty
-    public String getRotation() {
-      return rotation;
-    }
+    private String size;
 
-    public void setRotation(String rotation) {
-      this.rotation = rotation;
-    }
+    @Getter
+    @Setter
+    @JsonProperty
+    private Float rotation;
+
+    @Getter
+    @Setter
+    @JsonProperty
+    private String quality;
+
+    @Getter
+    @Setter
+    @JsonProperty
+    private String format;
   }
 
 }

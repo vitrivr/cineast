@@ -9,42 +9,86 @@
     },
     "iiif": {
       "url": "https://libimages.princeton.edu/loris/pudl0001/5138415",
-      "imageApiVersion" : "2.1.1",
+      "imageApiVersion": "2.1.1",
+      "rotation": 10,
       "items": [
         {
+          "identifier": "00000010.jp2",
+          "region": "square"
+        },
+        {
           "identifier": "00000011.jp2",
-          "rotation" : "90"
+          "rotation": 90,
+          "quality": "gray"
+        },
+        {
+          "identifier": "00000012.jp2",
+          "rotation": 180,
+          "quality": "bitonal",
+          "format": "png"
         }
       ]
     }
   },
-  "extractors":[
-    {"name": "AverageColor"},
-    {"name": "AverageColorARP44"},
-    {"name": "AverageColorCLD"},
-    {"name": "AverageColorGrid8"},
-    {"name": "AverageColorRaster"},
-    {"name": "AverageFuzzyHist"},
-    {"name": "AverageColorGrid8Reduced15"},
-    {"name": "CLD"},
-    {"name": "EdgeARP88"},
-    {"name": "EdgeGrid16"},
-    {"name": "EHD"},
-    {"name": "HPCP12Shingle"},
-    {"name": "MedianColor"},
-    {"name": "MedianColorGrid8"},
-    {"name": "HOGMirflickr25K512"},
-    {"name": "SURFMirflickr25K512"}
+  "extractors": [
+    {
+      "name": "AverageColor"
+    },
+    {
+      "name": "AverageColorARP44"
+    },
+    {
+      "name": "AverageColorCLD"
+    },
+    {
+      "name": "AverageColorGrid8"
+    },
+    {
+      "name": "AverageColorRaster"
+    },
+    {
+      "name": "AverageFuzzyHist"
+    },
+    {
+      "name": "AverageColorGrid8Reduced15"
+    },
+    {
+      "name": "CLD"
+    },
+    {
+      "name": "EdgeARP88"
+    },
+    {
+      "name": "EdgeGrid16"
+    },
+    {
+      "name": "EHD"
+    },
+    {
+      "name": "HPCP12Shingle"
+    },
+    {
+      "name": "MedianColor"
+    },
+    {
+      "name": "MedianColorGrid8"
+    },
+    {
+      "name": "HOGMirflickr25K512"
+    },
+    {
+      "name": "SURFMirflickr25K512"
+    }
   ],
-  "exporters":[
+  "exporters": [
     {
       "name": "ShotThumbnailsExporter",
       "properties": {
-        "destination":"thumbnails/"
+        "destination": "thumbnails/"
       }
     }
   ],
-  "database":{
+  "database": {
     "host": "output/",
     "writer": "JSON",
     "selector": "NONE"
