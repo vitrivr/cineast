@@ -20,7 +20,7 @@ public class IIIFConfig {
 
   @Setter
   @JsonProperty
-  private final String imageApiVersion = "2.1.1";
+  private String imageApiVersion = "2.1.1";
 
   @Getter
   @Setter
