@@ -35,7 +35,7 @@ public interface ImageInformationRequest {
    * @return Received Image Information JSON String
    * @throws IOException if an HTTP connection was not established successfully.
    */
-  default String fetchImageInformation(String url) throws IOException {
+  static String fetchImageInformation(String url) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setRequestProperty("accept", "application/json");
     InputStream responseStream = connection.getInputStream();

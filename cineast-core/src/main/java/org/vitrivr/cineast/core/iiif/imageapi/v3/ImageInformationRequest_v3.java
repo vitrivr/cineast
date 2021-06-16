@@ -26,7 +26,7 @@ public class ImageInformationRequest_v3 implements ImageInformationRequest {
 
   public ImageInformationRequest_v3(String url) throws IOException {
     this.url = url;
-    this.imageInformation = this.fetchImageInformation(url);
+    this.imageInformation = ImageInformationRequest.fetchImageInformation(url);
   }
 
   @Nullable

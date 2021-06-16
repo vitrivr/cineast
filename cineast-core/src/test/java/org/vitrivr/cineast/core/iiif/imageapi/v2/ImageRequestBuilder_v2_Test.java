@@ -27,7 +27,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  */
 public class ImageRequestBuilder_v2_Test {
 
-  private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
+  private static final String BASE_URL = "https://www.example.com";
 
   public ImageRequestBuilder_v2 builder;
 
