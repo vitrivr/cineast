@@ -28,7 +28,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
  */
 public class ImageRequestBuilder_v3 {
 
-  private static final String PREFIX_UPSCALING_MODIFIER = "^";
+  public static final String PREFIX_UPSCALING_MODIFIER = "^";
   private static final Logger LOGGER = LogManager.getLogger();
   private final BaseImageRequestBuilder baseBuilder;
   private Validators validators;

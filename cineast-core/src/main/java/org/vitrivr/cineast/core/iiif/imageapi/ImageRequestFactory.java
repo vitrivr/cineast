@@ -46,72 +46,9 @@ public class ImageRequestFactory {
     if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
       return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
     } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
-      runImageApi_v3_0_job(jobDirectoryString, itemPrefixString);
+      return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
-  }
-
-  private List<ImageRequest> runImageApi_v3_0_job(String jobDirectoryString, String itemPrefixString) {
-    List<ImageRequest> imageRequests = new LinkedList<>();
-    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
-    if (iiifItems == null) {
-      return imageRequests;
-    }
-    for (final IIIFItem iiifItem : iiifItems) {
-      String identifier = iiifItem.getIdentifier();
-      final String imageName = itemPrefixString + identifier;
-
-      ImageInformation_v3 imageInformation = null;
-      try {
-        final ImageInformationRequest_v3 informationRequest = new ImageInformationRequest_v3(iiifConfig.getBaseUrl() + "/" + identifier);
-        informationRequest.saveToFile(jobDirectoryString, imageName);
-        imageInformation = informationRequest.parseImageInformation(null);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      ImageRequestBuilder_v3 builder;
-      if (imageInformation != null) {
-        builder = new ImageRequestBuilder_v3(imageInformation);
-      } else {
-        builder = new ImageRequestBuilder_v3(iiifConfig.getBaseUrl());
-      }
-
-      float rotationDegree;
-      if (iiifItem.getRotation() != null) {
-        try {
-          rotationDegree = iiifItem.getRotation();
-        } catch (NumberFormatException e) {
-          e.printStackTrace();
-          continue;
-        }
-      } else {
-        rotationDegree = 0;
-      }
-
-      ImageRequest imageRequest = null;
-      try {
-        imageRequest = builder
-            .setRegionFull()
-            .setSizeMaxNotUpscaled()
-            .setRotation(rotationDegree, false)
-            .setQuality(QUALITY_DEFAULT)
-            .setFormat(EXTENSION_JPG)
-            .build();
-      } catch (OperationNotSupportedException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        if (imageRequest != null) {
-          imageRequest.saveToFile(jobDirectoryString, imageName);
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      imageRequests.add(imageRequest);
-    }
-    return imageRequests;
   }
 
   private static class ApiJob_v2 {
@@ -204,6 +141,7 @@ public class ImageRequestFactory {
       } else {
         region = iiifConfig.getRegion();
       }
+      iiifItem.setRegion(region);
 
       switch (region) {
         case REGION_FULL:
@@ -220,6 +158,7 @@ public class ImageRequestFactory {
       } else {
         size = iiifConfig.getSize();
       }
+      iiifItem.setSize(size);
 
       switch (size) {
         case SIZE_FULL:
@@ -236,6 +175,7 @@ public class ImageRequestFactory {
       } else {
         rotation = iiifConfig.getRotation();
       }
+      iiifItem.setRotation(rotation);
       builder.setRotation(rotation, false);
 
       String quality;
@@ -244,6 +184,7 @@ public class ImageRequestFactory {
       } else {
         quality = iiifConfig.getQuality();
       }
+      iiifItem.setQuality(quality);
       builder.setQuality(quality);
 
       String format;
@@ -252,6 +193,149 @@ public class ImageRequestFactory {
       } else {
         format = iiifConfig.getFormat();
       }
+      iiifItem.setFormat(format);
+      builder.setFormat(format);
+    }
+  }
+
+  private static class ApiJob_v3 {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    private final IIIFConfig iiifConfig;
+
+    private ApiJob_v3(IIIFConfig iiifConfig) {
+      this.iiifConfig = iiifConfig;
+    }
+
+    private List<ImageRequest> run(String jobDirectoryString, String itemPrefixString) {
+      // Set default values for global parameters with missing values
+      initGlobalParameters();
+
+      List<ImageRequest> imageRequests = new LinkedList<>();
+      List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+      if (iiifItems == null) {
+        return imageRequests;
+      }
+
+      for (final IIIFItem iiifItem : iiifItems) {
+        String identifier = iiifItem.getIdentifier();
+        final String imageName = itemPrefixString + identifier;
+
+        ImageInformation_v3 imageInformation = null;
+        try {
+          final ImageInformationRequest_v3 informationRequest = new ImageInformationRequest_v3(iiifConfig.getBaseUrl() + "/" + identifier);
+          informationRequest.saveToFile(jobDirectoryString, imageName);
+          imageInformation = informationRequest.parseImageInformation(null);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        ImageRequestBuilder_v3 builder;
+        if (imageInformation != null) {
+          builder = new ImageRequestBuilder_v3(imageInformation);
+        } else {
+          builder = new ImageRequestBuilder_v3(iiifConfig.getBaseUrl());
+        }
+
+        ImageRequest imageRequest;
+        try {
+          setRequestParameters(iiifItem, builder);
+          imageRequest = builder.build();
+        } catch (OperationNotSupportedException e) {
+          LOGGER.debug("Failed to make image request for IIIFConfig item: " + iiifItem);
+          e.printStackTrace();
+          continue;
+        }
+
+        try {
+          imageRequest.saveToFile(jobDirectoryString, imageName);
+        } catch (IOException e) {
+          LOGGER.debug("Failed to save image: " + imageName);
+          e.printStackTrace();
+        }
+        imageRequests.add(imageRequest);
+      }
+      return imageRequests;
+    }
+
+    private void initGlobalParameters() {
+      if (!isParamStringValid(iiifConfig.getRegion())) {
+        iiifConfig.setRegion(REGION_FULL);
+      }
+      String configSize = iiifConfig.getSize();
+      if (!isParamStringValid(configSize)) {
+        iiifConfig.setSize(SIZE_FULL);
+      }
+      Float configRotation = iiifConfig.getRotation();
+      if (configRotation == null) {
+        iiifConfig.setRotation(0f);
+      }
+      String configQuality = iiifConfig.getQuality();
+      if (!isParamStringValid(configQuality)) {
+        iiifConfig.setQuality(QUALITY_DEFAULT);
+      }
+      String configFormat = iiifConfig.getFormat();
+      if (!isParamStringValid(configFormat)) {
+        iiifConfig.setFormat(EXTENSION_JPG);
+      }
+    }
+
+    private void setRequestParameters(IIIFItem iiifItem, ImageRequestBuilder_v3 builder) throws OperationNotSupportedException {
+      String region;
+      if (isParamStringValid(iiifItem.getRegion())) {
+        region = iiifItem.getRegion();
+      } else {
+        region = iiifConfig.getRegion();
+      }
+      iiifItem.setRegion(region);
+
+      switch (region) {
+        case REGION_FULL:
+          builder.setRegionFull();
+          break;
+        case REGION_SQUARE:
+          builder.setRegionSquare();
+          break;
+      }
+
+      String size;
+      if (isParamStringValid(iiifItem.getSize())) {
+        size = iiifItem.getSize();
+      } else {
+        size = iiifConfig.getSize();
+      }
+      iiifItem.setSize(size);
+
+      if (SIZE_FULL.equals(size) || SIZE_MAX.equals(size)) {
+        builder.setSizeMaxNotUpscaled();
+      }
+
+      Float rotation;
+      if (iiifItem.getRotation() != null) {
+        rotation = iiifItem.getRotation();
+      } else {
+        rotation = iiifConfig.getRotation();
+      }
+      iiifItem.setRotation(rotation);
+      builder.setRotation(rotation, false);
+
+      String quality;
+      if (isParamStringValid(iiifItem.getQuality())) {
+        quality = iiifItem.getQuality();
+      } else {
+        quality = iiifConfig.getQuality();
+      }
+      iiifItem.setQuality(quality);
+      builder.setQuality(quality);
+
+      String format;
+      if (isParamStringValid(iiifItem.getFormat())) {
+        format = iiifItem.getFormat();
+      } else {
+        format = iiifConfig.getFormat();
+      }
+      iiifItem.setFormat(format);
       builder.setFormat(format);
     }
   }
