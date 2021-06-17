@@ -13,6 +13,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
+ * Makes HTTP request for image information, parses the response into {@link ImageInformation_v3} and saves the raw JSON to the filesystem
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 14.06.21

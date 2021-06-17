@@ -22,6 +22,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
+ * Builds an Image API 3.0 request using {@link BaseImageRequestBuilder} while also performing validation to check if the server supports the requested parameters
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 11.06.21
