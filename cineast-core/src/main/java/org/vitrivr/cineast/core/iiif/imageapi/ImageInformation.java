@@ -44,6 +44,15 @@ public interface ImageInformation {
   /** Get the {@link ImageApiVersion} of the ImageInformation */
   ImageApiVersion getImageApiVersion();
 
+  /** Get the max width supported by server */
+  Long getMaxWidth();
+
+  /** Get the max height supported by server */
+  Long getMaxHeight();
+
+  /** Get the max area supported by server */
+  Long getMaxArea();
+
   /**
    * Inner class used to parse the Image Information JSON response.
    */

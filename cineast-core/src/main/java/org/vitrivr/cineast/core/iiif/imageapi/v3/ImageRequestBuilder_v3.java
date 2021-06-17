@@ -327,7 +327,7 @@ public class ImageRequestBuilder_v3 {
         validateServerSupportsFeature(SUPPORTS_SIZE_UPSCALING, ERROR_UPSCALING_NOT_SUPPORTED);
       }
       validateServerSupportsFeature(SUPPORTS_SIZE_BY_WH, "Server does not support requesting for image sizes using width and height parameters");
-      return true;
+      return validateDimensWithinMaxValues(width, height);
     }
 
     public boolean validateSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable, boolean upscaling) throws OperationNotSupportedException {

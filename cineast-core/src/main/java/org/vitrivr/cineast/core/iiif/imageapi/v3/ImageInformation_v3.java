@@ -50,11 +50,6 @@ public class ImageInformation_v3 implements ImageInformation {
   // Image sizes prefixed with ^ may be requested.
   public static final String SUPPORTS_SIZE_UPSCALING = "sizeUpscaling";
 
-  /** The maximum area in pixels supported for this image. Clients must not expect requests with a width*height greater than this value to be supported. */
-  @Getter
-  @Setter
-  @JsonProperty
-  public long maxArea;
   /**
    * The @context tells Linked Data processors how to interpret the image information. If extensions are used then their context definitions should be included in this top-level @context property.
    */
@@ -106,11 +101,16 @@ public class ImageInformation_v3 implements ImageInformation {
   @Getter
   @Setter
   @JsonProperty
-  private long maxWidth;
+  private Long maxWidth;
   /** The maximum height in pixels supported for this image. Clients must not expect requests with a height greater than this value to be supported. */
   @Setter
   @JsonProperty
-  private long maxHeight;
+  private Long maxHeight;
+  /** The maximum area in pixels supported for this image. Clients must not expect requests with a width*height greater than this value to be supported. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private Long maxArea;
 
   /**
    * A set of height and width pairs the client should use in the size parameter to request complete images at different sizes that the server has available. This may be used to let a client know the sizes that are available when the server does not support requests for arbitrary sizes, or simply as a hint that requesting an image of this size may result in a faster response. A request constructed with the w,h syntax using these sizes must be supported by the server, even if arbitrary width and height are not.
@@ -158,7 +158,7 @@ public class ImageInformation_v3 implements ImageInformation {
   @JsonProperty
   private List<String> extraFeatures;
 
-  public long getMaxHeight() {
+  public Long getMaxHeight() {
     // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
     if (maxHeight == 0 && maxWidth != 0) {
       maxHeight = maxWidth;
