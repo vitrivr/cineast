@@ -9,11 +9,24 @@ import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 /**
+ * Interface that defines functionality that has to be implemented by ImageInformation objects of all versions of the Image API
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 14.06.21
  */
 public interface ImageInformationRequest {
+
+  /**
+   * @return Received Image Information JSON String
+   * @throws IOException if an HTTP connection was not established successfully.
+   */
+  static String fetchImageInformation(String url) throws IOException {
+    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    connection.setRequestProperty("accept", "application/json");
+    InputStream responseStream = connection.getInputStream();
+    return IOUtils.toString(responseStream, StandardCharsets.UTF_8);
+  }
 
   /**
    * This has been created as a separate function to help with unit testing.
@@ -30,15 +43,4 @@ public interface ImageInformationRequest {
    * @throws IOException If the Http request or writing to file fails
    */
   void saveToFile(String filePath, String fileName) throws IOException;
-
-  /**
-   * @return Received Image Information JSON String
-   * @throws IOException if an HTTP connection was not established successfully.
-   */
-  static String fetchImageInformation(String url) throws IOException {
-    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-    connection.setRequestProperty("accept", "application/json");
-    InputStream responseStream = connection.getInputStream();
-    return IOUtils.toString(responseStream, StandardCharsets.UTF_8);
-  }
 }

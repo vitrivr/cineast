@@ -13,6 +13,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
+ * Makes HTTP request for image information, parses the response into {@link ImageInformation_v2} and saves the raw JSON to the filesystem
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 02.06.21
@@ -57,7 +59,7 @@ public class ImageInformationRequest_v2 implements ImageInformationRequest {
   }
 
   /** Get the {@link ImageApiVersion} of the ImageInformation */
-  public ImageApiVersion getImageApiVersion(){
+  public ImageApiVersion getImageApiVersion() {
     return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
   }
 }

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Class definition of a single IIIF Image Api Request
+ * Class definition of a single IIIF Image API Request
  *
  * @author singaltanmay
  * @version 1.0
