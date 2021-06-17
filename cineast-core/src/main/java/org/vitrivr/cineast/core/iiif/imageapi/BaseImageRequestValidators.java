@@ -77,7 +77,7 @@ public class BaseImageRequestValidators {
   }
 
   /** Validates that the float value of a percentage is greater than zero */
-  public static boolean validatePercentageValueGreaterThanZero(float n){
+  public static boolean validatePercentageValueGreaterThanZero(float n) {
     if (n <= 0) {
       throw new IllegalArgumentException("Percentage value has to be greater than 0");
     }
@@ -85,9 +85,28 @@ public class BaseImageRequestValidators {
   }
 
   /** Validates that the degree of rotation is >= 0 and < 360 */
-  public static boolean validateRotationDegrees(float degree){
+  public static boolean validateRotationDegrees(float degree) {
     if (degree < 0 || degree > 360) {
       throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");
+    }
+    return true;
+  }
+
+  public boolean validateDimensWithinMaxValues(float w, float h) throws OperationNotSupportedException {
+    Long maxWidth = imageInformation.getMaxWidth();
+    Long maxHeight = imageInformation.getMaxHeight();
+    Long maxArea = imageInformation.getMaxArea();
+    boolean isMaxWidthValid = maxWidth != null && isImageDimenValidFloat(maxWidth.floatValue());
+    boolean isMaxHeightValid = maxHeight != null && isImageDimenValidFloat(maxHeight.floatValue());
+    boolean isMaxAreaValid = maxArea != null && isImageDimenValidFloat(maxArea.floatValue());
+    if (isMaxWidthValid && w > maxWidth) {
+      throw new OperationNotSupportedException("Requested image width exceeds the maxWidth supported by the server");
+    }
+    if (isMaxHeightValid && h > maxHeight) {
+      throw new OperationNotSupportedException("Requested image height exceeds the maxHeight supported by the server");
+    }
+    if (isMaxAreaValid && (w * h) > maxArea) {
+      throw new OperationNotSupportedException("Requested image area exceeds the maxArea supported by the server");
     }
     return true;
   }
@@ -106,11 +125,12 @@ public class BaseImageRequestValidators {
     return isSupported;
   }
 
-  public void validateServerSupportsRegionAbsolute(float w, float h) throws OperationNotSupportedException {
+  public boolean validateServerSupportsRegionAbsolute(float w, float h) throws OperationNotSupportedException {
     validateServerSupportsFeature(SUPPORTS_REGION_BY_PX, "Server does not support requesting regions of images using pixel dimensions");
     if (w > imageInformation.getWidth() && h > imageInformation.getHeight()) {
       throw new OperationNotSupportedException("Request region is entirely outside the image's reported dimensional bounds");
     }
+    return validateDimensWithinMaxValues(w, h);
   }
 
   public void validateServerSupportsQuality(String quality) throws OperationNotSupportedException {

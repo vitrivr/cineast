@@ -259,6 +259,7 @@ public class ImageRequestBuilder_v2 {
       } else {
         validateServerSupportsFeature(SUPPORTS_SIZE_BY_WH, "Server does not support requesting for image sizes using width and height parameters");
       }
+      validateDimensWithinMaxValues(width, height);
     }
 
     public boolean validateSizeScaledBestFit(float width, float height, boolean isWidthOverridable, boolean isHeightOverridable) throws OperationNotSupportedException {
