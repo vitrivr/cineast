@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Common Image request parameter validation methods used by both API 2.x and 3.x
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 11.06.21

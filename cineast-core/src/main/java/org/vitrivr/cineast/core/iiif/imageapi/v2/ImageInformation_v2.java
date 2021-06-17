@@ -17,6 +17,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
+ * ImageInformation object used to parse Image API 2.1.1 image information request's JSON response
+ *
  * @author singaltanmay
  * @version 1.0
  * @created 29.05.21
