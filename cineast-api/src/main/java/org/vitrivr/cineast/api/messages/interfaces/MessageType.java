@@ -44,7 +44,7 @@ public enum MessageType {
   QR_ERROR(QueryError.class),
   QR_OBJECT(MediaObjectQueryResult.class),
   QR_METADATA_O(MediaObjectMetadataQueryResult.class),
-  QR_METADATA_S(MediaObjectMetadataQueryResult.class),
+  QR_METADATA_S(MediaSegmentQueryResult.class),
   QR_SEGMENT(MediaSegmentQueryResult.class),
   QR_SIMILARITY(SimilarityQueryResult.class),
   QR_TEMPORAL(TemporalQueryResult.class);
