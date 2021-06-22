@@ -65,8 +65,8 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
       List<String> segmentIds = paths.stream()
           .flatMap(listContainer -> listContainer.getSegmentIds().stream())
           .distinct().collect(Collectors.toList());
-      List<Float> startAbs = this.getStartAbs(segmentIds);
-      List<String> sortedSegments = new ArrayList<>(IntStream.range(0, segmentIds.size()).boxed().collect(Collectors.toMap(startAbs::get, segmentIds::get, (s, a) -> s + ", " + a, TreeMap::new)).values());
+      List<Integer> sequenceNumbers = this.getSequenceNumbers(segmentIds);
+      List<String> sortedSegments = new ArrayList<>(IntStream.range(0, segmentIds.size()).boxed().collect(Collectors.toMap(sequenceNumbers::get, segmentIds::get, (s, a) -> s + ", " + a, TreeMap::new)).values());
       TemporalObject temporalObject = new TemporalObject(sortedSegments, objectId, max);
       if (max > 0d) {
         results.add(temporalObject);
