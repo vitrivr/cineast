@@ -1,16 +1,34 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
+import static org.bytedeco.ffmpeg.global.avcodec.AV_CODEC_CAP_VARIABLE_FRAME_SIZE;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_free_context;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_parameters_from_context;
+import static org.bytedeco.ffmpeg.global.avutil.AV_ROUND_UP;
+import static org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_FLTP;
+import static org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_S16;
+import static org.bytedeco.ffmpeg.global.avutil.av_frame_free;
+import static org.bytedeco.ffmpeg.global.avutil.av_frame_make_writable;
+import static org.bytedeco.ffmpeg.global.avutil.av_opt_set_int;
+import static org.bytedeco.ffmpeg.global.avutil.av_opt_set_sample_fmt;
+import static org.bytedeco.ffmpeg.global.avutil.av_rescale_q;
+import static org.bytedeco.ffmpeg.global.avutil.av_rescale_rnd;
+import static org.bytedeco.ffmpeg.global.swresample.swr_alloc;
+import static org.bytedeco.ffmpeg.global.swresample.swr_convert;
+import static org.bytedeco.ffmpeg.global.swresample.swr_free;
+import static org.bytedeco.ffmpeg.global.swresample.swr_get_delay;
+import static org.bytedeco.ffmpeg.global.swresample.swr_init;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.swresample;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.swresample.SwrContext;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
-
-import static org.bytedeco.javacpp.avcodec.*;
-import static org.bytedeco.javacpp.avutil.*;
-import static org.bytedeco.javacpp.swresample.*;
 
 class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
@@ -19,12 +37,12 @@ class AudioOutputStreamContainer extends AbstractAVStreamContainer {
     AVFrame tmp_frame;
     private int samples_count;
     private AVFrame frame;
-    private swresample.SwrContext swr_ctx;
+    private SwrContext swr_ctx;
     private AVRational rat = new AVRational();
 
     private final int channels = 1;
 
-    AudioOutputStreamContainer(avformat.AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
+    AudioOutputStreamContainer(AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
         super(oc, codec_id);
 
         long channellayout = avutil.av_get_default_channel_layout(channels);

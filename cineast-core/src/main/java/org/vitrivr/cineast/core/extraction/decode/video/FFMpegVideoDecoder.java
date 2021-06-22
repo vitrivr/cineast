@@ -2,11 +2,25 @@ package org.vitrivr.cineast.core.extraction.decode.video;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.*;
-import org.bytedeco.javacpp.avcodec.AVCodec;
-import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.avutil.AVDictionary;
-import org.bytedeco.javacpp.avutil.AVRational;
+import org.bytedeco.ffmpeg.avcodec.AVCodec;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avcodec.AVPacket;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.global.swresample;
+import org.bytedeco.ffmpeg.global.swscale;
+import org.bytedeco.ffmpeg.swresample.SwrContext;
+import org.bytedeco.ffmpeg.swscale.SwsContext;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.DoublePointer;
+import org.bytedeco.javacpp.IntPointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
@@ -66,7 +80,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
 
     private static final Logger LOGGER = LogManager.getLogger();
-    
+
     /**
      * Lists the mime types supported by the FFMpegVideoDecoder.
      *
@@ -97,25 +111,25 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private int             videoStream = -1;
     private int             audioStream = -1;
-    private avcodec.AVCodecContext pCodecCtxVideo = null;
-    private avcodec.AVCodecContext pCodecCtxAudio = null;
+    private AVCodecContext pCodecCtxVideo = null;
+    private AVCodecContext pCodecCtxAudio = null;
 
     /** Field for raw frame as returned by decoder (regardless of being audio or video). */
-    private avutil.AVFrame pFrame = null;
+    private AVFrame pFrame = null;
 
     /** Field for RGB frame (decoded video frame). */
-    private avutil.AVFrame pFrameRGB = null;
+    private AVFrame pFrameRGB = null;
 
     /** Field for re-sampled audio-sample. */
-    private avutil.AVFrame resampledFrame = null;
+    private AVFrame resampledFrame = null;
 
-    private avcodec.AVPacket packet;
+    private AVPacket packet;
     private BytePointer buffer = null;
 
     private IntPointer out_linesize = new IntPointer();
 
-    private swscale.SwsContext sws_ctx = null;
-    private swresample.SwrContext swr_ctx = null;
+    private SwsContext sws_ctx = null;
+    private SwrContext swr_ctx = null;
 
     private VideoDescriptor videoDescriptor = null;
     private AudioDescriptor audioDescriptor = null;

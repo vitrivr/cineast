@@ -1,23 +1,5 @@
 package org.vitrivr.cineast.core.extraction.decode.audio;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.*;
-import org.bytedeco.javacpp.avcodec.AVCodec;
-import org.bytedeco.javacpp.avcodec.AVCodecContext;
-import org.bytedeco.javacpp.avcodec.AVPacket;
-import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.avutil.AVDictionary;
-import org.bytedeco.javacpp.avutil.AVFrame;
-import org.bytedeco.javacpp.avutil.AVRational;
-import org.bytedeco.javacpp.swresample.SwrContext;
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.config.CacheConfig;
-import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +9,29 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bytedeco.ffmpeg.avcodec.AVCodec;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avcodec.AVPacket;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.global.swresample;
+import org.bytedeco.ffmpeg.swresample.SwrContext;
+import org.bytedeco.javacpp.IntPointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
+import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * A {@link Decoder} implementation that decodes audio using the ffmpeg library + the corresponding Java bindings.

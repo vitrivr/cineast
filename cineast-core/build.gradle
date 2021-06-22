@@ -149,7 +149,7 @@ dependencies {
 
     /** JavaCPP. */
     api group: "org.bytedeco", name: "javacpp", version: version_javacpp
-    api group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: version_ffmpeg
+    api group: "org.bytedeco", name: "ffmpeg-platform", version: version_ffmpeg
 
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
