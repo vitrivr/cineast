@@ -34,7 +34,7 @@ public class BaseImageRequestBuilder {
   private String extension;
 
   public BaseImageRequestBuilder(String baseUrl) {
-    this.baseUrl = baseUrl != null ? baseUrl : "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
+    this.baseUrl = baseUrl;
   }
 
   public static String toSimplifiedFloatString(float value) {
