@@ -47,6 +47,11 @@ import java.util.Arrays;
  *
  * @author Kevin L. Stern
  */
+
+/**
+ * The Hungarian Algorithm takes a cost matrix, and finds the optimal minimum one-to-one matches between row and column elements.
+ * The algorithm is particularly useful for multi-object tracking in which detections from one frame have to be matched with detections in an adjacent frame
+ */
 public class HungarianAlgorithm {
     private final double[][] costMatrix;
     private final int rows, cols, dim;

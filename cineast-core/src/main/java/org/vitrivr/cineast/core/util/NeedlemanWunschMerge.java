@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
+/**
+ * NeedlemanWunschMerge takes two (ideally similar) strings and is able to return a substring which is similar in both strings
+ */
 public class NeedlemanWunschMerge {
     private String string1;
     private String string2;

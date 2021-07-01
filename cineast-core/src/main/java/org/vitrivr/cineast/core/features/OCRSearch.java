@@ -29,20 +29,20 @@ public class OCRSearch extends AbstractTextRetriever {
    * Configurations
    * rate:
    *    Rate refers to the rate at which detections are done.
-   *    E.g.: Rate = 3 --> Detections are doen at every third frame
+   *    E.g.: Rate = 3 --> Detections are done at every third frame
    *    Increase rate for better inference times
    * threshold_CIoU:
    *    CIoU stands for Combined Intersection over Union
    *    When the CIoU is below 0.4, they are regarded as separate streams
    *    Should not be changed
-   * threshold_postprooc:
-   *    This is the threshold for the postprocessing step, where the recognition is used to merge similar streams
+   * threshold_postproc:
+   *    This is the threshold for the postprocessing stream association step
    *    Strongly urge not to change
-   * tracker_Type:
+   * tracker_type:
    *    Refers to the tracker which is used
    * threshold_stream_length:
-   *    Refers to the amount of consecutive frames a text should minimally appear
-   *    If a text appears less than the threshold, the text is discarded
+   *    Refers to the amount of consecutive frames a text should minimally appear in
+   *    If a text appears in less consecutive frames than the threshold, the text is discarded
    */
   private static final int rate = 3;
   private static final double threshold_CIoU = 0.4;
@@ -188,14 +188,15 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 
   /**
-   * transformString transforms the string by replacing certain characters with others
+   * transformString transforms the string by replacing certain characters with others.
+   * This is helpful since certain characters are visually (almost) indistinguishable to the recognition module
    * @param str The string to be transformed
    * @return The transformed string
    */
   private String transformString(String str) { return str.replace("i", "l").replace("l", "1").replace("a", "o");}
 
   /**
-   * safeText transforms and safes the scene text in the database
+   * saveText transforms and saves the scene text in the database
    * @param id id of the shot (the {@link SegmentContainer}) to be processed
    * @param recognition The scene text that should be safed
    */
@@ -507,7 +508,7 @@ public class OCRSearch extends AbstractTextRetriever {
   @Override
   protected String enrichQueryTerm(String queryTerm) {
     // The EAST text detector views text instances with a slash inbetween as one text instance
-    // The recognizer cannot recognize a slash and thus removes it. Subsequently we also remove it in the query term
+    // The recognizer cannot recognize a slash. Subsequently we also remove it in the query term
     queryTerm = transformString(queryTerm.replaceAll("-", "").toLowerCase(Locale.ROOT));
     if (queryTerm.contains("\"")) {
       return queryTerm;

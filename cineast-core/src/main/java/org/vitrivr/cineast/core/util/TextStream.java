@@ -5,6 +5,10 @@ import org.vitrivr.cineast.core.data.Pair;
 
 import java.util.*;
 
+/**
+ * TextStream is a helper class for the OCRSearch feature extraction
+ * It stores the frame-coordinate pairs in which the text appears, as well as the extracted text itself
+ */
 public class TextStream {
     int first;
     int last;
