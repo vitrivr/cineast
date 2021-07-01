@@ -80,11 +80,6 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName, batchSize);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    throw new UnsupportedOperationException("Not supported by default");
-  }
-
   /**
    * Initializes the persistent layer with two fields: GENERIC_ID_COLUMN_QUALIFIER and FEATURE_COLUMN_QUALIFIER both using the Apache Solr storage handler.
    *
