@@ -17,17 +17,31 @@ public class TextDetector_EAST {
     static {
         nu.pattern.OpenCV.loadLocally();
     }
+    private static final float confThreshold = 0.5f;
+    private static final float nmsThreshold = 0.4f;
+    private static Net model;
+    private static List<String> outNames = new ArrayList<>();
 
-    float confThreshold;
-    float nmsThreshold;
-    Net model;
-    List<String> outNames;
+    private TextDetector_EAST () {
+        outNames.add("feature_fusion/Conv_7/Sigmoid");
+        outNames.add("feature_fusion/concat_3");
+        model = Dnn.readNetFromTensorflow("resources/TextSpotter/frozen_east_text_detection.pb");
+    }
+
+    private static final class InstanceHolder {
+        static final TextDetector_EAST INSTANCE = new TextDetector_EAST();
+    }
+
+    public static TextDetector_EAST getInstance() {
+        return InstanceHolder.INSTANCE;
+    }
 
     /**
      *
      * @param confidenceThreshold threshold that determines which detections are returned. Set low threshold if precision is not important
      * @param nonMaximumSuppressionThreshold threshold that determines the amount of overlap at which detections are fused
      */
+    /*
     public TextDetector_EAST(float confidenceThreshold, float nonMaximumSuppressionThreshold) {
         this.confThreshold = confidenceThreshold;
         this.nmsThreshold = nonMaximumSuppressionThreshold;
@@ -37,14 +51,18 @@ public class TextDetector_EAST {
 
     }
 
+     */
+
     /**
      * Sets default confidence and non-maximum suppression threshold values
      * Confidence threshold = 0.5f
      * Non-maximum suppression threshold = 0.4f
      */
-    public TextDetector_EAST() {
+    /*public TextDetector_EAST() {
         this(0.5f, 0.4f);
     }
+
+     */
 
     /**
      * initialize takes a path to the weights file and reads it
@@ -52,7 +70,7 @@ public class TextDetector_EAST {
      * @return returns its own instance
      */
     public TextDetector_EAST initialize(String modelPath) {
-       this.model = Dnn.readNetFromTensorflow(modelPath);
+       model = Dnn.readNetFromTensorflow(modelPath);
        return this;
     }
 
@@ -80,7 +98,7 @@ public class TextDetector_EAST {
 
             for (int x = 0; x < W; ++x) {
                 double score = scoresData.get(0, x)[0];
-                if (score >= this.confThreshold) {
+                if (score >= confThreshold) {
                     double offsetX = x * 4.0;
                     double offsetY = y * 4.0;
                     double angle = anglesData.get(0, x)[0];
@@ -94,7 +112,7 @@ public class TextDetector_EAST {
                     double w = x1 + x3;
                     Point offset = new Point(offsetX + cosA * x1 + sinA * x2, offsetY - sinA * x1 + cosA * x2);
                     Point p1 = new Point(-1 * sinA * h + offset.x, -1 * cosA * h + offset.y);
-                    Point p3 = new Point(-1 * cosA * w + offset.x,      sinA * w + offset.y); // original trouble here !
+                    Point p3 = new Point(-1 * cosA * w + offset.x,      sinA * w + offset.y);
                     RotatedRect r = new RotatedRect(new Point(0.5 * (p1.x + p3.x), 0.5 * (p1.y + p3.y)), new Size(w, h), -1 * angle * 180 / Math.PI);
                     boxes.add(r);
                     confidences.add((float) score);
@@ -115,10 +133,10 @@ public class TextDetector_EAST {
         Size size = new Size(frame.width() - (frame.width() % 32), frame.height() - (frame.height() % 32));
         int H = (int)(size.height / 4);
         Mat blob = Dnn.blobFromImage(frame, 1.0,size, new Scalar(123.68, 116.78, 103.94), true, false);
-        this.model.setInput(blob);
+        model.setInput(blob);
         List<Mat> outs = new ArrayList<>(2);
 
-        this.model.forward(outs, this.outNames);
+        model.forward(outs, outNames);
 
         Mat scores = outs.get(0).reshape(1, H);
         Mat geometry = outs.get(1).reshape(1, 5 * H);
@@ -130,7 +148,7 @@ public class TextDetector_EAST {
         RotatedRect[] boxesArray = decoded.second.toArray(new RotatedRect[0]);
         MatOfRotatedRect boxes = new MatOfRotatedRect(boxesArray);
         MatOfInt indices = new MatOfInt();
-        Dnn.NMSBoxesRotated(boxes, confidences, this.confThreshold, this.nmsThreshold, indices);
+        Dnn.NMSBoxesRotated(boxes, confidences, confThreshold, nmsThreshold, indices);
 
         Point ratio = new Point((float) frame.cols() / size.width, (float) frame.rows() / size.height);
         int[] indexes = indices.toArray();
