@@ -16,6 +16,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -29,6 +30,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   private static final int EMBEDDING_SIZE = 256;
   private static final String TABLE_NAME = "features_visualtextcoembedding";
+  private static final Distance DISTANCE = ReadableQueryConfig.Distance.euclidean;
 
   /**
    * Required dimensions of visual embedding model.
@@ -101,12 +103,22 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     String text = sc.getText();
 
+    // Ensure the correct distance function is used
     QueryConfig queryConfig = QueryConfig.clone(qc);
-    queryConfig.setDistance(ReadableQueryConfig.Distance.euclidean);
+    queryConfig.setDistance(DISTANCE);
 
     float[] embeddingArray = embedText(text);
 
     return getSimilar(embeddingArray, queryConfig);
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+    // Ensure the correct distance function is used
+    QueryConfig queryConfig = QueryConfig.clone(qc);
+    queryConfig.setDistance(DISTANCE);
+
+    return super.getSimilar(segmentId, queryConfig);
   }
 
   private void initializeTextEmbedding() {
