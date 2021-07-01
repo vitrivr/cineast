@@ -199,7 +199,7 @@ public class OCRSearch extends AbstractTextRetriever {
    * @param id id of the shot (the {@link SegmentContainer}) to be processed
    * @param recognition The scene text that should be safed
    */
-  private void safeText(String id,String recognition) {
+  private void saveText(String id,String recognition) {
     if (recognition.equals("")) {
       return;
     }
@@ -263,9 +263,11 @@ public class OCRSearch extends AbstractTextRetriever {
     if (lenVideo == 1) {
       Mat frame = img2Mat(shot.getVideoFrames().get(0).getImage().getBufferedImage());
       Point[][] coordinates = detector.detect(frame);
+      StringBuilder sb = new StringBuilder();
       for (Point[] coordinate : coordinates) {
-        safeText(shot.getId(), recognizer.recognize(coordinate, frame, true));
+        sb.append(recognizer.recognize(coordinate, frame, true)).append('\n');
       }
+      saveText(shot.getId(), sb.toString());
       return;
     }
 
@@ -497,7 +499,9 @@ public class OCRSearch extends AbstractTextRetriever {
     for (TextStream stream : shouldRemove) {
       streams.remove(stream);
     }
-    streams.forEach(s->safeText(shot.getId(), s.getText()));
+    StringBuilder sb = new StringBuilder();
+    streams.forEach(s -> sb.append(s.getText()).append('\n'));
+    saveText(shot.getId(), sb.toString());
   }
 
   @Override
