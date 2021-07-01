@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -100,14 +99,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
             LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
             return new ArrayList<>(0);
         }
-        if (list.size() == 1) {
-            return getSimilar(list.get(0), qc);
-        }
-
-        List<float[]> vectors = list.stream().map(FloatArrayProvider::getFloatArray).collect(Collectors.toList());
-        List<SegmentDistanceElement> distances = this.selector.getBatchedNearestNeighbours(qc.getResultsPerModule(), vectors, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, vectors.stream().map(x -> setQueryConfig(qc)).collect(Collectors.toList()));
-        CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(correspondence);
-        return ScoreElement.filterMaximumScores(DistanceElement.toScore(distances, function).stream());
+        return getSimilarHelper(list, qc);
     }
 
     public List<ScoreElement> getSimilar(List<String> segmentIds, ReadableQueryConfig qc) {
@@ -117,6 +109,10 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
             LOGGER.warn("No feature vectors for segmentIds {} found, returning empty result-list", segmentIds);
             return new ArrayList<>(0);
         }
+        return getSimilarHelper(list, qc);
+    }
+
+    protected List<ScoreElement> getSimilarHelper(List<PrimitiveTypeProvider> list, ReadableQueryConfig qc) {
         if (list.size() == 1) {
             return getSimilar(list.get(0), qc);
         }
