@@ -3,6 +3,9 @@ package org.vitrivr.cineast.api.rest.handlers.actions.mediaobject;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -10,14 +13,10 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-
 public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList, MediaObjectQueryResult> {
-  
+
   public static final String ROUTE = "find/object/by/id";
-  
+
   @Override
   public MediaObjectQueryResult performPost(IdList context, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
@@ -29,22 +28,22 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
     ol.close();
     return new MediaObjectQueryResult("", new ArrayList<>(objects.values()));
   }
-  
+
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
   }
-  
+
   @Override
   public Class<MediaObjectQueryResult> outClass() {
     return MediaObjectQueryResult.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

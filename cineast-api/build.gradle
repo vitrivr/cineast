@@ -18,6 +18,71 @@ distributions {
     }
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.vitrivr'
+            artifactId = 'cineast-api'
+            version = System.getenv().getOrDefault("MAVEN_PUBLICATION_VERSION", version.toString())
+            pom {
+                name = 'Cineast API'
+                description = 'The Cineast API web API.'
+                url = 'https://github.com/vitrivr/cineast/'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'lucaro'
+                        name = 'Luca Rossetto'
+                        email = 'rossetto@ifi.uzh.ch'
+                    }
+                    developer {
+                        id = 'silvanheller'
+                        name = 'Silvan Heller'
+                        email = 'silvan.heller@unibas.ch'
+                    }
+                    developer {
+                        id = 'sauterl'
+                        name = 'Loris Sauter'
+                        email = 'loris.sauter@unibas.ch'
+                    }
+                    developer {
+                        id = 'ppanopticon'
+                        name = 'Ralph Gasser'
+                        email = 'ralph.gasser@unibas.ch'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/vitrivr/cineast.git'
+                    url = 'https://github.com/vitrivr/cineast/'
+                }
+            }
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            name = "OSSRH"
+            url = (publishing.publications.mavenJava.version.endsWith('SNAPSHOT')) ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+}
 
 configurations.all {
     // Check for updates every build
@@ -37,12 +102,13 @@ shadowJar {
 }
 
 dependencies {
-    compile('io.javalin:javalin-bundle:3.13.3'){
+    implementation project(':cineast-runtime')
+    implementation("io.javalin:javalin-bundle:$version_javalin"){
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.0'
-    compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.+'
-    compile 'org.vitrivr:cineast-proto:0.1.0'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson
+    implementation group: 'de.svenkubiak', name: 'jBCrypt', version: version_jbcrypt
+    implementation group: 'org.vitrivr', name: 'cineast-proto', version: version_cineast_proto
 }
 
 

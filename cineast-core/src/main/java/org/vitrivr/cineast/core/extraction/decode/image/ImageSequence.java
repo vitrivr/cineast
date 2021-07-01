@@ -89,7 +89,7 @@ public final class ImageSequence {
             } catch (IOException | IllegalArgumentException e) {
                 LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", path.toString());
             }
-            return new Pair<>(path, null);
+            return new Pair<>(path, Optional.empty());
         });
     }
 

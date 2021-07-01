@@ -1,0 +1,1629 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Cineast RESTful API",
+    "description" : "Cineast is vitrivr's content-based multimedia retrieval engine. This is it's RESTful API.",
+    "contact" : {
+      "name" : "Cineast Team",
+      "url" : "https://vitrivr.org",
+      "email" : "contact@vitrivr.org"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "v1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:4567/",
+    "description" : "Cineast API Address"
+  } ],
+  "tags" : [ {
+    "name" : "/api/v1",
+    "description" : "Cineast Default"
+  }, {
+    "name" : "Metadata",
+    "description" : "Metadata related operations"
+  } ],
+  "paths" : {
+    "/api/v1/find/metadata/of/{id}/in/{domain}/with/{key}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for specific object id in given domain with given key",
+        "description" : "The description",
+        "operationId" : "findMetaFullyQualified",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The object id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "domain",
+          "in" : "path",
+          "description" : "The domain name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for the given object id",
+        "description" : "Find metadata by the given object id",
+        "operationId" : "findMetaById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The object id to find metadata of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/by/id" : {
+      "post" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Finds metadata for the given list of object ids",
+        "description" : "Finds metadata for the given list of object ids",
+        "operationId" : "findMetadataForObjectIdBatched",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptionallyFilteredIdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/in/{domain}/by/id/{domain}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for specific object id in given domain",
+        "description" : "Find metadata for specific object id in given domain",
+        "operationId" : "findMetadataByDomain",
+        "parameters" : [ {
+          "name" : "domain",
+          "in" : "path",
+          "description" : "The domain of the metadata to find",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The object id of the multimedia object to find metadata for",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/in/{domain}" : {
+      "post" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata in the specified domain for all the given ids",
+        "description" : "Find metadata in the specified domain for all the given ids",
+        "operationId" : "findMetadataByDomainBatched",
+        "parameters" : [ {
+          "name" : "domain",
+          "in" : "path",
+          "description" : "The domain of the metadata to find",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/with/{key}/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for a given object id with specified key",
+        "description" : "Find metadata for a given object id with specified key",
+        "operationId" : "findMetadataByKey",
+        "parameters" : [ {
+          "name" : "key",
+          "in" : "path",
+          "description" : "The key of the metadata to find",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The object id of for which the metadata should be find",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/with/{key}" : {
+      "post" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for a given object id with specified key",
+        "description" : "Find metadata with a the speicifed key from the path across all domains and for the provided ids",
+        "operationId" : "findMetadataByKeyBatched",
+        "parameters" : [ {
+          "name" : "key",
+          "in" : "path",
+          "description" : "The key of the metadata to find",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/by/segmentid/{id}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find metadata for the given segment id",
+        "description" : "Find metadata by the given segment id",
+        "operationId" : "findSegMetaById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The segment id to find metadata of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaSegmentMetadataQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/objects/all" : {
+      "get" : {
+        "tags" : [ "Object" ],
+        "summary" : "Find all objects for a certain type",
+        "description" : "Find all objects for a certain type",
+        "operationId" : "findObjectsAll",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/by/id" : {
+      "post" : {
+        "tags" : [ "Object" ],
+        "summary" : "Find objects by id",
+        "description" : "Find objects by id",
+        "operationId" : "findObjectsByIdBatched",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/by/{attribute}/{value}" : {
+      "get" : {
+        "tags" : [ "Object" ],
+        "summary" : "Find object by specified attribute value. I.e by id, name or path",
+        "description" : "Find object by specified attribute value. I.e by id, name or path",
+        "operationId" : "findObjectsByAttribute",
+        "parameters" : [ {
+          "name" : "attribute",
+          "in" : "path",
+          "description" : "The attribute type of the value. One of: id, name, path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "value",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/by/id" : {
+      "post" : {
+        "tags" : [ "Segment" ],
+        "summary" : "Finds segments for specified ids",
+        "description" : "Finds segments for specified ids",
+        "operationId" : "findSegmentByIdBatched",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaSegmentQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "Segment" ],
+        "summary" : "Finds segments for specified id",
+        "description" : "Finds segments for specified id",
+        "operationId" : "findSegmentById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id of the segments",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaSegmentQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/all/object/{id}" : {
+      "get" : {
+        "tags" : [ "Segment" ],
+        "summary" : "Find segments by their media object's id",
+        "description" : "Find segments by their media object's id",
+        "operationId" : "findSegmentByObjectId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id of the media object to find segments fo",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaSegmentQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/similar" : {
+      "post" : {
+        "tags" : [ "Segments" ],
+        "summary" : "Find similar segments based on the given query",
+        "description" : "Performs a similarity search based on the formulated query",
+        "operationId" : "findSegmentSimilar",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimilarityQuery"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimilarityQueryResultBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/feature/all/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find features for the given id",
+        "description" : "Find features by the given id",
+        "operationId" : "findSegFeatById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id to find features of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeaturesAllCategoriesQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/feature/text/by/{id}/{category}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find Text for the given id and retrieval category",
+        "description" : "Find Text by the given id and retrieval category",
+        "operationId" : "findTextByIDAndCat",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id to find text of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "category",
+          "in" : "path",
+          "description" : "The category for which retrieval shall be performed",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeaturesTextCategoryQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/tags/all" : {
+      "get" : {
+        "tags" : [ "Tag" ],
+        "summary" : "Find all tags",
+        "operationId" : "findAllTags",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tags/by/id" : {
+      "post" : {
+        "tags" : [ "Tag" ],
+        "summary" : "Find all tags by ids",
+        "operationId" : "findTagsById",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/feature/tags/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find tag ids for the given id",
+        "description" : "Find tag ids for the given id",
+        "operationId" : "findTagsById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id to find tagids of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagIDsForElementQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/tags/by/{attribute}/{value}" : {
+      "get" : {
+        "tags" : [ "Tag" ],
+        "summary" : "Find all tags specified by attribute value",
+        "description" : "Find all tags by attributes id, name or matchingname and filter value",
+        "operationId" : "findTagsBy",
+        "parameters" : [ {
+          "name" : "attribute",
+          "in" : "path",
+          "description" : "The attribute to filter on. One of: id, name, matchingname",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "value",
+          "in" : "path",
+          "description" : "The value of the attribute to filter",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/start" : {
+      "post" : {
+        "tags" : [ "Session" ],
+        "summary" : "Start new session for given credentials",
+        "operationId" : "startSession",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StartSessionMessage"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/extract/start" : {
+      "post" : {
+        "tags" : [ "Session" ],
+        "summary" : "Start extraction session",
+        "description" : "Changes the session's state to extraction",
+        "operationId" : "startExtraction",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : true
+      }
+    },
+    "/api/v1/session/extract/new" : {
+      "post" : {
+        "tags" : [ "Session" ],
+        "summary" : "Extract new item",
+        "description" : "TODO",
+        "operationId" : "extractItem",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExtractionContainerMessage"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/validate/{id}" : {
+      "get" : {
+        "tags" : [ "Session" ],
+        "summary" : "Validates the session with given id",
+        "operationId" : "validateSession",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id to validate the session of",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/extract/end" : {
+      "post" : {
+        "tags" : [ "Session" ],
+        "summary" : "End the active extraction session",
+        "description" : "CAUTION. Untested",
+        "operationId" : "endExtraction",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : true
+      }
+    },
+    "/api/v1/session/end/{id}" : {
+      "get" : {
+        "tags" : [ "Session" ],
+        "summary" : "End the session for given id",
+        "description" : "Ends the session for the given id",
+        "operationId" : "endSession",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The id of the session to end",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/boolean/column/distinct" : {
+      "post" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Find all distinct elements of a given column",
+        "description" : "Find all distinct elements of a given column. Please note that this operation does cache results.",
+        "operationId" : "FindDistinctElementsByColumn",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ColumnSpecification"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DistinctElementsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/boolean/table/select" : {
+      "post" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Find all elements of given columns",
+        "description" : "Find all elements of given columns",
+        "operationId" : "SelectFromTable",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SelectSpecification"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SelectResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/status" : {
+      "get" : {
+        "tags" : [ "Status" ],
+        "summary" : "Get the status of the server",
+        "operationId" : "status",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Ping"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/thumbnails/{id}" : {
+      "get" : {
+        "summary" : "Get thumbnails with id",
+        "operationId" : "getThumbnailsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
+          }
+        }
+      }
+    },
+    "/objects/{id}" : {
+      "get" : {
+        "summary" : "Get objects with id",
+        "operationId" : "getObjectsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "MediaObjectMetadataDescriptor" : {
+        "type" : "object",
+        "properties" : {
+          "objectId" : {
+            "type" : "string"
+          },
+          "domain" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "exists" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          }
+        }
+      },
+      "MediaObjectMetadataQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MediaObjectMetadataDescriptor"
+            }
+          },
+          "queryId" : {
+            "type" : "string"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "AbstractMetadataFilterDescriptor" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "keywords" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "type"
+        }
+      },
+      "MetadataDomainFilter" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AbstractMetadataFilterDescriptor"
+        } ]
+      },
+      "MetadataKeyFilter" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AbstractMetadataFilterDescriptor"
+        } ]
+      },
+      "OptionallyFilteredIdList" : {
+        "type" : "object",
+        "properties" : {
+          "filters" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AbstractMetadataFilterDescriptor"
+            }
+          },
+          "ids" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          },
+          "idList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "IdList" : {
+        "type" : "object",
+        "properties" : {
+          "ids" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "MediaSegmentMetadataDescriptor" : {
+        "type" : "object",
+        "properties" : {
+          "segmentId" : {
+            "type" : "string"
+          },
+          "domain" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "exists" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          }
+        }
+      },
+      "MediaSegmentMetadataQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MediaSegmentMetadataDescriptor"
+            }
+          },
+          "queryId" : {
+            "type" : "string"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "MediaObjectDescriptor" : {
+        "type" : "object",
+        "properties" : {
+          "objectId" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "path" : {
+            "type" : "string"
+          },
+          "mediatype" : {
+            "type" : "string",
+            "enum" : [ "VIDEO", "IMAGE", "AUDIO", "MODEL3D", "IMAGE_SEQUENCE", "UNKNOWN" ]
+          },
+          "exists" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          },
+          "contentURL" : {
+            "type" : "string"
+          }
+        }
+      },
+      "MediaObjectQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MediaObjectDescriptor"
+            }
+          },
+          "queryId" : {
+            "type" : "string"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "MediaSegmentDescriptor" : {
+        "type" : "object",
+        "properties" : {
+          "segmentId" : {
+            "type" : "string"
+          },
+          "objectId" : {
+            "type" : "string"
+          },
+          "start" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "end" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "startabs" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "endabs" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "sequenceNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "count" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "MediaSegmentQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MediaSegmentDescriptor"
+            }
+          },
+          "queryId" : {
+            "type" : "string"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "CorrespondenceFunction" : {
+        "type" : "object"
+      },
+      "QueryComponent" : {
+        "type" : "object",
+        "properties" : {
+          "terms" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/QueryTerm"
+            }
+          },
+          "containerId" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "QueryConfig" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "hints" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "exact", "inexact", "lsh", "ecp", "mi", "pq", "sh", "va", "vaf", "vav", "sequential", "empirical" ]
+            }
+          },
+          "distance" : {
+            "type" : "string",
+            "enum" : [ "chisquared", "correlation", "cosine", "hamming", "jaccard", "kullbackleibler", "chebyshev", "euclidean", "squaredeuclidean", "manhattan", "minkowski", "spannorm", "haversine" ]
+          },
+          "distanceWeights" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "float"
+            }
+          },
+          "norm" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "resultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxResults" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "relevantSegmentIds" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "rawResultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "QueryTerm" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
+          },
+          "data" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "categories" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "SimilarityQuery" : {
+        "type" : "object",
+        "properties" : {
+          "containers" : {
+            "type" : "array",
+            "writeOnly" : true,
+            "items" : {
+              "$ref" : "#/components/schemas/QueryComponent"
+            }
+          },
+          "config" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "components" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/QueryComponent"
+            }
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "SimilarityQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/StringDoublePair"
+            }
+          },
+          "queryId" : {
+            "type" : "string"
+          },
+          "category" : {
+            "type" : "string"
+          },
+          "containerId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "SimilarityQueryResultBatch" : {
+        "type" : "object",
+        "properties" : {
+          "categories" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SimilarityQueryResult"
+            }
+          }
+        }
+      },
+      "StringDoublePair" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "FeaturesAllCategoriesQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "featureMap" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object"
+              }
+            }
+          },
+          "elementID" : {
+            "type" : "string"
+          }
+        }
+      },
+      "FeaturesTextCategoryQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "featureValues" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "category" : {
+            "type" : "string"
+          },
+          "elementID" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Tag" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string",
+            "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
+          },
+          "id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "TagsQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Tag"
+            }
+          }
+        }
+      },
+      "TagIDsForElementQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "tagIDs" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "elementID" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Credentials" : {
+        "type" : "object",
+        "properties" : {
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      },
+      "StartSessionMessage" : {
+        "type" : "object",
+        "properties" : {
+          "credentials" : {
+            "$ref" : "#/components/schemas/Credentials"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "SessionState" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "validUntil" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "UNAUTHENTICATED", "USER", "ADMIN" ]
+          },
+          "sessionId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ExtractionContainerMessage" : {
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ExtractionItemContainer"
+            }
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "ExtractionItemContainer" : {
+        "type" : "object",
+        "properties" : {
+          "object" : {
+            "$ref" : "#/components/schemas/MediaObjectDescriptor"
+          },
+          "metadata" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MediaObjectMetadataDescriptor"
+            }
+          },
+          "uri" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ColumnSpecification" : {
+        "type" : "object",
+        "properties" : {
+          "column" : {
+            "type" : "string"
+          },
+          "table" : {
+            "type" : "string"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      },
+      "DistinctElementsResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "distinctElements" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "SelectSpecification" : {
+        "type" : "object",
+        "properties" : {
+          "table" : {
+            "type" : "string"
+          },
+          "columns" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "limit" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "SelectResult" : {
+        "type" : "object",
+        "properties" : {
+          "columns" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "Ping" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "UNKNOWN", "OK", "ERROR" ]
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+          }
+        }
+      }
+    }
+  }
+}
