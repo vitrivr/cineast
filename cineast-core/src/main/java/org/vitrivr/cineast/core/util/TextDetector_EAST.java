@@ -10,6 +10,9 @@ import org.vitrivr.cineast.core.data.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TextDetector_EAST is able to detect scene text contained within an image
+ */
 public class TextDetector_EAST {
     static {
         nu.pattern.OpenCV.loadLocally();

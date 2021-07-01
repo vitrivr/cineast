@@ -9,6 +9,11 @@ import org.vitrivr.cineast.core.data.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MultiTracker allows for multiple objects to be tracked across frames
+ * Initialize the MultiTracker with the initial frame and coordinates of the objects to be tracked
+ * Call update(GrayU8 frame) with the new frame to obtain the coordinates of the objects in the new frame
+ */
 public class MultiTracker {
     public enum TRACKER_TYPE {CIRCULANT, TLD};
     List<TrackerObjectQuad> trackers;

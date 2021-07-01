@@ -11,8 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Is able to take a frame with coordinates, and return the scene text within it
- * It applies generic CTC decoding and can thus be used for any CTC-based text recognizer (only the weights file has to be changed)
+ * TextRecognizer is able to take a frame with coordinates, and return the scene text within it
+ * It applies generic CTC decoding and can thus be used for any CTC-based text recognizer (e.g. CRNN)
+ * The latin alphabet is used. Changes in the alphabet should only be done if the recognition module has been trained with it accordingly
  */
 public class TextRecognizer {
     static {
