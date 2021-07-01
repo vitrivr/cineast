@@ -256,7 +256,7 @@ public class OCRSearch extends AbstractTextRetriever {
    */
   @Override
   public void processSegment(SegmentContainer shot) {
-    TextDetector_EAST detector = new TextDetector_EAST().initialize();
+    TextDetector_EAST detector = TextDetector_EAST.getInstance();
     TextRecognizer recognizer = new TextRecognizer().initialize();
 
     int lenVideo = shot.getVideoFrames().size();
@@ -379,6 +379,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
     List<TextStream> shouldRemove = new ArrayList<>();
 
+    // Recognize text within each stream
     for (TextStream stream : streams) {
       HashMap<Integer, Quadrilateral_F64> filtered = stream.getFilteredCoordinates();
       Iterator<Integer> frameIterator = filtered.keySet().iterator();
@@ -410,7 +411,7 @@ public class OCRSearch extends AbstractTextRetriever {
       } else if (prunedRecognitions.size() == 2) {
         stream.setText(new NeedlemanWunschMerge(prunedRecognitions.get(0), prunedRecognitions.get(1)).execute());
       } else {
-        shouldRemove.add(stream);
+        shouldRemove.add(stream); // Streams who cannot agree on at most two recognitions are considered unstable and removed
       }
     }
 
