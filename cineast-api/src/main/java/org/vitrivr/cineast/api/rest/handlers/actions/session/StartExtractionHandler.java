@@ -9,20 +9,17 @@ import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.PostRestHandler;
 
-/**
- * @author silvan on 23.01.18.
- */
 public class StartExtractionHandler implements PostRestHandler<SessionState> {
-  
+
   // FIXME this needs cleanup / rework
-  
+
   public static final String ROUTE = "session/extract/start";
   private static final Logger LOGGER = LogManager.getLogger();
-  
+
   @Override
   public SessionState doPost(Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
-    
+
     if (SessionExtractionContainer.keepAliveCheckIfClosed()) {
       LOGGER.info("Session is closed, restarting");
       SessionExtractionContainer.restartExceptCounter();
@@ -31,17 +28,17 @@ public class StartExtractionHandler implements PostRestHandler<SessionState> {
     LOGGER.debug("Session already open, only sent keepAlive message");
     return state;
   }
-  
+
   @Override
   public Class<SessionState> outClass() {
     return SessionState.class;
   }
-  
+
   @Override
   public String route() {
     return ROUTE;
   }
-  
+
   @Override
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()

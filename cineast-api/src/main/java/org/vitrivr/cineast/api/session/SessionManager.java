@@ -12,7 +12,7 @@ public class SessionManager {
 
   public static Session newSession(int lifetime, SessionType type) {
     Session s;
-    if(type == null){
+    if (type == null) {
       throw new NullPointerException("session type cannot be null");
     }
     synchronized (sessions) {
@@ -23,14 +23,14 @@ public class SessionManager {
     }
     return s;
   }
-  
-  public static void endSession(String sessionId){
+
+  public static void endSession(String sessionId) {
     synchronized (sessions) {
-     sessions.remove(sessionId); 
+      sessions.remove(sessionId);
     }
   }
-  
-  public static Session get(String sessionId){
+
+  public static Session get(String sessionId) {
     synchronized (sessions) {
       return sessions.get(sessionId);
     }

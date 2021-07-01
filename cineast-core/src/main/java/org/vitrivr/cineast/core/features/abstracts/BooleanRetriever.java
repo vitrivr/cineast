@@ -23,6 +23,10 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * BooleanRetrievers operate on tables which are created externally.
+ * Therefore, both initializing and dropping the entity are managed externally.
+ */
 public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
   private static final Logger LOGGER = LogManager.getLogger();

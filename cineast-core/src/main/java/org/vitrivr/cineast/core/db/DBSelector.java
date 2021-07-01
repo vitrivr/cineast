@@ -35,12 +35,12 @@ public interface DBSelector {
   /**
    * * Finds the {@code k}-nearest neighbours of the given {@code queryProvider} in {@code column} using the provided distance function in {@code config}. {@code ScoreElementClass} defines the specific type of {@link DistanceElement} to be created internally and returned by this method.
    *
-   * @param k maximum number of results
-   * @param queryProvider query vector
-   * @param column feature column to do the search
+   * @param k                    maximum number of results
+   * @param queryProvider        query vector
+   * @param column               feature column to do the search
    * @param distanceElementClass class of the {@link DistanceElement} type
-   * @param config query config
-   * @param <E> type of the {@link DistanceElement}
+   * @param config               query config
+   * @param <E>                  type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
   default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
@@ -60,12 +60,12 @@ public interface DBSelector {
   /**
    * Performs a batched kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector in the provided list and returns the union of the results for every query.
    *
-   * @param k The number k vectors to return per query.
-   * @param vectors The list of vectors to use.
-   * @param column The column to perform the kNN search on.
+   * @param k                    The number k vectors to return per query.
+   * @param vectors              The list of vectors to use.
+   * @param column               The column to perform the kNN search on.
    * @param distanceElementClass class of the {@link DistanceElement} type
-   * @param configs The query configuration, which may contain distance definitions or query-hints.
-   * @param <T> The type T of the resulting <T> type of the {@link DistanceElement}.
+   * @param configs              The query configuration, which may contain distance definitions or query-hints.
+   * @param <T>                  The type T of the resulting <T> type of the {@link DistanceElement}.
    * @return List of results.
    */
   <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors,
@@ -111,9 +111,9 @@ public interface DBSelector {
   /**
    * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to lookup for entries in the provided fields that match the provided query terms.
    *
-   * @param rows The number of rows that should be returned.
+   * @param rows      The number of rows that should be returned.
    * @param fieldname The field that should be used for lookup.
-   * @param terms The query terms. Individual terms will be connected by a logical OR.
+   * @param terms     The query terms. Individual terms will be connected by a logical OR.
    * @return List of rows that math the fulltext search.
    */
   List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
@@ -129,12 +129,12 @@ public interface DBSelector {
 
   /**
    * Performs a boolean lookup on a specified field  and retrieves the rows that match the specified condition.
-   *
+   * <p>
    * i.e. SELECT * from WHERE A <Operator> B
    *
    * @param fieldName The name of the database field .
-   * @param operator The {@link RelationalOperator} that should be used for comparison.
-   * @param values The values the field should be compared to.
+   * @param operator  The {@link RelationalOperator} that should be used for comparison.
+   * @param values    The values the field should be compared to.
    * @return List of rows (one row is represented by one Map of the field ames and the data contained in the field).
    */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
@@ -142,7 +142,8 @@ public interface DBSelector {
 
   /**
    * Performs a boolean lookup based on multiple conditions, linked with AND. Each element of the list specifies one of the conditions - left middle right, i.e. id IN (1, 5, 7)
-   *  @param conditions conditions which will be linked by AND
+   *
+   * @param conditions conditions which will be linked by AND
    * @param identifier column upon which the retain operation will be performed if the database layer does not support compound boolean retrieval.
    * @param projection Which columns shall be selected
    * @param qc
@@ -193,6 +194,27 @@ public interface DBSelector {
    * SELECT column from the table. Be careful with large entities
    */
   List<PrimitiveTypeProvider> getAll(String column);
+
+  /**
+   * SELECT columns from the table. Be careful with large entities
+   *
+   * @param limit if <= 0, parameter is ignored
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
+    List<Map<String, PrimitiveTypeProvider>> collect = getAll().stream().map(el -> {
+      Map<String, PrimitiveTypeProvider> m = new HashMap<>();
+      el.forEach((k, v) -> {
+        if (columns.contains(k)) {
+          m.put(k, v);
+        }
+      });
+      return m;
+    }).collect(Collectors.toList());
+    if (limit > 0) {
+      return collect.subList(0, limit);
+    }
+    return collect;
+  }
 
   /**
    * Get all rows from all tables

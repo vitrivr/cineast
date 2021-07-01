@@ -62,9 +62,9 @@ public class ReflectionHelper {
 			}
 
 			if (properties == null || properties.isEmpty()) {
-				return instanciate(c);
+				return instantiate(c);
 			} else {
-				return instanciate(c, new Class[]{Map.class}, properties);
+				return instantiate(c, new Class[]{Map.class}, properties);
 			}
 		} catch (ClassNotFoundException | InstantiationException  e) {
 			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
@@ -91,7 +91,7 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, CodebookGenerator.class, CODEBOOK_GENERATOR_PACKAGE);
 			}
-			return instanciate(c);
+			return instantiate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -114,7 +114,7 @@ public class ReflectionHelper {
 		  }
 			@SuppressWarnings("unchecked")
       Class<Converter> cc = (Class<Converter>) c;
-			return instanciate(cc);
+			return instantiate(cc);
 		} catch (ClassNotFoundException e) {
 			LOGGER.fatal("Failed to create Converter. Could not find or access class with name {} ({}).", fqn, LogHelper.getStackTrace(e));
 			return null;
@@ -140,7 +140,7 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, Extractor.class, FEATURE_MODULE_PACKAGE);
 			}
-			return instanciate(c);
+			return instantiate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create Exporter. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -168,9 +168,9 @@ public class ReflectionHelper {
 			}
 
 			if (configuration == null || configuration.isEmpty()) {
-				return instanciate(c);
+				return instantiate(c);
 			} else {
-				return instanciate(c, configuration);
+				return instantiate(c, configuration);
 			}
 		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
@@ -196,7 +196,7 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, Decoder.class, DECODER_PACKAGE+"."+type.getName());
 			}
-			return instanciate(c);
+			return instantiate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create Decoder. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -223,7 +223,7 @@ public class ReflectionHelper {
 				c = getClassFromName(name, MetadataExtractor.class, METADATA_PACKAGE);
 			}
 
-			return instanciate(c);
+			return instantiate(c);
 		} catch (ClassNotFoundException | InstantiationException | ClassCastException e) {
 			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -247,16 +247,16 @@ public class ReflectionHelper {
 		try {
 			 c = (Class<Segmenter<T>>) Class.forName(name);
 			if (configuration == null) {
-				return instanciate(c, new Class[]{ExtractionContextProvider.class}, provider);
+				return instantiate(c, new Class[]{ExtractionContextProvider.class}, provider);
 			} else {
-				return instanciate(c, new Class[]{ExtractionContextProvider.class, Map.class}, provider, configuration);
+				return instantiate(c, new Class[]{ExtractionContextProvider.class, Map.class}, provider, configuration);
 			}
 		} catch (ClassNotFoundException | ClassCastException e) {
 			LOGGER.fatal("Failed to create Segmenter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
-	
+
 	private static Class<?>[] getClassArray(Object... args) {
 		Class<?>[] cls = new Class<?>[args.length];
 		int i = 0;
@@ -274,8 +274,8 @@ public class ReflectionHelper {
 	 * @param <T>
 	 * @return Instance of the class or null, if instantiation failed.
 	 */
-	public static <T> T instanciate(Class<? extends T> cl, Object... args) {
-		return instanciate(cl, getClassArray(args), args);
+	public static <T> T instantiate(Class<? extends T> cl, Object... args) {
+		return instantiate(cl, getClassArray(args), args);
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class ReflectionHelper {
 	 * @param <T>
 	 * @return Instance of the class or null, if instantiation failed.
 	 */
-	public static <T> T instanciate(Class<? extends T> cl, Class[] types, Object... args) {
+	public static <T> T instantiate(Class<? extends T> cl, Class[] types, Object... args) {
 		try {
 			Constructor<? extends T> con = cl.getConstructor(types);
 			return con.newInstance(args);
@@ -298,7 +298,7 @@ public class ReflectionHelper {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> getClassFromName(String className, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, ClassNotFoundException, InstantiationException {
 	  	Class<T> targetClass = null;

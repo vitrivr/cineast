@@ -24,6 +24,33 @@ import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionTuple;
 
+/**
+ * Import code for the google vision export of the V3C1 Dataset.
+ *
+ * Format is as follows:
+ * [ // whole dataset
+ *  { // video
+ *    "segmentid": {
+ *      "web": [ //list of concepts
+ *        "id": "/m/...",
+ *        "decription" (not a typo): "Human-readable description, capitalized"
+ *        "score:" score (can be above 1)
+ *      ],
+ *      "ocr": [
+ *        "id": "",
+ *        "decription": "text",
+ *        "score": 0.0
+ *      ],
+ *      "labels": [
+ *        "id": "/m/...",
+ *        "decription": "human-readable description, non-capitalized"
+ *        "score": score between 0 and 1
+ *      ]
+ *    },
+ *    // list of segments
+ *  },
+ *  // list of videos
+ */
 public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
     private JsonParser parser;

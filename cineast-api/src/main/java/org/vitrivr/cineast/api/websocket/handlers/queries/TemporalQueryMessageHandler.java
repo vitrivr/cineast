@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
@@ -23,6 +24,9 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
+/**
+ * This class extends the {@link AbstractQueryMessageHandler} abstract class and handles messages of type {@link TemporalQuery}.
+ */
 public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<TemporalQuery> {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -33,6 +37,15 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     this.continuousRetrievalLogic = retrievalLogic;
   }
 
+  /**
+   * Executes a {@link TemporalQuery}. Performs the staged similarity queries in temporal order based on the {@link QueryStage} objects provided in the {@link TemporalQuery}.
+   *
+   * @param session                             WebSocket session the invocation is associated with.
+   * @param qconf                               The {@link QueryConfig} that contains additional specifications.
+   * @param message                             Instance of {@link TemporalQuery}
+   * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which metadata is fetched
+   * @param objectIdsForWhichMetadataIsFetched  Object IDs for which metadata is fetched
+   */
   @Override
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     StopWatch watch = StopWatch.createStarted();
@@ -40,11 +53,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
-    qconf.setMaxResults(max);
-    final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
-    qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
 
     /* We iterate over all components independently, because they have a temporal context.*/
     for (int containerIdx = 0; containerIdx < message.queries.size(); containerIdx++) {
@@ -60,11 +71,11 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       List<Map<String, List<StringDoublePair>>> cache = new ArrayList<>();
 
       /* For the terms of a stage, ordering matters. The assumption is that each term is used as a filter for its successor */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size(); stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size(); stageIndex++) {
         /* Initalize stage with this hashmap */
         cache.add(stageIndex, new HashMap<>());
 
-        QueryStage stage = stagedSimilarityQuery.stages.get(stageIndex);
+        QueryStage stage = stagedSimilarityQuery.getStages().get(stageIndex);
 
         List<Thread> qtThreads = new ArrayList<>();
 
@@ -119,11 +130,11 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               /* If this is the last stage, we can send relevant results per category back to the UI.
                * Otherwise, we cannot since we might send results to the UI which would be filtered at a later stage
                */
-              if (finalStageIndex == stagedSimilarityQuery.stages.size() - 1) {
+              if (finalStageIndex == stagedSimilarityQuery.getStages().size() - 1) {
                 /* Finalize and submit per-container results */
                 List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
                 List<String> objectIds = this.submitSegmentAndObjectInformation(session, uuid, segmentIds);
-                this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results);
+                futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), results));
                 List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
                 metadataRetrievalThreads.addAll(_threads);
               }
@@ -152,12 +163,15 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
       List<Thread> cleanupThreads = new ArrayList<>();
       /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
-      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages.size() - 1; stageIndex++) {
+      for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size() - 1; stageIndex++) {
         int finalContainerIdx = containerIdx;
         int finalStageIndex = stageIndex;
         cache.get(stageIndex).forEach((category, results) -> {
           results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
-          Thread thread = new Thread(() -> this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results));
+          Thread thread = new Thread(() -> {
+            List<CompletableFuture<Void>> finalizingFutures = this.finalizeAndSubmitResults(session, uuid, category, finalContainerIdx, results);
+            finalizingFutures.forEach(CompletableFuture::join);
+          });
           thread.setName("finalization-stage" + finalStageIndex + "-" + category);
           thread.start();
           cleanupThreads.add(thread);
@@ -173,6 +187,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
     }
+    futures.forEach(CompletableFuture::join);
+
     /* At this point, all StagedQueries have been executed for this TemporalQuery.
      * Since results have always been sent for the final stage or, when appropriate, in intermediate steps, there's nothing left to do.
      */

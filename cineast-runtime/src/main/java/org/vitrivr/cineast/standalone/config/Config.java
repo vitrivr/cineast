@@ -65,7 +65,7 @@ public class Config {
   }
 
 
-  @JsonProperty
+    @JsonProperty
     public APIConfig getApi() {
         return api;
     }

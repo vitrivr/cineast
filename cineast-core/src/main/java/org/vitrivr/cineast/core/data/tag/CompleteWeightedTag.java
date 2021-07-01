@@ -9,6 +9,9 @@ public class CompleteWeightedTag implements WeightedTag {
   private final String id, name, description;
   private final float weight;
 
+  /** only used in querying */
+  private TagPriority priority;
+
   public CompleteWeightedTag(String id, String name, String description, float weight) {
     this.id = id;
     this.name = name;
@@ -93,6 +96,16 @@ public class CompleteWeightedTag implements WeightedTag {
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+  }
+
+  @Override
+  public TagPriority getPriority() {
+    return this.priority;
+  }
+
+  @Override
+  public void setPriority(TagPriority priority) {
+    this.priority = priority;
   }
 
 }

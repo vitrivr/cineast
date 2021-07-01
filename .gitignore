@@ -62,3 +62,7 @@ index*
 
 ##macOS
 .DS_Store
+
+output/
+logs/
+resources/
