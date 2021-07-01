@@ -49,6 +49,7 @@ dependencies {
     /** Apache Commons Libraries */
     compile group: "org.apache.commons", name: "commons-lang3", version: "3.+"
     compile group: "org.apache.commons", name: "commons-math3", version: "3.+"
+    compile group: "org.apache.commons", name: "commons-text", version: "1.9"
     compile group: "commons-io", name: "commons-io", version: "2.+"
     compile group: "commons-codec", name: "commons-codec", version: "1.+"
 
@@ -85,6 +86,12 @@ dependencies {
     /** JavaCPP. */
     compile group: "org.bytedeco", name: "javacpp", version: "1.5.1"
     compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}"
+
+    /** OpenCV. */
+    compile group: 'org.openpnp', name: 'opencv', version: '4.5.1-2'
+
+    /** JTS */
+    compile group: 'org.locationtech.jts', name: 'jts-core', version: '1.18.1'
 }
 
 test {
