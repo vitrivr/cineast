@@ -497,9 +497,6 @@ public class OCRSearch extends AbstractTextRetriever {
     for (TextStream stream : shouldRemove) {
       streams.remove(stream);
     }
-    for (TextStream s : streams) {
-      System.out.print(s.getText()+", ");
-    }
     streams.forEach(s->safeText(shot.getId(), s.getText()));
   }
 
