@@ -45,10 +45,10 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
 
     /* Prepare QueryConfig (so as to obtain a QueryId). */
     final String uuid = qconf.getQueryId().toString();
+    final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
 
     /* Prepare map that maps QueryTerms (as QueryContainer, ready for retrieval) and their associated categories */
     final HashMap<QueryContainer, List<String>> containerCategoryMap = QueryComponent.toContainerMap(message.getComponents());
-    final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
 
     List<Thread> threads = new ArrayList<>();
     List<CompletableFuture<Void>> futures = new ArrayList<>();

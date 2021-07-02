@@ -92,7 +92,7 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
 
   @Override
   public Map<String, PrimitiveTypeProvider> readNext() {
-    if(iterator.hasNext()){
+    while(iterator.hasNext()){
       Entry<String, String> next = iterator.next();
       Optional<Map<String, PrimitiveTypeProvider>> parsed = parseEntry(next.getKey(), metadataMap.get(next.getValue()));
       if(parsed.isPresent()){
