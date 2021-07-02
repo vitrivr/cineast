@@ -19,30 +19,29 @@ import java.util.*;
 import java.util.List;
 
 /**
- *  OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision)
- *  This makes sense here since we expect small errors from OCR sources
+ * OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision) This makes sense here since we expect small errors from OCR sources
  */
 public class OCRSearch extends AbstractTextRetriever {
+
   public static final String OCR_TABLE_NAME = "features_ocr";
 
   /**
    * Configurations
    * rate:
-   *    Rate refers to the rate at which detections are done.
-   *    E.g.: Rate = 3 --> Detections are done at every third frame
-   *    Increase rate for better inference times
+   * Rate refers to the rate at which detections are done. E.g.: Rate = 3 --> Detections are done at every third frame
+   * Increase rate for better inference times
+   *
    * threshold_CIoU:
-   *    CIoU stands for Combined Intersection over Union
-   *    When the CIoU is below 0.4, they are regarded as separate streams
-   *    Should not be changed
-   * threshold_postproc:
-   *    This is the threshold for the postprocessing stream association step
-   *    Strongly urge not to change
-   * tracker_type:
-   *    Refers to the tracker which is used
-   * threshold_stream_length:
-   *    Refers to the amount of consecutive frames a text should minimally appear in
-   *    If a text appears in less consecutive frames than the threshold, the text is discarded
+   * CIoU stands for Combined Intersection over Union
+   * When the CIoU is below 0.4, they are regarded as separate streams
+   * Should not be changed
+   *
+   * threshold_postproc: This is the threshold for the postprocessing stream association step
+   * Strongly urge not to change
+   *
+   * tracker_type: Refers to the tracker which is used
+   * threshold_stream_length: Refers to the amount of consecutive frames a text should minimally appear in
+   * If a text appears in less consecutive frames than the threshold, the text is discarded
    */
   private static final int rate = 3;
   private static final double threshold_CIoU = 0.4;
@@ -58,7 +57,7 @@ public class OCRSearch extends AbstractTextRetriever {
    * @param coordinate The coordinate to be processed
    * @return The minimum and maximum (in that order) of the X-coordinates
    */
-  private Pair<Double, Double> minimumMaximumX (Quadrilateral_F64 coordinate) {
+  private Pair<Double, Double> minimumMaximumX(Quadrilateral_F64 coordinate) {
     double x_max = Double.NEGATIVE_INFINITY;
     double x_min = Double.POSITIVE_INFINITY;
 
@@ -94,7 +93,7 @@ public class OCRSearch extends AbstractTextRetriever {
    * @param coordinate The coordinate to be processed
    * @return The minimum and maximum (in that order) of the Y-coordinates
    */
-  private Pair<Double, Double> minimumMaximumY (Quadrilateral_F64 coordinate) {
+  private Pair<Double, Double> minimumMaximumY(Quadrilateral_F64 coordinate) {
     double y_max = Double.NEGATIVE_INFINITY;
     double y_min = Double.POSITIVE_INFINITY;
 
@@ -128,6 +127,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
   /**
    * img2Mat converts the buffered image to an RGB (OpenCV) Mat image
+   *
    * @param original The buffered image to be converted
    * @return The buffered image as an RGB (OpenCV) Mat image
    */
@@ -137,8 +137,7 @@ public class OCRSearch extends AbstractTextRetriever {
     try {
       graphic.setComposite(AlphaComposite.Src);
       graphic.drawImage(original, 0, 0, null);
-    }
-    finally {
+    } finally {
       graphic.dispose();
     }
 
@@ -160,7 +159,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
   private GrayU8 bufferedImage2GrayU8(SegmentContainer shot, int frame_index) {
     return ConvertBufferedImage.convertFromSingle(
-            shot.getVideoFrames().get(frame_index).getImage().getBufferedImage(), null, GrayU8.class);
+        shot.getVideoFrames().get(frame_index).getImage().getBufferedImage(), null, GrayU8.class);
   }
 
   /**
@@ -173,34 +172,37 @@ public class OCRSearch extends AbstractTextRetriever {
     Quadrilateral_F64 firstBox = streamFirst.findFirstBox();
 
     double spatial_x = (Math.abs(lastBox.getA().x - firstBox.getA().x) + Math.abs(lastBox.getB().x - firstBox.getB().x) +
-            Math.abs(lastBox.getC().x - firstBox.getC().x) + Math.abs(lastBox.getD().x - firstBox.getD().x)) / 4;
+        Math.abs(lastBox.getC().x - firstBox.getC().x) + Math.abs(lastBox.getD().x - firstBox.getD().x)) / 4;
     double spatial_y = (Math.abs(lastBox.getA().y - firstBox.getA().y) + Math.abs(lastBox.getB().y - firstBox.getB().y) +
-            Math.abs(lastBox.getC().y - firstBox.getC().y) + Math.abs(lastBox.getD().y - firstBox.getD().y)) / 4;
+        Math.abs(lastBox.getC().y - firstBox.getC().y) + Math.abs(lastBox.getD().y - firstBox.getD().y)) / 4;
 
-    double spatial_dis = (spatial_x / Math.max(Math.abs(lastBox.getB().x -lastBox.getA().x), Math.abs(firstBox.getB().x -firstBox.getA().x)))
-            +(spatial_y / Math.max(Math.abs(lastBox.getD().y - lastBox.getA().y), Math.abs(firstBox.getD().y - firstBox.getA().y)));
+    double spatial_dis = (spatial_x / Math.max(Math.abs(lastBox.getB().x - lastBox.getA().x), Math.abs(firstBox.getB().x - firstBox.getA().x)))
+        + (spatial_y / Math.max(Math.abs(lastBox.getD().y - lastBox.getA().y), Math.abs(firstBox.getD().y - firstBox.getA().y)));
 
     double inv_IoU = 1 - getIntersectionOverUnion(lastBox, firstBox);
 
     double edit_dis = 1 - new JaroWinklerSimilarity().apply(streamLast.getText(), streamFirst.getText());
 
-    return spatial_dis + inv_IoU + 10*edit_dis + 0.2*Math.abs(streamFirst.getFirst() - streamLast.getLast());
+    return spatial_dis + inv_IoU + 10 * edit_dis + 0.2 * Math.abs(streamFirst.getFirst() - streamLast.getLast());
   }
 
   /**
-   * transformString transforms the string by replacing certain characters with others.
-   * This is helpful since certain characters are visually (almost) indistinguishable to the recognition module
+   * transformString transforms the string by replacing certain characters with others. This is helpful since certain characters are visually (almost) indistinguishable to the recognition module
+   *
    * @param str The string to be transformed
    * @return The transformed string
    */
-  private String transformString(String str) { return str.replace("i", "l").replace("l", "1").replace("a", "o");}
+  private String transformString(String str) {
+    return str.replace("i", "l").replace("l", "1").replace("a", "o");
+  }
 
   /**
    * saveText transforms and saves the scene text in the database
-   * @param id id of the shot (the {@link SegmentContainer}) to be processed
+   *
+   * @param id          id of the shot (the {@link SegmentContainer}) to be processed
    * @param recognition The scene text that should be safed
    */
-  private void saveText(String id,String recognition) {
+  private void saveText(String id, String recognition) {
     if (recognition.equals("")) {
       return;
     }
@@ -213,8 +215,8 @@ public class OCRSearch extends AbstractTextRetriever {
    * @return the intersection over union of the two rectangular coordinates
    */
   private double getIntersectionOverUnion(Quadrilateral_F64 coordA, Quadrilateral_F64 coordB) {
-    double[] boxA = new double[]{coordA.getA().x, coordA.getA().y,coordA.getC().x, coordA.getC().y};
-    double[] boxB = new double[]{coordB.getA().x, coordB.getA().y,coordB.getC().x, coordB.getC().y};
+    double[] boxA = new double[]{coordA.getA().x, coordA.getA().y, coordA.getC().x, coordA.getC().y};
+    double[] boxB = new double[]{coordB.getA().x, coordB.getA().y, coordB.getC().x, coordB.getC().y};
 
     double xA = Math.max(boxA[0], boxB[0]);
     double yA = Math.max(boxA[1], boxB[1]);
@@ -231,6 +233,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
   /**
    * getAverageIntersectionOverUnion takes two lists of coordinates and returns the average IoU
+   *
    * @param coordinates1 Sequentially ordered coordinates (from frame i to frame i+n)
    * @param coordinates2 Sequentially ordered coordinates (from frame i to frame i+n)
    * @return The average intersection over union
@@ -239,7 +242,7 @@ public class OCRSearch extends AbstractTextRetriever {
     double total_IoU = 0;
     int count = 0;
 
-    for (int i=0; i<coordinates1.size(); i++) {
+    for (int i = 0; i < coordinates1.size(); i++) {
       if (coordinates1.get(i) == null || coordinates2.get(i) == null) {
         continue;
       }
@@ -247,17 +250,18 @@ public class OCRSearch extends AbstractTextRetriever {
       total_IoU = total_IoU + getIntersectionOverUnion(coordinates1.get(i), coordinates2.get(i));
     }
 
-    return count==0 ? 0 : total_IoU / count;
+    return count == 0 ? 0 : total_IoU / count;
   }
 
   /**
    * Extracts the scene text and ingests it using the {@link SimpleFulltextFeatureDescriptor}.
+   *
    * @param shot The {@link SegmentContainer} that should be processed.
    */
   @Override
   public void processSegment(SegmentContainer shot) {
-    TextDetector_EAST detector = TextDetector_EAST.getInstance();
-    TextRecognizer recognizer = new TextRecognizer().initialize();
+    TextDetector_EAST detector = new TextDetector_EAST().initialize();
+    TextRecognizer_CTC recognizer = new TextRecognizer_CTC().initialize();
 
     int lenVideo = shot.getVideoFrames().size();
     // Scene text extraction for image
@@ -277,29 +281,29 @@ public class OCRSearch extends AbstractTextRetriever {
     List<Point[][]> detections = new ArrayList<>();
     List<GrayU8> frames_grayU8 = new ArrayList<>();
 
-    for (int i=0; i<lenVideo; i++) {
+    for (int i = 0; i < lenVideo; i++) {
       frames_grayU8.add(bufferedImage2GrayU8(shot, i));
     }
-    for (int i=0; i<lenVideo; i=i+rate) {
+    for (int i = 0; i < lenVideo; i = i + rate) {
       detections.add(detector.detect(img2Mat(shot.getVideoFrames().get(i).getImage().getBufferedImage())));
     }
 
-    for (int i=0; i+rate<lenVideo && i<lenVideo; i=i+rate) {
+    for (int i = 0; i + rate < lenVideo && i < lenVideo; i = i + rate) {
       List<List<Quadrilateral_F64>> tracking_forward = new ArrayList<>();
       List<List<Quadrilateral_F64>> tracking_backward = new ArrayList<>();
 
       // Forward Tracking (from frame i to frame i+rate)
       List<Quadrilateral_F64> coordinates_tracking = new ArrayList<>();
-      Point[][] initialCoordinates = detections.get(i/rate);
+      Point[][] initialCoordinates = detections.get(i / rate);
       if (initialCoordinates.length == 0) {
         continue;
       }
       int count = 0;
       for (Point[] coordinate : initialCoordinates) {
-        Quadrilateral_F64 coordinate_tracking = new Quadrilateral_F64(coordinate[1].x,coordinate[1].y,coordinate[0].x,coordinate[0].y,coordinate[3].x,coordinate[3].y,coordinate[2].x,coordinate[2].y);
-        Pair<Double, Double> minMaxX =  minimumMaximumX(coordinate_tracking);
-        Pair<Double, Double> minMaxY =  minimumMaximumY(coordinate_tracking);
-        coordinate_tracking = new Quadrilateral_F64(minMaxX.first,minMaxY.first,minMaxX.second,minMaxY.first,minMaxX.second,minMaxY.second,minMaxX.first,minMaxY.second);
+        Quadrilateral_F64 coordinate_tracking = new Quadrilateral_F64(coordinate[1].x, coordinate[1].y, coordinate[0].x, coordinate[0].y, coordinate[3].x, coordinate[3].y, coordinate[2].x, coordinate[2].y);
+        Pair<Double, Double> minMaxX = minimumMaximumX(coordinate_tracking);
+        Pair<Double, Double> minMaxY = minimumMaximumY(coordinate_tracking);
+        coordinate_tracking = new Quadrilateral_F64(minMaxX.first, minMaxY.first, minMaxX.second, minMaxY.first, minMaxX.second, minMaxY.second, minMaxX.first, minMaxY.second);
 
         coordinates_tracking.add(coordinate_tracking);
         tracking_forward.add(new ArrayList<>());
@@ -309,9 +313,9 @@ public class OCRSearch extends AbstractTextRetriever {
 
       MultiTracker tracker_forward = new MultiTracker(bufferedImage2GrayU8(shot, i), coordinates_tracking, tracker_type);
 
-      for (int j=i+1; j<lenVideo && j<=i+rate; j++) {
+      for (int j = i + 1; j < lenVideo && j <= i + rate; j++) {
         List<Pair<Boolean, Quadrilateral_F64>> new_coordinates = tracker_forward.update(frames_grayU8.get(j));
-        for (int k=0; k<new_coordinates.size(); k++) {
+        for (int k = 0; k < new_coordinates.size(); k++) {
           if (new_coordinates.get(k).first) {
             tracking_forward.get(k).add(new_coordinates.get(k).second);
           } else {
@@ -322,35 +326,35 @@ public class OCRSearch extends AbstractTextRetriever {
 
       // Backward Tracking (from frame i+rate to frame i)
       coordinates_tracking.clear();
-      initialCoordinates = detections.get((i+rate)/rate);
+      initialCoordinates = detections.get((i + rate) / rate);
       if (initialCoordinates.length == 0) {
         continue;
       }
       count = 0;
       for (Point[] coordinate : initialCoordinates) {
-        Quadrilateral_F64 coordinate_tracking = new Quadrilateral_F64(coordinate[1].x,coordinate[1].y,coordinate[2].x,coordinate[2].y,coordinate[3].x,coordinate[3].y,coordinate[0].x,coordinate[0].y);
+        Quadrilateral_F64 coordinate_tracking = new Quadrilateral_F64(coordinate[1].x, coordinate[1].y, coordinate[2].x, coordinate[2].y, coordinate[3].x, coordinate[3].y, coordinate[0].x, coordinate[0].y);
         coordinates_tracking.add(coordinate_tracking);
         tracking_backward.add(new ArrayList<>());
         tracking_backward.get(count).add(coordinate_tracking);
         count++;
       }
 
-      MultiTracker tracker_backward= new MultiTracker(bufferedImage2GrayU8(shot, i+rate), coordinates_tracking, tracker_type);
-      for (int j=i+rate-1; j>=0 && j>=i; j--) {
+      MultiTracker tracker_backward = new MultiTracker(bufferedImage2GrayU8(shot, i + rate), coordinates_tracking, tracker_type);
+      for (int j = i + rate - 1; j >= 0 && j >= i; j--) {
         List<Pair<Boolean, Quadrilateral_F64>> new_coordinates = tracker_backward.update(frames_grayU8.get(j));
-        for (int k=0; k<new_coordinates.size(); k++) {
+        for (int k = 0; k < new_coordinates.size(); k++) {
           if (new_coordinates.get(k).first) {
-            tracking_backward.get(k).add(0,new_coordinates.get(k).second);
+            tracking_backward.get(k).add(0, new_coordinates.get(k).second);
           } else {
-            tracking_backward.get(k).add(0,null);
+            tracking_backward.get(k).add(0, null);
           }
         }
       }
 
       // Find best matches between the forward tracking stream and the backward tracking one and compare it to threshold_CiOU
       double[][] cost = new double[tracking_forward.size()][tracking_backward.size()];
-      for (int j=0; j< tracking_forward.size(); j++) {
-        for (int k=0; k< tracking_backward.size(); k++) {
+      for (int j = 0; j < tracking_forward.size(); j++) {
+        for (int k = 0; k < tracking_backward.size(); k++) {
           cost[j][k] = 1 - getAverageIntersectionOverUnion(tracking_forward.get(j), tracking_backward.get(k));
         }
       }
@@ -359,18 +363,16 @@ public class OCRSearch extends AbstractTextRetriever {
       int[] pairs = optimization.execute();
 
       for (int j = 0; j < tracking_forward.size(); j++) {
-        if (pairs[j] == -1) {
-          continue;
-        } else if (cost[j][pairs[j]] <= 1 - threshold_CIoU) {
+        if (pairs[j] != -1 && cost[j][pairs[j]] <= 1 - threshold_CIoU) {
           TextStream stream = null;
-          for (int k=0; k<streams.size(); k++) {
-            if (streams.get(k).getLast() == i && streams.get(k).getCoordinate_id()==j) {
-              stream = streams.get(k);
-              stream.add(i, i+rate, pairs[j], tracking_forward.get(j), tracking_backward.get(pairs[j]));
+          for (TextStream textStream : streams) {
+            if (textStream.getLast() == i && textStream.getCoordinate_id() == j) {
+              stream = textStream;
+              stream.add(i, i + rate, pairs[j], tracking_forward.get(j), tracking_backward.get(pairs[j]));
             }
           }
           if (stream == null) {
-            stream = new TextStream(i, i+rate, pairs[j], tracking_forward.get(j), tracking_backward.get(pairs[j]));
+            stream = new TextStream(i, i + rate, pairs[j], tracking_forward.get(j), tracking_backward.get(pairs[j]));
             streams.add(stream);
           }
         }
@@ -387,11 +389,11 @@ public class OCRSearch extends AbstractTextRetriever {
       while (frameIterator.hasNext()) {
         int key = frameIterator.next();
         Quadrilateral_F64 coord_before = filtered.get(key);
-        Point[] coordinates = new Point[] {new Point(coord_before.getD().x, coord_before.getD().y), new Point(coord_before.getA().x, coord_before.getA().y), new Point(coord_before.getB().x, coord_before.getB().y), new Point(coord_before.getC().x, coord_before.getC().y)};
+        Point[] coordinates = new Point[]{new Point(coord_before.getD().x, coord_before.getD().y), new Point(coord_before.getA().x, coord_before.getA().y), new Point(coord_before.getB().x, coord_before.getB().y), new Point(coord_before.getC().x, coord_before.getC().y)};
         Mat frame = img2Mat(shot.getVideoFrames().get(key).getImage().getBufferedImage());
         String recognition = recognizer.recognize(coordinates, frame, false);
         Integer count = counts.get(recognition);
-        counts.put(recognition, count != null ? count+1 : 1);
+        counts.put(recognition, count != null ? count + 1 : 1);
       }
 
       int max_count = 0;
@@ -443,7 +445,7 @@ public class OCRSearch extends AbstractTextRetriever {
     }
 
     int distance = rate;
-    while (distance < threshold_postproc/0.2) {
+    while (distance < threshold_postproc / 0.2) {
       for (int i = rate; i + distance < lenVideo; i = i + rate) {
         List<TextStream> streams_last = lasts.get(i);
         List<TextStream> streams_first = firsts.get(i + distance);
@@ -466,7 +468,7 @@ public class OCRSearch extends AbstractTextRetriever {
             continue;
           }
           if (cost[j][pairs[j]] < threshold_postproc) {
-            matches.add(new Pair<>(streams_last.get(j),streams_first.get(pairs[j])));
+            matches.add(new Pair<>(streams_last.get(j), streams_first.get(pairs[j])));
           }
         }
         for (Pair<TextStream, TextStream> match : matches) {

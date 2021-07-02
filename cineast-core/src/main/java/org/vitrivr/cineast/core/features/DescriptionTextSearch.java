@@ -14,8 +14,4 @@ public class DescriptionTextSearch extends AbstractTextRetriever {
     super(DESCRIPTION_TEXT_TABLE_NAME);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    throw new UnsupportedOperationException("Not supported by default");
-  }
 }
