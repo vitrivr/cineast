@@ -44,9 +44,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
     /* Prepare the query config and get the QueryId */
     final String uuid = qconf.getQueryId().toString();
-    final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
+    final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);
-    final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
+    final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
     qconf.setResultsPerModule(resultsPerModule);
 
     List<Thread> metadataRetrievalThreads = new ArrayList<>();
