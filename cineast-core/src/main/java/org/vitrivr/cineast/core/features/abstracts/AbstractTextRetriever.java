@@ -80,9 +80,14 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName, batchSize);
   }
 
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    throw new UnsupportedOperationException("Not supported by default");
+  }
+
   /**
    * Initializes the persistent layer with two fields: GENERIC_ID_COLUMN_QUALIFIER and FEATURE_COLUMN_QUALIFIER both using the Apache Solr storage handler.
-   *
+   * <p>
    * This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The FEATURE_COLUMN_QUALIFIER in this context is the full text for the given segment
    */
   @Override
@@ -174,7 +179,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   /**
    * Convenience-Method for implementing classes once they have generated their query terms.
-   *
+   * <p>
    * If there are multiple scores per segment (e.g. a segment has "hello" and "hello world" which produces two hits, does maxpooling
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
