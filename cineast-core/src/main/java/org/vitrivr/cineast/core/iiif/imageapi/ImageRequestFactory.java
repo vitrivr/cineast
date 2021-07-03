@@ -27,6 +27,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformationRequest_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Image;
 
 /**
  * Accepts an {@link IIIFConfig} and downloads the image file & image information JSON of all {@link IIIFItem} specified in the config file
@@ -39,6 +41,7 @@ public class ImageRequestFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final IIIFConfig iiifConfig;
+  private final Canvas canvas;
   private ImageApiVersion imageApiVersion;
 
   public ImageRequestFactory(IIIFConfig iiifConfig) {
@@ -49,6 +52,12 @@ public class ImageRequestFactory {
       LOGGER.debug("No valid Image API version specified in the config file");
       imageApiVersion = null;
     }
+    this.canvas = null;
+  }
+
+  public ImageRequestFactory(Canvas canvas) {
+    this.canvas = canvas;
+    this.iiifConfig = null;
   }
 
   private static boolean isParamStringValid(String configRegion) {
@@ -59,7 +68,30 @@ public class ImageRequestFactory {
     // If Image API version is not specified then auto-detect the highest API version supported by the server
     if (imageApiVersion == null) {
       LOGGER.debug("Image API version not specified. Starting detection of highest Image API version supported by the server.");
-      ImageApiVersion highestSupportedApiVersion = determineHighestSupportedApiVersion();
+      String url = null;
+      if (iiifConfig != null) {
+        List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+        if (iiifItems != null) {
+          Optional<IIIFItem> iiifItem = iiifItems.stream().findAny();
+          if (iiifItem.isPresent()) {
+            String identifier = iiifItem.get().getIdentifier();
+            url = iiifConfig.getBaseUrl() + "/" + identifier;
+          }
+        }
+      } else if (canvas != null) {
+        Optional<Image> image = canvas.getImages().stream().findAny();
+        if (image.isPresent()) {
+          Image it = image.get();
+          String imageApiUrl = it.getResource().getAtId();
+          ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
+          String baseUrl = imageRequest.getBaseUrl();
+          if (!baseUrl.endsWith("/")) {
+            baseUrl += "/";
+          }
+          url = baseUrl + "info.json";
+        }
+      }
+      ImageApiVersion highestSupportedApiVersion = determineHighestSupportedApiVersion(url);
       if (highestSupportedApiVersion == null) {
         LOGGER.error("The Image API version could not be auto detected and thus Image Requests could not be created.");
         return Collections.emptyList();
@@ -68,46 +100,81 @@ public class ImageRequestFactory {
         LOGGER.debug("The highest supported Image API version was autodetected to version " + this.imageApiVersion.toNumericString());
       }
     }
-    if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
-      return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
-    } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
-      return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
+    if (iiifConfig != null) {
+      if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
+        return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
+      } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
+        return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
+      }
+    } else if (canvas != null) {
+      runCanvasJob(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
+  }
+
+  private List<ImageRequest> runCanvasJob(String jobDirectoryString, String itemPrefixString) {
+    List<ImageRequest> imageRequests = new LinkedList<>();
+    List<Image> images = canvas.getImages();
+    if (images != null && images.size() != 0) {
+      // Download all images in the canvas
+      for (final Image image : images) {
+        String imageApiUrl = image.getResource().getAtId();
+        // Make image request to remote server
+        ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
+        imageRequests.add(imageRequest);
+        if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
+          try {
+            String baseUrl = imageRequest.getBaseUrl();
+            if (!baseUrl.endsWith("/")) {
+              baseUrl += "/";
+            }
+            String imageInformationUrl = baseUrl + "info.json";
+            final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(imageInformationUrl);
+            informationRequest.saveToFile(jobDirectoryString, itemPrefixString + canvas.getLabel());
+            LOGGER.info("Image information request's json response data written to file successfully. Request url: " + imageInformationUrl);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+        // Write the downloaded image to the filesystem
+        LOGGER.info("Downloading and saving image to the filesystem: " + image);
+        try {
+          imageRequest.saveToFile(jobDirectoryString, itemPrefixString + canvas.getLabel(), imageApiUrl);
+        } catch (IOException e) {
+          LOGGER.error("Failed to save image to file system: " + image);
+          e.printStackTrace();
+        }
+      }
+    }
+    return imageRequests;
   }
 
   /**
    * Determines the highest version of the Image API supported by the server by making an Image Information request and trying to parse as different versions of the {@link ImageInformation} starting with the highest version {@link ImageInformation_v3} and moving downwards
    */
   @Nullable
-  public ImageApiVersion determineHighestSupportedApiVersion() {
-    List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
-    if (iiifItems != null) {
-      Optional<IIIFItem> iiifItem = iiifItems.stream().findAny();
-      if (iiifItem.isPresent()) {
-        String identifier = iiifItem.get().getIdentifier();
-        String response = null;
-        String url = iiifConfig.getBaseUrl() + "/" + identifier;
-        try {
-          response = ImageInformationRequest.fetchImageInformation(url);
-        } catch (IOException e) {
-          LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
-          e.printStackTrace();
-        }
-        if (response != null) {
-          try {
-            new ObjectMapper().readValue(response, ImageInformation_v3.class);
-            return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
-          } catch (JsonProcessingException e) {
-            LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
-          }
-          try {
-            new ObjectMapper().readValue(response, ImageInformation_v2.class);
-            return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
-          } catch (JsonProcessingException e) {
-            LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
-          }
-        }
+  public ImageApiVersion determineHighestSupportedApiVersion(String url) {
+    String response = null;
+    try {
+      response = ImageInformationRequest.fetchImageInformation(url);
+    } catch (IOException e) {
+      LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
+      e.getMessage();
+    }
+    if (response != null) {
+      try {
+        new ObjectMapper().readValue(response, ImageInformation_v3.class);
+        return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
+      } catch (JsonProcessingException e) {
+        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
+        e.getMessage();
+      }
+      try {
+        new ObjectMapper().readValue(response, ImageInformation_v2.class);
+        return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
+      } catch (JsonProcessingException e) {
+        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
+        e.printStackTrace();
       }
     }
     return null;
@@ -121,6 +188,18 @@ public class ImageRequestFactory {
 
     private ApiJob_v2(IIIFConfig iiifConfig) {
       this.iiifConfig = iiifConfig;
+    }
+
+    public ImageInformation_v2 saveImageInformation(String url, String jobDirectoryString, String filename) {
+      ImageInformation_v2 imageInformation = null;
+      try {
+        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(url);
+        informationRequest.saveToFile(jobDirectoryString, filename);
+        imageInformation = informationRequest.parseImageInformation(null);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      return imageInformation;
     }
 
     private List<ImageRequest> run(String jobDirectoryString, String itemPrefixString) {
@@ -137,14 +216,7 @@ public class ImageRequestFactory {
         String identifier = iiifItem.getIdentifier();
         final String imageName = itemPrefixString + identifier;
 
-        ImageInformation_v2 imageInformation = null;
-        try {
-          final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(iiifConfig.getBaseUrl() + "/" + identifier);
-          informationRequest.saveToFile(jobDirectoryString, imageName);
-          imageInformation = informationRequest.parseImageInformation(null);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        ImageInformation_v2 imageInformation = saveImageInformation(iiifConfig.getBaseUrl() + "/" + identifier, jobDirectoryString, imageName);
 
         ImageRequestBuilder_v2 builder;
         if (imageInformation != null) {
