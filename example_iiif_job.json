@@ -93,5 +93,10 @@
     "host": "output/",
     "writer": "JSON",
     "selector": "NONE"
-  }
+  },
+  "metadata": [
+    {
+      "name": "JsonMetaDataExtractor"
+    }
+  ]
 }
