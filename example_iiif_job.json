@@ -89,8 +89,7 @@
     }
   ],
   "database": {
-    "host": "output/",
-    "writer": "JSON",
-    "selector": "NONE"
+    "selector": "COTTONTAIL",
+    "writer": "COTTONTAIL"
   }
 }
