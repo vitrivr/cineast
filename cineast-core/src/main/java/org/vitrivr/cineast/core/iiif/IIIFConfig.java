@@ -2,10 +2,6 @@ package org.vitrivr.cineast.core.iiif;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 
 /**
@@ -15,47 +11,35 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
  * @version 1.0
  * @created 28.05.21
  */
-@ToString
 public class IIIFConfig {
 
-  @Setter
   @JsonProperty
   private String imageApiVersion;
-
-  @Getter
-  @Setter
-  @JsonProperty(value = "url", required = true)
+  @JsonProperty(value = "imageApiUrl")
   private String baseUrl;
-
-  @Getter
-  @Setter
   @JsonProperty
   private String region;
-
-  @Getter
-  @Setter
   @JsonProperty
   private String size;
-
-  @Getter
-  @Setter
   @JsonProperty
   private Float rotation;
-
-  @Getter
-  @Setter
   @JsonProperty
   private String quality;
-
-  @Getter
-  @Setter
   @JsonProperty
   private String format;
-
-  @Getter
-  @Setter
-  @JsonProperty(value = "items")
+  @JsonProperty("items")
   private List<IIIFItem> iiifItems;
+  @JsonProperty
+  private String manifestUrl;
+
+  public String getManifestUrl() {
+    return manifestUrl;
+  }
+
+  public void setManifestUrl(String manifestUrl) {
+    this.manifestUrl = manifestUrl;
+  }
+
 
   public ImageApiVersion getImageApiVersion() {
     if (imageApiVersion == null) {
@@ -64,39 +48,154 @@ public class IIIFConfig {
     return ImageApiVersion.fromNumericString(imageApiVersion);
   }
 
-  @ToString
-  @NoArgsConstructor
-  public static class IIIFItem {
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private String identifier;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private String region;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private String size;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private Float rotation;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private String quality;
-
-    @Getter
-    @Setter
-    @JsonProperty
-    private String format;
+  @JsonProperty
+  public void setImageApiVersion(final String imageApiVersion) {
+    this.imageApiVersion = imageApiVersion;
   }
 
+  @Override
+  public java.lang.String toString() {
+    return "IIIFConfig(imageApiVersion=" + this.getImageApiVersion() + ", baseUrl=" + this.getBaseUrl() + ", region=" + this.getRegion() + ", size=" + this.getSize() + ", rotation=" + this.getRotation() + ", quality=" + this.getQuality() + ", format=" + this.getFormat() + ", iiifItems=" + this.getIiifItems() + ")";
+  }
+
+  public String getBaseUrl() {
+    return this.baseUrl;
+  }
+
+  @JsonProperty(value = "imageApiUrl", required = true)
+  public void setBaseUrl(final String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+  public String getRegion() {
+    return this.region;
+  }
+
+  @JsonProperty
+  public void setRegion(final String region) {
+    this.region = region;
+  }
+
+  public String getSize() {
+    return this.size;
+  }
+
+  @JsonProperty
+  public void setSize(final String size) {
+    this.size = size;
+  }
+
+  public Float getRotation() {
+    return this.rotation;
+  }
+
+  @JsonProperty
+  public void setRotation(final Float rotation) {
+    this.rotation = rotation;
+  }
+
+  public String getQuality() {
+    return this.quality;
+  }
+
+  @JsonProperty
+  public void setQuality(final String quality) {
+    this.quality = quality;
+  }
+
+  public String getFormat() {
+    return this.format;
+  }
+
+  @JsonProperty
+  public void setFormat(final String format) {
+    this.format = format;
+  }
+
+  public List<IIIFItem> getIiifItems() {
+    return this.iiifItems;
+  }
+
+  @JsonProperty("items")
+  public void setIiifItems(final List<IIIFItem> iiifItems) {
+    this.iiifItems = iiifItems;
+  }
+
+  public static class IIIFItem {
+
+    @JsonProperty
+    private String identifier;
+    @JsonProperty
+    private String region;
+    @JsonProperty
+    private String size;
+    @JsonProperty
+    private Float rotation;
+    @JsonProperty
+    private String quality;
+    @JsonProperty
+    private String format;
+
+    public IIIFItem() {
+    }
+
+    @Override
+    public java.lang.String toString() {
+      return "IIIFConfig.IIIFItem(identifier=" + this.getIdentifier() + ", region=" + this.getRegion() + ", size=" + this.getSize() + ", rotation=" + this.getRotation() + ", quality=" + this.getQuality() + ", format=" + this.getFormat() + ")";
+    }
+
+    public String getIdentifier() {
+      return this.identifier;
+    }
+
+    @JsonProperty
+    public void setIdentifier(final String identifier) {
+      this.identifier = identifier;
+    }
+
+    public String getRegion() {
+      return this.region;
+    }
+
+    @JsonProperty
+    public void setRegion(final String region) {
+      this.region = region;
+    }
+
+    public String getSize() {
+      return this.size;
+    }
+
+    @JsonProperty
+    public void setSize(final String size) {
+      this.size = size;
+    }
+
+    public Float getRotation() {
+      return this.rotation;
+    }
+
+    @JsonProperty
+    public void setRotation(final Float rotation) {
+      this.rotation = rotation;
+    }
+
+    public String getQuality() {
+      return this.quality;
+    }
+
+    @JsonProperty
+    public void setQuality(final String quality) {
+      this.quality = quality;
+    }
+
+    public String getFormat() {
+      return this.format;
+    }
+
+    @JsonProperty
+    public void setFormat(final String format) {
+      this.format = format;
+    }
+  }
 }

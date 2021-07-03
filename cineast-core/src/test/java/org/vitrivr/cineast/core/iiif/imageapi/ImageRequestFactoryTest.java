@@ -55,8 +55,9 @@ public class ImageRequestFactoryTest {
   @Test
   void determineHighestSupportedApiVersion_v2() {
     // Test specific setup
-    informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(BASE_URL + "/" + IDENTIFIER)).thenReturn(JSON_RESPONSE_v2);
-    ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion();
+    String url = BASE_URL + "/" + IDENTIFIER;
+    informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(url)).thenReturn(JSON_RESPONSE_v2);
+    ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion(url);
     assertNotNull(imageApiVersion);
     assertEquals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageApiVersion.getVersion());
   }
@@ -68,8 +69,9 @@ public class ImageRequestFactoryTest {
   @Test
   void determineHighestSupportedApiVersion_v3() {
     // Test specific setup
-    informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(BASE_URL + "/" + IDENTIFIER)).thenReturn(JSON_RESPONSE_v3);
-    ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion();
+    String url = BASE_URL + "/" + IDENTIFIER;
+    informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(url)).thenReturn(JSON_RESPONSE_v3);
+    ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion(url);
     assertNotNull(imageApiVersion);
     assertEquals(IMAGE_API_VERSION.THREE_POINT_ZERO, imageApiVersion.getVersion());
   }

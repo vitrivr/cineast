@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.iiif.imageapi;
 
-import lombok.Getter;
-
 /**
  * Utility class to hold the Image API version along with some helpful methods for converting into different formats
  *
@@ -19,7 +17,6 @@ public class ImageApiVersion {
   /**
    * Variable to hold the Image API version of this object
    */
-  @Getter
   private final IMAGE_API_VERSION version;
 
   public ImageApiVersion(IMAGE_API_VERSION version) {
@@ -97,11 +94,14 @@ public class ImageApiVersion {
     }
   }
 
+  public IMAGE_API_VERSION getVersion() {
+    return this.version;
+  }
+
   /**
    * Enum to hold the various Image Api specification versions supported by the builder
    */
   public enum IMAGE_API_VERSION {
-    TWO_POINT_ONE_POINT_ONE,
-    THREE_POINT_ZERO
+    TWO_POINT_ONE_POINT_ONE, THREE_POINT_ZERO
   }
 }

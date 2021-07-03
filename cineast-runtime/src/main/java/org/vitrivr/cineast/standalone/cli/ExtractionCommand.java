@@ -10,11 +10,13 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestFactory;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.config.InputConfig;
@@ -39,7 +41,9 @@ public class ExtractionCommand implements Runnable {
   @Option(name = {"-e", "--extraction"}, title = "Extraction config", description = "Path that points to a valid Cineast extraction config file.")
   private String extractionConfig;
 
-  /** Helper method to detect if the path in InputConfig is that of an IIIF job or the local filesystem */
+  /**
+   * Helper method to detect if the path in InputConfig is that of an IIIF job or the local filesystem
+   */
   public static boolean isURL(String url) {
     try {
       new URI(url);
@@ -113,8 +117,33 @@ public class ExtractionCommand implements Runnable {
       Files.createDirectories(jobDirectory);
     }
     final String jobDirectoryString = jobDirectory.toString();
+    // Process Image API job
     String itemPrefixString = "iiif_image_";
-    ImageRequestFactory imageRequestFactory = new ImageRequestFactory(iiifConfig);
-    imageRequestFactory.createImageRequests(jobDirectoryString, itemPrefixString);
+    String imageApiBaseUrl = iiifConfig.getBaseUrl();
+    if (imageApiBaseUrl != null && !imageApiBaseUrl.isEmpty()) {
+      ImageRequestFactory imageRequestFactory = new ImageRequestFactory(iiifConfig);
+      imageRequestFactory.createImageRequests(jobDirectoryString, itemPrefixString);
+    }
+    // Process Presentation API job
+    String manifestUrl = iiifConfig.getManifestUrl();
+    if (manifestUrl != null && !manifestUrl.isEmpty()) {
+      ManifestFactory manifestFactory = null;
+      try {
+        manifestFactory = new ManifestFactory(manifestUrl);
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+      }
+      if (manifestFactory != null) {
+        String jobIdentifier = UUID.randomUUID().toString();
+        String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
+        Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
+        if (!Files.exists(manifestJobDirectory)) {
+          Files.createDirectories(manifestJobDirectory);
+        }
+        manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
+        manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+      }
+    }
   }
 }

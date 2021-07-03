@@ -8,7 +8,7 @@
       "properties": {}
     },
     "iiif": {
-      "url": "https://libimages.princeton.edu/loris/pudl0001/5138415",
+      "imageApiUrl": "https://libimages.princeton.edu/loris/pudl0001/5138415",
       "imageApiVersion": "2.1.1",
       "rotation": 10,
       "items": [
@@ -27,7 +27,8 @@
           "quality": "bitonal",
           "format": "png"
         }
-      ]
+      ],
+      "manifestUrl": "https://dms-data.stanford.edu/data/manifests/Parker/bg021sq9590/manifest.json"
     }
   },
   "extractors": [
