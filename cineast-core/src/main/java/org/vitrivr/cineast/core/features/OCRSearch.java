@@ -44,6 +44,7 @@ public class OCRSearch extends AbstractTextRetriever {
    * If a text appears in less consecutive frames than the threshold, the text is discarded
    */
   private static final int rate = 3;
+  private static final int batchSize=16;
   private static final double threshold_CIoU = 0.4;
   private static final double threshold_postproc = 8;
   private static final MultiTracker.TRACKER_TYPE tracker_type = MultiTracker.TRACKER_TYPE.CIRCULANT;
@@ -278,14 +279,17 @@ public class OCRSearch extends AbstractTextRetriever {
 
     // Scene text extraction for video
     List<TextStream> streams = new ArrayList<>();
-    List<Point[][]> detections = new ArrayList<>();
+
+    List<Mat> matFrames = new ArrayList<>();
+    for (int i = 0; i < lenVideo; i = i + rate) {
+      matFrames.add(img2Mat(shot.getVideoFrames().get(i).getImage().getBufferedImage()));
+    }
+
+    List<Point[][]> detections =  detector.detect(matFrames, batchSize);
     List<GrayU8> frames_grayU8 = new ArrayList<>();
 
     for (int i = 0; i < lenVideo; i++) {
       frames_grayU8.add(bufferedImage2GrayU8(shot, i));
-    }
-    for (int i = 0; i < lenVideo; i = i + rate) {
-      detections.add(detector.detect(img2Mat(shot.getVideoFrames().get(i).getImage().getBufferedImage())));
     }
 
     for (int i = 0; i + rate < lenVideo && i < lenVideo; i = i + rate) {
@@ -386,8 +390,10 @@ public class OCRSearch extends AbstractTextRetriever {
       HashMap<Integer, Quadrilateral_F64> filtered = stream.getFilteredCoordinates();
       Iterator<Integer> frameIterator = filtered.keySet().iterator();
       HashMap<String, Integer> counts = new HashMap<>();
+
       while (frameIterator.hasNext()) {
         int key = frameIterator.next();
+
         Quadrilateral_F64 coord_before = filtered.get(key);
         Point[] coordinates = new Point[]{new Point(coord_before.getD().x, coord_before.getD().y), new Point(coord_before.getA().x, coord_before.getA().y), new Point(coord_before.getB().x, coord_before.getB().y), new Point(coord_before.getC().x, coord_before.getC().y)};
         Mat frame = img2Mat(shot.getVideoFrames().get(key).getImage().getBufferedImage());
