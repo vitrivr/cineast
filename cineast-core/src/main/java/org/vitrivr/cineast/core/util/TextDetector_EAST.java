@@ -51,7 +51,7 @@ public class TextDetector_EAST {
    * @return returns its own instance
    */
   public TextDetector_EAST initialize() {
-    return initialize("resources/TextSpotter/frozen_east_text_detection.pb");
+    return initialize("resources/SceneTextExtractor/frozen_east_text_detection.pb");
   }
 
   private Pair<List<Float>, List<RotatedRect>> decode(Mat scores, Mat geometry) {
@@ -94,6 +94,72 @@ public class TextDetector_EAST {
     return new Pair<>(confidences, boxes);
   }
 
+  private Point[][] detect(Mat scores, Mat geometry, Size size, int rows, int cols) {
+    Pair<List<Float>, List<RotatedRect>> decoded = decode(scores, geometry);
+    if (decoded.first.size() == 0 || decoded.second.size() == 0) {
+      return new Point[0][0];
+    }
+    MatOfFloat confidences = new MatOfFloat(Converters.vector_float_to_Mat(decoded.first));
+    RotatedRect[] boxesArray = decoded.second.toArray(new RotatedRect[0]);
+    MatOfRotatedRect boxes = new MatOfRotatedRect(boxesArray);
+    MatOfInt indices = new MatOfInt();
+    Dnn.NMSBoxesRotated(boxes, confidences, confThreshold, nmsThreshold, indices);
+
+    Point ratio = new Point((float) cols / size.width, (float) rows / size.height);
+    int[] indexes = indices.toArray();
+    Point[][] allPoints = new Point[indexes.length][4];
+
+    for (int i = 0; i < indexes.length; ++i) {
+      RotatedRect rot = boxesArray[indexes[i]];
+      Point[] vertices = new Point[4];
+      rot.points(vertices);
+      for (int j = 0; j < 4; ++j) {
+        if (vertices[j].x < 0) {
+          vertices[j].x = 0;
+        }
+        if (vertices[j].y < 0) {
+          vertices[j].y = 0;
+        }
+        vertices[j].x *= ratio.x;
+        vertices[j].y *= ratio.y;
+        if (vertices[j].x > cols) {
+          vertices[j].x = cols;
+        }
+        if (vertices[j].y > rows) {
+          vertices[j].y = rows;
+        }
+      }
+      allPoints[i] = vertices;
+    }
+    return allPoints;
+
+  }
+
+  public List<Point[][]> detect (List<Mat> frames, int batchSize) {
+    assert model != null : "Model has not been initialized!";
+    List<Point[][]> allPoints = new ArrayList<>();
+    if (frames.size() == 0) { return allPoints; }
+    frames.forEach(frame -> Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB));
+    int rows = frames.get(0).rows();
+    int cols = frames.get(0).cols();
+    Size size = new Size(frames.get(0).width() - (frames.get(0).width() % 32), frames.get(0).height() - (frames.get(0).height() % 32));
+    int H = (int) (size.height / 4);
+    for (int i=0; i<frames.size(); i=i+batchSize) {
+      List<Mat> subFrames = frames.subList(i, Math.min(i + batchSize, frames.size()));
+      Mat blob = Dnn.blobFromImages(subFrames, 1.0, size, new Scalar(123.68, 116.78, 103.94), true, false);
+      List<Mat> outs = new ArrayList<>(2);
+      model.setInput(blob);
+      model.forward(outs, outNames);
+
+      for (int j=0; j<subFrames.size(); j++) {
+        Mat scores = outs.get(0).row(j).reshape(1, H);
+        Mat geometry = outs.get(1).row(j).reshape(1, 5 * H);
+        allPoints.add(detect(scores, geometry, size, rows, cols));
+      }
+    }
+    return allPoints;
+  }
+
   /**
    * detect takes an image and returns the detect text as rotated rectangles
    *
@@ -113,42 +179,7 @@ public class TextDetector_EAST {
 
     Mat scores = outs.get(0).reshape(1, H);
     Mat geometry = outs.get(1).reshape(1, 5 * H);
-    Pair<List<Float>, List<RotatedRect>> decoded = decode(scores, geometry);
-    if (decoded.first.size() == 0 || decoded.second.size() == 0) {
-      return new Point[0][0];
-    }
-    MatOfFloat confidences = new MatOfFloat(Converters.vector_float_to_Mat(decoded.first));
-    RotatedRect[] boxesArray = decoded.second.toArray(new RotatedRect[0]);
-    MatOfRotatedRect boxes = new MatOfRotatedRect(boxesArray);
-    MatOfInt indices = new MatOfInt();
-    Dnn.NMSBoxesRotated(boxes, confidences, confThreshold, nmsThreshold, indices);
 
-    Point ratio = new Point((float) frame.cols() / size.width, (float) frame.rows() / size.height);
-    int[] indexes = indices.toArray();
-    Point[][] allPoints = new Point[indexes.length][4];
-
-    for (int i = 0; i < indexes.length; ++i) {
-      RotatedRect rot = boxesArray[indexes[i]];
-      Point[] vertices = new Point[4];
-      rot.points(vertices);
-      for (int j = 0; j < 4; ++j) {
-        if (vertices[j].x < 0) {
-          vertices[j].x = 0;
-        }
-        if (vertices[j].y < 0) {
-          vertices[j].y = 0;
-        }
-        vertices[j].x *= ratio.x;
-        vertices[j].y *= ratio.y;
-        if (vertices[j].x > frame.width()) {
-          vertices[j].x = frame.width();
-        }
-        if (vertices[j].y > frame.height()) {
-          vertices[j].y = frame.height();
-        }
-      }
-      allPoints[i] = vertices;
-    }
-    return allPoints;
+    return detect(scores, geometry, size, frame.rows(), frame.cols());
   }
 }

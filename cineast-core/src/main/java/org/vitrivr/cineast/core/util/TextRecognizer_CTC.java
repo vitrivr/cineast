@@ -32,7 +32,7 @@ public class TextRecognizer_CTC {
   }
 
   public TextRecognizer_CTC initialize() {
-    return initialize("resources/TextSpotter/CRNN_VGG_BiLSTM_CTC.onnx");
+    return initialize("resources/SceneTextExtractor/CRNN_VGG_BiLSTM_CTC.onnx");
   }
 
   /**
