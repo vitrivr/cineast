@@ -124,6 +124,25 @@ public class ImageRequestFactory {
         // Make image request to remote server
         ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
         imageRequests.add(imageRequest);
+        ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata);
+        imageMetadata.setResourceUrl(imageApiUrl);
+        if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
+          try {
+            String baseUrl = imageRequest.getBaseUrl();
+            if (!baseUrl.endsWith("/")) {
+              baseUrl += "/";
+            }
+            String imageInformationUrl = baseUrl + "info.json";
+            final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(imageInformationUrl);
+            ImageInformation_v2 imageInformation_v2 = informationRequest.parseImageInformation();
+            if (imageInformation_v2 != null) {
+              imageMetadata.setHeight(imageInformation_v2.getHeight());
+              imageMetadata.setWidth(imageInformation_v2.getWidth());
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
         // Write the downloaded image to the filesystem
         LOGGER.info("Downloading and saving image to the filesystem: " + image);
         String imageFilename = itemPrefixString + canvas.getLabel();
@@ -133,9 +152,7 @@ public class ImageRequestFactory {
           LOGGER.error("Failed to save image to file system: " + image);
           e.printStackTrace();
         }
-        ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata)
-            .setResourceUrl(imageApiUrl)
-            .setQuality(imageRequest.getQuality());
+        imageMetadata.setQuality(imageRequest.getQuality());
         try {
           imageMetadata.saveToFile(jobDirectoryString, imageFilename);
         } catch (IOException e) {
