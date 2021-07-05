@@ -31,13 +31,16 @@ public class ImageInformationRequest_v2 implements ImageInformationRequest {
     this.imageInformation = ImageInformationRequest.fetchImageInformation(url);
   }
 
+  @Nullable
+  @Override
+  public ImageInformation_v2 parseImageInformation() {
+    return parseImageInformation(this.imageInformation);
+  }
+
   @Override
   @Nullable
   public ImageInformation_v2 parseImageInformation(String response) {
     ImageInformation_v2 imageInformation = null;
-    if (response == null || response.isEmpty()) {
-      response = this.imageInformation;
-    }
     try {
       imageInformation = new ObjectMapper().readValue(response, ImageInformation_v2.class);
     } catch (IOException e) {

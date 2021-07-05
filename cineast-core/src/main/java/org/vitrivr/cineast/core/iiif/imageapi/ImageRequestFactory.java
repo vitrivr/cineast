@@ -122,26 +122,21 @@ public class ImageRequestFactory {
         // Make image request to remote server
         ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
         imageRequests.add(imageRequest);
-        if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
-          try {
-            String baseUrl = imageRequest.getBaseUrl();
-            if (!baseUrl.endsWith("/")) {
-              baseUrl += "/";
-            }
-            String imageInformationUrl = baseUrl + "info.json";
-            final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(imageInformationUrl);
-            informationRequest.saveToFile(jobDirectoryString, itemPrefixString + canvas.getLabel());
-            LOGGER.info("Image information request's json response data written to file successfully. Request url: " + imageInformationUrl);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
         // Write the downloaded image to the filesystem
         LOGGER.info("Downloading and saving image to the filesystem: " + image);
+        String imageFilename = itemPrefixString + canvas.getLabel();
         try {
-          imageRequest.saveToFile(jobDirectoryString, itemPrefixString + canvas.getLabel(), imageApiUrl);
+          imageRequest.saveToFile(jobDirectoryString, imageFilename, imageApiUrl);
         } catch (IOException e) {
           LOGGER.error("Failed to save image to file system: " + image);
+          e.printStackTrace();
+        }
+        ImageMetadata imageMetadata = new ImageMetadata()
+            .setResourceUrl(imageApiUrl)
+            .setQuality(imageRequest.getQuality());
+        try {
+          imageMetadata.saveToFile(jobDirectoryString, imageFilename);
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
@@ -159,7 +154,7 @@ public class ImageRequestFactory {
       response = ImageInformationRequest.fetchImageInformation(url);
     } catch (IOException e) {
       LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
-      e.getMessage();
+      e.printStackTrace();
     }
     if (response != null) {
       try {
@@ -167,14 +162,12 @@ public class ImageRequestFactory {
         return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
       } catch (JsonProcessingException e) {
         LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
-        e.getMessage();
       }
       try {
         new ObjectMapper().readValue(response, ImageInformation_v2.class);
         return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
       } catch (JsonProcessingException e) {
         LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
-        e.printStackTrace();
       }
     }
     return null;
@@ -190,12 +183,11 @@ public class ImageRequestFactory {
       this.iiifConfig = iiifConfig;
     }
 
-    public ImageInformation_v2 saveImageInformation(String url, String jobDirectoryString, String filename) {
+    public ImageInformation_v2 parseImageInformation(String url) {
       ImageInformation_v2 imageInformation = null;
       try {
         final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(url);
-        informationRequest.saveToFile(jobDirectoryString, filename);
-        imageInformation = informationRequest.parseImageInformation(null);
+        imageInformation = informationRequest.parseImageInformation();
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -216,7 +208,7 @@ public class ImageRequestFactory {
         String identifier = iiifItem.getIdentifier();
         final String imageName = itemPrefixString + identifier;
 
-        ImageInformation_v2 imageInformation = saveImageInformation(iiifConfig.getBaseUrl() + "/" + identifier, jobDirectoryString, imageName);
+        ImageInformation_v2 imageInformation = parseImageInformation(iiifConfig.getBaseUrl() + "/" + identifier);
 
         ImageRequestBuilder_v2 builder;
         if (imageInformation != null) {
@@ -241,6 +233,16 @@ public class ImageRequestFactory {
           LOGGER.debug("Failed to save image: " + imageName);
           e.printStackTrace();
         }
+
+        ImageMetadata imageMetadata = new ImageMetadata();
+        imageMetadata.setQuality(imageRequest.getQuality())
+            .setResourceUrl(imageRequest.getBaseUrl());
+        try {
+          imageMetadata.saveToFile(jobDirectoryString, imageName);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
         imageRequests.add(imageRequest);
       }
       return imageRequests;

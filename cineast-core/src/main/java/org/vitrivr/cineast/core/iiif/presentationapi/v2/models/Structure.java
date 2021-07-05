@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- *   @author singaltanmay
- *   @version 1.0
- *   @created 23.06.21
+ * @author singaltanmay
+ * @version 1.0
+ * @created 23.06.21
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Structure {
