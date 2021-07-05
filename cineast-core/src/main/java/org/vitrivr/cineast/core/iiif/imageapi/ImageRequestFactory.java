@@ -43,6 +43,7 @@ public class ImageRequestFactory {
   private final IIIFConfig iiifConfig;
   private final Canvas canvas;
   private ImageApiVersion imageApiVersion;
+  private ImageMetadata globalMetadata;
 
   public ImageRequestFactory(IIIFConfig iiifConfig) {
     this.iiifConfig = iiifConfig;
@@ -55,8 +56,9 @@ public class ImageRequestFactory {
     this.canvas = null;
   }
 
-  public ImageRequestFactory(Canvas canvas) {
+  public ImageRequestFactory(Canvas canvas, ImageMetadata globalMetadata) {
     this.canvas = canvas;
+    this.globalMetadata = globalMetadata;
     this.iiifConfig = null;
   }
 
@@ -131,7 +133,7 @@ public class ImageRequestFactory {
           LOGGER.error("Failed to save image to file system: " + image);
           e.printStackTrace();
         }
-        ImageMetadata imageMetadata = new ImageMetadata()
+        ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata)
             .setResourceUrl(imageApiUrl)
             .setQuality(imageRequest.getQuality());
         try {
