@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
@@ -51,11 +52,15 @@ public class ManifestFactory {
   public void saveAllCanvasImages(String jobDirectoryString, String filenamePrefix) {
     List<Sequence> sequences = manifest.getSequences();
     if (sequences != null && sequences.size() != 0) {
+      ImageMetadata globalMetadata = new ImageMetadata()
+          .setDescription(manifest.getDescription())
+          .setLinkingUrl(manifest.getAtId())
+          .setAttribution(manifest.getAttribution());
       for (Sequence sequence : sequences) {
         List<Canvas> canvases = sequence.getCanvases();
         if (canvases != null && canvases.size() != 0) {
           for (final Canvas canvas : canvases) {
-            ImageRequestFactory imageRequestFactory = new ImageRequestFactory(canvas);
+            ImageRequestFactory imageRequestFactory = new ImageRequestFactory(canvas, globalMetadata);
             imageRequestFactory.createImageRequests(jobDirectoryString, filenamePrefix);
           }
         }

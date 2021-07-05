@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 public class ImageMetadata {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
   @JsonInclude(Include.NON_NULL)
   private Long width;
   @JsonInclude(Include.NON_NULL)
@@ -48,6 +47,25 @@ public class ImageMetadata {
    */
   @JsonInclude(Include.NON_NULL)
   private String label;
+
+  /**
+   * Constructor function to initialize values of this object using an existing object
+   */
+  public static ImageMetadata from(ImageMetadata obj) {
+    ImageMetadata imageMetadata = new ImageMetadata();
+    if (obj != null) {
+      imageMetadata
+          .setHeight(obj.getHeight())
+          .setWidth(obj.getWidth())
+          .setQuality(obj.getQuality())
+          .setDescription(obj.getDescription())
+          .setAttribution(obj.getAttribution())
+          .setResourceUrl(obj.getResourceUrl())
+          .setLinkingUrl(obj.getLinkingUrl())
+          .setLabel(obj.getLabel());
+    }
+    return imageMetadata;
+  }
 
   /**
    * Convert this object into a JSON string
