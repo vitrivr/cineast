@@ -29,6 +29,14 @@ public interface ImageInformationRequest {
   }
 
   /**
+   * Parses the JSON response received from the server
+   *
+   * @return {@link ImageInformation}
+   */
+  @Nullable
+  ImageInformation parseImageInformation();
+
+  /**
    * This has been created as a separate function to help with unit testing.
    *
    * @param response The JSON response received from the server

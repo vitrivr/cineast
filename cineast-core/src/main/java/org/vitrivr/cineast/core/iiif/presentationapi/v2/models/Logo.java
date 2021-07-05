@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- *   @author singaltanmay
- *   @version 1.0
- *   @created 23.06.21
+ * @author singaltanmay
+ * @version 1.0
+ * @created 23.06.21
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Logo {

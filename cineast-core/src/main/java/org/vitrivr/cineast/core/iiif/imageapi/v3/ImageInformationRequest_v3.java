@@ -33,11 +33,14 @@ public class ImageInformationRequest_v3 implements ImageInformationRequest {
 
   @Nullable
   @Override
+  public ImageInformation_v3 parseImageInformation() {
+    return parseImageInformation(this.imageInformation);
+  }
+
+  @Nullable
+  @Override
   public ImageInformation_v3 parseImageInformation(String response) {
     ImageInformation_v3 imageInformation = null;
-    if (response == null || response.isEmpty()) {
-      response = this.imageInformation;
-    }
     try {
       imageInformation = new ObjectMapper().readValue(response, ImageInformation_v3.class);
     } catch (IOException e) {
