@@ -59,7 +59,9 @@ public class ManifestFactory {
       for (Sequence sequence : sequences) {
         List<Canvas> canvases = sequence.getCanvases();
         if (canvases != null && canvases.size() != 0) {
-          for (final Canvas canvas : canvases) {
+          // TODO remove limit of 5 canvasses
+          for (int i = 0; i < Math.min(5, canvases.size()); i++) {
+            final Canvas canvas = canvases.get(i);
             ImageRequestFactory imageRequestFactory = new ImageRequestFactory(canvas, globalMetadata);
             imageRequestFactory.createImageRequests(jobDirectoryString, filenamePrefix);
           }
