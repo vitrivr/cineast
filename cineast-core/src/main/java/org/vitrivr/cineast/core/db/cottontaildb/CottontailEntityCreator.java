@@ -87,10 +87,13 @@ public final class CottontailEntityCreator implements EntityCreator {
           .column(TagReader.TAG_DESCRIPTION_COLUMNNAME, Type.STRING, -1, false);
       this.cottontail.client.create(create, txId);
 
-      /* Create index. */
+      /* tag ids should be unique */
       this.createIndex(entityName, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ, txId);
+      /* tag names do not necessarily have to be unique */
       this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH, txId);
+      /* could be used for autocomplete */
       this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE, txId);
+
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
