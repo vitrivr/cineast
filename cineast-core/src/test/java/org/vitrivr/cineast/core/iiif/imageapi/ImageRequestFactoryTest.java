@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
-import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
+import org.vitrivr.cineast.core.iiif.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 
 /**
