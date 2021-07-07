@@ -19,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
-import org.vitrivr.cineast.core.iiif.IIIFConfig.IIIFItem;
+import org.vitrivr.cineast.core.iiif.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationRequest_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;

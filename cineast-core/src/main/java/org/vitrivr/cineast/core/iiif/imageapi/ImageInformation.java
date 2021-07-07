@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Interface defining the common functionality implemented by ImageInformation objects of every version of the Image API
@@ -76,13 +79,13 @@ public interface ImageInformation {
     public SizesItem() {
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
-      return "ImageInformation.SizesItem(width=" + this.getWidth() + ", height=" + this.getHeight() + ")";
+    @Override
+    public String toString() {
+      return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object o) {
+    @Override
+    public boolean equals(final Object o) {
       if (o == this) {
         return true;
       }
@@ -93,29 +96,18 @@ public interface ImageInformation {
       if (!other.canEqual(this)) {
         return false;
       }
-      final java.lang.Object this$width = this.getWidth();
-      final java.lang.Object other$width = other.getWidth();
-      if (this$width == null ? other$width != null : !this$width.equals(other$width)) {
+      final Object this$width = this.getWidth();
+      final Object other$width = other.getWidth();
+      if (!Objects.equals(this$width, other$width)) {
         return false;
       }
-      final java.lang.Object this$height = this.getHeight();
-      final java.lang.Object other$height = other.getHeight();
-      return this$height == null ? other$height == null : this$height.equals(other$height);
+      final Object this$height = this.getHeight();
+      final Object other$height = other.getHeight();
+      return Objects.equals(this$height, other$height);
     }
 
-    protected boolean canEqual(final java.lang.Object other) {
+    protected boolean canEqual(final Object other) {
       return other instanceof ImageInformation.SizesItem;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final java.lang.Object $width = this.getWidth();
-      result = result * PRIME + ($width == null ? 43 : $width.hashCode());
-      final java.lang.Object $height = this.getHeight();
-      result = result * PRIME + ($height == null ? 43 : $height.hashCode());
-      return result;
     }
 
     public Long getWidth() {
@@ -153,13 +145,13 @@ public interface ImageInformation {
     public TilesItem() {
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
-      return "ImageInformation.TilesItem(width=" + this.getWidth() + ", height=" + this.getHeight() + ", scaleFactors=" + this.getScaleFactors() + ")";
+    @Override
+    public String toString() {
+      return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object o) {
+    @Override
+    public boolean equals(final Object o) {
       if (o == this) {
         return true;
       }
@@ -176,26 +168,13 @@ public interface ImageInformation {
       if (this.getHeight() != other.getHeight()) {
         return false;
       }
-      final java.lang.Object this$scaleFactors = this.getScaleFactors();
-      final java.lang.Object other$scaleFactors = other.getScaleFactors();
-      return this$scaleFactors == null ? other$scaleFactors == null : this$scaleFactors.equals(other$scaleFactors);
+      final Object this$scaleFactors = this.getScaleFactors();
+      final Object other$scaleFactors = other.getScaleFactors();
+      return Objects.equals(this$scaleFactors, other$scaleFactors);
     }
 
-    protected boolean canEqual(final java.lang.Object other) {
+    protected boolean canEqual(final Object other) {
       return other instanceof ImageInformation.TilesItem;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final long $width = this.getWidth();
-      result = result * PRIME + (int) ($width >>> 32 ^ $width);
-      final long $height = this.getHeight();
-      result = result * PRIME + (int) ($height >>> 32 ^ $height);
-      final java.lang.Object $scaleFactors = this.getScaleFactors();
-      result = result * PRIME + ($scaleFactors == null ? 43 : $scaleFactors.hashCode());
-      return result;
     }
 
     public long getWidth() {
