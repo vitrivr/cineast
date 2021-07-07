@@ -159,7 +159,7 @@ public class ImageRequest {
     BufferedImage img = ImageIO.read(url);
     File file = new File(filePath + "/" + fileName + "." + this.getExtension());
     ImageIO.write(img, this.getExtension(), file);
-    LOGGER.debug("Image downloaded and written to file successfully. Image url:\t" + url);
+    LOGGER.debug("Image downloaded and written to file successfully. Image url:\t{}", url);
   }
 
   @Override

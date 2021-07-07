@@ -49,10 +49,12 @@ public class ImageApiVersion {
    * Converts numeric version number string into an enum item
    */
   private static IMAGE_API_VERSION numericStringToEnum(String input) {
-    if (input.equals(IMAGE_API_VERSION_2_1_1_NUMERIC)) {
-      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals(IMAGE_API_VERSION_3_0_NUMERIC) || input.equals("3.0.0")) {
-      return IMAGE_API_VERSION.THREE_POINT_ZERO;
+    switch (input) {
+      case IMAGE_API_VERSION_2_1_1_NUMERIC:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+      case IMAGE_API_VERSION_3_0_NUMERIC:
+      case "3.0.0":
+        return IMAGE_API_VERSION.THREE_POINT_ZERO;
     }
     return null;
   }
@@ -61,10 +63,11 @@ public class ImageApiVersion {
    * Converts IIIF Image API level string into an enum item
    */
   private static IMAGE_API_VERSION apiComplianceLevelToEnum(String input) {
-    if (input.equals(IMAGE_API_VERSION_2_1_1_COMPLIANCE_LEVEL_2)) {
-      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals(IMAGE_API_VERSION_3_0_COMPLIANCE_LEVEL_1)) {
-      return IMAGE_API_VERSION.THREE_POINT_ZERO;
+    switch (input) {
+      case IMAGE_API_VERSION_2_1_1_COMPLIANCE_LEVEL_2:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+      case IMAGE_API_VERSION_3_0_COMPLIANCE_LEVEL_1:
+        return IMAGE_API_VERSION.THREE_POINT_ZERO;
     }
     return null;
   }
