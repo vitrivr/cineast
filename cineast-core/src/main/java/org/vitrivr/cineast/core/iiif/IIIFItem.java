@@ -1,20 +1,13 @@
 package org.vitrivr.cineast.core.iiif;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 
-/**
- * IIIF configuration used to fetch media files from remote servers.
- */
-public class IIIFConfig {
+public class IIIFItem {
 
   @JsonProperty
-  private String imageApiVersion;
-  @JsonProperty(value = "url", required = true)
-  private String baseUrl;
+  private String identifier;
   @JsonProperty
   private String region;
   @JsonProperty
@@ -25,19 +18,8 @@ public class IIIFConfig {
   private String quality;
   @JsonProperty
   private String format;
-  @JsonProperty("items")
-  private List<IIIFItem> iiifItems;
 
-  public ImageApiVersion getImageApiVersion() {
-    if (imageApiVersion == null) {
-      throw new IllegalArgumentException("Image API Version is not defined!");
-    }
-    return ImageApiVersion.fromNumericString(imageApiVersion);
-  }
-
-  @JsonProperty
-  public void setImageApiVersion(final String imageApiVersion) {
-    this.imageApiVersion = imageApiVersion;
+  public IIIFItem() {
   }
 
   @Override
@@ -45,13 +27,13 @@ public class IIIFConfig {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
-  public String getBaseUrl() {
-    return this.baseUrl;
+  public String getIdentifier() {
+    return this.identifier;
   }
 
-  @JsonProperty(value = "url", required = true)
-  public void setBaseUrl(final String baseUrl) {
-    this.baseUrl = baseUrl;
+  @JsonProperty
+  public void setIdentifier(final String identifier) {
+    this.identifier = identifier;
   }
 
   public String getRegion() {
@@ -98,14 +80,4 @@ public class IIIFConfig {
   public void setFormat(final String format) {
     this.format = format;
   }
-
-  public List<IIIFItem> getIiifItems() {
-    return this.iiifItems;
-  }
-
-  @JsonProperty("items")
-  public void setIiifItems(final List<IIIFItem> iiifItems) {
-    this.iiifItems = iiifItems;
-  }
-
 }
