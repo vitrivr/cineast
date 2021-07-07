@@ -65,22 +65,19 @@ public class ImageApiCompliance_v3 {
   }
 
   public static boolean isFormatSupported(String format, String level) {
-    // All levels support the jpg format
-    if (format.equals(EXTENSION_JPG)) {
-      return true;
-    }
-    if (format.equals(EXTENSION_PNG)) {
-      return level.equals(LEVEL_2);
+    switch (format) {
+      case EXTENSION_JPG:
+        // All levels support the jpg format
+        return true;
+      case EXTENSION_PNG:
+        return level.equals(LEVEL_2);
     }
     return false;
   }
 
   public static boolean isHttpFeatureSupported(String httpFeature, String level) {
-    switch (httpFeature) {
-      case SUPPORTS_BASE_URI_REDIRECT:
-      case SUPPORTS_CORS:
-      case SUPPORTS_JSONLD_MEDIA_TYPE:
-        return level.equals(LEVEL_1) || level.equals(LEVEL_2);
+    if (httpFeature.equals(SUPPORTS_BASE_URI_REDIRECT) || httpFeature.equals(SUPPORTS_CORS) || httpFeature.equals(SUPPORTS_JSONLD_MEDIA_TYPE)) {
+      return level.equals(LEVEL_1) || level.equals(LEVEL_2);
     }
     return false;
   }
