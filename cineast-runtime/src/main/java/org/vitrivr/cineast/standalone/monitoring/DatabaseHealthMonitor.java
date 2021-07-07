@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
-/**
- * @author silvan on 19.11.18.
- */
+
 public class DatabaseHealthMonitor {
 
   private static boolean initalized = false;

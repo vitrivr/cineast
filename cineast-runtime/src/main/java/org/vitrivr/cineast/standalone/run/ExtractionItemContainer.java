@@ -18,7 +18,6 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * corresponding {@link #object} MUST contain the {@link MediaObjectDescriptor#getMediatype()} so an
  * item can be handed out to different extractionhandlers.
  *
- * @author silvan on 06.04.18.
  */
 public class ExtractionItemContainer {
 

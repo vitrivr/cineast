@@ -3,11 +3,7 @@ package org.vitrivr.cineast.standalone.config;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.config.IdConfig;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
- */
+
 public class InputConfig {
     private String path;
     private String name;

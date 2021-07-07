@@ -11,9 +11,6 @@ import java.util.*;
  * Represents a ground truth data collection that assigns IDs of test objects to arbitrary classes and
  * vice versa. This class can be constructed from a simple JSON file.
  *
- * @author rgasser
- * @version 1.0
- * @created 06.05.17
  */
 public class Groundtruth {
 

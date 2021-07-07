@@ -15,11 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 17.01.17
- */
+
 public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
 
