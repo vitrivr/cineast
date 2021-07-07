@@ -32,10 +32,6 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Image;
 
 /**
  * Accepts an {@link IIIFConfig} and downloads the image file & image information JSON of all {@link IIIFItem} specified in the config file
- *
- * @author singaltanmay
- * @version 1.0
- * @created 10.06.21
  */
 public class ImageRequestFactory {
 

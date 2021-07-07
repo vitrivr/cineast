@@ -22,10 +22,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
  * Builds an Image API 2.1.1 request using {@link BaseImageRequestBuilder} while also performing validation to check if the server supports the requested parameters
- *
- * @author singaltanmay
- * @version 1.0
- * @created 09.06.21
  */
 public class ImageRequestBuilder_v2 {
 

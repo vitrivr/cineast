@@ -14,10 +14,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
  * Makes HTTP request for image information, parses the response into {@link ImageInformation_v2} and saves the raw JSON to the filesystem
- *
- * @author singaltanmay
- * @version 1.0
- * @created 02.06.21
  */
 public class ImageInformationRequest_v2 implements ImageInformationRequest {
 

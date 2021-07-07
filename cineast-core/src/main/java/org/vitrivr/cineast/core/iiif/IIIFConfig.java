@@ -6,10 +6,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 
 /**
  * IIIF configuration used to fetch media files from remote servers.
- *
- * @author singaltanmay
- * @version 1.0
- * @created 28.05.21
  */
 public class IIIFConfig {
 

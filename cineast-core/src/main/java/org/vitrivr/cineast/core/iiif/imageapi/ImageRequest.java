@@ -11,10 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Class definition of a single IIIF Image API Request
- *
- * @author singaltanmay
- * @version 1.0
- * @created 29.05.21
  */
 public class ImageRequest {
 

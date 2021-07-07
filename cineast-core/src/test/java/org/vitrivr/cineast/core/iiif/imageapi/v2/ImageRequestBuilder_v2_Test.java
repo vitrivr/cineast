@@ -20,10 +20,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
  * Only input validation and functions specific to Image API 2.1.1 need to be tested
- *
- * @author singaltanmay
- * @version 1.0
- * @created 10.06.21
  */
 public class ImageRequestBuilder_v2_Test {
 
