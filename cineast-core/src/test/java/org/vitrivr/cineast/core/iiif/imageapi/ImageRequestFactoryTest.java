@@ -18,10 +18,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 
 /**
  * Unit testing of the methods in the class {@link ImageRequestFactory}
- *
- * @author singaltanmay
- * @version 1.0
- * @created 16.06.21
  */
 public class ImageRequestFactoryTest {
 

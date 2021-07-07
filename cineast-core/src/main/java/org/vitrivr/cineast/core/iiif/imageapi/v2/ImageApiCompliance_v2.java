@@ -21,10 +21,6 @@ import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.Prof
 
 /**
  * Class to check for IIIF Image API Compliance Level specific support for features, quality and image formats
- *
- * @author singaltanmay
- * @version 1.0
- * @created 15.06.21
  */
 public class ImageApiCompliance_v2 {
 

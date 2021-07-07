@@ -28,10 +28,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for methods in {@link ImageApiCompliance_v2}
- *
- * @author singaltanmay
- * @version 1.0
- * @created 15.06.21
  */
 public class ImageApiCompliance_v2_Test {
 

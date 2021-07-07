@@ -13,25 +13,18 @@ import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPP
 import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_BY_PCT;
 import static org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3.SUPPORTS_SIZE_UPSCALING;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
  * Tests the parsing of JSON response received for an "info.json" into an ImageInformation_v3 object
- *
- * @author singaltanmay
- * @version 1.0
- * @created 15.06.21
  */
 public class ImageInformationRequest_v3_Test {
 
