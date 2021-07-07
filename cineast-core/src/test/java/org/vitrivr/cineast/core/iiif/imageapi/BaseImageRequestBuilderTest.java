@@ -74,7 +74,6 @@ public class BaseImageRequestBuilderTest {
       final float w = 120f;
       final float h = 140f;
       ImageRequest request = builder.setRegionPercentage(x, y, w, h).build();
-      String s = request.generateIIIFRequestUrl();
       assertNotNull(request);
       String coordinates = toSimplifiedFloatString(x) + "," + toSimplifiedFloatString(y) + ","
           + toSimplifiedFloatString(w) + "," + toSimplifiedFloatString(h);

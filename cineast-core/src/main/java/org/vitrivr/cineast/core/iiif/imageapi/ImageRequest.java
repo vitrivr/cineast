@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +38,7 @@ public class ImageRequest {
 
   public static ImageRequest fromUrl(String url) {
     ImageRequest imageRequest = new ImageRequest();
+    url = URLDecoder.decode(url);
     String[] split = url.split("/");
     imageRequest.setRegion(split[split.length - 4]);
     imageRequest.setSize(split[split.length - 3]);
@@ -51,28 +53,6 @@ public class ImageRequest {
     imageRequest.setBaseUrl(baseUrl.toString());
     LOGGER.info("ImageRequest parsed from url: " + imageRequest);
     return imageRequest;
-  }
-
-  /**
-   * Percent encodes "/","?","#","[","]","@" and "%" to their corresponding ASCII reserved characters
-   */
-  public static String percentEncode(String toEncode) {
-    HashMap<Character, String> mapping = new HashMap<>();
-    mapping.put('/', "%2F");
-    mapping.put('?', "%3F");
-    mapping.put('#', "%23");
-    mapping.put('[', "%5B");
-    mapping.put(']', "%5D");
-    mapping.put('@', "%40");
-    mapping.put('%', "%25");
-    if (toEncode == null) {
-      return null;
-    }
-    StringBuilder encoded = new StringBuilder(toEncode.length());
-    for (Character c : toEncode.toCharArray()) {
-      encoded.append(mapping.getOrDefault(c, c.toString()));
-    }
-    return encoded.toString();
   }
 
   public String getBaseUrl() {
@@ -135,15 +115,15 @@ public class ImageRequest {
   public String generateIIIFRequestUrl() {
     String FORWARD_SLASH_DELIMITER = "/";
     return baseUrl + FORWARD_SLASH_DELIMITER
-        + percentEncode(region)
+        + URLEncoder.encode(region)
         + FORWARD_SLASH_DELIMITER
-        + percentEncode(size)
+        + URLEncoder.encode(size)
         + FORWARD_SLASH_DELIMITER
-        + percentEncode(rotation)
+        + URLEncoder.encode(rotation)
         + FORWARD_SLASH_DELIMITER
-        + percentEncode(quality)
+        + URLEncoder.encode(quality)
         + "."
-        + percentEncode(extension);
+        + URLEncoder.encode(extension);
   }
 
   public void saveToFile(String filePath, String fileName) throws IOException {
