@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 /**
  * This class represents a melody as as sequence of pitches.
  *
- * @author rgasser
- * @version 1.0
- * @created 19.04.17
  */
 public class Melody implements Iterable<Pitch> {
     /** List holding the pitches that comprise this melody. */

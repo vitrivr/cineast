@@ -21,9 +21,6 @@ import java.nio.file.Path;
 /**
  * Provides JSON deserialization capabilities by means of Jackson Databind library.
  *
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
  */
 public class JacksonJsonProvider implements JsonReader, JsonWriter {
 

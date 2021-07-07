@@ -2,9 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 import com.googlecode.javaewah.datastructure.BitSet;
 
-/**
- * @author silvan on 18.12.17.
- */
+
 public class BitSetHammingDistance implements Distance<BitSet> {
   
   @Override

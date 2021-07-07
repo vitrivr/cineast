@@ -11,9 +11,6 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
  * [1] Mueller, M., Kurth, F., & Clausen, M. (2005). Audio matching via chroma-based statistical features. International Conference on Music Information Retrieval, 288–295. http://doi.org/10.1109/ASPAA.2005.1540223
  *
  *
- * @author rgasser
- * @version 1.0
- * @created 21.02.17
  */
 public class CENS {
 

@@ -23,11 +23,7 @@ import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 14.04.17
- */
+
 public class MelodyEstimate extends StagedFeatureModule {
 
     /**

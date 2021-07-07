@@ -25,9 +25,6 @@ import java.util.List;
  *
  * TODO: Use CSV based format for codebooks.
  *
- * @author rgasser
- * @version 1.0
- * @created 20.01.17
  */
 public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule {
     /** The Assignment used for the codebook. */

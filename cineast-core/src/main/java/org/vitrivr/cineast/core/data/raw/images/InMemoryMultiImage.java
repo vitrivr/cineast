@@ -10,8 +10,7 @@ import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
  * The {@link InMemoryMultiImage} object is an immutable representation of a {@link BufferedImage} that holds all its data in-memory.
  * The memory will be occupied until the {@link InMemoryMultiImage} is garbage collected.
  *
- * @author Ralph Gasser
- * @version 1.0
+  * @version 1.0
  *
  * @see MultiImage
  * @see CacheableData

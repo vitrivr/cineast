@@ -23,10 +23,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-/**
- * @author rgasser
- * @version 1.1
- */
+
 public class ChromagramExporter implements Extractor {
 
     private static final Logger LOGGER = LogManager.getLogger();

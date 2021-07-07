@@ -6,11 +6,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import java.nio.file.Path;
 import java.util.Set;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 06.05.17
- */
+
 public interface Converter {
     /**
      * Converts a single file to a QueryContainer.

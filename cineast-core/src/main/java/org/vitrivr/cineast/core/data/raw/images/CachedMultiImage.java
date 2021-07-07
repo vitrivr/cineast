@@ -19,8 +19,7 @@ import java.nio.file.Path;
  * A temporary cache file is created upon constructing the {@link CachedMultiImage} object and holds its content in case the in-memory
  * representation gets garbage collected.
  *
- * @author Ralph Gasser
- * @version 1.0
+  * @version 1.0
  *
  * @see MultiImage
  * @see CacheableData

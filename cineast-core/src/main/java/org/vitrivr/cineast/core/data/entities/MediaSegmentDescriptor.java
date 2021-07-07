@@ -13,8 +13,6 @@ import org.vitrivr.cineast.core.data.ExistenceCheck;
  * or an image in an image sequence). The cardinality of a media object to its segments is 1 to (1..n) depending on the
  * type of media.
  *
- * @author rgasser
- * @version 1.1
  */
 public final class MediaSegmentDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */

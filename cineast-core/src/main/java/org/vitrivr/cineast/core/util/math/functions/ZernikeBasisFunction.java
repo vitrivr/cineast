@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.util.math.functions.interfaces.UnivariateComplex
  * This class represents a Zernike Basis Function of order m,n. These functions can be
  * used to construct a Zernike Polynomial.
  *
- * @author rgasser
- * @version 1.0
- * @created 16.03.17
  */
 public class ZernikeBasisFunction implements UnivariateComplexFunction {
 

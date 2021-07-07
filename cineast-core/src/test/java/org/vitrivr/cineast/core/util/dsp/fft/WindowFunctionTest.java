@@ -10,11 +10,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 07.02.17
- */
+
 public class WindowFunctionTest {
     @Test
     @DisplayName("Rectangular Window Test")

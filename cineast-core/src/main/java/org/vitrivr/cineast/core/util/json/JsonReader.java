@@ -7,9 +7,6 @@ import java.io.File;
  * Wraps the Json to Object deserialization so as to make sure that it can be provided
  * independently of a concrete library.
  *
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
  */
 public interface JsonReader {
   /**

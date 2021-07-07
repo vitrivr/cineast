@@ -25,8 +25,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * A {@link Segmenter} for {@link ImageSequence}s.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
 

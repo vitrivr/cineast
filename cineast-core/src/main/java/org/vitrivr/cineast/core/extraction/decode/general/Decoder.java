@@ -15,9 +15,6 @@ import java.util.Set;
  * may be reusable, which means that they can be re-initialized by calling init() again. Use the reusable()
  * method to determine whether or not a Decoder can be re-used.
  *
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
  */
 public interface Decoder<T> extends AutoCloseable {
     /**

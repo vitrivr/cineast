@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
  * Default implementation of a Codebook generator for images. Extend and add the details like
  * the images to use.
  *
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
  */
 public abstract class ImageCodebookGenerator implements CodebookGenerator {
     /** K-Means clusterer used for the clustering step in the Codebook generation. */

@@ -14,9 +14,6 @@ import java.util.List;
  *
  * [1] Vranić, D. and D. S. (n.d.). 3D Model Retrieval.
  *
- * @author rgasser
- * @version 1.0
- * @created 08.01.17
  */
 public final class MeshMathUtil {
 

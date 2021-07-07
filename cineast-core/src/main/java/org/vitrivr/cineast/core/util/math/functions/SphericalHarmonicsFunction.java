@@ -4,11 +4,7 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.apache.commons.math3.util.FastMath;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 17.03.17
- */
+
 public class SphericalHarmonicsFunction {
 
     /** Degree of the Spherical Harmonics function (l >= 0) */

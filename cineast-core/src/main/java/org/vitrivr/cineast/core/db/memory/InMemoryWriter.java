@@ -14,8 +14,6 @@ import org.vitrivr.cineast.core.db.memory.InMemoryStore.Entity;
  *
  * @see InMemoryStore
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
 

@@ -22,9 +22,6 @@ import java.util.List;
  * [1] Vranic, D. V., Saupe, D., & Richter, J. (2001). Tools for 3D-object retrieval: Karhunen-Loeve transform and\nspherical harmonics.
  *  2001 IEEE Fourth Workshop on Multimedia Signal Processing (Cat. No.01TH8564), 0–5. http://doi.org/10.1109/MMSP.2001.962749
  *
- * @author rgasser
- * @version 1.0
- * @created 08.01.17
  */
 public final class MeshTransformUtil {
     /**

@@ -13,11 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 10.03.17
- */
+
 public class AudioParser extends DataURLParser {
     /** Mimetype of supported data URL's. Only WAV audio is currently supported. */
     private static final String MIME_TYPE = "audio/wav";

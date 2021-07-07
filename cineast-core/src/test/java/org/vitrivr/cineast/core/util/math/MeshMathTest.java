@@ -14,11 +14,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 16.03.17
- */
+
 public class MeshMathTest {
 
     private static final Mesh CUBE = new Mesh(6, 20);

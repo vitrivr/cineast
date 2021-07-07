@@ -21,11 +21,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 12.03.17
- */
+
 public class Model3DThumbnailExporter implements Extractor {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -25,9 +25,6 @@ import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterI
  *
  * @see WindowFunction
  *
- * @author rgasser
- * @version 1.0
- * @created 02.02.17
  */
 public class FFT {
     /** Data obtained by forward FFT. */
