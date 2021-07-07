@@ -18,10 +18,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Unit testing of methods in {@link BaseImageRequestBuilder}
- *
- * @author singaltanmay
- * @version 1.0
- * @created 29.05.21
  */
 public class BaseImageRequestBuilderTest {
 

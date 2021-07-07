@@ -5,10 +5,6 @@ import java.util.List;
 
 /**
  * Interface defining the common functionality implemented by ImageInformation objects of every version of the Image API
- *
- * @author singaltanmay
- * @version 1.0
- * @created 13.06.21
  */
 public interface ImageInformation {
 

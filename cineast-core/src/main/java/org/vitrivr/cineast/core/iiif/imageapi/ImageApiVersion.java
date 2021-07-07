@@ -2,10 +2,6 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 
 /**
  * Utility class to hold the Image API version along with some helpful methods for converting into different formats
- *
- * @author singaltanmay
- * @version 1.0
- * @created 14.06.21
  */
 public class ImageApiVersion {
 

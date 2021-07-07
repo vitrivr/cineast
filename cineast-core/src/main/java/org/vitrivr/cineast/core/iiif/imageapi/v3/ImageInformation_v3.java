@@ -8,10 +8,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
  * ImageInformation object used to parse Image API 3.0 image information request's JSON response
- *
- * @author singaltanmay
- * @version 1.0
- * @created 13.06.21
  */
 public class ImageInformation_v3 implements ImageInformation {
 

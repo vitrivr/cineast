@@ -17,10 +17,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem
 
 /**
  * Tests the parsing of JSON response received for an "info.json" into an ImageInformation_v2 object
- *
- * @author singaltanmay
- * @version 1.0
- * @created 02.06.21
  */
 class ImageInformationRequest_v2_Test {
 

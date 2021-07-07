@@ -12,10 +12,6 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 
 /**
  * Unit testing of methods in class {@link ImageApiVersion}
- *
- * @author singaltanmay
- * @version 1.0
- * @created 15.06.21
  */
 public class ImageApiVersionTest {
 

@@ -2,10 +2,6 @@ package org.vitrivr.cineast.core.iiif.imageapi;
 
 /**
  * Base builder class to generate a single IIIF Image API request
- *
- * @author singaltanmay
- * @version 1.0
- * @created 09.06.21
  */
 public class BaseImageRequestBuilder {
 

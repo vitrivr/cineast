@@ -10,10 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface that defines functionality that has to be implemented by ImageInformation objects of all versions of the Image API
- *
- * @author singaltanmay
- * @version 1.0
- * @created 14.06.21
  */
 public interface ImageInformationRequest {
 
