@@ -164,13 +164,13 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 
   /**
-   * @param streamLast
-   * @param streamFirst
+   * @param streamPast Stream which appears before streamFuture
+   * @param streamFuture Stream which appears after streamPast
    * @return The similarity of the streams by taking into account the spatial distance, the overlap, the text similarity, and the frame offset
    */
-  private double getSimilarity(TextStream streamLast, TextStream streamFirst) {
-    Quadrilateral_F64 lastBox = streamLast.findLastBox();
-    Quadrilateral_F64 firstBox = streamFirst.findFirstBox();
+  private double getSimilarity(TextStream streamPast, TextStream streamFuture) {
+    Quadrilateral_F64 lastBox = streamPast.findLastBox();
+    Quadrilateral_F64 firstBox = streamFuture.findFirstBox();
 
     double spatial_x = (Math.abs(lastBox.getA().x - firstBox.getA().x) + Math.abs(lastBox.getB().x - firstBox.getB().x) +
         Math.abs(lastBox.getC().x - firstBox.getC().x) + Math.abs(lastBox.getD().x - firstBox.getD().x)) / 4;
@@ -182,9 +182,9 @@ public class OCRSearch extends AbstractTextRetriever {
 
     double inv_IoU = 1 - getIntersectionOverUnion(lastBox, firstBox);
 
-    double edit_dis = 1 - new JaroWinklerSimilarity().apply(streamLast.getText(), streamFirst.getText());
+    double edit_dis = 1 - new JaroWinklerSimilarity().apply(streamPast.getText(), streamFuture.getText());
 
-    return spatial_dis + inv_IoU + 10 * edit_dis + 0.2 * Math.abs(streamFirst.getFirst() - streamLast.getLast());
+    return spatial_dis + inv_IoU + 10 * edit_dis + 0.2 * Math.abs(streamFuture.getFirst() - streamPast.getLast());
   }
 
   /**
@@ -211,8 +211,9 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 
   /**
-   * @param coordA
-   * @param coordB
+   * Computes and returns the IoU of the two rectangular boxes. The method will not work if they are not rectangular
+   * @param coordA Coordinate of a rectangular box
+   * @param coordB Coordinate of a rectangular box
    * @return the intersection over union of the two rectangular coordinates
    */
   private double getIntersectionOverUnion(Quadrilateral_F64 coordA, Quadrilateral_F64 coordB) {
@@ -234,7 +235,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
   /**
    * getAverageIntersectionOverUnion takes two lists of coordinates and returns the average IoU
-   *
+   * The coordinates provided have to describe a rectangular box
    * @param coordinates1 Sequentially ordered coordinates (from frame i to frame i+n)
    * @param coordinates2 Sequentially ordered coordinates (from frame i to frame i+n)
    * @return The average intersection over union
@@ -391,6 +392,7 @@ public class OCRSearch extends AbstractTextRetriever {
       Iterator<Integer> frameIterator = filtered.keySet().iterator();
       HashMap<String, Integer> counts = new HashMap<>();
 
+      // Recognize text from the filtered coordinates and count the amount of times they occur
       while (frameIterator.hasNext()) {
         int key = frameIterator.next();
 
@@ -402,6 +404,7 @@ public class OCRSearch extends AbstractTextRetriever {
         counts.put(recognition, count != null ? count + 1 : 1);
       }
 
+      // Select the recognitions which appear most often (majority voting)
       int max_count = 0;
       List<String> prunedRecognitions = new ArrayList<>();
       for (HashMap.Entry<String, Integer> val : counts.entrySet()) {
@@ -414,6 +417,7 @@ public class OCRSearch extends AbstractTextRetriever {
         }
       }
 
+      // If there are two recognitions which appear most often, apply NeedlemanWunschMerge. If there are more than two, then delete the stream
       if (prunedRecognitions.size() == 1) {
         stream.setText(prunedRecognitions.get(0));
       } else if (prunedRecognitions.size() == 2) {
@@ -450,6 +454,8 @@ public class OCRSearch extends AbstractTextRetriever {
       }
     }
 
+    // Combine streams which are considered to be highly similar
+    // This is done to overcome scenarios in which the object was occluded during the detection, or couldn't be detected for other reasons, which resulted in two or more streams for the same text instance
     int distance = rate;
     while (distance < threshold_postproc / 0.2) {
       for (int i = rate; i + distance < lenVideo; i = i + rate) {
@@ -501,6 +507,8 @@ public class OCRSearch extends AbstractTextRetriever {
     }
 
     shouldRemove.clear();
+    // Remove streams which appear in less frames than specified in threshold_stream_length
+    // This is done to prune unreliable streams and text instances which the user could not possibly have memorized
     for (TextStream stream : streams) {
       if ((stream.getLast() - stream.getFirst()) < threshold_stream_length) {
         shouldRemove.add(stream);

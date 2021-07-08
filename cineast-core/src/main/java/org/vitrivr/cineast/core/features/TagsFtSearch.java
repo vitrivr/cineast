@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
 public class TagsFtSearch extends AbstractTextRetriever {
