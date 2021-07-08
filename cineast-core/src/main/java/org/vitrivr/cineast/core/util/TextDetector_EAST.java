@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.concurrent.atomic.AtomicReference;
 import org.opencv.core.*;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;

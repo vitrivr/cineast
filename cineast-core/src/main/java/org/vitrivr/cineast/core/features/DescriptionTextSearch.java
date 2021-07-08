@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
 public class DescriptionTextSearch extends AbstractTextRetriever {
@@ -13,5 +12,4 @@ public class DescriptionTextSearch extends AbstractTextRetriever {
   public DescriptionTextSearch() {
     super(DESCRIPTION_TEXT_TABLE_NAME);
   }
-
 }
