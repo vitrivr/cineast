@@ -1,0 +1,28 @@
+{
+	"input":{
+		"path": "data/",
+		"depth": 2,
+		"id": {
+			"name": "FileNameObjectIdGenerator",
+			"properties": {}
+		}
+	},
+	"extractors":[
+		{"name": "AverageColor"}
+	],
+	"metadata":[
+		{name: "EXIFMetadataExtractor"}
+	],
+	"exporters":[
+		{
+			"name": "ShotThumbnailsExporter",
+			"properties": {
+				"destination": "thumbnails/"
+			}
+		}
+	],
+	"database":{
+		"selector": "COTTONTAIL",
+		"writer": "COTTONTAIL"
+	}
+}

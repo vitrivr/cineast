@@ -25,12 +25,7 @@ import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandl
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler.Mode;
 import org.vitrivr.cineast.standalone.importer.lsc2020.SpatialImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.*;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
 
@@ -94,6 +89,9 @@ public class ImportCommand implements Runnable {
         break;
       case METADATA:
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
+        break;
+      case BOOLEANDATA:
+        handler = new BooleanDataHandler(this.threads, this.batchsize, true);
         break;
       case GOOGLEVISION:
         doVisionImport(path);
@@ -166,6 +164,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, BOOLEANDATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }

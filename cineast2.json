@@ -1,0 +1,86 @@
+{
+  "database": {
+    "host": "localhost",
+    "selector": "COTTONTAIL",
+    "writer": "COTTONTAIL",
+    "port": 1865,
+    "plaintext": true
+  },
+  "benchmark": {
+    "mode": "OFF",
+    "path": "benchmarks"
+  },
+  "retriever": {
+    "threadPoolSize": 2,
+    "maxResults": 10000,
+    "resultsPerModule": 5000,
+    "features": {
+      "globalcolor": [
+        {"feature": "AverageColor",  "weight": 2.3}
+      ],
+	"boolean": [
+        {
+          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "properties": {
+            "entity": "test_table",
+            "attribute": "domain,key,value"
+          }
+	}
+	]
+    }
+  },
+
+  "decoders": {
+    "VIDEO": {
+      "decoder": "FFMpegVideoDecoder",
+      "properties": {
+        "maxFrameWidth": 640,
+        "maxFrameHeight": 480
+      }
+    },
+    "IMAGE": {
+      "decoder": "DefaultImageDecoder",
+      "properties": {
+        "bounds": 1024
+      }
+    },
+    "AUDIO": {
+      "decoder": "FFMpegAudioDecoder",
+      "properties": {
+        "samplerate": 44100,
+        "channels": 2
+      }
+    }
+  },
+
+  "extractor": {
+    "threadPoolSize": 4,
+    "outputLocation": "out"
+  },
+
+  "api": {
+    "enableCLI": true,
+    "enableWebsocket": true,
+    "enableWebsocketSecure": false,
+    "enableRest": true,
+    "enableRestLiveDoc": true,
+    "enableRestSecure": false,
+    "enableLegacy": false,
+    "httpPort": 4567,
+    "httpsPort": 4568,
+    "legacyPort": 12345,
+    "threadPoolSize": 12,
+    "serveContent": true,
+    "serveUI": false,
+    "uiLocation": "../vitrivr-ng/dist",
+    "thumbnailLocation": "thumbnails",
+    "objectLocation": "objects",
+    "objectsFilesAreIDed": true
+  },
+
+  "monitoring":{
+    "enablePrometheus": false,
+    "prometheusPort": 4569
+  }
+
+}
