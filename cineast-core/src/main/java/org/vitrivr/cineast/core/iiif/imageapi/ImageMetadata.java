@@ -33,7 +33,7 @@ public class ImageMetadata {
   @JsonInclude(Include.NON_NULL)
   private String attribution;
   /**
-   * Link to the original IIIF resource from where this image was downloaded
+   * Link to the original IIIF resource from where this image was downloaded. This URL should not contain any configuration parameters such as region, size, rotation etc and show end at the identifier without the trailing '/'
    */
   @JsonInclude(Include.NON_NULL)
   private String resourceUrl;
