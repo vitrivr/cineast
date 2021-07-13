@@ -90,9 +90,8 @@
     }
   ],
   "database": {
-    "host": "output/",
-    "writer": "JSON",
-    "selector": "NONE"
+    "writer": "COTTONTAIL",
+    "selector": "COTTONTAIL"
   },
   "metadata": [
     {

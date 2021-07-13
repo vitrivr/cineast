@@ -121,10 +121,10 @@ public class ImageRequestFactory {
         ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
         imageRequests.add(imageRequest);
         ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata);
-        imageMetadata.setResourceUrl(imageApiUrl);
         if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
           try {
             String baseUrl = imageRequest.getBaseUrl();
+            imageMetadata.setResourceUrl(baseUrl);
             if (!baseUrl.endsWith("/")) {
               baseUrl += "/";
             }
