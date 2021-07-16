@@ -118,6 +118,7 @@ dependencies {
     /** Apache Commons Libraries */
     api group: "org.apache.commons", name: "commons-lang3", version: version_commonslang3
     api group: "org.apache.commons", name: "commons-math3", version: version_commonsmath3
+    api group: "org.apache.commons", name: "commons-text", version: version_commonstext
     api group: "commons-io", name: "commons-io", version: version_commonsio
     api group: "commons-codec", name: "commons-codec", version: version_commonscodec
 
@@ -150,6 +151,9 @@ dependencies {
     /** JavaCPP. */
     api group: "org.bytedeco", name: "javacpp", version: version_javacpp
     api group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: version_ffmpeg
+    
+    /** OpenCV. */
+    api group: 'org.openpnp', name: 'opencv', version: version_opencv
 
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
