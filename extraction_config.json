@@ -1,0 +1,20 @@
+{
+	"input": {
+		"path": "videos",
+		"depth": 1,
+		"id": {
+			"name": "SequentialObjectIdGenerator",
+			"properties": {}
+		}
+	},
+	"extractors": [
+		{"name": "AverageColor"},
+		{"name": "MedianColor"},
+		{"name": "OCRSearch"},
+		{"name": "SubtitleFulltextSearch"}
+	],
+	"database": {
+		"writer": "COTTONTAIL",
+		"selector": "COTTONTAIL"
+	}
+}
