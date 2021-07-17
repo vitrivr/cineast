@@ -93,6 +93,9 @@ public class ImportCommand implements Runnable {
       case BOOLEANDATA:
         handler = new BooleanDataHandler(this.threads, this.batchsize, true);
         break;
+      case BOOLEANDATA2:
+        handler = new BooleanDataHandler2(this.threads, this.batchsize);
+        break;
       case GOOGLEVISION:
         doVisionImport(path);
         isGoogleVision = true;
@@ -164,6 +167,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, BOOLEANDATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, BOOLEANDATA, BOOLEANDATA2, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }

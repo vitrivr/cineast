@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api.messages.interfaces;
 
 import org.vitrivr.cineast.api.messages.general.Ping;
+import org.vitrivr.cineast.api.messages.lookup.BooleanLookup;
 import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
@@ -31,6 +32,7 @@ public enum MessageType {
   Q_SEG(SegmentQuery.class),
   M_LOOKUP(MetadataLookup.class),
   Q_TEMPORAL(TemporalQuery.class),
+  B_LOOKUP(BooleanLookup.class),
 
 
   /* Session */
