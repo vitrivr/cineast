@@ -112,6 +112,7 @@ public class ExtractionCommand implements Runnable {
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */
   private void configureIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
+    LOGGER.info("Starting IIIF resource download and extraction job");
     final Path jobDirectory = Paths.get(directoryPath);
     if (!Files.exists(jobDirectory)) {
       Files.createDirectories(jobDirectory);

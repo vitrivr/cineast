@@ -75,8 +75,11 @@ public class ImageMetadata {
     return objectMapper.writeValueAsString(this);
   }
 
+  /**
+   * Saves the metadata file to the filesystem as a JSON file with the extension .iiif
+   */
   public void saveToFile(String filePath, String fileName) throws IOException {
-    File file = new File(filePath + "/" + fileName + ".json");
+    File file = new File(filePath + "/" + fileName + ".iiif");
     FileOutputStream fileOutputStream = new FileOutputStream(file);
     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
     //write byte array to file
