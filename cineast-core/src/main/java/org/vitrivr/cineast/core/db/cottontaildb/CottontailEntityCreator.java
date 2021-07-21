@@ -162,7 +162,8 @@ public final class CottontailEntityCreator implements EntityCreator {
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[2], Type.STRING, -1, false)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, false);
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, true)
+              .column(MediaObjectMetadataDescriptor.FIELDNAMES[4], Type.INTEGER, -1, true);
       this.cottontail.client.create(entity, txId);
 
       /* Create Index. */

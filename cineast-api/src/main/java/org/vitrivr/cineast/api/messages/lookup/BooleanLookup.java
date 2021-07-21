@@ -17,16 +17,16 @@ public class BooleanLookup implements Message {
     /**
      * List of object ID's for which metadata should be looked up.
      */
+    private String table_name;
+
     private String attribute;
 
     private String value;
 
-    private String value;
 
     /**
      * List of metadata domains that should be considered. If empty, all domains are considered!
      */
-    private String[] domains;
 
     /**
      * Constructor for the MetadataLookup object.
@@ -35,27 +35,13 @@ public class BooleanLookup implements Message {
      * @param domains Array of String of the metadata domains to be considered.
      */
     @JsonCreator
-    public MetadataLookup(@JsonProperty("objectids") String[] ids, @JsonProperty("domains") String[] domains) {
-        this.objectIds = ids;
-        this.domains = domains;
+    public BooleanLookup(@JsonProperty("table_name") String table,@JsonProperty("attribute") String
+     attribute, @JsonProperty("value") String value) {
+        this.table_name = table;
+        this.attribute = attribute;
+        this.value = value;
     }
 
-    public List<String> getIds() {
-        if (this.objectIds != null) {
-            return Arrays.asList(this.objectIds);
-        } else {
-            return new ArrayList<>(0);
-        }
-    }
-
-
-    public List<String> getDomains() {
-        if (this.domains != null) {
-            return Arrays.asList(this.domains);
-        } else {
-            return new ArrayList<>(0);
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -68,5 +54,15 @@ public class BooleanLookup implements Message {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+    }
+
+    public String getTable_name() {
+        return table_name;
+    }
+    public String getAttribute() {
+        return attribute;
+    }
+    public String getValue() {
+        return value;
     }
 }
