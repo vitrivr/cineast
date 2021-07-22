@@ -8,22 +8,29 @@ import org.vitrivr.cineast.core.db.cottontaildb.CottontailSelector;
 import java.util.List;
 
 public class BooleanReader extends AbstractEntityReader{
-    public BooleanReader(DBSelector selector) {
+
+
+    private String entity;
+    private String attribute;
+
+    public BooleanReader(DBSelector selector, String entity, String attribute) {
         super(selector);
         this.selector.open(MediaObjectMetadataDescriptor.ENTITY);
+        this.entity = entity;
+        this.attribute = attribute;
 
     }
 
 
     /** Returns the total amount of elements in the database*/
     public int getTotalElements() {
-        String entity = "test_table"; /*some random entity*/
         selector.open(entity);
         System.out.println(selector.existsEntity(entity));
-        List<PrimitiveTypeProvider> z = selector.getAll("id");
+        List<PrimitiveTypeProvider> results = selector.getAll(attribute);
         System.out.println(selector.getAll("key"));
-        System.out.println("hello");
+        System.out.println(results.size());
+        return results.size();
     }
     /** Returns the total amount of elements for a specific boolean value*/
-    public int getElementsforAttribute
+   /* public int getElementsforAttribute{}*/
 }

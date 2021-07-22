@@ -20,6 +20,7 @@ import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.api.websocket.handlers.BooleanLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
@@ -67,7 +68,7 @@ public class WebsocketAPI {
     STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
     STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
     STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
-    STATELESS_HANDLERS.put(MessageType.B_LOOKUP, new MetadataLookupMessageHandler());
+    STATELESS_HANDLERS.put(MessageType.B_LOOKUP, new BooleanLookupMessageHandler());
   }
 
   /* */

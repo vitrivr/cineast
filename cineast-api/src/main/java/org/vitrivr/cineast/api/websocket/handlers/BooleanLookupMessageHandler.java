@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api.websocket.handlers;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.lookup.BooleanLookup;
 import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
+import org.vitrivr.cineast.api.messages.result.BooleanLookupResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -22,9 +23,11 @@ public class BooleanLookupMessageHandler  extends StatelessWebsocketMessageHandl
     @Override
     public void handle(Session session, BooleanLookup message) {
         Thread.currentThread().setName("boolean-lookup-handler");
-        BooleanReader reader = new BooleanReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()); /*MUSS HIER ALLE ELEMENTE FINDEN in einem neuen reader*/
-        List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
-        this.write(session, new MediaObjectMetadataQueryResult("", descriptors)); /*new BOOLEANQUERYRESULT*/
+
+        BooleanReader reader = new BooleanReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get(), message.getEntity(), message.getAttribute());
+        int numberresults = reader.getTotalElements();/*MUSS HIER ALLE ELEMENTE FINDEN in einem neuen reader*/
+        /*List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());*/
+        this.write(session, new BooleanLookupResult("", numberresults)); //*new BOOLEANQUERYRESULT
         reader.close();
     }
 }

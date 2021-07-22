@@ -23,6 +23,8 @@ public class BooleanLookup implements Message {
 
     private String value;
 
+    private String entity;
+
 
     /**
      * List of metadata domains that should be considered. If empty, all domains are considered!
@@ -31,15 +33,16 @@ public class BooleanLookup implements Message {
     /**
      * Constructor for the MetadataLookup object.
      *
-     * @param ids     Array of String object IDs to be looked up.
-     * @param domains Array of String of the metadata domains to be considered.
+     * @param ids   Array of String object IDs to be looked up.
+     * @param Array of String of the metadata domains to be considered.
      */
     @JsonCreator
-    public BooleanLookup(@JsonProperty("table_name") String table,@JsonProperty("attribute") String
-     attribute, @JsonProperty("value") String value) {
+    public BooleanLookup(@JsonProperty("table_name") String table, @JsonProperty("attribute") String
+            attribute, @JsonProperty("value") String value, @JsonProperty("entity") String entity) {
         this.table_name = table;
         this.attribute = attribute;
         this.value = value;
+        this.entity = entity;
     }
 
 
@@ -48,7 +51,7 @@ public class BooleanLookup implements Message {
      */
     @Override
     public MessageType getMessageType() {
-        return MessageType.M_LOOKUP;
+        return MessageType.B_LOOKUP;
     }
 
     @Override
@@ -59,10 +62,16 @@ public class BooleanLookup implements Message {
     public String getTable_name() {
         return table_name;
     }
+
     public String getAttribute() {
         return attribute;
     }
+
     public String getValue() {
         return value;
+    }
+
+    public String getEntity() {
+        return entity;
     }
 }
