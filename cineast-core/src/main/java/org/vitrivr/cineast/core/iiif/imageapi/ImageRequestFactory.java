@@ -121,6 +121,7 @@ public class ImageRequestFactory {
         ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
         imageRequests.add(imageRequest);
         ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata);
+        imageMetadata.setIIIFParameters(imageRequest);
         if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
           try {
             String baseUrl = imageRequest.getBaseUrl();
@@ -250,8 +251,8 @@ public class ImageRequestFactory {
         }
 
         ImageMetadata imageMetadata = new ImageMetadata();
-        imageMetadata.setQuality(imageRequest.getQuality())
-            .setResourceUrl(imageRequest.getBaseUrl());
+        imageMetadata.setIIIFParameters(imageRequest);
+        imageMetadata.setResourceUrl(imageRequest.getBaseUrl());
         try {
           imageMetadata.saveToFile(jobDirectoryString, imageName);
         } catch (IOException e) {
@@ -406,6 +407,16 @@ public class ImageRequestFactory {
           e.printStackTrace();
         }
         imageRequests.add(imageRequest);
+
+        ImageMetadata imageMetadata = new ImageMetadata();
+        imageMetadata.setIIIFParameters(imageRequest);
+        imageMetadata.setResourceUrl(imageRequest.getBaseUrl());
+        try {
+          imageMetadata.saveToFile(jobDirectoryString, imageName);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
       }
       return imageRequests;
     }

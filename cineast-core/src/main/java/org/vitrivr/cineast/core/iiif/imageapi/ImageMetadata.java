@@ -27,7 +27,15 @@ public class ImageMetadata {
   @JsonInclude(Include.NON_NULL)
   private Long height;
   @JsonInclude(Include.NON_NULL)
+  private String region = null;
+  @JsonInclude(Include.NON_NULL)
+  private String size = null;
+  @JsonInclude(Include.NON_NULL)
+  private String rotation = null;
+  @JsonInclude(Include.NON_NULL)
   private String quality;
+  @JsonInclude(Include.NON_NULL)
+  private String extension = null;
   @JsonInclude(Include.NON_NULL)
   private String description;
   @JsonInclude(Include.NON_NULL)
@@ -57,7 +65,11 @@ public class ImageMetadata {
       imageMetadata
           .setHeight(obj.getHeight())
           .setWidth(obj.getWidth())
+          .setRegion(obj.getRegion())
+          .setSize(obj.getSize())
+          .setRotation(obj.getRotation())
           .setQuality(obj.getQuality())
+          .setExtension(obj.getExtension())
           .setDescription(obj.getDescription())
           .setAttribution(obj.getAttribution())
           .setResourceUrl(obj.getResourceUrl())
@@ -65,6 +77,17 @@ public class ImageMetadata {
           .setLabel(obj.getLabel());
     }
     return imageMetadata;
+  }
+
+  /**
+   * Sets the region, size, rotation, quality and extension parameters from the IIIF request
+   */
+  public void setIIIFParameters(ImageRequest imageRequest){
+    this.setRegion(imageRequest.getRegion());
+    this.setSize(imageRequest.getSize());
+    this.setRotation(imageRequest.getRotation());
+    this.setQuality(imageRequest.getQuality());
+    this.setExtension(imageRequest.getExtension());
   }
 
   /**
@@ -158,6 +181,42 @@ public class ImageMetadata {
 
   public ImageMetadata setLabel(String label) {
     this.label = label;
+    return this;
+  }
+
+  public String getRegion() {
+    return region;
+  }
+
+  public ImageMetadata setRegion(String region) {
+    this.region = region;
+    return this;
+  }
+
+  public String getSize() {
+    return size;
+  }
+
+  public ImageMetadata setSize(String size) {
+    this.size = size;
+    return this;
+  }
+
+  public String getRotation() {
+    return rotation;
+  }
+
+  public ImageMetadata setRotation(String rotation) {
+    this.rotation = rotation;
+    return this;
+  }
+
+  public String getExtension() {
+    return extension;
+  }
+
+  public ImageMetadata setExtension(String extension) {
+    this.extension = extension;
     return this;
   }
 }
