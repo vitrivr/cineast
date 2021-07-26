@@ -27,8 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * Texture information is currently discarded!
  *
- * @author rgasser
- * @version 1.1
  */
 public class OBJMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */

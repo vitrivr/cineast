@@ -28,9 +28,6 @@ import java.util.List;
  * [1] Huang, J. H. J., Yagel, R. Y. R., Filippov, V. F. V., & Kurzion, Y. K. Y. (1998).
  *  An accurate method for voxelizing polygon meshes. IEEE Symposium on Volume Visualization (Cat. No.989EX300), 119–126,. http://doi.org/10.1109/SVV.1998.729593
  *
- * @author rgasser
- * @version 1.0
- * @created 06.01.17
  */
 public class Voxelizer {
     /** */

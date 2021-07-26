@@ -8,11 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 27.01.17
- */
+
 public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
     /** The {@link Queue} used to store {@link PersistentTuple}s until they are flushed to disk. */
     private final ArrayBlockingQueue<PersistentTuple> buffer;

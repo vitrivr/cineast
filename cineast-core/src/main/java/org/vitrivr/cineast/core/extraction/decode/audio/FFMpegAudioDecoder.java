@@ -36,8 +36,6 @@ import org.vitrivr.cineast.core.util.LogHelper;
 /**
  * A {@link Decoder} implementation that decodes audio using the ffmpeg library + the corresponding Java bindings.
  *
- * @author rgasser
- * @version 1.1
  */
 public class FFMpegAudioDecoder implements AudioDecoder {
 

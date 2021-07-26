@@ -3,9 +3,6 @@ package org.vitrivr.cineast.core.util.dsp.fft.windows;
 /**
  * IdentityWindows - this is the same as applying no window at all.
  *
- * @author rgasser
- * @version 1.0
- * @created 02.02.17
  */
 public class RectangularWindow implements WindowFunction {
     /**

@@ -23,11 +23,7 @@ import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 01.03.17
- */
+
 public abstract class DataImportHandler {
 
 
@@ -216,6 +212,7 @@ public abstract class DataImportHandler {
                 LOGGER.warn("Future returned {}, still returning true", o);
                 return true;
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 LOGGER.error("Execution of one of the tasks could not be completed!");
                 return true;
             }

@@ -10,9 +10,6 @@ import java.util.List;
  * Helper class that can be used to track evaluation results. It tracks the total number of relevant documents
  * per class, the number of retrieved documents and the number of hits at every rank k.
  *
- * @author rgasser
- * @version 1.0
- * @created 06.05.17
  */
 public class EvaluationResult {
     /** ID of the reference document that was used to perform the query. */

@@ -9,8 +9,6 @@ import java.nio.ByteBuffer;
  * This interface represents an object that holds arbitrary, immutable data that can be stored in a ByteBuffer.
  * The kind of data is implementation specific as are the pattern used to access the data.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public interface ByteData extends CacheableData {
     /**

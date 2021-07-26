@@ -20,11 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 25.04.17
- */
+
 public abstract class AverageHPCP extends StagedFeatureModule {
     /** Size of the window during STFT in samples. */
     private final static float WINDOW_SIZE = 0.2f;

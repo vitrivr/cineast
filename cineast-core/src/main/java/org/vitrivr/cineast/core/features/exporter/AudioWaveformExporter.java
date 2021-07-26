@@ -23,8 +23,6 @@ import java.util.function.Supplier;
 /**
  * Visualizes and export the audio-waveform of the audio data in a given Segment.
  *
- * @author rgasser
- * @version 1.1
  */
 public class AudioWaveformExporter implements Extractor {
     private static final Logger LOGGER = LogManager.getLogger();

@@ -10,9 +10,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * @author silvan on 19.01.18.
- */
+
 public class ExtractionContainerProviderFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();

@@ -10,11 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 10.03.17
- */
+
 public class DataURLParser {
 
     protected static final Logger LOGGER = LogManager.getLogger();

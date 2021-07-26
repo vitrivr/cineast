@@ -10,11 +10,7 @@ import org.vitrivr.cineast.core.util.math.functions.ZernikeBasisFunction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 16.03.17
- */
+
 public class ZernikePolynomialsTest {
     /**
      * Tests definition of Zernike Polynomials, which are only defined

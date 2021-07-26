@@ -16,9 +16,6 @@ import java.util.List;
  *
  * @see PitchTracker
  *
- * @author rgasser
- * @version 1.0
- * @created 19.04.17
  */
 public class PitchContour {
     /** The minimum frequency in Hz on the (artifical) cent-scale. */

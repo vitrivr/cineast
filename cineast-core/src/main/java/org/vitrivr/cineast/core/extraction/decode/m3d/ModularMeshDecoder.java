@@ -24,8 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Tries to decode arbitrary 3D model files by selecting the correct decoder based on the
  * model-file's mime-type.
  *
- * @author rgasser
- * @version 1.1
  */
 public class ModularMeshDecoder implements MeshDecoder, Converter {
     /** Default logging facility. */

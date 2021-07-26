@@ -10,7 +10,6 @@ import java.util.Optional;
 /**
  * Convenience Method when you don't want to actually provide Elements.
  *
- * @author silvan on 19.01.18.
  */
 public class NoContainerProvider implements ExtractionContainerProvider, ExtractionCompleteListener {
 

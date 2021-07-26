@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 /**
  * Helper class that can be used to start an interactive CLI.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public class CLI {
 

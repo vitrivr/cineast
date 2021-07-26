@@ -25,9 +25,11 @@ import org.vitrivr.cineast.api.messages.result.QueryEnd;
 import org.vitrivr.cineast.api.messages.result.QueryError;
 import org.vitrivr.cineast.api.messages.result.QueryStart;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -81,9 +83,9 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     try {
       final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
       final String uuid = qconf.getQueryId().toString();
-      final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
+      final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
       qconf.setMaxResults(max);
-      final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
+      final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
       qconf.setResultsPerModule(resultsPerModule);
       Thread.currentThread().setName("query-msg-handler-" + uuid.substring(0, 3));
       try {
@@ -224,7 +226,6 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
     final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
 
-    LOGGER.trace("Loading object information");
     final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
     final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
 
@@ -238,6 +239,28 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     this.write(session, new MediaObjectQueryResult(queryId, objects));
     this.write(session, new MediaSegmentQueryResult(queryId, segments));
     return objectIds;
+  }
+
+  /**
+   * Submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) from Ids to the UI. Should be executed before sending results.
+   */
+  void submitSegmentAndObjectInformationFromIds(Session session, String queryId, List<String> segmentIds, List<String> objectIds) {
+    /* Load segment & object information. */
+    LOGGER.trace("Loading segment information for {} segments", segmentIds.size());
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+
+    LOGGER.trace("Loading object information");
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+
+    if (segments.isEmpty() || objects.isEmpty()) {
+      LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
+    }
+
+    LOGGER.trace("Writing results to the websocket");
+
+    /* Write segments, objects and similarity search data to stream. */
+    this.write(session, new MediaObjectQueryResult(queryId, objects));
+    this.write(session, new MediaSegmentQueryResult(queryId, segments));
   }
 
   /**
@@ -276,6 +299,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     }
     watch.stop();
     LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+    return futures;
+  }
+
+  protected List<CompletableFuture<Void>> finalizeAndSubmitTemporalResults(Session session, String queryId, List<TemporalObject> raw) {
+    final int stride = 50_000;
+    List<CompletableFuture<Void>> futures = new ArrayList<>();
+    for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
+      final List<TemporalObject> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
+      futures.add(this.write(session, new TemporalQueryResult(queryId, sub)));
+    }
     return futures;
   }
 }

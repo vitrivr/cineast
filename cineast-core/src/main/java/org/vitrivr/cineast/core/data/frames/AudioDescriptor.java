@@ -4,9 +4,6 @@ package org.vitrivr.cineast.core.data.frames;
  * The class encapsulates descriptive information concerning an audio-stream that does not change between frames. The intention behind this
  * class is that {@link AudioFrame}s that belong together share the same instance of the AudioDescriptor.
  *
- * @author rgasser
- * @version 1.0
- * @created 28.04.17
  */
 public class AudioDescriptor {
     /** Samplingrate of the audio associated with this descriptor. */

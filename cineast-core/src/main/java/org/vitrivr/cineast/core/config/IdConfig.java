@@ -10,11 +10,7 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
- */
+
 public final class IdConfig {
 
     public enum ExistenceCheck {

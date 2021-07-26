@@ -6,9 +6,6 @@ package org.vitrivr.cineast.core.features;
  * [1] Grosche, P., & Muller, M. (2012). Toward characteristic audio shingles for efficient cross-version music retrieval.
  *      In 2012 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) (pp. 473–476). IEEE. http://doi.org/10.1109/ICASSP.2012.6287919
  *
- * @author rgasser
- * @version 1.0
- * @created 26.02.17
  */
 public class CENS12Shingle extends CENS {
     /* Minimum frequency to consider. */

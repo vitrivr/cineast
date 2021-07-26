@@ -7,11 +7,7 @@ import org.joml.Vector4i;
 
 import java.awt.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 15.03.17
- */
+
 public interface WritableMesh extends ReadableMesh {
     /**
      * Adds a new triangular face to the Mesh. Faces index vertices and

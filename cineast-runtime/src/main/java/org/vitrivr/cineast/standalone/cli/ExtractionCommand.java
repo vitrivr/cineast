@@ -17,8 +17,6 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
 /**
  * A CLI command that can be used to start a media extraction based on an extraction definition file.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
 public class ExtractionCommand implements Runnable {

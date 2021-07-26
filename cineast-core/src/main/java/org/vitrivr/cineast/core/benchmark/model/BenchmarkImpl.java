@@ -4,11 +4,7 @@ import org.vitrivr.cineast.core.data.Pair;
 
 import java.util.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 27.04.17
- */
+
 public class BenchmarkImpl implements Benchmark {
     /** Date of the Benchmark. */
     protected final Date date;

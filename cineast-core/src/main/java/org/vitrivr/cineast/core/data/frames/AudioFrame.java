@@ -13,8 +13,6 @@ import java.nio.ByteOrder;
  * The AudioFrame class supports different sample-rates and an arbitrary number of samples and is compatible with the
  * Java Audio API.
  *
- * @author rgasser
- * @version 1.0
  */
 public class AudioFrame {
     /** Default empty frames frame. Encodes a single, mute sample for one channel. */

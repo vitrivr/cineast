@@ -32,8 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * [2] Philip Shilane, Patrick Min, Michael Kazhdan, and Thomas Funkhouser The Princeton Shape Benchmark
  *      Shape Modeling International, Genova, Italy, June 2004
  *      
- * @author rgasser
- * @version 1.1
  */
 public class OFFMeshDecoder implements Decoder<Mesh> {
         /** Default logging facility. */

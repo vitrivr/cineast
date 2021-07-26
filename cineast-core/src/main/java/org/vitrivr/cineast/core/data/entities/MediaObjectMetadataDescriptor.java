@@ -18,10 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * @author rgasser
- * @created 10.01.17
- */
+
 public class MediaObjectMetadataDescriptor implements ExistenceCheck {
 
   private static final Logger LOGGER = LogManager.getLogger();

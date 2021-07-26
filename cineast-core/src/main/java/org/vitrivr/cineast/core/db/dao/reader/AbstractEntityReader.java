@@ -4,11 +4,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 
 import java.io.Closeable;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 02.03.17
- */
+
 public abstract class AbstractEntityReader implements Closeable {
 
     /** DBSelector instance used to perform the DB lookup. */

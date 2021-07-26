@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.util.images.SURFHelper;
 
 import java.awt.image.BufferedImage;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
- */
+
 public class SURFCodebookGenerator extends ImageCodebookGenerator {
     /**
      * Default constructor.

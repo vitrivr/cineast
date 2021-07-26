@@ -16,9 +16,6 @@ import java.util.concurrent.TimeUnit;
  *
  * No aggregation or post-processing will take place besides wrapping of the content in a SegmentContainer.
  *
- * @author rgasser
- * @version 1.0
- * @created 14.01.17
  */
 public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
 

@@ -10,7 +10,6 @@ import java.util.Optional;
  * ExtractionItemContainer}. It is intended to be both used for e.g. walking a directory or during
  * an extraction-session using Cineast's API
  *
- * @author silvan on 19.01.18.
  */
 public interface ExtractionContainerProvider {
 

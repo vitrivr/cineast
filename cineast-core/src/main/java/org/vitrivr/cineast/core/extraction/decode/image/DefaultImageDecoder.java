@@ -21,10 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @author rgasser
- * @version 1.1
- */
+
 public class DefaultImageDecoder implements Decoder<BufferedImage> {
 
     /* Configuration property-names and defaults for the DefaultImageDecoder. */
