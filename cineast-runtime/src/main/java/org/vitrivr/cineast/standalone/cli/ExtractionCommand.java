@@ -61,12 +61,14 @@ public class ExtractionCommand implements Runnable {
       try {
         final JacksonJsonProvider reader = new JacksonJsonProvider();
         final IngestConfig context = reader.toObject(file, IngestConfig.class);
+        // Check if the config specifies an IIIF job
         if (context != null) {
           InputConfig inputConfig = context.getInput();
           IIIFConfig iiifConfig = inputConfig.getIiif();
           if (iiifConfig != null) {
             String directoryPath;
             String iiifConfigPath = inputConfig.getPath();
+            // If the user hasn't specified a download directory for the IIIF images, then save the images in a new "iiif-media" subfolder
             if (iiifConfigPath == null || iiifConfigPath.isEmpty()) {
               directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media";
               inputConfig.setPath(directoryPath);

@@ -58,46 +58,23 @@ public class ImageRequestFactory {
     this.iiifConfig = null;
   }
 
-  private static boolean isParamStringValid(String configRegion) {
-    return configRegion != null && configRegion.length() != 0;
+  /** Helper method to check that given string is not empty */
+  private static boolean isParamStringValid(String input) {
+    return input != null && input.length() != 0;
   }
 
   public List<ImageRequest> createImageRequests(String jobDirectoryString, String itemPrefixString) {
     // If Image API version is not specified then auto-detect the highest API version supported by the server
     if (imageApiVersion == null) {
-      LOGGER.debug("Image API version not specified. Starting detection of highest Image API version supported by the server.");
-      String url = null;
-      if (iiifConfig != null) {
-        List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
-        if (iiifItems != null) {
-          Optional<IIIFItem> iiifItem = iiifItems.stream().findAny();
-          if (iiifItem.isPresent()) {
-            String identifier = iiifItem.get().getIdentifier();
-            url = iiifConfig.getBaseUrl() + "/" + identifier;
-          }
-        }
-      } else if (canvas != null) {
-        Optional<Image> image = canvas.getImages().stream().findAny();
-        if (image.isPresent()) {
-          Image it = image.get();
-          String imageApiUrl = it.getResource().getAtId();
-          ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
-          String baseUrl = imageRequest.getBaseUrl();
-          if (!baseUrl.endsWith("/")) {
-            baseUrl += "/";
-          }
-          url = baseUrl + "info.json";
-        }
-      }
-      ImageApiVersion highestSupportedApiVersion = determineHighestSupportedApiVersion(url);
-      if (highestSupportedApiVersion == null) {
+      LOGGER.debug("Image API version not specified. Starting detection of highest version of the Image API that is supported by the server.");
+      if (!determineHighestSupportedApiVersion()) {
         LOGGER.error("The Image API version could not be auto detected and thus Image Requests could not be created.");
         return Collections.emptyList();
       } else {
-        this.imageApiVersion = highestSupportedApiVersion;
         LOGGER.debug("The highest supported Image API version was autodetected to version " + this.imageApiVersion.toNumericString());
       }
     }
+
     if (iiifConfig != null) {
       if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
         return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
@@ -105,9 +82,77 @@ public class ImageRequestFactory {
         return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
       }
     } else if (canvas != null) {
-      runCanvasJob(jobDirectoryString, itemPrefixString);
+      return runCanvasJob(jobDirectoryString, itemPrefixString);
     }
     return new LinkedList<>();
+  }
+
+  /**
+   * Determines the highest version of the Image API supported by the server
+   *
+   * @return true if API version could be successfully determined, false if version supported by server could not be determined or is incompatible with Cineast
+   */
+  private boolean determineHighestSupportedApiVersion() {
+    String url = null;
+    // Set the url variable as the url of any random image
+    if (iiifConfig != null) /* In an Image API job, iiifConfig will not be null */ {
+      List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
+      if (iiifItems != null) {
+        Optional<IIIFItem> iiifItem = iiifItems.stream().findAny();
+        if (iiifItem.isPresent()) {
+          String identifier = iiifItem.get().getIdentifier();
+          url = iiifConfig.getBaseUrl() + "/" + identifier;
+        }
+      }
+    } else if (canvas != null) /* In a Presentation API (manifest) job the canvas object will not be null */ {
+      Optional<Image> image = canvas.getImages().stream().findAny();
+      if (image.isPresent()) {
+        Image it = image.get();
+        String imageApiUrl = it.getResource().getAtId();
+        ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
+        String baseUrl = imageRequest.getBaseUrl();
+        if (!baseUrl.endsWith("/")) {
+          baseUrl += "/";
+        }
+        url = baseUrl + "info.json";
+      }
+    }
+    ImageApiVersion highestSupportedApiVersion = determineHighestSupportedApiVersion(url);
+    if (highestSupportedApiVersion != null) {
+      this.imageApiVersion = highestSupportedApiVersion;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Determines the highest version of the Image API supported by the server by making an Image Information request and trying to parse as different versions of the {@link ImageInformation} starting with the highest version {@link ImageInformation_v3} and moving downwards
+   */
+  @Nullable
+  public ImageApiVersion determineHighestSupportedApiVersion(String url) {
+    String response = null;
+    try {
+      response = ImageInformationRequest.fetchImageInformation(url);
+    } catch (IOException e) {
+      LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
+      e.printStackTrace();
+    }
+    if (response != null) {
+      try {
+        new ObjectMapper().readValue(response, ImageInformation_v3.class);
+        return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
+      } catch (JsonProcessingException e) {
+        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
+      }
+      try {
+        new ObjectMapper().readValue(response, ImageInformation_v2.class);
+        return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
+      } catch (JsonProcessingException e) {
+        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
+      }
+    }
+    return null;
   }
 
   private List<ImageRequest> runCanvasJob(String jobDirectoryString, String itemPrefixString) {
@@ -158,35 +203,6 @@ public class ImageRequestFactory {
       }
     }
     return imageRequests;
-  }
-
-  /**
-   * Determines the highest version of the Image API supported by the server by making an Image Information request and trying to parse as different versions of the {@link ImageInformation} starting with the highest version {@link ImageInformation_v3} and moving downwards
-   */
-  @Nullable
-  public ImageApiVersion determineHighestSupportedApiVersion(String url) {
-    String response = null;
-    try {
-      response = ImageInformationRequest.fetchImageInformation(url);
-    } catch (IOException e) {
-      LOGGER.error("An error occurred while making an Image Information request with the url: " + url);
-      e.printStackTrace();
-    }
-    if (response != null) {
-      try {
-        new ObjectMapper().readValue(response, ImageInformation_v3.class);
-        return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
-      } catch (JsonProcessingException e) {
-        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_3_0_NUMERIC);
-      }
-      try {
-        new ObjectMapper().readValue(response, ImageInformation_v2.class);
-        return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
-      } catch (JsonProcessingException e) {
-        LOGGER.info("Server does not support Image API version " + ImageApiVersion.IMAGE_API_VERSION_2_1_1_NUMERIC);
-      }
-    }
-    return null;
   }
 
   private static class ApiJob_v2 {

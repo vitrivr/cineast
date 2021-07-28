@@ -10,6 +10,9 @@ import java.util.Set;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
+/**
+ * Similar to {@link JsonMetaDataExtractor} except that it reads JSON files with the extension ".iiif" and stores in the database with the "IIIF" domain
+ */
 public class IIIFMetaDataExtractor implements MetadataExtractor {
 
   private static final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
