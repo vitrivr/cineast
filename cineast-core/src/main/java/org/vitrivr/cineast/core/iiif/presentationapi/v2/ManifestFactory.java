@@ -47,11 +47,12 @@ public class ManifestFactory {
   }
 
   /**
-   * Save all images in the canvasses along with their image information JSONs
+   * Save all images in the canvasses along with their respective {@link MetadataJson} metadata.iiif files
    */
   public void saveAllCanvasImages(String jobDirectoryString, String filenamePrefix) {
     List<Sequence> sequences = manifest.getSequences();
     if (sequences != null && sequences.size() != 0) {
+      // Setting global metadata values that are common for every image in this sequence
       ImageMetadata globalMetadata = new ImageMetadata()
           .setDescription(manifest.getDescription())
           .setLinkingUrl(manifest.getAtId())
