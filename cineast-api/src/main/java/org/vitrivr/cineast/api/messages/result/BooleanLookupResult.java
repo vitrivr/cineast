@@ -22,7 +22,7 @@ public class BooleanLookupResult implements Message {
          */
         public final int numberofElements;
 
-
+        public final int componentID;
         /**
          * Constructor for the TagsQueryResult object.
          *
@@ -30,9 +30,10 @@ public class BooleanLookupResult implements Message {
          * @param tags    List of Strings containing the tags that represent the result of the query.
          */
         @JsonCreator
-        public BooleanLookupResult(String queryId, int numberofElements) {
+        public BooleanLookupResult(String queryId, int numberofElements, int componentID) {
             this.queryId = queryId;
             this.numberofElements= numberofElements;
+            this.componentID = componentID;
         }
         @Override
         public MessageType getMessageType() {
