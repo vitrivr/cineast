@@ -17,15 +17,15 @@ import org.vitrivr.cineast.core.iiif.IIIFItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 
 /**
- * Unit testing of the methods in the class {@link ImageRequestFactory}
+ * Unit testing of the methods in the class {@link ImageFactory}
  */
-public class ImageRequestFactoryTest {
+public class ImageFactoryTest {
 
   private final String BASE_URL = "https://example.com";
   private final String IDENTIFIER = "identifier";
   private final String JSON_RESPONSE_v2 = "{\"profile\": [\"http://iiif.io/api/image/2/level2.json\",{}], \"protocol\": \"http://iiif.io/api/image\", \"height\": 7200, \"width\": 5351, \"@context\": \"http://iiif.io/api/image/2/context.json\", \"@id\": \"" + BASE_URL + "\"}";
   private final String JSON_RESPONSE_v3 = "{\"@context\":\"http://iiif.io/api/image/3/context.json\",\"id\":\"" + BASE_URL + "\",\"type\":\"ImageService3\",\"protocol\":\"http://iiif.io/api/image\",\"profile\":\"level2\",\"width\":1920,\"height\":1080}";
-  private ImageRequestFactory factory;
+  private ImageFactory factory;
   private MockedStatic<ImageInformationRequest> informationRequestMockedStatic;
 
   @BeforeEach
@@ -36,7 +36,7 @@ public class ImageRequestFactoryTest {
     iiifItem.setIdentifier(IDENTIFIER);
     when(iiifConfig.getIiifItems()).thenReturn(Collections.singletonList(iiifItem));
     informationRequestMockedStatic = mockStatic(ImageInformationRequest.class);
-    factory = new ImageRequestFactory(iiifConfig);
+    factory = new ImageFactory(iiifConfig);
   }
 
   @AfterEach

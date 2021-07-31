@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageRequestFactory;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
@@ -123,8 +123,8 @@ public class ExtractionCommand implements Runnable {
     String itemPrefixString = "iiif_image_";
     String imageApiBaseUrl = iiifConfig.getBaseUrl();
     if (imageApiBaseUrl != null && !imageApiBaseUrl.isEmpty()) {
-      ImageRequestFactory imageRequestFactory = new ImageRequestFactory(iiifConfig);
-      imageRequestFactory.createImageRequests(jobDirectoryString, itemPrefixString);
+      ImageFactory imageFactory = new ImageFactory(iiifConfig);
+      imageFactory.fetchImages(jobDirectoryString, itemPrefixString);
     }
     // Process Presentation API job
     String manifestUrl = iiifConfig.getManifestUrl();
