@@ -10,7 +10,6 @@ import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.S
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.naming.OperationNotSupportedException;
@@ -185,7 +184,7 @@ public class ImageFactory {
         LOGGER.info("Downloading and saving image to the filesystem: " + image);
         String imageFilename = itemPrefixString + canvas.getLabel();
         try {
-          imageRequest.saveToFile(jobDirectoryString, imageFilename, imageApiUrl);
+          imageRequest.downloadImage(jobDirectoryString, imageFilename, imageApiUrl);
         } catch (IOException e) {
           LOGGER.error("Failed to save image to file system: " + image);
           e.printStackTrace();
@@ -210,17 +209,6 @@ public class ImageFactory {
       this.iiifConfig = iiifConfig;
     }
 
-    public ImageInformation_v2 parseImageInformation(String url) {
-      ImageInformation_v2 imageInformation = null;
-      try {
-        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(url);
-        imageInformation = informationRequest.parseImageInformation();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return imageInformation;
-    }
-
     private void run(String jobDirectoryString, String itemPrefixString) {
       // Set default values for global parameters with missing values
       initGlobalParameters();
@@ -235,7 +223,6 @@ public class ImageFactory {
         final String imageName = itemPrefixString + identifier;
 
         ImageInformation_v2 imageInformation = parseImageInformation(iiifConfig.getBaseUrl() + "/" + identifier);
-
         ImageRequestBuilder_v2 builder;
         if (imageInformation != null) {
           builder = new ImageRequestBuilder_v2(imageInformation);
@@ -252,9 +239,8 @@ public class ImageFactory {
           e.printStackTrace();
           continue;
         }
-
         try {
-          imageRequest.saveToFile(jobDirectoryString, imageName);
+          imageRequest.downloadImage(jobDirectoryString, imageName);
         } catch (IOException e) {
           LOGGER.debug("Failed to save image: " + imageName);
           e.printStackTrace();
@@ -271,6 +257,23 @@ public class ImageFactory {
       }
     }
 
+    /**
+     * Makes an HTTP request and returns the parsed {@link ImageInformation_v2}
+     */
+    public ImageInformation_v2 parseImageInformation(String url) {
+      ImageInformation_v2 imageInformation = null;
+      try {
+        final ImageInformationRequest_v2 informationRequest = new ImageInformationRequest_v2(url);
+        imageInformation = informationRequest.parseImageInformation();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      return imageInformation;
+    }
+
+    /**
+     * Checks to see if user has specifies any global parameters in {@link IIIFConfig}, otherwise sets them to get the entire image at the maximum available size, without any rotation or mirroring, in it's default quality and extension.
+     */
     private void initGlobalParameters() {
       if (!isParamStringValid(iiifConfig.getRegion())) {
         iiifConfig.setRegion(REGION_FULL);
@@ -293,6 +296,9 @@ public class ImageFactory {
       }
     }
 
+    /**
+     * Set's the request parameters for an individual image request. Checks for any request specific parameters specified in the configuration file {@link IIIFConfig}, otherwise uses the parameters initialized in {@link ApiJob_v2#initGlobalParameters()}
+     */
     private void setRequestParameters(IIIFItem iiifItem, ImageRequestBuilder_v2 builder) throws OperationNotSupportedException {
       String region;
       if (isParamStringValid(iiifItem.getRegion())) {
@@ -380,15 +386,7 @@ public class ImageFactory {
         String identifier = iiifItem.getIdentifier();
         final String imageName = itemPrefixString + identifier;
 
-        ImageInformation_v3 imageInformation = null;
-        try {
-          final ImageInformationRequest_v3 informationRequest = new ImageInformationRequest_v3(iiifConfig.getBaseUrl() + "/" + identifier);
-          informationRequest.saveToFile(jobDirectoryString, imageName);
-          imageInformation = informationRequest.parseImageInformation(null);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-
+        ImageInformation_v3 imageInformation = parseImageInformation(iiifConfig.getBaseUrl() + "/" + identifier);
         ImageRequestBuilder_v3 builder;
         if (imageInformation != null) {
           builder = new ImageRequestBuilder_v3(imageInformation);
@@ -405,9 +403,8 @@ public class ImageFactory {
           e.printStackTrace();
           continue;
         }
-
         try {
-          imageRequest.saveToFile(jobDirectoryString, imageName);
+          imageRequest.downloadImage(jobDirectoryString, imageName);
         } catch (IOException e) {
           LOGGER.debug("Failed to save image: " + imageName);
           e.printStackTrace();
@@ -421,17 +418,33 @@ public class ImageFactory {
         } catch (IOException e) {
           e.printStackTrace();
         }
-
       }
     }
 
+    /**
+     * Makes an HTTP request and returns the parsed {@link ImageInformation_v3}
+     */
+    public ImageInformation_v3 parseImageInformation(String url) {
+      ImageInformation_v3 imageInformation = null;
+      try {
+        final ImageInformationRequest_v3 informationRequest = new ImageInformationRequest_v3(url);
+        imageInformation = informationRequest.parseImageInformation();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      return imageInformation;
+    }
+
+    /**
+     * Checks to see if user has specifies any global parameters in {@link IIIFConfig}, otherwise sets them to get the entire image at the maximum available size, without any rotation or mirroring, in it's default quality and extension.
+     */
     private void initGlobalParameters() {
       if (!isParamStringValid(iiifConfig.getRegion())) {
         iiifConfig.setRegion(REGION_FULL);
       }
       String configSize = iiifConfig.getSize();
       if (!isParamStringValid(configSize)) {
-        iiifConfig.setSize(SIZE_FULL);
+        iiifConfig.setSize(SIZE_MAX);
       }
       Float configRotation = iiifConfig.getRotation();
       if (configRotation == null) {
@@ -447,6 +460,9 @@ public class ImageFactory {
       }
     }
 
+    /**
+     * Set's the request parameters for an individual image request. Checks for any request specific parameters specified in the configuration file {@link IIIFConfig}, otherwise uses the parameters initialized in {@link ApiJob_v3#initGlobalParameters()}
+     */
     private void setRequestParameters(IIIFItem iiifItem, ImageRequestBuilder_v3 builder) throws OperationNotSupportedException {
       String region;
       if (isParamStringValid(iiifItem.getRegion())) {
