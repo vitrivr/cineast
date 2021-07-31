@@ -10,7 +10,6 @@ import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2.S
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -31,9 +30,9 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Image;
 
 /**
- * Accepts an {@link IIIFConfig} and downloads the image file & image information JSON of all {@link IIIFItem} specified in the config file
+ * Accepts an {@link IIIFConfig} and downloads the image file, its information JSON and write the metadata .iiif file of all {@link IIIFItem} specified in the config file or images in a {@link Canvas}
  */
-public class ImageRequestFactory {
+public class ImageFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final IIIFConfig iiifConfig;
@@ -41,7 +40,7 @@ public class ImageRequestFactory {
   private ImageApiVersion imageApiVersion;
   private ImageMetadata globalMetadata;
 
-  public ImageRequestFactory(IIIFConfig iiifConfig) {
+  public ImageFactory(IIIFConfig iiifConfig) {
     this.iiifConfig = iiifConfig;
     try {
       imageApiVersion = iiifConfig.getImageApiVersion();
@@ -52,7 +51,7 @@ public class ImageRequestFactory {
     this.canvas = null;
   }
 
-  public ImageRequestFactory(Canvas canvas, ImageMetadata globalMetadata) {
+  public ImageFactory(Canvas canvas, ImageMetadata globalMetadata) {
     this.canvas = canvas;
     this.globalMetadata = globalMetadata;
     this.iiifConfig = null;
@@ -63,13 +62,13 @@ public class ImageRequestFactory {
     return input != null && input.length() != 0;
   }
 
-  public List<ImageRequest> createImageRequests(String jobDirectoryString, String itemPrefixString) {
+  public void fetchImages(String jobDirectoryString, String itemPrefixString) {
     // If Image API version is not specified then auto-detect the highest API version supported by the server
     if (imageApiVersion == null) {
       LOGGER.debug("Image API version not specified. Starting detection of highest version of the Image API that is supported by the server.");
       if (!determineHighestSupportedApiVersion()) {
         LOGGER.error("The Image API version could not be auto detected and thus Image Requests could not be created.");
-        return Collections.emptyList();
+        return;
       } else {
         LOGGER.debug("The highest supported Image API version was autodetected to version " + this.imageApiVersion.toNumericString());
       }
@@ -77,14 +76,13 @@ public class ImageRequestFactory {
 
     if (iiifConfig != null) {
       if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
-        return new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
+        new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
       } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
-        return new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
+        new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
       }
     } else if (canvas != null) {
-      return runCanvasJob(jobDirectoryString, itemPrefixString);
+      runCanvasJob(jobDirectoryString, itemPrefixString);
     }
-    return new LinkedList<>();
   }
 
   /**
@@ -155,8 +153,7 @@ public class ImageRequestFactory {
     return null;
   }
 
-  private List<ImageRequest> runCanvasJob(String jobDirectoryString, String itemPrefixString) {
-    List<ImageRequest> imageRequests = new LinkedList<>();
+  private void runCanvasJob(String jobDirectoryString, String itemPrefixString) {
     List<Image> images = canvas.getImages();
     if (images != null && images.size() != 0) {
       // Download all images in the canvas
@@ -164,7 +161,6 @@ public class ImageRequestFactory {
         String imageApiUrl = image.getResource().getAtId();
         // Make image request to remote server
         ImageRequest imageRequest = ImageRequest.fromUrl(imageApiUrl);
-        imageRequests.add(imageRequest);
         ImageMetadata imageMetadata = ImageMetadata.from(globalMetadata);
         imageMetadata.setIIIFParameters(imageRequest);
         if (imageApiVersion.getVersion().equals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE)) {
@@ -202,7 +198,6 @@ public class ImageRequestFactory {
         }
       }
     }
-    return imageRequests;
   }
 
   private static class ApiJob_v2 {
@@ -226,14 +221,13 @@ public class ImageRequestFactory {
       return imageInformation;
     }
 
-    private List<ImageRequest> run(String jobDirectoryString, String itemPrefixString) {
+    private void run(String jobDirectoryString, String itemPrefixString) {
       // Set default values for global parameters with missing values
       initGlobalParameters();
 
-      List<ImageRequest> imageRequests = new LinkedList<>();
       List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
       if (iiifItems == null) {
-        return imageRequests;
+        return;
       }
 
       for (final IIIFItem iiifItem : iiifItems) {
@@ -274,10 +268,7 @@ public class ImageRequestFactory {
         } catch (IOException e) {
           e.printStackTrace();
         }
-
-        imageRequests.add(imageRequest);
       }
-      return imageRequests;
     }
 
     private void initGlobalParameters() {
@@ -376,14 +367,13 @@ public class ImageRequestFactory {
       this.iiifConfig = iiifConfig;
     }
 
-    private List<ImageRequest> run(String jobDirectoryString, String itemPrefixString) {
+    private void run(String jobDirectoryString, String itemPrefixString) {
       // Set default values for global parameters with missing values
       initGlobalParameters();
 
-      List<ImageRequest> imageRequests = new LinkedList<>();
       List<IIIFItem> iiifItems = iiifConfig.getIiifItems();
       if (iiifItems == null) {
-        return imageRequests;
+        return;
       }
 
       for (final IIIFItem iiifItem : iiifItems) {
@@ -422,7 +412,6 @@ public class ImageRequestFactory {
           LOGGER.debug("Failed to save image: " + imageName);
           e.printStackTrace();
         }
-        imageRequests.add(imageRequest);
 
         ImageMetadata imageMetadata = new ImageMetadata();
         imageMetadata.setIIIFParameters(imageRequest);
@@ -434,7 +423,6 @@ public class ImageRequestFactory {
         }
 
       }
-      return imageRequests;
     }
 
     private void initGlobalParameters() {
