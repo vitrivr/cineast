@@ -5,11 +5,12 @@ import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,16 +43,9 @@ public class ExtractionCommand implements Runnable {
   private String extractionConfig;
 
   /**
-   * Helper method to detect if the path in InputConfig is that of an IIIF job or the local filesystem
+   * Deletes all the IIIF resource and metadata files downloaded by {@link ExtractionCommand#prepareIIIFExtractionJob(IIIFConfig, String)} once extraction has been performed on them.
    */
-  public static boolean isURL(String url) {
-    try {
-      new URI(url);
-      return true;
-    } catch (URISyntaxException e) {
-      return false;
-    }
-  }
+  private Runnable postExtractionIIIFCleanup;
 
   @Override
   public void run() {
@@ -68,14 +62,15 @@ public class ExtractionCommand implements Runnable {
           if (iiifConfig != null) {
             String directoryPath;
             String iiifConfigPath = inputConfig.getPath();
-            // If the user hasn't specified a download directory for the IIIF images, then save the images in a new "iiif-media" subfolder
-            if (iiifConfigPath == null || iiifConfigPath.isEmpty()) {
-              directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media";
+            /* If the user hasn't asked to save the images once extraction is complete or if the user has not specified a download directory for the IIIF images, then save the images in a new "iiif-media-{@link System#currentTimeMillis}" subfolder.
+            This folder can act as the temp directory during extraction and can either be deleted or retained post extraction based on the value set in {@link IIIFConfig#keepImagesPostExtraction} */
+            if (!iiifConfig.isKeepImagesPostExtraction() || iiifConfigPath == null || iiifConfigPath.isEmpty()) {
+              directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media-" + System.currentTimeMillis();
               inputConfig.setPath(directoryPath);
             } else {
               directoryPath = iiifConfigPath;
             }
-            configureIIIFExtractionJob(iiifConfig, directoryPath);
+            prepareIIIFExtractionJob(iiifConfig, directoryPath);
           }
         }
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
@@ -100,6 +95,10 @@ public class ExtractionCommand implements Runnable {
         e.printStackTrace();
       } catch (ClassCastException e) {
         System.err.println("Could not register completion listener for extraction.");
+      } finally {
+        if (postExtractionIIIFCleanup != null) {
+          postExtractionIIIFCleanup.run();
+        }
       }
     } else {
       System.err.printf("Could not start handleExtraction with configuration file '%s'; the file does not exist!%n", file);
@@ -113,7 +112,7 @@ public class ExtractionCommand implements Runnable {
    * @param directoryPath The path where the downloaded IIIF content should be stored
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */
-  private void configureIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
+  private void prepareIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
     LOGGER.info("Starting IIIF resource download and extraction job");
     final Path jobDirectory = Paths.get(directoryPath);
     if (!Files.exists(jobDirectory)) {
@@ -147,6 +146,29 @@ public class ExtractionCommand implements Runnable {
         manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
         manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
       }
+    }
+    if (!iiifConfig.isKeepImagesPostExtraction()) {
+      postExtractionIIIFCleanup = () -> {
+        try {
+          Files.walkFileTree(jobDirectory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+              Files.delete(file);
+              return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+              Files.delete(dir);
+              return FileVisitResult.CONTINUE;
+            }
+          });
+          LOGGER.debug("All temporarily downloaded IIIF resources deleted from the filesystem along with their parent directory " + jobDirectoryString);
+        } catch (IOException e) {
+          LOGGER.error("Could not delete temp IIIF resource directory post extraction.\t" + e.getMessage());
+          e.printStackTrace();
+        }
+      };
     }
   }
 }
