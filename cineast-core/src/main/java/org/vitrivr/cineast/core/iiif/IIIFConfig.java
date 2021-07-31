@@ -29,6 +29,8 @@ public class IIIFConfig {
   private List<IIIFItem> iiifItems;
   @JsonProperty
   private String manifestUrl;
+  @JsonProperty
+  private boolean keepImagesPostExtraction;
 
   public String getManifestUrl() {
     return manifestUrl;
@@ -119,4 +121,11 @@ public class IIIFConfig {
     this.iiifItems = iiifItems;
   }
 
+  public boolean isKeepImagesPostExtraction() {
+    return keepImagesPostExtraction;
+  }
+
+  public void setKeepImagesPostExtraction(boolean keepImagesPostExtraction) {
+    this.keepImagesPostExtraction = keepImagesPostExtraction;
+  }
 }

@@ -10,6 +10,7 @@
     "iiif": {
       "imageApiUrl": "https://libimages.princeton.edu/loris/pudl0001/5138415",
       "imageApiVersion": "2.1.1",
+      "keepImagesPostExtraction": true,
       "rotation": 10,
       "items": [
         {
