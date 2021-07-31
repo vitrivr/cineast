@@ -27,15 +27,6 @@ public class ImageRequest {
   public ImageRequest() {
   }
 
-  public ImageRequest(String baseUrl, String region, String size, String rotation, String quality, String extension) {
-    this.baseUrl = baseUrl;
-    this.region = region;
-    this.size = size;
-    this.rotation = rotation;
-    this.quality = quality;
-    this.extension = extension;
-  }
-
   public static ImageRequest fromUrl(String url) {
     ImageRequest imageRequest = new ImageRequest();
     url = URLDecoder.decode(url);
@@ -126,11 +117,22 @@ public class ImageRequest {
         + URLEncoder.encode(extension);
   }
 
-  public void saveToFile(String filePath, String fileName) throws IOException {
-    saveToFile(filePath, fileName, this.generateIIIFRequestUrl());
+  /**
+   * Downloads and saves the image to the local filesystem. See {@link ImageRequest#downloadImage(String, String, String)}
+   */
+  public void downloadImage(String filePath, String fileName) throws IOException {
+    downloadImage(filePath, fileName, this.generateIIIFRequestUrl());
   }
 
-  public void saveToFile(String filePath, String fileName, String requestUrl) throws IOException {
+  /**
+   * Downloads and saves the image to the local filesystem
+   *
+   * @param filePath The path of the directory where the image should be saved
+   * @param fileName The name that should be given to the saved image
+   * @param requestUrl The complete IIIF Image API compliant URL of the image resource. Useful when URL doesn't need to be generated or has to be overridden.
+   * @throws IOException If the image could not downloaded or written to the filesystem
+   */
+  public void downloadImage(String filePath, String fileName, String requestUrl) throws IOException {
     URL url = new URL(requestUrl);
     BufferedImage img = ImageIO.read(url);
     File file = new File(filePath + "/" + fileName + "." + this.getExtension());
