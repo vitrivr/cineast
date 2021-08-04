@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
@@ -60,9 +60,7 @@ public class ManifestFactory {
       for (Sequence sequence : sequences) {
         List<Canvas> canvases = sequence.getCanvases();
         if (canvases != null && canvases.size() != 0) {
-          // TODO remove limit of 5 canvasses
-          for (int i = 0; i < Math.min(5, canvases.size()); i++) {
-            final Canvas canvas = canvases.get(i);
+          for (final Canvas canvas : canvases) {
             ImageFactory imageFactory = new ImageFactory(canvas, globalMetadata);
             imageFactory.fetchImages(jobDirectoryString, filenamePrefix);
           }
