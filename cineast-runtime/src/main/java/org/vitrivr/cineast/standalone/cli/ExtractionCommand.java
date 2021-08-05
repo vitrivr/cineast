@@ -29,7 +29,6 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
 
 /**
  * A CLI command that can be used to start a media extraction based on an extraction definition file.
- *
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
 public class ExtractionCommand implements Runnable {
@@ -165,7 +164,13 @@ public class ExtractionCommand implements Runnable {
         if (!Files.exists(collectionJobDirectory)) {
           Files.createDirectories(collectionJobDirectory);
         }
-        collectionFactory.saveAllCreatedImages(collectionJobDirectoryString, "image_" + jobIdentifier + "_");
+        try {
+          LOGGER.info("Starting downloading of all manifest images specified in the OrderedCollection at url: " + orderedCollectionUrl);
+          collectionFactory.saveAllCreatedImages(collectionJobDirectoryString, "image_" + jobIdentifier + "_");
+        } catch (Exception e) {
+          LOGGER.error("Error occurred while downloading manifest images specified in the OrderedCollection at url: " + orderedCollectionUrl);
+          e.printStackTrace();
+        }
       }
     }
     if (!iiifConfig.isKeepImagesPostExtraction()) {

@@ -23,6 +23,9 @@ public class OrderedCollection {
   @JsonProperty
   private IdTypeObject last;
 
+  @JsonProperty
+  private List<IdTypeObject> partOf;
+
   public OrderedCollection() {
   }
 
@@ -74,6 +77,14 @@ public class OrderedCollection {
     this.last = last;
   }
 
+  public List<IdTypeObject> getPartOf() {
+    return partOf;
+  }
+
+  public void setPartOf(List<IdTypeObject> partOf) {
+    this.partOf = partOf;
+  }
+
   @Override
   public String toString() {
     return "OrderedCollection{" +
@@ -83,6 +94,7 @@ public class OrderedCollection {
         ", totalItems=" + totalItems +
         ", first=" + first +
         ", last=" + last +
+        ", partOf=" + partOf +
         '}';
   }
 }
