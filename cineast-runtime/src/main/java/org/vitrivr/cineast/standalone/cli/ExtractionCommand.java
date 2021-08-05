@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
+import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -145,6 +146,26 @@ public class ExtractionCommand implements Runnable {
         }
         manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
         manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+      }
+    }
+    // Process Change Discovery API job
+    String orderedCollectionUrl = iiifConfig.getOrderedCollectionUrl();
+    if (orderedCollectionUrl != null && !orderedCollectionUrl.isEmpty()) {
+      OrderedCollectionFactory collectionFactory = null;
+      try {
+        collectionFactory = new OrderedCollectionFactory(orderedCollectionUrl);
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+      }
+      if (collectionFactory != null) {
+        String jobIdentifier = UUID.randomUUID().toString();
+        String collectionJobDirectoryString = jobDirectoryString + "/ordered_collection_job_" + jobIdentifier;
+        Path collectionJobDirectory = Paths.get(collectionJobDirectoryString);
+        if (!Files.exists(collectionJobDirectory)) {
+          Files.createDirectories(collectionJobDirectory);
+        }
+        collectionFactory.saveAllCreatedImages(collectionJobDirectoryString, "image_" + jobIdentifier + "_");
       }
     }
     if (!iiifConfig.isKeepImagesPostExtraction()) {

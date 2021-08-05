@@ -13,6 +13,8 @@ public class IIIFConfig {
 
   @JsonProperty
   private String imageApiVersion;
+  @JsonProperty
+  private boolean keepImagesPostExtraction;
   @JsonProperty(value = "imageApiUrl")
   private String baseUrl;
   @JsonProperty
@@ -30,7 +32,7 @@ public class IIIFConfig {
   @JsonProperty
   private String manifestUrl;
   @JsonProperty
-  private boolean keepImagesPostExtraction;
+  private String orderedCollectionUrl;
 
   public String getManifestUrl() {
     return manifestUrl;
@@ -127,5 +129,13 @@ public class IIIFConfig {
 
   public void setKeepImagesPostExtraction(boolean keepImagesPostExtraction) {
     this.keepImagesPostExtraction = keepImagesPostExtraction;
+  }
+
+  public String getOrderedCollectionUrl() {
+    return orderedCollectionUrl;
+  }
+
+  public void setOrderedCollectionUrl(String orderedCollectionUrl) {
+    this.orderedCollectionUrl = orderedCollectionUrl;
   }
 }
