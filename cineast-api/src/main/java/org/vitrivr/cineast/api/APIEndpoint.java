@@ -20,6 +20,7 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvocationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.SelectFromTablePostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByCategoryGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementGetHandler;
@@ -412,6 +413,7 @@ public class APIEndpoint {
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
+        new FindFeaturesByCategoryGetHandler(),
         new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
