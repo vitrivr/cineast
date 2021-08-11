@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.AllFeaturesByCategoryQueryResult;
+import org.vitrivr.cineast.api.messages.result.AllFeaturesByTableNameQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
@@ -226,6 +227,26 @@ public class QueryUtil {
     return new FeaturesAllCategoriesQueryResult("", features, id);
   }
 
+
+  private static ArrayList<HashMap<String, Object>> getAllFeatures(String tableName) {
+    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
+    ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
+    selector.open(tableName);
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getAll();
+
+    for (Map<String, PrimitiveTypeProvider> row : rows) {
+      HashMap<String, Object> tempMap = new HashMap<>();
+
+      tempMap.put(FEATURE_COLUMN_QUALIFIER, row.get(FEATURE_COLUMN_QUALIFIER).toObject());
+      tempMap.put(GENERIC_ID_COLUMN_QUALIFIER, row.get(GENERIC_ID_COLUMN_QUALIFIER).toObject());
+
+      currList.add(tempMap);
+    }
+
+    return currList;
+  }
+
   /**
    * Retrieves features by category for all stored/available IDs.
    *
@@ -242,20 +263,7 @@ public class QueryUtil {
 
       retriever.getTableNames().forEach(tableName -> {
 
-        ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
-        selector.open(tableName);
-        List<Map<String, PrimitiveTypeProvider>> rows = selector.getAll();
-
-        for (Map<String, PrimitiveTypeProvider> row : rows) {
-          HashMap<String, Object> tempMap = new HashMap<>();
-
-          tempMap.put(FEATURE_COLUMN_QUALIFIER, row.get(FEATURE_COLUMN_QUALIFIER).toObject());
-          tempMap.put(GENERIC_ID_COLUMN_QUALIFIER, row.get(GENERIC_ID_COLUMN_QUALIFIER).toObject());
-
-          currList.add(tempMap);
-        }
-
-        _return.put(tableName, currList);
+        _return.put(tableName, getAllFeatures(tableName));
 
       });
 
@@ -264,6 +272,11 @@ public class QueryUtil {
     });
 
     return _return;
+  }
+
+  public static AllFeaturesByTableNameQueryResult retrieveAllFeaturesForTableName(String tableName) {
+    ArrayList<HashMap<String, Object>> features = getAllFeatures(tableName);
+    return new AllFeaturesByTableNameQueryResult("", features, tableName);
   }
 
   public static AllFeaturesByCategoryQueryResult retrieveAllFeaturesByCategory(String category) {
