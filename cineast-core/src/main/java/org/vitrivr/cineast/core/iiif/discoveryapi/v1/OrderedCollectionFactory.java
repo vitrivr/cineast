@@ -38,25 +38,28 @@ public class OrderedCollectionFactory {
       OrderedCollectionPage orderedCollectionPage = OrderedCollectionPage.fromUrl(nextPage.getId());
       List<OrderedItem> orderedItems = orderedCollectionPage.getOrderedItems();
       for (OrderedItem orderedItem : orderedItems) {
-        ManifestFactory manifestFactory = null;
-        try {
-          manifestFactory = new ManifestFactory(orderedItem.getObject().getId());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        if (manifestFactory != null) {
-          String jobIdentifier = UUID.randomUUID().toString();
-          String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
-          Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
-          if (!Files.exists(manifestJobDirectory)) {
-            try {
-              Files.createDirectories(manifestJobDirectory);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
+        /* Only download images whose type is Create **/
+        if (orderedItem.getType().equals(OrderedCollection.TYPE_CREATE)) {
+          ManifestFactory manifestFactory = null;
+          try {
+            manifestFactory = new ManifestFactory(orderedItem.getObject().getId());
+          } catch (Exception e) {
+            e.printStackTrace();
           }
-          manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
-          manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+          if (manifestFactory != null) {
+            String jobIdentifier = UUID.randomUUID().toString();
+            String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
+            Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
+            if (!Files.exists(manifestJobDirectory)) {
+              try {
+                Files.createDirectories(manifestJobDirectory);
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            }
+            manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
+            manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+          }
         }
       }
       nextPage = orderedCollectionPage.getNext();
