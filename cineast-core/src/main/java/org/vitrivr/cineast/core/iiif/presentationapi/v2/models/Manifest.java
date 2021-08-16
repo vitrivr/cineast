@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import org.vitrivr.cineast.core.data.Pair;
 
 /**
  * The overall description of the structure and properties of the digital representation of an object. It carries information needed for the viewer to present the digitized content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each manifest describes how to present a single object such as a book, a photograph, or a statue.
@@ -21,7 +22,7 @@ public class Manifest {
   @JsonProperty("@type")
   private String atType;
   @JsonProperty
-  private String label;
+  private Object label;
   @JsonProperty
   private List<Metadata> metadata;
   @JsonProperty
@@ -47,7 +48,7 @@ public class Manifest {
   @JsonProperty
   private SeeAlso seeAlso;
   @JsonProperty
-  private Rendering rendering;
+  private Object rendering;
   @JsonProperty
   private String within;
   @JsonProperty
@@ -82,11 +83,19 @@ public class Manifest {
     this.atType = atType;
   }
 
-  public String getLabel() {
-    return label;
+  /**
+   * Custom getter for getLabel that converts List<Object> into a Pair<String, List<LabelItem>>
+   */
+  public Pair<String, List<LabelItem>> getLabel() {
+    if (this.label instanceof List) {
+      return new Pair<>(null, (List<LabelItem>) this.label);
+    } else if (this.label instanceof String) {
+      return new Pair<>(((String) this.label), null);
+    }
+    return null;
   }
 
-  public void setLabel(String label) {
+  public void setLabel(Object label) {
     this.label = label;
   }
 
@@ -186,11 +195,19 @@ public class Manifest {
     this.seeAlso = seeAlso;
   }
 
-  public Rendering getRendering() {
-    return rendering;
+  /**
+   * Custom getter for getRendering that converts List<Object> into a Pair<String, List<Rendering>>
+   */
+  public Pair<String, List<Rendering>> getRendering() {
+    if (this.rendering instanceof List) {
+      return new Pair<>(null, (List<Rendering>) this.rendering);
+    } else if (this.rendering instanceof String) {
+      return new Pair<>(((String) this.rendering), null);
+    }
+    return null;
   }
 
-  public void setRendering(Rendering rendering) {
+  public void setRendering(Object rendering) {
     this.rendering = rendering;
   }
 
