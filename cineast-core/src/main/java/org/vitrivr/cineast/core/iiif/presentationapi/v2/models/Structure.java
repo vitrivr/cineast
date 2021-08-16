@@ -3,19 +3,15 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import org.vitrivr.cineast.core.data.Pair;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 23.06.21
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Structure {
 
   @JsonProperty("@type")
   private String atType;
   @JsonProperty
-  private String label;
+  private Object label;
   @JsonProperty
   private String viewingHint;
   @JsonProperty("@id")
@@ -51,11 +47,19 @@ class Structure {
     this.atType = atType;
   }
 
-  public String getLabel() {
-    return label;
+  /**
+   * Custom getter for getLabel that converts List<Object> into a Pair<String, List<LabelItem>>
+   */
+  public Pair<String, List<LabelItem>> getLabel() {
+    if (this.label instanceof List) {
+      return new Pair<>(null, (List<LabelItem>) this.label);
+    } else if (this.label instanceof String) {
+      return new Pair<>(((String) this.label), null);
+    }
+    return null;
   }
 
-  public void setLabel(String label) {
+  public void setLabel(Object label) {
     this.label = label;
   }
 

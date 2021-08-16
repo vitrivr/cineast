@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 23.06.21
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Sequence {
 

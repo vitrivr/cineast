@@ -7,11 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 23.06.21
- */
 public class ManifestTest {
 
   private static final String JSON_RESPONSE = "{\n"

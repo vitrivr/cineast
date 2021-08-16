@@ -3,11 +3,6 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 23.06.21
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Rendering {
 
@@ -17,6 +12,8 @@ class Rendering {
   private String label;
   @JsonProperty
   private String format;
+  @JsonProperty("@type")
+  private String type;
 
   public Rendering() {
   }
@@ -27,7 +24,16 @@ class Rendering {
         "atId='" + atId + '\'' +
         ", label='" + label + '\'' +
         ", format='" + format + '\'' +
+        ", type='" + type + '\'' +
         '}';
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public String getAtId() {

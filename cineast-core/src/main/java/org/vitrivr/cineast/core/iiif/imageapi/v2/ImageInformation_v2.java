@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Service;
 
 /**
  * ImageInformation object used to parse Image API 2.1.1 image information request's JSON response
@@ -79,6 +80,17 @@ public class ImageInformation_v2 implements ImageInformation {
    */
   @JsonProperty
   private Long maxArea;
+
+  @JsonProperty
+  private Service service;
+
+  public Service getService() {
+    return service;
+  }
+
+  public void setService(Service service) {
+    this.service = service;
+  }
 
   public Long getMaxHeight() {
     // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
@@ -180,9 +192,23 @@ public class ImageInformation_v2 implements ImageInformation {
     });
   }
 
-  @java.lang.Override
-  public java.lang.String toString() {
-    return "ImageInformation_v2(profile=" + this.getProfile() + ", atContext=" + this.getAtContext() + ", atId=" + this.getAtId() + ", atType=" + this.getAtType() + ", protocol=" + this.getProtocol() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", tiles=" + this.getTiles() + ", sizes=" + this.getSizes() + ", maxWidth=" + this.getMaxWidth() + ", maxHeight=" + this.getMaxHeight() + ", maxArea=" + this.getMaxArea() + ")";
+  @Override
+  public String toString() {
+    return "ImageInformation_v2{" +
+        "profile=" + profile +
+        ", atContext='" + atContext + '\'' +
+        ", atId='" + atId + '\'' +
+        ", atType='" + atType + '\'' +
+        ", protocol='" + protocol + '\'' +
+        ", width=" + width +
+        ", height=" + height +
+        ", tiles=" + tiles +
+        ", sizes=" + sizes +
+        ", maxWidth=" + maxWidth +
+        ", maxHeight=" + maxHeight +
+        ", maxArea=" + maxArea +
+        ", service=" + service +
+        '}';
   }
 
   /**
