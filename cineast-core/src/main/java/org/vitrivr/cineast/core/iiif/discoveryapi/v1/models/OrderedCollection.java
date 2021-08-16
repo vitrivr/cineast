@@ -5,6 +5,11 @@ import java.util.List;
 
 public class OrderedCollection {
 
+  public static String TYPE_CREATE = "Create";
+  public static String TYPE_ADD = "Add";
+  public static String TYPE_UPDATE = "Update";
+  public static String TYPE_REMOVE = "Remove";
+
   @JsonProperty("@context")
   private List<String> atContext;
 
