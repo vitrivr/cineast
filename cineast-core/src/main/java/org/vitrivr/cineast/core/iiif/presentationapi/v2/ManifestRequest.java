@@ -15,11 +15,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 25.06.21
- */
 public class ManifestRequest {
 
   private static final Logger LOGGER = LogManager.getLogger();

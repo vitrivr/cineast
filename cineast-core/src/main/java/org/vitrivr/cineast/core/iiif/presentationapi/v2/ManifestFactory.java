@@ -12,10 +12,6 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 
 /**
  * Takes a URL String to a manifest in the constructor and downloads all the images, image information and simplified metadata to the filesystem.
- *
- * @author singaltanmay
- * @version 1.0
- * @created 30.06.21
  */
 public class ManifestFactory {
 

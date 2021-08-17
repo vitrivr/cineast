@@ -15,11 +15,6 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Metadata;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 
-/**
- * @author singaltanmay
- * @version 1.0
- * @created 27.06.21
- */
 public class MetadataJson {
 
   private static final Logger LOGGER = LogManager.getLogger();
