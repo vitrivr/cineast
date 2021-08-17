@@ -13,10 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Image Metadata file containing technical and non-technical information about the image. This file must be convertible to a flat JSON and can only contain key-value pairs.
- *
- * @author singaltanmay
- * @version 1.0
- * @created 05.07.21
  */
 
 public class ImageMetadata {
