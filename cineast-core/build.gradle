@@ -112,6 +112,9 @@ dependencies {
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
 
+    /** Mockito for unit testing */
+    implementation 'org.mockito:mockito-inline:3.11.0'
+
     /** Tensorflow (Java). */
     api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
 
