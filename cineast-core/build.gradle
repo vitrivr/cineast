@@ -92,6 +92,10 @@ dependencies {
     /** Tensorflow */
     implementation group: 'org.tensorflow', name: 'tensorflow', version: '1.15.0'
 
+    /** OpenCV */
+    implementation group: 'org.openpnp', name: 'opencv', version: '4.5.1-2'
+    implementation group: 'nu.pattern', name: 'opencv', version: '2.4.9-7'
+
 }
 
 test {
