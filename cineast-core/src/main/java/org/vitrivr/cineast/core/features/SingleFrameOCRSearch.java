@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.features;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint2f;
@@ -48,27 +50,25 @@ import org.opencv.utils.Converters;
  *  This makes sense here since we expect small errors from OCR sources
  */
 
-public class OCRSearch extends AbstractTextRetriever {
+public class SingleFrameOCRSearch extends AbstractTextRetriever {
 
   public static final String OCR_TABLE_NAME = "features_ocr";
 
   /**
-   * Default constructor for {@link OCRSearch}.
+   * Default constructor for {@link SingleFrameOCRSearch}.
    */
-  public OCRSearch() {
+  public SingleFrameOCRSearch() {
     super(OCR_TABLE_NAME);
   }
 
   public void processSegment(SegmentContainer shot) {
-    BufferedImage image;
-    image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+    BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
     String text;
 
     SceneTextOCR det = new SceneTextOCR();
-    text = det.TextDetector(image);
+    text = det.textDetector(image);
     this.writer.write(new SimpleFulltextFeatureDescriptor(shot.getId(), text));
 
-    System.out.println(text);
   }
 
   @Override
@@ -80,27 +80,36 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 }
 
+// This class is for initializing and configuring Tesseract using Tess4j
 class TesseractRecognizer {
+  private static final Logger LOGGER = Logger.getLogger( AttentionOCRrecognizer.class.getName() );
 
   public String recognizer(BufferedImage image){
     Tesseract tesseract = new Tesseract();
     tesseract.setDatapath("resources/OCRSearch/TesseractData/tessdata/");
     tesseract.setLanguage("eng");
     tesseract.setTessVariable("tessedit_char_whitelist", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
+
+    // PageSegMode 6 allows Tesseract to treat the text as a uniform block. Since I am passing a crop of each bounding box this mode would give the best result.
     tesseract.setPageSegMode(6);
+    // OcrEngineMode 2 makes use of both the LSTM model and the original Tesseract. This gives better result than just using the LSTM model.
     tesseract.setOcrEngineMode(2);
     tesseract.setTessVariable("user_defined_dpi", "300");
     try {
       String result = tesseract.doOCR(image);
       return result;
     } catch (TesseractException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.ALL, e.toString(), e );
       return null;
     }
   }
 }
 
+// This class implements a Tensorflow model of AttentionOCR.
 class AttentionOCRrecognizer{
+
+  private static final Logger LOGGER = Logger.getLogger( AttentionOCRrecognizer.class.getName() );
+
   private static final String modelpath = "resources/OCRSearch/AttentionOCRGraph/aocr_frozen_graph/";
   protected static byte[] graphDef;
   protected static byte[] imageBytes;
@@ -109,8 +118,7 @@ class AttentionOCRrecognizer{
     try {
       return Files.readAllBytes(path);
     } catch (IOException e) {
-      System.err.println("Failed to read [" + path + "]: " + e.getMessage());
-      System.exit(1);
+      LOGGER.log(Level.ALL, e.toString(), e );
     }
     return null;
   }
@@ -141,14 +149,17 @@ class AttentionOCRrecognizer{
       return result;
     }
     catch (Exception e){
-      e.printStackTrace();
+      LOGGER.log(Level.ALL, e.toString(), e );
       return null;
     }
   }
 }
 
+// This class uses EAST to detect text then pass it to one of the recognizers above.
 class SceneTextOCR{
-  public String TextDetector(BufferedImage image){
+  private static final Logger LOGGER = Logger.getLogger( SceneTextOCR.class.getName() );
+
+  public String textDetector(BufferedImage image){
     nu.pattern.OpenCV.loadLocally();
 
     float scoreThresh = 0.5f;
@@ -173,7 +184,7 @@ class SceneTextOCR{
     net.forward(outs, outNames);
     String text = "";
 
-  // Decode predicted bounding boxes.
+    // Decode predicted bounding boxes.
     Mat scores = outs.get(0).reshape(1, H);
     Mat geometry = outs.get(1).reshape(1, 5 * H);
     List<Float> confidencesList = new ArrayList<>();
@@ -252,7 +263,7 @@ class SceneTextOCR{
         text = text + " " + tess4j.recognizer(bufImage);
 
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.log(Level.ALL, e.toString(), e );
       }
     }
     return text;
