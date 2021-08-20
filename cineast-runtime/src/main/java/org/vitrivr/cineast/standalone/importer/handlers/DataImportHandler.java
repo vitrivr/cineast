@@ -42,7 +42,7 @@ public abstract class DataImportHandler {
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);
             cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
-            //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
+             //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
         }
         LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
         ec.dropEntity(entityName);

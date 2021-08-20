@@ -18,6 +18,19 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY  = "cineast_segment";
 
+    /** Name of the column wih the FK */
+    public static final String OBJECT_ID_COL_NAME = "objectid";
+    /** Name of the column with the segment number */
+    public static final String SEGMENT_NO_COL_NAME = "segmentnumber";
+    /** Name of the column with segmentstart value*/
+    public static final String SEGMENT_START_COL_NAME = "segmentstart";
+    /** Name of the column with segmentend value */
+    public static final String SEGMENT_END_COL_NAME = "segmentend";
+    /** Name of the column with segmetnstartabs value */
+    public static final String SEGMENT_STARTABS_COL_NAME = "segmentstartabs";
+    /** Name of the column with segmentendabs value*/
+    public static final String SEGMENT_ENDABS_COL_NAME = "segmentendabs";
+
     /** Field names in the persistence layer.
      *
      *  Order (Important):
@@ -28,7 +41,14 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
      *  - segmentend
      *  - startabs
      */
-    public static final String[] FIELDNAMES = {SEGMENT_ID_COLUMN_QUALIFIER, "objectid", "segmentnumber", "segmentstart", "segmentend", "segmentstartabs", "segmentendabs"};
+    public static final String[] FIELDNAMES = {
+        SEGMENT_ID_COLUMN_QUALIFIER,
+        OBJECT_ID_COL_NAME,
+        SEGMENT_NO_COL_NAME,
+        SEGMENT_START_COL_NAME,
+        SEGMENT_END_COL_NAME,
+        SEGMENT_STARTABS_COL_NAME,
+        SEGMENT_ENDABS_COL_NAME};
 
     private final String segmentId, objectId;
     private final int start, end, number;
