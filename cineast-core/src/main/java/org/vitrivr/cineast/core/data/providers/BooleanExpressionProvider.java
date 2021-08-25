@@ -10,5 +10,8 @@ public interface BooleanExpressionProvider {
   default List<BooleanExpression> getBooleanExpressions(){
     return Collections.emptyList();
   }
+  default Double getContainerWeight() {
+    return 1.0;
+  }
 
 }

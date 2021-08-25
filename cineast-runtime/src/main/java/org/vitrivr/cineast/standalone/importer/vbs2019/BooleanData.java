@@ -88,7 +88,7 @@ public class BooleanData implements Importer<Map<String, PrimitiveTypeProvider>>
         final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
         map.put("id", PrimitiveTypeProvider.fromObject(node.get("id").textValue()));
         map.put("domain", PrimitiveTypeProvider.fromObject(node.get("domain").asText()));
-        map.put("key", PrimitiveTypeProvider.fromObject(node.get("key").asInt()));
+        map.put("key", PrimitiveTypeProvider.fromObject(node.get("key").asText()));
         map.put("value", PrimitiveTypeProvider.fromObject(node.get("value").asInt()));
         empty = true;
         return Optional.of(map);

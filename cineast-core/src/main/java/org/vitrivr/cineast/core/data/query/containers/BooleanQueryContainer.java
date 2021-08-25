@@ -18,10 +18,12 @@ public class BooleanQueryContainer extends QueryContainer {
   private static final String ATTRIBUTE_FIELD_NAME = "attribute";
   private static final String OPERATOR_FIELD_NAME = "operator";
   private static final String VALUES_FIELD_NAME = "values";
+  private static final String CONTAINER_WEIGHT = "weight";
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   private ArrayList<BooleanExpression> expressions = new ArrayList<>();
+  private Double containerWeight;
 
   public BooleanQueryContainer(Collection<BooleanExpression> expressions) {
     this.expressions.addAll(expressions);
@@ -32,11 +34,12 @@ public class BooleanQueryContainer extends QueryContainer {
   }
 
   public BooleanQueryContainer(JsonNode json) {
-    if (!json.isArray()) {
+    JsonNode terms = json.get("BoolTerms");
+    if (!terms.isArray()) {
       throw new IllegalArgumentException("Boolean expression data is not a list");
     }
-
-    Iterator<JsonNode> iter = json.elements();
+    containerWeight = json.get(CONTAINER_WEIGHT).asDouble();
+    Iterator<JsonNode> iter = terms.elements();
     while (iter.hasNext()) {
       JsonNode element = iter.next();
 
@@ -81,4 +84,7 @@ public class BooleanQueryContainer extends QueryContainer {
   public List<BooleanExpression> getBooleanExpressions() {
     return this.expressions;
   }
+
+  @Override
+  public Double getContainerWeight() { return this.containerWeight; }
 }

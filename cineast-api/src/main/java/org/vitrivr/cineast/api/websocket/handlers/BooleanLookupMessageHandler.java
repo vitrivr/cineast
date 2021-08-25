@@ -24,7 +24,7 @@ public class BooleanLookupMessageHandler  extends StatelessWebsocketMessageHandl
         if (message.getType().equals("B_ALL")) {
             numberresults = reader.getTotalElements(); /*MUSS HIER ALLE ELEMENTE FINDEN in einem neuen reader*/
         }
-        else {
+        else{
             /*numberresults = reader.getElementsForAttribute();*/
             numberresults = reader.getElementsAND();
         }

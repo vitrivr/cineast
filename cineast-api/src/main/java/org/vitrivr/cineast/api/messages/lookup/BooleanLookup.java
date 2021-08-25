@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
+import org.graalvm.compiler.nodes.calc.ObjectEqualsNode;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -13,7 +14,9 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BooleanLookup implements Message {
 
@@ -65,7 +68,7 @@ public class BooleanLookup implements Message {
 
     private void createTriple() {
         for (BooleanLookupQuery query: queries) {
-            queryList.add(new MutableTriple<>(query.getAttribute(), query.getOperator(), Arrays.asList(PrimitiveTypeProvider.fromObject(query.getValue()))));
+            queryList.add(new MutableTriple<>(query.getAttribute(), query.getOperator(), query.getValue()));
         }
 }
     /**
@@ -100,18 +103,18 @@ class BooleanLookupQuery {
 
     private String attribute;
 
-    private String value;
+    private List<Object> values;
 
     private String entity;
 
     private RelationalOperator operator;
         @JsonCreator
     public BooleanLookupQuery(@JsonProperty("table_name") String table, @JsonProperty("attribute") String
-            attribute, @JsonProperty("value") String value, @JsonProperty("entity") String entity,
+            attribute, @JsonProperty("values") List<Object> values, @JsonProperty("entity") String entity,
                          @JsonProperty("operator") RelationalOperator operator) {
         this.table_name = table;
         this.attribute = attribute;
-        this.value = value;
+        this.values = values;
         this.entity = entity;
         this.operator = operator;
     }
@@ -124,8 +127,9 @@ class BooleanLookupQuery {
         return attribute;
     }
 
-    public String getValue() {
-        return value;
+    public List<PrimitiveTypeProvider> getValue() {
+        List<PrimitiveTypeProvider> results = this.values.stream().map(item -> PrimitiveTypeProvider.fromObject(item)).collect(Collectors.toList());;
+        return results;
     }
 
     public String getEntity() {

@@ -31,7 +31,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
   /**
    * Field names in the persistence layer.
    */
-  public static final String[] FIELDNAMES = {"objectid", "domain", "key", "value_string","value_int"};
+  public static final String[] FIELDNAMES = {"objectid", "domain", "key", "value"};
 
   private static final List<Class<?>> SUPPORTED_TYPES = ImmutableList
       .of(Integer.class, Long.class, Float.class, Double.class, Short.class, Byte.class,
