@@ -4,6 +4,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
@@ -14,7 +15,7 @@ import java.util.function.Supplier;
 public class MedianColorRaster extends AverageColorRaster {
 
 	@Override
-	public void init(PersistencyWriterSupplier supply, int batchSize) {
+	public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
 		/* TODO: Respect batchSize. */
 		this.phandler = supply.get();
 		this.phandler.open("features_MedianColorRaster");

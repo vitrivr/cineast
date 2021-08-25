@@ -2,8 +2,7 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 
-import org.vitrivr.cineast.core.config.DatabaseConfig.Selector;
-import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cottontail.client.language.ddl.ListEntities;
@@ -18,7 +17,7 @@ public class OptimizeEntitiesCommand implements Runnable {
   }
 
   public static void optimizeAllCottontailEntities() {
-    if (Config.sharedConfig().getDatabase().getSelector() != Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != Writer.COTTONTAIL) {
+    if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
       System.err.println("Cottontail DB is not both selector & writer in the config. exiting");
       return;
     }

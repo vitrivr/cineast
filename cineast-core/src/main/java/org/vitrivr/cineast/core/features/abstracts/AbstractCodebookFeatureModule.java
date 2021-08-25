@@ -9,10 +9,12 @@ import boofcv.struct.image.GrayF32;
 import org.ddogleg.clustering.AssignCluster;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * An abstract feature module that leverages a named codebook and a set of features to obtain
@@ -48,7 +50,7 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      * @param phandlerSupply
      */
     @Override
-    public final void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+    public final void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
         super.init(phandlerSupply, batchSize);
 
         /* Load the Codebook. */
@@ -61,7 +63,7 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      * @param selectorSupply
      */
     @Override
-    public final void init(DBSelectorSupplier selectorSupply) {
+    public final void init(Supplier<DBSelector> selectorSupply) {
         super.init(selectorSupply);
 
         /* Load the Codebook. */

@@ -16,7 +16,6 @@ import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -42,7 +41,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
   }
 
   @Override
-  public void init(DBSelectorSupplier supply) {
+  public void init(Supplier<DBSelector>  supply) {
     this.selector = supply.get();
     this.selector.open(tableName);
   }

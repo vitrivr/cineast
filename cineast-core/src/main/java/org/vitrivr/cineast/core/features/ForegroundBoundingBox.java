@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
@@ -68,7 +69,7 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
     super.init(phandlerSupply, batchSize);
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame", "bbox");
   }

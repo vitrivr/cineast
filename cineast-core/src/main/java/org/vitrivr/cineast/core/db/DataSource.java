@@ -1,6 +1,6 @@
-package org.vitrivr.cineast.core.config;
+package org.vitrivr.cineast.core.db;
 
-import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.db.adampro.ADAMproEntityCreator;
 import org.vitrivr.cineast.core.db.adampro.ADAMproSelector;
 import org.vitrivr.cineast.core.db.adampro.ADAMproWrapper;
@@ -13,7 +13,9 @@ import org.vitrivr.cineast.core.db.json.JsonFileWriter;
 import org.vitrivr.cineast.core.db.json.JsonSelector;
 import org.vitrivr.cineast.core.db.memory.InMemoryEntityCreator;
 import org.vitrivr.cineast.core.db.polypheny.PolyphenyEntityCreator;
+import org.vitrivr.cineast.core.db.polypheny.PolyphenySelector;
 import org.vitrivr.cineast.core.db.polypheny.PolyphenyWrapper;
+import org.vitrivr.cineast.core.db.polypheny.PolyphenyWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.NoEntityCreator;
 
@@ -49,7 +51,7 @@ public enum DataSource {
             case COTTONTAIL:
                 return () -> new CottontailWriter(new CottontailWrapper(config, false));
             case POLYPHENY:
-                return () -> null; /* TODO. */
+                return () -> new PolyphenyWriter(new PolyphenyWrapper(config));
             case JSON:
                 return () -> new JsonFileWriter(new File(config.getHost()));
             default:
@@ -72,7 +74,7 @@ public enum DataSource {
             case COTTONTAIL:
                 return () -> new CottontailSelector(new CottontailWrapper(config, false));
             case POLYPHENY:
-                return () -> null; /* TODO. */
+                return () -> new PolyphenySelector(new PolyphenyWrapper(config));
             case JSON:
                 return () -> new JsonSelector(new File(config.getHost()));
             default:

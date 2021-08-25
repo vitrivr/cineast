@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features.exporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -45,7 +46,7 @@ public class ShotDescriptorExporter implements Extractor {
 	}
 
 	@Override
-	public void init(PersistencyWriterSupplier supply, int batchSize) {
+	public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
 		if(!folder.exists()){
 			folder.mkdirs();
 		}

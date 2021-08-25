@@ -4,6 +4,7 @@ import georegression.struct.point.Point2D_F32;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -48,7 +49,7 @@ public class MotionFrameExporter implements Extractor {
 
 
 	@Override
-	public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+	public void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
 		if(!folder.exists()){
 			folder.mkdirs();
 		}

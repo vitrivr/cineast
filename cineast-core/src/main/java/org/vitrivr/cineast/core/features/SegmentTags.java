@@ -23,7 +23,6 @@ import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.BatchedTagWriter;
@@ -69,7 +68,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public void init(DBSelectorSupplier selectorSupply) {
+  public void init(Supplier<DBSelector> selectorSupply) {
     this.selector = selectorSupply.get();
     this.selector.open(SEGMENT_TAGS_TABLE_NAME);
   }
@@ -187,7 +186,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
     this.phandler = phandlerSupply.get();
     this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
   }

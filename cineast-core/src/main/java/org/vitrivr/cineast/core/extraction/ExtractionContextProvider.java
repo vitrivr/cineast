@@ -4,11 +4,13 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
@@ -103,14 +105,14 @@ public interface ExtractionContextProvider {
    *
    * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
    */
-  PersistencyWriterSupplier persistencyWriter();
+  Supplier<PersistencyWriter<?>> persistencyWriter();
 
   /**
    * Returns the DBSelectorSupplier that can be used during the extraction run to obtain a DBSelector instance.
    *
    * @return DBSelectorSupplier instance used obtain a DBSelector.
    */
-  DBSelectorSupplier persistencyReader();
+  Supplier<DBSelector> persistencyReader();
 
   /**
    * Returns the default output-location for files generated during extraction (e.g. thumbnails, PROTO files etc.). Unless explicitly stated otherwise in the configuration of one of the exporters, this path will be used.

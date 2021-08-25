@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
@@ -21,7 +21,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
-import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 
 public abstract class DataImportHandler {
@@ -37,7 +36,7 @@ public abstract class DataImportHandler {
         /* Beware, this drops the table */
         CreateEntity createEntity = null;
         CottontailWrapper cottontail = null;
-        if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+        if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
             LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -125,7 +126,7 @@ public class AudioSegmentExporter implements Extractor {
 
 
     @Override
-    public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) { /* Nothing to init. */ }
+    public void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) { /* Nothing to init. */ }
 
     @Override
     public void finish() {  /* Nothing to finish. */}

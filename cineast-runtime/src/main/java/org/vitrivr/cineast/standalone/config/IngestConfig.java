@@ -8,8 +8,8 @@ import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.SegmenterConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -298,7 +299,7 @@ public class IngestConfig implements ExtractionContextProvider {
      * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
      */
     @Override
-    public PersistencyWriterSupplier persistencyWriter() {
+    public Supplier<PersistencyWriter<?>> persistencyWriter() {
        return this.database.getWriterSupplier();
     }
 
@@ -321,7 +322,7 @@ public class IngestConfig implements ExtractionContextProvider {
      * @return DBSelectorSupplier instance used obtain a DBSelector.
      */
     @Override
-    public DBSelectorSupplier persistencyReader() {
+    public Supplier<DBSelector> persistencyReader() {
         return this.database.getSelectorSupplier();
     }
 

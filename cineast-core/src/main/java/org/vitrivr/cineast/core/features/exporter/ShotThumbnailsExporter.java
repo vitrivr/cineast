@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -53,7 +54,7 @@ public class ShotThumbnailsExporter implements Extractor {
 	}
 
 	@Override
-	public void init(PersistencyWriterSupplier supply, int batchSize) {
+	public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}

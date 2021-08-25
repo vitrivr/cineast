@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
   protected PersistencyWriter<?> phandler;
@@ -22,7 +23,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
     this.phandler = supply.get();
     this.phandler.open(this.tableName);
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "sums", "hist");

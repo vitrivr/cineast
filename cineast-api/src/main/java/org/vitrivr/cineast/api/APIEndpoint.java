@@ -91,8 +91,7 @@ public class APIEndpoint {
   /**
    * The retrieval logic used to retrieve
    */
-  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(
-      Config.sharedConfig().getDatabase());
+  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
 
   /**
    * The single instance of this class
