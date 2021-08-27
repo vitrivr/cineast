@@ -3,8 +3,6 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import io.grpc.StatusRuntimeException;
 import java.util.List;
-import java.util.logging.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -21,8 +19,6 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailWriter}.
    */
   private final CottontailWrapper cottontail;
-
-  private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
 
   /**
    * The fully qualified name of the entity handled by this {@link CottontailWriter}.
@@ -41,7 +37,6 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   @Override
   public boolean close() {
-    this.cottontail.close();
     return true;
   }
 
