@@ -37,16 +37,12 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 
 public final class CottontailSelector implements DBSelector {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailSelector}.
    */
   private final CottontailWrapper cottontail;
 
-  /**
-   * The fully qualified name of the entity handled by this {@link CottontailSelector}.
-   */
+  /** The fully qualified name of the entity handled by this {@link CottontailSelector}. */
   private String fqn;
 
   public CottontailSelector(CottontailWrapper wrapper) {
@@ -60,10 +56,7 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public boolean close() {
-    this.cottontail.close();
-    return true;
-  }
+  public boolean close() { return true; }
 
   /**
    * if {@link ReadableQueryConfig#getRelevantSegmentIds()} is null, the where-clause will be left empty
