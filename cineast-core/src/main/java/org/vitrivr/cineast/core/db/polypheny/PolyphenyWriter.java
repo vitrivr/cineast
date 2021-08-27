@@ -30,9 +30,6 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
     /** The fully qualified name of the entity handled by this {@link PolyphenyWriter}. */
     private String fqn;
 
-    /** Internal {@link ArrayFactoryImpl} used to construct arrays. */
-    private final ArrayFactoryImpl factory = new ArrayFactoryImpl(TimeZone.getDefault());
-
     public PolyphenyWriter(PolyphenyWrapper wrapper) {
         this.wrapper = wrapper;
     }
@@ -142,22 +139,20 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
             } else if(o instanceof String){
                 stmt.setString(index++, (String) o);
             } else if(o instanceof float[]){
-                final List<Object> list = new ArrayList<>(((float[])o).length);
-                for (float f : (float[])o) list.add(f);
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.REAL, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
-                stmt.setArray(index++, array);
+                final Object[] list = new Object[((float[])o).length];
+                for (int i = 0; i<((float[])o).length;i++)
+                    list[i] = ((float[]) o)[i];
+                stmt.setArray(index++, this.wrapper.connection.createArrayOf("REAL", list));
             } else if(o instanceof int[]){
-                final List<Object> list = new ArrayList<>(((int[])o).length);
-                for (int i : (int[])o) list.add(i);
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.INTEGER, "INTEGER", Rep.PRIMITIVE_INT), list);
-                stmt.setArray(index++, array);
+                final Object[] list = new Object[((int[])o).length];
+                for (int i = 0; i<((int[])o).length;i++)
+                    list[i] = ((int[]) o)[i];
+                stmt.setArray(index++, this.wrapper.connection.createArrayOf("INTEGER", list));
             } else if (o instanceof ReadableFloatVector){
-                final List<Object> list = new ArrayList<>(((ReadableFloatVector)o).getElementCount());
-                for (int i = 0; i<((ReadableFloatVector)o).getElementCount();i++) {
-                    list.add(((ReadableFloatVector)o).getElement(i));
-                }
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.REAL, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
-                stmt.setArray(index++, array);
+                final Object[] list = new Object[((ReadableFloatVector)o).getElementCount()];
+                for (int i = 0; i<((ReadableFloatVector)o).getElementCount();i++)
+                    list[i] = ((ReadableFloatVector) o).getElement(i);
+                stmt.setArray(index++, this.wrapper.connection.createArrayOf("REAL", list));
             } else if (o == null) {
                 stmt.setNull(index++, Types.NULL);
             } else {
