@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.polypheny;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -20,6 +19,12 @@ import java.util.HashMap;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+/**
+ * An {@link EntityCreator} implementation used to create the Cineast dada model in Polypheny DB.
+ *
+ * @author Ralph Gasser
+ * @version 1.0.0
+ */
 public final class PolyphenyEntityCreator implements EntityCreator {
 
     /** Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyEntityCreator}. */
