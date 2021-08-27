@@ -55,13 +55,13 @@ public final class PolyphenyWrapper implements AutoCloseable {
         }
 
         watch.stop();
-        LOGGER.info("Connected to Polypheny DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
+        LOGGER.debug("Connected to Polypheny DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
     }
 
     @Override
     public void close(){
         try {
-            LOGGER.info("Closing JDBC connection to Polypheny DB.");
+            LOGGER.debug("Closing JDBC connection to Polypheny DB.");
             this.connection.close();
         } catch (SQLException e) {
             LOGGER.error("Closing JDBC connection to Polypheny DB failed: {}", e.getMessage());

@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.db.polypheny;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -21,6 +24,12 @@ public final class PolyphenyEntityCreator implements EntityCreator {
 
     /** Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyEntityCreator}. */
     private final PolyphenyWrapper wrapper;
+
+    /** Hint used to indicate primary key fields. */
+    private final static String PK_HINT = "pk";
+
+    /** Hint used to indicate that a field is nullable. */
+    private final static String NULLABLE_HINT = "nullable";
 
     /**
      * Constructor
@@ -145,7 +154,11 @@ public final class PolyphenyEntityCreator implements EntityCreator {
     @Override
     public boolean createFeatureEntity(String featureEntityName, boolean unique, AttributeDefinition... attributes) {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
-        final HashMap<String, String> hints = new HashMap<>(1);
+        final HashMap<String, String> hints = new HashMap<>(2);
+        if (unique) {
+            hints.put(PK_HINT, Boolean.TRUE.toString());
+            hints.put(NULLABLE_HINT, Boolean.FALSE.toString());
+        }
         extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
         System.arraycopy(attributes, 0, extended, 1, attributes.length);
         return this.createEntity(featureEntityName, extended);
@@ -154,7 +167,10 @@ public final class PolyphenyEntityCreator implements EntityCreator {
     @Override
     public boolean createIdEntity(String entityName, AttributeDefinition... attributes) {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
-        extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING);
+        final HashMap<String, String> hints = new HashMap<>(2);
+        hints.put(PK_HINT, Boolean.TRUE.toString());
+        hints.put(NULLABLE_HINT, Boolean.FALSE.toString());
+        extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
         System.arraycopy(attributes, 0, extended, 1, attributes.length);
         return this.createEntity(entityName, extended);
     }
@@ -170,45 +186,65 @@ public final class PolyphenyEntityCreator implements EntityCreator {
         try (final Statement stmt = this.wrapper.connection.createStatement()) {
             final StringBuilder builder = new StringBuilder("CREATE TABLE " + entityFullName + " (");
             String store = PolyphenyWrapper.STORE_NAME_POSTGRESQL;
+            List<String> pk = new LinkedList<>();
             int index = 0;
             for (AttributeDefinition attribute : entityDefinition.getAttributes()) {
                 switch (attribute.getType()) {
                     case BOOLEAN:
-                        builder.append(attribute.getName() + " BOOLEAN NULL");
+                        builder.append(attribute.getName() + " BOOLEAN ");
                         break;
                     case DOUBLE:
-                        builder.append(attribute.getName() + " DOUBLE NULL");
+                        builder.append(attribute.getName() + " DOUBLE ");
                         break;
                     case FLOAT:
-                        builder.append(attribute.getName() + " FLOAT NULL");
+                        builder.append(attribute.getName() + " REAL ");
                         break;
                     case INT:
-                        builder.append(attribute.getName() + " INT NULL");
+                        builder.append(attribute.getName() + " INT ");
                         break;
                     case LONG:
-                        builder.append(attribute.getName() + " LONG NULL");
+                        builder.append(attribute.getName() + " LONG ");
                         break;
                     case STRING:
-                        builder.append(attribute.getName() + " VARCHAR(255) NULL");
+                        builder.append(attribute.getName() + " VARCHAR(255) ");
                         break;
                     case TEXT:
-                        builder.append(attribute.getName() + " TEXT NULL");
+                        builder.append(attribute.getName() + " VARCHAR(65535) ");
                         break;
                     case VECTOR:
-                        builder.append(attribute.getName() + " REAL ARRAY(1," + attribute.getLength() + ") NULL");
+                        builder.append(attribute.getName() + " REAL ARRAY(1," + attribute.getLength() + ") ");
                         store = PolyphenyWrapper.STORE_NAME_COTTONTAIL;
                         break;
                     case BITSET:
-                        builder.append(attribute.getName() + " BOOLEAN ARRAY(1," + attribute.getLength() + ") NULL");
+                        builder.append(attribute.getName() + " BOOLEAN ARRAY(1," + attribute.getLength() + ") ");
                         store = PolyphenyWrapper.STORE_NAME_COTTONTAIL;
                         break;
                     default:
                         throw new RuntimeException("Type " + attribute.getType() + " has no matching analogue in Cottontail DB");
                 }
+
+                if (attribute.getHint(NULLABLE_HINT).map(h -> h.equals(Boolean.TRUE.toString())).orElse(true)) {
+                    builder.append("NULL");
+                } else {
+                    builder.append("NOT NULL");
+                }
+
+                if (attribute.getHint(PK_HINT).map(h -> h.equals(Boolean.TRUE.toString())).orElse(false)) {
+                    pk.add(attribute.getName());
+                }
                 if ((index++) < entityDefinition.getAttributes().size() - 1) {
                     builder.append(", ");
                 }
             }
+
+            /* Add PRIMARY KEY definition. */
+            if (!pk.isEmpty()) {
+                builder.append(", PRIMARY KEY(");
+                builder.append(String.join(",", pk));
+                builder.append(")");
+            }
+
+            /* Add ON STORE. */
             builder.append(") ON STORE " + store);
             stmt.execute(builder.toString());
             return true;
