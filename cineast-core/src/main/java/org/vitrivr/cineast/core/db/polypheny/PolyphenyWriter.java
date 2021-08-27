@@ -1,9 +1,15 @@
 package org.vitrivr.cineast.core.db.polypheny;
 
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.TimeZone;
+import org.apache.calcite.avatica.ColumnMetaData;
+import org.apache.calcite.avatica.ColumnMetaData.Rep;
+import org.apache.calcite.avatica.util.ArrayFactoryImpl;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -24,12 +30,16 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
     /** The fully qualified name of the entity handled by this {@link PolyphenyWriter}. */
     private String fqn;
 
+    /** Internal {@link ArrayFactoryImpl} used to construct arrays. */
+    private final ArrayFactoryImpl factory = new ArrayFactoryImpl(TimeZone.getDefault());
+
     public PolyphenyWriter(PolyphenyWrapper wrapper) {
         this.wrapper = wrapper;
     }
 
     @Override
     public boolean open(String name) {
+        this.fqn = this.wrapper.fqnInput(name);
         return true;
     }
 
@@ -64,6 +74,8 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
                 bindInsertStatement(stmt, tuples.remove(0));
                 stmt.addBatch();
             }
+            stmt.executeBatch(); /* Execute INSERTs. */
+            this.wrapper.connection.commit();
             long stop = System.currentTimeMillis();
             LOGGER.trace("Completed insert of {} elements in {} ms", size, stop - start);
             return true;
@@ -92,14 +104,14 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
      */
     private String createInsertStatement(PersistentTuple tuple) {
         final StringBuilder insert = new StringBuilder("INSERT INTO " + this.fqn  + "(");
-        final StringBuilder values = new StringBuilder(") VALUES ( ");
+        final StringBuilder values = new StringBuilder(") VALUES (");
         int index = 0;
         for (Object ignored : tuple.getElements()) {
             insert.append(this.names[index++]);
             values.append("?");
-            if ((index) < tuple.getElements().size() - 1) {
+            if ((index) < tuple.getElements().size()) {
                 insert.append(",");
-                insert.append(",");
+                values.append(",");
             }
         }
         values.append(")");
@@ -114,7 +126,7 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
      * @return True on success, false otherwise.
      */
     private PreparedStatement bindInsertStatement(PreparedStatement stmt, PersistentTuple tuple) throws SQLException {
-        int index = 0;
+        int index = 1;
         for (Object o : tuple.getElements()) {
             if(o instanceof Long){
                 stmt.setLong(index++, (Long) o);
@@ -129,12 +141,22 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
             } else if(o instanceof String){
                 stmt.setString(index++, (String) o);
             } else if(o instanceof float[]){
-                stmt.setObject(index++, o);
+                final List<Object> list = new ArrayList<>(((float[])o).length);
+                for (float f : (float[])o) list.add(f);
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(6, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
+                stmt.setArray(index++, array);
             } else if(o instanceof int[]){
-                stmt.setObject(index++, o);
+                final List<Object> list = new ArrayList<>(((int[])o).length);
+                for (int i : (int[])o) list.add(i);
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(4, "INTEGER", Rep.PRIMITIVE_INT), list);
+                stmt.setArray(index++, array);
             } else if (o instanceof ReadableFloatVector){
-                float[] array = ReadableFloatVector.toArray((ReadableFloatVector) o);
-                stmt.setObject(index++, array);
+                final List<Object> list = new ArrayList<>(((ReadableFloatVector)o).getElementCount());
+                for (int i = 0; i<((ReadableFloatVector)o).getElementCount();i++) {
+                    list.add(((ReadableFloatVector)o).getElement(i));
+                }
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(6, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
+                stmt.setArray(index++, array);
             } else if (o == null) {
                 stmt.setNull(index++, Types.NULL);
             } else {
