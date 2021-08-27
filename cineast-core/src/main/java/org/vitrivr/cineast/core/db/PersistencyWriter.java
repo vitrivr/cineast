@@ -1,8 +1,14 @@
 package org.vitrivr.cineast.core.db;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public interface PersistencyWriter <R> {
+	/**
+	 * Logger instance used for logging.
+	 */
+	Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * @return true if the writer was successfully opened
