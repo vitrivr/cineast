@@ -98,7 +98,7 @@ signing {
 dependencies {
 
     /** THE Cottontail DB proto dependency */
-    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb
+    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontail_proto
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE ADAMpro proto dependency (legacy) */
