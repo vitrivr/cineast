@@ -45,7 +45,8 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
 
     @Override
     public boolean close() {
-        return false;
+        this.wrapper.close();
+        return true;
     }
 
     @Override
@@ -103,11 +104,11 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
      * @return Resulting INSERT query as string.
      */
     private String createInsertStatement(PersistentTuple tuple) {
-        final StringBuilder insert = new StringBuilder("INSERT INTO " + this.fqn  + "(");
+        final StringBuilder insert = new StringBuilder("INSERT INTO ").append(this.fqn).append(" (");
         final StringBuilder values = new StringBuilder(") VALUES (");
         int index = 0;
         for (Object ignored : tuple.getElements()) {
-            insert.append(this.names[index++]);
+            insert.append("\"").append(this.names[index++]).append("\"");
             values.append("?");
             if ((index) < tuple.getElements().size()) {
                 insert.append(",");
@@ -143,19 +144,19 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
             } else if(o instanceof float[]){
                 final List<Object> list = new ArrayList<>(((float[])o).length);
                 for (float f : (float[])o) list.add(f);
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(6, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.REAL, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
                 stmt.setArray(index++, array);
             } else if(o instanceof int[]){
                 final List<Object> list = new ArrayList<>(((int[])o).length);
                 for (int i : (int[])o) list.add(i);
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(4, "INTEGER", Rep.PRIMITIVE_INT), list);
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.INTEGER, "INTEGER", Rep.PRIMITIVE_INT), list);
                 stmt.setArray(index++, array);
             } else if (o instanceof ReadableFloatVector){
                 final List<Object> list = new ArrayList<>(((ReadableFloatVector)o).getElementCount());
                 for (int i = 0; i<((ReadableFloatVector)o).getElementCount();i++) {
                     list.add(((ReadableFloatVector)o).getElement(i));
                 }
-                final Array array = this.factory.createArray(ColumnMetaData.scalar(6, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
+                final Array array = this.factory.createArray(ColumnMetaData.scalar(Types.REAL, "FLOAT", Rep.PRIMITIVE_FLOAT), list);
                 stmt.setArray(index++, array);
             } else if (o == null) {
                 stmt.setNull(index++, Types.NULL);
