@@ -105,22 +105,17 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       System.out.println("Other DB than Cottontail DB not supported (yet). Aborting");
       return;
     }
-    final CottontailWrapper cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(),
-        false);
-//    long txId = cottontail.client.begin();
-    final Query query = new Query(ENTITY_NAME);
-    query.select("*");
-//    final TupleIterator ti = cottontail.client.query(query, txId);
-    final TupleIterator ti = cottontail.client.query(query, null);
+    final CottontailWrapper cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
+    long txId = cottontail.client.begin();
+    final Query query = new Query(ENTITY_NAME).select("*");
+    final TupleIterator ti = cottontail.client.query(query, txId);
     final List<UpdateElement> updateElements = new ArrayList<>();
     int counter = 0;
     int totalCounter = 0;
     while (ti.hasNext()) {
       final Tuple t = ti.next();
       final MediaSegmentDescriptor segment = convert(t);
-      // we need to strip "is_" from the id
-      final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(
-          segment.getSegmentId().substring(4));
+      final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(segment.getSegmentId().substring(4));
       if (!minuteIdOpt.isPresent()) {
         LOGGER.warn("Could not update " + segment.getSegmentId());
         continue;
@@ -135,29 +130,17 @@ public class LSC21TemporalUpdateCommand implements Runnable {
               new Pair<>(MediaSegmentDescriptor.SEGMENT_STARTABS_COL_NAME, (double) msAbs),
               new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
           )
-          .where(
-              new org.vitrivr.cottontail.client.language.extensions.Literal(
-                  ColumnName.newBuilder().setName(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER)
-                      .build(),
-                  ComparisonOperator.EQUAL,
-                  Collections.singletonList(
-                      Literal.newBuilder().setStringData(segment.getSegmentId()).build()),
-                  false
-              )
-          );
-//      cottontail.client.insert(update, txId); // TODO as soon as fixed, rename to update
-      cottontail.client.insert(update, null);
+          .where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId()));
+      cottontail.client.insert(update, txId);
       totalCounter++;
       if (counter++ > 99) {
-//        cottontail.client.commit(txId);
-//        txId = cottontail.client.begin();
         if (progress) {
           System.out.println("Updated " + totalCounter + " rows.");
         }
         counter = 0;
       }
     }
-//    cottontail.client.commit(txId);
+    cottontail.client.commit(txId);
     System.out.println("Done.");
   }
 }
