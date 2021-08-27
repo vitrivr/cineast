@@ -45,6 +45,9 @@ subprojects {
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            url 'https://nexus.dmi.unibas.ch/repository/maven2/' /* Required by Polypheny. */
+        }
     }
 
     /* Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future. */

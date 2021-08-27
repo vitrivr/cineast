@@ -102,7 +102,7 @@ dependencies {
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE Polypheny dependency */
-    implementation files('lib/polypheny-jdbc-driver-1.4.jar')
+    api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
 
     /** THE Polypheny proto dependency (legacy) */
     api group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro
