@@ -24,7 +24,6 @@ import org.vitrivr.cottontail.client.TupleIterator;
 import org.vitrivr.cottontail.client.TupleIterator.Tuple;
 import org.vitrivr.cottontail.client.language.dml.Update;
 import org.vitrivr.cottontail.client.language.dql.Query;
-import org.vitrivr.cottontail.client.language.extensions.Predicate;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.ComparisonOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
@@ -38,7 +37,8 @@ public class LSC21TemporalUpdateCommand implements Runnable {
 
   private static final String ENTITY_NAME = "cineast.cineast_segment";
 
-  @Option(name = {"-p", "--progress"}, title = "Progress", description = "Flag to indicate that some progress information is desired")
+  @Option(name = {"-p",
+      "--progress"}, title = "Progress", description = "Flag to indicate that some progress information is desired")
   private boolean progress = false;
 
   private static MediaSegmentDescriptor convert(Tuple segmentTuple) {
@@ -62,7 +62,6 @@ public class LSC21TemporalUpdateCommand implements Runnable {
         .setValue(forValue(segment, name))
         .build()).collect(Collectors.toList());
   }
-
 
 
   private static Literal forValue(MediaSegmentDescriptor segment, String name) {
@@ -108,10 +107,11 @@ public class LSC21TemporalUpdateCommand implements Runnable {
     }
     final CottontailWrapper cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(),
         false);
-    long txId = cottontail.client.begin();
+//    long txId = cottontail.client.begin();
     final Query query = new Query(ENTITY_NAME);
     query.select("*");
-    final TupleIterator ti = cottontail.client.query(query, txId);
+//    final TupleIterator ti = cottontail.client.query(query, txId);
+    final TupleIterator ti = cottontail.client.query(query, null);
     final List<UpdateElement> updateElements = new ArrayList<>();
     int counter = 0;
     int totalCounter = 0;
@@ -119,7 +119,8 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       final Tuple t = ti.next();
       final MediaSegmentDescriptor segment = convert(t);
       // we need to strip "is_" from the id
-      final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(segment.getSegmentId().substring(4));
+      final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(
+          segment.getSegmentId().substring(4));
       if (!minuteIdOpt.isPresent()) {
         LOGGER.warn("Could not update " + segment.getSegmentId());
         continue;
@@ -133,27 +134,30 @@ public class LSC21TemporalUpdateCommand implements Runnable {
               new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext),
               new Pair<>(MediaSegmentDescriptor.SEGMENT_STARTABS_COL_NAME, (double) msAbs),
               new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
-              )
+          )
           .where(
               new org.vitrivr.cottontail.client.language.extensions.Literal(
-                  ColumnName.newBuilder().setName(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER).build(),
+                  ColumnName.newBuilder().setName(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER)
+                      .build(),
                   ComparisonOperator.EQUAL,
-                  Collections.singletonList(Literal.newBuilder().setStringData(segment.getSegmentId()).build()),
+                  Collections.singletonList(
+                      Literal.newBuilder().setStringData(segment.getSegmentId()).build()),
                   false
               )
           );
-      cottontail.client.insert(update, txId); // TODO as soon as fixed, rename to update
+//      cottontail.client.insert(update, txId); // TODO as soon as fixed, rename to update
+      cottontail.client.insert(update, null);
       totalCounter++;
-      if(counter++ > 99){
-        cottontail.client.commit(txId);
-        txId = cottontail.client.begin();
-        if(progress){
-          System.out.println("Updated "+totalCounter+" rows.");
+      if (counter++ > 99) {
+//        cottontail.client.commit(txId);
+//        txId = cottontail.client.begin();
+        if (progress) {
+          System.out.println("Updated " + totalCounter + " rows.");
         }
         counter = 0;
       }
     }
-    cottontail.client.commit(txId);
+//    cottontail.client.commit(txId);
     System.out.println("Done.");
   }
 }
