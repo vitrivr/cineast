@@ -58,6 +58,10 @@ public final class PolyphenyWrapper implements AutoCloseable {
         LOGGER.debug("Connected to Polypheny DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
     }
 
+    public String fqnInput(String entity) {
+        return CINEAST_SCHEMA + "." + entity;
+    }
+
     @Override
     public void close(){
         try {
