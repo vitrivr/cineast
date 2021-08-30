@@ -27,13 +27,13 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.language.basics.Distances;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.client.language.extensions.And;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
 import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -412,17 +412,17 @@ public final class CottontailSelector implements DBSelector {
   private static String toDistance(Distance distance) {
     switch (distance) {
       case manhattan:
-        return Knn.Distance.L1.toString();
+        return Distances.L1.toString();
       case euclidean:
-        return Knn.Distance.L2.toString();
+        return Distances.L2.toString();
       case squaredeuclidean:
-        return Knn.Distance.L2SQUARED.toString();
+        return Distances.L2SQUARED.toString();
       case chisquared:
-        return Knn.Distance.CHISQUARED.toString();
+        return Distances.CHISQUARED.toString();
       case cosine:
-        return Knn.Distance.COSINE.toString();
+        return Distances.COSINE.toString();
       case haversine:
-        return Knn.Distance.HAVERSINE.toString();
+        return Distances.HAVERSINE.toString();
       default:
         LOGGER.error("distance '{}' not supported by cottontail", distance);
         throw new IllegalArgumentException("Distance '" + distance.toString() + "' not supported by Cottontail DB.");

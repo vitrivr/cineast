@@ -49,7 +49,7 @@ public enum DataSource {
             case ADAMPRO:
                 return () -> new ADAMproWriter(new ADAMproWrapper(config));
             case COTTONTAIL:
-                return () -> new CottontailWriter(new CottontailWrapper(config, false));
+                return () -> new CottontailWriter(new CottontailWrapper(config));
             case POLYPHENY:
                 return () -> new PolyphenyWriter(new PolyphenyWrapper(config));
             case JSON:
@@ -72,7 +72,7 @@ public enum DataSource {
             case ADAMPRO:
                 return () -> new ADAMproSelector(new ADAMproWrapper(config));
             case COTTONTAIL:
-                return () -> new CottontailSelector(new CottontailWrapper(config, false));
+                return () -> new CottontailSelector(new CottontailWrapper(config));
             case POLYPHENY:
                 return () -> new PolyphenySelector(new PolyphenyWrapper(config));
             case JSON:
@@ -97,7 +97,7 @@ public enum DataSource {
             case ADAMPRO:
                 return () -> new ADAMproEntityCreator(new ADAMproWrapper(config));
             case COTTONTAIL:
-                return () -> new CottontailEntityCreator(new CottontailWrapper(config, false));
+                return () -> new CottontailEntityCreator(new CottontailWrapper(config));
             case POLYPHENY:
                 return () -> new PolyphenyEntityCreator(new PolyphenyWrapper(config));
             default:

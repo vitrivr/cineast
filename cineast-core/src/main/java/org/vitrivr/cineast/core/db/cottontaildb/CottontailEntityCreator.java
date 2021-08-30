@@ -40,7 +40,7 @@ public final class CottontailEntityCreator implements EntityCreator {
   private final CottontailWrapper cottontail;
 
   public CottontailEntityCreator(DatabaseConfig config) {
-    this.cottontail = new CottontailWrapper(config, false);
+    this.cottontail = new CottontailWrapper(config);
     init();
   }
 
