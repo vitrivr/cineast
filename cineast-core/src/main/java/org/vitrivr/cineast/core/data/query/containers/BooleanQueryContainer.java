@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -19,6 +20,7 @@ public class BooleanQueryContainer extends QueryContainer {
   private static final String OPERATOR_FIELD_NAME = "operator";
   private static final String VALUES_FIELD_NAME = "values";
   private static final String CONTAINER_WEIGHT = "weight";
+  private static final String RELEVANT_TERMS = "relevant";
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -34,11 +36,16 @@ public class BooleanQueryContainer extends QueryContainer {
   }
 
   public BooleanQueryContainer(JsonNode json) {
-    JsonNode terms = json.get("BoolTerms");
+    JsonNode terms = json.get("terms");
     if (!terms.isArray()) {
       throw new IllegalArgumentException("Boolean expression data is not a list");
     }
-    containerWeight = json.get(CONTAINER_WEIGHT).asDouble();
+    if (json.has(CONTAINER_WEIGHT)) {
+      containerWeight = json.get(CONTAINER_WEIGHT).asDouble();
+    } else {
+      containerWeight = 1d;
+    }
+
     Iterator<JsonNode> iter = terms.elements();
     while (iter.hasNext()) {
       JsonNode element = iter.next();
@@ -58,7 +65,8 @@ public class BooleanQueryContainer extends QueryContainer {
             element.toString());
         continue;
       }
-
+      Boolean relevant = true;
+      if (element.has(RELEVANT_TERMS)) relevant = element.get(RELEVANT_TERMS).asBoolean();
       String attribute = element.get(ATTRIBUTE_FIELD_NAME).asText();
       RelationalOperator operator =
           RelationalOperator.valueOf(element.get(OPERATOR_FIELD_NAME).asText());
@@ -75,7 +83,7 @@ public class BooleanQueryContainer extends QueryContainer {
         }
       }
 
-      this.expressions.add(new BooleanExpression(attribute, operator, values));
+      this.expressions.add(new BooleanExpression(attribute, operator, values, relevant));
 
     }
   }

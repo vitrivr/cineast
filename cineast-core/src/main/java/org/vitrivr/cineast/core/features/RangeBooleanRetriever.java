@@ -4,10 +4,11 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveProviderCompar
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
+import org.vitrivr.cineast.core.features.abstracts.ExtendedBooleanRetriever;
 
 import java.util.*;
 
-public class RangeBooleanRetriever extends BooleanRetriever {
+public class RangeBooleanRetriever extends ExtendedBooleanRetriever {
 
   private static final List<RelationalOperator> SUPPORTED_OPERATORS =
       Collections.unmodifiableList(

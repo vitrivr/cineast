@@ -80,16 +80,15 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 
     List<BooleanExpression> relevantExpressions = sc.getBooleanExpressions().stream().filter(this::canProcess).collect(Collectors.toList());
-    Double containerWeight = sc.getContainerWeight();
     if (relevantExpressions.isEmpty()){
       LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
       return Collections.emptyList();
     }
 
-    return getMatching(relevantExpressions, qc,containerWeight);
+    return getMatching(relevantExpressions, qc);
   }
 
-  protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc, Double weight){
+  protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
 
     List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(
         expressions.stream().map(be -> Triple.of(

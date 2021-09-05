@@ -4,14 +4,18 @@ public class BooleanSegmentScoreElement implements ScoreElement {
 
   private final String id;
   private final Double weight;
+  private final Double factor;
 
   public BooleanSegmentScoreElement(String segmentId){
     this.id = segmentId;
     this.weight = 1d;
+    this.factor = 1d;
   }
-  public BooleanSegmentScoreElement(String segmentId, Double weight){
+// For the extenden Boolean RetrieverModel
+  public BooleanSegmentScoreElement(String segmentId, Double weight,Double factor){
     this.id = segmentId;
     this.weight = weight;
+    this.factor = factor;
   }
 
   @Override
@@ -21,7 +25,7 @@ public class BooleanSegmentScoreElement implements ScoreElement {
 
   @Override
   public double getScore() {
-    return 1d;
+    return weight*factor;
   }
 
   @Override
