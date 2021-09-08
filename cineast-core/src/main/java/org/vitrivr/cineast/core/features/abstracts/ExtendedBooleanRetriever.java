@@ -25,8 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * BooleanRetrievers operate on tables which are created externally.
- * Therefore, both initializing and dropping the entity are managed externally.
+ * The Extended Boolean Retriever supports both Container Weights as well as Term Preferences.
  */
 public abstract class ExtendedBooleanRetriever implements MultipleInstantiatableRetriever {
 
@@ -115,12 +114,12 @@ public abstract class ExtendedBooleanRetriever implements MultipleInstantiatable
                 qc);
         int index= 0;
         List<Map<String, Pair<PrimitiveTypeProvider,Double>>> results = new ArrayList<>(rows.size());
-        // If an element is in both query terms its score is marginally higher ( +0.01) else it is 0.99
+        // If an element is in both query terms its score is marginally higher ( +0.1) else it is 0.9
         for (Map<String,PrimitiveTypeProvider> row: rows){
             if (rowsWithUnrelevant.contains(row))
                 results.add(index, Collections.singletonMap(GENERIC_ID_COLUMN_QUALIFIER, new Pair<>(row.get(GENERIC_ID_COLUMN_QUALIFIER), 1d)));
             else
-            results.add(index, Collections.singletonMap(GENERIC_ID_COLUMN_QUALIFIER, new Pair<>(row.get(GENERIC_ID_COLUMN_QUALIFIER), 0.99)));
+            results.add(index, Collections.singletonMap(GENERIC_ID_COLUMN_QUALIFIER, new Pair<>(row.get(GENERIC_ID_COLUMN_QUALIFIER), 0.9)));
 
         }
 

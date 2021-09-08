@@ -17,11 +17,6 @@ import java.util.*;
 public class HAMMetadataImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private String _id;
-    private Iterator<Map.Entry<String, JsonNode>> _meta;
-    private Iterator<JsonNode> _metaArray;
-    private String _key;
-    private JsonNode node;
     private Boolean empty;
     private Path root;
     private int currentRow;
@@ -33,25 +28,9 @@ public class HAMMetadataImporter implements Importer<Map<String, PrimitiveTypePr
         this.root = root;
         currentRow = 0;
         csvReader = new BufferedReader(new FileReader(root.toString()));
-//        parser = mapper.getFactory().createParser(input.toFile());
-//        node =  mapper.readTree(parser);
-//        if (parser.nextToken() != JsonToken.START_ARRAY) {
-//            throw new IOException("Invalid format");
-//        }
-//        if (parser.nextToken() != JsonToken.START_OBJECT) {
-//            throw new IOException("Invalid format");
-//        }
-        //nextObjectMetadata(root);
     }
 
     private Optional<Iterator<Map.Entry<String, JsonNode>>> nextObjectMetadata(Path root) throws IOException {
-//        BufferedReader csvReader = new BufferedReader(new FileReader(root.toString()));
-//        String row;
-//        while ((row = csvReader.readLine()) != null) {
-//            String[] data = row.split(",");
-//            // do something with the data
-//        }
-//        csvReader.close();
         return Optional.empty();
     }
 
@@ -70,13 +49,6 @@ public class HAMMetadataImporter implements Importer<Map<String, PrimitiveTypePr
             map.put("sex", PrimitiveTypeProvider.fromObject(data[5]));
             map.put("localization", PrimitiveTypeProvider.fromObject(data[6]));
             map.put("dataset", PrimitiveTypeProvider.fromObject(data[7]));
-//        System.out.println("iterated");
-//        String x = node.get("id").textValue();
-//
-//        map.put("id", PrimitiveTypeProvider.fromObject(node.get("id").textValue()));
-//        map.put("domain", PrimitiveTypeProvider.fromObject(node.get("domain").asText()));
-//        map.put("key", PrimitiveTypeProvider.fromObject(node.get("key").asText()));
-//        map.put("value", PrimitiveTypeProvider.fromObject(node.get("value").asInt()));
         return Optional.of(map);
 
     }

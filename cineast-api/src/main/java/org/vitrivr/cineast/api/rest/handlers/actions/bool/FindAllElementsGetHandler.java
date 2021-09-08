@@ -1,11 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.bool;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +15,11 @@ import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.BooleanReader;
-import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
 
 
 /**
- * For boolean retrieval, it is useful to know all available options for a certain column.
- * <p>
- * For example, it would be useful to know all available timezones for the column $table.timezone
+ * For boolean retrieval, returns all elements for a specific attribute
  */
 public class FindAllElementsGetHandler implements GetRestHandler<BooleanLookupResult> {
 
@@ -68,13 +61,13 @@ public class FindAllElementsGetHandler implements GetRestHandler<BooleanLookupRe
     public OpenApiDocumentation docs() {
         return OpenApiBuilder.document()
                 .operation(op -> {
-                    op.summary("Find all metadata for specific object id in given domain");
-                    op.description("Find all metadata for specific object id in given domain");
+                    op.summary("Find all metadata for a specfic attribute");
+                    op.description("Find all metadata for a specfic attribute");
                     op.operationId("findAllElements");
                     op.addTagsItem("Misc");
                 })
                 .pathParam(TABLE_NAME, String.class, p -> p.description("The table in which the data is stored"))
-                .pathParam(TABLE_COLUMN, String.class, p -> p.description("The colmn with the data"))
+                .pathParam(TABLE_COLUMN, String.class, p -> p.description("The column with the data"))
                 .json("200", outClass());
     }
 }

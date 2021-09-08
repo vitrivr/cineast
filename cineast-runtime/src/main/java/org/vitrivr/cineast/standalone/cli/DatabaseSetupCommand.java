@@ -103,6 +103,7 @@ public class DatabaseSetupCommand implements Runnable {
 
       ec.createMultiMediaObjectsEntity();
       ec.createMetadataEntity();
+//      ec.createNewMetadataEntity();
       ec.createSegmentMetadataEntity();
       ec.createSegmentEntity();
       ec.createTagEntity();

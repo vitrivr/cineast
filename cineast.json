@@ -16,7 +16,7 @@
     "resultsPerModule": 5000,
     "features": {
       "globalcolor": [
-        {"feature": "AverageColor",  "weight": 2.3},
+        {"feature": "AverageColor",  "weight": 1.8},
         {"feature": "MedianColor", "weight": 1.2},
         {"feature": "AverageFuzzyHist", "weight": 0.7},
         {"feature": "HueHistogram", "weight": 0.7},
@@ -95,7 +95,8 @@
     "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "thumbnails",
     "objectLocation": "objects",
-    "objectsFilesAreIDed": true
+    "objectsFilesAreIDed": true,
+    "maxMessageSize": 900000000
   },
 
   "monitoring":{

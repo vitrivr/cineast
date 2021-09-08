@@ -11,7 +11,7 @@ public class BooleanSegmentScoreElement implements ScoreElement {
     this.weight = 1d;
     this.factor = 1d;
   }
-// For the extenden Boolean RetrieverModel
+// For the extended Boolean RetrieverModel
   public BooleanSegmentScoreElement(String segmentId, Double weight,Double factor){
     this.id = segmentId;
     this.weight = weight;

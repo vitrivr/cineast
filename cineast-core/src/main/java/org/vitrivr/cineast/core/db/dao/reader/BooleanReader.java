@@ -55,7 +55,6 @@ public class BooleanReader extends AbstractEntityReader{
         selector.open(entity);
         System.out.println(selector.existsEntity(entity));
         List<PrimitiveTypeProvider> results = selector.getUniqueValues(queryList.get(0).getLeft());
-        //System.out.println(selector.getAll("key"));
         System.out.println(results.size());
         return results.size();
     }
@@ -72,9 +71,6 @@ public class BooleanReader extends AbstractEntityReader{
         return results.size();
     }
 
-//    public int getTotal() {
-//         this.retriever.getSimilar()
-//    }
 
     public List<PrimitiveTypeProvider> getAllValues() {
         List<PrimitiveTypeProvider> results = selector.getAll(this.attribute);
