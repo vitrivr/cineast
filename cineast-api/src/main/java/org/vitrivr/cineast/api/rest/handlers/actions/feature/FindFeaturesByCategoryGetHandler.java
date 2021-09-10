@@ -5,29 +5,38 @@ import static org.vitrivr.cineast.api.util.APIConstants.CATEGORY_NAME;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.Arrays;
 import java.util.Map;
-import org.vitrivr.cineast.api.messages.result.AllFeaturesByCategoryQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
 /**
  * Handler for the API call to retrieve all features for all objects for a given category.
  */
-public class FindFeaturesByCategoryGetHandler implements GetRestHandler<AllFeaturesByCategoryQueryResult> {
+public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<String[], FeaturesByCategoryQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/category/:" + CATEGORY_NAME;
 
   @Override
-  public AllFeaturesByCategoryQueryResult doGet(Context ctx) {
+  public FeaturesByCategoryQueryResult performPost(String[] input, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
+
+    // Category name from path params.
     final String cat = parameters.get(CATEGORY_NAME);
-    return QueryUtil.retrieveAllFeaturesByCategory(cat);
+
+    return QueryUtil.queryFeaturesForCategory(cat, Arrays.asList(input));
   }
 
   @Override
-  public Class<AllFeaturesByCategoryQueryResult> outClass() {
-    return AllFeaturesByCategoryQueryResult.class;
+  public Class<String[]> inClass() {
+    return String[].class;
+  }
+
+  @Override
+  public Class<FeaturesByCategoryQueryResult> outClass() {
+    return FeaturesByCategoryQueryResult.class;
   }
 
   @Override
@@ -39,13 +48,13 @@ public class FindFeaturesByCategoryGetHandler implements GetRestHandler<AllFeatu
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
-          op.operationId("findAllFeatByCat");
-          op.description("Find all features for the given category for all indexed objects");
-          op.summary("Find features for the given category");
+          op.operationId("findFeaturesByCategory");
+          op.description("Find features for the given category for all (or specific) IDs");
+          op.summary("Find features for the given category for all (or specific) IDs");
           op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
         })
-        .pathParam(CATEGORY_NAME, String.class,
-            p -> p.description("The category to find features for all objects for"))
+        .pathParam(CATEGORY_NAME, String.class)
+        .body(inClass())
         .json("200", outClass());
   }
 

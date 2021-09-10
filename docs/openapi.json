@@ -539,27 +539,38 @@
       }
     },
     "/api/v1/find/feature/all/by/category/{category}" : {
-      "get" : {
+      "post" : {
         "tags" : [ "Metadata" ],
-        "summary" : "Find features for the given category",
-        "description" : "Find all features for the given category for all indexed objects",
-        "operationId" : "findAllFeatByCat",
+        "summary" : "Find features for the given category for all (or specific) IDs",
+        "description" : "Find features for the given category for all (or specific) IDs",
+        "operationId" : "findFeaturesByCategory",
         "parameters" : [ {
           "name" : "category",
           "in" : "path",
-          "description" : "The category to find features for all objects for",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        },
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AllFeaturesByCategoryQueryResult"
+                  "$ref" : "#/components/schemas/FeaturesByCategoryQueryResult"
                 }
               }
             }
@@ -567,28 +578,39 @@
         }
       }
     },
-    "/api/v1/find/feature/all/by/tablename/{category}" : {
-      "get" : {
+    "/api/v1/find/feature/all/by/tablename/{tablename}" : {
+      "post" : {
         "tags" : [ "Metadata" ],
-        "summary" : "Find features for the given table name",
-        "description" : "Find all features for the given table name for all indexed objects",
-        "operationId" : "findAllFeatByTableName",
+        "summary" : "Find features for the given feature table name for all (or specific) IDs",
+        "description" : "Find features for the given feature table name for all (or specific) IDs",
+        "operationId" : "findFeaturesByTableName",
         "parameters" : [ {
-          "name" : "category",
+          "name" : "tablename",
           "in" : "path",
-          "description" : "The table name to find features for all objects for",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        },
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AllFeaturesByTableNameQueryResult"
+                  "$ref" : "#/components/schemas/FeaturesByTableNameQueryResult"
                 }
               }
             }
@@ -1234,11 +1256,11 @@
             "type" : "number",
             "format" : "float"
           },
-          "count" : {
+          "sequenceNumber" : {
             "type" : "integer",
             "format" : "int32"
           },
-          "sequenceNumber" : {
+          "count" : {
             "type" : "integer",
             "format" : "int32"
           }
@@ -1325,10 +1347,10 @@
               "type" : "string"
             }
           },
-          "distanceIfEmpty" : {
+          "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "correspondenceFunctionIfEmpty" : {
+          "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "normIfEmpty" : {
@@ -1464,7 +1486,7 @@
           }
         }
       },
-      "AllFeaturesByCategoryQueryResult" : {
+      "FeaturesByCategoryQueryResult" : {
         "type" : "object",
         "properties" : {
           "queryId" : {
@@ -1482,12 +1504,12 @@
               }
             }
           },
-          "elementID" : {
+          "category" : {
             "type" : "string"
           }
         }
       },
-      "AllFeaturesByTableNameQueryResult" : {
+      "FeaturesByTableNameQueryResult" : {
         "type" : "object",
         "properties" : {
           "queryId" : {
@@ -1502,7 +1524,7 @@
               }
             }
           },
-          "elementID" : {
+          "tableName" : {
             "type" : "string"
           }
         }
