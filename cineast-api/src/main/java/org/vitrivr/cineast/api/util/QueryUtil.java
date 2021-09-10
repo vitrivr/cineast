@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
-import org.vitrivr.cineast.api.messages.result.AllFeaturesByCategoryQueryResult;
-import org.vitrivr.cineast.api.messages.result.AllFeaturesByTableNameQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByTableNameQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -212,13 +212,13 @@ public class QueryUtil {
   public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {
     Map<String, Object[]> features = new HashMap<>();
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
-    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
     retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> {
       List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
       if (_features.size() == 0) {
         return;
       }
+
       if (_features.get(0) != null) {
         features.put(cat, _features.toArray());
       }
@@ -227,13 +227,19 @@ public class QueryUtil {
     return new FeaturesAllCategoriesQueryResult("", features, id);
   }
 
-
-  private static ArrayList<HashMap<String, Object>> getAllFeatures(String tableName) {
+  private static ArrayList<HashMap<String, Object>> getFeaturesFromTable(String tableName, List<String> ids) {
     final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
     ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
     selector.open(tableName);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getAll();
+
+    List<Map<String, PrimitiveTypeProvider>> rows;
+
+    if (ids == null || ids.isEmpty()) {
+      rows = selector.getAll();
+    } else {
+      rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
+    }
 
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       HashMap<String, Object> tempMap = new HashMap<>();
@@ -247,41 +253,26 @@ public class QueryUtil {
     return currList;
   }
 
-  /**
-   * Retrieves features by category for all stored/available IDs.
-   *
-   * @param category The category of features to retrieve.
-   * @return A feature map containing a list of IDs/feature array for every object ID for every feature in the category.
-   */
-  private static Map<String, ArrayList<HashMap<String, Object>>> getAllFeaturesInCategory(String category) {
-    // TODO Simplify return data type.
+  private static Map<String, ArrayList<HashMap<String, Object>>> getFeaturesForCategory(String category, List<String> ids) {
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
-    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
 
     retrievalRuntimeConfig.getRetrieversByCategory(category).forEach(retriever -> {
-
-      retriever.getTableNames().forEach(tableName -> {
-
-        _return.put(tableName, getAllFeatures(tableName));
-
-      });
-
+      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromTable(tableName, ids)));
       return true;
-
     });
 
     return _return;
   }
 
-  public static AllFeaturesByTableNameQueryResult retrieveAllFeaturesForTableName(String tableName) {
-    ArrayList<HashMap<String, Object>> features = getAllFeatures(tableName);
-    return new AllFeaturesByTableNameQueryResult("", features, tableName);
+  public static FeaturesByTableNameQueryResult queryFeaturesForTableName(String tableName, List<String> ids) {
+    ArrayList<HashMap<String, Object>> features = getFeaturesFromTable(tableName, ids);
+    return new FeaturesByTableNameQueryResult("", features, tableName);
   }
 
-  public static AllFeaturesByCategoryQueryResult retrieveAllFeaturesByCategory(String category) {
-    Map<String, ArrayList<HashMap<String, Object>>> features = getAllFeaturesInCategory(category);
-    return new AllFeaturesByCategoryQueryResult("", features, category);
+  public static FeaturesByCategoryQueryResult queryFeaturesForCategory(String category, List<String> ids) {
+    Map<String, ArrayList<HashMap<String, Object>>> features = getFeaturesForCategory(category, ids);
+    return new FeaturesByCategoryQueryResult("", features, category);
   }
 
 }

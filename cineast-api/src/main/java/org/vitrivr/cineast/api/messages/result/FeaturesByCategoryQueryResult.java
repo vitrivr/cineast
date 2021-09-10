@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Contains lists of all features and the IDs of the objects they belong to, mapped by table name.
  */
-public class AllFeaturesByCategoryQueryResult {
+public class FeaturesByCategoryQueryResult {
 
   /**
    * The query ID to which this result belongs to.
@@ -25,20 +25,20 @@ public class AllFeaturesByCategoryQueryResult {
   /**
    * The category for which the features of all objects were requested.
    */
-  public final String elementID;
+  public final String category;
 
   /**
    * Constructor for the FeaturesTextCategoryQueryResult object.
    *
    * @param queryId    Query ID as a string to which this result belongs to.
    * @param featureMap Map containing a list of IDs/feature array for every object ID for every feature in the category.
-   * @param elementID  Category for which the features of all objects were requested.
+   * @param category   Category for which the features of all objects were requested.
    */
   @JsonCreator
-  public AllFeaturesByCategoryQueryResult(String queryId, Map<String, ArrayList<HashMap<String, Object>>> featureMap, String elementID) {
+  public FeaturesByCategoryQueryResult(String queryId, Map<String, ArrayList<HashMap<String, Object>>> featureMap, String category) {
     this.queryId = queryId;
     this.featureMap = featureMap;
-    this.elementID = elementID;
+    this.category = category;
   }
 
   @Override
