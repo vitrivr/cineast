@@ -15,8 +15,11 @@
     "maxResults": 10000,
     "resultsPerModule": 5000,
     "features": {
+      "semantic" : [
+        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
+      ],
       "globalcolor": [
-        {"feature": "AverageColor",  "weight": 1.8},
+        {"feature": "AverageColor",  "weight": 2.3},
         {"feature": "MedianColor", "weight": 1.2},
         {"feature": "AverageFuzzyHist", "weight": 0.7},
         {"feature": "HueHistogram", "weight": 0.7},
@@ -30,22 +33,48 @@
         {"feature": "DominantEdgeGrid16", "weight": 1.4},
         {"feature": "DominantEdgeGrid8", "weight": 1.4}
       ],
-	"boolean": [
+      "motion": [
+        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
+      ],
+      "quantized": [
+
+      ],
+      "localfeatures": [
+        {"feature": "HOGMirflickr25K512", "weight": 1.0}
+      ],
+      "localfeatures_fast": [
+        {"feature": "HOGMirflickr25K256", "weight": 1.0}
+      ],
+      "audiofingerprint": [
+        {"feature": "HPCP12Shingle", "weight": 1.0}
+      ],
+      "tags": [
+        {"feature": "SegmentTags", "weight": 1.0}
+      ],
+      "ocr": [
+        {"feature": "OCRSearch", "weight": 1.0}
+      ],
+      "asr": [
+        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
+      ],
+      "scenecaption": [
+        {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      ],
+      "objectInstances": [
+        {"feature":  "ObjectInstances", "weight":  1.0}
+      ],
+      "boolean": [
         {
           "feature": "RangeBooleanRetriever", "weight": 1.0,
           "properties": {
-            "entity": "test_table",
-            "attribute": "domain,key,value"
+            "entity": "features_table_lsc20meta",
+            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month,p_hour,p_day"
           }
-	},
-	{
-          "feature": "RangeBooleanRetriever", "weight": 1.0,
-          "properties": {
-            "entity": "him_table",
-            "attribute": "sex,localization,age,dx,dx_type"
-          }
-	}
-	]
+        }
+      ]
     }
   },
 
@@ -85,18 +114,16 @@
     "enableRestLiveDoc": true,
     "enableRestSecure": false,
     "enableLegacy": false,
-    "enableLiveDoc": true,
     "httpPort": 4567,
     "httpsPort": 4568,
     "legacyPort": 12345,
     "threadPoolSize": 12,
-    "serveContent": true,
+    "serveContent": false,
     "serveUI": false,
     "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "thumbnails",
     "objectLocation": "objects",
-    "objectsFilesAreIDed": true,
-    "maxMessageSize": 900000000
+    "objectsFilesAreIDed": true
   },
 
   "monitoring":{

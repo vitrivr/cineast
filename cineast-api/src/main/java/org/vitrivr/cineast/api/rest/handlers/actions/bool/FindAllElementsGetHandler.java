@@ -19,7 +19,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 
 /**
- * For boolean retrieval, returns all elements for a specific attribute
+ * For boolean retrieval, returns all elements for a specific attribute in an entity
  */
 public class FindAllElementsGetHandler implements GetRestHandler<BooleanLookupResult> {
 

@@ -1,26 +1,23 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
+
 
 import java.util.*;
-
+/**
+ * Data access object that facilitates lookups in Cineast's for a Boolean Query.
+ * Methods designed to return the number of elements or all elements for a Boolean Query
+ */
 public class BooleanReader extends AbstractEntityReader{
 
 
     private String entity;
     private String attribute;
     private List<PrimitiveTypeProvider> values = new ArrayList<>();
-    private RelationalOperator operator;
     private List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> queryList;
-    private BooleanRetriever retriever;
 
 
 
@@ -39,18 +36,10 @@ public class BooleanReader extends AbstractEntityReader{
         this.attribute = attribute;
 
     }
-    public BooleanReader(DBSelector selector, String entity, String attribute, BooleanRetriever retriever) {
-        super(selector);
-        this.selector.open(entity);
-        this.entity = entity;
-        this.attribute = attribute;
-        this.retriever = retriever;
-
-    }
 
 
-
-    /** Returns the total amount of elements in the database*/
+    /** Returns the total amount of elements in the database
+     * * @return Number of elements(int) */
     public int getTotalElements() {
         selector.open(entity);
         System.out.println(selector.existsEntity(entity));
@@ -58,20 +47,15 @@ public class BooleanReader extends AbstractEntityReader{
         System.out.println(results.size());
         return results.size();
     }
-    /** Returns the total amount of elements for a specific boolean value
-     * @return*/
-
-    public int getElementsForAttribute() {
-        List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(attribute, this.operator, PrimitiveTypeProvider.fromObject(this.values));
-        return results.size();
-    }
-
+    /** Returns the number of elements to be returned for a Boolean Query
+     * * @return Number of elements(int) */
     public int getElementsAND() {
         List<Map<String, PrimitiveTypeProvider>> results = selector.getRowsAND(this.queryList,null, Arrays.asList(),null);
         return results.size();
     }
 
-
+    /** Returns all values for an attribute in an entity
+     * * @return All elements for an attribute */
     public List<PrimitiveTypeProvider> getAllValues() {
         List<PrimitiveTypeProvider> results = selector.getAll(this.attribute);
         return results;

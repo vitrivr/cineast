@@ -11,7 +11,8 @@ import java.util.List;
 
 public class BooleanLookupMessageHandler  extends StatelessWebsocketMessageHandler<BooleanLookup> {
     /**
-     * Invoked when a Message of type MetadataLookup arrives and requires handling. Looks up the MultimediaMetadataDescriptors of the requested objects, wraps them in a MediaObjectMetadataQueryResult object and writes them to the stream.
+     * Invoked when a Message of type BooleanLookup arrives and requires handling. Returns the total number of results for a BooleanQuery.
+     * Used in the Front-end to show direct Feedback for any BoolQuery Changes
      *
      * @param session WebSocketSession for which the message arrived.
      * @param message Message of type a that needs to be handled.
@@ -20,15 +21,15 @@ public class BooleanLookupMessageHandler  extends StatelessWebsocketMessageHandl
     public void handle(Session session, BooleanLookup message) {
         Thread.currentThread().setName("boolean-lookup-handler");
         BooleanReader reader = new BooleanReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get(), message.getEntity(), message.getQueryList());
-        int numberresults;
+        int numberResults;
         if (message.getType().equals("B_ALL")) {
-            numberresults = reader.getTotalElements(); /*MUSS HIER ALLE ELEMENTE FINDEN in einem neuen reader*/
+            numberResults = reader.getTotalElements();
         }
         else{
-            /*numberresults = reader.getElementsForAttribute();*/
-            numberresults = reader.getElementsAND();
+
+            numberResults = reader.getElementsAND();
         }
-        this.write(session, new BooleanLookupResult("", numberresults, message.getComponentID()));
+        this.write(session, new BooleanLookupResult("", numberResults, message.getComponentID()));
         reader.close();
     }
 }

@@ -22,7 +22,7 @@ public class BooleanExpression {
     this.relevant = true;
   }
 
-  public BooleanExpression(String attribute, RelationalOperator operator, List<PrimitiveTypeProvider> values,Boolean relevant) {
+  public BooleanExpression(String attribute, RelationalOperator operator, List<PrimitiveTypeProvider> values, Boolean relevant) {
     this.attribute = attribute;
     this.operator = operator;
     this.values.addAll(values);

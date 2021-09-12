@@ -19,18 +19,25 @@ public class BooleanLookupResult implements Message {
         public final String queryId;
 
         /**
-         * List of tags that represent the result of the tags query.
+         * number of Elements that match the query
          */
         public final int numberofElements;
 
+        /**
+        * Map a Query to a Bool Term
+        */
         public final Integer componentID;
 
+        /**
+        * Results with data from a Boolean Query
+        */
         public final List<String> content;
         /**
-         * Constructor for the TagsQueryResult object.
+         * Constructor for the BooleanLookup object.
          *
          * @param queryId String representing the ID of the query to which this part of the result message.
          * @param numberofElements    The number of elements to be returned to that Query term
+         * @param componentID   The ID to Map a Query to a Bool Term
          */
         @JsonCreator
         public BooleanLookupResult(String queryId, int numberofElements, Integer componentID) {
@@ -39,7 +46,13 @@ public class BooleanLookupResult implements Message {
             this.componentID = componentID;
             this.content = new ArrayList<>();
         }
-
+        /**
+        * Constructor for the BooleanLookup object.
+        *
+        * @param queryId String representing the ID of the query to which this part of the result message.
+        * @param numberofElements    The number of elements to be returned to that Query term
+        * @param content   The results from a BooleanQuery
+        */
         @JsonCreator
         public BooleanLookupResult(String queryId, int numberofElements,  List<String> content) {
             this.queryId = queryId;

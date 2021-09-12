@@ -91,11 +91,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         return ack.getCode() == Code.OK;
     }
-    /**
-     * Placeholder Function
-     */
-//    @Override
-//    public boolean createNewMetadataEntity() { return true;}
+
     @Override
     public boolean createSegmentMetadataEntity() {
         final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);

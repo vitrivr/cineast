@@ -37,11 +37,6 @@ public interface EntityCreator extends AutoCloseable {
     boolean createSegmentMetadataEntity();
 
     /**
-     * Initialises the entity responsible for holding metadata information about multimedia segments for the NEW Model.
-     */
-//    boolean createNewMetadataEntity();
-
-    /**
      * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids
      */
     default boolean createTagEntity() {

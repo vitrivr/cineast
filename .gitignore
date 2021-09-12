@@ -34,8 +34,6 @@ cineast.iml
 /representative_frames/
 /thumbnails/
 /queryImages/
-/import
-/info
 
 ##Framecache
 /framecache_*
@@ -68,12 +66,3 @@ index*
 output/
 logs/
 resources/
-HAM10000_images_part_1/
-HAM10000_images_part_2/
-test2/
-test/
-data/
-data2/
-HIM.csv
-HAM10000_metadata.csv
-cineaststandard.json

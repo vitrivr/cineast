@@ -9,8 +9,6 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import io.grpc.StatusRuntimeException;
 import java.util.Objects;
 import java.util.Optional;
-
-import org.vitrivr.cineast.core.data.entities.*;
 import org.vitrivr.cottontail.client.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
 import org.vitrivr.cottontail.client.language.basics.Type;
@@ -23,6 +21,10 @@ import org.vitrivr.cottontail.client.language.ddl.DropEntity;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -160,7 +162,7 @@ public final class CottontailEntityCreator implements EntityCreator {
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[2], Type.STRING, -1, false)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, true);
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, false);
       this.cottontail.client.create(entity, txId);
 
       /* Create Index. */
@@ -172,28 +174,6 @@ public final class CottontailEntityCreator implements EntityCreator {
       return false;
     }
   }
-
-//  @Override
-//  public boolean createNewMetadataEntity() {
-//    final long txId = this.cottontail.client.begin();
-//    try {
-//      /* Create entity. */
-//      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + MediaObjectMetadataDescriptor.ENTITY;
-//      final CreateEntity entity = new CreateEntity(entityName)
-//              .column(MediaObjectNewMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
-//              .column(MediaObjectNewMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
-//              .column(MediaObjectNewMetadataDescriptor.FIELDNAMES[2], Type.STRING, -1, false);
-//      this.cottontail.client.create(entity, txId);
-//
-//      /* Create Index. */
-//      this.createIndex(entityName, MediaObjectNewMetadataDescriptor.FIELDNAMES[0], IndexType.HASH, txId);
-//      this.cottontail.client.commit(txId);
-//      return true;
-//    } catch (StatusRuntimeException e) {
-//      this.cottontail.client.rollback(txId);
-//      return false;
-//    }
-//  }
 
   @Override
   public boolean createSegmentMetadataEntity() {

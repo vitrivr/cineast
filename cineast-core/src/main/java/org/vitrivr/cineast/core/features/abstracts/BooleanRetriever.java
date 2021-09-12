@@ -80,6 +80,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 
     List<BooleanExpression> relevantExpressions = sc.getBooleanExpressions().stream().filter(this::canProcess).collect(Collectors.toList());
+
     if (relevantExpressions.isEmpty()){
       LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
       return Collections.emptyList();

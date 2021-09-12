@@ -22,38 +22,32 @@ public class BooleanLookup implements Message {
 
 
     /**
-     * List of object ID's for which metadata should be looked up.
+     * The type of Boolean Lookup
      */
 
     private String type;
 
+    /**
+     * Entity for the BooleanQuery
+     */
     private String entity;
-
+    /**
+     * List consisting of single Boolean Queries
+     */
     private List<BooleanLookupQuery> queries;
-
+    /**
+     * QueryList to be used in the Boolean Feature
+     */
     private List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> queryList;
-
+    /**
+     * ComponentID to map a query to a BoolTerm in the frontend
+     */
     private int componentID;
 
     /**
-     * List of metadata domains that should be considered. If empty, all domains are considered!
-     */
-
-    /**
-     * Constructor for the MetadataLookup object.
+     * Constructor for the BooleanLookup object.
      *
      */
-/*    @JsonCreator
-    public BooleanLookup(@JsonProperty("table_name") String table, @JsonProperty("attribute") String
-            attribute, @JsonProperty("value") String value, @JsonProperty("entity") String entity,
-                         @JsonProperty("operator") RelationalOperator operator, @JsonProperty("type") String type) {
-        this.table_name = table;
-        this.attribute = attribute;
-        this.value = value;
-        this.entity = entity;
-        this.type = type;
-        this.operator = operator;
-    }*/
 
     @JsonCreator
     public BooleanLookup(@JsonProperty("boolQueries") List<BooleanLookupQuery> queries, @JsonProperty("type") String type,
@@ -108,7 +102,8 @@ class BooleanLookupQuery {
     private String entity;
 
     private RelationalOperator operator;
-        @JsonCreator
+
+    @JsonCreator
     public BooleanLookupQuery(@JsonProperty("table_name") String table, @JsonProperty("attribute") String
             attribute, @JsonProperty("values") List<Object> values, @JsonProperty("entity") String entity,
                          @JsonProperty("operator") RelationalOperator operator) {
