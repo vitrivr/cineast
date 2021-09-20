@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
+import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -28,7 +29,6 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
 
 /**
  * A CLI command that can be used to start a media extraction based on an extraction definition file.
- *
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
 public class ExtractionCommand implements Runnable {
@@ -145,6 +145,32 @@ public class ExtractionCommand implements Runnable {
         }
         manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
         manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+      }
+    }
+    // Process Change Discovery API job
+    String orderedCollectionUrl = iiifConfig.getOrderedCollectionUrl();
+    if (orderedCollectionUrl != null && !orderedCollectionUrl.isEmpty()) {
+      OrderedCollectionFactory collectionFactory = null;
+      try {
+        collectionFactory = new OrderedCollectionFactory(orderedCollectionUrl);
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+      }
+      if (collectionFactory != null) {
+        String jobIdentifier = UUID.randomUUID().toString();
+        String collectionJobDirectoryString = jobDirectoryString + "/ordered_collection_job_" + jobIdentifier;
+        Path collectionJobDirectory = Paths.get(collectionJobDirectoryString);
+        if (!Files.exists(collectionJobDirectory)) {
+          Files.createDirectories(collectionJobDirectory);
+        }
+        try {
+          LOGGER.info("Starting downloading of all manifest images specified in the OrderedCollection at url: " + orderedCollectionUrl);
+          collectionFactory.saveAllCreatedImages(collectionJobDirectoryString, "image_" + jobIdentifier + "_");
+        } catch (Exception e) {
+          LOGGER.error("Error occurred while downloading manifest images specified in the OrderedCollection at url: " + orderedCollectionUrl);
+          e.printStackTrace();
+        }
       }
     }
     if (!iiifConfig.isKeepImagesPostExtraction()) {
