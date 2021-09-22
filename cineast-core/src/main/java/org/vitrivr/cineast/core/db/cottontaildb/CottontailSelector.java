@@ -80,7 +80,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
-    final Query query = knn(k, vector, column, config).select("*");
+    final Query query = knn(k, vector, column, config).select(new kotlin.Pair[]{ new kotlin.Pair<>(GENERIC_ID_COLUMN_QUALIFIER, null) }, false);
     try {
       return processResults(this.cottontail.client.query(query, null));
     } catch (StatusRuntimeException e) {
