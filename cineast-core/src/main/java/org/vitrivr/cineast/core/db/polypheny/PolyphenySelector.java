@@ -20,7 +20,6 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.List;
 import java.util.Map;
-import org.vitrivr.cottontail.client.TupleIterator;
 
 /**
  * A {@link DBSelector} implementation used to read data from Polypheny DB.
