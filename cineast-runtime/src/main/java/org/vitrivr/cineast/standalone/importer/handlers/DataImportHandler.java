@@ -40,7 +40,7 @@ public abstract class DataImportHandler {
             LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);
-            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
+            cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase());
             //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
         }
         LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);

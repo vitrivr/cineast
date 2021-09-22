@@ -21,7 +21,7 @@ public class OptimizeEntitiesCommand implements Runnable {
       System.err.println("Cottontail DB is not both selector & writer in the config. exiting");
       return;
     }
-    try (final CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase(), false)) {
+    try (final CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase())) {
       System.out.println("Optimizing all entities for schema '" + CottontailWrapper.CINEAST_SCHEMA + "' in Cottontail");
       wrapper.client.list(new ListEntities(CottontailWrapper.CINEAST_SCHEMA), null).forEachRemaining(entity -> {
         System.out.println("Optimizing entity " + entity);
