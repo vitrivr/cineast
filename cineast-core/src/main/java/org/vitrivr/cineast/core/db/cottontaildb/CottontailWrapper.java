@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.vitrivr.cottontail.client.stub.SimpleClient;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
@@ -10,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cottontail.client.SimpleClient;
 
 public final class CottontailWrapper implements AutoCloseable {
 

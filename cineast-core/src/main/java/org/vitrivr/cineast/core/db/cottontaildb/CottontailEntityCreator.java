@@ -9,7 +9,8 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import io.grpc.StatusRuntimeException;
 import java.util.Objects;
 import java.util.Optional;
-import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.iterators.Tuple;
+import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
 import org.vitrivr.cottontail.client.language.basics.Type;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
@@ -59,7 +60,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       final TupleIterator iterator = this.cottontail.client.list(list, txId);
       boolean exists = false;
       while (iterator.hasNext()) {
-        TupleIterator.Tuple next = iterator.next();
+        Tuple next = iterator.next();
         if (Objects.equals(next.asString(Constants.COLUMN_NAME_DBO), CottontailWrapper.FQN_CINEAST_SCHEMA)) {
           exists = true;
           break;

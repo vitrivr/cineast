@@ -18,22 +18,21 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-import org.vitrivr.cottontail.client.TupleIterator;
+import org.vitrivr.cottontail.client.iterators.Tuple;
+import org.vitrivr.cottontail.client.iterators.TupleIterator;
+import org.vitrivr.cottontail.client.language.basics.Distances;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.client.language.extensions.And;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
 import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -63,7 +62,7 @@ public final class CottontailSelector implements DBSelector {
    */
   @Override
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
-    final Query query = knn(k, vector, column, config).select(GENERIC_ID_COLUMN_QUALIFIER, DB_DISTANCE_VALUE_QUALIFIER);
+    final Query query = knn(k, vector, column, config);
     try {
       return handleNearestNeighbourResponse(this.cottontail.client.query(query, null), distanceElementClass);
     } catch (StatusRuntimeException e) {
@@ -95,7 +94,7 @@ public final class CottontailSelector implements DBSelector {
       final TupleIterator results = this.cottontail.client.query(query, null);
       final List<float[]> _return = new LinkedList<>();
       while (results.hasNext()) {
-        final TupleIterator.Tuple t = results.next();
+        final Tuple t = results.next();
         _return.add(t.asFloatVector(vectorName));
       }
       return _return;
@@ -263,7 +262,7 @@ public final class CottontailSelector implements DBSelector {
     try {
       final TupleIterator results = this.cottontail.client.query(query, null);
       while (results.hasNext()) {
-        final TupleIterator.Tuple t = results.next();
+        final Tuple t = results.next();
         count.merge(t.asString(column), 1, (old, one) -> old + 1);
       }
       return count;
@@ -314,17 +313,12 @@ public final class CottontailSelector implements DBSelector {
    * @return {@link Query}
    */
   private Query knn(int k, float[] vector, String column, ReadableQueryConfig config) {
-    final Optional<float[]> weights = config.getDistanceWeights();
     final Set<String> relevant = config.getRelevantSegmentIds();
-    final String distance = toDistance(config.getDistance().orElse(Distance.manhattan));
+    final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
     final Query query = new Query(this.fqn);
 
-    /* Add weights (optional). */
-    if (weights.isPresent()) {
-      query.knn(column, k, distance, vector, weights.get());
-    } else {
-      query.knn(column, k, distance, vector, null);
-    }
+    /* Prepare NNS. */
+    query.nns(column, vector, distance, "distance", k);
 
     /* Add relevant segments (optional). */
     if (!relevant.isEmpty()) {
@@ -339,14 +333,10 @@ public final class CottontailSelector implements DBSelector {
     final StopWatch watch = StopWatch.createStarted();
     final Collection<String> columns = results.getColumns();
     while (results.hasNext()) {
-      final TupleIterator.Tuple t = results.next();
+      final Tuple t = results.next();
       final Map<String, PrimitiveTypeProvider> map = new HashMap<>(results.getNumberOfColumns());
       for (String c : columns) {
-        if (mappings.containsKey(c)) {
-          map.put(mappings.get(c), PrimitiveTypeProvider.fromObject(t.get(c)));
-        } else {
-          map.put(c, PrimitiveTypeProvider.fromObject(t.get(c)));
-        }
+        map.put(mappings.getOrDefault(c, c), PrimitiveTypeProvider.fromObject(t.get(c)));
       }
       _return.add(map);
     }
@@ -374,7 +364,7 @@ public final class CottontailSelector implements DBSelector {
   private List<PrimitiveTypeProvider> toSingleCol(TupleIterator results, String colName) {
     final List<PrimitiveTypeProvider> _return = new LinkedList<>();
     while (results.hasNext()) {
-      final TupleIterator.Tuple t = results.next();
+      final Tuple t = results.next();
       _return.add(PrimitiveTypeProvider.fromObject(t.get(colName)));
     }
     return _return;
@@ -391,9 +381,9 @@ public final class CottontailSelector implements DBSelector {
     final List<T> result = new LinkedList<>();
     while (response.hasNext()) {
       try {
-        final TupleIterator.Tuple t = response.next();
-        final String id = t.get(GENERIC_ID_COLUMN_QUALIFIER).toString(); /* This should be fine. */
-        double distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER);
+        final Tuple t = response.next();
+        final String id = t.asString(GENERIC_ID_COLUMN_QUALIFIER);
+        double distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER); /* This should be fine. */
         T e = DistanceElement.create(distanceElementClass, id, distance);
         result.add(e);
       } catch (NullPointerException e) {
@@ -409,23 +399,23 @@ public final class CottontailSelector implements DBSelector {
    * @param distance {@link Distance} to convert.
    * @return {@link String} Name of Cottontail DB distance.
    */
-  private static String toDistance(Distance distance) {
+  private static Distances toDistance(Distance distance) {
     switch (distance) {
       case manhattan:
-        return Knn.Distance.L1.toString();
+        return Distances.L1;
       case euclidean:
-        return Knn.Distance.L2.toString();
+        return Distances.L2;
       case squaredeuclidean:
-        return Knn.Distance.L2SQUARED.toString();
+        return Distances.L2SQUARED;
       case chisquared:
-        return Knn.Distance.CHISQUARED.toString();
+        return Distances.CHISQUARED;
       case cosine:
-        return Knn.Distance.COSINE.toString();
+        return Distances.COSINE;
       case haversine:
-        return Knn.Distance.HAVERSINE.toString();
+        return Distances.HAVERSINE;
       default:
         LOGGER.error("distance '{}' not supported by cottontail", distance);
-        throw new IllegalArgumentException("Distance '" + distance.toString() + "' not supported by Cottontail DB.");
+        throw new IllegalArgumentException("Distance '" + distance + "' not supported by Cottontail DB.");
     }
   }
 
@@ -464,7 +454,7 @@ public final class CottontailSelector implements DBSelector {
       case IN:
         return "IN";
       default:
-        throw new IllegalArgumentException("Operator '" + op.toString() + "' not supported by Cottontail DB.");
+        throw new IllegalArgumentException("Operator '" + op + "' not supported by Cottontail DB.");
     }
   }
 }
