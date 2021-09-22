@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import kotlin.Pair;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -155,9 +157,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     /* Prepare plain query. */
-    final Query query = new Query(this.fqn).select(
-        new kotlin.Pair<>("*", null)
-    );
+    final Query query = new Query(this.fqn).select(new kotlin.Pair[]{ new kotlin.Pair<>("*", null) }, false);
 
     /* Process predicates. */
     final List<Predicate> atomics = Arrays.stream(terms).map(t -> new Literal(fieldname, "MATCH", t)).collect(Collectors.toList());
@@ -247,7 +247,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
-    final Query query = new Query(this.fqn).distinct(column);
+    final Query query = new Query(this.fqn).distinct( new kotlin.Pair[]{ new kotlin.Pair<>(column, null) }, true );
     try {
       return toSingleCol(this.cottontail.client.query(query, null), column);
     } catch (StatusRuntimeException e) {
