@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -17,9 +20,13 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+import org.vitrivr.cottontail.client.language.dql.Query;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 /**
  * A {@link DBSelector} implementation used to read data from Polypheny DB.
@@ -49,6 +56,24 @@ public final class PolyphenySelector implements DBSelector {
     public boolean close() {
         this.wrapper.close();
         return true;
+    }
+
+    @Override
+    public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
+        final Distance distance = config.getDistance().orElse(Distance.euclidean);
+        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id,distance(" + column + ",?," + toName(distance) + ") as distance FROM " + this.fqn + " ORDER BY distance LIMIT " + k)) {
+            /* Execute query and return results. */
+            try (final ResultSet rs = statement.executeQuery()) {
+                return processResults(rs).stream().map( e -> {
+                    final String id = e.get(GENERIC_ID_COLUMN_QUALIFIER).toString();
+                    double d = e.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble(); /* This should be fine. */
+                    return DistanceElement.create(distanceElementClass, id, d);
+                }).collect(Collectors.toList());
+            }
+        } catch (SQLException e) {
+            LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+            return new ArrayList<>(0);
+        }
     }
 
     @Override
