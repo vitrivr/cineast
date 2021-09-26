@@ -61,12 +61,12 @@ public final class PolyphenySelector implements DBSelector {
     @Override
     public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
         final Distance distance = config.getDistance().orElse(Distance.euclidean);
-        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id,distance(" + column + ",?," + toName(distance) + ") as distance FROM " + this.fqn + " ORDER BY distance LIMIT " + k)) {
+        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id, distance(" + column + "," + toVectorString(vector) + ",'" + toName(distance) + "') as dist FROM " + this.fqn + " ORDER BY dist ASC LIMIT " + k)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 return processResults(rs).stream().map( e -> {
                     final String id = e.get(GENERIC_ID_COLUMN_QUALIFIER).toString();
-                    double d = e.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble(); /* This should be fine. */
+                    double d = e.get("dist").getDouble(); /* This should be fine. */
                     return DistanceElement.create(distanceElementClass, id, d);
                 }).collect(Collectors.toList());
             }
@@ -85,7 +85,8 @@ public final class PolyphenySelector implements DBSelector {
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
         final Distance distance = config.getDistance().orElse(Distance.euclidean);
-        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id,distance(" + column + ",?," + toName(distance) + ") as distance FROM " + this.fqn + " ORDER BY distance LIMIT " + k)) {
+
+        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id, distance(" + column + "," + toVectorString(vector) + ",'" + toName(distance) + "') as dist FROM " + this.fqn + " ORDER BY dist ASC LIMIT " + k)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 return processResults(rs);
@@ -265,6 +266,22 @@ public final class PolyphenySelector implements DBSelector {
         return _return;
     }
 
+    /**
+     * Converts a flat vector to a string representation usable by Polypheny DB.
+     *
+     * @param vector {@link Distance} The float vector to convert.
+     * @return The resulting name.
+     */
+    private static String toVectorString(float[] vector) {
+        final StringBuilder arrayString = new StringBuilder("ARRAY[");
+        int i = 0;
+        for (float v : vector) {
+            if (i++ > 0) arrayString.append(",");
+            arrayString.append(v);
+        }
+        arrayString.append("]");
+        return arrayString.toString();
+    }
 
     /**
      * Converts a {@link Distance} to a name usable by Polypheny DB.
