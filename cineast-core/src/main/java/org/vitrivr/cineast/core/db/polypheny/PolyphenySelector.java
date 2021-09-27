@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -20,12 +19,10 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-import org.vitrivr.cottontail.client.language.dql.Query;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 /**
@@ -71,7 +68,7 @@ public final class PolyphenySelector implements DBSelector {
                 }).collect(Collectors.toList());
             }
         } catch (SQLException e) {
-            LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+            LOGGER.error("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
             return new ArrayList<>(0);
         }
     }
@@ -92,7 +89,7 @@ public final class PolyphenySelector implements DBSelector {
                 return processResults(rs);
             }
         } catch (SQLException e) {
-            LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+            LOGGER.error("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
             return new ArrayList<>(0);
         }
     }
