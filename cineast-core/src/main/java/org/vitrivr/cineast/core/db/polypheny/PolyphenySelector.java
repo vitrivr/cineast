@@ -5,23 +5,19 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.*;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
@@ -62,7 +58,7 @@ public final class PolyphenySelector implements DBSelector {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 return processResults(rs).stream().map( e -> {
-                    final String id = e.get(GENERIC_ID_COLUMN_QUALIFIER).toString();
+                    final String id = e.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
                     double d = e.get("dist").getDouble(); /* This should be fine. */
                     return DistanceElement.create(distanceElementClass, id, d);
                 }).collect(Collectors.toList());
@@ -118,10 +114,7 @@ public final class PolyphenySelector implements DBSelector {
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
         final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
         if (mapped.length == 0) return new ArrayList<>(0);
-        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " IN ?")) {
-            /* Bind array to statement. */
-            this.bindArrayValue(1, mapped, statement);
-
+        try (final PreparedStatement statement = this.prepareInStatement(fieldName, values)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 return processResults(rs);
@@ -140,16 +133,7 @@ public final class PolyphenySelector implements DBSelector {
 
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
-        final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-        try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator))) {
-            if (operator == RelationalOperator.IN) {
-                this.bindArrayValue(1, mapped, statement);
-            } else if (operator == RelationalOperator.BETWEEN) {
-                this.bindScalarValue(1, mapped[0], statement);
-                this.bindScalarValue(2, mapped[1], statement);
-            } else {
-                this.bindScalarValue(1, mapped[0], statement);
-            }
+        try (final PreparedStatement statement = this.prepareStatement(fieldName, operator, values)) {
             try (final ResultSet rs = statement.executeQuery()) {
                 return processResults(rs);
             }
@@ -344,65 +328,95 @@ public final class PolyphenySelector implements DBSelector {
      * Binds a scalar value to a {@link PreparedStatement}.
      *
      * @param index Index of the placeholder to bind to.
-     * @param object Array of values to bind.
+     * @param value {@link PrimitiveTypeProvider} of values to bind.
      * @param statement {@link PreparedStatement} to bind values to.
-     * @return {@link PreparedStatement}
-     * @throws SQLException
      */
-    private PreparedStatement bindScalarValue(int index, Object object, PreparedStatement statement) throws SQLException {
+    private void bindScalarValue(int index, PrimitiveTypeProvider value, PreparedStatement statement) throws SQLException {
         /* Bind values. */
-        if (object instanceof Double) {
-            statement.setDouble(index, (Double)object);
-        } else if (object instanceof Float) {
-            statement.setFloat(index, (Float)object);
-        } else if (object instanceof Long) {
-            statement.setLong(index, (Long)object);
-        } else if (object instanceof Integer) {
-            statement.setInt(index, (Integer)object);
-        } else if (object instanceof Short) {
-            statement.setShort(index, (Short) object);
-        } else if (object instanceof Byte) {
-            statement.setByte(index, (Byte)object);
-        } else if (object instanceof Boolean) {
-            statement.setBoolean(index, (Boolean)object);
-        } else if (object instanceof String) {
-            statement.setString(index, (String) object);
+        if (value instanceof DoubleProviderImpl) {
+            statement.setDouble(index, value.getDouble());
+        } else if (value instanceof FloatProviderImpl) {
+            statement.setFloat(index, value.getFloat());
+        } else if (value instanceof LongProviderImpl) {
+            statement.setLong(index, value.getLong());
+        } else if (value instanceof IntProviderImpl) {
+            statement.setInt(index, value.getInt());
+        } else if (value instanceof ShortProviderImpl) {
+            statement.setShort(index, value.getShort());
+        } else if (value instanceof ByteProviderImpl) {
+            statement.setByte(index, value.getByte());
+        } else if (value instanceof BooleanProviderImpl) {
+            statement.setBoolean(index, value.getBoolean());
+        } else if (value instanceof StringProviderImpl) {
+            statement.setString(index, value.getString());
         } else {
-            LOGGER.warn("Error occurred during query execution in getRows(): {} not supported as parameter for IN query.", object);
+            LOGGER.warn("Error occurred during query execution in getRows(): {} not supported as parameter for IN query.", value);
         }
-        return statement;
     }
 
     /**
-     * Binds an array value to a {@link PreparedStatement}.
+     * Prepares a prepared statement {@link PreparedStatement} for a query with a single IN predicate.
      *
-     * @param index Index of the placeholder to bind to.
-     * @param object Array of values to bind.
-     * @param statement {@link PreparedStatement} to bind values to.
+     * @param fieldName Name of the field that should be queried.
+     * @param values Values to use in query.
+     * @return {@link PreparedStatement}
+     */
+    private PreparedStatement prepareStatement(String fieldName,  RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) throws SQLException {
+        final Object[] mapped;
+        final PreparedStatement statement;
+        switch (operator) {
+            case ISNOTNULL:
+            case ISNULL:
+                return this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+            case EQ:
+            case NEQ:
+            case GEQ:
+            case LEQ:
+            case GREATER:
+            case LESS:
+            case LIKE:
+            case NLIKE:
+                mapped = StreamSupport.stream(values.spliterator(), false).limit(1).toArray();
+                statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+                this.bindScalarValue(1, (PrimitiveTypeProvider)mapped[0], statement);
+                return statement;
+            case BETWEEN:
+                mapped = StreamSupport.stream(values.spliterator(), false).limit(2).toArray();
+                statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+                this.bindScalarValue(1, (PrimitiveTypeProvider)mapped[0], statement);
+                this.bindScalarValue(2, (PrimitiveTypeProvider)mapped[1], statement);
+                return statement;
+            case IN:
+                return this.prepareInStatement(fieldName, values);
+            default:
+                throw new IllegalArgumentException("Operator '" + operator + "' not supported by Cottontail DB.");
+        }
+    }
+
+    /**
+     * Prepares a prepared statement {@link PreparedStatement} for a query with a single IN predicate.
+     *
+     * @param fieldName Name of the field that should be queried.
+     * @param values Values to use in query.
      * @return {@link PreparedStatement}
      * @throws SQLException
      */
-    private PreparedStatement bindArrayValue(int index, Object[] object, PreparedStatement statement) throws SQLException {
-        /* Bind values. */
-        if (object[0] instanceof Double) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("DOUBLE", object));
-        } else if (object[0] instanceof Float) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("REAL", object));
-        } else if (object[0] instanceof Long) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("BIGINT", object));
-        } else if (object[0] instanceof Integer) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("INTEGER", object));
-        } else if (object[0] instanceof Short) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("SMALLINT", object));
-        } else if (object[0] instanceof Byte) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("TINYINT", object));
-        } else if (object[0] instanceof Boolean) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("BOOLEAN", object));
-        } else if (object[0] instanceof String) {
-            statement.setArray(index, this.wrapper.connection.createArrayOf("VARCHAR", object));
-        } else {
-            LOGGER.warn("Error occurred during query execution in getRows(): {} not supported as parameter for IN query.", object);
+    private PreparedStatement prepareInStatement(String fieldName, Iterable<PrimitiveTypeProvider> values) throws SQLException {
+        /* Prepare query (apparently, JDBC doesn't support value binding for IN predicates).*/
+        final StringBuilder stringStatement = new StringBuilder("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " IN (");
+        int index = 0;
+        for (PrimitiveTypeProvider v : values) {
+            if (index++ > 0) stringStatement.append(",");
+            if (v instanceof StringProviderImpl) {
+                stringStatement.append("'");
+                stringStatement.append(v.getString());
+                stringStatement.append("'");
+            } else {
+                stringStatement.append(v.getString());
+            }
         }
-        return statement;
+        stringStatement.append(")");
+
+        return this.wrapper.connection.prepareStatement(stringStatement.toString());
     }
 }
