@@ -10,11 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.04.17
- */
+
 public final class BenchmarkManager {
 
     private static BenchmarkManager INSTANCE;

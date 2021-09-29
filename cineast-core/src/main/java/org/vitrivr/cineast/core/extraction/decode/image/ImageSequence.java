@@ -24,8 +24,6 @@ import java.util.function.Supplier;
  * This class is merely an internal abstraction of that type and the content it represents. Its sole purpose is to
  * provide lazy access to the images contained in such a sequence during the extraction process.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public final class ImageSequence {
     /* Configuration property-names and defaults for the DefaultImageDecoder. */

@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.util.dsp.fft.windows;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 07.02.17
- */
+
 public class BlackmanHarrisWindow implements WindowFunction {
 
     /** Constants defined for the Blackman-Harris Window. */

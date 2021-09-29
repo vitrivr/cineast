@@ -2,11 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.util.audio.HPCP;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 09.05.17
- */
+
 public class HPCP12Shingle extends HPCPShingle {
     private final static float MIN_FREQUENCY = 50.0f;
 

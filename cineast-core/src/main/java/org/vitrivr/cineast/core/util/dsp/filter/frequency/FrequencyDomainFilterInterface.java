@@ -6,9 +6,6 @@ import org.apache.commons.math3.complex.Complex;
  * Interface for filters that are intended for application on data returned by a FFT (i.e. frequency-domain
  * data). The interface works with complex representations of the Fourier coefficients.
  *
- * @author rgasser
- * @version 1.0
- * @created 12.04.17
  */
 public interface FrequencyDomainFilterInterface {
 

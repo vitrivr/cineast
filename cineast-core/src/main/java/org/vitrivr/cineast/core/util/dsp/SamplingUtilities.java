@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.util.dsp;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 23.02.17
- */
+
 public class SamplingUtilities {
 
 

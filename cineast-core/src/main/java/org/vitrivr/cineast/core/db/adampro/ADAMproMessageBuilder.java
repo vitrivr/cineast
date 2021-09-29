@@ -15,11 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 27.04.17
- */
+
 public class ADAMproMessageBuilder {
 
     /** Default projection message.. */

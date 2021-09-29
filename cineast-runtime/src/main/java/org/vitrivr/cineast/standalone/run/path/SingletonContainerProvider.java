@@ -13,7 +13,6 @@ import java.util.Optional;
 /**
  * Convenience Provider for the {@link IngestConfig}
  *
- * @author silvan on 19.01.18.
  */
 public class SingletonContainerProvider implements ExtractionContainerProvider,
     ExtractionCompleteListener {

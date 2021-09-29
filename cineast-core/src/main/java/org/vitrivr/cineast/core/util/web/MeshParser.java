@@ -10,11 +10,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.IOException;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 10.03.17
- */
+
 public class MeshParser extends DataURLParser {
 
     /** Some format specific constants. */

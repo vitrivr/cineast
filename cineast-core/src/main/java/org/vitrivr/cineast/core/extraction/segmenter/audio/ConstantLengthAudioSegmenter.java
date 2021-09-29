@@ -23,9 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see AudioSegment
  * @see AudioFrame
  *
- * @author rgasser
- * @version 1.0
- * @created 31.01.17
  */
 public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
 

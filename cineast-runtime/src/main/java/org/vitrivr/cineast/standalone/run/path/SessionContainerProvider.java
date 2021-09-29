@@ -22,7 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Session is ended by the user, he still expects the submitted items to be extracted. Therefore, on
  * an {@link #endSession()} call, the instance is only {@link #closing}, but still {@link #open}.
  *
- * @author silvan on 19.01.18.
  */
 public class SessionContainerProvider implements ExtractionContainerProvider,
     ExtractionCompleteListener {

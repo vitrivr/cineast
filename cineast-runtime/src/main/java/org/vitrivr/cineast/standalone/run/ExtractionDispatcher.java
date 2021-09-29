@@ -8,11 +8,7 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
- */
+
 public class ExtractionDispatcher {
 
   private static final Logger LOGGER = LogManager.getLogger();

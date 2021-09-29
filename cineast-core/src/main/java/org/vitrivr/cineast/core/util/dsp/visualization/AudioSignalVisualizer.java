@@ -9,11 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 05.02.17
- */
+
 public class AudioSignalVisualizer {
 
     /** YlOrRd palette used for visualization. */

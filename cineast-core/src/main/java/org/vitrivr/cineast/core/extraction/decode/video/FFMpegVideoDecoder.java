@@ -31,8 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * A {@link Decoder} implementation that decodes videos using the ffmpeg library + the corresponding Java bindings.
  *
- * @author rgasser
- * @version 1.1
  */
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video. */

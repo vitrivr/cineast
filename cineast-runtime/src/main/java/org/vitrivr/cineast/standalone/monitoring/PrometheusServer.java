@@ -14,7 +14,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 /**
  * Singleton which starts a reporting endpoint for Prometheus
  *
- * @author silvan on 25.01.18.
  */
 public class PrometheusServer {
 

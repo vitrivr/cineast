@@ -18,11 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 22.01.17
- */
+
 public class ShapeCentroidDistance extends AbstractFeatureModule {
 
     private static final int DESCRIPTOR_LENGTH = 100;

@@ -6,11 +6,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 25.01.17
- */
+
 public class IPTCMetadataExtractor implements MetadataExtractor {
 
     /**

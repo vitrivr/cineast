@@ -9,9 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Generates objectIds from a counter that is incremented every time a new ID is generated.
  *
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
  */
 public class SequentialObjectIdGenerator implements ObjectIdGenerator {
     /** Property-name for a custom start value (can be set in the configuration). */

@@ -11,7 +11,6 @@ import java.util.Map;
 /**
  * Helper class to disable database lookups.
  *
- * @author Luca Rossetto
  */
 public class NoDBSelector implements DBSelector {
 

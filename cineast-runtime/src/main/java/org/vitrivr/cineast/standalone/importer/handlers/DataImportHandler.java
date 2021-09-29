@@ -23,11 +23,7 @@ import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 01.03.17
- */
+
 public abstract class DataImportHandler {
 
 
@@ -46,7 +42,7 @@ public abstract class DataImportHandler {
         }else{
             LOGGER.info("Storing entity ({}) details for re-setup", entityName);
             cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
-            //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
+             //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
         }
         LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
         ec.dropEntity(entityName);
@@ -216,6 +212,7 @@ public abstract class DataImportHandler {
                 LOGGER.warn("Future returned {}, still returning true", o);
                 return true;
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 LOGGER.error("Execution of one of the tasks could not be completed!");
                 return true;
             }

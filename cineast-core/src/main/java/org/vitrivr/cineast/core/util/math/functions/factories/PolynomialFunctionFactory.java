@@ -10,9 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * This class can be used to generate different types of polynomials. It leverages the PolynomialFunction
  * class provided by Apache Commons Math library.
  *
- * @author rgasser
- * @version 1.0
- * @created 16.03.17
  */
 public final class PolynomialFunctionFactory {
 

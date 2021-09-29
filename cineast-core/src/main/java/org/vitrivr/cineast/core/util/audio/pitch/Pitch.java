@@ -7,9 +7,6 @@ import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
  * This class represents a single pitch as returned for instance by pitch estimation classes or used by
  * pitch tracking classes. A pitch can be either created based on a frequency in Hz or a MIDI index.
  *
- * @author rgasser
- * @version 1.0
- * @created 19.04.17
  */
 public class Pitch {
     /** MIDI index of the pitch. */

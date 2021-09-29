@@ -1,30 +1,16 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.importer.Importer;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImporter.ClassificationTuple;
 
 /**
  * Imports the colorlabels as given by the https://github.com/klschoef/V3C1Analysis repo. File is expected to be in format:

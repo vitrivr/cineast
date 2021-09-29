@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.util.math.functions.factories.PolynomialFunction
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 16.03.17
- */
+
 public class RadialPolynomialTest {
     /**
      * Tests Orthogonality relation that exists between two radial polynomials.

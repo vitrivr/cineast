@@ -54,11 +54,18 @@ public class TagImporter implements Importer<String[]> {
   @Override
   public Map<String, PrimitiveTypeProvider> convert(String[] data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(data.length);
+    /**
+     * Iterate over tsv array
+     */
     for (int i = 0; i < data.length; i++) {
+      /*
+       * Skip column if no col-name is provided
+       */
       if (columnNames[i] == null) {
         continue;
       }
       if (columnNames[i].equals(TagReader.TAG_NAME_COLUMNNAME) || columnNames[i].equals(TagReader.TAG_DESCRIPTION_COLUMNNAME)) {
+        /** sanity-check if there's an @ */
         if (data[i].contains("@")) {
           map.put(columnNames[i], PrimitiveTypeProvider.fromObject(data[i].substring(0, data[i].indexOf("@"))));
           continue;
@@ -73,8 +80,9 @@ public class TagImporter implements Importer<String[]> {
       }
       map.put(columnNames[i], PrimitiveTypeProvider.fromObject(data[i]));
     }
+    /** If there's no description yet, fill it */
     if (Arrays.asList(columnNames).contains(TagReader.TAG_DESCRIPTION_COLUMNNAME) && !map.containsKey(TagReader.TAG_DESCRIPTION_COLUMNNAME)) {
-      map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(""));
+      map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, map.getOrDefault(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject("no description")));
     }
     // since there is no score provided...
     if (data.length < columnNames.length) {

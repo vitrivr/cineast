@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.util.dsp;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 20.04.17
- */
+
 public final class FrequencyUtils {
 
     /** */

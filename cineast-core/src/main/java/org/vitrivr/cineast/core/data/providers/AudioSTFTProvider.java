@@ -5,11 +5,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
 import java.util.Arrays;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 03.02.17
- */
+
 public interface AudioSTFTProvider {
     /**
      * Calculates and returns the Short-term Fourier Transform of the
