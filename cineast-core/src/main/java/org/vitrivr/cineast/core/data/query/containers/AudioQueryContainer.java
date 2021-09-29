@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.util.web.AudioParser;
 
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 08.02.17
- */
+
 public class AudioQueryContainer extends QueryContainer {
 
     /** List of {@link AudioFrame}s. */

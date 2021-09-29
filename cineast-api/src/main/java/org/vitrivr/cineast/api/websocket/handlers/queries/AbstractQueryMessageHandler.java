@@ -83,9 +83,9 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     try {
       final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
       final String uuid = qconf.getQueryId().toString();
-      final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
+      final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
       qconf.setMaxResults(max);
-      final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
+      final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
       qconf.setResultsPerModule(resultsPerModule);
       Thread.currentThread().setName("query-msg-handler-" + uuid.substring(0, 3));
       try {

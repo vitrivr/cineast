@@ -32,9 +32,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @see Mesh
  * @see VoxelGrid
  *
- * @author rgasser
- * @version 1.0
- * @created 29.12.16
  */
 public class JOGLOffscreenRenderer implements Renderer {
     private static final Logger LOGGER = LogManager.getLogger();

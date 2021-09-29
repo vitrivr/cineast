@@ -26,8 +26,6 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 /**
  * Exports the audio in a given segment as mono WAV file.
  *
- * @author rgasser
- * @version 1.1
  */
 public class AudioSegmentExporter implements Extractor {
 

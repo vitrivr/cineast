@@ -4,11 +4,7 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 11.03.17
- */
+
 public interface MeshProvider {
     /**
      * Returns the original 3D Mesh. Defaults to the empty mesh, if the method

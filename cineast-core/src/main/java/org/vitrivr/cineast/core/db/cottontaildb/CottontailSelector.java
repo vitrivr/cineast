@@ -208,7 +208,7 @@ public final class CottontailSelector implements DBSelector {
       final String op = toOperator(c.getMiddle());
       return new Literal(c.getLeft(), op, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray());
     }).collect(Collectors.toList());
-    final Optional<Predicate> predicates = atomics.stream().reduce(Or::new);
+    final Optional<Predicate> predicates = atomics.stream().reduce(And::new);
     if (qc != null && !qc.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = qc.getRelevantSegmentIds();
       final Literal segmentIds = new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());

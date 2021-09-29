@@ -14,9 +14,6 @@ import java.util.*;
  * [1] Salamon, J., & Gomez, E. (2012). Melody extraction from polyphonic music signals using pitch contour characteristics.
  *      IEEE Transactions on Audio, Speech and Language Processing, 20(6), 1759–1770. http://doi.org/10.1109/TASL.2012.2188515
  *
- * @author rgasser
- * @version 1.0
- * @created 19.04.17
  */
 public class PitchTracker {
     /** Pitch-candidates that have been ruled out. */

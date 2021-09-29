@@ -22,10 +22,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-/**
- * @author rgasser
- * @version 1.0
- */
+
 public class CENSExporter implements Extractor {
 
     private static final Logger LOGGER = LogManager.getLogger();

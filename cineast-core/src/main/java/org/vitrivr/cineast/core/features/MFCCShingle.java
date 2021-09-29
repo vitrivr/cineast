@@ -22,11 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 28.02.17
- */
+
 public class MFCCShingle extends StagedFeatureModule {
 
     /** Size of the window during STFT in # samples. */

@@ -40,8 +40,6 @@ public class MLTFeaturesImportHandler extends DataImportHandler {
           throw new RuntimeException(e);
         }
       });
-      this.waitForCompletion();
-      LOGGER.info("Completed data import with mlt feature Import files in: {}", root.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));
     }

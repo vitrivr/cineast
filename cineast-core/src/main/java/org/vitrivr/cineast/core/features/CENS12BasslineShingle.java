@@ -10,9 +10,6 @@ package org.vitrivr.cineast.core.features;
  * [2] Salamon, J., Serrà, J., & Gómez, E. (2012). Tonal representations for music retrieval: from version identification to query-by-humming.
  *    International Journal of Multimedia Information Retrieval, 2(1), 45–58. http://doi.org/10.1007/s13735-012-0026-0
  *
- * @author rgasser
- * @version 1.0
- * @created 26.02.17
  */
 public class CENS12BasslineShingle extends CENS {
 

@@ -9,11 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 16.01.17
- */
+
 public class ImageSegment implements SegmentContainer {
 
     private MultiImage image;

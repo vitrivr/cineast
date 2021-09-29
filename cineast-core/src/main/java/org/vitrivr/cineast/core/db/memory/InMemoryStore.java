@@ -23,8 +23,6 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @see InMemoryWriter
  * @see InMemoryEntityCreator
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public class InMemoryStore {
 
@@ -126,8 +124,6 @@ public class InMemoryStore {
   /**
    * An individual {@link Entity} in the {@link InMemoryStore}.
    *
-   * @author Ralph Gasser
-   * @version 1.0
    */
   public class Entity implements Iterable<PersistentTuple> {
 

@@ -4,11 +4,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 14.01.17
- */
+
 public class MediaSegmentWriter extends AbstractBatchedEntityWriter<MediaSegmentDescriptor> {
     /**
      * @param writer

@@ -22,11 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 14.02.17
- */
+
 public class AudioFingerprint extends StagedFeatureModule {
     /** Frequency-ranges that should be used to calculate the fingerprint. */
     private static final float[] RANGES = {30.0f, 40.0f, 80.0f, 120.0f, 180.0f, 300.0f, 480.0f};

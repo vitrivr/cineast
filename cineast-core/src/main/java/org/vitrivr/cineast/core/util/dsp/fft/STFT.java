@@ -8,11 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 04.02.17
- */
+
 public class STFT {
     /** Size of the FFT window. Must be a power of 2 (e.g. 512, 1024, 2048, 4096). */
     private final int windowsize;

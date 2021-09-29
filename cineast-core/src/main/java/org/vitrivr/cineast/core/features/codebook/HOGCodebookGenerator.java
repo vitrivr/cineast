@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.util.images.HOGHelper;
 
 import java.awt.image.BufferedImage;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.01.17
- */
+
 public class HOGCodebookGenerator extends ImageCodebookGenerator {
     /**
      * Default constructor.

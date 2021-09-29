@@ -2,11 +2,7 @@ package org.vitrivr.cineast.core.benchmark.model;
 
 import java.util.Map;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.04.17
- */
+
 public interface Benchmark {
 
     String FIELD_DATE = "Date";

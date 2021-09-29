@@ -27,9 +27,6 @@ import java.util.List;
  * [1] Chen, D.-Y., Tian, X.-P., Shen, Y.-T., & Ouh. (2003).
  *      On Visual Similarity Based 3D Model Retrieval. In Eurographics (Vol. 22, pp. 313–318). http://doi.org/KE.2008.4730947
  *
- * @author rgasser
- * @version 1.0
- * @created 17.03.17
  */
 public abstract class Lightfield extends StagedFeatureModule {
 

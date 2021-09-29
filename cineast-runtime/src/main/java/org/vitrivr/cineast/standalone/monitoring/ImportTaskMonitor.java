@@ -7,9 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
 
-/**
- * @author silvan on 19.11.18.
- */
+
 public class ImportTaskMonitor {
 
   private static boolean initalized = false;

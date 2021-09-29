@@ -5,9 +5,6 @@ import java.util.Arrays;
 /**
  * Interface for filters that are intended for application on raw sample data (i.e. time-domain).
  *
- * @author rgasser
- * @version 1.0
- * @created 08.03.17
  */
 public interface TimeDomainFilterInterface {
     /**

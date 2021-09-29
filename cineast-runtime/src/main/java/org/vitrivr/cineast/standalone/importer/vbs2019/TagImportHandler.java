@@ -24,7 +24,6 @@ public class TagImportHandler extends DataImportHandler {
 
       this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("tagDetails.tsv"), TagReader.TAG_ID_COLUMNNAME, TagReader.TAG_NAME_COLUMNNAME, null, TagReader.TAG_DESCRIPTION_COLUMNNAME), TagReader.TAG_ENTITY_NAME, "tags")));
       this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("uniqueTagInstances.tsv"), "id", "tagid", "score"), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "unique mappings from segments and tags")));
-      this.waitForCompletion();
       LOGGER.info("Completed data import with Tag Import files in: {}", root.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));

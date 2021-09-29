@@ -23,7 +23,6 @@ import java.util.List;
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02
  * see http://stackoverflow.com/questions/909542/opencv-edge-extraction
  *
- * @author rosluc00
  */
 public class EHD extends AbstractFeatureModule {
 

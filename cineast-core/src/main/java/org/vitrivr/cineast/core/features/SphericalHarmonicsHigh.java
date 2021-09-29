@@ -7,10 +7,7 @@ package org.vitrivr.cineast.core.features;
  * [1] Funkhouser, T., Min, P., Kazhdan, M., Chen, J., Halderman, A., Dobkin, D., & Jacobs, D. (2003).
  *      A search engine for 3D models. ACM Trans. Graph., 22(1), 83–105. http://doi.org/10.1145/588272.588279
 
- * @author rgasser
- * @version 1.0
- * @created 16.02.17
- */
+  */
 public class SphericalHarmonicsHigh extends SphericalHarmonics {
     /**
      * Constructor for SphericalHarmonics feature module. Uses the values a higher

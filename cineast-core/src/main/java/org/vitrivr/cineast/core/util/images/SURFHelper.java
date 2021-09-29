@@ -14,9 +14,6 @@ import java.awt.image.BufferedImage;
  *
  * [1] Herbert Bay, Andreas Ess, Tinne Tuytelaars, and Luc Van Gool, "Speeded-Up Robust Features (SURF)", CVIU June, 2008, Volume 110, Issue 3, pages 346-359
  *
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
  */
 public final class SURFHelper {
 

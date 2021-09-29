@@ -5,34 +5,80 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 /**
- * A {@link TemporalQuery} contains a list of {@link StagedSimilarityQuery}s. Each of them represents a query in a total temporal ordering.
+ * This object represents a temporal-query message of temporal query version 2, i.e. a request for a
+ * temporally staged similarity-search.
  */
 public class TemporalQuery extends Query {
 
   /**
    * List of {@link StagedSimilarityQuery}s that are part of this {@link TemporalQuery}.
    */
-  public final List<StagedSimilarityQuery> queries;
+  private final List<StagedSimilarityQuery> queries;
+
+  /**
+   * List of time distances as floats that can be part of this {@link TemporalQuery}.
+   */
+  private final List<Float> timeDistances;
+
+  /**
+   * The max length of the temporal sequences as float that can be part of this {@link
+   * TemporalQuery}.
+   */
+  private final Float maxLength;
 
   /**
    * Constructor for the TemporalQuery object.
    *
-   * @param queries List of {@link StagedSimilarityQuery}s.
-   * @param config  The {@link QueryConfig}. May be null!
+   * @param queries       List of {@link StagedSimilarityQuery}s.
+   * @param config        The {@link ReadableQueryConfig}. May be null!
+   * @param timeDistances List of {@link Float}. May be null!
+   * @param maxLength     A {@link Float}. May be null!
    */
   @JsonCreator
-  public TemporalQuery(@JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries, @JsonProperty(value = "config", required = false) QueryConfig config) {
+  public TemporalQuery(@JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries, @JsonProperty(value = "config", required = false) QueryConfig config, @JsonProperty(value = "timeDistances", required = false) List<Float> timeDistances, @JsonProperty(value = "maxLength", required = false) Float maxLength) {
     super(config);
     this.queries = queries;
+    this.timeDistances = timeDistances;
+    this.maxLength = maxLength;
   }
 
   /**
-   * {@inheritDoc}
+   * Getter for queries.
+   *
+   * @return {@link StagedSimilarityQuery}
    */
+  public List<StagedSimilarityQuery> getQueries() {
+    return queries;
+  }
+
+  /**
+   * Getter for timeDistances.
+   *
+   * @return List<Float>
+   */
+  public List<Float> getTimeDistances() {
+    return timeDistances;
+  }
+
+  /**
+   * Getter for maxLength.
+   *
+   * @return Float
+   */
+  public Float getMaxLength() {
+    return maxLength;
+  }
+
+  /**
+   * Returns the type of particular message. Expressed as MessageTypes enum.
+   *
+   * @return {@link MessageType}
+   */
+  @Override
   public MessageType getMessageType() {
     return MessageType.Q_TEMPORAL;
   }
-
 }

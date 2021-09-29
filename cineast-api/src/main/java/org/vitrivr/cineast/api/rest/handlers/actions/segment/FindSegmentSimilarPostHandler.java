@@ -41,8 +41,10 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
     QueryConfig config = query.getQueryConfig();
     ConstrainedQueryConfig qconf = new ConstrainedQueryConfig(config);
     if (config == null) {
-      qconf.setResultsPerModule(Config.sharedConfig().getRetriever().getMaxResultsPerModule());
-      qconf.setMaxResults(Config.sharedConfig().getRetriever().getMaxResults());
+      final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
+      qconf.setMaxResults(max);
+      final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
+      qconf.setResultsPerModule(resultsPerModule);
     }
 
     for (String category : categoryMap.keySet()) {

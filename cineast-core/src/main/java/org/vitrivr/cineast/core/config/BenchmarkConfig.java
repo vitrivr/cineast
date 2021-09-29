@@ -7,11 +7,7 @@ import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.04.17
- */
+
 public class BenchmarkConfig {
     private BenchmarkMode mode = BenchmarkMode.OFF;
 

@@ -25,9 +25,6 @@ import java.util.List;
  * [2] Zhang, D., & Lu, G. (2002).
  *      An Integrated Approach to Shape Based Image Retrieval. In ACCV2002: The 5th Asian Conference on Computer Vision. Melbourne, Australia.
  *
- * @author rgasser
- * @version 1.0
- * @created 16.02.17
  */
 public class LightfieldFourier extends Lightfield {
     /** Size of the feature vector. */

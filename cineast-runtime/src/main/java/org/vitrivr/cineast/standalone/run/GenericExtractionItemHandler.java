@@ -62,8 +62,6 @@ import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
  * <p>
  * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
  *
- * @author silvan on 16.04.18.
- * @version 1.1
  */
 public class GenericExtractionItemHandler implements Runnable, ExtractionItemProcessor {
 

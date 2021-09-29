@@ -18,11 +18,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 22.01.17
- */
+
 public final class ContourHelper {
 
     /**

@@ -4,8 +4,7 @@ package org.vitrivr.cineast.core.data.raw;
 /**
  * A cacheable piece of data as created by a {@link CachedDataFactory}.
  *
- * @author Ralph Gasser
- * @version 1.0
+  * @version 1.0
  * @see CachedDataFactory
  */
 public interface CacheableData {

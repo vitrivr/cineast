@@ -17,9 +17,6 @@ import java.awt.image.BufferedImage;
  * [1] Velmurugan, K., & Santosh Baboo, S. (2011).
  *  Image Retrieval using Harris Corners and Histogram of Oriented Gradients. International Journal of Computer Applications, 24(7), 6–10. Retrieved from http://www.ijcaonline.org/journal/number14/pxc387478.pdf
  *
- * @author rgasser
- * @version 1.0
- * @created 22.01.17
  */
 public final class HOGHelper {
 

@@ -20,11 +20,7 @@ import java.util.List;
 
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 19.03.17
- */
+
 public final class ZernikeHelper {
 
     /**
