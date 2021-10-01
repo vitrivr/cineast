@@ -59,8 +59,8 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   public void addScore(StringDoublePair stringDoublePair) {
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
       this.normalizer++;
-      this.totalScore++;
-      this.score = totalScore/normalizer;
+      this.totalScore += stringDoublePair.value;
+      this.score = totalScore / normalizer;
     }
   }
 
@@ -106,8 +106,10 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     int comparison = Integer.compare(this.containerId, o.getContainerId());
     if (comparison != 0) {
       return comparison;
-    } else {
+    }
+    if (this.startAbs + o.getStartAbs() > 0) {
       return Float.compare(this.startAbs, o.getStartAbs());
     }
+    return Float.compare(this.sequenceNumber, o.getSequenceNumber());
   }
 }
