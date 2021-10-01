@@ -113,9 +113,10 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
           /* if endAbs is 0, we're dealing with image sequences so it makes little sense to look for a maximum sequence length.
            * Were time to be included in image sequence information, we could do that but this is currently not the case //TODO @Loris
            * */
-          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1)) + path.getScore() && (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) || candidate.getEndAbs() == 0) {
-            bestPath = new SequentialPath(path);
-            bestPath.addSegment(candidate);
+          SequentialPath candidatePath = new SequentialPath(path);
+          candidatePath.addSegment(candidate);
+          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) && ((candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) || candidate.getEndAbs() == 0)) {
+            bestPath = candidatePath;
           }
           continue;
         }
