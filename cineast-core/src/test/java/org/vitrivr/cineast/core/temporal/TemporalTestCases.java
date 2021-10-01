@@ -132,7 +132,7 @@ public class TemporalTestCases {
     segments1.add(descriptor1_4.getSegmentId());
     segments1.add(descriptor1_5.getSegmentId());
     segments1.add(descriptor1_7.getSegmentId());
-    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 1f);
+    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 2.5/3f);
     expectedResults.add(t1);
 
     this.segmentMap = segmentMap;
@@ -193,7 +193,7 @@ public class TemporalTestCases {
     segments3.add(descriptor3_5.getSegmentId());
     segments3.add(descriptor3_6.getSegmentId());
     segments3.add(descriptor3_7.getSegmentId());
-    TemporalObject t1 = new TemporalObject(segments3, descriptor3_5.getObjectId(), 4f / 3f);
+    TemporalObject t1 = new TemporalObject(segments3, descriptor3_5.getObjectId(), 1f);
     expectedResults.add(t1);
 
     List<String> segments2 = new ArrayList<>();
