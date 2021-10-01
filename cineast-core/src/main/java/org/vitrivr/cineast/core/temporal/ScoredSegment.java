@@ -57,6 +57,7 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
    * Add a score to this segment, meaning this segment appeared more than once in a container.
    */
   public void addScore(StringDoublePair stringDoublePair) {
+    // Implementation note: currently uses averagepooling. We could also use maxpooling, or weighted pooling.
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
       this.normalizer++;
       this.totalScore += stringDoublePair.value;
