@@ -20,7 +20,10 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   private final float segmentLength;
   private final float startAbs;
   private final float endAbs;
+  private final int sequenceNumber;
   private double score;
+  private double totalScore = 0;
+  private double normalizer = 0;
 
   /**
    * Constructor to create a scored segment.
@@ -30,6 +33,7 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.segmentId = mediaSegmentDescriptor.getSegmentId();
     this.startAbs = mediaSegmentDescriptor.getStartabs();
     this.endAbs = mediaSegmentDescriptor.getEndabs();
+    this.sequenceNumber = mediaSegmentDescriptor.getSequenceNumber();
     this.containerId = containerId;
     this.segmentLength = segmentLength;
     this.score = score;
@@ -46,6 +50,7 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.segmentLength = scoredSegment.getSegmentLength();
     this.startAbs = scoredSegment.getStartAbs();
     this.endAbs = scoredSegment.getEndAbs();
+    this.sequenceNumber = scoredSegment.getSequenceNumber();
   }
 
   /**
@@ -53,12 +58,18 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
    */
   public void addScore(StringDoublePair stringDoublePair) {
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
-      this.score += stringDoublePair.value;
+      this.normalizer++;
+      this.totalScore++;
+      this.score = totalScore/normalizer;
     }
   }
 
   public String getSegmentId() {
     return segmentId;
+  }
+
+  public int getSequenceNumber() {
+    return this.sequenceNumber;
   }
 
   public double getScore() {

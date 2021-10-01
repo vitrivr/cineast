@@ -92,6 +92,9 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
         return this.objectId;
     }
 
+    /**
+     * Note: this property is called **segmentnumber** in the data model now.
+     */
     @JsonProperty
     public int getSequenceNumber() {
         return this.number;
