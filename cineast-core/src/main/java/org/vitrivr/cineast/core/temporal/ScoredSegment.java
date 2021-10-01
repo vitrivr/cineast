@@ -22,6 +22,8 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   private final float endAbs;
   private final int sequenceNumber;
   private double score;
+  private double totalScore = 0;
+  private double normalizer = 0;
 
   /**
    * Constructor to create a scored segment.
@@ -56,7 +58,9 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
    */
   public void addScore(StringDoublePair stringDoublePair) {
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
-      this.score += stringDoublePair.value;
+      this.normalizer++;
+      this.totalScore++;
+      this.score = totalScore/normalizer;
     }
   }
 
