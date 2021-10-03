@@ -23,10 +23,10 @@ public class OptimizeEntitiesCommand implements Runnable {
     }
     try (final CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase())) {
       System.out.println("Optimizing all entities for schema '" + CottontailWrapper.CINEAST_SCHEMA + "' in Cottontail");
-      wrapper.client.list(new ListEntities(CottontailWrapper.CINEAST_SCHEMA), null).forEachRemaining(entity -> {
+      wrapper.client.list(new ListEntities(CottontailWrapper.CINEAST_SCHEMA)).forEachRemaining(entity -> {
         System.out.println("Optimizing entity " + entity);
         final String name = entity.asString("dbo").replace("warren.", "");
-        wrapper.client.optimize(new OptimizeEntity(name), null);
+        wrapper.client.optimize(new OptimizeEntity(name));
       });
       System.out.println("Finished optimizing all entities");
     }

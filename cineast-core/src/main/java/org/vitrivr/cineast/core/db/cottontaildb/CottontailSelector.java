@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import kotlin.Pair;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -28,6 +27,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
+import org.vitrivr.cottontail.client.language.basics.Direction;
 import org.vitrivr.cottontail.client.language.basics.Distances;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
@@ -66,7 +66,7 @@ public final class CottontailSelector implements DBSelector {
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     final Query query = knn(k, vector, column, config);
     try {
-      return handleNearestNeighbourResponse(this.cottontail.client.query(query, null), distanceElementClass);
+      return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -80,9 +80,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
-    final Query query = knn(k, vector, column, config).select(new kotlin.Pair[]{ new kotlin.Pair<>(GENERIC_ID_COLUMN_QUALIFIER, null) }, false);
+    final Query query = knn(k, vector, column, config);
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getNearestNeighbourRows(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -91,9 +91,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
-    final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject()));
     try {
-      final TupleIterator results = this.cottontail.client.query(query, null);
+      final TupleIterator results = this.cottontail.client.query(query);
       final List<float[]> _return = new LinkedList<>();
       while (results.hasNext()) {
         final Tuple t = results.next();
@@ -108,9 +108,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName) {
-    final Query query = new Query(this.fqn).select(vectorName).where(new Literal(fieldName, "==", value.toObject()));
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject()));
     try {
-      return toSingleCol(this.cottontail.client.query(query, null), vectorName);
+      return toSingleCol(this.cottontail.client.query(query), vectorName);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getFeatureVectorsGeneric(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -120,9 +120,9 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
+    final Query query = new Query(this.fqn).select("*", null).where(new Literal(fieldName, "IN", mapped));
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -132,9 +132,9 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values) {
     final Object[] mapped = values.toArray();
-    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, "IN", mapped));
+    final Query query = new Query(this.fqn).select("*", null).where(new Literal(fieldName, "IN", mapped));
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -145,9 +145,9 @@ public final class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
     final String op = toOperator(operator);
-    final Query query = new Query(this.fqn).select("*").where(new Literal(fieldName, op, mapped));
+    final Query query = new Query(this.fqn).select("*", null).where(new Literal(fieldName, op, mapped));
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -157,28 +157,22 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     /* Prepare plain query. */
-    final Query query = new Query(this.fqn).select(new kotlin.Pair[]{ new kotlin.Pair<>("*", null) }, false);
+    final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" "));
+    final Query query = new Query(this.fqn)
+        .select("*", null)
+        .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER);
 
     /* Process predicates. */
-    final List<Predicate> atomics = Arrays.stream(terms).map(t -> new Literal(fieldname, "MATCH", t)).collect(Collectors.toList());
-    final Optional<Predicate> predicates = atomics.stream().reduce(Or::new);
     if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = queryConfig.getRelevantSegmentIds();
       final Literal segmentIds = new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
-      if (predicates.isPresent()) {
-        query.where(new And(segmentIds, predicates.get()));
-      } else {
-        query.where(segmentIds);
-      }
+      query.where(new And(segmentIds, new Literal(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0)));
     } else {
-      predicates.ifPresent(query::where);
+      query.where(new Literal(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0));
     }
 
-    Map<String, String> mappings = new HashMap<>();
-    mappings.put("score", DB_DISTANCE_VALUE_QUALIFIER);
-
     try {
-      return processResults(this.cottontail.client.query(query, null), mappings);
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getFulltextRows(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -190,9 +184,11 @@ public final class CottontailSelector implements DBSelector {
     /* Prepare plain query. */
     final Query query = new Query(this.fqn);
     if (projection.isEmpty()) {
-      query.select("*");
+      query.select("*", null);
     } else {
-      query.select(projection.toArray(new String[]{}));
+      for (String p: projection) {
+        query.select(p, null);
+      }
     }
 
     /* Process predicates. */
@@ -213,7 +209,7 @@ public final class CottontailSelector implements DBSelector {
       predicates.ifPresent(query::where);
     }
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getRowsAND(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -222,9 +218,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    final Query query = new Query(this.fqn).select(column);
+    final Query query = new Query(this.fqn).select(column, null );
     try {
-      return toSingleCol(this.cottontail.client.query(query, null), column);
+      return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -233,12 +229,15 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
-    final Query query = new Query(this.fqn).select(columns.toArray(new String[]{}));
+    final Query query = new Query(this.fqn);
+    for (String c: columns) {
+      query.select(c, null);
+    }
     if (limit > 0) {
       query.limit(limit);
     }
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -247,9 +246,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
-    final Query query = new Query(this.fqn).distinct( new kotlin.Pair[]{ new kotlin.Pair<>(column, null) }, true );
+    final Query query = new Query(this.fqn).distinct(column, null);
     try {
-      return toSingleCol(this.cottontail.client.query(query, null), column);
+      return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getUniqueValues(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -257,10 +256,10 @@ public final class CottontailSelector implements DBSelector {
   }
 
   public Map<String, Integer> countDistinctValues(String column) {
-    final Query query = new Query(this.fqn).select("*");
+    final Query query = new Query(this.fqn).select("*", null);
     final Map<String, Integer> count = new HashMap<>();
     try {
-      final TupleIterator results = this.cottontail.client.query(query, null);
+      final TupleIterator results = this.cottontail.client.query(query);
       while (results.hasNext()) {
         final Tuple t = results.next();
         count.merge(t.asString(column), 1, (old, one) -> old + 1);
@@ -274,9 +273,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
-    final Query query = new Query(this.fqn).select("*");
+    final Query query = new Query(this.fqn).select("*", null);
     try {
-      return processResults(this.cottontail.client.query(query, null));
+      return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -287,7 +286,7 @@ public final class CottontailSelector implements DBSelector {
   public boolean existsEntity(String name) {
     final AboutEntity about = new AboutEntity(this.cottontail.fqnInput(name));
     try {
-      final TupleIterator results = this.cottontail.client.about(about, null);
+      final TupleIterator results = this.cottontail.client.about(about);
       return results.hasNext();
     } catch (StatusRuntimeException e) {
       return false;
@@ -315,10 +314,11 @@ public final class CottontailSelector implements DBSelector {
   private Query knn(int k, float[] vector, String column, ReadableQueryConfig config) {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
-    final Query query = new Query(this.fqn);
-
-    /* Prepare NNS. */
-    query.nns(column, vector, distance, "distance", k);
+    final Query query = new Query(this.fqn)
+        .select(GENERIC_ID_COLUMN_QUALIFIER, null)
+        .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
+        .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
+        .limit(k);
 
     /* Add relevant segments (optional). */
     if (!relevant.isEmpty()) {
