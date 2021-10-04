@@ -113,17 +113,18 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       final Tuple t = ti.next();
       final MediaSegmentDescriptor segment = convert(t);
       try {
-        final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(segment.getSegmentId().substring(4));
+        final Optional<String> minuteIdOpt = LSCUtilities.filenameToMinuteId(segment.getSegmentId().substring(segment.getSegmentId().indexOf('_')+1)); // substring(3) to remove "is_"
         if (!minuteIdOpt.isPresent()) {
           LOGGER.warn("Could not update " + segment.getSegmentId());
           continue;
         }
         final LocalDateTime ldt = LSCUtilities.fromMinuteId(minuteIdOpt.get());
+        final long msAbsZero = ldt.withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant(ZoneOffset.UTC).toEpochMilli();
         final long msAbs = ldt.toInstant(ZoneOffset.UTC).toEpochMilli();
         final long msAbsNext = msAbs + 1;
         final Update update = new Update(ENTITY_NAME).values(
-                new Pair<>(MediaSegmentDescriptor.SEGMENT_START_COL_NAME, (double) msAbs),
-                new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext),
+                new Pair<>(MediaSegmentDescriptor.SEGMENT_START_COL_NAME, (double) msAbs - msAbsZero),
+                new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext - msAbsZero),
                 new Pair<>(MediaSegmentDescriptor.SEGMENT_STARTABS_COL_NAME, (double) msAbs),
                 new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
         ).where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId())).txId(txId);

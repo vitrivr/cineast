@@ -344,11 +344,12 @@ public class LSCUtilities {
         // YYYYMMDD_HHMM
         // 0123456789012
         try {
+            final int endStrIdx = Math.min(minuteId.length(), 13);
             final int year = Integer.parseInt(minuteId.substring(0, 4));
             final int month = Integer.parseInt(minuteId.substring(4, 6));
             final int day = Integer.parseInt(minuteId.substring(6, 8));
             final int hour = Integer.parseInt(minuteId.substring(9, 11));
-            final int minute = Integer.parseInt(minuteId.substring(11));
+            final int minute = Integer.parseInt(minuteId.substring(11, endStrIdx));
             return LocalDateTime.of(year, month, day, hour, minute);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Cannot parse due to invalid number format in minuteId");
