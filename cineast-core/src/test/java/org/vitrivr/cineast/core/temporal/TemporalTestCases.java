@@ -132,7 +132,7 @@ public class TemporalTestCases {
     segments1.add(descriptor1_4.getSegmentId());
     segments1.add(descriptor1_5.getSegmentId());
     segments1.add(descriptor1_7.getSegmentId());
-    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 1f);
+    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 2.5/3f);
     expectedResults.add(t1);
 
     this.segmentMap = segmentMap;
@@ -193,7 +193,7 @@ public class TemporalTestCases {
     segments3.add(descriptor3_5.getSegmentId());
     segments3.add(descriptor3_6.getSegmentId());
     segments3.add(descriptor3_7.getSegmentId());
-    TemporalObject t1 = new TemporalObject(segments3, descriptor3_5.getObjectId(), 4f / 3f);
+    TemporalObject t1 = new TemporalObject(segments3, descriptor3_5.getObjectId(), 1f);
     expectedResults.add(t1);
 
     List<String> segments2 = new ArrayList<>();
@@ -242,25 +242,25 @@ public class TemporalTestCases {
     return expectedResults;
   }
 
-  private MediaSegmentDescriptor descriptor1_1 = new MediaSegmentDescriptor("Test1", "Test1_1", 0, 0, 10, 0f, 10f, true);
-  private MediaSegmentDescriptor descriptor1_2 = new MediaSegmentDescriptor("Test1", "Test1_2", 0, 10, 20, 10f, 20f, true);
-  private MediaSegmentDescriptor descriptor1_3 = new MediaSegmentDescriptor("Test1", "Test1_3", 0, 20, 30, 20f, 30f, true);
-  private MediaSegmentDescriptor descriptor1_4 = new MediaSegmentDescriptor("Test1", "Test1_4", 0, 30, 40, 30f, 40f, true);
-  private MediaSegmentDescriptor descriptor1_5 = new MediaSegmentDescriptor("Test1", "Test1_5", 0, 40, 50, 40f, 50f, true);
-  private MediaSegmentDescriptor descriptor1_6 = new MediaSegmentDescriptor("Test1", "Test1_6", 0, 50, 60, 50f, 60f, true);
-  private MediaSegmentDescriptor descriptor1_7 = new MediaSegmentDescriptor("Test1", "Test1_7", 0, 60, 70, 60f, 70f, true);
+  private MediaSegmentDescriptor descriptor1_1 = new MediaSegmentDescriptor("Test1", "Test1_1", 1, 0, 10, 0f, 10f, true);
+  private MediaSegmentDescriptor descriptor1_2 = new MediaSegmentDescriptor("Test1", "Test1_2", 2, 10, 20, 10f, 20f, true);
+  private MediaSegmentDescriptor descriptor1_3 = new MediaSegmentDescriptor("Test1", "Test1_3", 3, 20, 30, 20f, 30f, true);
+  private MediaSegmentDescriptor descriptor1_4 = new MediaSegmentDescriptor("Test1", "Test1_4", 4, 30, 40, 30f, 40f, true);
+  private MediaSegmentDescriptor descriptor1_5 = new MediaSegmentDescriptor("Test1", "Test1_5", 5, 40, 50, 40f, 50f, true);
+  private MediaSegmentDescriptor descriptor1_6 = new MediaSegmentDescriptor("Test1", "Test1_6", 6, 50, 60, 50f, 60f, true);
+  private MediaSegmentDescriptor descriptor1_7 = new MediaSegmentDescriptor("Test1", "Test1_7", 7, 60, 70, 60f, 70f, true);
 
-  private MediaSegmentDescriptor descriptor2_1 = new MediaSegmentDescriptor("Test2", "Test2_1", 0, 0, 10, 0f, 10f, true);
-  private MediaSegmentDescriptor descriptor2_2 = new MediaSegmentDescriptor("Test2", "Test2_2", 0, 10, 20, 10f, 20f, true);
-  private MediaSegmentDescriptor descriptor2_3 = new MediaSegmentDescriptor("Test2", "Test2_3", 0, 20, 30, 20f, 30f, true);
-  private MediaSegmentDescriptor descriptor2_4 = new MediaSegmentDescriptor("Test2", "Test2_4", 0, 30, 40, 30f, 40f, true);
-  private MediaSegmentDescriptor descriptor2_5 = new MediaSegmentDescriptor("Test2", "Test2_5", 0, 40, 50, 40f, 50f, true);
-  private MediaSegmentDescriptor descriptor2_6 = new MediaSegmentDescriptor("Test2", "Test2_6", 0, 50, 60, 50f, 60f, true);
-  private MediaSegmentDescriptor descriptor2_7 = new MediaSegmentDescriptor("Test2", "Test2_7", 0, 60, 70, 60f, 70f, true);
+  private MediaSegmentDescriptor descriptor2_1 = new MediaSegmentDescriptor("Test2", "Test2_1", 1, 0, 10, 0f, 10f, true);
+  private MediaSegmentDescriptor descriptor2_2 = new MediaSegmentDescriptor("Test2", "Test2_2", 2, 10, 20, 10f, 20f, true);
+  private MediaSegmentDescriptor descriptor2_3 = new MediaSegmentDescriptor("Test2", "Test2_3", 3, 20, 30, 20f, 30f, true);
+  private MediaSegmentDescriptor descriptor2_4 = new MediaSegmentDescriptor("Test2", "Test2_4", 4, 30, 40, 30f, 40f, true);
+  private MediaSegmentDescriptor descriptor2_5 = new MediaSegmentDescriptor("Test2", "Test2_5", 5, 40, 50, 40f, 50f, true);
+  private MediaSegmentDescriptor descriptor2_6 = new MediaSegmentDescriptor("Test2", "Test2_6", 6, 50, 60, 50f, 60f, true);
+  private MediaSegmentDescriptor descriptor2_7 = new MediaSegmentDescriptor("Test2", "Test2_7", 7, 60, 70, 60f, 70f, true);
 
-  private MediaSegmentDescriptor descriptor3_5 = new MediaSegmentDescriptor("Test3", "Test3_5", 0, 40, 50, 40f, 50f, true);
-  private MediaSegmentDescriptor descriptor3_6 = new MediaSegmentDescriptor("Test3", "Test3_6", 0, 50, 60, 50f, 60f, true);
-  private MediaSegmentDescriptor descriptor3_7 = new MediaSegmentDescriptor("Test3", "Test3_7", 0, 60, 70, 60f, 70f, true);
+  private MediaSegmentDescriptor descriptor3_5 = new MediaSegmentDescriptor("Test3", "Test3_5", 5, 40, 50, 40f, 50f, true);
+  private MediaSegmentDescriptor descriptor3_6 = new MediaSegmentDescriptor("Test3", "Test3_6", 6, 50, 60, 50f, 60f, true);
+  private MediaSegmentDescriptor descriptor3_7 = new MediaSegmentDescriptor("Test3", "Test3_7", 7, 60, 70, 60f, 70f, true);
 
   public boolean assertListSame(List<TemporalObject> l1, List<TemporalObject> l2) {
     if (l1.size() == l2.size()) {

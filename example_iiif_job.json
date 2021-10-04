@@ -29,7 +29,8 @@
           "format": "png"
         }
       ],
-      "manifestUrl": "https://dms-data.stanford.edu/data/manifests/Parker/bg021sq9590/manifest.json"
+      "manifestUrl": "https://dms-data.stanford.edu/data/manifests/Parker/bg021sq9590/manifest.json",
+      "orderedCollectionUrl":  "https://haab-digital.klassik-stiftung.de/viewer/api/v1/records/changes/"
     }
   },
   "extractors": [
