@@ -166,7 +166,10 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         final long start = System.currentTimeMillis();
 
         /* 1: Perform NNS. */
-        try (final PreparedStatement statement = this.connection.prepareStatement("SELECT object.name, distance(feature," + toVectorString(query) + ",'L2') AS dist FROM cineast." + this.table + " AS feature INNER JOIN cineast.cineast_segment AS segment ON (feature.id = segment.segmentid) INNER JOIN cineast.cineast_multimediaobject AS object ON (segment.objectid = object.objectid) ORDER BY dist ASC LIMIT " + this.limit)) {
+        try (final PreparedStatement statement = this.connection.prepareStatement(""
+                + "SELECT * FROM (SELECT id, distance(feature," + toVectorString(query) + ",'L2') AS dist FROM cineast." + this.table + " ORDER BY dist ASC LIMIT " + this.limit + ") as feature "
+                + "INNER JOIN cineast.cineast_segment AS segment ON (feature.id = segment.segmentid) "
+                + "INNER JOIN cineast.cineast_multimediaobject AS object ON (segment.objectid = object.objectid)")) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
