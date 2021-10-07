@@ -30,7 +30,7 @@ public final class PolyphenyWrapper implements AutoCloseable {
     public static final String STORE_NAME_POSTGRESQL = "postgresql";
 
     /** Store name Cottontail DB instances. */
-    public static final String STORE_NAME_COTTONTAIL = "cottontaildb";
+    public static final String STORE_NAME_COTTONTAIL = "cottontail";
 
     /** The JDBC {@link Connection} used to communicate with Polypheny DB. */
     final Connection connection;
