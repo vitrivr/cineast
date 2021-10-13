@@ -11,6 +11,7 @@ import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
+import org.vitrivr.cineast.api.util.APIConstants;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a certain domain.
@@ -20,7 +21,8 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
 
 
-  public static final String ROUTE = "find/metadata/in/:" + DOMAIN_NAME + "/by/id/:" + FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
+  public static final String ROUTE = "find/metadata/in/{" + DOMAIN_NAME + "}/by/id/{" + APIConstants.ID_QUALIFIER
+      + "}";
 
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {

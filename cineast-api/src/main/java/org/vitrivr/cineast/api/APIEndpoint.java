@@ -234,6 +234,10 @@ public class APIEndpoint {
     final int port = this.validateAndNormalizePort(secure, config);
 
     final Javalin service = Javalin.create(serviceConfig -> {
+      /* Default return mime */
+      serviceConfig.defaultContentType = "application/json";
+      /* Prefer 405 over 404 to not expose information */
+      serviceConfig.prefer405over404 = true;
       /* Configure server (TLS, thread pool, etc.) */
       serviceConfig.enableCorsForAllOrigins();
       /* Configuration of the actual server */
@@ -316,10 +320,6 @@ public class APIEndpoint {
       ex.printStackTrace();
       LOGGER.error(ex);
     });
-
-    /* General settings */
-    service.config.defaultContentType = "application/json";
-    service.config.prefer405over404 = true;
 
     /* Start javalin */
     try {
