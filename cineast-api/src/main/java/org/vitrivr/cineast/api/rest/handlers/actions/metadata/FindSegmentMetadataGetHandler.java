@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 public class FindSegmentMetadataGetHandler implements GetRestHandler<MediaSegmentMetadataQueryResult> {
 
-  public static final String ROUTE = "find/metadata/by/segmentid/:" + ID_QUALIFIER;
+  public static final String ROUTE = "find/metadata/by/segmentid/{" + ID_QUALIFIER +"}";
 
   @Override
   public MediaSegmentMetadataQueryResult doGet(Context ctx) {

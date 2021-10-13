@@ -15,7 +15,7 @@ public class ValidateSessionHandler implements GetRestHandler<SessionState> {
 
   private final static String ID_NAME = "id";
 
-  public static final String ROUTE = "session/validate/:" + ID_NAME;
+  public static final String ROUTE = "session/validate/{" + ID_NAME+"}";
 
   public static SessionState validateSession(String sessionId) {
     if (sessionId == null) {
