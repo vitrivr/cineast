@@ -3,12 +3,17 @@ package org.vitrivr.cineast.standalone.cli.db;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.restrictions.Required;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -28,6 +33,9 @@ public class PolyphenyBenchmarkCommand implements Runnable {
     @Option(name = {"--host"}, description = "The host IP or name where Polypheny DB runs.")
     private String host = "localhost";
 
+    @Option(name = {"--schema"}, description = "The name of the schema to run Polypheny DB tests against.")
+    private String schema = "cineast";
+
     @Option(name = {"--limit"}, description = "The number of features to retrieve (the k in kNN).")
     private int limit = 500;
 
@@ -37,6 +45,10 @@ public class PolyphenyBenchmarkCommand implements Runnable {
     @Option(name = {"--table"}, description = "The feature table to benchmark.")
     @Required
     private String table;
+
+    @Option(name = {"--out"}, description = "Path to the output directory.")
+    @Required
+    private String out;
 
     /** The JDBC {@link Connection} used to communicate with Polypheny DB. */
     private Connection connection;
@@ -61,7 +73,22 @@ public class PolyphenyBenchmarkCommand implements Runnable {
             return false;
         }
 
-        try (final PreparedStatement stmt = this.connection.prepareStatement("SELECT * FROM cineast." + table + " LIMIT 1")) {
+        /* Try to create output directory (if it doesn't exist). */
+        try {
+            final Path path = Paths.get(this.out);
+            if (!Files.exists(path)) {
+                try (final BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+                    writer.write("r,schema,table,d,limit,traditional_ms,join_ms");
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Preparation failed because Cineast failed to create output directory: " + e.getMessage());
+            return false;
+        }
+
+        /* Check for schema. */
+        try (final PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s.%s LIMIT 1", this.schema, this.table))) {
             try (final ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
                     System.err.println("Preparation failed because Cineast failed to fetch an example row form cineast." + table + "; table seems to be empty.");
@@ -76,7 +103,7 @@ public class PolyphenyBenchmarkCommand implements Runnable {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Preparation failed because Cineast failed to fetch an example row form cineast. "  + table + "; due to an error: " + e.getMessage());
+            System.err.println("Preparation failed because Cineast failed to fetch an example row form cineast."  + table + " due to an error: " + e.getMessage());
             return false;
         }
         return true;
@@ -89,20 +116,30 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         if (!this.prepare()) return;
 
         /* Warmup. */
-        //this.executeTraditional(this.randomVector());
+        this.executeTraditional(this.randomVector());
         this.executeJoin(this.randomVector());
 
         /* Executes workloads. */
-        double duration_traditional_ms = 0.0;
-        double duration_join_ms = 0.0;
-
-        for (int r = 0; r < this.repeat; r++) {
-            final float[] query = this.randomVector();
-            duration_traditional_ms += (this.executeTraditional(query) / 1000.0);
-            duration_join_ms += (this.executeJoin(query) / 1000.0);
+        final Path out = Paths.get(this.out);
+        float duration_traditional_s = 0.0f;
+        float duration_join_s = 0.0f;
+        try (final BufferedWriter writer = Files.newBufferedWriter(out, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+            for (int r = 0; r < this.repeat; r++) {
+                final float[] query = this.randomVector();
+                final long duration_traditional = this.executeTraditional(query);
+                final long duration_join = this.executeJoin(query);
+                writer.write(String.format("%d,%s,%s,%d,%d,%d,%d", r, this.schema, this.table, this.dimensionality, this.limit, duration_traditional, duration_join));
+                writer.newLine();
+                duration_traditional_s += (duration_traditional/1000.0f);
+                duration_join_s += (duration_join/1000.0f);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to open output file: " + e.getMessage());
+            return;
         }
-        System.out.println("Traditional workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_traditional_ms/this.repeat) + "s on average (" + this.repeat + " repetitions).");
-        System.out.println("JOIN workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_join_ms/this.repeat) + "s on average (" + this.repeat + " repetitions).");
+
+        System.out.println("Traditional workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_traditional_s/this.repeat) + "s on average (" + this.repeat + " repetitions).");
+        System.out.println("JOIN workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_join_s/this.repeat) + "s on average (" + this.repeat + " repetitions).");
     }
 
     /**
@@ -116,7 +153,8 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         final long start = System.currentTimeMillis();
 
         /* 1: Perform NNS. */
-        try (final PreparedStatement statement = this.connection.prepareStatement("SELECT id, distance(feature," + toVectorString(query) + ",'L2') as dist FROM cineast." + this.table + " ORDER BY dist ASC LIMIT " + this.limit)) {
+        final String sql = String.format("SELECT id, distance(feature, %s, 'L2') as dist FROM %s.%s ORDER BY dist ASC LIMIT %d", toVectorString(query), this.schema, this.table, this.limit);
+        try (final PreparedStatement statement = this.connection.prepareStatement(sql)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -129,7 +167,7 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         }
 
         /* 2: Fetch all segments. */
-        try (final PreparedStatement statement = this.prepareInStatement("cineast.cineast_segment", "segmentid", segmentids)) {
+        try (final PreparedStatement statement = this.prepareInStatement("cineast_segment", "segmentid", segmentids)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -142,7 +180,7 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         }
 
         /* 3: Fetch all objects. */
-        try (final PreparedStatement statement = this.prepareInStatement("cineast.cineast_multimediaobject", "objectid", objectids)) {
+        try (final PreparedStatement statement = this.prepareInStatement("cineast_multimediaobject", "objectid", objectids)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -166,10 +204,10 @@ public class PolyphenyBenchmarkCommand implements Runnable {
         final long start = System.currentTimeMillis();
 
         /* 1: Perform NNS. */
-        try (final PreparedStatement statement = this.connection.prepareStatement(""
-                + "SELECT * FROM (SELECT id, distance(feature," + toVectorString(query) + ",'L2') AS dist FROM cineast." + this.table + " ORDER BY dist ASC LIMIT " + this.limit + ") as feature "
-                + "INNER JOIN cineast.cineast_segment AS segment ON (feature.id = segment.segmentid) "
-                + "INNER JOIN cineast.cineast_multimediaobject AS object ON (segment.objectid = object.objectid)")) {
+        final String sql = String.format("SELECT * FROM (SELECT id, distance(feature, %s, 'L2') as dist FROM %s.%s ORDER BY dist ASC LIMIT %d) AS feature"
+            + " INNER JOIN %s.cineast_segment AS segment ON (feature.id = segment.segmentid)"
+            + " INNER JOIN %s.cineast_multimediaobject AS object ON (segment.objectid = object.objectid)", toVectorString(query), this.schema, this.table, this.limit, this.schema, this.schema);
+        try (final PreparedStatement statement = this.connection.prepareStatement(sql)) {
             /* Execute query and return results. */
             try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -225,7 +263,7 @@ public class PolyphenyBenchmarkCommand implements Runnable {
      */
     private PreparedStatement prepareInStatement(String table, String fieldName, Iterable<String> values) throws SQLException {
         /* Prepare query (apparently, JDBC doesn't support value binding for IN predicates).*/
-        final StringBuilder stringStatement = new StringBuilder("SELECT * FROM " + table + " WHERE " + fieldName + " IN (");
+        final StringBuilder stringStatement = new StringBuilder(String.format("SELECT * FROM %s.%s WHERE %s IN (", this.schema, table, fieldName));
         int index = 0;
         for (String v : values) {
             if (index++ > 0) stringStatement.append(",");
