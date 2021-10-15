@@ -112,34 +112,49 @@ public class PolyphenyBenchmarkCommand implements Runnable {
 
     @Override
     public void run() {
-        /* Run preparation. */
-        if (!this.prepare()) return;
 
-        /* Warmup. */
-        this.executeTraditional(this.randomVector());
-        this.executeJoin(this.randomVector());
+        try {
+            /* Run preparation. */
+            if (!this.prepare()) return;
 
-        /* Executes workloads. */
-        final Path out = Paths.get(this.out);
-        float duration_traditional_s = 0.0f;
-        float duration_join_s = 0.0f;
-        try (final BufferedWriter writer = Files.newBufferedWriter(out, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-            for (int r = 0; r < this.repeat; r++) {
-                final float[] query = this.randomVector();
-                final long duration_traditional = this.executeTraditional(query);
-                final long duration_join = this.executeJoin(query);
-                writer.write(String.format("%d,%s,%s,%d,%d,%d,%d", r, this.schema, this.table, this.dimensionality, this.limit, duration_traditional, duration_join));
-                writer.newLine();
-                duration_traditional_s += (duration_traditional/1000.0f);
-                duration_join_s += (duration_join/1000.0f);
+            /* Warmup. */
+            this.executeTraditional(this.randomVector());
+            this.executeJoin(this.randomVector());
+
+            /* Executes workloads. */
+            final Path out = Paths.get(this.out);
+
+            try (final BufferedWriter writer = Files.newBufferedWriter(out, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+
+                float duration_traditional_s = 0.0f;
+                float duration_join_s = 0.0f;
+
+                for (int r = 0; r < this.repeat; r++) {
+                    final float[] query = this.randomVector();
+                    final long duration_traditional = this.executeTraditional(query);
+                    final long duration_join = this.executeJoin(query);
+                    writer.write(String.format("%d,%s,%s,%d,%d,%d,%d", r, this.schema, this.table, this.dimensionality, this.limit, duration_traditional, duration_join));
+                    writer.newLine();
+                    duration_traditional_s += (duration_traditional / 1000.0f);
+                    duration_join_s += (duration_join / 1000.0f);
+                }
+                System.out.println("Traditional workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_traditional_s / this.repeat) + "s on average (" + this.repeat + " repetitions).");
+                System.out.println("JOIN workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_join_s / this.repeat) + "s on average (" + this.repeat + " repetitions).");
+
+            } catch (IOException e) {
+                System.err.println("Failed to open output file: " + e.getMessage());
+                return;
             }
-        } catch (IOException e) {
-            System.err.println("Failed to open output file: " + e.getMessage());
-            return;
-        }
 
-        System.out.println("Traditional workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_traditional_s/this.repeat) + "s on average (" + this.repeat + " repetitions).");
-        System.out.println("JOIN workload on 'cineast." + this.table + "' (d=" + this.dimensionality + ") took " + (duration_join_s/this.repeat) + "s on average (" + this.repeat + " repetitions).");
+        } finally {
+            try {
+                if (this.connection != null) {
+                    this.connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Failed to close JDBC connection: " + e.getMessage());
+            }
+        }
     }
 
     /**
