@@ -8,9 +8,6 @@ import org.joml.Vector3i;
  * This class represents a Voxel grid, i.e. a 3-dimensional grid of 3D pixels (called Voxels). Every voxel
  * can either be visible or invisible.
  *
- * @author rgasser
- * @version 1.0
- * @created 06.01.17
  */
 public class VoxelGrid {
     /** The default, empty VoxelGrid. */

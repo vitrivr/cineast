@@ -41,8 +41,6 @@ public class ProtoDataImportHandler extends DataImportHandler {
           LOGGER.error("Could not start data import for file '{}'. Skipping...?", filename);
         }
       });
-      this.waitForCompletion();
-      LOGGER.info("Completed data import with PROTO files in: {}", path.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException. Aborting...", path.toString());
     }

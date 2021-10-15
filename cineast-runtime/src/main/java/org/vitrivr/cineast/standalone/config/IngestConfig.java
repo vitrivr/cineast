@@ -34,11 +34,8 @@ import java.util.stream.Collectors;
  * A concrete instance can be obtained by deserializing a JSON file that is compatible with the
  * structure defined by this classes and its fields.
  *
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
  */
-public final class IngestConfig implements ExtractionContextProvider {
+public class IngestConfig implements ExtractionContextProvider {
     /** MediaType for the Extraction run. */
     private final MediaType type;
 

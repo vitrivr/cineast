@@ -9,11 +9,7 @@ import org.vitrivr.cineast.core.util.math.functions.AssociatedLegendrePolynomial
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 21.03.17
- */
+
 public class AssociatedLegendrePolynomialTest {
 
     /**

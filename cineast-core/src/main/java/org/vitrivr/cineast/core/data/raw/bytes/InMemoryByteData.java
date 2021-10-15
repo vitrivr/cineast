@@ -11,8 +11,7 @@ import java.nio.ByteOrder;
  * The {@link InMemoryByteData} object is an immutable {@link ByteData} object that holds all its data in-memory. The memory
  * will be occupied until the {@link InMemoryByteData} is garbage collected.
  *
- * @author Ralph Gasser
- * @version 1.0
+  * @version 1.0
  *
  * @see ByteData
  * @see CacheableData

@@ -24,8 +24,6 @@ import java.util.function.Supplier;
  * This class is merely an internal abstraction of that type and the content it represents. Its sole purpose is to
  * provide lazy access to the images contained in such a sequence during the extraction process.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public final class ImageSequence {
     /* Configuration property-names and defaults for the DefaultImageDecoder. */
@@ -89,7 +87,7 @@ public final class ImageSequence {
             } catch (IOException | IllegalArgumentException e) {
                 LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", path.toString());
             }
-            return new Pair<>(path, null);
+            return new Pair<>(path, Optional.empty());
         });
     }
 

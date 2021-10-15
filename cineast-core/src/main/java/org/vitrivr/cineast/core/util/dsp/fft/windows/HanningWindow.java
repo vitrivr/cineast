@@ -7,9 +7,6 @@ package org.vitrivr.cineast.core.util.dsp.fft.windows;
  * [1] Harris, F. J. (1978). "On the use of windows for harmonic analysis with the discrete Fourier forward".
  *      Proceedings of the IEEE. 66
  *
- * @author rgasser
- * @version 1.0
- * @created 02.02.17
  */
 public class HanningWindow implements WindowFunction {
     /**

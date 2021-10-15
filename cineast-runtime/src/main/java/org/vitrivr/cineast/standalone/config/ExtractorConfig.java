@@ -7,11 +7,7 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.HashMap;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
- */
+
 public class ExtractorConfig {
     /** Name of the Extractor. Must correspond to the simple-name or the FQN of the respective class.
      *

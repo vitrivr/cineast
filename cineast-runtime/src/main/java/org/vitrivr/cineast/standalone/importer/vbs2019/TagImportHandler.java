@@ -22,10 +22,8 @@ public class TagImportHandler extends DataImportHandler {
     try {
       LOGGER.info("Starting data import for tag files in: {}", root.toString());
 
-      this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("tagNames.tsv"), TagReader.TAG_ID_COLUMNNAME, TagReader.TAG_NAME_COLUMNNAME, TagReader.TAG_DESCRIPTION_COLUMNNAME), TagReader.TAG_ENTITY_NAME, "tags")));
-      this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("tagInstances.tsv"), "id", "tagid", "score"), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "tags & segments")));
-      this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("expandedTagInstances.tsv"), "id", "tagid", "score"), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "tags & segments")));
-      this.waitForCompletion();
+      this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("tagDetails.tsv"), TagReader.TAG_ID_COLUMNNAME, TagReader.TAG_NAME_COLUMNNAME, null, TagReader.TAG_DESCRIPTION_COLUMNNAME), TagReader.TAG_ENTITY_NAME, "tags")));
+      this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(root.resolve("uniqueTagInstances.tsv"), "id", "tagid", "score"), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "unique mappings from segments and tags")));
       LOGGER.info("Completed data import with Tag Import files in: {}", root.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));

@@ -7,11 +7,7 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.HashMap;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 25.01.17
- */
+
 public class MetadataConfig {
     /** Name of the MetadataExtractor. Must correspond to the simple-name or the FQN of the respective class.
      *

@@ -20,11 +20,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.01.17
- */
+
 public abstract class HOG extends AbstractCodebookFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();

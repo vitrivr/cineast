@@ -19,9 +19,6 @@ import java.util.List;
  * @TODO:
  * - Perform basic checks when adding an audio-frame (sample-rate, duration...)
  *
- * @author rgasser
- * @version 1.0
- * @created 31.01.17
  */
 public class AudioSegment implements SegmentContainer {
     /** Segment ID of the AudioSegment. */

@@ -31,8 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * A {@link Decoder} implementation that decodes videos using the ffmpeg library + the corresponding Java bindings.
  *
- * @author rgasser
- * @version 1.1
  */
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video. */
@@ -208,7 +206,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     private Long getFrameTimestamp(int stream) {
         AVRational timebase = this.pFormatCtx.streams(stream).time_base();
-        return Math.floorDiv((this.pFrame.best_effort_timestamp() * timebase.num() * 1000), timebase.den());
+        return Math.floorDiv((this.pFrame.best_effort_timestamp() * timebase.num() * 1000), (long)timebase.den());
     }
 
     /**

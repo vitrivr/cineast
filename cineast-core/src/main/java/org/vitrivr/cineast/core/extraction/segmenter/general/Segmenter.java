@@ -9,9 +9,6 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
  * the media type and the{@link Segmenter}s implementation. A segment could be anything from a shot of a video
  * to an arbitrary part of song or just a single image.
  *
- * @author rgasser
- * @version 1.0
- * @created 16.01.17
  */
 public interface Segmenter<A> extends Runnable, AutoCloseable {
     /**

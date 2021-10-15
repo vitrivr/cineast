@@ -5,11 +5,7 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.polynomials.PolynomialsUtils;
 import org.apache.commons.math3.util.FastMath;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 21.03.17
- */
+
 public final class AssociatedLegendrePolynomial implements UnivariateFunction {
 
     /** Legendre used to generate base values for the associated Legendre polynomial. That polynomial

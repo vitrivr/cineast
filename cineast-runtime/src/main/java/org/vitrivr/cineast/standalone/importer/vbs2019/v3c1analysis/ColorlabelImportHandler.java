@@ -29,8 +29,6 @@ public class ColorlabelImportHandler extends DataImportHandler {
           throw new RuntimeException(e);
         }
       });
-      this.waitForCompletion();
-      LOGGER.info("Completed data import with colorlabel import files in: {}", root.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));
     }

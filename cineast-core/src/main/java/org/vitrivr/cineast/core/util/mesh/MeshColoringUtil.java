@@ -7,11 +7,7 @@ import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 
 import java.awt.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 08.01.17
- */
+
 public final class MeshColoringUtil {
     /**
      * Private constructor; cannot be instantiated.

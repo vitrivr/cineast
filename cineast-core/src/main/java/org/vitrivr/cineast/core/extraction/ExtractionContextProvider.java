@@ -17,9 +17,6 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 /**
  * Provides a configuration context for an extraction run.
  *
- * @author rgasser
- * @version 1.0
- * @created 13.01.17
  */
 public interface ExtractionContextProvider {
 

@@ -9,11 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 10.03.17
- */
+
 public class ImageParser extends DataURLParser {
     /**
      * Converts a Base64 data URL to a BufferedImage.

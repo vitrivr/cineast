@@ -17,8 +17,6 @@ import java.util.Map;
  * @see Segmenter
  * @see PassthroughSegmenter
  *
- * @author rgasser
- * @version 1.0
  */
 public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
     /** THe {@link CachedDataFactory} that is used to create {@link org.vitrivr.cineast.core.data.raw.images.MultiImage}s. */

@@ -7,11 +7,7 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 05.05.17
- */
+
 public class EvaluationConfig {
 
     /** Evaluation mode determines how files should be selected;

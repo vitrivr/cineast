@@ -19,8 +19,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
 /**
  * Data access object that facilitates lookups in Cineast's metadata entity (cineast_metadata). Methods in this class usually return MultimediaMetadataDescriptors.
  *
- * @author rgasser
- * @version 1.0
+  * @version 1.0
  * @created 10.02.17
  * @see MediaObjectMetadataDescriptor
  */

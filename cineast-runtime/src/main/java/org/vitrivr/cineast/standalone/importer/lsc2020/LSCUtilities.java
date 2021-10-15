@@ -20,8 +20,8 @@ import java.util.*;
 public class LSCUtilities {
 
     public static final String LSC_REPORT_VALID_FILNE_NAME = "report-valid.txt";
-    public static final String METADATA_FILE_NAME = "lsc2020-metadata.csv";
-    public static final String CONCEPTS_FILE_NAME = "lsc2020-visual-concepts.csv";
+    public static final String METADATA_FILE_NAME = "lsc2021-metadata.csv";
+    public static final String CONCEPTS_FILE_NAME = "lsc2021-visual-concepts.csv";
     public static final String META_NO_PATH_FILE = "meta-no-path.txt";
     public static final String WRITTEN_FILE = "written.txt";
     public static final String KEY_MINUTEID = "minute_id";
@@ -353,6 +353,19 @@ public class LSCUtilities {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Cannot parse due to invalid number format in minuteId");
         }
+    }
+
+    public static boolean isMetaBlank(String meta){
+        return StringUtils.isBlank(meta) || "NULL".equalsIgnoreCase(meta);
+    }
+
+    public static boolean isAnyMetaBlank(String... meta){
+        for(String m : meta){
+            if(isMetaBlank(m)){
+                return true;
+            }
+        }
+        return false;
     }
 
 

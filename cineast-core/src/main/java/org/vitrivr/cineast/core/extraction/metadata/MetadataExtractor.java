@@ -5,11 +5,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
- */
+
 public interface MetadataExtractor {
   /**
    * Initializes the extractor. The default implementation does nothing.

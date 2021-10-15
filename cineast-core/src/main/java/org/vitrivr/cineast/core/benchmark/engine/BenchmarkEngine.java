@@ -10,11 +10,7 @@ import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 import java.nio.file.Path;
 import java.util.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.04.17
- */
+
 public class BenchmarkEngine {
     /**
      * Inner class extension of the BenchmarkImpl.

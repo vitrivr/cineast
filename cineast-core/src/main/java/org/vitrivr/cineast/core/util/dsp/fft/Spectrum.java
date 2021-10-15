@@ -11,11 +11,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 05.02.17
- */
+
 public class Spectrum implements Iterable<Pair<Float,Double>>{
     /**
      * Available type of spectra.

@@ -10,9 +10,6 @@ import java.util.Map;
 /**
  * Generates an objectId from a random string.
  *
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
  */
 public class UniqueObjectIdGenerator implements ObjectIdGenerator {
     /** Property-name for a custom start value (can be set in the configuration). */

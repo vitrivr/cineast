@@ -25,9 +25,6 @@ import java.util.List;
  * @see STFT
  * @see Spectrum
  *
- * @author rgasser
- * @version 1.0
- * @created 03.02.17
  */
 public class HPCP {
     /**

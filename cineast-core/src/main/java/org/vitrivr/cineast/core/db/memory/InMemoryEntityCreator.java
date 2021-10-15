@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
  *
  * @see InMemoryStore
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 public class InMemoryEntityCreator implements EntityCreator {
 

@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
  * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
- *
+ * <p>
  * These all have the {@link QueryComponent#containerId} of their parent.
+ *
  * @deprecated use {@link TemporalQuery} instead
  */
 @Deprecated
@@ -40,11 +43,6 @@ public class QueryComponent {
     this.containerId = containerId;
   }
 
-  /**
-   * Getter for terms.
-   *
-   * @return List of QueryTerms
-   */
   public List<QueryTerm> getTerms() {
     return this.terms;
   }
@@ -114,9 +112,6 @@ public class QueryComponent {
 
   @Override
   public String toString() {
-    return "QueryComponent{" +
-        "terms=" + terms +
-        ", containerId=" + containerId +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

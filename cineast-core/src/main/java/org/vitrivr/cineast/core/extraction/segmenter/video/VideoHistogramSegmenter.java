@@ -21,11 +21,7 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 17.01.17
- */
+
 public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
     /** */
     private static final Logger LOGGER = LogManager.getLogger();

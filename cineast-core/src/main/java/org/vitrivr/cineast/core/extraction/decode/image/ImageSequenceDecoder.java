@@ -26,8 +26,6 @@ import java.util.*;
  *
  * @see ImageSequence
  *
- * @author rgasser
- * @version 1.0
  */
 public class ImageSequenceDecoder implements Decoder<ImageSequence> {
 

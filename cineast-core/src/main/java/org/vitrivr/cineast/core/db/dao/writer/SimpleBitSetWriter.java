@@ -5,9 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
-/**
- * @author silvan on 18.12.17.
- */
+
 public class SimpleBitSetWriter extends AbstractBatchedEntityWriter<Pair<String, BitSet>> {
 
   private final String entityName;

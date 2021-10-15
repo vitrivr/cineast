@@ -3,11 +3,7 @@ package org.vitrivr.cineast.core.features.codebook;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 19.01.17
- */
+
 public interface CodebookGenerator {
     /**
      * Generates a Codebook for files in the source folder and writes it to the destination folder.

@@ -4,11 +4,7 @@ import org.joml.Vector3fc;
 
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 15.03.17
- */
+
 public interface ReadableMesh {
     /**
      * Returns the list of vertices. The returned collection is unmodifiable.

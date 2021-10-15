@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.importer.lsc2020.MyscealTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
@@ -21,6 +22,8 @@ import org.vitrivr.cineast.standalone.importer.lsc2020.LSCAllTagsImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.OCRImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler.Mode;
+import org.vitrivr.cineast.standalone.importer.lsc2020.SpatialImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
@@ -29,9 +32,7 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ColorlabelImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
@@ -94,27 +95,16 @@ public class ImportCommand implements Runnable {
       case METADATA:
         handler = new ObjectMetadataImportHandler(this.threads, this.batchsize);
         break;
-      case AUDIOTRANSCRIPTION:
-        handler = new AudioTranscriptImportHandler(this.threads, 15_000);
-        break;
       case GOOGLEVISION:
         doVisionImport(path);
         isGoogleVision = true;
         break;
-      case V3C1CLASSIFICATIONS:
-        handler = new ClassificationsImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
-        break;
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        handler.doImport(path);
-        break;
-      case V3C1FACES:
-        handler = new FacesImportHandler(this.threads, this.batchsize);
         break;
       case OBJECTINSTANCE:
-        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, clean);
+        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCMETA:
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
@@ -126,16 +116,22 @@ public class ImportCommand implements Runnable {
         handler = new CaptionImportHandler(this.threads, this.batchsize);
         break;
       case LSCX:
-        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, false);
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, Mode.TAGS, clean);
         break;
       case LSCTABLE:
-        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, true);
+        handler = new ProcessingMetaImportHandler(this.threads, this.batchsize, Mode.TABLE, clean);
         break;
-      case LSC20TAGS:
+      case LSCTAGSALL:
         handler = new LSCAllTagsImportHandler(this.threads, this.batchsize, clean);
         break;
       case LSCOCR:
         handler = new OCRImportHandler(this.threads, this.batchsize, clean);
+        break;
+      case LSCSPATIAL:
+        handler = new SpatialImportHandler(this.threads, this.batchsize);
+        break;
+      case LSC21TAGS:
+        handler = new MyscealTagImportHandler(this.threads, this.batchsize);
         break;
     }
     if (!isGoogleVision) {
@@ -143,30 +139,26 @@ public class ImportCommand implements Runnable {
         throw new RuntimeException("Cannot do import as the handler was not properly registered. Import type: " + type);
       } else {
         handler.doImport(path);
+        handler.waitForCompletion();
       }
     }
 
     /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
     if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
-      handler.waitForCompletion();
       OptimizeEntitiesCommand.optimizeAllCottontailEntities();
     }
 
     System.out.printf("Completed import of type %s for '%s'.%n", this.type, this.input);
   }
 
+  /**
+   * From VBS 21+ on, in uniqueTagInstances.tsv we have all google vision tags deduplicated
+   */
   private void doVisionImport(Path path) {
     List<GoogleVisionImportHandler> handlers = new ArrayList<>();
-    for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-      GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, 40_000, category, false);
-      _handler.doImport(path);
-      handlers.add(_handler);
-      if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
-        GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(this.threads, 40_000, category, true);
-        _handlerTrue.doImport(path);
-        handlers.add(_handlerTrue);
-      }
-    }
+    GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(this.threads, this.batchsize, GoogleVisionCategory.OCR, false);
+    _handler.doImport(path);
+    handlers.add(_handler);
     handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
   }
 
@@ -174,6 +166,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, VBS2020, METADATA, AUDIOTRANSCRIPTION, CAPTIONING, GOOGLEVISION, V3C1CLASSIFICATIONS, V3C1COLORLABELS, V3C1FACES, V3C1ANALYSIS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSC20TAGS, LSCOCR
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }

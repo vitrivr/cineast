@@ -9,11 +9,7 @@ import org.vitrivr.cineast.core.util.web.MeshParser;
 
 import java.awt.image.BufferedImage;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 10.03.17
- */
+
 public class ModelQueryContainer extends QueryContainer {
 
     /** Original Mesh as transferred by the client. */

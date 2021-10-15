@@ -10,11 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 29.12.16
- */
+
 public class Mesh implements WritableMesh {
 
     /** The default, empty mesh. */

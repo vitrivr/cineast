@@ -22,9 +22,6 @@ import java.util.List;
  * [1] Klapuri, A. (2006). Multiple Fundamental Frequency Estimation by Summing Harmonic Amplitudes.
  *      Proceedings of the International Symposium/Conference on Music Information Retrieval (ISMIR), 216–221.
  *
- * @author rgasser
- * @version 1.0
- * @created 17.04.17
  */
 public class KLF0PitchEstimator {
     /** MIDI index of the minimum pitch to consider in the analysis. */

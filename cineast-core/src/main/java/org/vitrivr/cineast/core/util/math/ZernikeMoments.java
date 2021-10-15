@@ -10,9 +10,6 @@ import java.util.List;
 /**
  * This class can be used to compute Zernike Moments.
  *
- * @author Ralph Gasser
- * @version 1.0
- * @created 15.03.17
  */
 public final class ZernikeMoments {
 

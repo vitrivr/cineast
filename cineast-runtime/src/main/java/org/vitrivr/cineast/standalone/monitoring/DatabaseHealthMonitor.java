@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
-/**
- * @author silvan on 19.11.18.
- */
+
 public class DatabaseHealthMonitor {
 
   private static boolean initalized = false;
@@ -39,7 +37,7 @@ public class DatabaseHealthMonitor {
         boolean ping = selector.ping();
         try {
           if (!ping) {
-            LOGGER.error("Connection issue, waiting for 1 minute");
+            LOGGER.trace("Connection issue, waiting for 1 minute");
             Thread.sleep(60_000);
           } else {
             long stop = System.currentTimeMillis();

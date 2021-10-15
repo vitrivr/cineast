@@ -40,7 +40,7 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
       throw new NullPointerException("distance cannot be null");
     }
     if (distance == ReadableQueryConfig.Distance.minkowski) {
-      throw new IllegalArgumentException("cannot instanciate minkowski distance without a norm");
+      throw new IllegalArgumentException("cannot instantiate minkowski distance without a norm");
     }
 
     switch (distance) {
@@ -90,7 +90,7 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
 
     if (distance == ReadableQueryConfig.Distance.minkowski) {
       if (!queryConfig.getNorm().isPresent()) {
-        throw new IllegalArgumentException("cannot instanciate minkowski distance without a norm");
+        throw new IllegalArgumentException("cannot instantiate minkowski distance without a norm");
       }
       if (queryConfig.getDistanceWeights().isPresent()) {
         return new WeightedMinkowskiDistance(queryConfig.getDistanceWeights().get(),

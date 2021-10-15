@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * WARNING: EXTREMELY SLOW
  * 
- * @author Luca Rossetto
- *
+  *
  */
 public class MedianImg {
 

@@ -3,9 +3,6 @@ package org.vitrivr.cineast.core.util.dsp.fft.windows;
 /**
  * Interface implemented by any windows function (e.g. used for FFT).
  *
- * @author rgasser
- * @version 1.0
- * @created 02.02.17
  */
 public interface WindowFunction {
     /**
