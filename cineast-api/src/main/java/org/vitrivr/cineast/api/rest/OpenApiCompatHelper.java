@@ -9,14 +9,12 @@ import io.javalin.plugin.openapi.jackson.JacksonToJsonMapper;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.core.jackson.ModelResolver;
-import io.swagger.v3.core.jackson.mixin.MediaTypeMixin;
 import io.swagger.v3.core.jackson.mixin.SchemaMixin;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.tags.Tag;
 import java.io.File;
@@ -65,8 +63,8 @@ public class OpenApiCompatHelper {
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
     mapper.addMixIn(Schema.class,
         SchemaMixin.class); // Makes Schema.exampleFlagSet being ignored by jackson
-    mapper.addMixIn(MediaType.class,
-        MediaTypeMixin.class); // Makes MediaType.exampleFlagSet being ignored by jackson
+//    mapper.addMixIn(MediaType.class,
+//        MediaTypeMixin.class); // Makes MediaType.exampleFlagSet being ignored by jackson
     return new OpenApiOptions(() -> getOpenApi(config))
         .path("/openapi-specs")
         .activateAnnotationScanningFor("org.vitrivr.cineast.api")

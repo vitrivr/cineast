@@ -118,3 +118,8 @@ task generateOpenApiSpecs(type: JavaExec) {
     args("${config}")
 }
 
+task generateOAS(type: Download){
+    /* This requires a locally running Cineast */
+    src 'http://localhost:4567/openapi-specs'
+    dest "${project.projectDir}/docs/openapi.json"
+}
