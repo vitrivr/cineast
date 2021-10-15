@@ -627,7 +627,7 @@
         "tags" : [ "Metadata" ],
         "summary" : "Find tag ids for the given id",
         "description" : "Find tag ids for the given id",
-        "operationId" : "findTagsById",
+        "operationId" : "findTagInformationById",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1229,19 +1229,19 @@
               "type" : "string"
             }
           },
-          "normIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "distanceWeightsIfEmpty" : {
+          "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
-          "distanceIfEmpty" : {
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
