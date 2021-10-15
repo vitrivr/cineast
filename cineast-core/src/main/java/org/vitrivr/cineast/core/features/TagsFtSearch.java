@@ -12,5 +12,4 @@ public class TagsFtSearch extends AbstractTextRetriever {
   public TagsFtSearch() {
     super(TagsFtSearch.TAGS_FT_TABLE_NAME);
   }
-
 }

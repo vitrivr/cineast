@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 
 import javax.sound.midi.*;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 16.04.17
- */
+
 public final class MidiUtil {
 
     private static final Logger LOGGER = LogManager.getLogger();

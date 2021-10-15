@@ -5,9 +5,6 @@ import org.vitrivr.cineast.core.data.Pair;
 /**
  * Some utility functions in the context of FFT and STFT.
  *
- * @author rgasser
- * @version 1.0
- * @created 04.02.17
  */
 public class FFTUtil {
 

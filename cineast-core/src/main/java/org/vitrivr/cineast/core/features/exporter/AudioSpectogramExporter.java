@@ -26,8 +26,6 @@ import java.util.function.Supplier;
  * Visualizes and exporst the power spectogram (time vs. frequency vs. power) of the provided
  * AudioSegment.
  *
- * @author rgasser
- * @version 1.1
  */
 public class AudioSpectogramExporter implements Extractor {
 

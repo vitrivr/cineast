@@ -3,9 +3,7 @@ package org.vitrivr.cineast.standalone.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author silvan on 25.01.18.
- */
+
 public final class MonitoringConfig {
 
   public boolean enablePrometheus = false;

@@ -6,7 +6,15 @@ Cineast is a multi-feature content-based multimedia retrieval engine. It is capa
 Cineast is written in Java and uses [CottontailDB](https://github.com/vitrivr/cottontaildb) as a storage backend.
 
 ## Building Cineast
-For setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki/Environment-Setup)
+Cineast can be built using [Gradle](https://gradle.org/). Building and running it is as easy as
+```
+$> git clone https://github.com/vitrivr/cineast.git
+$> cd cineast
+$> ./gradlew cineast-runtime:shadowJar
+$> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
+ ```
+
+For more setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki)
 
 ## Docker image
 

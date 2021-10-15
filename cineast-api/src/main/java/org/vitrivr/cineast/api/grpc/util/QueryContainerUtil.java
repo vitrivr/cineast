@@ -62,7 +62,6 @@ public class QueryContainerUtil {
 
     public static RelationalOperator relationalOperator(CineastGrpc.BooleanExpression.Operator operator) {
         switch (operator){
-
             case EQ: return RelationalOperator.EQ;
             case NEQ: return RelationalOperator.NEQ;
             case GEQ: return RelationalOperator.GEQ;
@@ -71,13 +70,12 @@ public class QueryContainerUtil {
             case LESS: return RelationalOperator.LESS;
             case BETWEEN: return RelationalOperator.BETWEEN;
             case LIKE: return RelationalOperator.LIKE;
-            case ILIKE: return RelationalOperator.ILIKE;
             case NLIKE: return RelationalOperator.NLIKE;
-            case RLIKE: return RelationalOperator.RLIKE;
             case ISNULL: return RelationalOperator.ISNULL;
             case ISNOTNULL: return RelationalOperator.ISNOTNULL;
             case IN: return RelationalOperator.IN;
             case UNRECOGNIZED: return null;
+            /* TODO: Support MATCH operator. */
         }
 
         return null;

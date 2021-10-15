@@ -20,9 +20,6 @@ import java.util.Map;
  * TODO #1: Create different Formatters
  * TODO #2: File rotation
  *
- * @author rgasser
- * @version 1.0
- * @created 26.04.17
  */
 public class BenchmarkWriter implements Runnable {
     /** LogManager instance used to log Benchmark results. */

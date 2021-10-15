@@ -13,9 +13,6 @@ import java.util.List;
  * [1] S. Pfeiffer, and C. Parker, and T. Vincent. 2005.
  *      OC Volume: Java speech recognition engine. 2005. [March 8th, 2017].
  *
- * @author rgasser
- * @version 1.0
- * @created 07.02.17
  */
 public class MFCC {
 

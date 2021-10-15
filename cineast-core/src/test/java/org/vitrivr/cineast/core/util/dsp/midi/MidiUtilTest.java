@@ -5,11 +5,7 @@ import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 17.04.17
- */
+
 public class MidiUtilTest {
     /**
      * Array holding reference pitches from MIDI 0 to MIDI 127. Code from

@@ -31,8 +31,7 @@ import java.util.Comparator;
  * This factory class generates {@link ByteData} objects either in memory or backed by a file cache based on a heuristic involving
  * the size of the allocated data chunks.
  *
- * @author Ralph Gasser
- * @version 1.1
+  * @version 1.1
  *
  * @see ByteData
  * @see InMemoryByteData

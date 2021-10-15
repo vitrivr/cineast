@@ -9,7 +9,6 @@ import org.vitrivr.cineast.standalone.config.Config;
  * So we don't clutter the {@link org.vitrivr.cineast.standalone.runtime.ExtractionTask} code.
  * Singleton where you can register an extraction time of features
  *
- * @author silvan on 25.01.18.
  */
 public class PrometheusExtractionTaskMonitor extends ImportTaskMonitor {
 

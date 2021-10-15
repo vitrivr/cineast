@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import org.tensorflow.Tensor;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TUint8;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -32,10 +31,8 @@ public class ConceptMasks extends AbstractFeatureModule {
 
   private static List<DeepLabLabel> linearize(DeepLabLabel[][] labels) {
     ArrayList<DeepLabLabel> list = new ArrayList<>(labels.length * labels[0].length);
-    for (int i = 0; i < labels.length; ++i) {
-      for (int j = 0; j < labels[0].length; ++j) {
-        list.add(labels[i][j]);
-      }
+    for (DeepLabLabel[] label : labels) {
+      list.addAll(Arrays.asList(label));
     }
     return list;
   }
@@ -49,8 +46,7 @@ public class ConceptMasks extends AbstractFeatureModule {
       return;
     }
 
-    Tensor<UInt8> inputTensor = DeepLab
-        .prepareImage(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
+    TUint8 inputTensor = DeepLab.prepareImage(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
 
     int[][] tmp = this.ade20k.processImage(inputTensor);
 
@@ -94,7 +90,7 @@ public class ConceptMasks extends AbstractFeatureModule {
 
 
     Optional<SemanticMap> optional = sc.getSemanticMap();
-    if (!optional.isPresent()){
+    if (!optional.isPresent()) {
       return Collections.emptyList();
     }
 

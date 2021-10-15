@@ -12,9 +12,6 @@ import java.util.Arrays;
  * [1] Klapuri, A. (2006). Multiple Fundamental Frequency Estimation by Summing Harmonic Amplitudes.
  *      Proceedings of the International Symposium/Conference on Music Information Retrieval (ISMIR), 216–221.
  *
- * @author rgasser
- * @version 1.0
- * @created 16.04.17
  */
 public class SpectralWhiteningFilter implements FrequencyDomainFilterInterface {
     /**

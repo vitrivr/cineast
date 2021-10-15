@@ -5,11 +5,9 @@ import static org.vitrivr.cineast.api.util.APIConstants.ID_QUALIFIER;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.result.TagIDsForElementQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -41,7 +39,7 @@ public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForEle
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
-          op.operationId("findTagsById");
+          op.operationId("findTagInformationById");
           op.description("Find tag ids for the given id");
           op.summary("Find tag ids for the given id");
           op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);

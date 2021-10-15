@@ -27,8 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Decodes STereoLithography (.stl) files and returns a Mesh representation. Requires JOML to work properly.
  *
- * @author rgasser
- * @version 1.§
  */
 public class STLMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */

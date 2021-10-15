@@ -13,9 +13,6 @@ import java.util.List;
  * audio-segment groups multiple such frames and the methods defined in this interface facilitate easy access to the
  * underlying data.
  *
- * @author rgasser
- * @version 1.0
- * @created 31.01.17
  */
 public interface AudioFrameProvider {
     /**

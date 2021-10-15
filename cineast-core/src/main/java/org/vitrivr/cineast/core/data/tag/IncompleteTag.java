@@ -11,6 +11,9 @@ public class IncompleteTag implements WeightedTag {
   private final String id, name, description;
   private final float weight;
 
+  /** only used in querying */
+  private TagPriority priority;
+
   public IncompleteTag(String id, String name, String description) {
     this(id, name, description, 1f);
   }
@@ -102,6 +105,16 @@ public class IncompleteTag implements WeightedTag {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+  }
+
+  @Override
+  public TagPriority getPriority() {
+    return this.priority;
+  }
+
+  @Override
+  public void setPriority(TagPriority priority) {
+    this.priority = priority;
   }
 
 }

@@ -31,8 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * A {@link Decoder} implementation that decodes audio using the ffmpeg library + the corresponding Java bindings.
  *
- * @author rgasser
- * @version 1.1
  */
 public class FFMpegAudioDecoder implements AudioDecoder {
 

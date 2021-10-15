@@ -14,9 +14,6 @@ import java.awt.image.BufferedImage;
  * - Free positioning of the camera in terms of either cartesian or polar coordinate
  * - Snapshot of the rendered image can be obtained at any time.
  *
- * @author rgasser
- * @version 1.0
- * @created 29.12.16
  */
 public interface Renderer {
     /**

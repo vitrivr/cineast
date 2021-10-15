@@ -22,17 +22,14 @@ public enum RelationalOperator {
     /** TRUE if A is between B and C */
     BETWEEN,
 
-    /** TRUE if string A matches string B. */
+    /** TRUE if string A matches string B (SQL LIKE syntax expected). */
     LIKE,
 
-    /** TRUE if string A matches string B (case-insensitive). */
-    ILIKE,
-
-    /** TRUE if string A does not match string B. */
+    /** TRUE if string A does not match string B (SQL LIKE syntax expected). */
     NLIKE,
 
-    /** */
-    RLIKE,
+    /** TRUE for fulltext match; Apache Lucene syntax expected. */
+    MATCH,
 
     /** TRUE if A is null. */
     ISNULL,

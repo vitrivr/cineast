@@ -19,11 +19,7 @@ import org.vitrivr.cineast.core.util.images.SURFHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 24.01.17
- */
+
 public abstract class SURF extends AbstractCodebookFeatureModule {
     private static final Logger LOGGER = LogManager.getLogger();
 

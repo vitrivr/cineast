@@ -15,11 +15,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 25.01.17
- */
+
 public class EXIFMetadataExtractor implements MetadataExtractor {
 
   /**

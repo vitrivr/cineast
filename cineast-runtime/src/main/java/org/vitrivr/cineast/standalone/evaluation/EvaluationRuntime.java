@@ -27,11 +27,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 05.05.17
- */
+
 public class
 EvaluationRuntime implements Callable {
 

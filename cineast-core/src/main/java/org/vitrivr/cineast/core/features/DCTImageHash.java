@@ -36,7 +36,6 @@ import java.util.List;
  *
  * Christoph Zauner. Implementation and benchmarking of perceptual image hash func- tions. Master’s thesis, University of Applied Sciences Hagenberg, Austria, 2010. Baris Coskun and Bulent Sankur. Robust video hash extraction. In Signal Processing Conference, 2004 12th European, pages 2295–2298. IEEE, 2004.
  *
- * @author silvan on 18.12.17.
  */
 public class DCTImageHash extends AbstractFeatureModule {
 

@@ -25,9 +25,6 @@ import java.util.List;
  * When implementing this class, you are expected to override the methods that represent the different stages
  * instead of implementing the getSimilar() methods.
  *
- * @author rgasser
- * @version 1.0
- * @created 25.04.17
  */
 public abstract class StagedFeatureModule extends AbstractFeatureModule {
 

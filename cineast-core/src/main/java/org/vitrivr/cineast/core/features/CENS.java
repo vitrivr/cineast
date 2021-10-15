@@ -32,9 +32,6 @@ import java.util.List;
  * [2] Kurth, F., & Müler, M. (2008). Efficient index-based audio matching.
  *      IEEE Transactions on Audio, Speech and Language Processing, 16(2), 382–395. http://doi.org/10.1109/TASL.2007.911552
  *
- * @author rgasser
- * @version 1.0
- * @created 16.02.17
  */
 public abstract class CENS extends StagedFeatureModule {
 

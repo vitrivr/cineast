@@ -12,9 +12,6 @@ import java.nio.file.Path;
  * - Two invocations of next() generate different ID's, unless path & type are identical for both invocations AND the class
  *   intends to generate ID's specific for the combination of these values.
  *
- * @author rgasser
- * @version 1.0
- * @created 23.01.17
  */
 public interface ObjectIdGenerator {
     /**

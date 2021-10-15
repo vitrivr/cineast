@@ -3,11 +3,7 @@ package org.vitrivr.cineast.core.data.segments;
 import org.vitrivr.cineast.core.data.m3d.*;
 import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 11.03.17
- */
+
 public class Model3DSegment implements SegmentContainer {
 
     /** Default Voxelizer instance used for Mesh voxelization. */

@@ -19,8 +19,6 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
 /**
  * A CLI command that can be used to setup all the database entities required by Cineast.
  *
- * @author Ralph Gasser
- * @version 1.0
  */
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
 public class DatabaseSetupCommand implements Runnable {

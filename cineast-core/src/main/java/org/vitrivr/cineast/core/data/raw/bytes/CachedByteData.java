@@ -25,8 +25,7 @@ import java.nio.file.StandardOpenOption;
  * A temporary cache file is created upon constructing the {@link CachedByteData} object and holds its content in case the in-memory
  * representation gets garbage collected.
  *
- * @author Ralph Gasser
- * @version 1.1
+  * @version 1.1
  *
  * @see ByteData
  * @see CacheableData

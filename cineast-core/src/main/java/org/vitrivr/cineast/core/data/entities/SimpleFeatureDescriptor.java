@@ -2,11 +2,7 @@ package org.vitrivr.cineast.core.data.entities;
 
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 28.01.17
- */
+
 public class SimpleFeatureDescriptor {
     /** */
     public final String segmentId;

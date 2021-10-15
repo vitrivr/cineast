@@ -1,9 +1,14 @@
 package org.vitrivr.cineast.api.messages.abstracts;
 
-import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
-
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
+/**
+ * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
+ */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
 
   private List<T> content;
@@ -12,6 +17,13 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
 
   private final String queryId;
 
+  /**
+   * Constructor for the AbstractQueryResultMessage object.
+   *
+   * @param queryId     The query ID of the query corresponding to this result.
+   * @param contentType Content type of the result.
+   * @param content     Result of the query.
+   */
   public AbstractQueryResultMessage(String queryId, Class<T> contentType, List<T> content) {
     this.queryId = queryId;
     this.contentType = contentType;
@@ -44,9 +56,6 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
 
   @Override
   public String toString() {
-    return "AbstractQueryResultMessage{" +
-        "content=" + content +
-        ", queryId='" + queryId + '\'' +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

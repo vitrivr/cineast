@@ -12,10 +12,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 
-/**
- * @author rgasser
- * @created 10.01.17
- */
+
 public class MediaObjectDescriptor implements ExistenceCheck {
 
   /**

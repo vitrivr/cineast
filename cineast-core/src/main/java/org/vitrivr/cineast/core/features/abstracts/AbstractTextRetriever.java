@@ -161,7 +161,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     ArrayList<String> matches = new ArrayList<>();
 
     while (m.find()) {
-      String match = m.group(1).trim();
+      final String match = m.group(1).trim();
       if (!match.isEmpty()) {
         matches.add(enrichQueryTerm(match));
       }

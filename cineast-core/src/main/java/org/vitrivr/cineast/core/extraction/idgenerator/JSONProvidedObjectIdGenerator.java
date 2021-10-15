@@ -15,8 +15,6 @@ import java.util.Map;
  * based on the filename. It is up to the author of such a list to ensure that there are enough ID's for the
  * files in a run AND that those ID's are unique.
  *
- * @author rgasser
- * @version 1.0.1
  */
 public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
 

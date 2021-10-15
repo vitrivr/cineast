@@ -5,11 +5,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 25.01.17
- */
+
 public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<MediaObjectMetadataDescriptor> {
 
     /**

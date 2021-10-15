@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
  * [1] Klapuri, A. P. (2003). Multiple Fundamental Frequency Estimation Based on Harmonicity and Spectral Smoothness.
  *      IEEE Transactions on Speech and Audio Processing, 11(6), 804–816. http://doi.org/10.1109/TSA.2003.815516
  *
- * @author rgasser
- * @version 1.0
- * @created 16.04.17
  */
 public class SpectralWhiteningFilter implements SpectrumFilterInterface{
 

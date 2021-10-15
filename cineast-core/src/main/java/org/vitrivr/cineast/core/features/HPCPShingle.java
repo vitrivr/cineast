@@ -29,9 +29,6 @@ import java.util.stream.Collectors;
  * [1] Casey, M., Rhodes, C., & Slaney, M. (2008). Analysis of minimum distances in high-dimensional musical spaces.
  *  IEEE Transactions on Audio, Speech and Language Processing, 16(5), 1015–1028. http://doi.org/10.1109/TASL.2008.925883
  *
- * @author rgasser
- * @version 1.0
- * @created 26.02.17
  */
 public abstract class HPCPShingle extends StagedFeatureModule {
 
