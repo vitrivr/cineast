@@ -327,7 +327,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       case VECTOR:
         return Type.FLOAT_VECTOR;
       case BITSET:
-        return Type.BOOL_VECTOR;
+        return Type.BOOLEAN_VECTOR;
       case FLOAT:
         return Type.FLOAT;
       /*case GEOGRAPHY:
