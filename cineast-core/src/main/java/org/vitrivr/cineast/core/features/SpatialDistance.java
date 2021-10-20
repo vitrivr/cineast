@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
@@ -30,14 +33,21 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
   public static final String METADATA_DOMAIN = "LOCATION";
   public static final String FEATURE_NAME = "features_SpatialDistance";
 
-  // TODO: Find most suitable maximum distance, maybe even as a property to the feature
-  private static final double HALF_SIMILARITY_DISTANCE = 1000.0/3.0; // distance in meters where similarity equals 50%
-  private static final CorrespondenceFunction CORRESPONDENCE =
-      CorrespondenceFunction.hyperbolic(HALF_SIMILARITY_DISTANCE);
+
+  private final double halfeSimilarityDistance; // distance in meters where similarity equals 50% (default: 1000/3
+  private final CorrespondenceFunction correspondenceFunction;
+
+  public SpatialDistance(){
+    super(2);
+    halfeSimilarityDistance = 1000.0/3.0;
+    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
+  }
 
   // Empty public constructor necessary for instantiation through reflection
-  public SpatialDistance() {
-    super(2);
+  public SpatialDistance(LinkedHashMap<String,String> properties) {
+    super(2, properties);
+    halfeSimilarityDistance = Double.parseDouble(properties.getOrDefault("halfSimilarityDistance", String.valueOf(1000.0/3.0)));
+    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
   }
 
   @Override
@@ -57,7 +67,7 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
 
   @Override
   public CorrespondenceFunction defaultCorrespondence() {
-    return CORRESPONDENCE;
+    return correspondenceFunction;
   }
 
   @Override
