@@ -102,7 +102,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
         compareTo of ScoredSegment that allows to classify segments with the same containerId but
         higher segmentId as being higher.
          */
-        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStartAbs() < lastHighestSegment.getEndAbs() || candidate.getSequenceNumber() < lastHighestSegment.getSequenceNumber()) {
+        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStart() <= lastHighestSegment.getEnd() || candidate.getSequenceNumber() <= lastHighestSegment.getSequenceNumber()) {
           continue;
         }
         /*
@@ -115,6 +115,8 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
            * */
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
+          // TODO after import fixes by Loris, something like this:
+          // (candidate.getEndAbs()==0 ? candidate.getEnd()-candidate.getStart()<=this.maxLength : candidate.getEndAbs()-candidate.getStartAbs()<=this.maxLength)
           if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) && ((candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) || candidate.getEndAbs() == 0)) {
             bestPath = candidatePath;
           }
@@ -126,6 +128,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          the queue to be reevaluated in the next round as a longer path that is potentially
          better.
         */
+        //TODO after import fixes by Loris, path for lsc which should simply use start() and end()
         if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength || candidate.getEndAbs() == 0) {
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
