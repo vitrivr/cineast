@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * structure defined by this classes and its fields.
  *
  */
-public final class IngestConfig implements ExtractionContextProvider {
+public class IngestConfig implements ExtractionContextProvider {
     /** MediaType for the Extraction run. */
     private final MediaType type;
 

@@ -86,4 +86,8 @@ public abstract class AbstractTemporalScoringAlgorithm {
     return segments.stream().map(segmentId -> segmentMap.get(segmentId).getStartabs()).collect(Collectors.toList());
   }
 
+  protected List<Integer> getSequenceNumbers(List<String> segments) {
+    return segments.stream().map(segmentId -> segmentMap.get(segmentId).getSequenceNumber()).collect(Collectors.toList());
+  }
+
 }
