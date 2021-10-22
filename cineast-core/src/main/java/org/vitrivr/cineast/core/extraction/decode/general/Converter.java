@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.extraction.decode.general;
 
 
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -14,7 +14,7 @@ public interface Converter {
      * @param path Path the file that should be converted.
      * @return QueryContainer for the specified file.
      */
-    QueryContainer convert(Path path);
+    AbstractQueryTermContainer convert(Path path);
 
     /**
      * Returns a set of the mime/types of supported files.
