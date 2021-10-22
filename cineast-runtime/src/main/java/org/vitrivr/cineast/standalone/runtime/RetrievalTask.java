@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.monitoring.RetrievalTaskMonitor;
@@ -14,20 +14,20 @@ import org.vitrivr.cineast.standalone.monitoring.RetrievalTaskMonitor;
 public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
   private final Retriever retriever;
-  private final QueryContainer query;
+  private final AbstractQueryTermContainer query;
   private final String segmentId;
   private static final Logger LOGGER = LogManager.getLogger();
   private final ReadableQueryConfig config;
 
 
-  public RetrievalTask(Retriever retriever, QueryContainer query, ReadableQueryConfig qc) {
+  public RetrievalTask(Retriever retriever, AbstractQueryTermContainer query, ReadableQueryConfig qc) {
     this.retriever = retriever;
     this.query = query;
     this.config = qc;
     this.segmentId = null;
   }
 
-  public RetrievalTask(Retriever retriever, QueryContainer query) {
+  public RetrievalTask(Retriever retriever, AbstractQueryTermContainer query) {
     this(retriever, query, null);
   }
 
@@ -74,7 +74,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     return retriever;
   }
 
-  public QueryContainer getQuery() {
+  public AbstractQueryTermContainer getQuery() {
     return query;
   }
 

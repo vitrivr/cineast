@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImageQueryContainer extends QueryContainer {
+public class ImageQueryTermContainer extends AbstractQueryTermContainer {
 
 	private MultiImage img;
 	private VideoFrame videoFrame;
@@ -24,28 +24,28 @@ public class ImageQueryContainer extends QueryContainer {
 	private float relativeStart = 0, relativeEnd = 0;
 
 	/**
-	 * Constructs an {@link ImageQueryContainer} from base 64 encoded image data.
+	 * Constructs an {@link ImageQueryTermContainer} from base 64 encoded image data.
 	 *
 	 * @param data The image data that should be converted.
 	 * @param factory The {@link CachedDataFactory} that should be used to generate the {@link MultiImage}.
 	 */
-	public ImageQueryContainer(String data, CachedDataFactory factory) {
+	public ImageQueryTermContainer(String data, CachedDataFactory factory) {
 		this(ImageParser.dataURLtoBufferedImage(data), factory);
 	}
 
-	public ImageQueryContainer(BufferedImage image, CachedDataFactory factory) {
+	public ImageQueryTermContainer(BufferedImage image, CachedDataFactory factory) {
 		this.img = factory.newInMemoryMultiImage(image);
 	}
 
-	public ImageQueryContainer(BufferedImage image) {
+	public ImageQueryTermContainer(BufferedImage image) {
 		this(image, CachedDataFactory.getDefault());
 	}
 
-	public ImageQueryContainer(String data){
+	public ImageQueryTermContainer(String data){
 		this(data, CachedDataFactory.getDefault());
 	}
 
-	public ImageQueryContainer(MultiImage img){
+	public ImageQueryTermContainer(MultiImage img){
 		this.img = img;
 	}
 	

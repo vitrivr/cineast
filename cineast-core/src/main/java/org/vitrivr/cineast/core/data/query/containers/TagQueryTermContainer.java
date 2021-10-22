@@ -12,19 +12,19 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
 
 
-public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQueryTerm
+public class TagQueryTermContainer extends AbstractQueryTermContainer { // vitrivr pendant: TagQueryTerm
 
   /**
-   * List of {@link Tag}s contained in this {@link TagQueryContainer}.
+   * List of {@link Tag}s contained in this {@link TagQueryTermContainer}.
    */
   private final List<Tag> tags;
 
   /**
-   * Constructs an {@link TagQueryContainer} from base 64 encoded JSON data.
+   * Constructs an {@link TagQueryTermContainer} from base 64 encoded JSON data.
    *
    * @param data The tag data that should be converted.
    */
-  public TagQueryContainer(String data) {
+  public TagQueryTermContainer(String data) {
     final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
     final String converted = DataURLParser.dataURLtoString(data, "application/json");
     final WeightedTag[] tags = jsonProvider.toObject(converted, IncompleteTag[].class);
@@ -35,7 +35,7 @@ public class TagQueryContainer extends QueryContainer { // vitrivr pendant: TagQ
     }
   }
 
-  public TagQueryContainer(Collection<Tag> tags) {
+  public TagQueryTermContainer(Collection<Tag> tags) {
     ArrayList<Tag> tmp = new ArrayList<>(tags != null ? tags.size() : 0);
     if (tags != null) {
       tmp.addAll(tags);
