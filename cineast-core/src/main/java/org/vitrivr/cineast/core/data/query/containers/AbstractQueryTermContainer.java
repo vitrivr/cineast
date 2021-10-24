@@ -7,10 +7,16 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-public abstract class QueryContainer implements SegmentContainer {
+/**
+ * An {@link AbstractQueryTermContainer} is the implementation of a {@link SegmentContainer} which is used in the online-phase (during retrieval).
+ *
+ * On a system perspective, it is generally created based on an API request from a Query Term (e.g. a color sketch, a text query).
+ */
+public abstract class AbstractQueryTermContainer implements SegmentContainer {
 
   private float weight = 1f;
   private String id = null, superId = null;
+
   private int containerId = -1;
 
   /**
@@ -29,14 +35,6 @@ public abstract class QueryContainer implements SegmentContainer {
       return;
     }
     this.weight = MathHelper.limit(weight, -1f, 1f);
-  }
-
-  public int getContainerId() {
-    return containerId;
-  }
-
-  public void setContainerId(int containerId) {
-    this.containerId = containerId;
   }
 
   /**

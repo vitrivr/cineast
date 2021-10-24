@@ -8,30 +8,30 @@ import org.vitrivr.cineast.core.data.GpsData;
 /**
  * A query based on similarity to an {@link Instant} in time.
  */
-public class InstantQueryContainer extends QueryContainer {
+public class InstantQueryTermContainer extends AbstractQueryTermContainer {
 
   private final Instant instant;
 
   /**
-   * Constructs an {@link InstantQueryContainer} from string data
+   * Constructs an {@link InstantQueryTermContainer} from string data
    *
    * @param data The string data that should be converted.
    */
-  public InstantQueryContainer(String data) {
+  public InstantQueryTermContainer(String data) {
     this(GpsData.parseInstant(data).orElseThrow(() -> new IllegalArgumentException("The provided JSON data did not contain valid GPS information.")));
   }
 
   /**
-   * Constructs an {@link InstantQueryContainer} from an {@link Instant}
+   * Constructs an {@link InstantQueryTermContainer} from an {@link Instant}
    *
-   * @param instant {@link Instant} from which to construct the {@link InstantQueryContainer}
+   * @param instant {@link Instant} from which to construct the {@link InstantQueryTermContainer}
    */
-  public InstantQueryContainer(Instant instant) {
+  public InstantQueryTermContainer(Instant instant) {
     this.instant = instant;
   }
 
-  public static InstantQueryContainer of(Instant instant) {
-    return new InstantQueryContainer(instant);
+  public static InstantQueryTermContainer of(Instant instant) {
+    return new InstantQueryTermContainer(instant);
   }
 
   @Override

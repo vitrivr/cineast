@@ -21,7 +21,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.temporal.TemporalScoring;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -100,13 +100,12 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             LOGGER.warn("QueryTerm was null for stage {}", stage);
             return;
           }
-          QueryContainer qc = qt.toContainer();
+          AbstractQueryTermContainer qc = qt.toContainer();
           if (qc == null) {
             LOGGER.warn(
                 "Likely an empty query, as it could not be converted to a query container. Ignoring it");
             return;
           }
-          qc.setContainerId(containerIdx);
 
           /* We retrieve the results for each category of a QueryTerm independently. The relevant ids will not yet be changed after this call as we are still in the same stage. */
           for (String category : qt.getCategories()) {
@@ -155,7 +154,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               sentSegmentIds.addAll(limitedSegmentIds);
               List<String> limitedObjectIds = this.submitSegmentAndObjectInformation(session, uuid, limitedSegmentIds);
               sentObjectIds.addAll(limitedObjectIds);
-              futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, qc.getContainerId(), limitedResults));
+              futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, containerIdx, limitedResults));
               List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
               metadataRetrievalThreads.addAll(_threads);
             }
