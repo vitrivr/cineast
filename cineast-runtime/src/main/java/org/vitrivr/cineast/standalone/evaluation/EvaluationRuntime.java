@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
@@ -130,7 +130,7 @@ EvaluationRuntime implements Callable {
             }
 
             /* Try to create a QueryContainer. If this fails, the file is skipped. */
-            final QueryContainer container = converter.convert(path);
+            final AbstractQueryTermContainer container = converter.convert(path);
             if (container == null) {
                 LOGGER.warn("Failed to convert the file {}. File is being skipped...", path.getFileName());
                 this.error += 1;

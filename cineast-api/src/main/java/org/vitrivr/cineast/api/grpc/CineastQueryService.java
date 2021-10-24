@@ -2,7 +2,6 @@ package org.vitrivr.cineast.api.grpc;
 
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.StopWatch;
@@ -13,7 +12,6 @@ import org.vitrivr.cineast.api.grpc.data.QueryTerm;
 import org.vitrivr.cineast.api.grpc.util.MediaObjectUtil;
 import org.vitrivr.cineast.api.grpc.util.MediaSegmentUtil;
 import org.vitrivr.cineast.api.grpc.util.QueryContainerUtil;
-import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.util.QueryUtil;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -22,7 +20,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
@@ -190,12 +188,11 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                             LOGGER.warn("QueryTerm was null for stage {}", stage);
                             return;
                         }
-                        QueryContainer qc = qt.getContainer();
+                        AbstractQueryTermContainer qc = qt.getContainer();
                         if (qc == null) {
                             LOGGER.warn("Likely an empty query, as it could not be converted to a query container. Ignoring it");
                             return;
                         }
-                        qc.setContainerId(finalContainerIdx);
 
                         List<Thread> categoryThreads = new ArrayList<>();
 

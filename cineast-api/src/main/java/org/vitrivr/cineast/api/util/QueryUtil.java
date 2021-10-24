@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -32,9 +32,9 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 //TODO maybe this should be moved to core?
 public class QueryUtil {
 
-  public static HashMap<String, ArrayList<QueryContainer>> groupComponentsByCategory(
+  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupComponentsByCategory(
       List<QueryComponent> queryComponents) {
-    HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
     for (QueryComponent component : queryComponents) {
       for (QueryTerm term : component.getTerms()) {
         if (term.getCategories() == null) {
@@ -51,9 +51,9 @@ public class QueryUtil {
     return categoryMap;
   }
 
-  public static HashMap<String, ArrayList<Pair<QueryContainer, ReadableQueryConfig>>> groupTermsByCategory(
+  public static HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> groupTermsByCategory(
       List<org.vitrivr.cineast.api.grpc.data.QueryTerm> terms) {
-    HashMap<String, ArrayList<Pair<QueryContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
+    HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
     for (org.vitrivr.cineast.api.grpc.data.QueryTerm term : terms) {
       if (term.getCategories().isEmpty()) {
         continue;
@@ -71,15 +71,15 @@ public class QueryUtil {
 
   public static List<StringDoublePair> retrieveCategory(
       ContinuousRetrievalLogic continuousRetrievalLogic,
-      List<Pair<QueryContainer, ReadableQueryConfig>> queryContainers, String category) {
+      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
-    for (Pair<QueryContainer, ReadableQueryConfig> pair : queryContainers) {
+    for (Pair<AbstractQueryTermContainer, ReadableQueryConfig> pair : queryContainers) {
 
       if (pair == null) {
         continue;
       }
 
-      QueryContainer qc = pair.first;
+      AbstractQueryTermContainer qc = pair.first;
       ReadableQueryConfig qconf = pair.second;
 
       float weight = MathHelper.limit(qc.getWeight(), -1f, 1f);
@@ -122,15 +122,15 @@ public class QueryUtil {
   }
 
   public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic,
-      QueryContainer queryContainer, ReadableQueryConfig config, String category) {
-    float weight = MathHelper.limit(queryContainer.getWeight(), -1f, 1f);
+      AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
+    float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
 
     List<SegmentScoreElement> scoreResults;
-    if (queryContainer.hasId()) {
-      scoreResults = continuousRetrievalLogic.retrieve(queryContainer.getId(), category, config);
+    if (queryTermContainer.hasId()) {
+      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer.getId(), category, config);
     } else {
-      scoreResults = continuousRetrievalLogic.retrieve(queryContainer, category, config);
+      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer, category, config);
     }
 
     for (SegmentScoreElement element : scoreResults) {
