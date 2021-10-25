@@ -35,8 +35,8 @@ public class QueryContainerUtil {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static AudioQueryContainer audioQueryContainer(CineastGrpc.AudioQueryContainer container) {
-        return new AudioQueryContainer(container.getAudioFramesList().stream().map(QueryContainerUtil::audioFrame).collect(Collectors.toList()));
+    public static AudioQueryTermContainer audioQueryContainer(CineastGrpc.AudioQueryContainer container) {
+        return new AudioQueryTermContainer(container.getAudioFramesList().stream().map(QueryContainerUtil::audioFrame).collect(Collectors.toList()));
     }
 
     public static AudioFrame audioFrame(CineastGrpc.AudioFrame frame) {
@@ -44,9 +44,9 @@ public class QueryContainerUtil {
         return new AudioFrame(frame.getIdx(), frame.getTimestamp(), frame.getData().toByteArray(), descriptor);
     }
 
-    public static BooleanQueryContainer booleanQueryContainer(CineastGrpc.BooleanQueryContainer container) {
+    public static BooleanQueryTermContainer booleanQueryContainer(CineastGrpc.BooleanQueryContainer container) {
 
-        return new BooleanQueryContainer(
+        return new BooleanQueryTermContainer(
         container.getExpressionsList().stream().map(QueryContainerUtil::booleanExpression).collect(Collectors.toList())
         );
 
@@ -94,13 +94,13 @@ public class QueryContainerUtil {
         return new NothingProvider();
     }
 
-    public static IdQueryContainer idQueryContainer(CineastGrpc.IdQueryContainer container) {
-        return new IdQueryContainer(container.getSegmentId().getId());
+    public static IdQueryTermContainer idQueryContainer(CineastGrpc.IdQueryContainer container) {
+        return new IdQueryTermContainer(container.getSegmentId().getId());
     }
 
-    public static ImageQueryContainer imageQueryContainer(CineastGrpc.ImageQueryContainer container) {
+    public static ImageQueryTermContainer imageQueryContainer(CineastGrpc.ImageQueryContainer container) {
         try {
-            return new ImageQueryContainer(
+            return new ImageQueryTermContainer(
             ImageIO.read(new ByteArrayInputStream(container.getImage().toByteArray()))
             );
         } catch (IOException e) {
@@ -109,21 +109,21 @@ public class QueryContainerUtil {
         return null;
     }
 
-    public static InstantQueryContainer instantQueryContainer(CineastGrpc.InstantQueryContainer container) {
-        return new InstantQueryContainer(container.getInstant());
+    public static InstantQueryTermContainer instantQueryContainer(CineastGrpc.InstantQueryContainer container) {
+        return new InstantQueryTermContainer(container.getInstant());
     }
 
-    public static LocationQueryContainer locationQueryContainer(CineastGrpc.LocationQueryContainer container) {
-        return new LocationQueryContainer(Location.of(container.getLongitude(), container.getLatitude()));
+    public static LocationQueryTermContainer locationQueryContainer(CineastGrpc.LocationQueryContainer container) {
+        return new LocationQueryTermContainer(Location.of(container.getLongitude(), container.getLatitude()));
     }
 
-    public static ModelQueryContainer modelQueryContainer(CineastGrpc.ModelQueryContainer container) {
+    public static ModelQueryTermContainer modelQueryContainer(CineastGrpc.ModelQueryContainer container) {
         //TODO figure out better mesh representation
         return null;
     }
 
-    public static MotionQueryContainer motionQueryContainer(CineastGrpc.MotionQueryContainer container) {
-        MotionQueryContainer motionQueryContainer = new MotionQueryContainer();
+    public static MotionQueryTermContainer motionQueryContainer(CineastGrpc.MotionQueryContainer container) {
+        MotionQueryTermContainer motionQueryContainer = new MotionQueryTermContainer();
         container.getBackgroundPathList().stream().forEach(path -> motionQueryContainer.addBgPath(motionPath(path)));
         container.getForegroundPathList().stream().forEach(path -> motionQueryContainer.addPath(motionPath(path)));
         return motionQueryContainer;
@@ -139,9 +139,9 @@ public class QueryContainerUtil {
         return new Point2D_F32(point.getX(), point.getY());
     }
 
-    public static SemanticMapQueryContainer semanticMapQueryContainer(CineastGrpc.SemanticMapQueryContainer container) {
+    public static SemanticMapQueryTermContainer semanticMapQueryContainer(CineastGrpc.SemanticMapQueryContainer container) {
         try {
-            return new SemanticMapQueryContainer(new SemanticMap(
+            return new SemanticMapQueryTermContainer(new SemanticMap(
                     ImageIO.read(new ByteArrayInputStream(container.getImage().toByteArray())),
                     container.getConceptsMap())
             );
@@ -151,16 +151,16 @@ public class QueryContainerUtil {
         return null;
     }
 
-    public static TagQueryContainer tagQueryContainer(CineastGrpc.TagQueryContainer container) {
+    public static TagQueryTermContainer tagQueryContainer(CineastGrpc.TagQueryContainer container) {
         return null; //TODO do we even still need that one?
     }
 
-    public static TextQueryContainer textQueryContainer(CineastGrpc.TextQueryContainer container) {
-        return new TextQueryContainer(container.getText());
+    public static TextQueryTermContainer textQueryContainer(CineastGrpc.TextQueryContainer container) {
+        return new TextQueryTermContainer(container.getText());
     }
 
 
-    public static QueryContainer queryTermContainer(CineastGrpc.QueryTerm term) {
+    public static AbstractQueryTermContainer queryTermContainer(CineastGrpc.QueryTerm term) {
         switch(term.getContainerCase()){
 
             case AUDIOQUERYCONTAINER: return audioQueryContainer(term.getAudioQueryContainer());

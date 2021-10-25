@@ -10,30 +10,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 //FIXME integer in pair is never used
-public class MotionQueryContainer extends QueryContainer {
+public class MotionQueryTermContainer extends AbstractQueryTermContainer {
 
     private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
     private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 
-    public MotionQueryContainer(){
+    public MotionQueryTermContainer(){
         //empty container
     }
 
     /**
-     * Constructs an {@link MotionQueryContainer} from base 64 encoded JSON data.
+     * Constructs an {@link MotionQueryTermContainer} from base 64 encoded JSON data.
      *
      * @param data The 3D model data that should be converted.
      */
-    public MotionQueryContainer(String data) {
+    public MotionQueryTermContainer(String data) {
         this(DataURLParser.dataURLtoJsonNode(data).orElseThrow(() -> new IllegalArgumentException("Failed to parse the provided motion data.")));
     }
 
     /**
-     * Constructs an {@link MotionQueryContainer} from a JsonNode object.
+     * Constructs an {@link MotionQueryTermContainer} from a JsonNode object.
      *
      * @param jsonNode The JsonNode representing the motion data.
      */
-    public MotionQueryContainer(JsonNode jsonNode) {
+    public MotionQueryTermContainer(JsonNode jsonNode) {
         final JsonNode foreground = jsonNode.get("foreground");
         ArrayList<LinkedList<Point2D_F32>> list = nodeToList(foreground);
         for (LinkedList<Point2D_F32> path : list) {
@@ -65,8 +65,8 @@ public class MotionQueryContainer extends QueryContainer {
         this.bgPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
     }
 
-    public static QueryContainer fromJson(JsonNode jsonNode) {
-        return new MotionQueryContainer(jsonNode);
+    public static AbstractQueryTermContainer fromJson(JsonNode jsonNode) {
+        return new MotionQueryTermContainer(jsonNode);
     }
 
     private static ArrayList<LinkedList<Point2D_F32>> nodeToList(JsonNode jsonNode) {

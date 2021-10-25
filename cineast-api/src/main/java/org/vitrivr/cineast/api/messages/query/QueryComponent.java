@@ -10,14 +10,14 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 /**
- * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link QueryContainer}s are created out of it.
+ * The wording is suboptimal. A {@link QueryComponent} has only one containerID, but multiple {@link AbstractQueryTermContainer}s are created out of it.
  * <p>
  * These all have the {@link QueryComponent#containerId} of their parent.
  *
- * @deprecated use {@link TemporalQuery} instead
+ * @deprecated use {@link TemporalQuery} instead, which uses {@link StagedSimilarityQuery} which contains {@link QueryStage} which in turn contains {@link QueryTerm}
  */
 @Deprecated
 public class QueryComponent {
@@ -45,69 +45,6 @@ public class QueryComponent {
 
   public List<QueryTerm> getTerms() {
     return this.terms;
-  }
-
-  /**
-   * Converts the provided collection of QueryComponent objects to a map that maps feature categories defined in the query-terms to @{@link QueryContainer} derived from the {@link QueryTerm}.
-   *
-   * @return Category map.
-   */
-  public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(Collection<QueryComponent> components) {
-    final HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
-    if (components.isEmpty()) {
-      LOGGER.warn("Empty components collection, returning empty map");
-      return categoryMap;
-    }
-    for (QueryComponent component : components) {
-      if (component.getTerms().isEmpty()) {
-        LOGGER.warn("No terms for component {}", component);
-        continue;
-      }
-      for (QueryTerm term : component.getTerms()) {
-        if (term.getCategories().isEmpty()) {
-          LOGGER.warn("No categories for term {}", term);
-        }
-        for (String category : term.getCategories()) {
-          if (!categoryMap.containsKey(category)) {
-            categoryMap.put(category, new ArrayList<>());
-          }
-          final QueryContainer container = term.toContainer();
-          if (container != null) {
-            container.setContainerId(component.containerId);
-            categoryMap.get(category).add(container);
-          } else {
-            LOGGER.warn("Null container generated for term {}", term);
-          }
-        }
-      }
-    }
-    return categoryMap;
-  }
-
-  /**
-   * Converts the provided collection of {@link QueryComponent} object to a map of {@link QueryContainer} and their categories.
-   *
-   * @return A map of querycontainers with their associated categories
-   */
-  public static HashMap<QueryContainer, List<String>> toContainerMap(Collection<QueryComponent> components) {
-    final HashMap<QueryContainer, List<String>> map = new HashMap<>();
-    if (components.isEmpty()) {
-      LOGGER.warn("Empty components collection, returning empty list of containers");
-      return map;
-    }
-    for (QueryComponent component : components) {
-      for (QueryTerm qt : component.getTerms()) {
-        if (qt == null) {
-          /* FIXME in rare instances, it is possible to have null as query component*/
-          LOGGER.warn("QueryTerm was null for component {}", component);
-          continue;
-        }
-        QueryContainer qc = qt.toContainer();
-        qc.setContainerId(component.containerId);
-        map.put(qc, qt.getCategories());
-      }
-    }
-    return map;
   }
 
   @Override

@@ -4,14 +4,10 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import org.vitrivr.cineast.core.data.query.containers.TagQueryContainer;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
 import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 @Command(name = "retrieve-tags", description = "Retrieves objects from the database using text as query input.")
@@ -27,7 +23,7 @@ public class TagRetrievalCommand implements Runnable {
 
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
-    TagQueryContainer qc = new TagQueryContainer(data);
+    TagQueryTermContainer qc = new TagQueryTermContainer(data);
     List<Retriever> retrievers = new ArrayList<>();
     retrievers.add(new SegmentTags());
 

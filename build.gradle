@@ -86,7 +86,7 @@ idea {
 
 task getExternalFiles {
     doLast {
-        def fileList = new File("externalFiles.csv")
+        def fileList = rootProject.file("externalFiles.csv")
         fileList.eachLine { String line ->
             def split = line.split(",")
             def destination = split[1]
