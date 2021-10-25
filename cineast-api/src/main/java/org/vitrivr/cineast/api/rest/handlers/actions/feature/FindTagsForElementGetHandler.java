@@ -39,7 +39,7 @@ public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForEle
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
-          op.operationId("findTagsById");
+          op.operationId("findTagInformationById");
           op.description("Find tag ids for the given id");
           op.summary("Find tag ids for the given id");
           op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);
