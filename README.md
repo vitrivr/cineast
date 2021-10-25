@@ -1,4 +1,8 @@
-[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=open-api-v2)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/multi-module-openapi-support/docs/swagger.json)
+[![vitrivr - cineast](https://img.shields.io/static/v1?label=vitrivr&message=cineast&color=blue&logo=github)](https://github.com/vitrivr/cineast)
+[![GitHub release](https://img.shields.io/github/release/vitrivr/cineast?include_prereleases=&sort=semver&color=2ea44f)](https://github.com/vitrivr/cineast/releases/)
+[![License](https://img.shields.io/badge/License-MIT-blueviolet)](#license)
+[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Release))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
+[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Dev))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
 [![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=master)](https://travis-ci.org/vitrivr/cineast)
 
 # Cineast
