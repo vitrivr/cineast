@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 
 public class FindObjectMetadataByKeyPostHandler implements ParsingPostRestHandler<IdList, MediaObjectMetadataQueryResult> {
 
-  public static final String ROUTE = "find/metadata/with/:" + KEY_NAME;
+  public static final String ROUTE = "find/metadata/with/{" + KEY_NAME+"}";
 
   @Override
   public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
