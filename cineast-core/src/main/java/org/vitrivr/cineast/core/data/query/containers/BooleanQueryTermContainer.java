@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class BooleanQueryContainer extends QueryContainer {
+public class BooleanQueryTermContainer extends AbstractQueryTermContainer {
 
   private static final String ATTRIBUTE_FIELD_NAME = "attribute";
   private static final String OPERATOR_FIELD_NAME = "operator";
@@ -23,15 +23,15 @@ public class BooleanQueryContainer extends QueryContainer {
 
   private ArrayList<BooleanExpression> expressions = new ArrayList<>();
 
-  public BooleanQueryContainer(Collection<BooleanExpression> expressions) {
+  public BooleanQueryTermContainer(Collection<BooleanExpression> expressions) {
     this.expressions.addAll(expressions);
   }
 
-  public BooleanQueryContainer(String data) {
+  public BooleanQueryTermContainer(String data) {
     this(DataURLParser.dataURLtoJsonNode(data).orElseThrow(() -> new IllegalArgumentException("Failed to parse the provided Boolean expression data.")));
   }
 
-  public BooleanQueryContainer(JsonNode json) {
+  public BooleanQueryTermContainer(JsonNode json) {
     if (!json.isArray()) {
       throw new IllegalArgumentException("Boolean expression data is not a list");
     }

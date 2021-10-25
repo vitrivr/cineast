@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.api.grpc.data;
 
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,19 +9,19 @@ import java.util.List;
 
 public class QueryTerm {
 
-    private final QueryContainer container;
+    private final AbstractQueryTermContainer container;
     private final ReadableQueryConfig queryConfig;
     private final float weight;
     private final List<String> categories = new ArrayList<>();
 
-    public QueryTerm(QueryContainer container, ReadableQueryConfig queryConfig, float weight, Collection<String> categories){
+    public QueryTerm(AbstractQueryTermContainer container, ReadableQueryConfig queryConfig, float weight, Collection<String> categories){
         this.container = container;
         this.queryConfig = queryConfig;
         this.weight = weight;
         this.categories.addAll(categories);
     }
 
-    public QueryContainer getContainer() {
+    public AbstractQueryTermContainer getContainer() {
         return container;
     }
 

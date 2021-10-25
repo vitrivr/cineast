@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A {@link QueryContainer} for queries using semantic maps. The class expects a JSON of the following form:
+ * A {@link AbstractQueryTermContainer} for queries using semantic maps. The class expects a JSON of the following form:
  *
  * {
  *     image: <Base 64 encoded image>,
  *     map: List of objects mapping the class to the color (as used in the image.
  * }
  */
-public class SemanticMapQueryContainer extends QueryContainer {
+public class SemanticMapQueryTermContainer extends AbstractQueryTermContainer {
 
     /** Field name of the image portion of the JSON. */
     private static final String IMAGE_FIELD_NAME = "image";
@@ -29,25 +29,25 @@ public class SemanticMapQueryContainer extends QueryContainer {
     /** The {@link SemanticMap} that is used internally. */
     private final SemanticMap map;
 
-    public SemanticMapQueryContainer(SemanticMap map){
+    public SemanticMapQueryTermContainer(SemanticMap map){
         this.map = map;
     }
 
     /**
-     * Constructor for {@link SemanticMapQueryContainer}
+     * Constructor for {@link SemanticMapQueryTermContainer}
      *
      * @param data Base64 encoded representation of the JSON.
      */
-    public SemanticMapQueryContainer(String data){
+    public SemanticMapQueryTermContainer(String data){
         this(DataURLParser.dataURLtoJsonNode(data).orElseThrow(() -> new IllegalArgumentException("Failed to parse the provided semantic map data.")));
     }
 
     /**
-     * Constructor for {@link SemanticMapQueryContainer}
+     * Constructor for {@link SemanticMapQueryTermContainer}
      *
-     * @param jsonNode JsonObject as expected by {@link SemanticMapQueryContainer}
+     * @param jsonNode JsonObject as expected by {@link SemanticMapQueryTermContainer}
      */
-    public SemanticMapQueryContainer(JsonNode jsonNode){
+    public SemanticMapQueryTermContainer(JsonNode jsonNode){
         if (!jsonNode.has(IMAGE_FIELD_NAME)) throw new IllegalArgumentException("The provided data structure does not contain the required field 'image' (semantic map).");
         if (!jsonNode.has(MAP_FIELD_NAME)) throw new IllegalArgumentException("The provided data structure does not contain the required field 'map' (category to color map).");
 
@@ -67,7 +67,7 @@ public class SemanticMapQueryContainer extends QueryContainer {
     }
 
     /**
-     * Getter for {@link SemanticMapQueryContainer#map}.
+     * Getter for {@link SemanticMapQueryTermContainer#map}.
      *
      * @return {@link SemanticMap}
      */

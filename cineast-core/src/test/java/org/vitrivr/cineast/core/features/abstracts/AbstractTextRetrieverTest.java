@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.features.abstracts;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public class AbstractTextRetrieverTest {
@@ -30,11 +30,11 @@ public class AbstractTextRetrieverTest {
   }
 
   public void testMatch(String input, String... output) {
-    org.junit.jupiter.api.Assertions.assertArrayEquals(output, retriever.generateQuery(new TextQueryContainer(input), new QueryConfig(null)));
+    org.junit.jupiter.api.Assertions.assertArrayEquals(output, retriever.generateQuery(new TextQueryTermContainer(input), new QueryConfig(null)));
   }
 
   public SegmentContainer generateSegmentContainerFromText(String text) {
-    return new TextQueryContainer(text);
+    return new TextQueryTermContainer(text);
   }
 
 }

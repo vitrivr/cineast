@@ -6,8 +6,8 @@ import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 
-import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.extraction.decode.general.Converter;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -115,7 +115,7 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
      * @return QueryContainer for the specified file.
      */
     @Override
-    public QueryContainer convert(Path path) {
+    public AbstractQueryTermContainer convert(Path path) {
         final String contenttype = MimeTypeHelper.getContentType(path.toFile());
 
         /* Try to detach decoder from the list of cached decoders. */
@@ -137,7 +137,7 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
         /* Initialize the decoder and return the decoded mesh. */
         decoder.init(path, null, null);
         Mesh mesh = decoder.getNext();
-        return new ModelQueryContainer(mesh);
+        return new ModelQueryTermContainer(mesh);
     }
 
     /**

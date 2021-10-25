@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
@@ -84,7 +84,7 @@ public class CliUtils {
     System.out.println("Done");
   }
 
-  public static void retrieveAndLog(List<Retriever> retrievers, ContinuousRetrievalLogic retrieval, int limit, boolean printDetail, QueryContainer qc) {
+  public static void retrieveAndLog(List<Retriever> retrievers, ContinuousRetrievalLogic retrieval, int limit, boolean printDetail, AbstractQueryTermContainer qc) {
     System.out.println("Only printing the first " + limit + " results, change with --limit parameter");
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     retrievers.forEach(retriever -> {
