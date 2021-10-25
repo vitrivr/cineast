@@ -16,7 +16,7 @@ public class FindSegmentsByIdGetHandler implements GetRestHandler<MediaSegmentQu
 
   public static final String ID_NAME = "id";
 
-  public static final String ROUTE = "find/segments/by/id/:" + ID_NAME;
+  public static final String ROUTE = "find/segments/by/id/{" + ID_NAME+"}";
 
   @Override
   public MediaSegmentQueryResult doGet(Context ctx) {

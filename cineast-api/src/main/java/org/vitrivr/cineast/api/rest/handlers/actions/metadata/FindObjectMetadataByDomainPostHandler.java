@@ -23,7 +23,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  */
 public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHandler<IdList, MediaObjectMetadataQueryResult> {
 
-  public static final String ROUTE = "find/metadata/in/:" + DOMAIN_NAME;
+  public static final String ROUTE = "find/metadata/in/{" + DOMAIN_NAME +"}";
 
   @Override
   public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
