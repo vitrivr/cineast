@@ -6,10 +6,6 @@
     "port": 1865,
     "plaintext": true
   },
-  "benchmark": {
-    "mode": "OFF",
-    "path": "benchmarks"
-  },
   "retriever": {
     "threadPoolSize": 2,
     "maxResults": 10000,
