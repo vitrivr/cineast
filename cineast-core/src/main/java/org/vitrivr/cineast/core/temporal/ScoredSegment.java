@@ -115,9 +115,6 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     if (comparison != 0) {
       return comparison;
     }
-    if (this.start + o.getStart() > 0) {
-      return Float.compare(this.start, o.getStart());
-    }
     return Float.compare(this.sequenceNumber, o.getSequenceNumber());
   }
 }
