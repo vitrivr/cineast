@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
@@ -36,7 +36,7 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
     /*
      * Prepare map that maps categories to QueryTerm components.
      */
-    HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryUtil.groupComponentsByCategory(query.getComponents());
+    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = QueryUtil.groupComponentsByCategory(query.getComponents());
 
     QueryConfig config = query.getQueryConfig();
     ConstrainedQueryConfig qconf = new ConstrainedQueryConfig(config);
@@ -48,7 +48,7 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
     }
 
     for (String category : categoryMap.keySet()) {
-      List<Pair<QueryContainer, ReadableQueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, (ReadableQueryConfig) qconf)).collect(Collectors.toList());
+      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, (ReadableQueryConfig) qconf)).collect(Collectors.toList());
       returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category));
     }
 

@@ -10,7 +10,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindTagsAllGetHandler implements GetRestHandler<TagsQueryResult> {
 
-  // TODO CAUTION: This route has a breaking change in response signature
 
   public static final String ROUTE = "find/tags/all";
 

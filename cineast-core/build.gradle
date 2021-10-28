@@ -158,6 +158,9 @@ dependencies {
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
 
+    /** Evaluator of math expressions (e.g. to _evaluate_ config entries in the form of 1000/3 */
+    implementation 'com.fathzer:javaluator:3.0.3'
+
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
     api group: 'javax.activation', name: 'activation', version: '1.1.1'

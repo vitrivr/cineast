@@ -1,9 +1,12 @@
 package org.vitrivr.cineast.core.features;
 
+import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
@@ -33,20 +36,23 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
   public static final String METADATA_DOMAIN = "LOCATION";
   public static final String FEATURE_NAME = "features_SpatialDistance";
 
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private final double halfeSimilarityDistance; // distance in meters where similarity equals 50% (default: 1000/3
   private final CorrespondenceFunction correspondenceFunction;
 
+  // Empty public constructor necessary for instantiation through reflection
   public SpatialDistance(){
     super(2);
     halfeSimilarityDistance = 1000.0/3.0;
     correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
   }
 
-  // Empty public constructor necessary for instantiation through reflection
   public SpatialDistance(LinkedHashMap<String,String> properties) {
     super(2, properties);
-    halfeSimilarityDistance = Double.parseDouble(properties.getOrDefault("halfSimilarityDistance", String.valueOf(1000.0/3.0)));
+    String halfSimDistFromConfig = properties.getOrDefault("halfSimilarityDistance", "1000.0/3.0");
+    halfeSimilarityDistance = parseAndEvaluateHalfSimilarityDistance(halfSimDistFromConfig);
+    LOGGER.debug("Half Similarity Distance (m): {} ({})", halfeSimilarityDistance, halfSimDistFromConfig);
     correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
   }
 
@@ -106,6 +112,10 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
         MediaObjectMetadataDescriptor.of(objectId, this.domain(),
             GpsData.KEY_LONGITUDE, Float.toString(location.getLongitude()))
     );
+  }
+
+  private double parseAndEvaluateHalfSimilarityDistance(String dist){
+    return new DoubleEvaluator().evaluate(dist);
   }
 }
 

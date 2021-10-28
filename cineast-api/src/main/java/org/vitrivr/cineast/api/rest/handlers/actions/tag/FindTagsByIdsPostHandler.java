@@ -14,7 +14,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, TagsQueryResult> {
 
-  // TODO CAUTION: This route has a breaking change in response signature
 
   public static final String ROUTE = "tags/by/id"; // TODO only route not prefixed by find?
 
