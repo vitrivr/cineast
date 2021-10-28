@@ -82,10 +82,6 @@ public abstract class AbstractTemporalScoringAlgorithm {
 
   public abstract List<TemporalObject> score();
 
-  protected List<Float> getStart(List<String> segments, boolean lsc) {
-    return segments.stream().map(segmentId -> lsc? segmentMap.get(segmentId).getStart() : segmentMap.get(segmentId).getStartabs()).collect(Collectors.toList());
-  }
-
   protected List<Integer> getSequenceNumbers(List<String> segments) {
     return segments.stream().map(segmentId -> segmentMap.get(segmentId).getSequenceNumber()).collect(Collectors.toList());
   }

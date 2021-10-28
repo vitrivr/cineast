@@ -52,8 +52,14 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
         TemporalObject best = getBestTemporalObject(segment, lsc);
         resultMap.putIfAbsent(best.getObjectId(), new ResultStorage(best.getObjectId()));
         List<String> bestSegmentIds = best.getSegments();
-        List<Float> bestStart = this.getStart(bestSegmentIds, lsc);
-        resultMap.get(best.getObjectId()).addSegmentsAndScore(IntStream.range(0, bestSegmentIds.size()).boxed().collect(Collectors.toMap(bestStart::get, bestSegmentIds::get)), best.getScore());
+        List<Integer> bestSequenceNumber = this.getSequenceNumbers(bestSegmentIds);
+        resultMap.get(best.getObjectId())
+            .addSegmentsAndScore(
+                IntStream.range(0, bestSegmentIds.size())
+                    .boxed()
+                    .collect(Collectors.toMap(bestSequenceNumber::get, bestSegmentIds::get)),
+                best.getScore()
+            );
       });
     });
     Stream<TemporalObject> resultStream;
@@ -125,10 +131,10 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
   private double calculateInverseDecayScore(float currentSegmentEndTime, ScoredSegment nextSegment, float timeDifference, MediaSegmentDescriptor segmentDescriptor, boolean lsc) {
     float start = lsc ? segmentDescriptor.getStart() : segmentDescriptor.getStartabs();
     if (start >= currentSegmentEndTime && start < currentSegmentEndTime + timeDifference) {
-      return Math.exp((0.1f * (start - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
+      return Math.exp((0.1f * (20 / timeDifference) * (start - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
     }
     if (start >= currentSegmentEndTime && start > currentSegmentEndTime + timeDifference) {
-      return Math.exp((-0.1f * (start - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
+      return Math.exp((-0.1f * (20 / timeDifference) * (start - currentSegmentEndTime - timeDifference))) * nextSegment.getScore();
     }
     if (start == currentSegmentEndTime + timeDifference) {
       return nextSegment.getScore();
@@ -139,8 +145,8 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
   /* Storage class for the results for easier result transformation. */
   private static class ResultStorage {
 
-    /* Mapping the startAbs to the segmentId, we utilise a tree map to easily retrieve the values sorted by key */
-    private Map<Float, String> segments = new TreeMap<>();
+    /* Mapping the SegmentNumber to the segmentId, we utilise a tree map to easily retrieve the values sorted by key */
+    private final Map<Integer, String> segments = new TreeMap<>();
     private double score = 0D;
     private final String objectId;
 
@@ -148,7 +154,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
       this.objectId = objectId;
     }
 
-    public void addSegmentsAndScore(Map<Float, String> segments, double update) {
+    public void addSegmentsAndScore(Map<Integer, String> segments, double update) {
       this.segments.putAll(segments);
       if (this.score < update) {
         this.score = update;
@@ -159,7 +165,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
       return new TemporalObject(new ArrayList<>(segments.values()), this.objectId, this.score);
     }
 
-    public Map<Float, String> getSegments() {
+    public Map<Integer, String> getSegments() {
       return new HashMap<>(segments);
     }
 

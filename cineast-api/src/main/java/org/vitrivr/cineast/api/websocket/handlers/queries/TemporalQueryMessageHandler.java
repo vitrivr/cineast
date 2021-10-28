@@ -198,6 +198,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       containerResults.put(containerIdx, stageResults);
     }
 
+    LOGGER.debug("Starting fusion for temporal context");
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
     Map<String, MediaSegmentDescriptor> segmentMap = segments.stream().distinct()
         .collect(Collectors.toMap(MediaSegmentDescriptor::getSegmentId, x -> x, (x1, x2) -> x1));
@@ -215,6 +216,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         .sorted(TemporalObject.COMPARATOR.reversed())
         .limit(max)
         .collect(Collectors.toList());
+
+    LOGGER.debug("Temporal scoring done, {} results", finalResults.size());
 
     /* Retrieve the segment Ids of the newly scored segments */
     List<String> segmentIds = finalResults.stream().map(TemporalObject::getSegments).flatMap(List::stream).collect(Collectors.toList());
