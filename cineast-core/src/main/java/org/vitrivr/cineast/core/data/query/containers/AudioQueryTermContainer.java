@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.util.web.AudioParser;
 import java.util.List;
 
 
-public class AudioQueryContainer extends QueryContainer {
+public class AudioQueryTermContainer extends AbstractQueryTermContainer {
 
     /** List of {@link AudioFrame}s. */
     private final List<AudioFrame> frames;
@@ -24,12 +24,12 @@ public class AudioQueryContainer extends QueryContainer {
     private AudioDescriptor descriptor;
 
     /**
-     * Constructs an {@link AudioQueryContainer} from base 64 encoded wave audio data. The constructor assumes
+     * Constructs an {@link AudioQueryTermContainer} from base 64 encoded wave audio data. The constructor assumes
      * the following audio settings: 22050Hz, 1 Channel, 16bit PCM
      *
      * @param data The audio data that should be converted.
      */
-    public AudioQueryContainer(String data) {
+    public AudioQueryTermContainer(String data) {
         this(AudioParser.parseWaveAudio(data, 22050.0f, 1));
     }
 
@@ -39,7 +39,7 @@ public class AudioQueryContainer extends QueryContainer {
      *
      * @return List auf audio-frames in the audio-segment.
      */
-    public AudioQueryContainer(List<AudioFrame> frames) {
+    public AudioQueryTermContainer(List<AudioFrame> frames) {
         this.frames = frames;
         for (AudioFrame frame : this.frames) {
             if (this.descriptor == null) {

@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.util.web.MeshParser;
 import java.awt.image.BufferedImage;
 
 
-public class ModelQueryContainer extends QueryContainer {
+public class ModelQueryTermContainer extends AbstractQueryTermContainer {
 
     /** Original Mesh as transferred by the client. */
     private final Mesh mesh;
@@ -22,13 +22,13 @@ public class ModelQueryContainer extends QueryContainer {
     private final MultiImage image;
 
     /**
-     * Constructs an {@link ModelQueryContainer} from base 64 encoded JSON data. The constructor assumes either the JSV4 JSON format
+     * Constructs an {@link ModelQueryTermContainer} from base 64 encoded JSON data. The constructor assumes either the JSV4 JSON format
      * for Meshes OR a valid image (for 2D sketch to 3D model lookup).
      *
      * @param data The 3D model data that should be converted.
      * @param factory The {@link CachedDataFactory} used to create images.
      */
-    public ModelQueryContainer(String data, CachedDataFactory factory) {
+    public ModelQueryTermContainer(String data, CachedDataFactory factory) {
         if (MeshParser.isValidThreeJSV4Geometry(data)) {
             this.mesh = MeshParser.parseThreeJSV4Geometry(data);
             this.normalizedMesh = MeshTransformUtil.khlTransform(mesh, 1.0f);
@@ -43,39 +43,39 @@ public class ModelQueryContainer extends QueryContainer {
         }
     }
 
-    public ModelQueryContainer(String data){
+    public ModelQueryTermContainer(String data){
         this(data, CachedDataFactory.getDefault());
     }
 
     /**
-     * Constructor for {@link ModelQueryContainer} with a Mesh. Used for Query-by-Example.
+     * Constructor for {@link ModelQueryTermContainer} with a Mesh. Used for Query-by-Example.
      *
-     * @param mesh Mesh for which to create a {@link ModelQueryContainer}.
+     * @param mesh Mesh for which to create a {@link ModelQueryTermContainer}.
      */
-    public ModelQueryContainer(Mesh mesh) {
+    public ModelQueryTermContainer(Mesh mesh) {
         this.mesh = new Mesh(mesh);
         this.normalizedMesh = MeshTransformUtil.khlTransform(mesh, 1.0f);
         this.image = MultiImage.EMPTY_MULTIIMAGE;
     }
 
     /**
-     * Constructor for {@link ModelQueryContainer} with ab image. Used for Query-by-Sketch (2d sketch to 3d model).
+     * Constructor for {@link ModelQueryTermContainer} with ab image. Used for Query-by-Sketch (2d sketch to 3d model).
      *
-     * @param image BufferedImage for which to create a {@link ModelQueryContainer}.
+     * @param image BufferedImage for which to create a {@link ModelQueryTermContainer}.
      * @param factory The {@link CachedDataFactory} to create the {@link MultiImage} with.
      */
-    public ModelQueryContainer(BufferedImage image, CachedDataFactory factory) {
+    public ModelQueryTermContainer(BufferedImage image, CachedDataFactory factory) {
         this.image = factory.newMultiImage(image);
         this.mesh = Mesh.EMPTY;
         this.normalizedMesh = Mesh.EMPTY;
     }
 
     /**
-     * Constructor for {@link ModelQueryContainer} constructor with an image (treated as 2D sketch). Used for Query-by-2D-Sketch.
+     * Constructor for {@link ModelQueryTermContainer} constructor with an image (treated as 2D sketch). Used for Query-by-2D-Sketch.
      *
-     * @param image Image for which to create a {@link ModelQueryContainer}.
+     * @param image Image for which to create a {@link ModelQueryTermContainer}.
      */
-    public ModelQueryContainer(MultiImage image) {
+    public ModelQueryTermContainer(MultiImage image) {
         this.image = image;
         this.mesh = Mesh.EMPTY;
         this.normalizedMesh = Mesh.EMPTY;

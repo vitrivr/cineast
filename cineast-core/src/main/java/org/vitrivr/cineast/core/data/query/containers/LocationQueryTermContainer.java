@@ -8,17 +8,17 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.util.Optional;
 
-public class LocationQueryContainer extends QueryContainer {
+public class LocationQueryTermContainer extends AbstractQueryTermContainer {
 
-    /** The {@link Location} object contained in this {@link LocationQueryContainer}. */
+    /** The {@link Location} object contained in this {@link LocationQueryTermContainer}. */
     private final Location location;
 
     /**
-     * Constructs an {@link LocationQueryContainer} from JSON data.
+     * Constructs an {@link LocationQueryTermContainer} from JSON data.
      *
      * @param json The JSON data that should be converted.
      */
-    public LocationQueryContainer(String json) {
+    public LocationQueryTermContainer(String json) {
         final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
         final JsonNode jsonNode = jsonProvider.toJsonNode(json);
         if (jsonNode != null) {
@@ -29,16 +29,16 @@ public class LocationQueryContainer extends QueryContainer {
     }
 
     /**
-     * Constructs an {@link LocationQueryContainer} from a {@link Location} object.
+     * Constructs an {@link LocationQueryTermContainer} from a {@link Location} object.
      *
      * @param location The JSON data that should be converted.
      */
-    public LocationQueryContainer(Location location) {
+    public LocationQueryTermContainer(Location location) {
         this.location = location;
     }
 
-    public static LocationQueryContainer of(Location location) {
-        return new LocationQueryContainer(location);
+    public static LocationQueryTermContainer of(Location location) {
+        return new LocationQueryTermContainer(location);
     }
 
     @Override
