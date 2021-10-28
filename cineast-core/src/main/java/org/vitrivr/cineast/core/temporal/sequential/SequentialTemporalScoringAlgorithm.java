@@ -110,14 +110,13 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          if it is shorter than max length and has a higher score or ignore the path.
         */
         if (candidate.getContainerId() == this.maxContainerId) {
-          /* if endAbs is 0, we're dealing with image sequences so it makes little sense to look for a maximum sequence length.
-           * Were time to be included in image sequence information, we could do that but this is currently not the case //TODO @Loris
-           * */
+          /* if endAbs is 0, we're dealing with image sequences so we're looking at non-abs information (which is in seconds)
+           */
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
-          // TODO after import fixes by Loris, something like this:
-          // (candidate.getEndAbs()==0 ? candidate.getEnd()-candidate.getStart()<=this.maxLength : candidate.getEndAbs()-candidate.getStartAbs()<=this.maxLength)
-          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) && ((candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) || candidate.getEndAbs() == 0)) {
+          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) &&
+              (candidate.getEndAbs() == 0 ? candidate.getEnd() - candidate.getStart() <= this.maxLength : candidate.getEndAbs() - candidate.getStartAbs() <= this.maxLength)
+          ) {
             bestPath = candidatePath;
           }
           continue;
@@ -128,8 +127,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          the queue to be reevaluated in the next round as a longer path that is potentially
          better.
         */
-        //TODO after import fixes by Loris, path for lsc which should simply use start() and end()
-        if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength || candidate.getEndAbs() == 0) {
+        if ((candidate.getEndAbs() == 0 ? candidate.getEnd() - candidate.getStart() <= this.maxLength : candidate.getEndAbs() - candidate.getStartAbs() <= this.maxLength)) {
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
           if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {
