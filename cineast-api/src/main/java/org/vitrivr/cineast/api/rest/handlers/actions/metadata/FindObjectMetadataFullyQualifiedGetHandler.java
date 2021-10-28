@@ -23,7 +23,7 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
   public static final String DOMAIN_NAME = "domain";
   public static final String KEY_NAME = "key";
 
-  public static final String ROUTE = "find/metadata/of/:" + OBJECT_ID_NAME + "/in/:" + DOMAIN_NAME + "/with/:" + KEY_NAME;
+  public static final String ROUTE = "find/metadata/of/{" + OBJECT_ID_NAME + "}/in/{" + DOMAIN_NAME + "}/with/{" + KEY_NAME +"}";
 
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {

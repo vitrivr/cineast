@@ -12,7 +12,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindObjectAllGetHandler implements GetRestHandler<MediaObjectQueryResult> {
 
-  // TODO CAUTION: This route has a breaking change in response signature
 
   public static final String TYPE_NAME = "type";
 

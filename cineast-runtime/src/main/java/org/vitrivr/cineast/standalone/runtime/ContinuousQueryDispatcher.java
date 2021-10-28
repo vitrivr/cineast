@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -48,7 +48,7 @@ public class ContinuousQueryDispatcher {
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
-  public static List<SegmentScoreElement> retrieve(QueryContainer query,
+  public static List<SegmentScoreElement> retrieve(AbstractQueryTermContainer query,
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
       ReadableQueryConfig config,

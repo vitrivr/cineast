@@ -4,7 +4,7 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.util.ArrayList;
 import java.util.List;
-import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
 import org.vitrivr.cineast.core.features.OCRSearch;
@@ -29,7 +29,7 @@ public class TextRetrievalCommand implements Runnable {
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
     System.out.println("Querying for text " + text);
-    TextQueryContainer qc = new TextQueryContainer(text);
+    TextQueryTermContainer qc = new TextQueryTermContainer(text);
     List<Retriever> retrievers = new ArrayList<>();
     retrievers.add(new SubtitleFulltextSearch());
     retrievers.add(new OCRSearch());

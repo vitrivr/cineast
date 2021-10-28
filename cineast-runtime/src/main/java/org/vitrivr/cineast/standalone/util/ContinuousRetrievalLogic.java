@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -31,7 +31,7 @@ public class ContinuousRetrievalLogic {
     this.segmentReader = new MediaSegmentReader(this.config.getSelectorSupplier().get());
   }
 
-  public List<SegmentScoreElement> retrieve(QueryContainer qc, String category,
+  public List<SegmentScoreElement> retrieve(AbstractQueryTermContainer qc, String category,
       ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
@@ -74,7 +74,7 @@ public class ContinuousRetrievalLogic {
     return ContinuousQueryDispatcher.retrieve(segmentId, map, initializer, config, this.segmentReader);
   }
 
-  public List<SegmentScoreElement> retrieveByRetriever(QueryContainer qc,
+  public List<SegmentScoreElement> retrieveByRetriever(AbstractQueryTermContainer qc,
       Retriever retriever,
       ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
@@ -82,7 +82,7 @@ public class ContinuousRetrievalLogic {
     return ContinuousQueryDispatcher.retrieve(qc, map, initializer, config, this.segmentReader);
   }
 
-  public List<SegmentScoreElement> retrieveByRetrieverName(QueryContainer qc,
+  public List<SegmentScoreElement> retrieveByRetrieverName(AbstractQueryTermContainer qc,
       String retrieverName,
       ReadableQueryConfig config) {
     Optional<Retriever> retriever = Config.sharedConfig().getRetriever()

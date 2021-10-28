@@ -26,7 +26,6 @@ import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHan
 import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.TemporalQueryMessageHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -60,7 +59,6 @@ public class WebsocketAPI {
   private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
 
   static {
-    STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
     STATELESS_HANDLERS.put(MessageType.Q_TEMPORAL, new TemporalQueryMessageHandler(APIEndpoint.retrievalLogic));
     STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
     STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
