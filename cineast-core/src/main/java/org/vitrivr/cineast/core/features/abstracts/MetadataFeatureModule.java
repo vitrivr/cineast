@@ -174,7 +174,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
         .orElse(Collections.emptyList());
   }
 
-  private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
+  protected List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
     List<SegmentDistanceElement> sDistances = new ArrayList<>();
     List<ObjectDistanceElement> oDistances = new ArrayList<>();
