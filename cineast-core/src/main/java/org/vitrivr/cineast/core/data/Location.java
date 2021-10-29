@@ -105,4 +105,6 @@ public class Location implements ReadableFloatVector {
   public int hashCode() {
     return Objects.hash(latitude, longitude);
   }
+
+
 }
