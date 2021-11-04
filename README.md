@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blueviolet)](#license)
 [![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Release))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
 [![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Dev))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
-[![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=master)](https://travis-ci.org/vitrivr/cineast)
+[![Java CI with Gradle](https://github.com/vitrivr/cineast/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/vitrivr/cineast/actions?query=workflow:"Java+CI+with+Gradle")
 
 # Cineast
 Cineast is a multi-feature content-based multimedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
