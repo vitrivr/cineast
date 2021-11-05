@@ -102,7 +102,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
         compareTo of ScoredSegment that allows to classify segments with the same containerId but
         higher segmentId as being higher.
          */
-        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStart() <= lastHighestSegment.getEnd() || candidate.getSequenceNumber() <= lastHighestSegment.getSequenceNumber()) {
+        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStart() < lastHighestSegment.getEnd() || candidate.getSequenceNumber() <= lastHighestSegment.getSequenceNumber()) {
           continue;
         }
         /*
@@ -115,7 +115,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
           if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) &&
-              (candidate.getEndAbs() == 0 ? candidate.getEnd() - candidate.getStart() <= this.maxLength : candidate.getEndAbs() - candidate.getStartAbs() <= this.maxLength)
+              (candidate.getEndAbs() == 0 ? candidate.getEnd() - scoredSegment.getStart() <= this.maxLength : candidate.getEndAbs() - scoredSegment.getStartAbs() <= this.maxLength)
           ) {
             bestPath = candidatePath;
           }
@@ -127,7 +127,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          the queue to be reevaluated in the next round as a longer path that is potentially
          better.
         */
-        if ((candidate.getEndAbs() == 0 ? candidate.getEnd() - candidate.getStart() <= this.maxLength : candidate.getEndAbs() - candidate.getStartAbs() <= this.maxLength)) {
+        if ((candidate.getEndAbs() == 0 ? candidate.getEnd() - scoredSegment.getStart() <= this.maxLength : candidate.getEndAbs() - scoredSegment.getStartAbs() <= this.maxLength)) {
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
           if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {
