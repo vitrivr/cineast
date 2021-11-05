@@ -111,12 +111,6 @@ public class OpenApiCompatHelper {
     /* Add the OAS tags */
     OAS_TAGS.forEach(api::addTagsItem);
 
-    api.addServersItem(
-        new io.swagger.v3.oas.models.servers.Server()
-            .description("Cineast API Address")
-            .url(config.getApiAddress())
-    );
-
     return api;
   }
 

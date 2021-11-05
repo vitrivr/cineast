@@ -18,7 +18,7 @@ public class FindObjectGetHandler implements GetRestHandler<MediaObjectQueryResu
   public static final String ATTRIBUTE_NAME = "attribute";
   public static final String VALUE_NAME = "value";
 
-  public static final String ROUTE = "find/object/by/:" + ATTRIBUTE_NAME + "/:" + VALUE_NAME;
+  public static final String ROUTE = "find/object/by/{" + ATTRIBUTE_NAME + "}/{" + VALUE_NAME+"}";
 
   private static final Logger LOGGER = LogManager.getLogger(FindObjectGetHandler.class);
 

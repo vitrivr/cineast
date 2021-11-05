@@ -10,8 +10,8 @@ allprojects {
     /* Group name of our artifacts */
     group = 'org.vitrivr'
 
-    /* Our current version */
-    version = '3.3.0'
+    /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
+    version = '3.4.0-SNAPSHOT'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
