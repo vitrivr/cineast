@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 
 public class FindSegmentTextGetHandler implements GetRestHandler<FeaturesTextCategoryQueryResult> {
 
-  public static final String ROUTE = "find/feature/text/by/:" + ID_QUALIFIER + "/:" + CATEGORY_NAME;
+  public static final String ROUTE = "find/feature/text/by/{" + ID_QUALIFIER + "}/{" + CATEGORY_NAME + "}";
 
   @Override
   public FeaturesTextCategoryQueryResult doGet(Context ctx) {

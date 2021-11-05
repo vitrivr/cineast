@@ -127,9 +127,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       final Update update = new Update(ENTITY_NAME)
           .values(
               new Pair<>(MediaSegmentDescriptor.SEGMENT_START_COL_NAME, (double) msAbs),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_STARTABS_COL_NAME, (double) msAbs),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
+              new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext)
           )
           .where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId()));
       cottontail.client.update(update, txId);

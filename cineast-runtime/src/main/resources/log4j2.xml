@@ -13,7 +13,7 @@
             <FilePattern>logs/%d{yyyy-MM-dd-hh}-%i.log.zip</FilePattern>
             <PatternLayout pattern="${loggingPattern}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="10000 KB"/>
+                <SizeBasedTriggeringPolicy size="2000 KB"/>
             </Policies>
             <DefaultRolloverStrategy max="5" />
             <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>

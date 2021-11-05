@@ -16,7 +16,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
 
-  // TODO CAUTION: This route has a breaking change in response signature
 
   public static final String ID_NAME = "id";
   public static final String NAME_NAME = "name";
@@ -25,7 +24,7 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
   public static final String ATTRIBUTE_NAME = "attribute";
   public static final String VALUE_NAME = "value";
 
-  public static final String ROUTE = "find/tags/by/:" + ATTRIBUTE_NAME + "/:" + VALUE_NAME;
+  public static final String ROUTE = "find/tags/by/{" + ATTRIBUTE_NAME + "}/{" + VALUE_NAME+"}";
 
   private static final Logger LOGGER = LogManager.getLogger(FindTagsGetHandler.class);
 
