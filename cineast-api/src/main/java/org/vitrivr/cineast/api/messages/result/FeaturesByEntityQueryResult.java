@@ -7,9 +7,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Contains a list of all features and the IDs of the objects they belong to for a given table name.
+ * Contains a list of all features and the IDs of the objects they belong to for a given table/entity name.
  */
-public class FeaturesByTableNameQueryResult {
+public class FeaturesByEntityQueryResult {
 
   /**
    * The query ID to which this result belongs to.
@@ -17,27 +17,27 @@ public class FeaturesByTableNameQueryResult {
   public final String queryId;
 
   /**
-   * Feature list containing IDs/feature array for every object ID for every feature in the table.
+   * Feature list containing IDs/feature array for every object ID for every feature in the table/entity.
    */
   public final ArrayList<HashMap<String, Object>> featureMap;
 
   /**
    * The category for which the features of all objects were requested.
    */
-  public final String tableName;
+  public final String entityName;
 
   /**
    * Constructor for the FeaturesTextCategoryQueryResult object.
    *
    * @param queryId    Query ID as a string to which this result belongs to.
    * @param featureMap Map containing a list of IDs/feature array for every object ID for every feature in the category.
-   * @param tableName  Table name for which the features of all objects were requested.
+   * @param entityName Entity name for which the features of all objects were requested.
    */
   @JsonCreator
-  public FeaturesByTableNameQueryResult(String queryId, ArrayList<HashMap<String, Object>> featureMap, String tableName) {
+  public FeaturesByEntityQueryResult(String queryId, ArrayList<HashMap<String, Object>> featureMap, String entityName) {
     this.queryId = queryId;
     this.featureMap = featureMap;
-    this.tableName = tableName;
+    this.entityName = entityName;
   }
 
   @Override

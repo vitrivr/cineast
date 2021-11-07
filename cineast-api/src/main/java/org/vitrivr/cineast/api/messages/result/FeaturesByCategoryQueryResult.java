@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Contains lists of all features and the IDs of the objects they belong to, mapped by table name.
+ * Contains lists of all features and the IDs of the objects they belong to, mapped by table/entity name.
  */
 public class FeaturesByCategoryQueryResult {
 
