@@ -17,7 +17,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
  */
 public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<String[], FeaturesByCategoryQueryResult> {
 
-  public static final String ROUTE = "find/feature/all/by/category/:" + CATEGORY_NAME;
+  public static final String ROUTE = "find/feature/all/by/category/{" + CATEGORY_NAME + "}";
 
   @Override
   public FeaturesByCategoryQueryResult performPost(String[] input, Context ctx) {
