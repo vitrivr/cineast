@@ -5,63 +5,65 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.BooleanQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.IdQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.InstantQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.LocationQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.MotionQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.TagQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AudioQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.BooleanQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.IdQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.InstantQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.MotionQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 
 /**
  * A {@link QueryTermType} represents the types of query terms used.
  */
 public enum QueryTermType {
 
-  IMAGE(ImageQueryContainer.class),
-  AUDIO(AudioQueryContainer.class),
-  MOTION(MotionQueryContainer.class),
-  MODEL3D(ModelQueryContainer.class),
-  LOCATION(LocationQueryContainer.class),
-  TIME(InstantQueryContainer.class),
-  TEXT(TextQueryContainer.class),
-  TAG(TagQueryContainer.class),
-  SEMANTIC(SemanticMapQueryContainer.class),
+  IMAGE(ImageQueryTermContainer.class),
+  AUDIO(AudioQueryTermContainer.class),
+  MOTION(MotionQueryTermContainer.class),
+  MODEL3D(ModelQueryTermContainer.class),
+  LOCATION(LocationQueryTermContainer.class),
+  PARAMETERISED_LOCATION(ParameterisedLocationQueryTermContainer.class),
+  TIME(InstantQueryTermContainer.class),
+  TEXT(TextQueryTermContainer.class),
+  TAG(TagQueryTermContainer.class),
+  SEMANTIC(SemanticMapQueryTermContainer.class),
 
   /**
    * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
    */
-  ID(IdQueryContainer.class),
-  BOOLEAN(BooleanQueryContainer.class);
+  ID(IdQueryTermContainer.class),
+  BOOLEAN(BooleanQueryTermContainer.class);
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Instance of the {@link QueryContainer} class that represents this {@link QueryTermType}.
+   * Instance of the {@link AbstractQueryTermContainer} class that represents this {@link QueryTermType}.
    */
-  private final Class<? extends QueryContainer> c;
+  private final Class<? extends AbstractQueryTermContainer> c;
 
-  QueryTermType(Class<? extends QueryContainer> clazz) {
+  QueryTermType(Class<? extends AbstractQueryTermContainer> clazz) {
     this.c = clazz;
   }
 
-  public Class<? extends QueryContainer> getContainerClass() {
+  public Class<? extends AbstractQueryTermContainer> getContainerClass() {
     return this.c;
   }
 
   /**
-   * Constructs a new instance of the {@link QueryContainer} associated with the current {@link QueryTermType} using the provided raw data (usually base 64 encoded).
+   * Constructs a new instance of the {@link AbstractQueryTermContainer} associated with the current {@link QueryTermType} using the provided raw data (usually base 64 encoded).
    *
-   * @param data Data from which to construct a {@link QueryContainer}
+   * @param data Data from which to construct a {@link AbstractQueryTermContainer}
    */
-  public Optional<QueryContainer> getQueryContainer(String data) {
+  public Optional<AbstractQueryTermContainer> getQueryContainer(String data) {
     try {
-      Constructor<? extends QueryContainer> constructor = this.c.getConstructor(String.class);
+      Constructor<? extends AbstractQueryTermContainer> constructor = this.c.getConstructor(String.class);
       return Optional.of(constructor.newInstance(data));
     } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
       LOGGER.error("Error while constructing query container", e);

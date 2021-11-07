@@ -4,6 +4,10 @@ package org.vitrivr.cineast.core.features.abstracts;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import boofcv.abst.scene.ImageClassifier.Score;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -11,6 +15,7 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.ObjectDistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
@@ -48,9 +53,16 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   private DBSelector dbSelector;
   private MediaSegmentReader mediaSegmentReader;
   private final int vectorLength;
+  private final boolean segmentRetrievalScope;
 
   protected MetadataFeatureModule(int vectorLength) {
     this.vectorLength = vectorLength;
+    this.segmentRetrievalScope = false;
+  }
+
+  protected MetadataFeatureModule(int vectorLength, Map<String, String> properties) {
+    this.vectorLength = vectorLength;
+    segmentRetrievalScope = Boolean.parseBoolean(properties.getOrDefault("segmentRetrievalScope", "false"));
   }
 
   /** Returns the name of the feature entity as stored in the persistent layer. */
@@ -162,11 +174,18 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
         .orElse(Collections.emptyList());
   }
 
-  private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
+  protected List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
-    List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, ObjectDistanceElement.class, qc);
+    List<SegmentDistanceElement> sDistances = new ArrayList<>();
+    List<ObjectDistanceElement> oDistances = new ArrayList<>();
     CorrespondenceFunction correspondence = qc.getCorrespondenceFunction()
         .orElse(this.defaultCorrespondence());
-    return DistanceElement.toScore(distances, correspondence);
+    if (this.segmentRetrievalScope){
+      sDistances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, SegmentDistanceElement.class, qc);
+      return DistanceElement.toScore(sDistances, correspondence);
+    }else{
+      oDistances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, ObjectDistanceElement.class, qc);
+      return DistanceElement.toScore(oDistances, correspondence);
+    }
   }
 }

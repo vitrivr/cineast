@@ -18,7 +18,6 @@ public class SequentialPath implements Comparable<SequentialPath> {
   private final List<ScoredSegment> segments;
   private int lastContainerId;
   private final float startAbs;
-  private float currentEndAbs;
 
   /**
    * Constructor to initiate a sequential path.
@@ -42,7 +41,6 @@ public class SequentialPath implements Comparable<SequentialPath> {
     this.lastContainerId = sequentialPath.getCurrentContainerId();
     this.score = sequentialPath.getScore();
     this.startAbs = sequentialPath.getStartAbs();
-    this.currentEndAbs = sequentialPath.getCurrentEndAbs();
   }
 
   /**
@@ -53,7 +51,6 @@ public class SequentialPath implements Comparable<SequentialPath> {
       this.segments.add(segment);
       this.lastContainerId = segment.getContainerId();
       this.score += segment.getScore();
-      this.currentEndAbs = segment.getEndAbs();
       return true;
     } else {
       return false;
@@ -86,10 +83,6 @@ public class SequentialPath implements Comparable<SequentialPath> {
 
   public float getStartAbs() {
     return startAbs;
-  }
-
-  public float getCurrentEndAbs() {
-    return currentEndAbs;
   }
 
   @Override

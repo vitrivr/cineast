@@ -65,8 +65,8 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
       List<String> segmentIds = paths.stream()
           .flatMap(listContainer -> listContainer.getSegmentIds().stream())
           .distinct().collect(Collectors.toList());
-      List<Float> startAbs = this.getStartAbs(segmentIds);
-      List<String> sortedSegments = new ArrayList<>(IntStream.range(0, segmentIds.size()).boxed().collect(Collectors.toMap(startAbs::get, segmentIds::get, (s, a) -> s + ", " + a, TreeMap::new)).values());
+      List<Integer> sequenceNumbers = this.getSequenceNumbers(segmentIds);
+      List<String> sortedSegments = new ArrayList<>(IntStream.range(0, segmentIds.size()).boxed().collect(Collectors.toMap(sequenceNumbers::get, segmentIds::get, (s, a) -> s + ", " + a, TreeMap::new)).values());
       TemporalObject temporalObject = new TemporalObject(sortedSegments, objectId, max);
       if (max > 0d) {
         results.add(temporalObject);
@@ -102,7 +102,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
         compareTo of ScoredSegment that allows to classify segments with the same containerId but
         higher segmentId as being higher.
          */
-        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStartAbs() < lastHighestSegment.getEndAbs()) {
+        if (candidate.getContainerId() <= lastHighestSegment.getContainerId() || candidate.getStart() < lastHighestSegment.getEnd() || candidate.getSequenceNumber() <= lastHighestSegment.getSequenceNumber()) {
           continue;
         }
         /*
@@ -110,9 +110,14 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          if it is shorter than max length and has a higher score or ignore the path.
         */
         if (candidate.getContainerId() == this.maxContainerId) {
-          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidate.getScore() / (maxContainerId + 1)) + path.getScore() && candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
-            bestPath = new SequentialPath(path);
-            bestPath.addSegment(candidate);
+          /* if endAbs is 0, we're dealing with image sequences so we're looking at non-abs information (which is in seconds)
+           */
+          SequentialPath candidatePath = new SequentialPath(path);
+          candidatePath.addSegment(candidate);
+          if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1)) &&
+              (candidate.getEndAbs() == 0 ? candidate.getEnd() - scoredSegment.getStart() <= this.maxLength : candidate.getEndAbs() - scoredSegment.getStartAbs() <= this.maxLength)
+          ) {
+            bestPath = candidatePath;
           }
           continue;
         }
@@ -122,7 +127,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
          the queue to be reevaluated in the next round as a longer path that is potentially
          better.
         */
-        if (candidate.getEndAbs() - path.getStartAbs() <= this.maxLength) {
+        if ((candidate.getEndAbs() == 0 ? candidate.getEnd() - scoredSegment.getStart() <= this.maxLength : candidate.getEndAbs() - scoredSegment.getStartAbs() <= this.maxLength)) {
           SequentialPath candidatePath = new SequentialPath(path);
           candidatePath.addSegment(candidate);
           if ((bestPath.getScore() / (maxContainerId + 1)) < (candidatePath.getScore() / (maxContainerId + 1))) {

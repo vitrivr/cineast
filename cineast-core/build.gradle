@@ -98,7 +98,7 @@ signing {
 dependencies {
 
     /** THE Cottontail DB proto dependency */
-    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb
+    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontail_proto
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE ADAMpro proto dependency (legacy) */
@@ -111,6 +111,9 @@ dependencies {
     api group: "net.sf.trove4j", name: "trove4j", version: version_trove4j
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
+
+    /** Mockito for unit testing */
+    implementation 'org.mockito:mockito-inline:3.11.0'
 
     /** Tensorflow (Java). */
     api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
@@ -154,6 +157,9 @@ dependencies {
     
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
+
+    /** Evaluator of math expressions (e.g. to _evaluate_ config entries in the form of 1000/3 */
+    implementation 'com.fathzer:javaluator:3.0.3'
 
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
