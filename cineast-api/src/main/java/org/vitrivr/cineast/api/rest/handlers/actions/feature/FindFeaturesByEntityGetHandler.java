@@ -17,7 +17,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
  */
 public class FindFeaturesByEntityGetHandler implements ParsingPostRestHandler<String[], FeaturesByEntityQueryResult> {
 
-  public static final String ROUTE = "find/feature/all/by/entity/:" + ENTITY_NAME;
+  public static final String ROUTE = "find/feature/all/by/entity/{" + ENTITY_NAME + "}";
 
   @Override
   public FeaturesByEntityQueryResult performPost(String[] input, Context ctx) {
