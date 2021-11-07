@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 
 public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForElementQueryResult> {
 
-  public static final String ROUTE = "find/feature/tags/by/id/:" + ID_QUALIFIER;
+  public static final String ROUTE = "find/feature/tags/by/id/{" + ID_QUALIFIER+"}";
 
   @Override
   public TagIDsForElementQueryResult doGet(Context ctx) {
@@ -39,7 +39,7 @@ public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForEle
   public OpenApiDocumentation docs() {
     return OpenApiBuilder.document()
         .operation(op -> {
-          op.operationId("findTagsById");
+          op.operationId("findTagInformationById");
           op.description("Find tag ids for the given id");
           op.summary("Find tag ids for the given id");
           op.addTagsItem(OpenApiCompatHelper.METADATA_OAS_TAG);

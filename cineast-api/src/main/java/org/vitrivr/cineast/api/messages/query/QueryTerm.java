@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 /**
  * Contains the data of a particular {@link QueryTerm}.
@@ -30,9 +30,9 @@ public class QueryTerm {
   private final String data;
 
   /**
-   * Cached version of the {@link QueryContainer} representation of this {@link QueryTerm}.
+   * Cached version of the {@link AbstractQueryTermContainer} representation of this {@link QueryTerm}.
    */
-  private QueryContainer cachedQueryContainer;
+  private AbstractQueryTermContainer cachedQueryTermContainer;
 
   @Override
   public String toString() {
@@ -75,18 +75,18 @@ public class QueryTerm {
 
 
   /**
-   * Converts the {@link QueryTerm} to a {@link QueryContainer} that can be processed by the retrieval pipeline. This includes conversion of query-objects from the Base64 encoded representation.
+   * Converts the {@link QueryTerm} to a {@link AbstractQueryTermContainer} that can be processed by the retrieval pipeline. This includes conversion of query-objects from the Base64 encoded representation.
    *
-   * <strong>IMPORTANT:</strong> Subsequent calls to this method return a cached version of the original {@link QueryContainer}.
+   * <strong>IMPORTANT:</strong> Subsequent calls to this method return a cached version of the original {@link AbstractQueryTermContainer}.
    *
-   * @return {@link QueryContainer} representation of the {@link QueryTerm}.
+   * @return {@link AbstractQueryTermContainer} representation of the {@link QueryTerm}.
    */
-  public QueryContainer toContainer() {
-    if (this.cachedQueryContainer == null) {
+  public AbstractQueryTermContainer toContainer() {
+    if (this.cachedQueryTermContainer == null) {
       if (this.data != null) {
-        this.cachedQueryContainer = this.type.getQueryContainer(this.data).orElse(null);
+        this.cachedQueryTermContainer = this.type.getQueryContainer(this.data).orElse(null);
       }
     }
-    return this.cachedQueryContainer;
+    return this.cachedQueryTermContainer;
   }
 }

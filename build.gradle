@@ -10,8 +10,8 @@ allprojects {
     /* Group name of our artifacts */
     group = 'org.vitrivr'
 
-    /* Our current version */
-    version = '3.0.3-SNAPSHOT'
+    /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
+    version = '3.4.0'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -86,7 +86,7 @@ idea {
 
 task getExternalFiles {
     doLast {
-        def fileList = new File("externalFiles.csv")
+        def fileList = rootProject.file("externalFiles.csv")
         fileList.eachLine { String line ->
             def split = line.split(",")
             def destination = split[1]
@@ -118,3 +118,8 @@ task generateOpenApiSpecs(type: JavaExec) {
     args("${config}")
 }
 
+task generateOAS(type: Download){
+    /* This requires a locally running Cineast */
+    src 'http://localhost:4567/openapi-specs'
+    dest "${project.projectDir}/docs/openapi.json"
+}

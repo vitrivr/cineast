@@ -17,21 +17,27 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
   private final String objectId;
   private final String segmentId;
   private final int containerId;
-  private final float segmentLength;
   private final float startAbs;
   private final float endAbs;
+  private final int sequenceNumber;
+  private final int end;
+  private final int start;
   private double score;
+  private double totalScore = 0;
+  private double normalizer = 0;
 
   /**
    * Constructor to create a scored segment.
    */
-  public ScoredSegment(MediaSegmentDescriptor mediaSegmentDescriptor, double score, int containerId, float segmentLength) {
+  public ScoredSegment(MediaSegmentDescriptor mediaSegmentDescriptor, double score, int containerId) {
     this.objectId = mediaSegmentDescriptor.getObjectId();
     this.segmentId = mediaSegmentDescriptor.getSegmentId();
+    this.start = mediaSegmentDescriptor.getStart();
+    this.end = mediaSegmentDescriptor.getEnd();
     this.startAbs = mediaSegmentDescriptor.getStartabs();
     this.endAbs = mediaSegmentDescriptor.getEndabs();
+    this.sequenceNumber = mediaSegmentDescriptor.getSequenceNumber();
     this.containerId = containerId;
-    this.segmentLength = segmentLength;
     this.score = score;
   }
 
@@ -43,22 +49,39 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     this.segmentId = scoredSegment.getSegmentId();
     this.score = scoredSegment.getScore();
     this.containerId = scoredSegment.getContainerId();
-    this.segmentLength = scoredSegment.getSegmentLength();
+    this.start = scoredSegment.getStart();
+    this.end = scoredSegment.getEnd();
     this.startAbs = scoredSegment.getStartAbs();
     this.endAbs = scoredSegment.getEndAbs();
+    this.sequenceNumber = scoredSegment.getSequenceNumber();
+  }
+
+  public int getEnd() {
+    return end;
+  }
+
+  public int getStart() {
+    return start;
   }
 
   /**
    * Add a score to this segment, meaning this segment appeared more than once in a container.
    */
   public void addScore(StringDoublePair stringDoublePair) {
+    // Implementation note: currently uses averagepooling. We could also use maxpooling, or weighted pooling.
     if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
-      this.score += stringDoublePair.value;
+      this.normalizer++;
+      this.totalScore += stringDoublePair.value;
+      this.score = totalScore / normalizer;
     }
   }
 
   public String getSegmentId() {
     return segmentId;
+  }
+
+  public int getSequenceNumber() {
+    return this.sequenceNumber;
   }
 
   public double getScore() {
@@ -67,10 +90,6 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
 
   public int getContainerId() {
     return containerId;
-  }
-
-  public float getSegmentLength() {
-    return segmentLength;
   }
 
   public String getObjectId() {
@@ -95,8 +114,7 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
     int comparison = Integer.compare(this.containerId, o.getContainerId());
     if (comparison != 0) {
       return comparison;
-    } else {
-      return Float.compare(this.startAbs, o.getStartAbs());
     }
+    return Float.compare(this.sequenceNumber, o.getSequenceNumber());
   }
 }

@@ -3,19 +3,15 @@ package org.vitrivr.cineast.core.features.abstracts;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
-import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
-import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
-import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This implementation of the AbstractFeatureModule executes every query, either based on a SegmentContainer
@@ -29,17 +25,6 @@ import java.util.List;
 public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
     protected static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
-
-    /**
-     * Split markers used for benchmarking.
-     */
-    private final static String BENCHMARK_SPLITNAME_PREPROCESSING = "PREPROCESSING";
-    private final static String BENCHMARK_SPLITNAME_LOOKUP = "LOOKUP";
-    private final static String BENCHMARK_SPLITNAME_SIMILARITY = "SIMILARITY";
-    private final static String BENCHMARK_SPLITNAME_POSTPROCESSING = "POSTPROCESSING";
-
-    /** Instance of the BenchmarkEngine that is used to benchmark queries. */
-    private final BenchmarkEngine benchmark_engine = BenchmarkManager.getInstance().getDefaultEngine();
 
     /**
      * Constructor
@@ -62,8 +47,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      *     <li>Post-processing: Aggregating the query results into the final Score elements.</li>
      * </ol>
      *
-     * Every step is captured by a benchmarking object, allowing for in-depth analysis of the query process.
-     *
      * Even though it is possible to re-implement this method, it is not recommended. Instead, try to override
      * the methods that represent the different stages.
      *
@@ -73,12 +56,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     @Override
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        /* Initialize new Benchmark object. */
-        Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
-
-        /* Start query pre-processing phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_PREPROCESSING);
-
         /* Load default query-config. */
         QueryConfig qcc = this.defaultQueryConfig(qc);
 
@@ -87,7 +64,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
         if (features == null || features.isEmpty()) {
             LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
-            benchmark.abort();
             return new ArrayList<>(0);
         }
 
@@ -95,16 +71,11 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         List<ReadableQueryConfig> configs = this.generateQueryConfigsForFeatures(qcc, features);
 
         /* Start query lookup phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
         List<SegmentDistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
-        List<ScoreElement> results = this.postprocessQuery(partialResults, qcc);
 
-        /* End the benchmark and return the results. */
-        benchmark.end();
-        return results;
+        return this.postprocessQuery(partialResults, qcc);
     }
 
     /**
@@ -117,8 +88,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      *     <li>Post-processing: Aggregating the query results into the final Score elements.</li>
      * </ol>
      *
-     * Every step is captured by a benchmarking object, allowing for in-depth analysis of the query process.
-     *
      * Even though it is possible to re-implement this method, it is not recommended. Instead, try to override
      * the methods that represent the different stages.
      *
@@ -129,12 +98,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     @Override
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-        /* Initialize new Benchmark object. */
-        Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
-
-        /* Start query pre-processing phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_LOOKUP);
-
         /* Load default query-config. */
         QueryConfig qcc = this.defaultQueryConfig(qc);
 
@@ -142,7 +105,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         List<float[]> features = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER,  new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
         if (features.isEmpty()) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
-            benchmark.end();
             return new ArrayList<>(0);
         }
 
@@ -150,16 +112,10 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         List<ReadableQueryConfig> configs = this.generateQueryConfigsForFeatures(qcc, features);
 
         /* Start query lookup phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
         List<SegmentDistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
-        benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
-        List<ScoreElement> results = this.postprocessQuery(partialResults, qcc);
-
-        /* End the benchmark and return the results. */
-        benchmark.end();
-        return results;
+        return this.postprocessQuery(partialResults, qcc);
     }
 
     /**

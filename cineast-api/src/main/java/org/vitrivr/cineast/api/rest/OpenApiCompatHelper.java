@@ -1,18 +1,21 @@
 package org.vitrivr.cineast.api.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.javalin.plugin.openapi.OpenApiOptions;
+import io.javalin.plugin.openapi.jackson.JacksonToJsonMapper;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.core.jackson.ModelResolver;
+import io.swagger.v3.core.jackson.mixin.SchemaMixin;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.tags.Tag;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,6 +26,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.APIEndpoint;
+import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.standalone.config.APIConfig;
 
 /**
@@ -53,23 +57,18 @@ public class OpenApiCompatHelper {
    * @return
    */
   public static OpenApiOptions getJavalinOpenApiOptions(APIConfig config) {
-    //Default Javalin JSON mapper includes all null values and breaks spec json
+    //Default Javalin JSON mapper includes all null values, which breakes the openapi specs.
     ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
+    mapper.addMixIn(Schema.class,
+        SchemaMixin.class); // Makes Schema.exampleFlagSet being ignored by jackson
+//    mapper.addMixIn(MediaType.class,
+//        MediaTypeMixin.class); // Makes MediaType.exampleFlagSet being ignored by jackson
     return new OpenApiOptions(() -> getOpenApi(config))
         .path("/openapi-specs")
         .activateAnnotationScanningFor("org.vitrivr.cineast.api")
-        //        .toJsonMapper(new JacksonToJsonMapper())
-        //        .modelConverterFactory(new JacksonModelConverterFactory())
-        .toJsonMapper(o -> {
-          try {
-            return mapper.writeValueAsString(o);
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException("Couldn't serialise due to ", e);
-          }
-        })
+        .toJsonMapper(new JacksonToJsonMapper(mapper))
         .modelConverterFactory(() -> new ModelResolver(mapper))
         .swagger(new SwaggerOptions("/swagger-ui").title("Swagger UI for Cineast Documentation"))
         .reDoc(new ReDocOptions("/redoc").title("ReDoc for Cineast Documentation"));
@@ -87,7 +86,8 @@ public class OpenApiCompatHelper {
     api.info(
         new Info()
             .title("Cineast RESTful API")
-            .description("Cineast is vitrivr's content-based multimedia retrieval engine. This is it's RESTful API.")
+            .description(
+                "Cineast is vitrivr's content-based multimedia retrieval engine. This is it's RESTful API.")
             .version(APIEndpoint.VERSION)
             .license(
                 new License()
@@ -111,20 +111,16 @@ public class OpenApiCompatHelper {
     /* Add the OAS tags */
     OAS_TAGS.forEach(api::addTagsItem);
 
-    api.addServersItem(
-        new io.swagger.v3.oas.models.servers.Server()
-            .description("Cineast API Address")
-            .url(config.getApiAddress())
-    );
-
     return api;
   }
 
-  public static void writeOpenApiDocPersistently(APIEndpoint apiEndpoint, final String path) throws IOException {
+  public static void writeOpenApiDocPersistently(APIEndpoint apiEndpoint, final String path)
+      throws IOException {
     try {
       apiEndpoint.setHttp(apiEndpoint.dispatchService(false));
       if (apiEndpoint.getOpenApi() != null) {
-        String schema = Json.pretty(apiEndpoint.getOpenApi().getOpenApiHandler().createOpenAPISchema());
+        String schema = Json.pretty(
+            apiEndpoint.getOpenApi().getOpenApiHandler().createOpenAPISchema());
         File file = new File(path);
         File folder = file.getParentFile();
         if (folder != null) {
@@ -143,5 +139,11 @@ public class OpenApiCompatHelper {
     } finally {
       APIEndpoint.stop();
     }
+  }
+
+  private static abstract class MediaObjectMetadataQueryResultMixin {
+
+    @JsonIgnore
+    public abstract MessageType getMessageType();
   }
 }

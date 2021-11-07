@@ -14,7 +14,7 @@ public class EndSessionHandler implements GetRestHandler<SessionState> {
 
   public static final String ID_NAME = "id";
 
-  public static final String ROUTE = "session/end/:" + ID_NAME;
+  public static final String ROUTE = "session/end/{" + ID_NAME +"}";
 
 
   @Override
