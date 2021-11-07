@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
-import org.vitrivr.cineast.api.messages.result.FeaturesByTableNameQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -194,7 +194,7 @@ public class QueryUtil {
             row.get(FEATURE_COLUMN_QUALIFIER).toObject()
         ).forEach(_return::add);
       });
-      return true; // TODO Verify this.
+      return true;
     });
     return _return;
   }
@@ -227,11 +227,11 @@ public class QueryUtil {
     return new FeaturesAllCategoriesQueryResult("", features, id);
   }
 
-  private static ArrayList<HashMap<String, Object>> getFeaturesFromTable(String tableName, List<String> ids) {
+  private static ArrayList<HashMap<String, Object>> getFeaturesFromEntity(String entityName, List<String> ids) {
     final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
     ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
-    selector.open(tableName);
+    selector.open(entityName);
 
     List<Map<String, PrimitiveTypeProvider>> rows;
 
@@ -258,19 +258,19 @@ public class QueryUtil {
     Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
 
     retrievalRuntimeConfig.getRetrieversByCategory(category).forEach(retriever -> {
-      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromTable(tableName, ids)));
+      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
       return true;
     });
 
     return _return;
   }
 
-  public static FeaturesByTableNameQueryResult queryFeaturesForTableName(String tableName, List<String> ids) {
-    ArrayList<HashMap<String, Object>> features = getFeaturesFromTable(tableName, ids);
-    return new FeaturesByTableNameQueryResult("", features, tableName);
+  public static FeaturesByEntityQueryResult retrieveFeaturesForEntity(String entityName, List<String> ids) {
+    ArrayList<HashMap<String, Object>> features = getFeaturesFromEntity(entityName, ids);
+    return new FeaturesByEntityQueryResult("", features, entityName);
   }
 
-  public static FeaturesByCategoryQueryResult queryFeaturesForCategory(String category, List<String> ids) {
+  public static FeaturesByCategoryQueryResult retrieveFeaturesForCategory(String category, List<String> ids) {
     Map<String, ArrayList<HashMap<String, Object>>> features = getFeaturesForCategory(category, ids);
     return new FeaturesByCategoryQueryResult("", features, category);
   }
