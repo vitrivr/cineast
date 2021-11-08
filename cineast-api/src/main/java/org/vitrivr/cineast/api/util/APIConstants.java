@@ -4,5 +4,6 @@ public class APIConstants {
 
   public static final String ID_QUALIFIER = "id";
   public static final String CATEGORY_NAME = "category";
+  public static final String ENTITY_NAME = "entity";
 
 }
