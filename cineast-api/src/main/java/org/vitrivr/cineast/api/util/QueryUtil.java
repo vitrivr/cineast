@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -192,7 +194,7 @@ public class QueryUtil {
             row.get(FEATURE_COLUMN_QUALIFIER).toObject()
         ).forEach(_return::add);
       });
-      return false; //no repeat invocations allowed
+      return true; // Return value false would break the foreEachKey
     });
     return _return;
   }
@@ -210,20 +212,67 @@ public class QueryUtil {
   public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {
     Map<String, Object[]> features = new HashMap<>();
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
-    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
     retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> {
-      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachKey(retriever -> {
-        List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
-        if (_features.size() == 0) {
-          return false; //no repeat invocations allowed
-        }
-        if (_features.get(0) != null) {
-          features.put(cat, _features.toArray());
-        }
-        return false; //no repeat invocations allowed
-      });
+      List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
+      if (_features.size() == 0) {
+        return;
+      }
+
+      if (_features.get(0) != null) {
+        features.put(cat, _features.toArray());
+      }
     });
+
     return new FeaturesAllCategoriesQueryResult("", features, id);
+  }
+
+  private static ArrayList<HashMap<String, Object>> getFeaturesFromEntity(String entityName, List<String> ids) {
+    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
+    ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
+    selector.open(entityName);
+
+    List<Map<String, PrimitiveTypeProvider>> rows;
+
+    if (ids == null || ids.isEmpty()) {
+      rows = selector.getAll();
+    } else {
+      rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
+    }
+
+    for (Map<String, PrimitiveTypeProvider> row : rows) {
+      HashMap<String, Object> tempMap = new HashMap<>();
+
+      tempMap.put(FEATURE_COLUMN_QUALIFIER, row.get(FEATURE_COLUMN_QUALIFIER).toObject());
+      tempMap.put(GENERIC_ID_COLUMN_QUALIFIER, row.get(GENERIC_ID_COLUMN_QUALIFIER).toObject());
+
+      currList.add(tempMap);
+    }
+
+    return currList;
+  }
+
+  private static Map<String, ArrayList<HashMap<String, Object>>> getFeaturesForCategory(String category, List<String> ids) {
+    final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
+    Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
+
+    retrievalRuntimeConfig.getRetrieversByCategory(category).forEach(retriever -> {
+      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
+      return true;
+    });
+
+    return _return;
+  }
+
+  public static FeaturesByEntityQueryResult retrieveFeaturesForEntity(String entityName, List<String> ids) {
+    ArrayList<HashMap<String, Object>> features = getFeaturesFromEntity(entityName, ids);
+    return new FeaturesByEntityQueryResult("", features, entityName);
+  }
+
+  public static FeaturesByCategoryQueryResult retrieveFeaturesForCategory(String category, List<String> ids) {
+    Map<String, ArrayList<HashMap<String, Object>>> features = getFeaturesForCategory(category, ids);
+    return new FeaturesByCategoryQueryResult("", features, category);
   }
 
 }
