@@ -11,7 +11,7 @@ allprojects {
     group = 'org.vitrivr'
 
     /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
-    version = '3.4.0'
+    version = '3.5.0'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
