@@ -194,7 +194,7 @@ public class QueryUtil {
             row.get(FEATURE_COLUMN_QUALIFIER).toObject()
         ).forEach(_return::add);
       });
-      return true;
+      return true; // Return value false would break the foreEachKey
     });
     return _return;
   }
