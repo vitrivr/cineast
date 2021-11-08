@@ -552,10 +552,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "type" : "array",
-                "items" : {
-                  "type" : "string"
-                }
+                "$ref" : "#/components/schemas/IdList"
               }
             }
           }
@@ -592,10 +589,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "type" : "array",
-                "items" : {
-                  "type" : "string"
-                }
+                "$ref" : "#/components/schemas/IdList"
               }
             }
           }
@@ -1349,14 +1343,14 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
           "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
           "rawResultsPerModule" : {
             "type" : "integer",

@@ -5,8 +5,8 @@ import static org.vitrivr.cineast.api.util.APIConstants.CATEGORY_NAME;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.Arrays;
 import java.util.Map;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -15,23 +15,23 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 /**
  * Handler for the API call to retrieve all features for all objects for a given category.
  */
-public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<String[], FeaturesByCategoryQueryResult> {
+public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<IdList, FeaturesByCategoryQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/category/{" + CATEGORY_NAME + "}";
 
   @Override
-  public FeaturesByCategoryQueryResult performPost(String[] input, Context ctx) {
+  public FeaturesByCategoryQueryResult performPost(IdList idList, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
 
     // Category name from path params.
     final String cat = parameters.get(CATEGORY_NAME);
 
-    return QueryUtil.retrieveFeaturesForCategory(cat, Arrays.asList(input));
+    return QueryUtil.retrieveFeaturesForCategory(cat, idList.getIdList());
   }
 
   @Override
-  public Class<String[]> inClass() {
-    return String[].class;
+  public Class<IdList> inClass() {
+    return IdList.class;
   }
 
   @Override
