@@ -5,8 +5,8 @@ import static org.vitrivr.cineast.api.util.APIConstants.ENTITY_NAME;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.Arrays;
 import java.util.Map;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -15,23 +15,23 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 /**
  * Handler for the API call to retrieve all features for all objects for a given table/entity name.
  */
-public class FindFeaturesByEntityGetHandler implements ParsingPostRestHandler<String[], FeaturesByEntityQueryResult> {
+public class FindFeaturesByEntityGetHandler implements ParsingPostRestHandler<IdList, FeaturesByEntityQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/entity/{" + ENTITY_NAME + "}";
 
   @Override
-  public FeaturesByEntityQueryResult performPost(String[] input, Context ctx) {
+  public FeaturesByEntityQueryResult performPost(IdList idList, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
 
     // Entity name from path params.
     final String entity = parameters.get(ENTITY_NAME);
 
-    return QueryUtil.retrieveFeaturesForEntity(entity, Arrays.asList(input));
+    return QueryUtil.retrieveFeaturesForEntity(entity, idList.getIdList());
   }
 
   @Override
-  public Class<String[]> inClass() {
-    return String[].class;
+  public Class<IdList> inClass() {
+    return IdList.class;
   }
 
   @Override
