@@ -20,6 +20,8 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvocationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.SelectFromTablePostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByCategoryGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByEntityGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementGetHandler;
@@ -411,6 +413,8 @@ public class APIEndpoint {
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
+        new FindFeaturesByCategoryGetHandler(),
+        new FindFeaturesByEntityGetHandler(),
         new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
@@ -440,7 +444,7 @@ public class APIEndpoint {
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {
-      service.get("/thumbnails/:id", new ResolvedContentRoute(
+      service.get("/thumbnails/{id}", new ResolvedContentRoute(
           new FileSystemThumbnailResolver(
               new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
 
@@ -463,8 +467,7 @@ public class APIEndpoint {
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()));
       }
 
-      service.get("/objects/:id", new ResolvedContentRoute(fsor
-      ));
+      service.get("/objects/{id}", new ResolvedContentRoute(fsor));
     }
   }
 

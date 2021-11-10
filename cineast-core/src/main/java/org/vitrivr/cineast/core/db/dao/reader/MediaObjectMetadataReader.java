@@ -70,7 +70,7 @@ public class MediaObjectMetadataReader extends AbstractEntityReader {
    */
   public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
     StopWatch watch = StopWatch.createStarted();
-    LOGGER.traceEntry();
+    LOGGER.trace("Loading multimedia metadata for {} objects", objectids.size());
     final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectids);
     if (results.isEmpty()) {
       LOGGER.debug("Could not find any metadata for provided object IDs. Excerpt: {}, ID count: {}", Arrays.toString(objectids.subList(0, Math.min(5, objectids.size())).toArray()), objectids.size());
