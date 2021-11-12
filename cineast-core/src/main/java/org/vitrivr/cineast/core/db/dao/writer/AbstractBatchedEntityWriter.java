@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.dao.writer;
 
+import java.io.Closeable;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -9,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
-public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
+public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
     /** The {@link Queue} used to store {@link PersistentTuple}s until they are flushed to disk. */
     private final ArrayBlockingQueue<PersistentTuple> buffer;
 
@@ -31,15 +32,8 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
         }
     }
 
-    /**
-     *
-     */
     protected abstract void init();
 
-    /**
-     * @param entity
-     * @return
-     */
     protected abstract PersistentTuple generateTuple(T entity);
 
     /**

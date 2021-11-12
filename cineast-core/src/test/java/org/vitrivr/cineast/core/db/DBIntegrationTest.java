@@ -32,6 +32,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.CineastIOUtils;
 
 /**
  * Performs Inserts and Retrieves Elements. Verifies that both writing and reading is performed correctly.
@@ -99,16 +100,9 @@ public abstract class DBIntegrationTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    if (writer != null) {
-      writer.close();
-    }
-    if (selector != null) {
-      selector.close();
-    }
+    CineastIOUtils.closeQuietly(writer, selector);
     dropTables();
-    if (ec != null) {
-      ec.close();
-    }
+    CineastIOUtils.closeQuietly(ec);
   }
 
   private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;

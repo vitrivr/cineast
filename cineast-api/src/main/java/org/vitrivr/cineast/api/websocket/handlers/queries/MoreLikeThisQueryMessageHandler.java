@@ -52,7 +52,8 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
       /* Finalize and submit per-category results. */
       futures.addAll(this.finalizeAndSubmitResults(session, queryId, category, -1, results));
 
-      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+      // TODO Possibly add metadata specification to mlt-handler
+      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
       threads.addAll(_threads);
     }
     futures.forEach(CompletableFuture::join);

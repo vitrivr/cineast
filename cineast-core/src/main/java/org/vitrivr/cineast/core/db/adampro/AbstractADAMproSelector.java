@@ -51,10 +51,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
   }
 
   @Override
-  public boolean close() {
-
-    //this.adampro.close();
-    return true;
+  public void close() {
   }
 
   @Override
