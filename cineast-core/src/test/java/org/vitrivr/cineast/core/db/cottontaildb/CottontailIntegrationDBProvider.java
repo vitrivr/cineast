@@ -19,7 +19,7 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
 
   CottontailWrapper getWrapper() {
-    return new CottontailWrapper(config, false);
+    return new CottontailWrapper(config);
   }
 
   @Override

@@ -19,7 +19,7 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
   public void finishSetup() {
     final CottontailWrapper wrapper = _provider.getWrapper();
     final String fqn = wrapper.fqnInput(this.getTestTextTableName());
-    wrapper.client.optimize(new OptimizeEntity(fqn), null);
+    wrapper.client.optimize(new OptimizeEntity(fqn));
     wrapper.close();
   }
 
