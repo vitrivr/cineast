@@ -5,21 +5,22 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.IntegrationDBProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cottontail.CottontailKt;
 import org.vitrivr.cottontail.client.language.dml.Insert;
+import org.vitrivr.cottontail.server.grpc.CottontailGrpcServer;
 
 public class CottontailIntegrationDBProvider implements IntegrationDBProvider<Insert> {
 
 
-  private final DatabaseConfig config;
+  private final EmbeddedCottontailDB db;
 
   public CottontailIntegrationDBProvider() {
-    config = new DatabaseConfig();
-    config.setPort(1865);
+    db = EmbeddedCottontailDB.getInstance();
   }
 
 
   CottontailWrapper getWrapper() {
-    return new CottontailWrapper(config);
+    return db.getWrapper();
   }
 
   @Override
