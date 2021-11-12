@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
 
+import com.google.common.collect.Lists;
 import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +29,7 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 import org.vitrivr.cottontail.client.TupleIterator;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
@@ -33,6 +37,7 @@ import org.vitrivr.cottontail.client.language.extensions.And;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
 import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Knn;
 
 public final class CottontailSelector implements DBSelector {
@@ -60,9 +65,8 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public boolean close() {
+  public void close() {
     this.cottontail.close();
-    return true;
   }
 
   /**
@@ -229,6 +233,58 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
+    Query query = new Query(this.fqn);
+    query.select("*");
+    Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
+    predicates.ifPresent(query::where);
+    return processResults(this.cottontail.client.query(query, null));
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
+    Query query = new Query(this.fqn);
+    query.select("*");
+    Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
+    final Literal segmentIds = new Literal(idColName, "IN", ids.toArray());
+    if (predicates.isPresent()) {
+      query.where(new And(segmentIds, predicates.get()));
+    } else {
+      query.where(segmentIds);
+    }
+    return processResults(this.cottontail.client.query(query, null));
+  }
+
+
+  public Optional<Predicate> generateQueryFromMetadataSpec(List<MetadataAccessSpecification> spec) {
+    final List<Optional<Predicate>> atomics = spec.stream().map(s -> {
+      List<Predicate> singleSpecPredicates = new ArrayList<>();
+      if (!s.domain.isEmpty() && !s.domain.equals("*")) {
+        singleSpecPredicates.add(new Literal(DOMAIN_COL_NAME, "=", s.domain));
+      }
+      if (!s.key.isEmpty() && !s.key.equals("*")) {
+        singleSpecPredicates.add(new Literal(KEY_COL_NAME, "=", s.key));
+      }
+      return singleSpecPredicates.stream().reduce(And::new);
+    }).collect(Collectors.toList());
+
+    Optional<Optional<Predicate>> reduce = atomics.stream().reduce((res, el) -> {
+      if (!res.isPresent() && !el.isPresent()) {
+        return Optional.empty();
+      }
+      if (!res.isPresent()) {
+        return el;
+      }
+      if (!el.isPresent()) {
+        return res;
+      }
+      return Optional.of(new Or(res.get(), el.get()));
+    });
+    return reduce.orElseGet(Optional::empty);
+  }
+
+
+  @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
     final Query query = new Query(this.fqn).select(column);
     try {
@@ -309,6 +365,10 @@ public final class CottontailSelector implements DBSelector {
     } catch (StatusRuntimeException e) {
       return false;
     }
+  }
+
+  List<CottontailGrpc.Literal> toLiteralList(String s) {
+    return Lists.newArrayList(CottontailGrpc.Literal.newBuilder().setStringData(s).build());
   }
 
   /**

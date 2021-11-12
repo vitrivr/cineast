@@ -10,8 +10,7 @@ public class NoDBWriter extends AbstractPersistencyWriter<Object> {
   }
 
   @Override
-  public boolean close() {
-    return true;
+  public void close() {
   }
 
   @Override

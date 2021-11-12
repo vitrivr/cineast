@@ -42,7 +42,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
   private boolean progress = false;
 
   private static MediaSegmentDescriptor convert(Tuple segmentTuple) {
-    final String oid = (String) segmentTuple.get(MediaSegmentDescriptor.OBJECT_ID_COL_NAME);
+    final String oid = (String) segmentTuple.get(CineastConstants.OBJECT_ID_COLUMN_QUALIFIER);
     final String sid = (String) segmentTuple.get(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER);
     final int number = (Integer) segmentTuple.get(MediaSegmentDescriptor.SEGMENT_NO_COL_NAME);
     final int start = (Integer) segmentTuple.get(MediaSegmentDescriptor.SEGMENT_START_COL_NAME);
@@ -71,7 +71,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       case CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER:
         builder.setStringData(segment.getSegmentId());
         break;
-      case MediaSegmentDescriptor.OBJECT_ID_COL_NAME:
+      case CineastConstants.OBJECT_ID_COLUMN_QUALIFIER:
         builder.setStringData(segment.getObjectId());
         break;
       case MediaSegmentDescriptor.SEGMENT_NO_COL_NAME:
