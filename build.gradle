@@ -11,7 +11,7 @@ allprojects {
     group = 'org.vitrivr'
 
     /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
-    version = '3.5.0'
+    version = '3.5.1'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -40,7 +40,6 @@ subprojects {
     targetCompatibility = 1.8
 
     repositories {
-        jcenter()
         mavenCentral()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
