@@ -40,7 +40,6 @@ subprojects {
     targetCompatibility = 1.8
 
     repositories {
-        jcenter()
         mavenCentral()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
