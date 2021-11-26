@@ -1,9 +1,9 @@
 http://data.vitrivr.org/DeepLab/ade20k.pb,resources/DeepLab/ade20k.pb
 http://data.vitrivr.org/DeepLab/cityscapes.pb,resources/DeepLab/cityscapes.pb
 http://data.vitrivr.org/DeepLab/pascalvoc.pb,resources/DeepLab/pascalvoc.pb
-http://data.vitrivr.org/TextSpotter/CRNN_VGG_BiLSTM_CTC.onnx,resources/TextSpotter/CRNN_VGG_BiLSTM_CTC.onnx
+http://data.vitrivr.org/TextSpotter/CRNN_VGG_BiLSTM_CTC.onnx,resources/SceneTextExtractor/CRNN_VGG_BiLSTM_CTC.onnx
 http://data.vitrivr.org/TextSpotter/crnn.onnx,resources/TextSpotter/crnn.onnx
-http://data.vitrivr.org/TextSpotter/frozen_east_text_detection.pb,resources/TextSpotter/frozen_east_text_detection.pb
+http://data.vitrivr.org/TextSpotter/frozen_east_text_detection.pb,resources/SceneTextExtractor/frozen_east_text_detection.pb
 http://data.vitrivr.org/codebooks/mirflickr25k-256.hogcb,resources/codebooks/mirflickr25k-256.hogcb
 http://data.vitrivr.org/codebooks/mirflickr25k-256.surfcb,resources/codebooks/mirflickr25k-256.surfcb
 http://data.vitrivr.org/codebooks/mirflickr25k-512.hogcb,resources/codebooks/mirflickr25k-512.hogcb
