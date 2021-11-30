@@ -5,12 +5,10 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
@@ -34,39 +32,18 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 //TODO maybe this should be moved to core?
 public class QueryUtil {
 
-  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupComponentsByCategory(
-      List<QueryComponent> queryComponents) {
+  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupQueryTermsByCategory(List<QueryTerm> queryTerms) {
     HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
-    for (QueryComponent component : queryComponents) {
-      for (QueryTerm term : component.getTerms()) {
-        if (term.getCategories() == null) {
-          continue;
-        }
-        term.getCategories().forEach((String category) -> {
-          if (!categoryMap.containsKey(category)) {
-            categoryMap.put(category, new ArrayList<>());
-          }
-          categoryMap.get(category).add(term.toContainer());
-        });
-      }
-    }
-    return categoryMap;
-  }
-
-  public static HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> groupTermsByCategory(
-      List<org.vitrivr.cineast.api.grpc.data.QueryTerm> terms) {
-    HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
-    for (org.vitrivr.cineast.api.grpc.data.QueryTerm term : terms) {
-      if (term.getCategories().isEmpty()) {
+    for (QueryTerm term : queryTerms) {
+      if (term.getCategories() == null) {
         continue;
       }
       term.getCategories().forEach((String category) -> {
         if (!categoryMap.containsKey(category)) {
           categoryMap.put(category, new ArrayList<>());
         }
-        categoryMap.get(category).add(new Pair<>(term.getContainer(), term.getQueryConfig()));
+        categoryMap.get(category).add(term.toContainer());
       });
-
     }
     return categoryMap;
   }
@@ -86,22 +63,7 @@ public class QueryUtil {
 
       float weight = MathHelper.limit(qc.getWeight(), -1f, 1f);
 
-      List<SegmentScoreElement> scoreResults;
-      if (qc.hasId()) {
-        scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
-      } else {
-        scoreResults = continuousRetrievalLogic.retrieve(qc, category, qconf);
-      }
-
-      for (SegmentScoreElement element : scoreResults) {
-        String segmentId = element.getSegmentId();
-        double score = element.getScore();
-        if (Double.isInfinite(score) || Double.isNaN(score)) {
-          continue;
-        }
-        double weightedScore = score * weight;
-        scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
-      }
+      retrieveAndWeight(continuousRetrievalLogic, category, scoreBySegmentId, qc, qconf, weight);
 
     }
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
@@ -112,7 +74,7 @@ public class QueryUtil {
       return true;
     });
 
-    Collections.sort(list, StringDoublePair.COMPARATOR);
+    list.sort(StringDoublePair.COMPARATOR);
 
     final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults()
         .orElse(Config.sharedConfig().getRetriever().getMaxResults());
@@ -128,11 +90,25 @@ public class QueryUtil {
     float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
 
+    retrieveAndWeight(continuousRetrievalLogic, category, scoreBySegmentId, queryTermContainer, config, weight);
+
+    final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
+    scoreBySegmentId.forEachEntry((segmentId, score) -> {
+      if (score > 0) {
+        list.add(new StringDoublePair(segmentId, score));
+      }
+      return true;
+    });
+
+    return list;
+  }
+
+  private static void retrieveAndWeight(ContinuousRetrievalLogic continuousRetrievalLogic, String category, TObjectDoubleHashMap<String> scoreBySegmentId, AbstractQueryTermContainer qc, ReadableQueryConfig qconf, float weight) {
     List<SegmentScoreElement> scoreResults;
-    if (queryTermContainer.hasId()) {
-      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer.getId(), category, config);
+    if (qc.hasId()) {
+      scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
     } else {
-      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer, category, config);
+      scoreResults = continuousRetrievalLogic.retrieve(qc, category, qconf);
     }
 
     for (SegmentScoreElement element : scoreResults) {
@@ -144,16 +120,6 @@ public class QueryUtil {
       double weightedScore = score * weight;
       scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
     }
-
-    final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
-    scoreBySegmentId.forEachEntry((segmentId, score) -> {
-      if (score > 0) {
-        list.add(new StringDoublePair(segmentId, score));
-      }
-      return true;
-    });
-
-    return list;
   }
 
   /**
