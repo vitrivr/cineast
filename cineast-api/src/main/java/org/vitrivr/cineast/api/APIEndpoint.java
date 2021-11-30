@@ -38,6 +38,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadata
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarStagedPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
@@ -291,21 +292,13 @@ public class APIEndpoint {
       this.webSocketApi = new WebsocketAPI();
 
       service.ws(String.format("%s/websocket", namespace()), handler -> {
-        handler.onConnect(ctx -> {
-          webSocketApi.connected(ctx.session);
-        });
+        handler.onConnect(ctx -> webSocketApi.connected(ctx.session));
 
-        handler.onClose(ctx -> {
-          webSocketApi.closed(ctx.session, ctx.status(), ctx.reason());
-        });
+        handler.onClose(ctx -> webSocketApi.closed(ctx.session, ctx.status(), ctx.reason()));
 
-        handler.onError(ctx -> {
-          webSocketApi.onWebSocketException(ctx.session, ctx.error());
-        });
+        handler.onError(ctx -> webSocketApi.onWebSocketException(ctx.session, ctx.error()));
 
-        handler.onMessage(ctx -> {
-          webSocketApi.message(ctx.session, ctx.message());
-        });
+        handler.onMessage(ctx -> webSocketApi.message(ctx.session, ctx.message()));
       });
     }
 
@@ -413,6 +406,7 @@ public class APIEndpoint {
         new FindSegmentsByIdGetHandler(),
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
+        new FindSegmentSimilarStagedPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
         new FindFeaturesByCategoryGetHandler(),
         new FindFeaturesByEntityGetHandler(),
@@ -439,9 +433,6 @@ public class APIEndpoint {
 
   /**
    * If configured, this registers two special routes that serve the media objects as media content and additionally a thumbnails endpoint for them.
-   *
-   * @param service
-   * @param config
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {

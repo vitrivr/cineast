@@ -76,6 +76,7 @@ public class QueryUtil {
 
     list.sort(StringDoublePair.COMPARATOR);
 
+    // FIXME: Using an arbitrary query config to limit results is prone to errors
     final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults()
         .orElse(Config.sharedConfig().getRetriever().getMaxResults());
     List<StringDoublePair> resultList = list;
