@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -21,12 +20,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.APIEndpoint;
-import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.standalone.config.APIConfig;
 
 /**
@@ -41,7 +39,7 @@ public class OpenApiCompatHelper {
   public static final String SEGMENT_OAS_TAG = "Segment";
 
 
-  public static final List<Tag> OAS_TAGS = Arrays.asList(
+  public static final List<Tag> OAS_TAGS = Collections.singletonList(
       new Tag().name(METADATA_OAS_TAG).description("Metadata related operations")
   );
   private static final Logger LOGGER = LogManager.getLogger();
@@ -52,9 +50,6 @@ public class OpenApiCompatHelper {
 
   /**
    * Creates the Javalin options used to create an OpenAPI specification.
-   *
-   * @param config
-   * @return
    */
   public static OpenApiOptions getJavalinOpenApiOptions(APIConfig config) {
     //Default Javalin JSON mapper includes all null values, which breakes the openapi specs.
@@ -63,8 +58,6 @@ public class OpenApiCompatHelper {
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
     mapper.addMixIn(Schema.class,
         SchemaMixin.class); // Makes Schema.exampleFlagSet being ignored by jackson
-//    mapper.addMixIn(MediaType.class,
-//        MediaTypeMixin.class); // Makes MediaType.exampleFlagSet being ignored by jackson
     return new OpenApiOptions(() -> getOpenApi(config))
         .path("/openapi-specs")
         .activateAnnotationScanningFor("org.vitrivr.cineast.api")
@@ -76,9 +69,6 @@ public class OpenApiCompatHelper {
 
   /**
    * Creates the base {@link OpenAPI} specification.
-   *
-   * @param config
-   * @return
    */
   public static OpenAPI getOpenApi(APIConfig config) {
     OpenAPI api = new OpenAPI();
@@ -123,11 +113,11 @@ public class OpenApiCompatHelper {
             apiEndpoint.getOpenApi().getOpenApiHandler().createOpenAPISchema());
         File file = new File(path);
         File folder = file.getParentFile();
-        if (folder != null) {
-          folder.mkdirs();
+        if (folder != null && !folder.mkdirs()) {
+          LOGGER.warn("Could not create OpenAPI documentation path: {}", folder.getAbsolutePath());
         }
-        if (file.exists()) {
-          file.delete();
+        if (file.exists() && !file.delete()) {
+          LOGGER.warn("Could not delete existing OpenAPI documentation: {}", file.getAbsolutePath());
         }
         try (FileOutputStream stream = new FileOutputStream(
             file); PrintWriter writer = new PrintWriter(stream)) {
@@ -139,11 +129,5 @@ public class OpenApiCompatHelper {
     } finally {
       APIEndpoint.stop();
     }
-  }
-
-  private static abstract class MediaObjectMetadataQueryResultMixin {
-
-    @JsonIgnore
-    public abstract MessageType getMessageType();
   }
 }
