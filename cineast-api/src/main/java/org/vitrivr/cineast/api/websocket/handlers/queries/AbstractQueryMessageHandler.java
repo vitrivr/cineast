@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import static org.vitrivr.cineast.api.util.APIConstants.ACCESS_ALL_METADATA;
+
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +37,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
@@ -171,21 +174,22 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   /**
    * Performs a lookup for {@link MediaObjectMetadataReader} identified by the provided segment IDs.
    *
-   * @param session   The WebSocket session to write the data to.
-   * @param queryId   The current query id used for transmitting data back.
-   * @param objectIds List of object IDs for which to lookup metadata.
+   * @param session            The WebSocket session to write the data to.
+   * @param queryId            The current query id used for transmitting data back.
+   * @param objectIds          List of object IDs for which to lookup metadata.
+   * @param metadataAccessSpec if this parameter is null, no metadata is fetched
    */
-  protected synchronized List<Thread> loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds, Collection<String> objectIdsForWhichMetadataIsFetched) {
+  protected synchronized List<Thread> loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds, Collection<String> objectIdsForWhichMetadataIsFetched, List<MetadataAccessSpecification> metadataAccessSpec) {
     if (objectIds.isEmpty()) {
       return new ArrayList<>();
     }
     objectIds.removeAll(objectIdsForWhichMetadataIsFetched);
     objectIdsForWhichMetadataIsFetched.addAll(objectIds);
     if (objectIds.size() > 100_000) {
-      return Lists.partition(objectIds, 100_000).stream().map(list -> loadAndWriteObjectMetadata(session, queryId, list, objectIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
+      return Lists.partition(objectIds, 100_000).stream().map(list -> loadAndWriteObjectMetadata(session, queryId, list, objectIdsForWhichMetadataIsFetched, metadataAccessSpec)).flatMap(Collection::stream).collect(Collectors.toList());
     }
     Thread thread = new Thread(() -> {
-      final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
+      final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.findBySpec(objectIds, metadataAccessSpec);
       if (objectMetadata.isEmpty()) {
         return;
       }
@@ -208,8 +212,9 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param queryId                             The current query id used for transmitting data back.
    * @param segmentIds                          List of segment IDs for which to lookup metadata.
    * @param segmentIdsForWhichMetadataIsFetched segmentids for which metadata is already fetched
+   * @param metadataAccessSpec                  if this parameter is null, no metadata is fetched.
    */
-  protected synchronized List<Thread> loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds, Collection<String> segmentIdsForWhichMetadataIsFetched) {
+  synchronized List<Thread> loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds, Collection<String> segmentIdsForWhichMetadataIsFetched, List<MetadataAccessSpecification> metadataAccessSpec) {
     if (segmentIds.isEmpty()) {
       return new ArrayList<>();
     }
@@ -217,10 +222,10 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     segmentIdsForWhichMetadataIsFetched.addAll(segmentIds);
     //chunk for memory safety-purposes
     if (segmentIds.size() > 100_000) {
-      return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched)).flatMap(Collection::stream).collect(Collectors.toList());
+      return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched, metadataAccessSpec)).flatMap(Collection::stream).collect(Collectors.toList());
     }
     Thread fetching = new Thread(() -> {
-      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.findBySpec(segmentIds, metadataAccessSpec);
       if (segmentMetadata.isEmpty()) {
         return;
       }
@@ -298,11 +303,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param segmentIds                          Segment IDs of the metadata results.
    * @param objectIds                           Object IDs of the metadata result.
    * @param segmentIdsForWhichMetadataIsFetched Segment IDs for which the metadata was fetched and transferred.
+   * @param metadataAccessSpec                  if this param is null, all metadata is fetched
    */
-  protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched) {
+  protected List<Thread> submitMetadata(Session session, String queryId, List<String> segmentIds, List<String> objectIds, Collection<String> segmentIdsForWhichMetadataIsFetched, Collection<String> objectIdsForWhichMetadataIsFetched, List<MetadataAccessSpecification> metadataAccessSpec) {
+    // this ensures maximum backwards compatibility. The API should probably include a NONE option
+    if (metadataAccessSpec == null) {
+      metadataAccessSpec = ACCESS_ALL_METADATA;
+    }
     /* Load and transmit segment & object metadata. */
-    List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched);
-    List<Thread> objectThreads = this.loadAndWriteObjectMetadata(session, queryId, objectIds, objectIdsForWhichMetadataIsFetched);
+    List<Thread> segmentThreads = this.loadAndWriteSegmentMetadata(session, queryId, segmentIds, segmentIdsForWhichMetadataIsFetched, metadataAccessSpec);
+    List<Thread> objectThreads = this.loadAndWriteObjectMetadata(session, queryId, objectIds, objectIdsForWhichMetadataIsFetched, metadataAccessSpec);
     segmentThreads.addAll(objectThreads);
     return segmentThreads;
   }

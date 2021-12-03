@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.db.setup;
 
-import java.util.HashMap;
-
 public class NoEntityCreator implements EntityCreator {
 
 
@@ -16,7 +14,17 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
+  public boolean createMetadataEntity(String tableName) {
+    return false;
+  }
+
+  @Override
   public boolean createSegmentMetadataEntity() { return false; }
+
+  @Override
+  public boolean createSegmentMetadataEntity(String tableName) {
+    return false;
+  }
 
   @Override
   public boolean createSegmentEntity() {

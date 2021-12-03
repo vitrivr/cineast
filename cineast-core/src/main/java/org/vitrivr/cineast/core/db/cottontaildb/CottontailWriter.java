@@ -40,9 +40,8 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
   }
 
   @Override
-  public boolean close() {
+  public void close() {
     this.cottontail.close();
-    return true;
   }
 
   @Override

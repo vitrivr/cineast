@@ -40,9 +40,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   }
 
   @Override
-  public boolean close() {
-    //this.adampro.close();
-    return true;
+  public void close() {
   }
 
   @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 /**
  * This object represents a MoreLikeThisQuery message, i.e. a request for a similarity-search.
@@ -21,6 +22,7 @@ public class MoreLikeThisQuery extends Query {
    * List of feature categories that should be considered by the MLT query.
    */
   private final List<String> categories;
+  private List<MetadataAccessSpecification> metadataAccessSpec;
 
   /**
    * Constructor for the SimilarityQuery object.
@@ -32,10 +34,13 @@ public class MoreLikeThisQuery extends Query {
   @JsonCreator
   public MoreLikeThisQuery(@JsonProperty(value = "segmentId", required = true) String segmentId,
       @JsonProperty(value = "categories", required = true) List<String> categories,
-      @JsonProperty(value = "config", required = false) QueryConfig config) {
+      @JsonProperty(value = "config", required = false) QueryConfig config,
+      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
+  ) {
     super(config);
     this.segmentId = segmentId;
     this.categories = categories;
+    this.metadataAccessSpec = metadataAccessSpec;
   }
 
   public String getSegmentId() {
@@ -54,6 +59,9 @@ public class MoreLikeThisQuery extends Query {
     return MessageType.Q_MLT;
   }
 
+  public List<MetadataAccessSpecification> getMetadataAccessSpec() {
+    return metadataAccessSpec;
+  }
 }
 
 
