@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.OBJECT_ID_COLUMN_QUALIFIER;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,7 +25,7 @@ public class MediaObjectDescriptor implements ExistenceCheck {
   /**
    * Field names in the persistence layer.
    */
-  public static final String[] FIELDNAMES = {"objectid", "mediatype", "name", "path"};
+  public static final String[] FIELDNAMES = {OBJECT_ID_COLUMN_QUALIFIER, "mediatype", "name", "path"};
 
 
   private final String objectId;
@@ -72,7 +74,7 @@ public class MediaObjectDescriptor implements ExistenceCheck {
   }
 
   @JsonCreator
-  public MediaObjectDescriptor(@JsonProperty("objectId") String objectId,
+  public MediaObjectDescriptor(@JsonProperty(OBJECT_ID_COLUMN_QUALIFIER) String objectId,
       @JsonProperty("name") String name, @JsonProperty("path") String path,
       @JsonProperty(value = "mediatype", defaultValue = "UNKNOWN") MediaType mediatypeId,
       @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {

@@ -55,8 +55,8 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
     futures.add(this.write(session, new MediaObjectQueryResult(uuid, object)));
 
     /* Load and transmit segment & object metadata. */
-    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched));
-    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched));
+    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
+    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
     for (Thread thread : threads) {
       thread.join();
     }

@@ -1,6 +1,10 @@
 package org.vitrivr.cineast.core.db;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
+import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
+
 import com.google.common.collect.Lists;
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,12 +22,13 @@ import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
-public interface DBSelector {
+public interface DBSelector extends Closeable {
 
   boolean open(String name);
 
-  boolean close();
+  void close();
 
   /**
    * Convenience-wrapper to query with float-arrays {@link #getNearestNeighboursGeneric(int, PrimitiveTypeProvider, String, Class, ReadableQueryConfig)}
@@ -189,6 +194,59 @@ public interface DBSelector {
     this.getAll(column).forEach(el -> count.compute(el.getString(), (k, v) -> v == null ? 1 : v++));
     return count;
   }
+
+  /**
+   * by default just calls the implementation with a null-list for ids
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
+    return this.getMetadataByIdAndSpec(null, spec, null);
+  }
+
+  /**
+   * Horribly slow default implementation which iterates over the whole table
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
+    return getAll().stream().filter(tuple -> {
+      // check if there are any elements of the specification which do not work
+      if (spec.stream().noneMatch(el -> {
+        if (ids != null) {
+          if (!tuple.containsKey(idColName)) {
+            return false;
+          }
+          // check if this matches with one of the given ids
+          if (ids.stream().noneMatch(id -> id.equals(tuple.get(idColName).getString()))) {
+            return false;
+          }
+        }
+        // at this point, if there is an id list, the element is within that list
+        if (!el.domain.equals("*")) {
+          if (!tuple.containsKey(DOMAIN_COL_NAME)) {
+            return false;
+          }
+          if (!tuple.get(DOMAIN_COL_NAME).getString().equals(el.domain)) {
+            return false;
+          }
+        }
+        // at this point, if a domain is specified, the element matches that domain
+        if (!el.key.equals("*")) {
+          if (!tuple.containsKey(KEY_COL_NAME)) {
+            return false;
+          }
+          if (!tuple.get(KEY_COL_NAME).getString().equals(el.key)) {
+            return false;
+          }
+        }
+        //if we are here, it means the spec is good w.r.t. to the element - this element should not be blocked
+        return true;
+      })) {
+        //if there are any matches, return false to filter the element
+        return false;
+      }
+      // if the spec matches, this element is fine
+      return true;
+    }).collect(Collectors.toList());
+  }
+
 
   /**
    * SELECT column from the table. Be careful with large entities
