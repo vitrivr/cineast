@@ -127,7 +127,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .collect(Collectors.toList());
 
               if (results.isEmpty()) {
-                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full compoment: {}", category, qt.getType(), lambdaFinalContainerIdx, stage);
+                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full component: {}", category, qt.getType(), lambdaFinalContainerIdx, stage);
               }
               if (cache.get(stageIndex).containsKey(category)) {
                 LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, stageIndex);
@@ -137,7 +137,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               results.forEach(res -> relevantSegments.add(res.key));
 
               /*
-               * If this is the last stage, we can collect the results and send relevant results per category back the the requester.
+               * If this is the last stage, we can collect the results and send relevant results per category back the requester.
                * Otherwise we shouldn't yet send since we might send results to the requester that would be filtered at a later stage.
                */
               if (stageIndex == stagedSimilarityQuery.getStages().size() - 1) {
