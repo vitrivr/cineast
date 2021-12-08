@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.OBJECT_ID_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,8 +19,6 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY  = "cineast_segment";
 
-    /** Name of the column wih the FK */
-    public static final String OBJECT_ID_COL_NAME = "objectid";
     /** Name of the column with the segment number */
     public static final String SEGMENT_NO_COL_NAME = "segmentnumber";
     /** Name of the column with segmentstart value*/
@@ -43,7 +42,7 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
      */
     public static final String[] FIELDNAMES = {
         SEGMENT_ID_COLUMN_QUALIFIER,
-        OBJECT_ID_COL_NAME,
+        OBJECT_ID_COLUMN_QUALIFIER,
         SEGMENT_NO_COL_NAME,
         SEGMENT_START_COL_NAME,
         SEGMENT_END_COL_NAME,

@@ -12,14 +12,17 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
   private final DatabaseConfig config;
 
+  private final CottontailWrapper wrapper;
+
   public CottontailIntegrationDBProvider() {
     config = new DatabaseConfig();
     config.setPort(1865);
+    wrapper = new CottontailWrapper(config, true);
   }
 
 
   CottontailWrapper getWrapper() {
-    return new CottontailWrapper(config, false);
+    return wrapper;
   }
 
   @Override

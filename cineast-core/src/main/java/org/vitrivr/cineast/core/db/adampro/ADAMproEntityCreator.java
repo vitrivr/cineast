@@ -61,14 +61,8 @@ public class ADAMproEntityCreator implements EntityCreator {
         return ack.getCode() == Code.OK;
     }
 
-    /**
-     * Initialises the entity responsible for holding metadata information about multimedia objects in a ADAMpro
-     * storage.
-     *
-     * @see EntityCreator
-     */
     @Override
-    public boolean createMetadataEntity() {
+    public boolean createMetadataEntity(String tableName) {
         final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -80,7 +74,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         fields.add(builder.setName(MediaObjectMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaObjectMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(tableName).addAllAttributes(fields).build();
         final AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {
@@ -93,7 +87,7 @@ public class ADAMproEntityCreator implements EntityCreator {
     }
 
     @Override
-    public boolean createSegmentMetadataEntity() {
+    public boolean createSegmentMetadataEntity(String tableName) {
         final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -105,7 +99,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         fields.add(builder.setName(MediaSegmentMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaSegmentMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(tableName).addAllAttributes(fields).build();
         final AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {
