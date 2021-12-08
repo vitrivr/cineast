@@ -34,9 +34,8 @@ public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
   }
 
   @Override
-  public boolean close() {
+  public void close() {
     this.entity = null;
-    return true;
   }
 
   @Override

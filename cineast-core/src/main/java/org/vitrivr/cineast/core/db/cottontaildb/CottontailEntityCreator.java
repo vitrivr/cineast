@@ -153,11 +153,11 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity() {
+  public boolean createMetadataEntity(String tableName) {
     final long txId = this.cottontail.client.begin();
     try {
       /* Create entity. */
-      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + MediaObjectMetadataDescriptor.ENTITY;
+      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
       final CreateEntity entity = new CreateEntity(entityName)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
@@ -176,11 +176,11 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createSegmentMetadataEntity() {
+  public boolean createSegmentMetadataEntity(String tableName) {
     final long txId = this.cottontail.client.begin();
     try {
       /* Create entity. */
-      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + MediaSegmentMetadataDescriptor.ENTITY;
+      final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
       final CreateEntity entity = new CreateEntity(entityName)
           .column(MediaSegmentMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaSegmentMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)

@@ -3,6 +3,13 @@ package org.vitrivr.cineast.core.db;
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -13,15 +20,15 @@ import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.importer.Importer;
-import org.vitrivr.cineast.core.util.distance.*;
-
-import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.vitrivr.cineast.core.util.distance.BitSetComparator;
+import org.vitrivr.cineast.core.util.distance.BitSetHammingDistance;
+import org.vitrivr.cineast.core.util.distance.Distance;
+import org.vitrivr.cineast.core.util.distance.FloatArrayDistance;
+import org.vitrivr.cineast.core.util.distance.PrimitiveTypeMapDistanceComparator;
 
 public abstract class ImporterSelector<T extends Importer<?>> implements DBSelector {
 
-  protected ImporterSelector(File baseDirectory){
+  protected ImporterSelector(File baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
 
@@ -44,8 +51,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public boolean close() {
-    return true;
+  public void close() {
   }
 
   @Override
@@ -57,7 +63,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
         .equals(ProviderDataType.INT_ARRAY)) {
       results = getNearestNeighbourRows(k, queryProvider.getFloatArray(), column, config);
     } else {
-     results = getNearestNeighbourRows(k, queryProvider, column, config);
+      results = getNearestNeighbourRows(k, queryProvider, column, config);
     }
     return results.stream()
         .map(m -> DistanceElement.create(
@@ -131,7 +137,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
     FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue
-            .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+        .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
 
     HashSet<String> relevant = null;
     if (config.hasRelevantSegmentIds()) {
@@ -149,7 +155,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
         continue;
       }
       double d = distance
-              .applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
+          .applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
       map.put("distance", new FloatTypeProvider((float) d));
       knn.add(map);
     }
