@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -29,6 +30,7 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   private static final int EMBEDDING_SIZE = 256;
+  private static final int ENCODING_SIZE = 1536;
   private static final String TABLE_NAME = "features_visualtextcoembedding";
   private static final Distance DISTANCE = ReadableQueryConfig.Distance.euclidean;
 
@@ -87,15 +89,27 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+    // Return if already processed
+    if (phandler.idExists(shot.getId())) {
       return;
     }
 
-    BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+    if (!(shot.getVideoFrames().size() > 0 && shot.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
+      // Segment is video
+      List<BufferedImage> frames = shot.getVideoFrames().stream()
+          .map(frame -> frame.getImage().getBufferedImage())
+          .collect(Collectors.toList());
 
-    if (image != null) {
-      float[] embeddingArray = embedImage(image);
+      float[] embeddingArray = embedVideo(frames);
       this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+    } else if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      // Segment is image
+      BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+
+      if (image != null) {
+        float[] embeddingArray = embedImage(image);
+        this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+      }
     }
   }
 
@@ -199,6 +213,77 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
           return embeddingArray;
         }
+      }
+    }
+  }
+
+  private float[] embedVideo(List<BufferedImage> frames) {
+    initializeVisualEmbedding();
+
+    List<float[]> encodings = frames.stream().map(this::encodeImage).collect(Collectors.toList());
+
+    // Sum
+    float[] meanEncoding = encodings.stream().reduce(new float[ENCODING_SIZE], (encoding0, encoding1) -> {
+      float[] tempSum = new float[ENCODING_SIZE];
+
+      for (int i = 0; i < ENCODING_SIZE; i++) {
+        tempSum[i] = encoding0[i] + encoding1[i];
+      }
+
+      return tempSum;
+    });
+
+    // Calculate mean
+    for (int i = 0; i < ENCODING_SIZE; i++) {
+      meanEncoding[i] /= encodings.size();
+    }
+
+    try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
+      HashMap<String, Tensor> inputMap = new HashMap<>();
+
+      inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);
+
+      Map<String, Tensor> resultMap = visualCoEmbedding.call(inputMap);
+      try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
+
+        float[] embeddingArray = new float[EMBEDDING_SIZE];
+        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+        // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
+        embedding.read(floatBuffer);
+
+        return embeddingArray;
+      }
+    }
+  }
+
+  /**
+   * Encodes the given image using the encoding network.
+   * <p>
+   * Visual embedding must already be initialized.
+   *
+   * @return Intermediary encoding, not yet embedded.
+   */
+  private float[] encodeImage(BufferedImage image) {
+    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
+      image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
+    }
+    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
+    int[] rgb = colorsToRGB(colors);
+    float[] processedColors = preprocessInput(rgb);
+
+    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, IMAGE_WIDTH, IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
+      HashMap<String, Tensor> inputMap = new HashMap<>();
+      inputMap.put(VISUAL_EMBEDDING_INPUT, imageTensor);
+
+      Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
+
+      try (TFloat32 encoding = (TFloat32) resultMap.get(VISUAL_EMBEDDING_OUTPUT)) {
+
+        float[] embeddingArray = new float[ENCODING_SIZE];
+        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+        encoding.read(floatBuffer);
+
+        return embeddingArray;
       }
     }
   }
