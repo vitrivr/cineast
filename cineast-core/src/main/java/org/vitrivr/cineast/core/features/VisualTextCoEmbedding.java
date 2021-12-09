@@ -94,22 +94,28 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       return;
     }
 
+    // Case: segment contains video frames
     if (!(shot.getVideoFrames().size() > 0 && shot.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
-      // Segment is video
       List<BufferedImage> frames = shot.getVideoFrames().stream()
           .map(frame -> frame.getImage().getBufferedImage())
           .collect(Collectors.toList());
 
       float[] embeddingArray = embedVideo(frames);
       this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
-    } else if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      // Segment is image
+
+      return;
+    }
+
+    // Case: segment contains image
+    if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
       BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
 
       if (image != null) {
         float[] embeddingArray = embedImage(image);
         this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
       }
+
+      // Insert return here if additional cases are added!
     }
   }
 
