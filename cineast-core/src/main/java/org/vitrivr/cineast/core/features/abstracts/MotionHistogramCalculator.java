@@ -88,8 +88,8 @@ public abstract class MotionHistogramCalculator implements Retriever {
     for (int i = 0; i < sums.length; ++i) {
       float[] hist = hists[i];
       double sum = 0;
-      for (int j = 0; j < hist.length; ++j) {
-        sum += hist[j];
+      for (float v : hist) {
+        sum += v;
       }
       if (sum > 0) {
         for (int j = 0; j < hist.length; ++j) {
@@ -100,22 +100,22 @@ public abstract class MotionHistogramCalculator implements Retriever {
       sums[i] = sum;
     }
 
-    ArrayList<Double> sumList = new ArrayList<Double>(sums.length);
+    ArrayList<Double> sumList = new ArrayList<>(sums.length);
     for (double d : sums) {
       sumList.add(d);
     }
 
-    ArrayList<ArrayList<Float>> histList = new ArrayList<ArrayList<Float>>(
+    ArrayList<ArrayList<Float>> histList = new ArrayList<>(
         hists.length);
     for (float[] hist : hists) {
-      ArrayList<Float> h = new ArrayList<Float>(8);
+      ArrayList<Float> h = new ArrayList<>(8);
       for (float f : hist) {
         h.add(f);
       }
       histList.add(h);
     }
 
-    return new Pair<List<Double>, ArrayList<ArrayList<Float>>>(sumList,
+    return new Pair<>(sumList,
         histList);
   }
 
