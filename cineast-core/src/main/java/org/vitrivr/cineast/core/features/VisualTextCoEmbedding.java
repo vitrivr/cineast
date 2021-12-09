@@ -20,6 +20,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -96,8 +97,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
     // Case: segment contains video frames
     if (!(shot.getVideoFrames().size() > 0 && shot.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
-      List<BufferedImage> frames = shot.getVideoFrames().stream()
-          .map(frame -> frame.getImage().getBufferedImage())
+      List<MultiImage> frames = shot.getVideoFrames().stream()
+          .map(VideoFrame::getImage)
           .collect(Collectors.toList());
 
       float[] embeddingArray = embedVideo(frames);
@@ -223,10 +224,10 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private float[] embedVideo(List<BufferedImage> frames) {
+  private float[] embedVideo(List<MultiImage> frames) {
     initializeVisualEmbedding();
 
-    List<float[]> encodings = frames.stream().map(this::encodeImage).collect(Collectors.toList());
+    List<float[]> encodings = frames.stream().map(image -> encodeImage(image.getBufferedImage())).collect(Collectors.toList());
 
     // Sum
     float[] meanEncoding = encodings.stream().reduce(new float[ENCODING_SIZE], (encoding0, encoding1) -> {
