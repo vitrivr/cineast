@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
+import com.google.common.cache.CacheLoader;
 import georegression.struct.shapes.Quadrilateral_F64;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.opencv.core.CvType;
@@ -15,8 +16,8 @@ import org.vitrivr.cineast.core.util.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision) This makes sense here since we expect small errors from OCR sources
@@ -49,6 +50,20 @@ public class OCRSearch extends AbstractTextRetriever {
   private static final double threshold_postproc = 8;
   private static final MultiTracker.TRACKER_TYPE tracker_type = MultiTracker.TRACKER_TYPE.CIRCULANT;
   private static final int threshold_stream_length = 9;
+
+  private static final ThreadLocalObjectCache<TextDetector_EAST> detectorCache = new ThreadLocalObjectCache<>(new CacheLoader<Thread, TextDetector_EAST>() {
+    @Override
+    public TextDetector_EAST load(Thread key) {
+      return new TextDetector_EAST().initialize();
+    }
+  });
+
+  private static final ThreadLocalObjectCache<TextRecognizer_CTC> recognizerCache = new ThreadLocalObjectCache<>(new CacheLoader<Thread, TextRecognizer_CTC>() {
+    @Override
+    public TextRecognizer_CTC load(Thread key) {
+      return new TextRecognizer_CTC().initialize();
+    }
+  });
 
   public OCRSearch() {
     super(OCR_TABLE_NAME);
@@ -149,7 +164,7 @@ public class OCRSearch extends AbstractTextRetriever {
     data = new byte[in.getWidth() * in.getHeight() * (int) out.elemSize()];
     int[] dataBuff = in.getRGB(0, 0, in.getWidth(), in.getHeight(), null, 0, in.getWidth());
     for (int i = 0; i < dataBuff.length; i++) {
-      data[i * 3] = (byte) ((dataBuff[i] >> 0) & 0xFF);
+      data[i * 3] = (byte) ((dataBuff[i]) & 0xFF);
       data[i * 3 + 1] = (byte) ((dataBuff[i] >> 8) & 0xFF);
       data[i * 3 + 2] = (byte) ((dataBuff[i] >> 16) & 0xFF);
     }
@@ -262,8 +277,8 @@ public class OCRSearch extends AbstractTextRetriever {
    */
   @Override
   public void processSegment(SegmentContainer shot) {
-    TextDetector_EAST detector = new TextDetector_EAST().initialize();
-    TextRecognizer_CTC recognizer = new TextRecognizer_CTC().initialize();
+    TextDetector_EAST detector = detectorCache.get();
+    TextRecognizer_CTC recognizer = recognizerCache.get();
 
     int lenVideo = shot.getVideoFrames().size();
     // Scene text extraction for image
