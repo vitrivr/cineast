@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Decoder for media object of type {@link MediaType.IMAGE_SEQUENCE}, i.e. a sequence of images contained in a single
+ * Decoder for media object of type {@link MediaType#IMAGE_SEQUENCE}, i.e. a sequence of images contained in a single
  * folder that, in terms of Cineast's data model, belong together.
  *
  * <strong>Important:</strong> Unlike other implementations of {@link Decoder} this class operates on folders only!
