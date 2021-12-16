@@ -101,38 +101,6 @@ public class MedianImg {
 		System.gc();
 		LOGGER.traceExit();
 		return first.factory().newMultiImage(width, height, result);
-		
-		
-//		System.out.println("MedianImg.getMedian()");
-//		
-//		MultiImage first = frames.get(0).getImage();
-//		int width = first.getWidth(), height = first.getHeight();
-//		FileCachedImageHistogram fcih = new FileCachedImageHistogram(width, height);
-//		for(Frame frame : frames){
-//			BufferedImage bimg = frame.getImage().getBufferedImage();
-//			for(int y = 0; y < height; ++y){
-//				for(int x = 0; x < width; ++x){
-//					int col = bimg.getRGB(x, y);
-//					fcih.updateBucket(x, y, 0, RGBContainer.getRed(col));
-//					fcih.updateBucket(x, y, 1, RGBContainer.getGreen(col));
-//					fcih.updateBucket(x, y, 2, RGBContainer.getBlue(col));
-//				}
-//				System.err.println(y);
-//			}
-//		}
-//		
-//		BufferedImage median = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//		for(int y = 0; y < height; ++y){
-//			for(int x = 0; x < width; ++x){
-//				int r = medianFromHistogram(fcih.getBucket(x, y, 0));
-//				int g = medianFromHistogram(fcih.getBucket(x, y, 1));
-//				int b = medianFromHistogram(fcih.getBucket(x, y, 2));
-//				median.setRGB(x, y, RGBContainer.toIntColor(r, g, b));
-//			}
-//			System.err.println(y);
-//		}
-//		
-//		return new MultiImage(median);
 	}
 	
 	private static int medianFromHistogram(short[] hist){

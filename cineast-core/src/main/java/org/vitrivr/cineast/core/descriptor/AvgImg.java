@@ -42,9 +42,7 @@ public class AvgImg {
 		
 		
 		int size = videoFrames.size();
-		
-		//BufferedImage _return = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		
+
 		colors = new int[width * height];
 		
 		for(int i = 0; i < colors.length; ++i){
@@ -53,10 +51,7 @@ public class AvgImg {
 					(int)Math.round(buffer[3*i + 1] / size),
 					(int)Math.round(buffer[3*i + 2] / size));
 		}
-		
-		//_return.setRGB(0, 0, width, height, colors, 0, width);
-		
-		//colors = null;
+
 		buffer = null;
 		
 		System.gc();

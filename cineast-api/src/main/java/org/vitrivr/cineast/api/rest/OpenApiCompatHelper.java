@@ -60,8 +60,6 @@ public class OpenApiCompatHelper {
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
     mapper.addMixIn(Schema.class,
         SchemaMixin.class); // Makes Schema.exampleFlagSet being ignored by jackson
-//    mapper.addMixIn(MediaType.class,
-//        MediaTypeMixin.class); // Makes MediaType.exampleFlagSet being ignored by jackson
     return new OpenApiOptions(() -> getOpenApi(config))
         .path("/openapi-specs")
         .activateAnnotationScanningFor("org.vitrivr.cineast.api")
