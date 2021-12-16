@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
 /**
- * Represents a media object of type {@link MediaType.IMAGE_SEQUENCE}, i.e. a sequence of images contained in a folder.
+ * Represents a media object of type {@link MediaType#IMAGE_SEQUENCE}, i.e. a sequence of images contained in a folder.
  * This class is merely an internal abstraction of that type and the content it represents. Its sole purpose is to
  * provide lazy access to the images contained in such a sequence during the extraction process.
  *

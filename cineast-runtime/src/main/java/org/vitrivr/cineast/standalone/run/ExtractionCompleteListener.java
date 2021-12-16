@@ -7,7 +7,7 @@ public interface ExtractionCompleteListener {
 
     /**
      * This method is called after the decoder for the object has been closed.
-     * There might still be scheduled or ongoing {@link org.vitrivr.cineast.standalone.runtime.ExtractionTask}s for this object.
+     * There might still be scheduled or ongoing ExtractionTasks for this object.
      */
     default void onCompleted(ExtractionItemContainer path){
         //ignore

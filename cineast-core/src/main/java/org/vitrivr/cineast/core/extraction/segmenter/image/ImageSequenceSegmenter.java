@@ -40,7 +40,7 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
   /**
    * Instance of {@link FileNameObjectIdGenerator}.
    *
-   * Only Used in case that IDs should be derived from filenames which in the case of {@link MediaType.IMAGE_SEQUENCE} should also be done for the segments.
+   * Only Used in case that IDs should be derived from filenames which in the case of {@link MediaType#IMAGE_SEQUENCE} should also be done for the segments.
    */
   private final FileNameObjectIdGenerator idgenerator;
 
