@@ -168,8 +168,6 @@ public class PitchContour {
 
     /**
      * Returns the sum of all salience values in the pitch contour.
-     *
-     * @return
      */
     public final double salienceSum() {
         if (this.dirty) {

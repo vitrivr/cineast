@@ -15,10 +15,7 @@ import java.util.List;
  *
  * The AudioSegment implements the SegmentContainer interface and provides access to different, frames-related data.
  *
- *
- * @TODO:
- * - Perform basic checks when adding an audio-frame (sample-rate, duration...)
- *
+ * TODO: Perform basic checks when adding an audio-frame (sample-rate, duration...)
  */
 public class AudioSegment implements SegmentContainer {
     /** Segment ID of the AudioSegment. */
@@ -50,27 +47,16 @@ public class AudioSegment implements SegmentContainer {
         return this.segmentId;
     }
 
-    /**
-     * @param id
-     * @return a unique id of this
-     */
     @Override
     public void setId(String id) {
         this.segmentId = id;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String getSuperId() {
         return this.objectId;
     }
 
-    /**
-     * @param id
-     */
     @Override
     public void setSuperId(String id) {
         this.objectId = id;
@@ -113,8 +99,6 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the total number of samples in the AudioSegment.
-     *
-     * @return
      */
     @Override
     public int getNumberOfSamples() {
@@ -123,27 +107,17 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the total duration of the AudioSegment.
-     *
-     * @return
      */
     @Override
     public float getAudioDuration() {
         return totalDuration;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public float getSamplingrate() {
         return this.descriptor.getSamplingrate();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int getChannels() {
         return this.descriptor.getChannels();
@@ -151,8 +125,6 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the frame-number of the start-frame.
-     *
-     * @return
      */
     @Override
     public int getStart(){
@@ -165,8 +137,6 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the frame-number of the end-frame.
-     *
-     * @return
      */
     @Override
     public int getEnd(){
@@ -179,8 +149,6 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the start (in seconds) of this segment.
-     *
-     * @return
      */
     @Override
     public float getAbsoluteStart(){
@@ -193,8 +161,6 @@ public class AudioSegment implements SegmentContainer {
 
     /**
      * Getter for the end (in seconds) of this segment.
-     *
-     * @return
      */
     @Override
     public float getAbsoluteEnd(){

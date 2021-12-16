@@ -119,19 +119,10 @@ public class CCSubTitleDecoder implements SubTitleDecoder {
 		return this.items.size();
 	}
 
-	/**
-	 *
-	 * @param index
-	 * @return
-	 */
 	public SubtitleItem get(int index) {
 		return this.items.get(index);
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public SubtitleItem getLast() {
 		return this.items.get(pointer);
 	}

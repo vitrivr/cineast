@@ -118,8 +118,6 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
      *
      * Important: This method should be designed to block and wait for an appropriate amount of time if the Segmenter
      * is not yet ready to deliver another segment! It's up to the Segmenter how long that timeout should last.
-     *
-     * @return
      */
     @Override
     public SegmentContainer getNext() throws InterruptedException {

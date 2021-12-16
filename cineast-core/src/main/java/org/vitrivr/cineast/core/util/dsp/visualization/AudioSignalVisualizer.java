@@ -148,7 +148,6 @@ public class AudioSignalVisualizer {
      * @param min Minimal value in dB that should be color-coded.
      * @param max Maximal value in dB should be color-coded.
      * @param value value for which a color-code is required.
-     * @return
      */
     public static Color color (double min, double max, double value) {
         if (min > max) {

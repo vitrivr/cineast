@@ -28,8 +28,6 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
      *
      * <strong>Important:</strong> This method should be designed to block and wait for an appropriate amount of time if the
      * Segmenter is not yet ready to deliver another segment! It's up to the Segmenter how long that timeout should last.
-     *
-     * @return
      */
     SegmentContainer getNext() throws InterruptedException;
 

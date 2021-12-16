@@ -151,7 +151,6 @@ public interface DBSelector extends Closeable {
    * @param conditions conditions which will be linked by AND
    * @param identifier column upon which the retain operation will be performed if the database layer does not support compound boolean retrieval.
    * @param projection Which columns shall be selected
-   * @param qc
    */
   default List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
     HashMap<String, Map<String, PrimitiveTypeProvider>> relevant = new HashMap<>();

@@ -13,11 +13,6 @@ public class ProtoDataImportHandler extends DataImportHandler {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  /**
-   *
-   * @param threads
-   * @param batchsize
-   */
   public ProtoDataImportHandler(int threads, int batchsize) {
     super(threads, batchsize);
   }

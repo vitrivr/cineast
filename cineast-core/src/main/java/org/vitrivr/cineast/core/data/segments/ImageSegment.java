@@ -39,10 +39,6 @@ public class ImageSegment implements SegmentContainer {
         return this.segmentId;
     }
 
-    /**
-     * @param id
-     * @return a unique id of this
-     */
     @Override
     public void setId(String id) {
         this.segmentId = id;
@@ -53,9 +49,6 @@ public class ImageSegment implements SegmentContainer {
         return this.objectId;
     }
 
-    /**
-     * @param id
-     */
     @Override
     public void setSuperId(String id) {
         this.objectId = id;
@@ -63,8 +56,6 @@ public class ImageSegment implements SegmentContainer {
 
     /**
      * Returns the median image, which is the actual image.
-     *
-     * @return
      */
     @Override
     public MultiImage getAvgImg() {
@@ -73,8 +64,6 @@ public class ImageSegment implements SegmentContainer {
 
     /**
      * Returns the average image, which is the actual image.
-     *
-     * @return
      */
     @Override
     public MultiImage getMedianImg() {
@@ -83,8 +72,6 @@ public class ImageSegment implements SegmentContainer {
 
     /**
      * Returns a single frame - the image.
-     *
-     * @return
      */
     @Override
     public List<VideoFrame> getVideoFrames() {
@@ -95,8 +82,6 @@ public class ImageSegment implements SegmentContainer {
 
     /**
      * Returns a most representative frame - the image.
-     *
-     * @return
      */
     @Override
     public VideoFrame getMostRepresentativeFrame() {

@@ -50,8 +50,6 @@ public interface Decoder<T> extends AutoCloseable {
     /**
      * Returns the total number of content pieces T this decoder can return
      * for a given file.
-     *
-     * @return
      */
     int count();
 

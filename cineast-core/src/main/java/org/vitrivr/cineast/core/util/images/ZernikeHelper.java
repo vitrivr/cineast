@@ -120,9 +120,6 @@ public final class ZernikeHelper {
      * Attempts at reconstructing an image from a list of complete Zernike Moments. The list must contain
      * a complete set of complex Zernike Moments up to some arbitrary order. The moments must be ordered according
      * to Noll's sequential index (ascending).
-     *
-     * @param moments
-     * @return
      */
     public static BufferedImage reconstructImage(ZernikeMoments moments) {
         return ZernikeHelper.reconstructImage(moments.getHeight(), moments.getHeight(), moments.getMoments());

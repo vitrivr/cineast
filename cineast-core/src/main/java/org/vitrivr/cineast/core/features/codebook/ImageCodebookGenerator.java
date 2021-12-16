@@ -40,11 +40,6 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
         this.cluster = new ClusterVisualWords(clusterer, vectorsize,0xA1CF3B12);
     }
 
-    /**
-     * @param source
-     * @param destination
-     * @param words
-     */
     @Override
     public void generate(Path source, Path destination, int words) throws IOException {
         long start = System.currentTimeMillis();

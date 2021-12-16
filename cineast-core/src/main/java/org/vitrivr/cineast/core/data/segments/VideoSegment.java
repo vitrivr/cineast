@@ -57,9 +57,6 @@ public class VideoSegment implements SegmentContainer {
      */
     public VideoSegment() {}
 
-    /**
-     * @param movieId
-     */
     public VideoSegment(String movieId) {
         this.movieId = movieId;
     }
@@ -149,8 +146,6 @@ public class VideoSegment implements SegmentContainer {
     /**
      * Getter for samplingrate of the audio in this {@link VideoSegment}. If the {@link VideoSegment} does not
      * contain any audio, this method returns 0.
-     *
-     * @return
      */
     @Override
     public float getSamplingrate() {
@@ -164,8 +159,6 @@ public class VideoSegment implements SegmentContainer {
     /**
      * Getter for number of audio channels for the {@link VideoSegment}. If the {@link VideoSegment} does not
      * contain any audio, this method returns 0.
-     *
-     * @return
      */
     @Override
     public int getChannels() {
@@ -297,18 +290,11 @@ public class VideoSegment implements SegmentContainer {
         return this.movieId;
     }
 
-    /**
-     * @param id
-     * @return a unique id of this
-     */
     @Override
     public void setId(String id) {
         this.shotId = id;
     }
 
-    /**
-     * @param id
-     */
     @Override
     public void setSuperId(String id) {
         this.movieId = id;
@@ -322,8 +308,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the frame-number of the first frame in the segment (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public int getStart() {
@@ -336,8 +320,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the frame-number of the last frame in the segment (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public int getEnd() {
@@ -350,8 +332,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the relative start of the VideoSegment in percent (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public float getRelativeStart() {
@@ -360,8 +340,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the relative end of the VideoSegment in percent (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public float getRelativeEnd() {
@@ -370,8 +348,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the absolute start of the VideoSegment in seconds (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public float getAbsoluteStart() {
@@ -384,8 +360,6 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Returns the absolute end of the VideoSegment in seconds (relative to the entire stream).
-     *
-     * @return
      */
     @Override
     public float getAbsoluteEnd() {

@@ -82,11 +82,6 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         this.segmentReader = new MediaSegmentReader(context.persistencyReader().get());
     }
 
-    /**
-     *
-     * @param f
-     * @return
-     */
     private static Histogram getHistogram(VideoFrame f){
         return FuzzyColorHistogramCalculator.getSubdividedHistogramNormalized(f.getImage().getThumbnailImage(), 3);
     }
@@ -111,10 +106,6 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public SegmentContainer getNext() throws InterruptedException {
         SegmentContainer nextContainer = this.segments.poll(SEGMENT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -266,19 +257,10 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     private boolean queueFrames(){
         return queueFrames(20);
     }
 
-    /**
-     *
-     * @param number
-     * @return
-     */
     private  boolean queueFrames(int number) {
         for(int i = 0; i < number; ++i){
             VideoFrame f = this.decoder.getNext();

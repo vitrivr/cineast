@@ -131,11 +131,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** The {@link CachedDataFactory} reference used to create {@link MultiImage} objects. */
     private CachedDataFactory factory;
 
-    /**
-     *
-     * @param queue
-     * @return
-     */
     private boolean readFrame(boolean queue) {
         /* Tries to read a new packet from the stream. */
         int read_results = avformat.av_read_frame(this.pFormatCtx, this.packet);
@@ -644,8 +639,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     /**
      * Returns the total number of content pieces T this decoder can return for a given file.
-     *
-     * @return
      */
     @Override
     public int count() {

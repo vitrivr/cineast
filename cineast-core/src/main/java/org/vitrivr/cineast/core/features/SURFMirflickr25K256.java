@@ -15,8 +15,6 @@ public class SURFMirflickr25K256 extends SURF {
 
     /**
      * Returns the full name of the Codebook to use.
-     *
-     * @return
      */
     @Override
     protected String codebook() {

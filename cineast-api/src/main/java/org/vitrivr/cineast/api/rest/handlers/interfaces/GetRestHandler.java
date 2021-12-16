@@ -25,8 +25,6 @@ public interface GetRestHandler<T> extends DocumentedRestHandler {
 
   /**
    * Performs the GET REST operation of this handler and sends the result to the requester. Exception handling has to be done by the caller.
-   *
-   * @param ctx
    */
   default void get(Context ctx) {
     ctx.json(doGet(ctx));

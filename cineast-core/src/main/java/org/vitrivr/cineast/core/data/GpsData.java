@@ -147,9 +147,6 @@ public class GpsData {
    *   <li>the minutes or seconds, 0 is used for this</li>
    * </ul>
    * Following this approach, the date is somewhat 'centered' within a year, so that the {@link org.vitrivr.cineast.core.features.TemporalDistance} works best.
-   *
-   * @param dating
-   * @return
    */
   public static Optional<Instant> parseFuzzyDating(String dating){
     if(dating == null){

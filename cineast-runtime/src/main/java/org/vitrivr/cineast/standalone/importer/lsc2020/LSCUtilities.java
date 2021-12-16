@@ -152,9 +152,6 @@ public class LSCUtilities {
      * do contain more than the actual (image) file, hence some conversion is required
      * <br>
      * Prepends <code>is_</code>, removes anything before a slash ("<code>/</code>"), if present, and after a dot ("<code>.</code>") (i.e., file extension), if present
-     *
-     * @param path
-     * @return
      */
     public static String pathToSegmentId(String path) {
         final int beginIdx = path.contains("/") ? path.lastIndexOf("/") + 1 : 0;
@@ -198,9 +195,6 @@ public class LSCUtilities {
 
     /**
      * Removes all but after the last "/"
-     *
-     * @param path
-     * @return
      */
     public static String sanitizeFilename(String path) {
         int i = path.lastIndexOf("/");
@@ -221,7 +215,6 @@ public class LSCUtilities {
      * {@link LocalDateTime} is used, due to its definition of 'local time in ISO-8601 standard without time zone info'.
      *
      * @param lscUtcFormat The LSC UTC Timestamp in the format {@code UTC_yyyy-MM-dd_hh:mm}
-     * @return
      */
     public static LocalDateTime convertUtc(String lscUtcFormat) {
         return LocalDateTime.ofEpochSecond(convert(lscUtcFormat, true, null), 0, ZoneOffset.UTC);

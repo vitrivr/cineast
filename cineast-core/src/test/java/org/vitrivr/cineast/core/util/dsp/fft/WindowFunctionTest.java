@@ -43,11 +43,6 @@ public class WindowFunctionTest {
     }
 
 
-    /**
-     *
-     * @param function
-     * @param length
-     */
     private void executeTest(WindowFunction function, int length) {
         assertAll("Window Function Test (" + length +")",
                 () -> testWindowFunctionZeroOutside(function, length),

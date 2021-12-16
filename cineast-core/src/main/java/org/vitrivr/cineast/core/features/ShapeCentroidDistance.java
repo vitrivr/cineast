@@ -30,10 +30,6 @@ public class ShapeCentroidDistance extends AbstractFeatureModule {
         super("features_shapecentroid", 2.0f, DESCRIPTOR_LENGTH);
     }
 
-    /**
-     *
-     * @param shot
-     */
     @Override
     public void processSegment(SegmentContainer shot) {
 
@@ -54,12 +50,6 @@ public class ShapeCentroidDistance extends AbstractFeatureModule {
         }
     }
 
-    /**
-     *
-     * @param sc
-     * @param qc
-     * @return
-     */
     @Override
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 

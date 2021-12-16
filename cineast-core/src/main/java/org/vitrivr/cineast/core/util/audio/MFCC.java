@@ -69,7 +69,6 @@ public class MFCC {
      * @param cepstra The number of cepstra to obtain for the MFCC feature.
      * @param melfilters The number of triangular mel-filters (size of the mel-filter bank).
      * @param minFrequency Minimum frequency to consider for MFCC feature.
-     * @return
      */
     public static List<MFCC> calculate(STFT stft, int cepstra, int melfilters, float minFrequency) {
         List<Spectrum> spectra = stft.getMagnitudeSpectrum();
@@ -121,12 +120,6 @@ public class MFCC {
         return 700.0 * Math.pow(10, mel/2595.0) - 700.0;
     }
 
-    /**
-     *
-     * @param spectrum
-     * @param samplingrate
-     * @param windowsize
-     */
     public void calculate(Spectrum spectrum, float samplingrate, int windowsize) {
         /* Check the type of the provided spectrum* */
         if (spectrum.getType() != Spectrum.Type.MAGNITUDE) {

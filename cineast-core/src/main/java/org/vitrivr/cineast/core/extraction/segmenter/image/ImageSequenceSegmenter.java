@@ -53,10 +53,6 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
   /** Internal flag used to signal that this {@link ImageSequenceSegmenter} is still running. */
   private volatile boolean running = false;
 
-  /**
-   *
-   * @param context
-   */
   public ImageSequenceSegmenter(ExtractionContextProvider context){
     this.factory = context.cacheConfig().sharedCachedDataFactory();
     if (context.objectIdGenerator() instanceof FileNameObjectIdGenerator) {

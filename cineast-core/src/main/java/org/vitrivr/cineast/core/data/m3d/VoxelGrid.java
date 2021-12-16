@@ -160,8 +160,6 @@ public class VoxelGrid {
     /**
      * Returns true if VoxelGrid is visible (i.e. there is at least one
      * visible Voxel) and false otherwise.
-     *
-     * @return
      */
     public final boolean isVisible() {
         return this.visible > 0;

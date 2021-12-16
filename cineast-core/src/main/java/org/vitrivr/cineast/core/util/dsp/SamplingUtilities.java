@@ -14,7 +14,6 @@ public class SamplingUtilities {
      *
      * @param samples Double array that should be down-sampled.
      * @param factor Factor by which to down-sample. i.e. factor of n means that every n'th sample is discarded.
-     * @return
      */
     public static double[] downsample (double[] samples, int factor) {
         /* Makes sure, that the factor is a positive value. */
