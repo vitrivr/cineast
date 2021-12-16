@@ -28,7 +28,6 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
      *
      * @param n 1st moment of the Zernike Basis Function.
      * @param m 2nd moment of the Zernike Basis Function.
-     * @return ZernikeBasisFunction Z_nm
      * @throws IllegalArgumentException If |m| > n, m <'0 or (n-|m| % 2) = 1
      */
     public ZernikeBasisFunction(int n, int m) {
@@ -79,9 +78,6 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
 
     /**
      * Custom equals implementation.
-     *
-     * @param o
-     * @return
      */
     @Override
     public boolean equals(Object o) {
@@ -102,8 +98,6 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
 
     /**
      * Custom hashCode() implementation.
-     *
-     * @return
      */
     @Override
     public int hashCode() {

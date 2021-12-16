@@ -12,9 +12,6 @@ public interface JsonWriter {
     /**
      * Takes a Java Object (usually a POJO) and tries to serialize it into a JSON. If serialization
      * fails for some reason, this method should return JSON_EMPTY;
-     *
-     * @param object
-     * @return
      */
     String toJson(Object object);
 }

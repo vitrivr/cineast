@@ -38,12 +38,6 @@ public class ImageParser extends DataURLParser {
         return bimg;
     }
 
-    /**
-     *
-     * @param img
-     * @param format
-     * @return
-     */
     public static String BufferedImageToDataURL(BufferedImage img, String format){
         ByteArrayOutputStream bouts = new ByteArrayOutputStream();
         try {

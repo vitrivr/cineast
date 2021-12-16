@@ -49,12 +49,6 @@ public abstract class Lightfield extends StagedFeatureModule {
     /** Offscreen rendering environment used to create Lightfield images. */
     private final Renderer renderer;
 
-    /**
-     *
-     * @param tableName
-     * @param maxDist
-     * @param camerapositions
-     */
     protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
         super(tableName, maxDist, vectorLength);
         if (camerapositions.length == 0) {
@@ -159,8 +153,6 @@ public abstract class Lightfield extends StagedFeatureModule {
     /**
      * Processes a single segment. Extracts the mesh and persists all associated features. Segments
      * that have no mesh or an empty mesh will not be processed.
-     *
-     * @param sc
      */
     @Override
     public void processSegment(SegmentContainer sc) {
@@ -232,19 +224,8 @@ public abstract class Lightfield extends StagedFeatureModule {
         return features;
     }
 
-    /**
-     *
-     * @param image
-     * @param poseidx
-     * @return
-     */
     protected abstract List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx);
 
-    /**
-     *
-     * @param poseidx
-     * @return
-     */
     public double[] positionsForPoseidx(int poseidx) {
         if (poseidx < this.camerapositions.length) {
             return this.camerapositions[poseidx];

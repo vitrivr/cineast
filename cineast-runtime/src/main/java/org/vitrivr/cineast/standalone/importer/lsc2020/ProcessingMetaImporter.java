@@ -283,10 +283,7 @@ public class ProcessingMetaImporter implements Importer<Map<String, PrimitiveTyp
     }
 
     /**
-     * Checks if the needle is in the unique set. if so, it's not unique. otherwise its unique and added to the list
-     *
-     * @param needle
-     * @return
+     * Checks if the needle is in the unique set. If so, it's not unique. Otherwise, it's unique and added to the list
      */
     private boolean isUnique(String needle) {
         boolean found = uniqueList.contains(needle);

@@ -34,12 +34,9 @@ public class MotionHistoryImage {
 		return motionHistoryImage(container, lifeTime, threshold, true);
 	}
 	/**
-	 * 
-	 * @param container
 	 * @param lifeTime number of frames to consider for image
 	 * @param threshold threshold distance [0, 255]
 	 * @param useThumbnails produce image based on thumbnails to entire frame
-	 * @return
 	 */
 	public static MotionHistoryImage motionHistoryImage(SegmentContainer container, int lifeTime, int threshold, boolean useThumbnails){
 		if(container.getVideoFrames().isEmpty()){

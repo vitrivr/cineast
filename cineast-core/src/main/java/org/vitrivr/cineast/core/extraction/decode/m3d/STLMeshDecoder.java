@@ -243,8 +243,6 @@ public class STLMeshDecoder implements Decoder<Mesh> {
 
     /**
      * Returns the total number of content pieces T this decoder can return for a given file.
-     *
-     * @return
      */
     @Override
     public int count() {

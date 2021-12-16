@@ -55,11 +55,6 @@ public class KLF0PitchEstimator {
         this(DEFAULT_MIN_PITCH, DEFAULT_MAX_PITCH, ALPHA, BETA);
     }
 
-    /**
-     *
-     * @param min
-     * @param max
-     */
     public KLF0PitchEstimator(int min, int max, float alpha, float beta) {
         this.max = max;
         this.min = min;
@@ -185,7 +180,7 @@ public class KLF0PitchEstimator {
      * @param f0 The f0 to calculate the salience for.
      * @param spectrum The spectrum to check.
      * @param samplingrate The rate at which the original audio has been sampled.
-     * @param samplingrate The windowsize used during creation of the spectrum.
+     * @param windowsize The windowsize used during creation of the spectrum.
      * @return Salience of f0 in the spectrum.
      */
     private final double salience(float f0, Spectrum spectrum, final float samplingrate, final int windowsize) {

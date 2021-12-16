@@ -20,11 +20,6 @@ public class VideoDescriptor {
 
     /**
      * Constructor for VideoDescriptor
-     *
-     * @param fps
-     * @param duration
-     * @param width
-     * @param height
      */
     public VideoDescriptor(float fps, long duration, int width, int height) {
         this.fps = fps;
@@ -33,38 +28,18 @@ public class VideoDescriptor {
         this.height = height;
     }
 
-    /**
-     * Getter for fps.
-     *
-     * @return
-     */
     public float getFps() {
         return fps;
     }
 
-    /**
-     * Getter for duration.
-     *
-     * @return
-     */
     public long getDuration() {
         return duration;
     }
 
-    /**
-     * Getter for width.
-     *
-     * @return
-     */
     public int getWidth() {
         return width;
     }
 
-    /**
-     * Getter for height
-     *
-     * @return
-     */
     public int getHeight() {
         return height;
     }

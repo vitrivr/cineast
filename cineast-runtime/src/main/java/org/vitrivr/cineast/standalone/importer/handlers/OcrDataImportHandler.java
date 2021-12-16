@@ -14,19 +14,10 @@ public class OcrDataImportHandler extends DataImportHandler {
   /** */
   private static final Logger LOGGER = LogManager.getLogger();
 
-  /**
-   *
-   * @param threads
-   * @param batchsize
-   */
   public OcrDataImportHandler(int threads, int batchsize) {
     super(threads, batchsize);
   }
 
-  /**
-   *
-   * @param path
-   */
   @Override
   public void doImport(Path path) {
     try {

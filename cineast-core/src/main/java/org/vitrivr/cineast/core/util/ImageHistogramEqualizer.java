@@ -34,8 +34,6 @@ public class ImageHistogramEqualizer {
 	/**
 	 * 
 	 * Equalizes the color histogram of the input image.
-	 * @param in
-	 * @return
 	 */
 	private static MultiImage equalizeHistogram(MultiImage in){
 		int[] inColors = in.getColors();

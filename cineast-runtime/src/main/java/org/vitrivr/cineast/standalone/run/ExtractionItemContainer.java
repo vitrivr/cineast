@@ -56,8 +56,6 @@ public class ExtractionItemContainer {
 
   /**
    * To make fasterxml/jackson happy.
-   *
-   * @return
    */
   public String getUri() {
     return uri;

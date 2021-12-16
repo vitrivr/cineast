@@ -33,11 +33,7 @@ public class UniqueElementGrid<T> implements Grid<T> {
   }
 
   /**
-   * returns the grid position of the specified element or null if the element is not part of the
-   * map
-   * 
-   * @param element
-   * @return
+   * Returns the grid position of the specified element or null if the element is not part of the map.
    */
   public Position getPosition(T element) {
     return map.inverse().get(element);

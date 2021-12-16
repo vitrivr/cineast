@@ -17,10 +17,6 @@ public class AudioDescriptor {
 
     /**
      * Constructor for an AudioDescriptor.
-     *
-     * @param samplingrate
-     * @param channels
-     * @param duration
      */
     public AudioDescriptor(float samplingrate, int channels, long duration) {
         this.samplingrate = samplingrate;

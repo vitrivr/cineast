@@ -52,9 +52,6 @@ public class OpenApiCompatHelper {
 
   /**
    * Creates the Javalin options used to create an OpenAPI specification.
-   *
-   * @param config
-   * @return
    */
   public static OpenApiOptions getJavalinOpenApiOptions(APIConfig config) {
     //Default Javalin JSON mapper includes all null values, which breakes the openapi specs.
@@ -76,9 +73,6 @@ public class OpenApiCompatHelper {
 
   /**
    * Creates the base {@link OpenAPI} specification.
-   *
-   * @param config
-   * @return
    */
   public static OpenAPI getOpenApi(APIConfig config) {
     OpenAPI api = new OpenAPI();

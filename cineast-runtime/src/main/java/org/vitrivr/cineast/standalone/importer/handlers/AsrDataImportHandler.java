@@ -9,22 +9,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class AsrDataImportHandler extends DataImportHandler {
-    /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     * @param threads
-     * @param batchsize
-     */
     public AsrDataImportHandler(int threads, int batchsize) {
        super(threads, batchsize);
     }
 
-    /**
-     *
-     * @param path
-     */
     @Override
     public void doImport(Path path) {
         try {

@@ -104,10 +104,6 @@ public class MFCCShingle extends StagedFeatureModule {
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }
 
-    /**
-     *
-     * @param segment
-     */
     @Override
     public void processSegment(SegmentContainer segment) {
         List<float[]> features = this.getFeatures(segment);

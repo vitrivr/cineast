@@ -84,34 +84,18 @@ public final class AttributeDefinition {
         return this.type;
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean hasHint(String hint) {
         return this.hints.containsKey(hint);
     }
 
-    /**
-     *
-     * @return
-     */
     public Optional<String> getHint(String hint) {
         return Optional.ofNullable(this.hints.get(hint));
     }
 
-    /**
-     *
-     * @return
-     */
     public String getHintOrDefault(String hint, String defaultValue) {
         return this.hints.getOrDefault(hint, defaultValue);
     }
 
-    /**
-     *
-     * @return
-     */
     public void ifHintPresent(String hint, Consumer<String> consumer) {
         if (this.hints.containsKey(hint)) {
             consumer.accept(this.hints.get(hint));

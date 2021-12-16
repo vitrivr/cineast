@@ -82,12 +82,6 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
         return new Spectrum(Type.MAGNITUDE, magnitudeSpectrum, FFTUtil.binCenterFrequencies(data.length, samplingrate));
     }
 
-    /**
-     *
-     * @param type
-     * @param spectrum
-     * @param frequencies
-     */
     public Spectrum(Type type, double[] spectrum, float[] frequencies) {
         /* Check if the length of both array is the same. */
         if (spectrum.length != frequencies.length) {
@@ -177,8 +171,6 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
 
     /**
      * Returns the maximum value in the spectrum.
-     *
-     * @return
      */
     public Pair<Float,Double> getMaximum() {
         if (this.maximumIndex == null) {
@@ -194,8 +186,6 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
 
     /**
      * Returns the minimum value in the spectrum.
-     *
-     * @return
      */
     public Pair<Float,Double> getMinimum() {
         if (this.minimumIndex == null) {

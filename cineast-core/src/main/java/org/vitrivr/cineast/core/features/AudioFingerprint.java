@@ -40,10 +40,6 @@ public class AudioFingerprint extends StagedFeatureModule {
         super("features_audiofingerprint", 4000.0f, FINGERPRINT);
     }
 
-    /**
-     *
-     * @param segment
-     */
     @Override
     public void processSegment(SegmentContainer segment) {
         TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
@@ -96,7 +92,6 @@ public class AudioFingerprint extends StagedFeatureModule {
      *
      * @param features A list of feature-vectors (usually generated in the first stage). For each feature, a lookup is executed. May be empty!
      * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
-     * @return
      */
     @Override
     protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
@@ -171,11 +166,6 @@ public class AudioFingerprint extends StagedFeatureModule {
         return configs;
     }
 
-    /**
-     *
-     * @param segment
-     * @return
-     */
     private TIntArrayList filterSpectrum(SegmentContainer segment) {
         /* Prepare empty list of candidates for filtered spectrum. */
         TIntArrayList candidates = new TIntArrayList();

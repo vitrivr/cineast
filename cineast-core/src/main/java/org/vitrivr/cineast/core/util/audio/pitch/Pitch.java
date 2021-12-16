@@ -64,8 +64,6 @@ public class Pitch {
 
     /**
      * Getter for pitch salience.
-     *
-     * @return
      */
     public double getSalience() {
         return salience;

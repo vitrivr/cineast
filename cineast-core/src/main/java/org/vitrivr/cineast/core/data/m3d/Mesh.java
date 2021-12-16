@@ -32,20 +32,10 @@ public class Mesh implements WritableMesh {
         /** List of faces the current vertex participates in. */
         private final List<Face> faces = new ArrayList<>(4);
 
-        /**
-         *
-         * @param position
-         */
         public Vertex(Vector3f position) {
             this(position, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
         }
 
-        /**
-         *
-         * @param position
-         * @param normal
-         * @param color
-         */
         public Vertex(Vector3f position,Vector3f color, Vector3f normal) {
             this.position = position;
             this.normal = normal;
@@ -159,8 +149,6 @@ public class Mesh implements WritableMesh {
 
         /**
          * Constructor for a face.
-         *
-         * @param indices
          */
         private Face(Vector4i indices) {
             /* If the w-index is greater than -1 a QUAD face is created. */
@@ -269,8 +257,6 @@ public class Mesh implements WritableMesh {
 
         /**
          * Calculates and returns the face normal.
-         *
-         * @return
          */
         public Vector3f normal() {
             Vector3f e1 = new Vector3f(this.vertices[1].position).sub(this.vertices[0].position);
@@ -353,17 +339,13 @@ public class Mesh implements WritableMesh {
 
     /**
      * Adds an vector defining a vertex to the Mesh.
-     *
-     * @param vertex
      */
     public synchronized void addVertex(Vector3f vertex) {
         this.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f));
     }
 
     /**
-     * Adds an vector defining a vertex to the Mesh.
-     *
-     * @param vertex
+     * Adds a vector defining a vertex to the Mesh.
      */
     public synchronized void addVertex(Vector3f vertex, Vector3f color) {
         this.addVertex(vertex, color, new Vector3f(0.0f, 0.0f, 0.0f));
@@ -371,8 +353,6 @@ public class Mesh implements WritableMesh {
 
     /**
      * Adds an vector defining a vertex to the Mesh.
-     *
-     * @param vertex
      */
     public synchronized void addVertex(Vector3f vertex, Vector3f color, Vector3f normal) {
         this.vertices.add(new Vertex(vertex, color, normal));

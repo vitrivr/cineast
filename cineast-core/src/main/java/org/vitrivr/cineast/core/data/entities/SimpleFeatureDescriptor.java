@@ -10,11 +10,6 @@ public class SimpleFeatureDescriptor {
     /** */
     public final ReadableFloatVector feature;
 
-    /**
-     *
-     * @param segmentId
-     * @param feature
-     */
     public SimpleFeatureDescriptor(String segmentId, ReadableFloatVector feature) {
         this.segmentId = segmentId;
         this.feature = feature;

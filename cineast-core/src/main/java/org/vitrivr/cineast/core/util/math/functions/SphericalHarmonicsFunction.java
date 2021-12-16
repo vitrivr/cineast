@@ -63,8 +63,6 @@ public class SphericalHarmonicsFunction {
      * Calculates and returns the normalisation factor for the Spherical Harmonics Function
      *
      * @param l Order
-     * @param m
-     * @return
      */
    public static double getFactor(int l, int m) {
        return FastMath.sqrt(((2*l + 1)/(4*Math.PI)) * ((double)CombinatoricsUtils.factorial(l-FastMath.abs(m)) / (double)CombinatoricsUtils.factorial(l+FastMath.abs(m))));
@@ -75,7 +73,6 @@ public class SphericalHarmonicsFunction {
      * up to max_l.
      *
      * @param max_l The maximum harmonic to consider.
-     * @return
      */
    public static int numberOfCoefficients(int max_l, boolean onesided) {
         int number = 0;
