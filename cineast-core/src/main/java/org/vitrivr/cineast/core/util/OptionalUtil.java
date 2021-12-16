@@ -38,13 +38,13 @@ public final class OptionalUtil {
    * If a value of the first {@code Optional} is present, returns it, otherwise returns an
    * {@code Optional} produced by the supplying function.
    *
-   * @param first the first {@code Optional}
-   * @param secondSupplier the supplying function that produces a second {@code Optional} to be
+   * @param first the first {@link Optional}
+   * @param secondSupplier the supplying function that produces a second {@link Optional} to be
    *                       returned
-   * @return an {@code Optional} describing the value of the first {@code Optional}, if present,
-   *         otherwise an {@Optional} produced by the supplying function.
-   * @throws NullPointerException if the first {@code Optional} is null or the supplying function or
-   *                              its result is {@code null}
+   * @return an {@link Optional} describing the value of the first {@link Optional}, if present,
+   *         otherwise an {@link Optional} produced by the supplying function.
+   * @throws NullPointerException if the first {@link Optional} is null or the supplying function or
+   *                              its result is null
    */
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   public static <T> Optional<T> or(Optional<T> first, Supplier<Optional<T>> secondSupplier) {

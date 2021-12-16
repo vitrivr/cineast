@@ -70,13 +70,6 @@ public interface MultiImage extends CacheableData {
 
     void clear();
 
-  /**
-   *
-   * @param width
-   * @param height
-   * @param colors
-   * @return
-   */
   static int checkHeight(int width, int height, int[] colors){
     if(colors.length / width != height){
       height = colors.length / width;

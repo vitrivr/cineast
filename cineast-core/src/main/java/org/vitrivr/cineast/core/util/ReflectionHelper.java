@@ -271,7 +271,6 @@ public class ReflectionHelper {
 	 *
 	 * @param cl The class that should be instantiated.
 	 * @param args The arguments that should be passed to the constructor. The constructor signature will be inferred from this list.
-	 * @param <T>
 	 * @return Instance of the class or null, if instantiation failed.
 	 */
 	public static <T> T instantiate(Class<? extends T> cl, Object... args) {
@@ -284,7 +283,6 @@ public class ReflectionHelper {
 	 * @param cl The class that should be instantiated.
 	 * @param types An array of types that defines the expected signature of the class's constructor.
 	 * @param args The arguments that should be passed to the constructor.
-	 * @param <T>
 	 * @return Instance of the class or null, if instantiation failed.
 	 */
 	public static <T> T instantiate(Class<? extends T> cl, Class[] types, Object... args) {

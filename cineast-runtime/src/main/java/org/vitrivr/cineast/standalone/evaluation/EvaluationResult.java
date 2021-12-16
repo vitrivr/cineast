@@ -68,8 +68,6 @@ public class EvaluationResult {
 
     /**
      * Getter for query object ID.
-     *
-     * @return
      */
     public final String getDocId() {
         return this.docID;
@@ -77,8 +75,6 @@ public class EvaluationResult {
 
     /**
      * Getter for query object class.
-     *
-     * @return
      */
     public final String getCl() {
         return cl;
@@ -114,17 +110,11 @@ public class EvaluationResult {
     /**
      * Returns true, if the number of retrieved & relevant documents equals the
      * total number of relevant documents.
-     *
-     * @return
      */
     public boolean done() {
         return this.intersection == this.relevant;
     }
 
-    /**
-     *
-     * @return
-     */
     public final String toString(String delimiter) {
         StringBuilder builder = new StringBuilder();
 

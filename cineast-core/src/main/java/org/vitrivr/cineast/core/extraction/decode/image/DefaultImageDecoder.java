@@ -115,8 +115,6 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     /**
      * Returns the total number of content pieces T this decoder can return
      * for a given file.
-     *
-     * @return
      */
     @Override
     public int count() {
@@ -125,8 +123,6 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
 
     /**
      * Returns a list of supported files.
-     *
-     * @return
      */
     @Override
     public Set<String> supportedFiles() {

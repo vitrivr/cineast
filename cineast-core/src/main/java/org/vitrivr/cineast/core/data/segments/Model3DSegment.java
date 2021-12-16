@@ -43,27 +43,16 @@ public class Model3DSegment implements SegmentContainer {
         return this.segmentId;
     }
 
-    /**
-     * @param id
-     * @return a unique id of this
-     */
     @Override
     public final void setId(String id) {
         this.segmentId = id;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public final String getSuperId() {
         return this.objectId;
     }
 
-    /**
-     * @param id
-     */
     @Override
     public final void setSuperId(String id) {
         this.objectId = id;
@@ -79,10 +68,6 @@ public class Model3DSegment implements SegmentContainer {
         return this.mesh;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public final WritableMesh getNormalizedMesh() {
         return this.normalizedMesh;

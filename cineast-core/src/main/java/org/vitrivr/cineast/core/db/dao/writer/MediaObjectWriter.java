@@ -7,9 +7,6 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 
 public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDescriptor> {
-    /**
-     * @param writer
-     */
     public MediaObjectWriter(PersistencyWriter<?> writer) {
         super(writer, 1, true);
     }
@@ -23,10 +20,6 @@ public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDe
         this.writer.open(MediaObjectDescriptor.ENTITY);
     }
 
-    /**
-     * @param entity
-     * @return
-     */
     @Override
     protected PersistentTuple generateTuple(MediaObjectDescriptor entity) {
         return this.writer.generateTuple(entity.getObjectId(), entity.getMediatypeId(), entity.getName(), entity.getPath());

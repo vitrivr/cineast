@@ -13,11 +13,6 @@ public class JsonDataImportHandler extends DataImportHandler {
     /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     * @param threads
-     * @param batchsize
-     */
     public JsonDataImportHandler(int threads, int batchsize) {
         super(threads, batchsize);
     }

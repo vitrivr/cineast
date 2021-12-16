@@ -37,7 +37,7 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
      * Returns a list of audio-frames contained in the AudioSegment. The default implementation returns
      * a list containing one, empty frame.
      *
-     * @return List auf audio-frames in the audio-segment.
+     * List auf audio-frames in the audio-segment.
      */
     public AudioQueryTermContainer(List<AudioFrame> frames) {
         this.frames = frames;
@@ -53,10 +53,6 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public List<AudioFrame> getAudioFrames() {
         return this.frames;
@@ -64,8 +60,6 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
 
     /**
      * Getter for the total number of samples in the AudioSegment.
-     *
-     * @return
      */
     @Override
     public int getNumberOfSamples() {
@@ -74,8 +68,6 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
 
     /**
      * Getter for the total duration of the AudioSegment.
-     *
-     * @return
      */
     @Override
     public float getAudioDuration() {

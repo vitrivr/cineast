@@ -60,9 +60,6 @@ public class ADAMproMessageBuilder {
 
     /**
      * Constructs and returns a BatchedQueryMessage from the provided query-messages.
-     *
-     * @param queries
-     * @return
      */
     public BatchedQueryMessage buildBatchedQueryMessage(List<QueryMessage> queries) {
         synchronized (bqmBuilder) {
@@ -74,15 +71,6 @@ public class ADAMproMessageBuilder {
 
 
 
-    /**
-     *
-     * @param hints
-     * @param fb
-     * @param bqMessage
-     * @param pMessage
-     * @param nnqMessage
-     * @return
-     */
     public QueryMessage buildQueryMessage(Collection<ReadableQueryConfig.Hints> hints, FromMessage.Builder fb,
                                            BooleanQueryMessage bqMessage, ProjectionMessage pMessage,
                                            NearestNeighbourQueryMessage nnqMessage) {
@@ -105,14 +93,6 @@ public class ADAMproMessageBuilder {
         }
     }
 
-    /**
-     *
-     * @param hints
-     * @param bqMessage
-     * @param pMessage
-     * @param nnqMessage
-     * @return
-     */
     public QueryMessage buildQueryMessage(Collection<ReadableQueryConfig.Hints> hints, FromMessage fromMessage, BooleanQueryMessage bqMessage, ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
         synchronized (this.qmBuilder) {
             this.qmBuilder.clear();
@@ -133,11 +113,6 @@ public class ADAMproMessageBuilder {
         }
     }
 
-    /**
-     *
-     * @param entity
-     * @return
-     */
     public FromMessage buildFromMessage(String entity) {
         synchronized (this.fromBuilder) {
             this.fromBuilder.clear();
@@ -163,8 +138,6 @@ public class ADAMproMessageBuilder {
 
     /**
      * Builds a SubExpressionQueryMessage from a QueryMessage.
-     *
-     * @param message
      */
     public SubExpressionQueryMessage buildSubExpressionQueryMessage(QueryMessage message) {
         synchronized (this.seqmBuilder) {
@@ -176,8 +149,6 @@ public class ADAMproMessageBuilder {
 
     /**
      * Builds a SubExpressionQueryMessage from a ExpressionQueryMessage.
-     *
-     * @param message
      */
     public SubExpressionQueryMessage buildSubExpressionQueryMessage(ExpressionQueryMessage message) {
         synchronized (this.seqmBuilder) {
@@ -219,7 +190,6 @@ public class ADAMproMessageBuilder {
      *
      * @param expressions List of SubExpressionQueryMessages
      * @param operation Set operation used for combining partial results
-     * @return
      */
     public SubExpressionQueryMessage mergeSubexpressions(List<SubExpressionQueryMessage> expressions, Operation operation, Map<String,String> options) {
         /* If list only contains one SubExpressionQueryMessage then return it. */
@@ -242,12 +212,6 @@ public class ADAMproMessageBuilder {
         return mergeSubexpressions(expressions, operation, options);
     }
 
-    /**
-     *
-     * @param where
-     * @param whereMessages
-     * @return
-     */
     public BooleanQueryMessage buildBooleanQueryMessage(WhereMessage where,
                                                          WhereMessage... whereMessages) {
         ArrayList<WhereMessage> tmp = new ArrayList<>(
@@ -352,14 +316,6 @@ public class ADAMproMessageBuilder {
         }
     }
 
-    /**
-     *
-     * @param column
-     * @param fvm
-     * @param k
-     * @param qc
-     * @return
-     */
     public NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, VectorMessage fvm, int k, ReadableQueryConfig qc) {
         synchronized (nnqmBuilder) {
             this.nnqmBuilder.clear();
@@ -374,11 +330,6 @@ public class ADAMproMessageBuilder {
         }
     }
 
-    /**
-     *
-     * @param qc
-     * @return
-     */
     public DistanceMessage buildDistanceMessage(ReadableQueryConfig qc) {
         if (qc == null) {
             return manhattan;

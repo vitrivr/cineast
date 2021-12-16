@@ -42,14 +42,6 @@ public class STFT {
     /** List containing one FFT entry per timepoint. Same order as time[] */
     private final List<FFT> stft;
 
-    /**
-     *
-     * @param windowsize
-     * @param overlap
-     * @param padding
-     * @param function
-     * @param samplingrate
-     */
     public STFT(int windowsize, int overlap, int padding, WindowFunction function, float samplingrate) {
         /* Make sure that the windowsize is a power of two. */
         if (!FFTUtil.isPowerOf2(windowsize)) {
@@ -79,8 +71,6 @@ public class STFT {
      *
      * <strong>Important: </strong>Every call to forward() appends a time-local DFT to the current STFT. The existing
      * data will be kept.
-     *
-     * @param samples
      */
     public void forward(double[] samples) {
         /* Initialize values for the sliding window. */
@@ -150,8 +140,6 @@ public class STFT {
 
     /**
      * Getter for frequency bin labels.
-     *
-     * @return
      */
     public final float[] getFrequencies() {
         return frequencies;
@@ -166,8 +154,6 @@ public class STFT {
 
     /**
      * Returns the size / width of an individual frequency bin.
-     *
-     * @return
      */
     public final float getBinSize() {
         return (this.samplingrate/this.windowsize);
@@ -175,8 +161,6 @@ public class STFT {
 
     /**
      * Getter for time labels.
-     *
-     * @return
      */
     public final float[] getTime() {
         return time;
@@ -184,8 +168,6 @@ public class STFT {
 
     /**
      * Getter for STFT.
-     *
-     * @return
      */
     public final List<FFT> getStft() {
         return Collections.unmodifiableList(this.stft);
@@ -193,8 +175,6 @@ public class STFT {
 
     /**
      * Getter for window-size.
-     *
-     * @return
      */
     public final int getWindowsize() {
         return this.windowsize;
@@ -202,8 +182,6 @@ public class STFT {
 
     /**
      * Getter for overlap value.
-     *
-     * @return
      */
     public int getOverlap() {
         return this.overlap;
@@ -211,8 +189,6 @@ public class STFT {
 
     /**
      * Getter for sampling rate.
-     *
-     * @return
      */
     public final float getSamplingrate() {
         return this.samplingrate;
@@ -247,8 +223,6 @@ public class STFT {
 
     /**
      * The stepsize in seconds between to adjacent bins in the time dimension.
-     *
-     * @return
      */
     public float timeStepsize() {
        return ((windowsize - overlap - 2*padding)/this.samplingrate);

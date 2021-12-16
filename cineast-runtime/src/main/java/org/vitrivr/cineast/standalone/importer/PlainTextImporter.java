@@ -19,7 +19,6 @@ public class PlainTextImporter implements Importer<Pair<String,String>> {
      * Constructor for {@link PlainTextImporter}.
      *
      * @param input Path to the input file or folder.
-     * @throws IOException
      */
     public PlainTextImporter(Path input) throws IOException {
         this.files = Files.walk(input, 2).filter(s -> s.toString().endsWith(".txt")).iterator();

@@ -54,7 +54,6 @@ public final class IdConfig {
      *
      * @param name Name of the {@link ObjectIdGenerator}
      * @param existenceCheckMode  Determines the 'existence check mode' for objectId's of {@link MediaObjectDescriptor}s
-     * @param properties
      */
     @JsonCreator
     public IdConfig(@JsonProperty(value = "name", required = true) String name,

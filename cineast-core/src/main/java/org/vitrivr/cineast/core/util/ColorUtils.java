@@ -97,8 +97,6 @@ public class ColorUtils {
 	}
 	
 	/**
-	 * 
-	 * @param colors
 	 * @return value between 0 and 1
 	 */
 	public static final float getAvgAlpha(Iterable<Integer> colors){

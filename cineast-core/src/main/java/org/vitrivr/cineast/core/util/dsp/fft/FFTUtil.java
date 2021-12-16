@@ -47,10 +47,8 @@ public class FFTUtil {
      * Returns the bin-index associated with the provided frequency at the given samplingrate
      * and window-size.
      *
-     * @param frequency
      * @param size Size of the FFT (i.e. number of frequency bins).
      * @param samplingrate Rate at which the original data has been sampled.
-     * @return
      */
     public static int binIndex(float frequency, int size, float samplingrate) {
         if (frequency > samplingrate/2) {

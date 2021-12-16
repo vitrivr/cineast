@@ -22,8 +22,6 @@ public class TextStream {
    * @param first         the index of the first frame
    * @param last          the index of the last frame
    * @param coordinate_id the id of the coordinate
-   * @param coordinates1
-   * @param coordinates2
    */
   public TextStream(int first, int last, int coordinate_id, List<Quadrilateral_F64> coordinates1, List<Quadrilateral_F64> coordinates2) {
     this.first = first;
@@ -61,8 +59,6 @@ public class TextStream {
    * @param start         index of the first frame
    * @param end           index of the last frame
    * @param coordinate_id id of the coordinate
-   * @param coordinates1
-   * @param coordinates2
    */
   public void add(int start, int end, int coordinate_id, List<Quadrilateral_F64> coordinates1, List<Quadrilateral_F64> coordinates2) {
     for (int i = 0; i < coordinates1.size(); i++) {

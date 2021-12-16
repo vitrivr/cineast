@@ -98,8 +98,6 @@ public class PitchTracker {
 
     /**
      *  Executes the pitch-tracking / pitch-streaming step
-     *
-     * @return
      */
     public void trackPitches() {
         /* Apply the two filter stages described in [1], section II-B. */
@@ -138,10 +136,6 @@ public class PitchTracker {
         Collections.reverse( this.pitchContours);
     }
 
-    /**
-     *
-     * @return
-     */
     public Melody extractMelody(int iterations) {
         /* Return if no pitch-contours are available. */
         if (this.pitchContours.isEmpty()) {
@@ -205,11 +199,6 @@ public class PitchTracker {
         return melody;
     }
 
-    /**
-     *
-     * @param contours
-     * @return
-     */
     public double[] meanContour(List<PitchContour> contours) {
 
         final int size = 40;
@@ -395,12 +384,6 @@ public class PitchTracker {
         }
     }
 
-    /**
-     *
-     * @param contour
-     * @param start
-     * @return
-     */
     private void track(final PitchContour contour, final int start) {
         /* If start is the last entry, then no forward-tracking is required. */
         if (start == this.s1.length - 1) {
@@ -530,10 +513,6 @@ public class PitchTracker {
         });
     }
 
-    /**
-     *
-     * @param contours
-     */
     private void detectAndRemoveOctaveDuplicates(List<PitchContour> contours, double[] meanpitches) {
         Iterator<PitchContour> iterator = contours.iterator();
         while(iterator.hasNext()) {
@@ -582,11 +561,6 @@ public class PitchTracker {
         }
     }
 
-    /**
-     *
-     * @param contours
-     * @param meanpitches
-     */
     private void detectAndRemovePitchOutliers(List<PitchContour> contours, final double[] meanpitches) {
         Iterator<PitchContour> iterator = contours.iterator();
         while(iterator.hasNext()) {

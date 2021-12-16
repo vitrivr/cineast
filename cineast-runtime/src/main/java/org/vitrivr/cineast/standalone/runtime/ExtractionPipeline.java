@@ -105,8 +105,6 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
      * @param container SegmentContainer to add to the queue.
      * @param timeout Time to wait for space to become available in ms.
      * @return true if SegmentContainer was emitted, false otherwise.
-     *
-     * @throws InterruptedException
      */
     public boolean emit(SegmentContainer container, int timeout) throws InterruptedException {
         return this.segmentQueue.offer(container, timeout,  TimeUnit.MILLISECONDS);

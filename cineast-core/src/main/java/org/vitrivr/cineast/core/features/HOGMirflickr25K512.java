@@ -18,8 +18,6 @@ public class HOGMirflickr25K512 extends HOG {
     /**
      * Returns the full name of the codebook to use. All codebooks must be placed in the
      * ./resources/codebooks folder.
-     *
-     * @return
      */
     @Override
     protected String codebook() {

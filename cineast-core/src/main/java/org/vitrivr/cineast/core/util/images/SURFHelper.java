@@ -46,7 +46,6 @@ public final class SURFHelper {
      * Returns SURF descriptors for an image using the settings above. Uses the BoofCV stable SURF algorithm.
      *
      * @param image Image for which to obtain the SURF descriptors.
-     * @return
      */
     public static DetectDescribePoint<GrayF32, BrightFeature> getStableSurf(BufferedImage image) {
          /* Obtain raw SURF descriptors using the configuration above (FH-9 according to [1]). */
@@ -62,7 +61,6 @@ public final class SURFHelper {
      * which yields less images but operates a bit faster.
      *
      * @param image Image for which to obtain the SURF descriptors.
-     * @return
      */
     public static DetectDescribePoint<GrayF32, BrightFeature> getFastSurf(BufferedImage image) {
          /* Obtain raw SURF descriptors using the configuration above (FH-9 according to [1]). */

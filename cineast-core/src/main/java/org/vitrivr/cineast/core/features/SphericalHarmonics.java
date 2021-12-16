@@ -53,10 +53,6 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
         this.voxelizer = new Voxelizer(2.0f/grid_size);
     }
 
-    /**
-     *
-     * @param shot
-     */
     @Override
     public void processSegment(SegmentContainer shot) {
         /* Get the normalized Mesh. */
@@ -130,9 +126,6 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
      *
      * Depending on the model, the first components may be 0.0 because the surface of the sphere defined by the radius only
      * touches empty space (i.e the hollow interior of the model).
-     *
-     * @param mesh
-     * @return
      */
     private float[] featureVectorFromMesh(ReadableMesh mesh) {
         final float increment = 0.1f; /* Increment of the angles during calculation of the descriptors. */

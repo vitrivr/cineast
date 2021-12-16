@@ -44,7 +44,6 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
      *
      * @param path Path to the file for which an ID should be generated.
      * @param type MediaType of the file for which an ID should be generated.
-     * @return
      */
     @Override
     public String next(Path path, MediaType type) {

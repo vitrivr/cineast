@@ -30,10 +30,6 @@ public final class MeshColoringUtil {
         }
     }
 
-    /**
-     *
-     * @param mesh
-     */
     public static void normalColoring(WritableMesh mesh) {
         Vector3f axis = new Vector3f(1.0f,0.0f, 0.0f);
 

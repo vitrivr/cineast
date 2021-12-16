@@ -23,7 +23,6 @@ public class VbsMetaImporter implements Importer<Pair<String,String>> {
      * Constructor for {@link PlainTextImporter}.
      *
      * @param input Path to the input file or folder.
-     * @throws IOException
      */
     public VbsMetaImporter(Path input) throws IOException {
         this.files = Files.walk(input, 2).filter(s -> s.toString().endsWith(".xml")).iterator();

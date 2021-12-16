@@ -65,7 +65,6 @@ public class MyscealTagImporter implements Importer<Map<String, PrimitiveTypePro
    * Returns the next tag score element.
    * In other words, this returns the next triple segmentId, tagId, score als long as there are these triples.
    * Those triples are constructed by first getting the current segmentId and then iterating over this segment's tags until they are all processed
-   * @return
    */
   private Map<String, PrimitiveTypeProvider> readNextTagScore() {
     do{

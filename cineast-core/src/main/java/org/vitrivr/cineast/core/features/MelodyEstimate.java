@@ -120,7 +120,6 @@ public class MelodyEstimate extends StagedFeatureModule {
      * Generates a set of feature vectors for the provided melody and returns them
      *
      * @param melody Melody for which to generate the vectors.
-     * @return
      */
     private List<float[]> getFeatures(Melody melody) {
 
@@ -148,11 +147,6 @@ public class MelodyEstimate extends StagedFeatureModule {
         return features;
     }
 
-    /**
-     *
-     * @param sc
-     * @return
-     */
     private Melody transcribe(SegmentContainer sc) {
         /* Calculate STFT and apply spectral whitening. */
         Pair<Integer, Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
