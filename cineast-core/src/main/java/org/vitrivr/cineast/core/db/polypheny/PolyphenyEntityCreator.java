@@ -39,16 +39,6 @@ public final class PolyphenyEntityCreator implements EntityCreator {
     /**
      * Constructor
      *
-     * @param config
-     */
-    public PolyphenyEntityCreator(DatabaseConfig config) {
-        this.wrapper = new PolyphenyWrapper(config);
-        init();
-    }
-
-    /**
-     * Constructor
-     *
      * @param cottontailWrapper The {@link PolyphenyWrapper} to create this {@link PolyphenyEntityCreator} with.
      */
     public PolyphenyEntityCreator(PolyphenyWrapper cottontailWrapper) {

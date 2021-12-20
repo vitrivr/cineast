@@ -40,11 +40,6 @@ public final class CottontailEntityCreator implements EntityCreator {
   /** Internal reference to the {@link CottontailWrapper} used by this {@link CottontailEntityCreator}. */
   private final CottontailWrapper cottontail;
 
-  public CottontailEntityCreator(DatabaseConfig config) {
-    this.cottontail = new CottontailWrapper(config);
-    init();
-  }
-
   public CottontailEntityCreator(CottontailWrapper cottontailWrapper) {
     this.cottontail = cottontailWrapper;
     init();
