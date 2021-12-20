@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.polypheny;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -101,16 +100,16 @@ public final class PolyphenyEntityCreator implements EntityCreator {
     }
 
     @Override
-    public boolean createMetadataEntity() {
-        final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + MediaObjectMetadataDescriptor.ENTITY;
+    public boolean createMetadataEntity(String tableName) {
+        final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + tableName;
         try (final Statement stmt = this.wrapper.connection.createStatement()) {
             stmt.execute("CREATE TABLE " + entityName + " (" +
-                    MediaObjectMetadataDescriptor.FIELDNAMES[0] + " VARCHAR(255) NOT NULL," + /* object_id */
-                    MediaObjectMetadataDescriptor.FIELDNAMES[1] + " VARCHAR(255) NOT NULL," + /* domain */
-                    MediaObjectMetadataDescriptor.FIELDNAMES[2] + " VARCHAR(255) NOT NULL," + /* key */
-                    "\"" + MediaObjectMetadataDescriptor.FIELDNAMES[3] + "\"" + " VARCHAR(255) NOT NULL," + /* value */
-                    "PRIMARY KEY (" + MediaObjectMetadataDescriptor.FIELDNAMES[0] + "," + MediaObjectMetadataDescriptor.FIELDNAMES[1] + "," + MediaObjectMetadataDescriptor.FIELDNAMES[2] + ")" +
-                    ") ON STORE " + PolyphenyWrapper.STORE_NAME_POSTGRESQL);
+                MediaObjectMetadataDescriptor.FIELDNAMES[0] + " VARCHAR(255) NOT NULL," + /* object_id */
+                MediaObjectMetadataDescriptor.FIELDNAMES[1] + " VARCHAR(255) NOT NULL," + /* domain */
+                MediaObjectMetadataDescriptor.FIELDNAMES[2] + " VARCHAR(255) NOT NULL," + /* key */
+                "\"" + MediaObjectMetadataDescriptor.FIELDNAMES[3] + "\"" + " VARCHAR(255) NOT NULL," + /* value */
+                "PRIMARY KEY (" + MediaObjectMetadataDescriptor.FIELDNAMES[0] + "," + MediaObjectMetadataDescriptor.FIELDNAMES[1] + "," + MediaObjectMetadataDescriptor.FIELDNAMES[2] + ")" +
+                ") ON STORE " + PolyphenyWrapper.STORE_NAME_POSTGRESQL);
 
             /* TODO: Create index on object_id and domain. */
             return true;
@@ -121,8 +120,8 @@ public final class PolyphenyEntityCreator implements EntityCreator {
     }
 
     @Override
-    public boolean createSegmentMetadataEntity() {
-        final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + MediaSegmentMetadataDescriptor.ENTITY;
+    public boolean createSegmentMetadataEntity(String tableName) {
+        final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + tableName;
         try (final Statement stmt = this.wrapper.connection.createStatement()) {
             stmt.execute("CREATE TABLE " + entityName + " (" +
                     MediaSegmentMetadataDescriptor.FIELDNAMES[0] + " VARCHAR(255) NOT NULL," + /* segment_id */
