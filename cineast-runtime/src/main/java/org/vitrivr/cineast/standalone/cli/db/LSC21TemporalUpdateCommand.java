@@ -103,7 +103,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
     }
 
     /* Preparation. */
-    final CottontailWrapper cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase());
+    final CottontailWrapper cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase().getHost(), Config.sharedConfig().getDatabase().getPort());
     long txId = cottontail.client.begin();
     final Query query = new Query(ENTITY_NAME).select("*", null).txId(txId);
     final TupleIterator ti = cottontail.client.query(query);
