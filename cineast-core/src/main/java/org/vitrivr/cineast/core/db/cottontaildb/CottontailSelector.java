@@ -196,6 +196,8 @@ public final class CottontailSelector implements DBSelector {
       final String op = toOperator(c.getMiddle());
       return new Literal(c.getLeft(), op, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray());
     }).collect(Collectors.toList());
+
+    /*  */
     final Optional<Predicate> predicates = atomics.stream().reduce(And::new);
     if (qc != null && !qc.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = qc.getRelevantSegmentIds();
@@ -208,6 +210,7 @@ public final class CottontailSelector implements DBSelector {
     } else {
       predicates.ifPresent(query::where);
     }
+
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -331,7 +334,7 @@ public final class CottontailSelector implements DBSelector {
   private static List<Map<String, PrimitiveTypeProvider>> processResults(TupleIterator results, Map<String, String> mappings) {
     final List<Map<String, PrimitiveTypeProvider>> _return = new LinkedList<>();
     final StopWatch watch = StopWatch.createStarted();
-    final Collection<String> columns = results.getColumnNames();
+    final Collection<String> columns = results.getSimpleNames();
     while (results.hasNext()) {
       final Tuple t = results.next();
       final Map<String, PrimitiveTypeProvider> map = new HashMap<>(results.getNumberOfColumns());
