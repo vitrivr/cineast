@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
-public interface DBSelector extends AutoCloseable {
+public interface DBSelector extends Closeable {
 
   Logger LOGGER = LogManager.getLogger();
 

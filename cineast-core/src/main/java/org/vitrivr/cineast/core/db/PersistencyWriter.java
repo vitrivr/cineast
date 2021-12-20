@@ -1,10 +1,11 @@
 package org.vitrivr.cineast.core.db;
 
+import java.io.Closeable;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public interface PersistencyWriter<R> extends AutoCloseable {
+public interface PersistencyWriter<R> extends Closeable {
 	/**
 	 * Logger instance used for logging.
 	 */
