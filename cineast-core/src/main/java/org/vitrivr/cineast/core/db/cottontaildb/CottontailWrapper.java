@@ -22,29 +22,27 @@ public final class CottontailWrapper implements AutoCloseable {
   public static final String FQN_CINEAST_SCHEMA = WARREN_PREFIX + "." + CINEAST_SCHEMA;
 
   /** Internal connection pool to re-use managed channels. */
-  private static final Map<DatabaseConfig, ManagedChannel> POOL = new ConcurrentHashMap<>();
+  private static final Map<String, ManagedChannel> POOL = new ConcurrentHashMap<>();
 
   /**
    * Returns a {@link ManagedChannel} object for the given {@link DatabaseConfig}.
    *
-   * @param config  {@link DatabaseConfig} to generate channel for.
+   * @param host Hostname of the Cottontail DB server.
+   * @param port Port of the Cottontail DB server.
    * @return {@link ManagedChannel}
    */
-  private static ManagedChannel sharedChannel(DatabaseConfig config) {
-    return POOL.computeIfAbsent(config, (key) -> {
-      StopWatch watch = StopWatch.createStarted();
-      LOGGER.debug("Starting to connect to Cottontail DB at {}:{}", config.getHost(), config.getPort());
-      final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort());
-      if (config.getPlaintext()) {
-        builder.usePlaintext();
-      }
+  private static ManagedChannel sharedChannel(String host, int port) {
+    return POOL.computeIfAbsent((host + ":" + port), (key) -> {
+      final StopWatch watch = StopWatch.createStarted();
+      LOGGER.debug("Starting to connect to Cottontail DB at {}:{}", host, port);
+      final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(host, port).usePlaintext();
       final ManagedChannel channel = builder.build();
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
         LOGGER.info("Closing connection to Cottontail DB.");
         channel.shutdownNow();
       }));
       watch.stop();
-      LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
+      LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
       return channel;
     });
   }
@@ -61,8 +59,8 @@ public final class CottontailWrapper implements AutoCloseable {
     return FQN_CINEAST_SCHEMA + "." + entity;
   }
 
-  public CottontailWrapper(DatabaseConfig config) {
-    this.client = new SimpleClient(sharedChannel(config));
+  public CottontailWrapper(String host, int port) {
+    this.client = new SimpleClient(sharedChannel(host, port));
   }
 
   /**

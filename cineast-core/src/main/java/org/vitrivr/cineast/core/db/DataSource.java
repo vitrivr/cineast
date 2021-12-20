@@ -31,10 +31,12 @@ import java.util.function.Supplier;
 public enum DataSource {
     NONE,
     JSON,
-    ADAMPRO,
     COTTONTAIL,
     POLYPHENY,
-    INMEMORY;
+    INMEMORY,
+
+    @Deprecated
+    ADAMPRO;
 
     /**
      * Returns a new {@link Supplier} for an {@link PersistencyWriter}
@@ -46,14 +48,14 @@ public enum DataSource {
         switch (this) {
             case NONE:
                 return NoDBWriter::new;
-            case ADAMPRO:
-                return () -> new ADAMproWriter(new ADAMproWrapper(config));
             case COTTONTAIL:
-                return () -> new CottontailWriter(new CottontailWrapper(config));
+                return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()));
             case POLYPHENY:
-                return () -> new PolyphenyWriter(new PolyphenyWrapper(config));
+                return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost()));
             case JSON:
                 return () -> new JsonFileWriter(new File(config.getHost()));
+            case ADAMPRO:
+                return () -> new ADAMproWriter(new ADAMproWrapper(config));
             default:
                 throw new IllegalStateException("No supplier for " + this + " selector.");
         }
@@ -69,14 +71,14 @@ public enum DataSource {
         switch (this) {
             case NONE:
                 return NoDBSelector::new;
-            case ADAMPRO:
-                return () -> new ADAMproSelector(new ADAMproWrapper(config));
             case COTTONTAIL:
-                return () -> new CottontailSelector(new CottontailWrapper(config));
+                return () -> new CottontailSelector(new CottontailWrapper(config.getHost(), config.getPort()));
             case POLYPHENY:
-                return () -> new PolyphenySelector(new PolyphenyWrapper(config));
+                return () -> new PolyphenySelector(new PolyphenyWrapper(config.getHost()));
             case JSON:
                 return () -> new JsonSelector(new File(config.getHost()));
+            case ADAMPRO:
+                return () -> new ADAMproSelector(new ADAMproWrapper(config));
             default:
                 throw new IllegalStateException("No supplier for " + this + " selector.");
         }
@@ -94,12 +96,12 @@ public enum DataSource {
                 return NoEntityCreator::new;
             case INMEMORY:
                 return InMemoryEntityCreator::new;
+            case COTTONTAIL:
+                return () -> new CottontailEntityCreator(new CottontailWrapper(config.getHost(), config.getPort()));
+            case POLYPHENY:
+                return () -> new PolyphenyEntityCreator(new PolyphenyWrapper(config.getHost()));
             case ADAMPRO:
                 return () -> new ADAMproEntityCreator(new ADAMproWrapper(config));
-            case COTTONTAIL:
-                return () -> new CottontailEntityCreator(new CottontailWrapper(config));
-            case POLYPHENY:
-                return () -> new PolyphenyEntityCreator(new PolyphenyWrapper(config));
             default:
                 throw new IllegalStateException("No supplier for " + this + " entity creator.");
         }

@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.core.db.polypheny;
 
-import io.grpc.netty.NettyChannelBuilder;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,7 +25,7 @@ public final class PolyphenyWrapper implements AutoCloseable {
     public static final String CINEAST_SCHEMA = "cineast";
 
     /** Store name PostgreSQL instances. */
-    public static final String STORE_NAME_POSTGRESQL = "hsqldb";
+    public static final String STORE_NAME_POSTGRESQL = "postgresql";
 
     /** Store name Cottontail DB instances. */
     public static final String STORE_NAME_COTTONTAIL = "cottontail";
@@ -35,27 +33,21 @@ public final class PolyphenyWrapper implements AutoCloseable {
     /** The JDBC {@link Connection} used to communicate with Polypheny DB. */
     final Connection connection;
 
-    public PolyphenyWrapper(DatabaseConfig config) {
+    public PolyphenyWrapper(String host) {
         StopWatch watch = StopWatch.createStarted();
-        LOGGER.debug("Starting to connect to Polypheny DB at {}:{}", config.getHost(), config.getPort());
-        final NettyChannelBuilder builder = NettyChannelBuilder
-                .forAddress(config.getHost(), config.getPort());
-        if (config.getPlaintext()) {
-            builder.usePlaintext();
-        }
-
+        LOGGER.debug("Starting to connect to Polypheny DB at {}", host);
         /* Try to instantiate Polypheny driver. */
         try {
            Class.forName( "org.polypheny.jdbc.Driver" ); /* Make sure, driver was loaded. */
            final Properties properties = new Properties();
            properties.put("username","pa"); /* TODO: Could be configurable :-) */
-           this.connection = DriverManager.getConnection(String.format("jdbc:polypheny:http://%s/", config.getHost()), properties);
+           this.connection = DriverManager.getConnection(String.format("jdbc:polypheny:http://%s/", host), properties);
         } catch (ClassNotFoundException | SQLException e) {
             throw new IllegalStateException("Failed to initialize JDBC connection to Polypheny DB due to error: " + e.getMessage());
         }
 
         watch.stop();
-        LOGGER.debug("Connected to Polypheny DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
+        LOGGER.debug("Connected to Polypheny DB in {} ms at {}", watch.getTime(TimeUnit.MILLISECONDS), host);
     }
 
     public String fqnInput(String entity) {
