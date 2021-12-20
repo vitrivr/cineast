@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+@Deprecated
 public class ADAMproSelector extends AbstractADAMproSelector {
 
 

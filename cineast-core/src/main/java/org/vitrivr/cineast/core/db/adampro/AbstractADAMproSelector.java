@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@Deprecated
 public abstract class AbstractADAMproSelector implements DBSelector {
 
   /**
@@ -37,7 +38,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
    */
   protected FromMessage fromMessage;
 
-  final ADAMproWrapper adampro;
+  protected final ADAMproWrapper adampro;
 
   public AbstractADAMproSelector(ADAMproWrapper wrapper){
     this.adampro = wrapper;

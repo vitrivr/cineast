@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.*;
 
+@Deprecated
 public class ADAMproWrapper implements AutoCloseable {
 
   private static final Logger LOGGER = LogManager.getLogger();
