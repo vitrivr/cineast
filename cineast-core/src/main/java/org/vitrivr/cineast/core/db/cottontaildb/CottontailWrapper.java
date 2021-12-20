@@ -22,7 +22,7 @@ public final class CottontailWrapper implements AutoCloseable {
   public static final String FQN_CINEAST_SCHEMA = WARREN_PREFIX + "." + CINEAST_SCHEMA;
 
   /** Internal connection pool to re-use managed channels. */
-  private static final Map<String, ManagedChannel> POOL = new ConcurrentHashMap<>();
+  private static final Map<String, ManagedChannel> POOL = new ConcurrentHashMap<>(); /* TODO: Reference counting? */
 
   /**
    * Returns a {@link ManagedChannel} object for the given {@link DatabaseConfig}.
