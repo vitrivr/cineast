@@ -28,6 +28,7 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Direction;
@@ -60,7 +61,7 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public boolean close() { return true; }
+  public void close() { /* No op. */ }
 
   /**
    * if {@link ReadableQueryConfig#getRelevantSegmentIds()} is null, the where-clause will be left empty
@@ -224,25 +225,23 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
-    Query query = new Query(this.fqn);
-    query.select("*");
+    final Query query = new Query(this.fqn).select("*", null);
     Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     predicates.ifPresent(query::where);
-    return processResults(this.cottontail.client.query(query, null));
+    return processResults(this.cottontail.client.query(query));
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
-    Query query = new Query(this.fqn);
-    query.select("*");
-    Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
+    final Query query = new Query(this.fqn).select("*", null);
+    final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     final Literal segmentIds = new Literal(idColName, "IN", ids.toArray());
     if (predicates.isPresent()) {
       query.where(new And(segmentIds, predicates.get()));
     } else {
       query.where(segmentIds);
     }
-    return processResults(this.cottontail.client.query(query, null));
+    return processResults(this.cottontail.client.query(query));
   }
 
 
@@ -276,7 +275,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    final Query query = new Query(this.fqn).select(column, null );
+    final Query query = new Query(this.fqn).select(column, null);
     try {
       return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
@@ -358,10 +357,6 @@ public final class CottontailSelector implements DBSelector {
     } catch (StatusRuntimeException e) {
       return false;
     }
-  }
-
-  List<CottontailGrpc.Literal> toLiteralList(String s) {
-    return Lists.newArrayList(CottontailGrpc.Literal.newBuilder().setStringData(s).build());
   }
 
   /**

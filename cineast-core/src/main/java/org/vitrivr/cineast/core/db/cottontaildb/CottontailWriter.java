@@ -36,9 +36,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
   }
 
   @Override
-  public boolean close() {
-    return true;
-  }
+  public void close() { /* No op */ }
 
   @Override
   public boolean exists(String key, String value) {

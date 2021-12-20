@@ -41,9 +41,8 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
     }
 
     @Override
-    public boolean close() {
+    public void close() {
         this.wrapper.close();
-        return true;
     }
 
     @Override

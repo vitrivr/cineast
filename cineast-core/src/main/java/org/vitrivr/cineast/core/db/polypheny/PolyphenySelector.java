@@ -46,9 +46,8 @@ public final class PolyphenySelector implements DBSelector {
     }
 
     @Override
-    public boolean close() {
+    public void close() {
         this.wrapper.close();
-        return true;
     }
 
     @Override
