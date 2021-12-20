@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.ArrayList;
@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
-
-import static java.util.Arrays.asList;
-
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
@@ -31,13 +28,18 @@ import org.vitrivr.cineast.core.db.cottontaildb.CottontailBooleanIntegrationTest
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.CineastIOUtils;
 
 /**
  * Creates a table in cottontail with {@link #TABLE_CARD} columns of layout:
  * <p>
  * id | data_1_string_data_id | data_2_id_negative | data_3_id_plus_card
  * <p>
- * example columns for cardinality 20: 1 | "1" | -1 | 21 2 | "2 | -2 | 22
+ * example columns for cardinality 20:
+ * <br>
+ * 1 | "1" | -1 | 21
+ * <br>
+ * 2 | "2" | -2 | 22
  * <p>
  * A DBSelector which would like to be tested simply needs to extend this class. Have a look at {@link CottontailBooleanIntegrationTest} for an example.
  *
@@ -88,16 +90,9 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    if (writer != null) {
-      writer.close();
-    }
-    if (selector != null) {
-      selector.close();
-    }
+    CineastIOUtils.closeQuietly(writer, selector);
     dropTables();
-    if (ec != null) {
-      ec.close();
-    }
+    CineastIOUtils.closeQuietly(ec);
   }
 
   protected String getTestTableName() {
@@ -105,7 +100,6 @@ public abstract class DBBooleanIntegrationTest<R> {
   }
 
   protected abstract void finishSetup();
-
 
   protected abstract IntegrationDBProvider<R> provider();
 
@@ -280,7 +274,7 @@ public abstract class DBBooleanIntegrationTest<R> {
   @DisplayName("test BETWEEN() AND IN() query")
   void testBetweenANDInQuery() {
     selector.open(testTableName);
-    int idToCheck = TABLE_CARD/2;
+    int idToCheck = TABLE_CARD / 2;
 
     //The result is between x-2 and x+2
     List<PrimitiveTypeProvider> values1 = new ArrayList<>();

@@ -14,6 +14,8 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
   private final EmbeddedCottontailDB db;
 
+  private final CottontailWrapper wrapper;
+
   public CottontailIntegrationDBProvider() {
     db = EmbeddedCottontailDB.getInstance();
   }

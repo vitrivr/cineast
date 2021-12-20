@@ -42,16 +42,15 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   }
   
   @Override
-  public synchronized boolean close() {
+  public synchronized void close() {
     if (out == null) {
-      return true;
+      return;
     }
     out.println();
     out.println(']');
     out.flush();
     out.close();
     out = null;
-    return true;
   }
   
   @Override

@@ -20,8 +20,7 @@ public class NoDBSelector implements DBSelector {
     }
 
     @Override
-    public boolean close() {
-        return true;
+    public void close() {
     }
 
     @Override

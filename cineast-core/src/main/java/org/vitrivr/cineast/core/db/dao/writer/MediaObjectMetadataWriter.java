@@ -8,33 +8,30 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<MediaObjectMetadataDescriptor> {
 
-    /**
-     * @param writer
-     * @param batchsize
-     */
-    public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
-        super(writer, batchsize, true);
-    }
+  private final String tableName;
 
-    /**
-     *
-     */
-    @Override
-    protected void init() {
-        this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
-        this.writer.open(MediaObjectMetadataDescriptor.ENTITY);
-    }
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
+    this(writer, batchsize, MediaObjectMetadataDescriptor.ENTITY);
+  }
 
-    /**
-     * @param entity
-     * @return
-     */
-    @Override
-    protected PersistentTuple generateTuple(MediaObjectMetadataDescriptor entity) {
-        if(entity.getValueProvider() instanceof NothingProvider){
-            return null;
-        }
-        return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(),
-                entity.getValue());
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize, String tableName) {
+    super(writer, batchsize, false);
+    this.tableName = tableName;
+    this.init();
+  }
+
+  @Override
+  protected void init() {
+    this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
+    this.writer.open(tableName);
+  }
+
+  @Override
+  protected PersistentTuple generateTuple(MediaObjectMetadataDescriptor entity) {
+    if (entity.getValueProvider() instanceof NothingProvider) {
+      return null;
     }
+    return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(),
+        entity.getValue());
+  }
 }
