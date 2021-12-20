@@ -21,8 +21,8 @@ public class CottontailMetadataTest extends MetadataTest<Insert> {
     final CottontailWrapper wrapper = _provider.getWrapper();
     final String obj = wrapper.fqnInput(this.getTestObjMetaTableName());
     final String seg = wrapper.fqnInput(this.getTestSegMetaTableName());
-    wrapper.client.optimize(new OptimizeEntity(obj), null);
-    wrapper.client.optimize(new OptimizeEntity(seg), null);
+    wrapper.client.optimize(new OptimizeEntity(obj));
+    wrapper.client.optimize(new OptimizeEntity(seg));
     wrapper.close();
   }
 

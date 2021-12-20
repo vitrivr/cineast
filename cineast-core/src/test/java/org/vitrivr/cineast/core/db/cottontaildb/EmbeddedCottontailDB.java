@@ -58,7 +58,7 @@ public class EmbeddedCottontailDB {
     dbThread.setName("Embedded DB Trhead");
     dbThread.setDaemon(true);
     dbThread.start();
-    wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get() );
+    wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
     boolean ping = wrapper.client.ping();
     LOGGER.info("Embedded DB and wrapper started. Ping: "+ping);
   }
