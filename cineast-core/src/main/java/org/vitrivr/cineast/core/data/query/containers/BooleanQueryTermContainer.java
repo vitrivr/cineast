@@ -1,17 +1,16 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.BooleanExpression;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 public class BooleanQueryTermContainer extends AbstractQueryTermContainer {
 
@@ -64,7 +63,7 @@ public class BooleanQueryTermContainer extends AbstractQueryTermContainer {
       if (element.has(VALUES_FIELD_NAME)) {
         if (element.get(VALUES_FIELD_NAME).isArray()) {
           Iterator<JsonNode> elementIter = element.get(VALUES_FIELD_NAME).elements();
-          while(elementIter.hasNext()){
+          while (elementIter.hasNext()) {
             values.add(PrimitiveTypeProvider.fromJSON(elementIter.next()));
           }
         } else {

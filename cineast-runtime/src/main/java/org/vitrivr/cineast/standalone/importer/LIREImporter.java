@@ -1,18 +1,17 @@
 package org.vitrivr.cineast.standalone.importer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.importer.Importer;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.importer.Importer;
 
 public class LIREImporter implements Importer<StringFloatArrayPair> {
 
@@ -85,6 +84,7 @@ public class LIREImporter implements Importer<StringFloatArrayPair> {
 }
 
 class StringFloatArrayPair {
+
   final String id;
   final float[] vector;
 

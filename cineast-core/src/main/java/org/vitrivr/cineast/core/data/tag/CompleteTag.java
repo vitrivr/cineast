@@ -8,7 +8,9 @@ public class CompleteTag implements Tag {
 
   private final String id, name, description;
 
-  /** only used in querying */
+  /**
+   * only used in querying
+   */
   private TagPriority priority;
 
   public CompleteTag(String id, String name, String description) {

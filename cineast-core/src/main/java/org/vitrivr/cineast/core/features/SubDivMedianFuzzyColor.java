@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -12,8 +13,6 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.extraction.segmenter.SubdividedFuzzyColorHistogram;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-
-import java.util.List;
 
 public class SubDivMedianFuzzyColor extends AbstractFeatureModule {
 

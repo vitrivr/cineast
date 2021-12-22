@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.importer.Importer;
 
 /**
  * Imports the colorlabels as given by the https://github.com/klschoef/V3C1Analysis repo. File is expected to be in format:
- *
+ * <p>
  * every line contains the segmentid formatted xxxxx_yyyy, where before the _ is 0-padded to length 5 the movie id and behind the _ the non-0 padded segmentID
  */
 public class ColorlabelImporter implements Importer<Map<String, PrimitiveTypeProvider>> {
@@ -37,7 +37,7 @@ public class ColorlabelImporter implements Importer<Map<String, PrimitiveTypePro
     }
     String id = lineIterator.next();
     Map<String, PrimitiveTypeProvider> _return = new HashMap<>();
-    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject("v_"+id));
+    _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject("v_" + id));
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject("v3c1"));
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[2], PrimitiveTypeProvider.fromObject("colorlabels"));
     _return.put(MediaSegmentMetadataDescriptor.FIELDNAMES[3], PrimitiveTypeProvider.fromObject(this.label));

@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.db.memory.InMemoryStore.Entity;
  * Implementation of a Cineast {@link org.vitrivr.cineast.core.db.PersistencyWriter} on top of the {@link InMemoryStore}.
  *
  * @see InMemoryStore
- *
  */
 public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
 

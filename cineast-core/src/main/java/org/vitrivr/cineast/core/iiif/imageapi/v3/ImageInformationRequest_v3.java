@@ -57,7 +57,9 @@ public class ImageInformationRequest_v3 implements ImageInformationRequest {
     LOGGER.debug("Image information request's json response data written to file successfully. Request url:\t" + url);
   }
 
-  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  /**
+   * Get the {@link ImageApiVersion} of the ImageInformation
+   */
   public ImageApiVersion getImageApiVersion() {
     return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }

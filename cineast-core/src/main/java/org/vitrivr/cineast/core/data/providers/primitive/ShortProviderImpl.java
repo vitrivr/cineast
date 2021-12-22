@@ -2,18 +2,18 @@ package org.vitrivr.cineast.core.data.providers.primitive;
 
 public class ShortProviderImpl implements ShortProvider, IntProvider, LongProvider {
 
-	private final short value;
-	
-	public ShortProviderImpl(short value){
-		this.value = value;
-	}
+  private final short value;
 
-	@Override
-	public short getShort() {
-		return this.value;
-	}
+  public ShortProviderImpl(short value) {
+    this.value = value;
+  }
 
-	@Override
+  @Override
+  public short getShort() {
+    return this.value;
+  }
+
+  @Override
   public int getInt() {
     return this.value;
   }
@@ -24,33 +24,33 @@ public class ShortProviderImpl implements ShortProvider, IntProvider, LongProvid
   }
 
   @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + value;
-		return result;
-	}
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + value;
+    return result;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
       return true;
     }
-		if (obj == null) {
+    if (obj == null) {
       return false;
     }
-		if (getClass() != obj.getClass()) {
+    if (getClass() != obj.getClass()) {
       return false;
     }
-		ShortProviderImpl other = (ShortProviderImpl) obj;
-		if (value != other.value) {
+    ShortProviderImpl other = (ShortProviderImpl) obj;
+    if (value != other.value) {
       return false;
     }
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return String.format("ShortProviderImpl [value=%s]", value);
-	}
+  @Override
+  public String toString() {
+    return String.format("ShortProviderImpl [value=%s]", value);
+  }
 }

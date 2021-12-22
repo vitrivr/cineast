@@ -56,7 +56,9 @@ public class ImageFactory {
     this.iiifConfig = null;
   }
 
-  /** Helper method to check that given string is not empty */
+  /**
+   * Helper method to check that given string is not empty
+   */
   private static boolean isParamStringValid(String input) {
     return input != null && input.length() != 0;
   }

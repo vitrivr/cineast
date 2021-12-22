@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.score;
 import java.util.Objects;
 
 abstract class AbstractScoreElement implements ScoreElement {
+
   private final String id;
   private final double score;
 

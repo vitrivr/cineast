@@ -2,6 +2,16 @@ package org.vitrivr.cineast.core.features.abstracts;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,15 +27,9 @@ import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriever;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
-
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
- * BooleanRetrievers operate on tables which are created externally.
- * Therefore, both initializing and dropping the entity are managed externally.
+ * BooleanRetrievers operate on tables which are created externally. Therefore, both initializing and dropping the entity are managed externally.
  */
 public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
@@ -35,18 +39,18 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   protected final HashSet<String> attributes = new HashSet<>();
   protected final HashMap<String, ProviderDataType> columnTypes = new HashMap<>();
 
-  protected BooleanRetriever(String entity, Collection<String> attributes){
+  protected BooleanRetriever(String entity, Collection<String> attributes) {
     this.entity = entity;
     this.attributes.addAll(attributes);
   }
 
-  protected BooleanRetriever(Map<String, String> properties){
-    if(!properties.containsKey("entity")){
+  protected BooleanRetriever(Map<String, String> properties) {
+    if (!properties.containsKey("entity")) {
       throw new RuntimeException("no entity specified in properties map of BooleanRetriever");
     }
     this.entity = properties.get("entity");
 
-    if(properties.containsKey("attribute")){
+    if (properties.containsKey("attribute")) {
       List<String> attrs = Arrays.stream(properties.get("attribute").split(",")).map(String::trim)
           .collect(
               Collectors.toList());
@@ -68,11 +72,11 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
     this.selector.open(entity);
   }
 
-  public Collection<String> getAttributes(){
+  public Collection<String> getAttributes() {
     return this.attributes.stream().map(x -> this.entity + "." + x).collect(Collectors.toSet());
   }
 
-  protected boolean canProcess(BooleanExpression be){
+  protected boolean canProcess(BooleanExpression be) {
     return getSupportedOperators().contains(be.getOperator()) && getAttributes().contains(be.getAttribute());
   }
 
@@ -81,7 +85,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
 
     List<BooleanExpression> relevantExpressions = sc.getBooleanExpressions().stream().filter(this::canProcess).collect(Collectors.toList());
 
-    if (relevantExpressions.isEmpty()){
+    if (relevantExpressions.isEmpty()) {
       LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
       return Collections.emptyList();
     }
@@ -89,12 +93,12 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
     return getMatching(relevantExpressions, qc);
   }
 
-  protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
+  protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc) {
 
     List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(
         expressions.stream().map(be -> Triple.of(
             // strip entity if it was given via config
-            be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length()+1) : be.getAttribute(),
+            be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(),
             be.getOperator(),
             be.getValues()
         )).collect(Collectors.toList()),
@@ -125,7 +129,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
     //nop
   }
 
-  public ProviderDataType getColumnType(String column){
+  public ProviderDataType getColumnType(String column) {
     return this.columnTypes.get(column);
   }
 
@@ -137,10 +141,10 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
 
   @Override
   public boolean equals(Object obj) {
-    if(obj == null){
+    if (obj == null) {
       return false;
     }
-    if(!(obj instanceof BooleanRetriever)){
+    if (!(obj instanceof BooleanRetriever)) {
       return false;
     }
     return this.hashCode() == obj.hashCode();

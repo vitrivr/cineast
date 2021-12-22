@@ -4,10 +4,9 @@ import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_Q
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import com.googlecode.javaewah.datastructure.BitSet;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-
 import java.util.Comparator;
 import java.util.Map;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public class BitSetComparator implements Comparator<Map<String, PrimitiveTypeProvider>> {
 

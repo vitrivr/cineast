@@ -4,7 +4,8 @@ public interface ExecutionTimeCounter {
 
   /**
    * used to report task execution time for a particular class
-   * @param name classname. is a string since we can't determine the classname of generic types at runtime
+   *
+   * @param name        classname. is a string since we can't determine the classname of generic types at runtime
    * @param miliseconds the task duration in ms
    */
   void reportExecutionTime(String name, long miliseconds);

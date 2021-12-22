@@ -14,10 +14,14 @@ public class ReadableYCbCrContainer extends
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return y / 255f;
-      case 1: return cb / 255f;
-      case 2: return cr / 255f;
-      default: throw new IndexOutOfBoundsException(num + ">= 3");
+      case 0:
+        return y / 255f;
+      case 1:
+        return cb / 255f;
+      case 2:
+        return cr / 255f;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 3");
     }
   }
 

@@ -50,7 +50,6 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
       throw new RuntimeException("Failed to prepare metadata readout", e);
     }
 
-
     createLogFiles();
     LOGGER.info("Finished setup of Importer. Importing now...");
   }
@@ -182,7 +181,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     if (!logsEnabled) {
       return;
     }
-    if (nextsSinceLastDump++> logCadence) {
+    if (nextsSinceLastDump++ > logCadence) {
       try {
         writeLines(LSCUtilities.META_NO_PATH_FILE, metaNoPath);
         writeLines(LSCUtilities.WRITTEN_FILE, written);

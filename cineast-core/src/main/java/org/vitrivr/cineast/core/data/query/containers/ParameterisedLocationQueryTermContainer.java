@@ -23,7 +23,7 @@ public class ParameterisedLocationQueryTermContainer extends AbstractQueryTermCo
   public ParameterisedLocationQueryTermContainer(String json) {
     final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
     String converted = json;
-    if(json != null && json.startsWith("data")){
+    if (json != null && json.startsWith("data")) {
       converted = DataURLParser.dataURLtoString(json, "application/json");
     }
     final ParameterisedLocation ploc = jsonProvider.toObject(converted,
@@ -69,6 +69,7 @@ public class ParameterisedLocationQueryTermContainer extends AbstractQueryTermCo
 
     public GeoPoint geoPoint;
     public String parameter;
+
     public ParameterisedLocation() {
       // Empty constructor for de-/seralisation purposes
     }
@@ -78,6 +79,7 @@ public class ParameterisedLocationQueryTermContainer extends AbstractQueryTermCo
 
     public float latitude;
     public float longitude;
+
     public GeoPoint() {
       // Empty constructor for de-/seralisation purposes
     }

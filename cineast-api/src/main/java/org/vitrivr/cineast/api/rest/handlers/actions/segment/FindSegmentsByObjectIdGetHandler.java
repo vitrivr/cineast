@@ -14,7 +14,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSegmentQueryResult> {
 
   public static final String ID_NAME = "id";
-  public static final String ROUTE = "find/segments/all/object/{" + ID_NAME +"}";
+  public static final String ROUTE = "find/segments/all/object/{" + ID_NAME + "}";
 
 
   @Override

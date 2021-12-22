@@ -1,9 +1,13 @@
 package org.vitrivr.cineast.core.util;
 
 import georegression.struct.shapes.Quadrilateral_F64;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import org.vitrivr.cineast.core.data.Pair;
-
-import java.util.*;
 
 /**
  * TextStream is a helper class for the OCRSearch feature extraction It stores the frame-coordinate pairs in which the text appears, as well as the extracted text itself
@@ -164,12 +168,12 @@ public class TextStream {
 
   @Override
   public boolean equals(Object o) {
-      if (this == o) {
-          return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-          return false;
-      }
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     TextStream that = (TextStream) o;
     return this.last == that.getLast() && this.coordinate_id == that.getCoordinate_id();
   }

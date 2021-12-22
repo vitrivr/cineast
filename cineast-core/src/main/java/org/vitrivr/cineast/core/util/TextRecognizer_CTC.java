@@ -1,14 +1,18 @@
 package org.vitrivr.cineast.core.util;
 
-import org.opencv.core.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * TextRecognizer is able to take a frame with coordinates, and return the scene text within it It applies generic CTC decoding and can thus be used for any CTC-based text recognizer (e.g. CRNN) The latin alphabet is used. Changes in the alphabet should only be done if the recognition module has been trained with it accordingly
