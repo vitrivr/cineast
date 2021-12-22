@@ -61,7 +61,6 @@ import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
  * This class is used to extract a continuous list of {@link ExtractionItemContainer}s.
  * <p>
  * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
- *
  */
 public class GenericExtractionItemHandler implements Runnable, ExtractionItemProcessor {
 

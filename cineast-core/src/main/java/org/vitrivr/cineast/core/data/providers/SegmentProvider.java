@@ -5,12 +5,11 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 public interface SegmentProvider extends AutoCloseable {
 
   /**
-   * 
    * @return the next {@link SegmentContainer} from the source or <code>null</code> if there are no more segments.
    */
-	public SegmentContainer getNextSegment();
+  public SegmentContainer getNextSegment();
 
-	@Override
+  @Override
   public void close();
-	
+
 }

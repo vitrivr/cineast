@@ -5,21 +5,36 @@ import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
 import org.vitrivr.adampro.grpc.AdamDefinitionGrpc.AdamDefinitionFutureStub;
 import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.PropertiesMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamSearchGrpc;
 import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchFutureStub;
 import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.*;
 
 public class ADAMproWrapper implements AutoCloseable {
 
@@ -40,7 +55,7 @@ public class ADAMproWrapper implements AutoCloseable {
 
   private static final int maxMessageSize = 10_000_000;
   private static final long maxCallTimeOutMs = 300_000; //TODO expose to config
-  
+
   public ADAMproWrapper(DatabaseConfig config) {
     NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxInboundMessageSize(maxMessageSize);
     if (config.getPlaintext()) {
@@ -98,7 +113,7 @@ public class ADAMproWrapper implements AutoCloseable {
     return this.definitionStub.existsEntity(
         EntityNameMessage.newBuilder().setEntity(eName).build());
   }
-  
+
   public boolean existsEntityBlocking(String eName) {
     ListenableFuture<ExistsMessage> future = existsEntity(eName);
     try {
@@ -123,7 +138,7 @@ public class ADAMproWrapper implements AutoCloseable {
     return Futures.withTimeout(standardQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
   }
 
-   public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message) {
+  public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message) {
     synchronized (this.searchStub) {
       return Futures.withTimeout(this.searchStub.doQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
@@ -173,7 +188,7 @@ public class ADAMproWrapper implements AutoCloseable {
 
   public ArrayList<QueryResultsMessage> streamingStandardQuery(Collection<QueryMessage> messages) {
 
-    if(messages == null || messages.isEmpty()){
+    if (messages == null || messages.isEmpty()) {
       return new ArrayList<>(0);
     }
 
@@ -204,7 +219,7 @@ public class ADAMproWrapper implements AutoCloseable {
       } catch (InterruptedException e) {
         //ignore
       }
-      for(QueryMessage message : messages){
+      for (QueryMessage message : messages) {
         queryMessageStreamObserver.onNext(message);
       }
       queryMessageStreamObserver.onCompleted();
@@ -258,7 +273,7 @@ public class ADAMproWrapper implements AutoCloseable {
   }
 
 
-  public ListenableFuture<AckMessage> dropEntity(String entityName){
+  public ListenableFuture<AckMessage> dropEntity(String entityName) {
     return this.definitionStub.dropEntity(EntityNameMessage.newBuilder().setEntity(entityName).build());
   }
 
@@ -272,11 +287,11 @@ public class ADAMproWrapper implements AutoCloseable {
     }
   }
 
-  public ListenableFuture<AckMessage> dropIndex(String indexName){
+  public ListenableFuture<AckMessage> dropIndex(String indexName) {
     return this.definitionStub.dropIndex(IndexNameMessage.newBuilder().setIndex(indexName).build());
   }
 
-  public boolean dropIndexBlocking(String indexName){
+  public boolean dropIndexBlocking(String indexName) {
     ListenableFuture<AckMessage> future = this.dropIndex(indexName);
     try {
       return future.get().getCode() == AckMessage.Code.OK;

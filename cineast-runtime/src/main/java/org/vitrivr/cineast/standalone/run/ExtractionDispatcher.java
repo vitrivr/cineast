@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.standalone.run;
 
+import java.io.File;
+import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
-
-import java.io.File;
-import java.io.IOException;
 
 
 public class ExtractionDispatcher {

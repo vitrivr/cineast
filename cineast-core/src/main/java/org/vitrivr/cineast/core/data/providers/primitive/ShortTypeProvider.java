@@ -8,9 +8,9 @@ public class ShortTypeProvider extends ShortProviderImpl implements PrimitiveTyp
 
   @Override
   public ProviderDataType getType() {
-   return ProviderDataType.SHORT;
+    return ProviderDataType.SHORT;
   }
-  
+
   @Override
   public String getString() {
     return Short.toString(getShort());

@@ -1,81 +1,86 @@
 package org.vitrivr.cineast.core.data.frames;
 
 /**
- * The class encapsulates descriptive information concerning an audio-stream that does not change between frames. The intention behind this
- * class is that {@link AudioFrame}s that belong together share the same instance of the AudioDescriptor.
- *
+ * The class encapsulates descriptive information concerning an audio-stream that does not change between frames. The intention behind this class is that {@link AudioFrame}s that belong together share the same instance of the AudioDescriptor.
  */
 public class AudioDescriptor {
-    /** Samplingrate of the audio associated with this descriptor. */
-    private final float samplingrate;
 
-    /** Number of channels in the audio associated with this descriptor. */
-    private final int channels;
+  /**
+   * Samplingrate of the audio associated with this descriptor.
+   */
+  private final float samplingrate;
 
-    /** Duration of the audio associated with this descriptor in milliseconds. */
-    private final long duration;
+  /**
+   * Number of channels in the audio associated with this descriptor.
+   */
+  private final int channels;
 
-    /**
-     * Constructor for an AudioDescriptor.
-     */
-    public AudioDescriptor(float samplingrate, int channels, long duration) {
-        this.samplingrate = samplingrate;
-        this.channels = channels;
-        this.duration = duration;
+  /**
+   * Duration of the audio associated with this descriptor in milliseconds.
+   */
+  private final long duration;
+
+  /**
+   * Constructor for an AudioDescriptor.
+   */
+  public AudioDescriptor(float samplingrate, int channels, long duration) {
+    this.samplingrate = samplingrate;
+    this.channels = channels;
+    this.duration = duration;
+  }
+
+  /**
+   * Getter for the samplingrate.
+   *
+   * @return Samplingrate of the source stream.
+   */
+  public final float getSamplingrate() {
+    return this.samplingrate;
+  }
+
+  /**
+   * Getter for channels.
+   *
+   * @return Number of channels in the source stream
+   */
+  public final int getChannels() {
+    return this.channels;
+  }
+
+  /**
+   * Getter for duration.
+   *
+   * @return Duration of the total source stream
+   */
+  public final long getDuration() {
+    return this.duration;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    /**
-     * Getter for the samplingrate.
-     *
-     * @return Samplingrate of the source stream.
-     */
-    public final float getSamplingrate() {
-        return this.samplingrate;
+    AudioDescriptor that = (AudioDescriptor) o;
+
+    if (Float.compare(that.samplingrate, samplingrate) != 0) {
+      return false;
     }
-
-    /**
-     * Getter for channels.
-     *
-     * @return Number of channels in the source stream
-     */
-    public final int getChannels() {
-        return this.channels;
+    if (channels != that.channels) {
+      return false;
     }
+    return duration == that.duration;
+  }
 
-    /**
-     * Getter for duration.
-     *
-     * @return Duration of the total source stream
-     */
-    public final long getDuration() {
-        return this.duration;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-          return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-          return false;
-        }
-
-        AudioDescriptor that = (AudioDescriptor) o;
-
-        if (Float.compare(that.samplingrate, samplingrate) != 0) {
-          return false;
-        }
-        if (channels != that.channels) {
-          return false;
-        }
-        return duration == that.duration;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (samplingrate != +0.0f ? Float.floatToIntBits(samplingrate) : 0);
-        result = 31 * result + channels;
-        result = 31 * result + (int) (duration ^ (duration >>> 32));
-        return result;
-    }
+  @Override
+  public int hashCode() {
+    int result = (samplingrate != +0.0f ? Float.floatToIntBits(samplingrate) : 0);
+    result = 31 * result + channels;
+    result = 31 * result + (int) (duration ^ (duration >>> 32));
+    return result;
+  }
 }

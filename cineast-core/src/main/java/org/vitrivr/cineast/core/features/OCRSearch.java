@@ -4,6 +4,14 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
 import com.google.common.cache.CacheLoader;
 import georegression.struct.shapes.Quadrilateral_F64;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -12,12 +20,13 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
-import org.vitrivr.cineast.core.util.*;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.*;
+import org.vitrivr.cineast.core.util.HungarianAlgorithm;
+import org.vitrivr.cineast.core.util.MultiTracker;
+import org.vitrivr.cineast.core.util.NeedlemanWunschMerge;
+import org.vitrivr.cineast.core.util.TextDetector_EAST;
+import org.vitrivr.cineast.core.util.TextRecognizer_CTC;
+import org.vitrivr.cineast.core.util.TextStream;
+import org.vitrivr.cineast.core.util.ThreadLocalObjectCache;
 
 /**
  * OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision) This makes sense here since we expect small errors from OCR sources
@@ -27,25 +36,16 @@ public class OCRSearch extends AbstractTextRetriever {
   public static final String OCR_TABLE_NAME = "features_ocr";
 
   /**
-   * Configurations
-   * rate:
-   * Rate refers to the rate at which detections are done. E.g.: Rate = 3 --> Detections are done at every third frame
-   * Increase rate for better inference times
-   *
-   * threshold_CIoU:
-   * CIoU stands for Combined Intersection over Union
-   * When the CIoU is below 0.4, they are regarded as separate streams
-   * Should not be changed
-   *
-   * threshold_postproc: This is the threshold for the postprocessing stream association step
-   * Strongly urge not to change
-   *
-   * tracker_type: Refers to the tracker which is used
-   * threshold_stream_length: Refers to the amount of consecutive frames a text should minimally appear in
-   * If a text appears in less consecutive frames than the threshold, the text is discarded
+   * Configurations rate: Rate refers to the rate at which detections are done. E.g.: Rate = 3 --> Detections are done at every third frame Increase rate for better inference times
+   * <p>
+   * threshold_CIoU: CIoU stands for Combined Intersection over Union When the CIoU is below 0.4, they are regarded as separate streams Should not be changed
+   * <p>
+   * threshold_postproc: This is the threshold for the postprocessing stream association step Strongly urge not to change
+   * <p>
+   * tracker_type: Refers to the tracker which is used threshold_stream_length: Refers to the amount of consecutive frames a text should minimally appear in If a text appears in less consecutive frames than the threshold, the text is discarded
    */
   private static final int rate = 3;
-  private static final int batchSize=16;
+  private static final int batchSize = 16;
   private static final double threshold_CIoU = 0.4;
   private static final double threshold_postproc = 8;
   private static final MultiTracker.TRACKER_TYPE tracker_type = MultiTracker.TRACKER_TYPE.CIRCULANT;
@@ -179,7 +179,7 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 
   /**
-   * @param streamPast Stream which appears before streamFuture
+   * @param streamPast   Stream which appears before streamFuture
    * @param streamFuture Stream which appears after streamPast
    * @return The similarity of the streams by taking into account the spatial distance, the overlap, the text similarity, and the frame offset
    */
@@ -227,6 +227,7 @@ public class OCRSearch extends AbstractTextRetriever {
 
   /**
    * Computes and returns the IoU of the two rectangular boxes. The method will not work if they are not rectangular
+   *
    * @param coordA Coordinate of a rectangular box
    * @param coordB Coordinate of a rectangular box
    * @return the intersection over union of the two rectangular coordinates
@@ -249,8 +250,8 @@ public class OCRSearch extends AbstractTextRetriever {
   }
 
   /**
-   * getAverageIntersectionOverUnion takes two lists of coordinates and returns the average IoU
-   * The coordinates provided have to describe a rectangular box
+   * getAverageIntersectionOverUnion takes two lists of coordinates and returns the average IoU The coordinates provided have to describe a rectangular box
+   *
    * @param coordinates1 Sequentially ordered coordinates (from frame i to frame i+n)
    * @param coordinates2 Sequentially ordered coordinates (from frame i to frame i+n)
    * @return The average intersection over union
@@ -301,7 +302,7 @@ public class OCRSearch extends AbstractTextRetriever {
       matFrames.add(img2Mat(shot.getVideoFrames().get(i).getImage().getBufferedImage()));
     }
 
-    List<Point[][]> detections =  detector.detect(matFrames, batchSize);
+    List<Point[][]> detections = detector.detect(matFrames, batchSize);
     List<GrayU8> frames_grayU8 = new ArrayList<>();
 
     for (int i = 0; i < lenVideo; i++) {

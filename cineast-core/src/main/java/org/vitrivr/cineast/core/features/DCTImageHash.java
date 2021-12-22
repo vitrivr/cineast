@@ -7,6 +7,7 @@ import boofcv.abst.distort.FDistort;
 import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.struct.image.GrayF32;
 import com.googlecode.javaewah.datastructure.BitSet;
+import java.util.List;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
@@ -17,9 +18,9 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -29,13 +30,10 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
-import java.util.List;
-
 /**
  * Simple Image Fingerprinting Feature. Re-implemented based on the following two papers:
- *
+ * <p>
  * Christoph Zauner. Implementation and benchmarking of perceptual image hash func- tions. Master’s thesis, University of Applied Sciences Hagenberg, Austria, 2010. Baris Coskun and Bulent Sankur. Robust video hash extraction. In Signal Processing Conference, 2004 12th European, pages 2295–2298. IEEE, 2004.
- *
  */
 public class DCTImageHash extends AbstractFeatureModule {
 
@@ -149,8 +147,8 @@ public class DCTImageHash extends AbstractFeatureModule {
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
     supply.get().createEntity(this.tableName,
-          new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING),
-          new AttributeDefinition(FEATURE_COLUMN_QUALIFIER, AttributeType.BITSET, 64)
+        new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING),
+        new AttributeDefinition(FEATURE_COLUMN_QUALIFIER, AttributeType.BITSET, 64)
     );
   }
 }

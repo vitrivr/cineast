@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -9,20 +10,16 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import java.util.List;
-
 /**
- * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02
- * see http://stackoverflow.com/questions/909542/opencv-edge-extraction
- *
+ * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02 see http://stackoverflow.com/questions/909542/opencv-edge-extraction
  */
 public class EHD extends AbstractFeatureModule {
 
@@ -32,7 +29,7 @@ public class EHD extends AbstractFeatureModule {
     this(80);
   }
 
-  protected EHD(int vectorLength){
+  protected EHD(int vectorLength) {
     super("features_EHD", 16f / 4f, vectorLength);
   }
 

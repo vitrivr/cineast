@@ -1,5 +1,18 @@
 package org.vitrivr.cineast.core.extraction.segmenter.video;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -15,19 +28,11 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
 
-  /** */
+  /**
+   *
+   */
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
@@ -46,8 +51,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   private static final String PROPERTY_FOLDER_KEY = "folder";
 
   /**
-   * Queue of shot boundaries (pair of start and end frame). The entries are supposed to be sorted
-   * in ascending order.
+   * Queue of shot boundaries (pair of start and end frame). The entries are supposed to be sorted in ascending order.
    */
   private final Queue<Pair<Long, Long>> boundaries = new ArrayDeque<>();
 
@@ -73,16 +77,14 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   private volatile boolean running = false;
 
   /**
-   * A flag indicating whether more {@link SegmentContainer}s are to be expected from this {@link
-   * V3CMSBSegmenter}.
+   * A flag indicating whether more {@link SegmentContainer}s are to be expected from this {@link V3CMSBSegmenter}.
    */
   private volatile boolean complete = false;
 
   /**
    * Constructor for {@link V3CMSBSegmenter}.
    *
-   * @param path Path to the folder relative to which MSR files will be resolved (based on the name
-   * of the input video file).
+   * @param path Path to the folder relative to which MSR files will be resolved (based on the name of the input video file).
    */
   public V3CMSBSegmenter(Path path) {
     this.msrFolderPath = path;
@@ -94,8 +96,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   /**
    * Constructor for {@link ImageSegmenter}.
    *
-   * @param context The {@link ExtractionContextProvider } for the extraction context this {@link
-   * ImageSegmenter} is created in.
+   * @param context The {@link ExtractionContextProvider } for the extraction context this {@link ImageSegmenter} is created in.
    */
   public V3CMSBSegmenter(ExtractionContextProvider context) {
     this(context.inputPath().orElse(null));
@@ -104,7 +105,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   /**
    * Constructor for {@link ImageSegmenter}.
    *
-   * @param context The {@link ExtractionContextProvider} for the extraction context this {@link ImageSegmenter} is created in.
+   * @param context    The {@link ExtractionContextProvider} for the extraction context this {@link ImageSegmenter} is created in.
    * @param properties A HashMap containing the configuration properties for {@link ImageSegmenter}
    */
   public V3CMSBSegmenter(ExtractionContextProvider context, Map<String, String> properties) {
@@ -114,8 +115,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
-   * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s
-   * accordingly.
+   * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s accordingly.
    *
    * @param msb The file containing the master shot references.
    */
@@ -163,7 +163,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
 
   /**
    * @param decoder Decoder used for media-decoding.
-   * @param object Media object that is about to be segmented.
+   * @param object  Media object that is about to be segmented.
    */
   @Override
   public synchronized void init(Decoder<VideoFrame> decoder, MediaObjectDescriptor object) {
@@ -185,12 +185,10 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
-   * Returns the next {@link SegmentContainer} or null, if there is currently no {@link
-   * SegmentContainer} available.
+   * Returns the next {@link SegmentContainer} or null, if there is currently no {@link SegmentContainer} available.
    *
    * @return {@link SegmentContainer} or null
-   * @throws InterruptedException If thread is interrupted while waiting fro the {@link
-   * SegmentContainer}
+   * @throws InterruptedException If thread is interrupted while waiting fro the {@link SegmentContainer}
    */
   @Override
   public SegmentContainer getNext() throws InterruptedException {
@@ -205,9 +203,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
-   * Checks the current state of the {@link V3CMSBSegmenter}. The {@link V3CMSBSegmenter} is
-   * considered to be complete if the segmenting process has stopped AND the segments queue has been
-   * drained completely.
+   * Checks the current state of the {@link V3CMSBSegmenter}. The {@link V3CMSBSegmenter} is considered to be complete if the segmenting process has stopped AND the segments queue has been drained completely.
    *
    * @return Current state of the
    */
@@ -229,8 +225,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
-   * This method takes care of the actual segmenting based on existing TRECVid master shot record
-   * boundaries.
+   * This method takes care of the actual segmenting based on existing TRECVid master shot record boundaries.
    */
   @Override
   public void run() {
@@ -253,7 +248,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
         while (!this.decoder.complete()) {
           if (currentFrame == null) {
             currentFrame = this.decoder.getNext();
-            if(currentFrame == null){
+            if (currentFrame == null) {
               break;
             }
           }

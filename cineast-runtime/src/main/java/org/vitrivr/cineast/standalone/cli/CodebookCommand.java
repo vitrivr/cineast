@@ -10,7 +10,6 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
  * A CLI command that can be used to generate SURF or HOG codebooks based on a set of images.
- *
  */
 @Command(name = "codebook", description = "Generates a codebook of defined size based on a set of images using some specified features.")
 public class CodebookCommand implements Runnable {

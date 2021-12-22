@@ -1,6 +1,13 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
@@ -15,14 +22,6 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphBuilder;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphHelper;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class Inception5h implements AutoCloseable {
 

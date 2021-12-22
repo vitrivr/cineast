@@ -316,9 +316,7 @@ public final class ColorConverter {
   }
 
   /**
-   * @param colors assumed to be RGB and (x,y) can be accessed at y*width+x TODO Mabye use
-   * https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color for
-   * optimization
+   * @param colors assumed to be RGB and (x,y) can be accessed at y*width+x TODO Mabye use https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color for optimization
    */
   public static float[] RGBtoLuminance(int[] colors) {
     float[] luminance = new float[colors.length];

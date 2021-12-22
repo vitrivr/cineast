@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ExtractorConfig;
@@ -18,7 +17,6 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
 
 /**
  * A CLI command that can be used to setup all the database entities required by Cineast.
- *
  */
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
 public class DatabaseSetupCommand implements Runnable {
@@ -57,7 +55,7 @@ public class DatabaseSetupCommand implements Runnable {
 
   /**
    * This is a hacky way to support CLI and non CLI usage.
-   *
+   * <p>
    * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used. See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
    */
   private final boolean isNotCommand;
@@ -127,7 +125,7 @@ public class DatabaseSetupCommand implements Runnable {
   /**
    * Drops all entities currently required by Cineast.
    *
-   * @param ec The {@link EntityCreator} used to drop the entities.
+   * @param ec                  The {@link EntityCreator} used to drop the entities.
    * @param persistentOperators The list of {@link PersistentOperator} classes to drop the entities for.
    */
   private void dropAllEntities(EntityCreator ec, Collection<PersistentOperator> persistentOperators) {

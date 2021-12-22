@@ -7,30 +7,29 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
+import javax.annotation.Nullable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-
 /**
  * Provides JSON deserialization capabilities by means of Jackson Databind library.
- *
  */
 public class JacksonJsonProvider implements JsonReader, JsonWriter {
 
   /**
-   * Jackson ObjectMapper instance used to map to/from objects. As this class is thread safe it can
-   * be shared and therefore be static!
+   * Jackson ObjectMapper instance used to map to/from objects. As this class is thread safe it can be shared and therefore be static!
    */
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  /** Logger used to log errors. */
+  /**
+   * Logger used to log errors.
+   */
   private static final Logger LOGGER = LogManager.getLogger();
 
   /*
@@ -111,8 +110,7 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
   }
 
   /**
-   * Takes a Java Object (usually a POJO) and tries to serialize it into a JSON. If serialization
-   * fails for some reason, this method should return JSON_EMPTY;
+   * Takes a Java Object (usually a POJO) and tries to serialize it into a JSON. If serialization fails for some reason, this method should return JSON_EMPTY;
    */
   @Override
   public String toJson(Object object) {

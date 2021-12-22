@@ -2,44 +2,48 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-import java.util.HashMap;
-
 
 public class MetadataConfig {
-    /** Name of the MetadataExtractor. Must correspond to the simple-name or the FQN of the respective class.
-     *
-     * @see org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor
-     */
-    private String name;
 
-    /** Properties that are being used to initialize the Extractor.
-     *
-     * @see  org.vitrivr.cineast.core.features.extractor.Extractor
-     */
-    private HashMap<String, String> properties = new HashMap<>();
+  /**
+   * Name of the MetadataExtractor. Must correspond to the simple-name or the FQN of the respective class.
+   *
+   * @see org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor
+   */
+  private String name;
 
-    @JsonProperty(required = true)
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Properties that are being used to initialize the Extractor.
+   *
+   * @see org.vitrivr.cineast.core.features.extractor.Extractor
+   */
+  private HashMap<String, String> properties = new HashMap<>();
 
-    @JsonProperty
-    public HashMap<String, String> getProperties() {
-        return properties;
-    }
-    public void setProperties(HashMap<String, String> properties) {
-        this.properties = properties;
-    }
+  @JsonProperty(required = true)
+  public String getName() {
+    return name;
+  }
 
-    @JsonIgnore
-    public MetadataExtractor getMetadataExtractor() {
-        MetadataExtractor extractor = ReflectionHelper.newMetadataExtractor(this.name);
-        return extractor;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @JsonProperty
+  public HashMap<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(HashMap<String, String> properties) {
+    this.properties = properties;
+  }
+
+  @JsonIgnore
+  public MetadataExtractor getMetadataExtractor() {
+    MetadataExtractor extractor = ReflectionHelper.newMetadataExtractor(this.name);
+    return extractor;
+  }
 }

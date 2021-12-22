@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.data;
 
 import com.google.common.collect.HashBiMap;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ public class UniqueElementGrid<T> implements Grid<T> {
     map.forcePut(new Position(x, y), element);
     return this;
   }
-  
+
   public Grid<T> setElement(Position p, T element) {
     map.forcePut(p, element);
     return this;
@@ -24,9 +23,9 @@ public class UniqueElementGrid<T> implements Grid<T> {
   public T get(int x, int y) {
     return map.get(new Position(x, y));
   }
-  
-  public T get(Position p){
-    if(p == null){
+
+  public T get(Position p) {
+    if (p == null) {
       return null;
     }
     return map.get(p);

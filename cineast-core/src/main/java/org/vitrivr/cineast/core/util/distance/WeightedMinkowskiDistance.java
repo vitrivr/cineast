@@ -15,7 +15,7 @@ public class WeightedMinkowskiDistance extends MinkowskiDistance {
     }
     this.weights = weights.clone();
   }
-  
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {
@@ -36,5 +36,5 @@ public class WeightedMinkowskiDistance extends MinkowskiDistance {
 
     return Math.pow(dist, 1d / exponenet);
   }
-  
+
 }

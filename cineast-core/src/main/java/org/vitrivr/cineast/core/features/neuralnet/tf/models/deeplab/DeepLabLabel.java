@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.util.Collection;
 
 public enum DeepLabLabel {
@@ -265,14 +264,14 @@ public enum DeepLabLabel {
 
     TObjectIntHashMap<DeepLabLabel> hist = new TObjectIntHashMap<>();
 
-    for(DeepLabLabel label : labels){
-        hist.adjustOrPutValue(label, 1, 1);
+    for (DeepLabLabel label : labels) {
+      hist.adjustOrPutValue(label, 1, 1);
     }
 
     int max = 0;
     DeepLabLabel dominant = NOTHING;
-    for(DeepLabLabel label : hist.keySet()){
-      if(hist.get(label) > max){
+    for (DeepLabLabel label : hist.keySet()) {
+      if (hist.get(label) > max) {
         max = hist.get(label);
         dominant = label;
       }
