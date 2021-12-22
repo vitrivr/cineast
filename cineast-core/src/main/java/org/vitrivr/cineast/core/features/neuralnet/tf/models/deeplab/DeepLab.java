@@ -2,6 +2,13 @@ package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.ndarray.Shape;
@@ -9,12 +16,6 @@ import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class DeepLab implements AutoCloseable {
 
@@ -48,7 +49,6 @@ public class DeepLab implements AutoCloseable {
   public synchronized int[][] processImage(TUint8 input) {
 
     TInt64 result = (TInt64) session.runner().feed("ImageTensor", input).fetch("SemanticPredictions").run().get(0);
-
 
     int w = (int) result.shape().size(2);
     int h = (int) result.shape().size(1);

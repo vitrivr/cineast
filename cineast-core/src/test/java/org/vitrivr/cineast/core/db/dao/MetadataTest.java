@@ -282,7 +282,7 @@ public abstract class MetadataTest<R> {
     for (int key : keys) {
       objSpec.add(new MetadataAccessSpecification(MetadataType.OBJECT, "one", String.valueOf(key)));
       segSpec.add(new MetadataAccessSpecification(MetadataType.SEGMENT, "one", String.valueOf(key)));
-      for (int i = 0; i < ELEMENT_COUNT/2; i++) {
+      for (int i = 0; i < ELEMENT_COUNT / 2; i++) {
         objDescriptors.add(objMetadataForID(i).get(key));
         segDescriptors.add(segMetadataForID(i).get(key));
       }

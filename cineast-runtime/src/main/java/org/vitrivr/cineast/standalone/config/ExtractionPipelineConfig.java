@@ -2,64 +2,79 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.File;
 
 public final class ExtractionPipelineConfig {
 
-	/** Default value for size of thread-pool. */
-	public static final int DEFAULT_THREADPOOL_SIZE = 4;
+  /**
+   * Default value for size of thread-pool.
+   */
+  public static final int DEFAULT_THREADPOOL_SIZE = 4;
 
-	/** Default value for size of task-queue. */
-	public static final int DEFAULT_TASKQUEUE_SIZE = 10;
+  /**
+   * Default value for size of task-queue.
+   */
+  public static final int DEFAULT_TASKQUEUE_SIZE = 10;
 
-	/** Default value for size of segment-queue. */
-	public static final int DEFAULT_SEGMENTQUEUE_SIZE = 10;
+  /**
+   * Default value for size of segment-queue.
+   */
+  public static final int DEFAULT_SEGMENTQUEUE_SIZE = 10;
 
-	/** */
-	private Integer shotQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
+  /**
+   *
+   */
+  private Integer shotQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
 
-	/** */
-	private Integer threadPoolSize = DEFAULT_THREADPOOL_SIZE;
+  /**
+   *
+   */
+  private Integer threadPoolSize = DEFAULT_THREADPOOL_SIZE;
 
-	/** */
-	private Integer taskQueueSize = DEFAULT_TASKQUEUE_SIZE;
+  /**
+   *
+   */
+  private Integer taskQueueSize = DEFAULT_TASKQUEUE_SIZE;
 
-	private File outputLocation = new File(".");
+  private File outputLocation = new File(".");
 
-	@JsonCreator
-	public ExtractionPipelineConfig() {
-	}
+  @JsonCreator
+  public ExtractionPipelineConfig() {
+  }
 
-	@JsonProperty
-	public Integer getShotQueueSize(){
-		return this.shotQueueSize;
-	}
-	public void setShotQueueSize(Integer shotQueueSize) {
-		this.shotQueueSize = shotQueueSize;
-	}
+  @JsonProperty
+  public Integer getShotQueueSize() {
+    return this.shotQueueSize;
+  }
 
-	@JsonProperty
-	public Integer getThreadPoolSize(){
-		return this.threadPoolSize;
-	}
-	public void setThreadPoolSize(int threadPoolSize) {
-		this.threadPoolSize = threadPoolSize;
-	}
+  public void setShotQueueSize(Integer shotQueueSize) {
+    this.shotQueueSize = shotQueueSize;
+  }
 
-	@JsonProperty
-	public Integer getTaskQueueSize() {
-		return this.taskQueueSize;
-	}
-	public void setTaskQueueSize(int taskQueueSize) {
-		this.taskQueueSize = taskQueueSize;
-	}
+  @JsonProperty
+  public Integer getThreadPoolSize() {
+    return this.threadPoolSize;
+  }
 
-	@JsonProperty
-	public File getOutputLocation(){
-		return this.outputLocation;
-	}
-	public void setOutputLocation(String outputLocation) {
-		this.outputLocation = new File(outputLocation);
-	}
+  public void setThreadPoolSize(int threadPoolSize) {
+    this.threadPoolSize = threadPoolSize;
+  }
+
+  @JsonProperty
+  public Integer getTaskQueueSize() {
+    return this.taskQueueSize;
+  }
+
+  public void setTaskQueueSize(int taskQueueSize) {
+    this.taskQueueSize = taskQueueSize;
+  }
+
+  @JsonProperty
+  public File getOutputLocation() {
+    return this.outputLocation;
+  }
+
+  public void setOutputLocation(String outputLocation) {
+    this.outputLocation = new File(outputLocation);
+  }
 }

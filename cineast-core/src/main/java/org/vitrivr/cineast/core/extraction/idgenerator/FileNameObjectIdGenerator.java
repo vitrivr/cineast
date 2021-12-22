@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
-import org.apache.commons.io.FilenameUtils;
-import org.vitrivr.cineast.core.data.MediaType;
-
 import java.nio.file.Path;
 import java.util.Map;
+import org.apache.commons.io.FilenameUtils;
+import org.vitrivr.cineast.core.data.MediaType;
 
 /**
  * Generates object IDs from object file names (without file extension).

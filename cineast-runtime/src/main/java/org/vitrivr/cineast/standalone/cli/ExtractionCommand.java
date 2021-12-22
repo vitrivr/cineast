@@ -108,7 +108,7 @@ public class ExtractionCommand implements Runnable {
   /**
    * Configures an IIIF extraction job by downloading all specified images from the server onto to the filesystem and pointing the {@link ExtractionContainerProvider} to that directory.
    *
-   * @param iiifConfig The IIIF config parsed as an {@link IIIFConfig}
+   * @param iiifConfig    The IIIF config parsed as an {@link IIIFConfig}
    * @param directoryPath The path where the downloaded IIIF content should be stored
    * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
    */

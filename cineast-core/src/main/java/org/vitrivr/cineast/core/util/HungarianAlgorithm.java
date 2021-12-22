@@ -36,8 +36,7 @@ import java.util.Arrays;
  */
 
 /**
- * The Hungarian Algorithm takes a cost matrix, and finds the optimal minimum one-to-one matches between row and column elements.
- * The algorithm is particularly useful for multi-object tracking in which detections from one frame have to be matched with detections in an adjacent frame
+ * The Hungarian Algorithm takes a cost matrix, and finds the optimal minimum one-to-one matches between row and column elements. The algorithm is particularly useful for multi-object tracking in which detections from one frame have to be matched with detections in an adjacent frame
  */
 public class HungarianAlgorithm {
 
@@ -53,11 +52,7 @@ public class HungarianAlgorithm {
   /**
    * Construct an instance of the algorithm.
    *
-   * @param costMatrix
-   *          the cost matrix, where matrix[i][j] holds the cost of assigning
-   *          worker i to job j, for all i, j. The cost matrix must not be
-   *          irregular in the sense that all rows must be the same length; in
-   *          addition, all entries must be non-infinite numbers.
+   * @param costMatrix the cost matrix, where matrix[i][j] holds the cost of assigning worker i to job j, for all i, j. The cost matrix must not be irregular in the sense that all rows must be the same length; in addition, all entries must be non-infinite numbers.
    */
   public HungarianAlgorithm(double[][] costMatrix) {
     this.dim = Math.max(costMatrix.length, costMatrix[0].length);
@@ -95,9 +90,7 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Compute an initial feasible solution by assigning zero labels to the
-   * workers and by assigning to each job a label equal to the minimum cost
-   * among its incident edges.
+   * Compute an initial feasible solution by assigning zero labels to the workers and by assigning to each job a label equal to the minimum cost among its incident edges.
    */
   protected void computeInitialFeasibleSolution() {
     for (int j = 0; j < dim; j++) {
@@ -115,9 +108,7 @@ public class HungarianAlgorithm {
   /**
    * Execute the algorithm.
    *
-   * @return the minimum cost matching of workers to jobs based upon the
-   *         provided cost matrix. A matching value of -1 indicates that the
-   *         corresponding worker is unassigned.
+   * @return the minimum cost matching of workers to jobs based upon the provided cost matrix. A matching value of -1 indicates that the corresponding worker is unassigned.
    */
   public int[] execute() {
     /*
@@ -145,22 +136,10 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Execute a single phase of the algorithm. A phase of the Hungarian algorithm
-   * consists of building a set of committed workers and a set of committed jobs
-   * from a root unmatched worker by following alternating unmatched/matched
-   * zero-slack edges. If an unmatched job is encountered, then an augmenting
-   * path has been found and the matching is grown. If the connected zero-slack
-   * edges have been exhausted, the labels of committed workers are increased by
-   * the minimum slack among committed workers and non-committed jobs to create
-   * more zero-slack edges (the labels of committed jobs are simultaneously
-   * decreased by the same amount in order to maintain a feasible labeling).
+   * Execute a single phase of the algorithm. A phase of the Hungarian algorithm consists of building a set of committed workers and a set of committed jobs from a root unmatched worker by following alternating unmatched/matched zero-slack edges. If an unmatched job is encountered, then an augmenting path has been found and the matching is grown. If the connected zero-slack edges have been exhausted, the labels of committed workers are increased by the minimum slack among committed workers and non-committed jobs to create more zero-slack edges (the labels of committed jobs are simultaneously decreased by the same amount in order to maintain a feasible labeling).
    * <p>
-   *
-   * The runtime of a single phase of the algorithm is O(n^2), where n is the
-   * dimension of the internal square cost matrix, since each edge is visited at
-   * most once and since increasing the labeling is accomplished in time O(n) by
-   * maintaining the minimum slack values among non-committed jobs. When a phase
-   * completes, the matching will have increased in size.
+   * <p>
+   * The runtime of a single phase of the algorithm is O(n^2), where n is the dimension of the internal square cost matrix, since each edge is visited at most once and since increasing the labeling is accomplished in time O(n) by maintaining the minimum slack values among non-committed jobs. When a phase completes, the matching will have increased in size.
    */
   protected void executePhase() {
     while (true) {
@@ -217,7 +196,6 @@ public class HungarianAlgorithm {
   }
 
   /**
-   *
    * @return the first unmatched worker or {@link #dim} if none.
    */
   protected int fetchUnmatchedWorker() {
@@ -231,8 +209,7 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Find a valid matching by greedily selecting among zero-cost matchings. This
-   * is a heuristic to jump-start the augmentation algorithm.
+   * Find a valid matching by greedily selecting among zero-cost matchings. This is a heuristic to jump-start the augmentation algorithm.
    */
   protected void greedyMatch() {
     for (int w = 0; w < dim; w++) {
@@ -246,12 +223,9 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Initialize the next phase of the algorithm by clearing the committed
-   * workers and jobs sets and by initializing the slack arrays to the values
-   * corresponding to the specified root worker.
+   * Initialize the next phase of the algorithm by clearing the committed workers and jobs sets and by initializing the slack arrays to the values corresponding to the specified root worker.
    *
-   * @param w
-   *          the worker at which to root the next phase.
+   * @param w the worker at which to root the next phase.
    */
   protected void initializePhase(int w) {
     Arrays.fill(committedWorkers, false);
@@ -273,10 +247,7 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Reduce the cost matrix by subtracting the smallest element of each row from
-   * all elements of the row as well as the smallest element of each column from
-   * all elements of the column. Note that an optimal assignment for a reduced
-   * cost matrix is optimal for the original cost matrix.
+   * Reduce the cost matrix by subtracting the smallest element of each row from all elements of the row as well as the smallest element of each column from all elements of the column. Note that an optimal assignment for a reduced cost matrix is optimal for the original cost matrix.
    */
   protected void reduce() {
     for (int w = 0; w < dim; w++) {
@@ -309,9 +280,7 @@ public class HungarianAlgorithm {
   }
 
   /**
-   * Update labels with the specified slack by adding the slack value for
-   * committed workers and by subtracting the slack value for committed jobs. In
-   * addition, update the minimum slack values appropriately.
+   * Update labels with the specified slack by adding the slack value for committed workers and by subtracting the slack value for committed jobs. In addition, update the minimum slack values appropriately.
    */
   protected void updateLabeling(double slack) {
     for (int w = 0; w < dim; w++) {

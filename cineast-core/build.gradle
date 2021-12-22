@@ -154,7 +154,7 @@ dependencies {
     /** JavaCPP. */
     api group: "org.bytedeco", name: "javacpp", version: version_javacpp
     api group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: version_ffmpeg
-    
+
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
 
@@ -166,7 +166,7 @@ dependencies {
     api group: 'javax.activation', name: 'activation', version: '1.1.1'
 }
 
-shadowJar{
+shadowJar {
     mergeServiceFiles()
 }
 

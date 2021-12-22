@@ -3,10 +3,6 @@ package org.vitrivr.cineast.core.extraction.metadata;
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.google.common.collect.Maps;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
-import org.vitrivr.cineast.core.util.MetadataUtil;
-
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +10,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
+import org.vitrivr.cineast.core.util.MetadataUtil;
 
 
 public class EXIFMetadataExtractor implements MetadataExtractor {
@@ -39,13 +38,11 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
 
 
   /**
-   * Extracts the metadata from the specified path and returns a List of
-   * MediaObjectMetadataDescriptor objects (one for each metadata entry).
+   * Extracts the metadata from the specified path and returns a List of MediaObjectMetadataDescriptor objects (one for each metadata entry).
    *
    * @param objectId ID of the multimedia object for which metadata will be generated.
-   * @param path Path to the file for which metadata should be extracted.
-   * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be
-   * returned!
+   * @param path     Path to the file for which metadata should be extracted.
+   * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be returned!
    */
   @Override
   public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
@@ -56,8 +53,8 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
     }
     Set<Entry<String, Object>> set = Maps.transformValues(FIELDS, md::getObject).entrySet();
     return set.stream().filter(e -> e.getValue() != null).map(
-        e -> MediaObjectMetadataDescriptor.of(objectId, this.domain(), e.getKey(), e.getValue()))
-        .filter(e -> ! (e.getValueProvider() instanceof NothingProvider))
+            e -> MediaObjectMetadataDescriptor.of(objectId, this.domain(), e.getKey(), e.getValue()))
+        .filter(e -> !(e.getValueProvider() instanceof NothingProvider))
         .collect(Collectors.toList());
   }
 

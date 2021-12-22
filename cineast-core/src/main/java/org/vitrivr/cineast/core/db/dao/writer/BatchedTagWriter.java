@@ -30,8 +30,8 @@ public class BatchedTagWriter extends AbstractBatchedEntityWriter<TagInstance> {
   @Override
   protected PersistentTuple generateTuple(TagInstance entity) {
     float score = 1f;
-    if(entity.tag instanceof WeightedTag){
-      score = ((WeightedTag)entity.tag).getWeight();
+    if (entity.tag instanceof WeightedTag) {
+      score = ((WeightedTag) entity.tag).getWeight();
     }
     return this.writer.generateTuple(entity.id, entity.tag.getId(), score);
   }

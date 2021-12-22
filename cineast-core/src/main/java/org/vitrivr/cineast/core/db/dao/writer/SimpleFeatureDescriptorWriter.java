@@ -8,26 +8,26 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<SimpleFeatureDescriptor> {
 
-    private final String entityname;
+  private final String entityname;
 
-    public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
-        this(writer, entityname, 1);
-    }
+  public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
+    this(writer, entityname, 1);
+  }
 
-    public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
-        super(writer, batchsize, false);
-        this.entityname = entityname;
-        this.init();
-    }
+  public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
+    super(writer, batchsize, false);
+    this.entityname = entityname;
+    this.init();
+  }
 
-    @Override
-    public void init() {
-        this.writer.open(this.entityname);
-    }
+  @Override
+  public void init() {
+    this.writer.open(this.entityname);
+  }
 
-    @Override
-    protected PersistentTuple generateTuple(SimpleFeatureDescriptor entity) {
-        float[] array = ReadableFloatVector.toArray(entity.getFeature());
-        return this.writer.generateTuple(entity.getSegmentId(), array);
-    }
+  @Override
+  protected PersistentTuple generateTuple(SimpleFeatureDescriptor entity) {
+    float[] array = ReadableFloatVector.toArray(entity.getFeature());
+    return this.writer.generateTuple(entity.getSegmentId(), array);
+  }
 }

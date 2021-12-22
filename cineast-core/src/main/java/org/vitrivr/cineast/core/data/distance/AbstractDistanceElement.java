@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.distance;
 import java.util.Objects;
 
 abstract class AbstractDistanceElement implements DistanceElement {
+
   private final String id;
   private final double distance;
 

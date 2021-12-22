@@ -1,11 +1,15 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveProviderComparator;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
-
-import java.util.*;
 
 public class RangeBooleanRetriever extends BooleanRetriever {
 
@@ -37,35 +41,35 @@ public class RangeBooleanRetriever extends BooleanRetriever {
     return SUPPORTED_OPERATORS;
   }
 
-  public PrimitiveTypeProvider getMinimum(String column){
-    if (this.attributes.contains(column) && !this.minimumMap.containsKey(column)){
+  public PrimitiveTypeProvider getMinimum(String column) {
+    if (this.attributes.contains(column) && !this.minimumMap.containsKey(column)) {
       populateExtremaMap();
     }
     return minimumMap.get(column);
   }
 
-  public PrimitiveTypeProvider getMaximum(String column){
-    if (this.attributes.contains(column) && !this.maximumMap.containsKey(column)){
+  public PrimitiveTypeProvider getMaximum(String column) {
+    if (this.attributes.contains(column) && !this.maximumMap.containsKey(column)) {
       populateExtremaMap();
     }
     return maximumMap.get(column);
   }
 
-  private void populateExtremaMap(){
+  private void populateExtremaMap() {
 
     PrimitiveProviderComparator comparator = new PrimitiveProviderComparator();
 
-    for(String column: this.attributes){
+    for (String column : this.attributes) {
       List<PrimitiveTypeProvider> col = this.selector.getAll(column);
-      if (col.isEmpty()){
+      if (col.isEmpty()) {
         continue;
       }
       PrimitiveTypeProvider min = col.get(0), max = col.get(0);
-      for (PrimitiveTypeProvider t : col){
-        if (comparator.compare(t, min) < 0){
+      for (PrimitiveTypeProvider t : col) {
+        if (comparator.compare(t, min) < 0) {
           min = t;
         }
-        if(comparator.compare(t, max) > 0){
+        if (comparator.compare(t, max) > 0) {
           max = t;
         }
       }

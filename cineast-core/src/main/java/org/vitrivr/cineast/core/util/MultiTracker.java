@@ -4,15 +4,12 @@ import boofcv.abst.tracker.TrackerObjectQuad;
 import boofcv.factory.tracker.FactoryTrackerObjectQuad;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.shapes.Quadrilateral_F64;
-import org.vitrivr.cineast.core.data.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.vitrivr.cineast.core.data.Pair;
 
 /**
- * MultiTracker allows for multiple objects to be tracked across frames.
- * 1. Initialize the MultiTracker with the initial frame and coordinates of the objects to be tracked
- * 2. Call update(GrayU8 frame) with the new frame to obtain the coordinates of the objects in the new frame
+ * MultiTracker allows for multiple objects to be tracked across frames. 1. Initialize the MultiTracker with the initial frame and coordinates of the objects to be tracked 2. Call update(GrayU8 frame) with the new frame to obtain the coordinates of the objects in the new frame
  */
 public class MultiTracker {
 

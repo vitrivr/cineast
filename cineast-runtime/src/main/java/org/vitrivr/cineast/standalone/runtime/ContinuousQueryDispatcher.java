@@ -3,6 +3,17 @@ package org.vitrivr.cineast.standalone.runtime;
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -22,11 +33,8 @@ import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Function;
-
 public class ContinuousQueryDispatcher {
+
   private static final Logger LOGGER = LogManager.getLogger();
 
   private static final String LISTENER_NULL_MESSAGE = "Retrieval result listener cannot be null.";
@@ -132,7 +140,7 @@ public class ContinuousQueryDispatcher {
         e.printStackTrace();
       }
       List<Runnable> runnables = executor.shutdownNow();
-      if(runnables.size()>0){
+      if (runnables.size() > 0) {
         LOGGER.warn("{} threads terminated prematurely", runnables.size());
       }
       executor = null;

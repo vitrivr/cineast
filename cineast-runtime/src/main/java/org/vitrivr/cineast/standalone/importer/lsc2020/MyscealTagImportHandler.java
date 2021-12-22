@@ -6,13 +6,12 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.SegmentTags;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
-import org.vitrivr.cineast.standalone.importer.lsc2020.MyscealTagImporter;
 
 public class MyscealTagImportHandler extends DataImportHandler {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public MyscealTagImportHandler(int threads, int batchsize){
+  public MyscealTagImportHandler(int threads, int batchsize) {
     super(threads, batchsize);
   }
 

@@ -2,48 +2,52 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-import java.util.HashMap;
-
 
 public class ExtractorConfig {
-    /** Name of the Extractor. Must correspond to the simple-name or the FQN of the respective class.
-     *
-     * @see org.vitrivr.cineast.core.features.extractor.Extractor
-     */
-    private String name;
 
-    /** Properties that are being used to initialize the Extractor.
-     *
-     * @see  org.vitrivr.cineast.core.features.extractor.Extractor
-     */
-    private HashMap<String, String> properties = new HashMap<>();
+  /**
+   * Name of the Extractor. Must correspond to the simple-name or the FQN of the respective class.
+   *
+   * @see org.vitrivr.cineast.core.features.extractor.Extractor
+   */
+  private String name;
 
-    @JsonProperty(required = true)
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Properties that are being used to initialize the Extractor.
+   *
+   * @see org.vitrivr.cineast.core.features.extractor.Extractor
+   */
+  private HashMap<String, String> properties = new HashMap<>();
 
-    @JsonProperty
-    public HashMap<String, String> getProperties() {
-        return properties;
-    }
-    public void setProperties(HashMap<String, String> properties) {
-        this.properties = properties;
-    }
+  @JsonProperty(required = true)
+  public String getName() {
+    return name;
+  }
 
-    @JsonIgnore
-    public Extractor getExtractor() {
-        return ReflectionHelper.newExtractor(this.name);
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @JsonIgnore
-    public Extractor getExporter() {
-        return ReflectionHelper.newExporter(this.name, this.properties);
-    }
+  @JsonProperty
+  public HashMap<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(HashMap<String, String> properties) {
+    this.properties = properties;
+  }
+
+  @JsonIgnore
+  public Extractor getExtractor() {
+    return ReflectionHelper.newExtractor(this.name);
+  }
+
+  @JsonIgnore
+  public Extractor getExporter() {
+    return ReflectionHelper.newExporter(this.name, this.properties);
+  }
 }

@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-
-import java.util.*;
 
 public strictfp class KMeansPP {
 
@@ -12,6 +15,7 @@ public strictfp class KMeansPP {
   }
 
   public static class KMenasResult<T extends ReadableFloatVector> {
+
     private final int k;
     private final double[] distances;
     private double distance;
@@ -77,8 +81,7 @@ public strictfp class KMeansPP {
   private static final Random random = new Random(1);
 
   /**
-   * performs {@link KMeansPP} runs times and returns the result with the
-   * minimal overall distance
+   * performs {@link KMeansPP} runs times and returns the result with the minimal overall distance
    */
   public static <T extends ReadableFloatVector> KMenasResult<T> bestOfkMeansPP(
       List<T> elements, FloatVector helper, int k, double minDist, int runs) {
