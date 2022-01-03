@@ -161,7 +161,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     /* Prepare plain query. */
-    final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" "));
+    final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" OR "));
     final Query query = new Query(this.fqn)
         .select("*", null)
         .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER);
@@ -342,10 +342,10 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public boolean existsEntity(String name) {
     final AboutEntity about = new AboutEntity(this.cottontail.fqnInput(name));
-    try {
-      final TupleIterator results = this.cottontail.client.about(about);
+    try (final TupleIterator results = this.cottontail.client.about(about)) {
       return results.hasNext();
-    } catch (StatusRuntimeException e) {
+    } catch (Exception e) {
+      LOGGER.error("Failed to close TupleIterator!", e);
       return false;
     }
   }
