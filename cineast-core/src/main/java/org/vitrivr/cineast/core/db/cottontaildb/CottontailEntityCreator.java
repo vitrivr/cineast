@@ -238,14 +238,13 @@ public final class CottontailEntityCreator implements EntityCreator {
     try {
       /* Create entity. */
       final String entityName = CottontailWrapper.CINEAST_SCHEMA + "." + def.getEntityName();
-      final CreateEntity entity = new CreateEntity(entityName);
+      final CreateEntity entity = new CreateEntity(entityName).txId(txId);
       for (AttributeDefinition attribute : def.getAttributes()) {
         int length = -1;
         if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
           length = attribute.getLength();
         }
-        entity.column(attribute.getName(), mapAttributeType(attribute.getType()), length, false).txId(txId);
-
+        entity.column(attribute.getName(), mapAttributeType(attribute.getType()), length, false);
       }
       this.cottontail.client.create(entity);
 
