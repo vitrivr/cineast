@@ -50,13 +50,12 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
   public CottontailIntegrationDBProvider() {
     this.embedded = CottontailKt.embedded(COTTONTAIL_TEST_CONFIG);
     try {
-        this.wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
+      this.wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
     } catch (Throwable e) {
       this.embedded.stop(); /* Stop server to relinquish locks on catalogue. */
       throw e;
     }
   }
-
 
   CottontailWrapper getWrapper() {
     return this.wrapper;
@@ -79,7 +78,6 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
   @Override
   public void close() {
-    this.wrapper.close();
     if (this.embedded.isRunning()) {
       this.embedded.stop();
     }

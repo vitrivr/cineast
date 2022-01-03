@@ -226,7 +226,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
     final Query query = new Query(this.fqn).select("*", null);
-    Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
+    final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     predicates.ifPresent(query::where);
     return processResults(this.cottontail.client.query(query));
   }
@@ -257,7 +257,7 @@ public final class CottontailSelector implements DBSelector {
       return singleSpecPredicates.stream().reduce(And::new);
     }).collect(Collectors.toList());
 
-    Optional<Optional<Predicate>> reduce = atomics.stream().reduce((res, el) -> {
+    final Optional<Optional<Predicate>> reduce = atomics.stream().reduce((res, el) -> {
       if (!res.isPresent() && !el.isPresent()) {
         return Optional.empty();
       }

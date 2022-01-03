@@ -13,22 +13,17 @@ public class CottontailMetadataTest extends MetadataTest<Insert> {
   private final CottontailIntegrationDBProvider _provider;
 
   public CottontailMetadataTest() {
-    _provider = new CottontailIntegrationDBProvider();
+    try {
+      _provider = new CottontailIntegrationDBProvider();
+    } catch (Throwable e) {
+      LOGGER.error("Error occurred while starting and connecting to Cottontail DB: " + e.getMessage());
+      throw e;
+    }
   }
 
   @Override
-  public void finishInitialSetup() {
-    final CottontailWrapper wrapper = _provider.getWrapper();
-    final String obj = wrapper.fqnInput(this.getTestObjMetaTableName());
-    final String seg = wrapper.fqnInput(this.getTestSegMetaTableName());
-    wrapper.client.optimize(new OptimizeEntity(obj));
-    wrapper.client.optimize(new OptimizeEntity(seg));
-    wrapper.close();
-  }
-
-  @Override
-  protected void cleanup() {
-    this._provider.close();
+  public void finishSetup() {
+    //no-op
   }
 
   @Test

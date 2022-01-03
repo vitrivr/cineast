@@ -12,7 +12,12 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
   private final CottontailIntegrationDBProvider _provider;
 
   public CottontailIntegrationTest() {
-    _provider = new CottontailIntegrationDBProvider();
+    try {
+      _provider = new CottontailIntegrationDBProvider();
+    } catch (Throwable e) {
+      LOGGER.error("Error occurred while starting and connecting to Cottontail DB: " + e.getMessage());
+      throw e;
+    }
   }
 
   @Override
@@ -23,11 +28,6 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
   @Test
   protected void simpleTest() {
     //no-op
-  }
-
-  @Override
-  protected void cleanup() {
-    this._provider.close();
   }
 
   @Override

@@ -65,7 +65,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   private IntegrationDBProvider<R> provider;
 
-  private static final Logger LOGGER = LogManager.getLogger();
+  protected static final Logger LOGGER = LogManager.getLogger();
 
   @BeforeAll
   void checkConnection() {
@@ -74,17 +74,14 @@ public abstract class DBBooleanIntegrationTest<R> {
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
     LOGGER.info("Connection to Database established");
-  }
-
-  @BeforeEach
-  void setupTest() {
-    provider = provider();
-    selector = provider.getSelector();
-    assumeTrue(selector.ping(), "Connection to database could not be established");
     writer = provider.getPersistencyWriter();
     ec = provider.getEntityCreator();
     testTableName = getTestTableName();
     queryConfig = getQueryConfig();
+  }
+
+  @BeforeEach
+  void setupTest() {
     dropTables();
     createTables();
     fillData();
@@ -93,14 +90,12 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    CineastIOUtils.closeQuietly(writer, selector);
     dropTables();
-    CineastIOUtils.closeQuietly(ec);
   }
 
   @AfterAll
   void tearDownAll() {
-    this.cleanup();
+    CineastIOUtils.closeQuietly(this.provider);
   }
 
   protected String getTestTableName() {
@@ -111,11 +106,8 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   protected abstract IntegrationDBProvider<R> provider();
 
-  protected abstract void cleanup();
-
   protected QueryConfig getQueryConfig() {
-    QueryConfig qc = new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());
-    return qc;
+    return new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());
   }
 
   protected void dropTables() {
@@ -132,7 +124,6 @@ public abstract class DBBooleanIntegrationTest<R> {
    * Create table for boolean retrieval
    */
   protected void createTables() {
-    // TODO Text retrieval fails on windows
     ec.createEntity(testTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_1, AttributeType.TEXT), new AttributeDefinition(DATA_COL_NAME_2, AttributeType.INT), new AttributeDefinition(DATA_COL_NAME_3, AttributeType.INT));
   }
 
@@ -140,10 +131,8 @@ public abstract class DBBooleanIntegrationTest<R> {
     writer.open(testTableName);
     writer.setFieldNames(ID_COL_NAME, DATA_COL_NAME_1, DATA_COL_NAME_2, DATA_COL_NAME_3);
     List<PersistentTuple> vectors = new ArrayList<>();
-
     for (int i = 0; i < TABLE_CARD; i++) {
-      vectors.add(writer.generateTuple(Integer.toString(i), "string-data-" + i, -i, i + TABLE_CARD));
-      //vectors.add(writer.generateTuple(i, i, -i, i + TABLE_CARD));
+      vectors.add(writer.generateTuple(i, "string-data-" + i, -i, i + TABLE_CARD));
     }
     writer.persist(vectors);
   }
@@ -166,16 +155,6 @@ public abstract class DBBooleanIntegrationTest<R> {
     selector.open(testTableName);
     Assertions.assertEquals(TABLE_CARD, selector.getAll().size());
     Assertions.assertEquals(TABLE_CARD, selector.getAll(DATA_COL_NAME_1).size());
-  }
-
-  @Test
-  @DisplayName("Verify elements exist by id")
-  @Disabled /* TODO: Ga, this test doesn't make sense. PersistencyWriter.idExists expects ID to be a String but we create an ID column of type INT, i.e., this always fails. */
-  void entriesExistById() {
-    writer.open(testTableName);
-    for (int i = 0; i < TABLE_CARD; i++) {
-      Assertions.assertTrue(writer.idExists(String.valueOf(i)));
-    }
   }
 
   @Test
@@ -231,15 +210,11 @@ public abstract class DBBooleanIntegrationTest<R> {
   @DisplayName("test Greater() query")
   void testGreaterQuery() {
     selector.open(testTableName);
-    // query for greater than second-highest value
-    int idToCheck = TABLE_CARD - 2;
-    // cardinality should be higher than 2
-    if (idToCheck < -1) {
-      Assertions.fail();
-    }
-    List<PrimitiveTypeProvider> values = new ArrayList<>();
+    int idToCheck = TABLE_CARD - 2; // query for greater than second-highest value
+    if (idToCheck < -1) Assertions.fail(); // cardinality should be higher than 2
+    final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.GREATER, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.GREATER, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(TABLE_CARD - 1)));
   }
 
@@ -248,9 +223,9 @@ public abstract class DBBooleanIntegrationTest<R> {
   void testLessQuery() {
     selector.open(testTableName);
     int idToCheck = 1;
-    List<PrimitiveTypeProvider> values = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.LESS, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.LESS, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(0)));
   }
 
@@ -262,18 +237,18 @@ public abstract class DBBooleanIntegrationTest<R> {
     int idToCheck = TABLE_CARD / 2;
 
     //The result range is between x and x+1
-    List<PrimitiveTypeProvider> values1 = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values1 = new ArrayList<>();
     values1.add(PrimitiveTypeProvider.fromObject(idToCheck));
     values1.add(PrimitiveTypeProvider.fromObject(idToCheck + 1));
-    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element1 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values1);
+    final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element1 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values1);
 
     //The result range is between x+1 and x+2
-    List<PrimitiveTypeProvider> values2 = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values2 = new ArrayList<>();
     values2.add(PrimitiveTypeProvider.fromObject(idToCheck + 1));
     values2.add(PrimitiveTypeProvider.fromObject(idToCheck + 2));
-    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values2);
+    final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values2);
 
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
 
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck + 1)));
     Assertions.assertEquals(1, result.size());
@@ -287,18 +262,18 @@ public abstract class DBBooleanIntegrationTest<R> {
     int idToCheck = TABLE_CARD / 2;
 
     //The result is between x-2 and x+2
-    List<PrimitiveTypeProvider> values1 = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values1 = new ArrayList<>();
     values1.add(PrimitiveTypeProvider.fromObject(idToCheck + 2));
     values1.add(PrimitiveTypeProvider.fromObject(idToCheck - 2));
-    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element1 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values1);
+    final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element1 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values1);
 
     //The result range is either x+1 or x-1
-    List<PrimitiveTypeProvider> values2 = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values2 = new ArrayList<>();
     values2.add(PrimitiveTypeProvider.fromObject(idToCheck + 1));
     values2.add(PrimitiveTypeProvider.fromObject(idToCheck - 1));
-    Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.IN, values2);
+    final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.IN, values2);
 
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
 
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck + 1)));
