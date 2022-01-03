@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import io.grpc.ConnectivityState;
+import java.util.HashMap;
+import kotlin.jvm.Synchronized;
 import org.apache.commons.lang3.time.StopWatch;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
@@ -22,30 +25,57 @@ public final class CottontailWrapper implements AutoCloseable {
   public static final String FQN_CINEAST_SCHEMA = WARREN_PREFIX + "." + CINEAST_SCHEMA;
 
   /** Internal connection pool to re-use managed channels. */
-  private static final Map<String, ManagedChannel> POOL = new ConcurrentHashMap<>(); /* TODO: Reference counting? */
+  private static final Map<String, ManagedChannel> POOL = new HashMap<>();
 
   /**
-   * Returns a {@link ManagedChannel} object for the given {@link DatabaseConfig}.
+   * Returns a {@link ManagedChannel} object for the given database configuration.
+   *
+   * Tries to re-use existing {@link ManagedChannel} objects. Currently, {@link ManagedChannel} are kept
+   * alive as long as Cineast runs.
    *
    * @param host Hostname of the Cottontail DB server.
    * @param port Port of the Cottontail DB server.
    * @return {@link ManagedChannel}
    */
+  @Synchronized
   private static ManagedChannel sharedChannel(String host, int port) {
-    return POOL.computeIfAbsent((host + ":" + port), (key) -> {
-      final StopWatch watch = StopWatch.createStarted();
-      LOGGER.debug("Starting to connect to Cottontail DB at {}:{}", host, port);
-      final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(host, port).usePlaintext();
-      final ManagedChannel channel = builder.build();
-      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-        LOGGER.info("Closing connection to Cottontail DB.");
-        channel.shutdownNow();
-      }));
-      watch.stop();
-      LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
-      return channel;
-    });
+    final String key = host + ":" + port;
+    ManagedChannel channel = POOL.get(key);
+    if (channel != null) {
+      final ConnectivityState state = channel.getState(true);
+      if (state == ConnectivityState.TRANSIENT_FAILURE || state == ConnectivityState.SHUTDOWN) {
+        channel.shutdownNow(); /* Close old channel. */
+        channel = createChannel(host, port);
+        POOL.put(key, channel);
+      }
+    } else {
+      channel = createChannel(host, port);
+      POOL.put(key, channel);
+    }
+    return channel;
   }
+
+  /**
+   * Returns a new {@link ManagedChannel} object for the  given database configuration.
+   *
+   * @param host Hostname of the Cottontail DB server.
+   * @param port Port of the Cottontail DB server.
+   * @return {@link ManagedChannel}
+   */
+  private static ManagedChannel createChannel(String host, int port) {
+    final StopWatch watch = StopWatch.createStarted();
+    LOGGER.debug("Starting to connect to Cottontail DB at {}:{}", host, port);
+    final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(host, port).usePlaintext();
+    final ManagedChannel channel = builder.build();
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      LOGGER.info("Closing connection to Cottontail DB.");
+      channel.shutdownNow();
+    }));
+    watch.stop();
+    LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
+    return channel;
+  }
+
   /**
    * The {@link SimpleClient} instance that facilitates access to Cottontail DB.
    */
