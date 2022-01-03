@@ -69,6 +69,7 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
     this.wrapper.close();
     if (this.embedded.isRunning()) {
       this.embedded.stop();
+      this.embedded.getCatalogue().close();
     }
   }
 }
