@@ -47,20 +47,12 @@ public class EmbeddedCottontailDB {
     return config;
   };
 
-  private CottontailGrpcServer embedded;
-  private final Thread dbThread;
-  private final CottontailWrapper wrapper;
+  private final CottontailGrpcServer embedded = CottontailKt.embedded(COTTONTAIL_TEST_CONFIG);
+  private final CottontailWrapper wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
 
   private EmbeddedCottontailDB(){
-    dbThread = new Thread(() -> {
-      embedded = CottontailKt.embedded(COTTONTAIL_TEST_CONFIG);
-    });
-    dbThread.setName("Embedded DB Trhead");
-    dbThread.setDaemon(true);
-    dbThread.start();
-    wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
-    boolean ping = wrapper.client.ping();
-    LOGGER.info("Embedded DB and wrapper started. Ping: "+ping);
+    boolean ping = this.wrapper.client.ping();
+    LOGGER.info("Embedded DB and wrapper started. Ping: " + ping);
   }
 
   public CottontailWrapper getWrapper(){
@@ -70,5 +62,11 @@ public class EmbeddedCottontailDB {
   public void stop(){
     this.embedded.stop();
     this.wrapper.client.close();
+  }
+
+  public void finalize() {
+    if (this.embedded.isRunning()) {
+      this.stop();
+    }
   }
 }
