@@ -104,7 +104,7 @@ dependencies {
     /** THE Polypheny dependency */
     api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
 
-    /** THE Polypheny proto dependency (legacy) */
+    /** THE ADAMpro proto dependency (legacy) */
     api group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro
 
     /* Google Json: GSON, since JSON db layer is based on this */
