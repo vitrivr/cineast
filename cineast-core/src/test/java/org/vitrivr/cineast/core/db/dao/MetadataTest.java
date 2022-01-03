@@ -105,6 +105,8 @@ public abstract class MetadataTest<R> {
 
   protected abstract IntegrationDBProvider<R> provider();
 
+  protected abstract void cleanup();
+
   @AfterEach
   void tearDownTest() {
     CineastIOUtils.closeQuietly(objSelector, segSelector, objReader, segReader);
@@ -114,6 +116,7 @@ public abstract class MetadataTest<R> {
   void finalTearDownTest() {
     dropTables();
     CineastIOUtils.closeQuietly(ec);
+    this.cleanup();
   }
 
   protected void fillMetadata() {

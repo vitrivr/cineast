@@ -17,6 +17,11 @@ public class CottontailBooleanIntegrationTest extends DBBooleanIntegrationTest<I
   }
 
   @Override
+  protected void cleanup() {
+    this._provider.close();
+  }
+
+  @Override
   protected IntegrationDBProvider<Insert> provider() {
     return _provider;
   }

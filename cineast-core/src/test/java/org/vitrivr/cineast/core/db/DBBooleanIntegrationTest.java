@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -97,6 +98,11 @@ public abstract class DBBooleanIntegrationTest<R> {
     CineastIOUtils.closeQuietly(ec);
   }
 
+  @AfterAll
+  void tearDownAll() {
+    this.cleanup();
+  }
+
   protected String getTestTableName() {
     return "test_boolean_table";
   }
@@ -104,6 +110,8 @@ public abstract class DBBooleanIntegrationTest<R> {
   protected abstract void finishSetup();
 
   protected abstract IntegrationDBProvider<R> provider();
+
+  protected abstract void cleanup();
 
   protected QueryConfig getQueryConfig() {
     QueryConfig qc = new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());

@@ -26,6 +26,11 @@ public class CottontailMetadataTest extends MetadataTest<Insert> {
     wrapper.close();
   }
 
+  @Override
+  protected void cleanup() {
+    this._provider.close();
+  }
+
   @Test
   protected void simpleTest() {
     //no-op

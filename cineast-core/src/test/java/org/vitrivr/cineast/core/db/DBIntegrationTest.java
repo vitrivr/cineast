@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -100,11 +101,18 @@ public abstract class DBIntegrationTest<R> {
 
   protected abstract IntegrationDBProvider<R> provider();
 
+  protected abstract void cleanup();
+
   @AfterEach
   void tearDownTest() {
     CineastIOUtils.closeQuietly(writer, selector);
     dropTables();
     CineastIOUtils.closeQuietly(ec);
+  }
+
+  @AfterAll
+  void tearDownAll() {
+    this.cleanup();
   }
 
   private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
