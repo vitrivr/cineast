@@ -38,11 +38,24 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
   };
 
 
-  private final CottontailGrpcServer embedded = CottontailKt.embedded(COTTONTAIL_TEST_CONFIG);
+  /** The embedded {@link CottontailGrpcServer} used by this {@link CottontailIntegrationDBProvider}. */
+  private final CottontailGrpcServer embedded;
 
-  private final CottontailWrapper wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
+  /** The {@link CottontailWrapper} used to establish a database connection. */
+  private final CottontailWrapper wrapper;
 
-  public CottontailIntegrationDBProvider() { }
+  /**
+   * Constructor.
+   */
+  public CottontailIntegrationDBProvider() {
+    this.embedded = CottontailKt.embedded(COTTONTAIL_TEST_CONFIG);
+    try {
+        this.wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
+    } catch (Throwable e) {
+      this.embedded.stop(); /* Stop server to relinquish locks on catalogue. */
+      throw e;
+    }
+  }
 
 
   CottontailWrapper getWrapper() {
@@ -69,7 +82,6 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
     this.wrapper.close();
     if (this.embedded.isRunning()) {
       this.embedded.stop();
-      this.embedded.getCatalogue().close();
     }
   }
 }
