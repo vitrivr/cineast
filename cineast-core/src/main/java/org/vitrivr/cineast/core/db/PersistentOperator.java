@@ -2,9 +2,8 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
-
 import java.util.function.Supplier;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 public interface PersistentOperator {
 

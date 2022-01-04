@@ -78,7 +78,7 @@ public class ImageMetadata {
   /**
    * Sets the region, size, rotation, quality and extension parameters from the IIIF request
    */
-  public void setIIIFParameters(ImageRequest imageRequest){
+  public void setIIIFParameters(ImageRequest imageRequest) {
     this.setRegion(imageRequest.getRegion());
     this.setSize(imageRequest.getSize());
     this.setRotation(imageRequest.getRotation());

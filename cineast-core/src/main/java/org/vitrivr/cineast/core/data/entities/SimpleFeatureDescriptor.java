@@ -4,26 +4,27 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
 
 public class SimpleFeatureDescriptor {
-    /** */
-    public final String segmentId;
 
-    /** */
-    public final ReadableFloatVector feature;
+  /**
+   *
+   */
+  public final String segmentId;
 
-    /**
-     *
-     * @param segmentId
-     * @param feature
-     */
-    public SimpleFeatureDescriptor(String segmentId, ReadableFloatVector feature) {
-        this.segmentId = segmentId;
-        this.feature = feature;
-    }
+  /**
+   *
+   */
+  public final ReadableFloatVector feature;
 
-    public String getSegmentId() {
-        return segmentId;
-    }
-    public ReadableFloatVector getFeature() {
-        return feature;
-    }
+  public SimpleFeatureDescriptor(String segmentId, ReadableFloatVector feature) {
+    this.segmentId = segmentId;
+    this.feature = feature;
+  }
+
+  public String getSegmentId() {
+    return segmentId;
+  }
+
+  public ReadableFloatVector getFeature() {
+    return feature;
+  }
 }

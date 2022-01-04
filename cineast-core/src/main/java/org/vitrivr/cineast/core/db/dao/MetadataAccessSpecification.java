@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class MetadataAccessSpecification {
 
-    public final MetadataType type;
-    public final String domain;
-    public final String key;
+  public final MetadataType type;
+  public final String domain;
+  public final String key;
 
-    public MetadataAccessSpecification(
-            @JsonProperty("type") MetadataType type,
-            @JsonProperty("domain") String domain,
-            @JsonProperty("key") String key) {
-        this.type = type;
-        this.domain = domain;
-        this.key = key;
-    }
+  public MetadataAccessSpecification(
+      @JsonProperty("type") MetadataType type,
+      @JsonProperty("domain") String domain,
+      @JsonProperty("key") String key) {
+    this.type = type;
+    this.domain = domain;
+    this.key = key;
+  }
 }

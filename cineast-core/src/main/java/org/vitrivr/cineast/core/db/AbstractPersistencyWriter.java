@@ -8,19 +8,19 @@ import java.util.List;
 
 public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<R> {
 
-  protected String[] names; 
+  protected String[] names;
 
-  protected AbstractPersistencyWriter(String...names){
+  protected AbstractPersistencyWriter(String... names) {
     this.names = names;
   }
-  
-  protected AbstractPersistencyWriter(){
+
+  protected AbstractPersistencyWriter() {
     this(GENERIC_ID_COLUMN_QUALIFIER, FEATURE_COLUMN_QUALIFIER);
   }
-  
+
   @Override
-  public void setFieldNames(String...names){
-    if(names != null && names.length > 0){
+  public void setFieldNames(String... names) {
+    if (names != null && names.length > 0) {
       this.names = names;
     }
   }
@@ -36,10 +36,10 @@ public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<
   public boolean idExists(String id) {
     return exists(GENERIC_ID_COLUMN_QUALIFIER, id);
   }
-  
+
   @Override
   public PersistentTuple generateTuple(Object... objects) {
     return new PersistentTuple(objects);
   }
-  
+
 }

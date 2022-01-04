@@ -127,8 +127,8 @@ public class ImageRequest {
   /**
    * Downloads and saves the image to the local filesystem
    *
-   * @param filePath The path of the directory where the image should be saved
-   * @param fileName The name that should be given to the saved image
+   * @param filePath   The path of the directory where the image should be saved
+   * @param fileName   The name that should be given to the saved image
    * @param requestUrl The complete IIIF Image API compliant URL of the image resource. Useful when URL doesn't need to be generated or has to be overridden.
    * @throws IOException If the image could not downloaded or written to the filesystem
    */

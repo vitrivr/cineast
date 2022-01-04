@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 
 /**
  * An {@link AbstractQueryTermContainer} is the implementation of a {@link SegmentContainer} which is used in the online-phase (during retrieval).
- *
+ * <p>
  * On a system perspective, it is generally created based on an API request from a Query Term (e.g. a color sketch, a text query).
  */
 public abstract class AbstractQueryTermContainer implements SegmentContainer {
@@ -39,7 +39,7 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
 
   /**
    * Online: If this is set, it is assumed to be the id of a {@link MediaSegmentDescriptor}
-   *
+   * <p>
    * Offline: Id of the segment whose extraction is running
    */
   @Override
@@ -64,7 +64,7 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
 
   /**
    * Online: If this is set, it is assumed to be the id of a {@link MediaObjectDescriptor}
-   *
+   * <p>
    * Offline: The {@link MediaObjectDescriptor} this segment belongs to.
    */
   @Override

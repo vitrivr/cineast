@@ -89,7 +89,7 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-jar{
+jar {
     manifest {
         attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
         attributes 'Multi-Release': 'true'
@@ -103,7 +103,7 @@ shadowJar {
 
 dependencies {
     implementation project(':cineast-runtime')
-    implementation("io.javalin:javalin-bundle:$version_javalin"){
+    implementation("io.javalin:javalin-bundle:$version_javalin") {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson

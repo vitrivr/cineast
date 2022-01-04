@@ -4,36 +4,36 @@ import java.util.Iterator;
 
 public class IntArrayIterable implements Iterable<Integer> {
 
-	private final int[] arr;
-	
-	public IntArrayIterable(int[] arr){
-		this.arr = arr;
-	}
-	
-	@Override
-	public Iterator<Integer> iterator() {
-		return new IntArrayIterator();
-	}
-	
-	class IntArrayIterator implements Iterator<Integer>{
+  private final int[] arr;
 
-		int i = 0;
-		
-		@Override
-		public boolean hasNext() {
-			return i < arr.length;
-		}
+  public IntArrayIterable(int[] arr) {
+    this.arr = arr;
+  }
 
-		@Override
-		public Integer next() {
-			return arr[i++];
-		}
+  @Override
+  public Iterator<Integer> iterator() {
+    return new IntArrayIterator();
+  }
 
-		@Override
-		public void remove() {
-			//ignore
-		}
+  class IntArrayIterator implements Iterator<Integer> {
 
-	}
+    int i = 0;
+
+    @Override
+    public boolean hasNext() {
+      return i < arr.length;
+    }
+
+    @Override
+    public Integer next() {
+      return arr[i++];
+    }
+
+    @Override
+    public void remove() {
+      //ignore
+    }
+
+  }
 
 }

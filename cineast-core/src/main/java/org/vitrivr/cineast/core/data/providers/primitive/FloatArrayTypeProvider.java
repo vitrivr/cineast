@@ -14,18 +14,18 @@ public class FloatArrayTypeProvider extends FloatArrayProviderImpl
   public ProviderDataType getType() {
     return ProviderDataType.FLOAT_ARRAY;
   }
-  
+
   @Override
   public String getString() {
     return Arrays.toString(getFloatArray());
   }
 
-  public static FloatArrayTypeProvider fromList(List<Float> list){
+  public static FloatArrayTypeProvider fromList(List<Float> list) {
     float[] array = new float[list.size()];
 
     int i = 0;
 
-    for(Float f : list){
+    for (Float f : list) {
       array[i++] = f;
     }
 
@@ -40,7 +40,7 @@ public class FloatArrayTypeProvider extends FloatArrayProviderImpl
 
     int i = 0;
 
-    for(Double d : list){
+    for (Double d : list) {
       array[i++] = d.floatValue();
     }
 

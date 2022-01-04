@@ -1,15 +1,11 @@
 package org.vitrivr.cineast.standalone.run;
 
 import com.google.common.collect.Lists;
-
 import java.util.List;
 import java.util.Optional;
 
 /**
- * The {@link ExtractionContainerProvider} provides a continuous list of {@link
- * ExtractionItemContainer}. It is intended to be both used for e.g. walking a directory or during
- * an extraction-session using Cineast's API
- *
+ * The {@link ExtractionContainerProvider} provides a continuous list of {@link ExtractionItemContainer}. It is intended to be both used for e.g. walking a directory or during an extraction-session using Cineast's API
  */
 public interface ExtractionContainerProvider {
 
@@ -25,15 +21,12 @@ public interface ExtractionContainerProvider {
   }
 
   /**
-   * Check if this instance is still active. This does NOT mean that {@link #hasNextAvailable()}
-   * will return true, but simply that there might be elements yet to come.
+   * Check if this instance is still active. This does NOT mean that {@link #hasNextAvailable()} will return true, but simply that there might be elements yet to come.
    */
   boolean isOpen();
 
   /**
-   * Check if {@link #next()} could return an element. Since a {@link ExtractionContainerProvider}
-   * might be used in a multi-threaded context, it does not guarantee that by the time you will call
-   * {@link #next()}, the element will still be available.
+   * Check if {@link #next()} could return an element. Since a {@link ExtractionContainerProvider} might be used in a multi-threaded context, it does not guarantee that by the time you will call {@link #next()}, the element will still be available.
    */
   boolean hasNextAvailable();
 

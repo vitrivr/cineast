@@ -14,7 +14,7 @@ public class WeightedManhattanDistance extends ManhattanDistance {
     }
     this.weights = weights.clone();
   }
-  
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

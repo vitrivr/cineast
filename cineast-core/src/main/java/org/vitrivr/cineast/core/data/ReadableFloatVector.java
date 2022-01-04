@@ -19,8 +19,7 @@ public interface ReadableFloatVector {
 
   /**
    * @param vector the vector
-   * @param array the array to write into. If {@code array} does not match the vector size, a new
-   *              array is generated instead.
+   * @param array  the array to write into. If {@code array} does not match the vector size, a new array is generated instead.
    * @return an array containing the vector elements
    */
   static float[] toArray(ReadableFloatVector vector, float[] array) {
@@ -44,7 +43,7 @@ public interface ReadableFloatVector {
 
   /**
    * @param vector the vector
-   * @param list the list to write into. Note that existing elements are removed from {@code list}.
+   * @param list   the list to write into. Note that existing elements are removed from {@code list}.
    * @return the list containing the vector elements
    */
   static List<Float> toList(ReadableFloatVector vector, List<Float> list) {

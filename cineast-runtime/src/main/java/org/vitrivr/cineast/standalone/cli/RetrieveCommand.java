@@ -33,7 +33,6 @@ public class RetrieveCommand implements Runnable {
       retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));
     }
 
-
     QueryConfig qc = QueryConfig.newQueryConfigFromOther(new ConstrainedQueryConfig("cli-query", new ArrayList<>()));
 
     if (relevantSegments != null && !relevantSegments.isEmpty()) {
@@ -45,7 +44,6 @@ public class RetrieveCommand implements Runnable {
 
     qc.setMaxResults(Config.sharedConfig().getRetriever().getMaxResults());
     qc.setResultsPerModule(Config.sharedConfig().getRetriever().getMaxResultsPerModule());
-
 
     final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, qc);
     System.out.println("results:");

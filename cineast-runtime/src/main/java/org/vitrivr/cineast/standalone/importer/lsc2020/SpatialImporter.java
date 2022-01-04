@@ -8,17 +8,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.providers.LocationProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.features.SpatialDistance;
-import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.importer.Importer;
 
 /**
@@ -31,11 +26,11 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
   private final Map<String, String[]> metadataMap;
   private final Map<String, String> filenameToMinuteIdMap;
 
-  private final Iterator<Entry<String,String>> iterator;
+  private final Iterator<Entry<String, String>> iterator;
 
   private final Path root;
 
-  public SpatialImporter(Path path){
+  public SpatialImporter(Path path) {
     this.root = path;
 
     try {
@@ -45,36 +40,36 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
       metadataMap = lsc.getMetaPerMinuteId();
       iterator = filenameToMinuteIdMap.entrySet().iterator();
     } catch (IOException | CsvException e) {
-      LOGGER.error("Failed to prepare metadata readout due to {}", e,e);
-      throw new RuntimeException("Failed to prepare metadata readout",e);
+      LOGGER.error("Failed to prepare metadata readout due to {}", e, e);
+      throw new RuntimeException("Failed to prepare metadata readout", e);
     }
     LOGGER.info("Initialisation finished successfully. Starting import...");
   }
 
-  private Optional<Map<String, PrimitiveTypeProvider>> parseEntry(String key, String[] data){
+  private Optional<Map<String, PrimitiveTypeProvider>> parseEntry(String key, String[] data) {
     String lat = data[LSCUtilities.META_LAT_COL];
     String lon = data[LSCUtilities.META_LON_COL];
 
-    if(LSCUtilities.isAnyMetaBlank(lat, lon)){
-      LOGGER.warn("Either lat or long for {} is blank. Ignoring.",key);
+    if (LSCUtilities.isAnyMetaBlank(lat, lon)) {
+      LOGGER.warn("Either lat or long for {} is blank. Ignoring.", key);
       return Optional.empty();
     }
 
     boolean ignore = false;
     float fLat = Float.NaN, fLon = Float.NaN;
-    try{
-    fLat = Float.parseFloat(lat);
-    }catch(NumberFormatException e){
-      LOGGER.warn("Could not parse latitute for {}, as it was {}", key, lat,e);
+    try {
+      fLat = Float.parseFloat(lat);
+    } catch (NumberFormatException e) {
+      LOGGER.warn("Could not parse latitute for {}, as it was {}", key, lat, e);
       ignore = true;
     }
-    try{
+    try {
       fLon = Float.parseFloat(lon);
-    }catch(NumberFormatException e){
+    } catch (NumberFormatException e) {
       LOGGER.warn("Could not parse longitutde for {}, as it was {}", key, lon, e);
       ignore = true;
     }
-    if(ignore){
+    if (ignore) {
       return Optional.empty();
     }
 
@@ -92,16 +87,15 @@ public class SpatialImporter implements Importer<Map<String, PrimitiveTypeProvid
 
   @Override
   public Map<String, PrimitiveTypeProvider> readNext() {
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Entry<String, String> next = iterator.next();
       Optional<Map<String, PrimitiveTypeProvider>> parsed = parseEntry(next.getKey(), metadataMap.get(next.getValue()));
-      if(parsed.isPresent()){
+      if (parsed.isPresent()) {
         return parsed.get();
       }
     }
     return null;
   }
-
 
 
   @Override

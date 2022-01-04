@@ -6,7 +6,7 @@ public enum GoogleVisionCategory {
 
   public final String tableName;
 
-  GoogleVisionCategory(String tableName){
+  GoogleVisionCategory(String tableName) {
     this.tableName = tableName;
   }
 }

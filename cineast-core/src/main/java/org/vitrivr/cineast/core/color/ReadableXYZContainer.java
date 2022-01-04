@@ -23,10 +23,14 @@ public class ReadableXYZContainer extends AbstractColorContainer<ReadableXYZCont
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return x;
-      case 1: return y;
-      case 2: return z;
-      default: throw new IndexOutOfBoundsException(num + ">= 3");
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 3");
     }
   }
 

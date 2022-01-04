@@ -1,20 +1,23 @@
 package org.vitrivr.cineast.core.extraction.metadata;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.*;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
-import org.vitrivr.cineast.core.util.MimeTypeHelper;
+import static org.bytedeco.javacpp.avcodec.AVCodec;
+import static org.bytedeco.javacpp.avformat.AVFormatContext;
+import static org.bytedeco.javacpp.avformat.AVStream;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.bytedeco.javacpp.avcodec.AVCodec;
-import static org.bytedeco.javacpp.avformat.AVFormatContext;
-import static org.bytedeco.javacpp.avformat.AVStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
+import org.bytedeco.javacpp.avcodec;
+import org.bytedeco.javacpp.avformat;
+import org.bytedeco.javacpp.avutil;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
 
@@ -44,7 +47,7 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
    * Extracts the technical video metadata from the specified path and returns a List of {@link MediaObjectMetadataDescriptor} objects (one for each metadata entry).
    *
    * @param objectId ID of the multimedia object for which metadata will be generated.
-   * @param path Path to the file for which metadata should be extracted.
+   * @param path     Path to the file for which metadata should be extracted.
    * @return List of {@link MediaObjectMetadataDescriptor}s or an empty list, if extracting metadata fails.
    */
   @Override

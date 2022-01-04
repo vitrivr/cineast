@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.data;
 
-import com.google.common.collect.ImmutableList;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 public class LocationTest {
+
   private static final float COORDINATES_DELTA = 1e-5f;
 
   @Test
@@ -49,7 +49,7 @@ public class LocationTest {
   @DisplayName("Invalid Float Array")
   public void testInvalidFloatArray() {
     List<float[]> invalidArrays = ImmutableList
-        .of(new float[] {}, new float[]{ 0f }, new float[]{ 0f, 1f, 2f });
+        .of(new float[]{}, new float[]{0f}, new float[]{0f, 1f, 2f});
     for (float[] array : invalidArrays) {
       assertThrows(IllegalArgumentException.class, () -> Location.of(array));
     }
@@ -77,7 +77,7 @@ public class LocationTest {
   private static List<Location> getTestLocations(float latitude, float longitude) {
     return ImmutableList.of(
         Location.of(latitude, longitude),
-        Location.of(new float[] { latitude, longitude })
+        Location.of(new float[]{latitude, longitude})
     );
   }
 
