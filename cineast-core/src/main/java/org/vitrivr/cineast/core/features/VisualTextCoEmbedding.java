@@ -210,23 +210,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedVideo(List<MultiImage> frames) {
     initializeVisualEmbedding();
 
-    List<float[]> encodings = frames.stream().map(image -> InceptionResnetV2.encodeImage(image.getBufferedImage())).collect(Collectors.toList());
-
-    // Sum
-    float[] meanEncoding = encodings.stream().reduce(new float[InceptionResnetV2.ENCODING_SIZE], (encoding0, encoding1) -> {
-      float[] tempSum = new float[InceptionResnetV2.ENCODING_SIZE];
-
-      for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
-        tempSum[i] = encoding0[i] + encoding1[i];
-      }
-
-      return tempSum;
-    });
-
-    // Calculate mean
-    for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
-      meanEncoding[i] /= encodings.size();
-    }
+    float[] meanEncoding = InceptionResnetV2.encodeVideo(frames);
 
     try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, InceptionResnetV2.ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();

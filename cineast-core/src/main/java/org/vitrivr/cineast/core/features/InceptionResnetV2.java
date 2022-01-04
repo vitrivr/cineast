@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -28,7 +30,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
 
   public static final int ENCODING_SIZE = 1536;
   private static final String TABLE_NAME = "features_inceptionresnetv2";
-  private static final Distance DISTANCE = ReadableQueryConfig.Distance.euclidean;
+  private static final Distance DISTANCE = Distance.manhattan;
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -59,19 +61,31 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
   }
 
   @Override
-  public void processSegment(SegmentContainer shot) {
+  public void processSegment(SegmentContainer sc) {
     // Return if already processed
-    if (phandler.idExists(shot.getId())) {
+    if (phandler.idExists(sc.getId())) {
+      return;
+    }
+
+    // Case: segment contains video frames
+    if (!(sc.getVideoFrames().size() > 0 && sc.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
+      List<MultiImage> frames = sc.getVideoFrames().stream()
+          .map(VideoFrame::getImage)
+          .collect(Collectors.toList());
+
+      float[] encodingArray = encodeVideo(frames);
+      this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
+
       return;
     }
 
     // Case: segment contains image
-    if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 
       if (image != null) {
         float[] encodingArray = encodeImage(image);
-        this.persist(shot.getId(), new FloatVectorImpl(encodingArray));
+        this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
       }
 
       // Insert return here if additional cases are added!
@@ -80,23 +94,34 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    if (sc.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      LOGGER.error("Could not get similar because no image was provided.");
-      return new ArrayList<>();
+    float[] encodingArray = null;
+
+    if (!(sc.getVideoFrames().size() > 0 && sc.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
+      // Case: segment contains video frames
+      List<MultiImage> frames = sc.getVideoFrames().stream()
+          .map(VideoFrame::getImage)
+          .collect(Collectors.toList());
+
+      encodingArray = encodeVideo(frames);
+    } else if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      // Case: segment contains image
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
+
+      if (image != null) {
+        encodingArray = encodeImage(image);
+      } else {
+        LOGGER.error("Could not get similar because image could not be converted to BufferedImage.");
+      }
     }
 
-    BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
-
-    if (image == null) {
-      LOGGER.error("Could not get similar because image could not be converted to BufferedImage.");
+    if (encodingArray == null) {
+      LOGGER.error("Could not get similar because no acceptable modality was provided.");
       return new ArrayList<>();
     }
 
     // Ensure the correct distance function is used
     QueryConfig queryConfig = QueryConfig.clone(qc);
     queryConfig.setDistance(DISTANCE);
-
-    float[] encodingArray = encodeImage(image);
 
     return getSimilar(encodingArray, queryConfig);
   }
@@ -144,9 +169,37 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
   }
 
   /**
+   * Encodes each frame of the given video using InceptionResnetV2 and returns the mean encoding as float array.
+   *
+   * @param frames List of frames in the video or shot to be encoded.
+   * @return Mean of frame encodings as float array.
+   */
+  public static float[] encodeVideo(List<MultiImage> frames) {
+    List<float[]> encodings = frames.stream().map(image -> InceptionResnetV2.encodeImage(image.getBufferedImage())).collect(Collectors.toList());
+
+    // Sum
+    float[] meanEncoding = encodings.stream().reduce(new float[InceptionResnetV2.ENCODING_SIZE], (encoding0, encoding1) -> {
+      float[] tempSum = new float[InceptionResnetV2.ENCODING_SIZE];
+
+      for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
+        tempSum[i] = encoding0[i] + encoding1[i];
+      }
+
+      return tempSum;
+    });
+
+    // Calculate mean
+    for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
+      meanEncoding[i] /= encodings.size();
+    }
+
+    return meanEncoding;
+  }
+
+  /**
    * Preprocesses the image, so it can be used as input to the InceptionResnetV2. Involves rescaling, remapping and converting the image to a float array.
    *
-   * @return float array representation of the input image
+   * @return Float array representation of the input image.
    */
   public static float[] preprocessImage(BufferedImage image) {
     if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
