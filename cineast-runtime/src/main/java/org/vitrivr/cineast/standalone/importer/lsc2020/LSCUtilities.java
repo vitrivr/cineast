@@ -200,9 +200,6 @@ public class LSCUtilities {
 
   /**
    * Removes all but after the last "/"
-   *
-   * @param path
-   * @return
    */
   public static String sanitizeFilename(String path) {
     int i = path.lastIndexOf("/");
@@ -222,7 +219,6 @@ public class LSCUtilities {
    * Converts a lscUtcTime format {@code UTC_yyyy-MM-dd_hh:mm} datetime to a {@link LocalDateTime} {@link LocalDateTime} is used, due to its definition of 'local time in ISO-8601 standard without time zone info'.
    *
    * @param lscUtcFormat The LSC UTC Timestamp in the format {@code UTC_yyyy-MM-dd_hh:mm}
-   * @return
    */
   public static LocalDateTime convertUtc(String lscUtcFormat) {
     return LocalDateTime.ofEpochSecond(convert(lscUtcFormat, true, null), 0, ZoneOffset.UTC);
@@ -233,7 +229,6 @@ public class LSCUtilities {
    *
    * @param lscFormat The LSC UTC Timestamp in the format {@code yyyy-MM-dd_hh:mm}
    * @param zone      A zoneid in format {@code Area/Region}, see {@linkplain ZoneId}
-   * @return
    */
   public static ZonedDateTime convertLocal(String lscFormat, String zone) {
     final long epochSec = convert(lscFormat, false, zone);
@@ -435,8 +430,6 @@ public class LSCUtilities {
 
   /**
    * Immutable
-   *
-   * @return
    */
   @Deprecated
   public List<String[]> getHeaderlessMetaContents() {
@@ -453,8 +446,6 @@ public class LSCUtilities {
 
   /**
    * Immutable
-   *
-   * @return
    */
   @Deprecated
   public Map<String, String> getMinuteIdPathMap() {

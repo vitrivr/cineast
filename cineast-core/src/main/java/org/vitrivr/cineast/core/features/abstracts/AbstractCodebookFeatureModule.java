@@ -35,18 +35,12 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    */
   private static String CODEBOOK_FOLDER = "resources/codebooks/";
 
-  /**
-   * @param tableName
-   * @param maxDist
-   */
   protected AbstractCodebookFeatureModule(String tableName, float maxDist, int vectorLength) {
     super(tableName, maxDist, vectorLength);
   }
 
   /**
    * Initializer for Extraction - must load the codebook.
-   *
-   * @param phandlerSupply
    */
   @Override
   public final void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
@@ -58,8 +52,6 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
 
   /**
    * Initializer for Retrieval - must load the codebook.
-   *
-   * @param selectorSupply
    */
   @Override
   public final void init(Supplier<DBSelector> selectorSupply) {
@@ -127,8 +119,6 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
 
   /**
    * Returns the full name of the codebook to use. All codebook be placed in the ./resources/codebooks folder.
-   *
-   * @return
    */
   protected abstract String codebook();
 
