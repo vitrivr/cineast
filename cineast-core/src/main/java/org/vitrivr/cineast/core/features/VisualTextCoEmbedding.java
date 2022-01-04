@@ -1,11 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import static org.vitrivr.cineast.core.features.InceptionResnetV2.ENCODING_SIZE;
-import static org.vitrivr.cineast.core.features.InceptionResnetV2.IMAGE_HEIGHT;
-import static org.vitrivr.cineast.core.features.InceptionResnetV2.IMAGE_WIDTH;
-import static org.vitrivr.cineast.core.features.InceptionResnetV2.colorsToRGB;
-import static org.vitrivr.cineast.core.features.InceptionResnetV2.rescale;
-
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
@@ -186,14 +180,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedImage(BufferedImage image) {
     initializeVisualEmbedding();
 
-    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
-      image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
-    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
-    int[] rgb = colorsToRGB(colors);
-    float[] processedColors = InceptionResnetV2.preprocessInput(rgb);
+    float[] processedColors = InceptionResnetV2.preprocessImage(image);
 
-    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, IMAGE_WIDTH, IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
+    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, InceptionResnetV2.IMAGE_WIDTH, InceptionResnetV2.IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(InceptionResnetV2.INPUT, imageTensor);
 
@@ -224,10 +213,10 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     List<float[]> encodings = frames.stream().map(image -> InceptionResnetV2.encodeImage(image.getBufferedImage())).collect(Collectors.toList());
 
     // Sum
-    float[] meanEncoding = encodings.stream().reduce(new float[ENCODING_SIZE], (encoding0, encoding1) -> {
-      float[] tempSum = new float[ENCODING_SIZE];
+    float[] meanEncoding = encodings.stream().reduce(new float[InceptionResnetV2.ENCODING_SIZE], (encoding0, encoding1) -> {
+      float[] tempSum = new float[InceptionResnetV2.ENCODING_SIZE];
 
-      for (int i = 0; i < ENCODING_SIZE; i++) {
+      for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
         tempSum[i] = encoding0[i] + encoding1[i];
       }
 
@@ -235,11 +224,11 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     });
 
     // Calculate mean
-    for (int i = 0; i < ENCODING_SIZE; i++) {
+    for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
       meanEncoding[i] /= encodings.size();
     }
 
-    try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
+    try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, InceptionResnetV2.ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
 
       inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);

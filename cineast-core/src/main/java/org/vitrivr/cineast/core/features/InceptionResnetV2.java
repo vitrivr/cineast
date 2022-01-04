@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.SavedModelBundle;
@@ -124,12 +124,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
   public static float[] encodeImage(BufferedImage image) {
     initializeModel();
 
-    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
-      image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
-    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
-    int[] rgb = colorsToRGB(colors);
-    float[] processedColors = preprocessInput(rgb);
+    float[] processedColors = preprocessImage(image);
 
     try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, IMAGE_WIDTH, IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
@@ -148,20 +143,22 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
     }
   }
 
-  // TODO: Move image util related functions to a dedicated util class
-
   /**
-   * Rescales a buffered image using bilinear interpolation.
+   * Preprocesses the image, so it can be used as input to the InceptionResnetV2. Involves rescaling, remapping and converting the image to a float array.
+   *
+   * @return float array representation of the input image
    */
-  public static BufferedImage rescale(BufferedImage image, int width, int height) {
-    BufferedImage scaledImage = new BufferedImage(width, height, image.getType());
-
-    AffineTransform affineTransform = AffineTransform.getScaleInstance((double) width / image.getWidth(), (double) height / image.getHeight());
-    // The OpenCV resize with which the training data was scaled defaults to bilinear interpolation
-    AffineTransformOp transformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-    scaledImage = transformOp.filter(image, scaledImage);
-
-    return scaledImage;
+  public static float[] preprocessImage(BufferedImage image) {
+    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
+      try {
+        image = Thumbnails.of(image).forceSize(IMAGE_WIDTH, IMAGE_HEIGHT).asBufferedImage();
+      } catch (IOException e) {
+        LOGGER.error("Could not resize image", e);
+      }
+    }
+    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
+    int[] rgb = colorsToRGB(colors);
+    return preprocessInput(rgb);
   }
 
   /**
@@ -169,7 +166,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
    * <p>
    * Maps all values from [0,255] to [-1, 1].
    */
-  public static float[] preprocessInput(int[] colors) {
+  private static float[] preprocessInput(int[] colors) {
     // x /= 127.5
     // x -= 1.
     float[] processedColors = new float[colors.length];
@@ -183,7 +180,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
   /**
    * Converts an integer colors array storing ARGB values in each integer into an integer array where each integer stores R, G or B value.
    */
-  public static int[] colorsToRGB(int[] colors) {
+  private static int[] colorsToRGB(int[] colors) {
     int[] rgb = new int[colors.length * 3];
 
     for (int i = 0; i < colors.length; i++) {
