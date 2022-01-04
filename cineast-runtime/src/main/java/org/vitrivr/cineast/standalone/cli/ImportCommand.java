@@ -2,15 +2,13 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+import com.github.rvesse.airline.annotations.restrictions.Required;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.importer.lsc2020.MyscealTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
@@ -20,6 +18,7 @@ import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.CaptionImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.LSCAllTagsImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.MetaImportHandler;
+import org.vitrivr.cineast.standalone.importer.lsc2020.MyscealTagImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.OCRImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler;
 import org.vitrivr.cineast.standalone.importer.lsc2020.ProcessingMetaImportHandler.Mode;

@@ -1,14 +1,20 @@
 package org.vitrivr.cineast.core.util;
 
-import org.opencv.core.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfRotatedRect;
+import org.opencv.core.Point;
+import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 import org.vitrivr.cineast.core.data.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TextDetector_EAST is able to detect scene text contained within an image
@@ -134,23 +140,25 @@ public class TextDetector_EAST {
 
   }
 
-  public List<Point[][]> detect (List<Mat> frames, int batchSize) {
+  public List<Point[][]> detect(List<Mat> frames, int batchSize) {
     assert model != null : "Model has not been initialized!";
     List<Point[][]> allPoints = new ArrayList<>();
-    if (frames.size() == 0) { return allPoints; }
+    if (frames.size() == 0) {
+      return allPoints;
+    }
     frames.forEach(frame -> Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB));
     int rows = frames.get(0).rows();
     int cols = frames.get(0).cols();
     Size size = new Size(frames.get(0).width() - (frames.get(0).width() % 32), frames.get(0).height() - (frames.get(0).height() % 32));
     int H = (int) (size.height / 4);
-    for (int i=0; i<frames.size(); i=i+batchSize) {
+    for (int i = 0; i < frames.size(); i = i + batchSize) {
       List<Mat> subFrames = frames.subList(i, Math.min(i + batchSize, frames.size()));
       Mat blob = Dnn.blobFromImages(subFrames, 1.0, size, new Scalar(123.68, 116.78, 103.94), true, false);
       List<Mat> outs = new ArrayList<>(2);
       model.setInput(blob);
       model.forward(outs, outNames);
 
-      for (int j=0; j<subFrames.size(); j++) {
+      for (int j = 0; j < subFrames.size(); j++) {
         Mat scores = outs.get(0).row(j).reshape(1, H);
         Mat geometry = outs.get(1).row(j).reshape(1, 5 * H);
         allPoints.add(detect(scores, geometry, size, rows, cols));

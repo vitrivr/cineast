@@ -10,7 +10,7 @@ public class ByteTypeProvider extends ByteProviderImpl implements PrimitiveTypeP
   public ProviderDataType getType() {
     return ProviderDataType.BYTE;
   }
-  
+
   @Override
   public String getString() {
     return Byte.toString(getByte());

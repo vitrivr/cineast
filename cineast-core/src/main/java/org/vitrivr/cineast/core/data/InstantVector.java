@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data;
 import java.time.Instant;
 
 public class InstantVector implements ReadableFloatVector {
+
   private static final int ELEMENT_COUNT = 1;
 
   private final Instant instant;
@@ -27,8 +28,10 @@ public class InstantVector implements ReadableFloatVector {
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return instant.getEpochSecond();
-      default: throw new IndexOutOfBoundsException(num + " >= " + this.getElementCount());
+      case 0:
+        return instant.getEpochSecond();
+      default:
+        throw new IndexOutOfBoundsException(num + " >= " + this.getElementCount());
     }
   }
 }

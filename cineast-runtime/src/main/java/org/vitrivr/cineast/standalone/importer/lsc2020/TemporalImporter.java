@@ -22,32 +22,32 @@ public class TemporalImporter implements Importer<Map<String, PrimitiveTypeProvi
   private final Map<String, String[]> metadataMap;
   private final Map<String, String> filenameToMinuteIdMap;
 
-  private final Iterator<Entry<String,String>> iterator;
+  private final Iterator<Entry<String, String>> iterator;
 
   private final Path root;
 
-  public TemporalImporter(final Path path){
+  public TemporalImporter(final Path path) {
     this.root = path;
 
-    try{
+    try {
       final LSCUtilities lsc = LSCUtilities.create(path);
       lsc.initMetadata();
       filenameToMinuteIdMap = lsc.getFilenameToMinuteIdLookUp();
       metadataMap = lsc.getMetaPerMinuteId();
       iterator = filenameToMinuteIdMap.entrySet().iterator();
-    }catch (IOException | CsvException e) {
-      LOGGER.error("Failed to prepare metadata readout due to {}", e,e);
-      throw new RuntimeException("Failed to prepare metadata readout",e);
+    } catch (IOException | CsvException e) {
+      LOGGER.error("Failed to prepare metadata readout due to {}", e, e);
+      throw new RuntimeException("Failed to prepare metadata readout", e);
     }
     LOGGER.info("Initialisation finished successfully. Starting import now");
   }
 
-  private long toEpochMillis(String minuteId){
+  private long toEpochMillis(String minuteId) {
     final LocalDateTime date = LSCUtilities.fromMinuteId(minuteId);
     return date.toInstant(ZoneOffset.UTC).toEpochMilli();
   }
 
-  private Optional<Map<String, PrimitiveTypeProvider>> parseEntry(String key, String[] data){
+  private Optional<Map<String, PrimitiveTypeProvider>> parseEntry(String key, String[] data) {
     final long ms = toEpochMillis(filenameToMinuteIdMap.get(key));
     final PrimitiveTypeProvider msProvider = PrimitiveTypeProvider.fromObject(ms);
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
@@ -55,7 +55,7 @@ public class TemporalImporter implements Importer<Map<String, PrimitiveTypeProvi
     map.put("id", PrimitiveTypeProvider.fromObject(LSCUtilities.pathToSegmentId(key)));
     // temporal info
     map.put("segmentstart", msProvider);
-    map.put("segmentend", PrimitiveTypeProvider.fromObject(ms+1)); // Segment ends one millis later
+    map.put("segmentend", PrimitiveTypeProvider.fromObject(ms + 1)); // Segment ends one millis later
     map.put("startabs", msProvider);
 
     return Optional.of(map);
@@ -64,10 +64,10 @@ public class TemporalImporter implements Importer<Map<String, PrimitiveTypeProvi
 
   @Override
   public Map<String, PrimitiveTypeProvider> readNext() {
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Entry<String, String> next = iterator.next();
       Optional<Map<String, PrimitiveTypeProvider>> parsed = parseEntry(next.getKey(), metadataMap.get(next.getValue()));
-      if(parsed.isPresent()){
+      if (parsed.isPresent()) {
         return parsed.get();
       }
     }

@@ -6,7 +6,7 @@ public class BoundedManhattanDistance implements FloatArrayDistance {
 
   private final double bound;
 
-  public BoundedManhattanDistance(double bound){
+  public BoundedManhattanDistance(double bound) {
     this.bound = bound;
   }
 

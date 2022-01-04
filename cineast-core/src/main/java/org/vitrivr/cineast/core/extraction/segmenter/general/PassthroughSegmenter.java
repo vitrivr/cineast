@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.extraction.segmenter.general;
 
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,14 +10,10 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.segmenter.video.TRECVidMSRSegmenter;
 
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
-
 /**
  * A simple segmenter that passes the output from the decoder straight back to the orchestrator.
- *
+ * <p>
  * No aggregation or post-processing will take place besides wrapping of the content in a SegmentContainer.
- *
  */
 public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
 
@@ -49,7 +47,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
    * Method used to initialize the {@link PassthroughSegmenter}. A class implementing the {@link Decoder} interface with the same type must be provided.
    *
    * @param decoder Decoder used for media-decoding.
-   * @param object Media object that is about to be segmented.
+   * @param object  Media object that is about to be segmented.
    */
   @Override
   public void init(Decoder<T> decoder, MediaObjectDescriptor object) {

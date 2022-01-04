@@ -11,7 +11,9 @@ public class IncompleteTag implements WeightedTag {
   private final String id, name, description;
   private final float weight;
 
-  /** only used in querying */
+  /**
+   * only used in querying
+   */
   private TagPriority priority;
 
   public IncompleteTag(String id, String name, String description) {

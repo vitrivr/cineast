@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.Collections;
 import java.util.List;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -21,7 +20,7 @@ public class ObjectInstances extends AbstractFeatureModule {
   @Override
   public void processSegment(SegmentContainer shot) {
     //TODO implement extraction
-      throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -15,24 +15,15 @@ import org.vitrivr.cineast.core.data.Pair;
 
 /**
  * Reader for the tag format of tags, published by the MySceal Team in 2021.
- *
+ * <p>
  * Requires a JSON file (published in 2021 at http://lsc.dcu.ie/resources/microsoft_tags.json
- *
+ * <p>
  * Format:
  *
  * <code>
- *   {
- *     "item1":{
- *       "tag1": score,
- *       "tag2": score
- *     },
- *     "item2":{
- *       "tag1":score,
- *       "tag2":score
- *     }
- *   }
+ * { "item1":{ "tag1": score, "tag2": score }, "item2":{ "tag1":score, "tag2":score } }
  * </code>
- *
+ * <p>
  * {@code item} is formatted as filename, which {@link LSCUtilities#pathToSegmentId(String)} translates into vitrivr id
  */
 public class JsonTagReader {
@@ -60,9 +51,9 @@ public class JsonTagReader {
       String segmentId = LSCUtilities.pathToSegmentId(entry.getKey());
       JsonNode tags = entry.getValue();
       List<Pair<String, Float>> segmentTags = new ArrayList<>();
-      if(!tags.isEmpty()){
+      if (!tags.isEmpty()) {
         tags.fields().forEachRemaining(tagEntry -> {
-          if(tagEntry.getValue().isFloatingPointNumber()){
+          if (tagEntry.getValue().isFloatingPointNumber()) {
             segmentTags.add(new Pair<>(tagEntry.getKey(), tagEntry.getValue().floatValue()));
           }
           uniqueTags.add(tagEntry.getKey());
@@ -74,11 +65,11 @@ public class JsonTagReader {
     LOGGER.info("Successfully processed all tags");
   }
 
-  public HashSet<String> getUniqueTags(){
+  public HashSet<String> getUniqueTags() {
     return uniqueTags;
   }
 
-  public HashMap<String, List<Pair<String, Float>>> getTagScoreMap(){
+  public HashMap<String, List<Pair<String, Float>>> getTagScoreMap() {
     return tagEntries;
   }
 

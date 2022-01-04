@@ -23,11 +23,11 @@ public class Main {
     /* Initalize Monitoring */
     PrometheusServer.initialize();
 
-    if(args.length==1){
+    if (args.length == 1) {
       CLI.start(CineastCli.class);
     }
     /* Either start Cineast in interactive mode OR execute command directly. */
-    if(args.length==2 && args[1].equals("interactive")){
+    if (args.length == 2 && args[1].equals("interactive")) {
       CLI.start(CineastCli.class);
     } else {
       com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(CineastCli.class);

@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.temporal.TemporalTestCases;
 
 public class TimeDistanceTemporalScoringAlgorithmTest {
+
   @Test
   @DisplayName("Sanity temporal scoring")
   public void testSanity() {

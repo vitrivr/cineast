@@ -12,27 +12,29 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 
 /**
- * This is a very simple in-memory key-value store implementation. It revolves around {@link Entity} objects, that hold
- * instance of {@link PersistentTuple}s. Obtaining such a {@link PersistentTuple} by key can be done in O(1). All other
- * operations take at least linear time to complete.
- *
- *
- * {@link InMemoryStore} can be used as a storage engine for Cineast. That is, there are implementations of
- * {@link PersistencyWriter} and {@link DBSelector} for this store.
+ * This is a very simple in-memory key-value store implementation. It revolves around {@link Entity} objects, that hold instance of {@link PersistentTuple}s. Obtaining such a {@link PersistentTuple} by key can be done in O(1). All other operations take at least linear time to complete.
+ * <p>
+ * <p>
+ * {@link InMemoryStore} can be used as a storage engine for Cineast. That is, there are implementations of {@link PersistencyWriter} and {@link DBSelector} for this store.
  *
  * @see InMemoryWriter
  * @see InMemoryEntityCreator
- *
  */
 public class InMemoryStore {
 
-  /** Shared instance of {@link InMemoryStore}. */
+  /**
+   * Shared instance of {@link InMemoryStore}.
+   */
   private static final InMemoryStore SHARED_STORE = new InMemoryStore();
 
-  /** List of {@link Entity} objects held by this {@link InMemoryStore}. */
-  private final Map<String,Entity> entities = new HashMap<>();
+  /**
+   * List of {@link Entity} objects held by this {@link InMemoryStore}.
+   */
+  private final Map<String, Entity> entities = new HashMap<>();
 
-  /** Stamped lock to mediate access to {@link InMemoryStore}. */
+  /**
+   * Stamped lock to mediate access to {@link InMemoryStore}.
+   */
   private final StampedLock storeLock = new StampedLock();
 
   /**
@@ -44,11 +46,11 @@ public class InMemoryStore {
     return SHARED_STORE;
   }
 
-  public InMemoryStore() {}
+  public InMemoryStore() {
+  }
 
   /**
-   * Returns the {@link Entity} for the given name or an empty {@link Optional}, if that
-   * {@link Entity} doesn't exist.
+   * Returns the {@link Entity} for the given name or an empty {@link Optional}, if that {@link Entity} doesn't exist.
    *
    * @param name Name of the {@link Entity} to return.
    * @return An optional {@link Entity}
@@ -78,10 +80,9 @@ public class InMemoryStore {
   }
 
   /**
-   * Creates and returns the {@link Entity} for the given name or an empty {@link Optional}, if that
-   * {@link Entity} already exists and hence wasn't created.
+   * Creates and returns the {@link Entity} for the given name or an empty {@link Optional}, if that {@link Entity} already exists and hence wasn't created.
    *
-   * @param name Name of the {@link Entity} to create.
+   * @param name    Name of the {@link Entity} to create.
    * @param columns The list of columns to create.
    * @return An optional {@link Entity}
    */
@@ -123,17 +124,22 @@ public class InMemoryStore {
 
   /**
    * An individual {@link Entity} in the {@link InMemoryStore}.
-   *
    */
   public class Entity implements Iterable<PersistentTuple> {
 
-    /** The {@link java.util.Map} that holds all the data stored in this {@link org.vitrivr.cineast.core.db.memory.InMemoryStore.Entity}. */
+    /**
+     * The {@link java.util.Map} that holds all the data stored in this {@link org.vitrivr.cineast.core.db.memory.InMemoryStore.Entity}.
+     */
     private final Map<String, PersistentTuple> store = new TreeMap<>();
 
-    /** Name of the columns held by this {@link Entity}. */
+    /**
+     * Name of the columns held by this {@link Entity}.
+     */
     private final String[] columns;
 
-    /** Stamped lock to mediate access to {@link Entity}. */
+    /**
+     * Stamped lock to mediate access to {@link Entity}.
+     */
     private final StampedLock lock = new StampedLock();
 
     /**
@@ -160,7 +166,7 @@ public class InMemoryStore {
         } else {
           return false;
         }
-      }finally {
+      } finally {
         this.lock.unlockWrite(stamp);
       }
     }
@@ -208,12 +214,10 @@ public class InMemoryStore {
     }
 
     /**
-     * Returns true if this {@link Entity} contains a {@link PersistentTuple} for the given key, and
-     * false otherwise.
+     * Returns true if this {@link Entity} contains a {@link PersistentTuple} for the given key, and false otherwise.
      *
      * @param key The key to look up.
-     * @return True if {@link Entity} contains a {@link PersistentTuple} for the given key, and
-     * false otherwise
+     * @return True if {@link Entity} contains a {@link PersistentTuple} for the given key, and false otherwise
      */
     public boolean has(String key) {
       final long stamp = this.lock.readLock();

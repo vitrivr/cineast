@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.data.providers.primitive;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.googlecode.javaewah.datastructure.BitSet;
-
 import java.util.List;
 
 public interface PrimitiveTypeProvider

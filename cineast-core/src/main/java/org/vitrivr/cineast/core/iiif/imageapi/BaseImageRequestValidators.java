@@ -74,7 +74,9 @@ public class BaseImageRequestValidators {
     return true;
   }
 
-  /** Validates that the float value of a percentage is greater than zero */
+  /**
+   * Validates that the float value of a percentage is greater than zero
+   */
   public static boolean validatePercentageValueGreaterThanZero(float n) {
     if (n <= 0) {
       throw new IllegalArgumentException("Percentage value has to be greater than 0");
@@ -82,7 +84,9 @@ public class BaseImageRequestValidators {
     return true;
   }
 
-  /** Validates that the degree of rotation is >= 0 and < 360 */
+  /**
+   * Validates that the degree of rotation is >= 0 and < 360
+   */
   public static boolean validateRotationDegrees(float degree) {
     if (degree < 0 || degree > 360) {
       throw new IllegalArgumentException("Rotation value can only be between 0° and 360°!");

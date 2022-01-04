@@ -69,7 +69,7 @@ public class CliUtils {
         retriever.getTableNames().forEach(tableName -> {
           selector.open(tableName);
           List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
-          if( retriever.getClass() == RangeBooleanRetriever.class){
+          if (retriever.getClass() == RangeBooleanRetriever.class) {
             rows = selector.getRows("segmentid", new StringTypeProvider(segmentId));
           }
           rows.forEach(row -> {

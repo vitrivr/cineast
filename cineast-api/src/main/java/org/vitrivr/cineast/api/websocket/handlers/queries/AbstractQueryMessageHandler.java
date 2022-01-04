@@ -324,7 +324,6 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param queryId  ID of the running query.
    * @param category Name of the query category.
    * @param raw      List of raw per-category results (segmentId -> score).
-   * @return
    */
   protected List<CompletableFuture<Void>> finalizeAndSubmitResults(Session session, String queryId, String category, int containerId, List<StringDoublePair> raw) {
     StopWatch watch = StopWatch.createStarted();

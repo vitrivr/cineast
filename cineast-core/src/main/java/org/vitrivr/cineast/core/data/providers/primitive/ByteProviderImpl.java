@@ -2,18 +2,18 @@ package org.vitrivr.cineast.core.data.providers.primitive;
 
 public class ByteProviderImpl implements ByteProvider, ShortProvider, IntProvider, LongProvider {
 
-	private final byte value;
-	
-	public ByteProviderImpl(byte value){
-		this.value = value;
-	}
+  private final byte value;
 
-	@Override
-	public byte getByte() {
-		return this.value;
-	}
-	
-	@Override
+  public ByteProviderImpl(byte value) {
+    this.value = value;
+  }
+
+  @Override
+  public byte getByte() {
+    return this.value;
+  }
+
+  @Override
   public short getShort() {
     return this.value;
   }
@@ -28,34 +28,34 @@ public class ByteProviderImpl implements ByteProvider, ShortProvider, IntProvide
     return this.value;
   }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + value;
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + value;
+    return result;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
       return true;
     }
-		if (obj == null) {
+    if (obj == null) {
       return false;
     }
-		if (getClass() != obj.getClass()) {
+    if (getClass() != obj.getClass()) {
       return false;
     }
-		ByteProviderImpl other = (ByteProviderImpl) obj;
-		if (value != other.value) {
+    ByteProviderImpl other = (ByteProviderImpl) obj;
+    if (value != other.value) {
       return false;
     }
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return "ByteProviderImpl [value=" + value + "]";
-	}
+  @Override
+  public String toString() {
+    return "ByteProviderImpl [value=" + value + "]";
+  }
 }

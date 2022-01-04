@@ -14,7 +14,7 @@ public class WeightedSpanNormDistance extends SpanNormDistance {
     }
     this.weights = weights.clone();
   }
-  
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {
@@ -36,5 +36,5 @@ public class WeightedSpanNormDistance extends SpanNormDistance {
 
     return max - min;
   }
-  
+
 }

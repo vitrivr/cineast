@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.standalone.monitoring;
 
-import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Summary;
 import org.apache.logging.log4j.LogManager;

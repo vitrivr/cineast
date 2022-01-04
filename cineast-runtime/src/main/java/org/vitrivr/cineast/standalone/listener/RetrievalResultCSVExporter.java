@@ -1,5 +1,13 @@
 package org.vitrivr.cineast.standalone.listener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
@@ -12,11 +20,6 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.runtime.RetrievalTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.*;
-
 public class RetrievalResultCSVExporter implements RetrievalResultListener {
 
   private static File baseFolder = new File("retrieval_results"); // TODO make configurable
@@ -25,7 +28,7 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
   private final MediaSegmentReader mediaSegmentReader;
   private final MediaObjectReader mediaObjectReader;
 
-  public RetrievalResultCSVExporter(DatabaseConfig databaseConfig){
+  public RetrievalResultCSVExporter(DatabaseConfig databaseConfig) {
     mediaSegmentReader = new MediaSegmentReader(databaseConfig.getSelectorSupplier().get());
     mediaObjectReader = new MediaObjectReader(databaseConfig.getSelectorSupplier().get());
   }
@@ -46,26 +49,25 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
     outFolder.mkdirs();
     File out = new File(outFolder, filename);
 
-
     ArrayList<String> ids = new ArrayList<>(resultList.size());
-    for(ScoreElement e : resultList){
+    for (ScoreElement e : resultList) {
       ids.add(e.getId());
     }
-    
+
     Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(ids);
     Set<String> objectIds = new HashSet<>();
-    
-    for(MediaSegmentDescriptor sd : segments.values()){
+
+    for (MediaSegmentDescriptor sd : segments.values()) {
       objectIds.add(sd.getObjectId());
     }
-    
+
     Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
-    
+
     try (PrintWriter writer = new PrintWriter(out)) {
-      
+
       //header
       writer.println("\"rank\", \"id\", \"score\", \"path\"");
-      
+
       int rank = 1;
       for (ScoreElement e : resultList) {
         writer.print(rank++);

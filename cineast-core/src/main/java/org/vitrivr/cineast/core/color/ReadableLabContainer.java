@@ -70,8 +70,7 @@ public class ReadableLabContainer extends AbstractColorContainer<ReadableLabCont
   }
 
   /**
-   * see Lübbe, Eva (2010). Colours in the Mind - Colour Systems in Reality- A formula for colour
-   * saturation
+   * see Lübbe, Eva (2010). Colours in the Mind - Colour Systems in Reality- A formula for colour saturation
    *
    * @return the saturation
    */
@@ -90,11 +89,16 @@ public class ReadableLabContainer extends AbstractColorContainer<ReadableLabCont
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0:  return L;
-      case 1:  return a;
-      case 2:  return b;
-      case 3:  return alpha;
-      default: throw new IndexOutOfBoundsException(num + ">= 4");
+      case 0:
+        return L;
+      case 1:
+        return a;
+      case 2:
+        return b;
+      case 3:
+        return alpha;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 4");
     }
   }
 
