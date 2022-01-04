@@ -10,7 +10,8 @@ public class NoDBWriter extends AbstractPersistencyWriter<Object> {
   }
 
   @Override
-  public void close() {}
+  public void close() {
+  }
 
   @Override
   public boolean idExists(String id) {

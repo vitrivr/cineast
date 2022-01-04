@@ -42,7 +42,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
   }
 
   @Override
-  public void init(Supplier<DBSelector>  supply) {
+  public void init(Supplier<DBSelector> supply) {
     this.selector = supply.get();
     this.selector.open(tableName);
   }

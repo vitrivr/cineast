@@ -24,7 +24,6 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.BatchedTagWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;

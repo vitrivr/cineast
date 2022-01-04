@@ -1,20 +1,36 @@
 package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.collect.Iterables;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.*;
 
 @Deprecated
 public class ADAMproStreamingSelector extends AbstractADAMproSelector {
@@ -29,7 +45,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(qm);
 
-    if (resultList.isEmpty()){
+    if (resultList.isEmpty()) {
       return Collections.emptyList();
     }
 
@@ -63,23 +79,23 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
 
     NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
-            DataMessageConverter.convertVectorMessage(vector), k, config);
+        DataMessageConverter.convertVectorMessage(vector), k, config);
     QueryMessage sqMessage = this.mb.buildQueryMessage(config.getHints().isEmpty() ? ADAMproMessageBuilder.DEFAULT_HINT : config.getHints(), fromMessage, this.mb.inList("id", config.getRelevantSegmentIds()), ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(sqMessage);
 
-    if (resultList.isEmpty()){
+    if (resultList.isEmpty()) {
       return Collections.emptyList();
     }
 
     List<T> _return = new ArrayList<>(k);
 
-    for (QueryResultsMessage result : resultList){
+    for (QueryResultsMessage result : resultList) {
       AckMessage ack = result.getAck();
       if (ack.getCode() != AckMessage.Code.OK) {
         LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
-        LOGGER.error("Query was {} ",sqMessage.toString());
+        LOGGER.error("Query was {} ", sqMessage.toString());
         continue;
       }
 
@@ -99,22 +115,22 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       List<float[]> vectors, String column, Class<T> distanceElementClass,
       List<ReadableQueryConfig> configs) {
 
-    if(vectors == null || vectors.isEmpty()){
+    if (vectors == null || vectors.isEmpty()) {
       return Collections.emptyList();
     }
 
     List<QueryMessage> messages = new ArrayList<>(vectors.size());
 
-    for(int i = 0; i < vectors.size(); ++i) {
+    for (int i = 0; i < vectors.size(); ++i) {
       float[] vector = vectors.get(i);
       ReadableQueryConfig config = configs.get(i);
 
       NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
           DataMessageConverter.convertVectorMessage(vector), k, config);
       QueryMessage sqMessage = this.mb
-              .buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage,
-                      this.mb.inList("id", config.getRelevantSegmentIds()),
-                      ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+          .buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage,
+              this.mb.inList("id", config.getRelevantSegmentIds()),
+              ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
 
       messages.add(sqMessage);
 
@@ -123,13 +139,13 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(messages);
 
-    if (resultList.isEmpty()){
+    if (resultList.isEmpty()) {
       return Collections.emptyList();
     }
 
     List<T> _return = new ArrayList<>(k);
 
-    for (QueryResultsMessage result : resultList){
+    for (QueryResultsMessage result : resultList) {
       AckMessage ack = result.getAck();
       if (ack.getCode() != AckMessage.Code.OK) {
         LOGGER.error("error in getBatchedNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
@@ -168,7 +184,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(k);
 
-    for(QueryResultsMessage result: resultList) {
+    for (QueryResultsMessage result : resultList) {
 
       if (result.getResponsesCount() == 0) {
         continue;
@@ -181,7 +197,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       if (ack.getCode() != Code.OK) {
         LOGGER.error("error in getNearestNeighbourRows, entity {} ({}) : {}", entityName,
             ack.getCode(), ack.getMessage());
-       continue;
+        continue;
       }
       _return.addAll(resultsToMap(response.getResultsList()));
     }
@@ -195,8 +211,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     ArrayList<QueryResultsMessage> resultList = this.adampro.streamingStandardQuery(qbqm);
     ArrayList<float[]> _return = new ArrayList<>();
 
-
-    for(QueryResultsMessage r : resultList) {
+    for (QueryResultsMessage r : resultList) {
 
       if (r.getResponsesCount() == 0) {
         continue;
@@ -266,7 +281,6 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     final Map<String, String> parameters = new HashMap<>();
     parameters.put("rows", Integer.toString(rows));
 
-
     final StringBuilder sb = new StringBuilder();
     sb.append('(');
     for (String item : terms) {
@@ -306,7 +320,6 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
     QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, bqm, null, null);
     return executeQuery(qbqm);
   }
-
 
 
 }

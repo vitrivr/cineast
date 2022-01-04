@@ -3,8 +3,20 @@ package org.vitrivr.cineast.core.db.adampro;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
@@ -12,13 +24,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @Deprecated
 public abstract class AbstractADAMproSelector implements DBSelector {
@@ -40,7 +45,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
 
   protected final ADAMproWrapper adampro;
 
-  public AbstractADAMproSelector(ADAMproWrapper wrapper){
+  public AbstractADAMproSelector(ADAMproWrapper wrapper) {
     this.adampro = wrapper;
   }
 

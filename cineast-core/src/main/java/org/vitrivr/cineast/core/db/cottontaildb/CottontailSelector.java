@@ -5,7 +5,6 @@ import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
 
-import com.google.common.collect.Lists;
 import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -47,7 +45,9 @@ public final class CottontailSelector implements DBSelector {
    */
   private final CottontailWrapper cottontail;
 
-  /** The fully qualified name of the entity handled by this {@link CottontailSelector}. */
+  /**
+   * The fully qualified name of the entity handled by this {@link CottontailSelector}.
+   */
   private String fqn;
 
   public CottontailSelector(CottontailWrapper wrapper) {
@@ -190,7 +190,7 @@ public final class CottontailSelector implements DBSelector {
     if (projection.isEmpty()) {
       query.select("*", null);
     } else {
-      for (String p: projection) {
+      for (String p : projection) {
         query.select(p, null);
       }
     }
@@ -287,7 +287,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
     final Query query = new Query(this.fqn);
-    for (String c: columns) {
+    for (String c : columns) {
       query.select(c, null);
     }
     if (limit > 0) {

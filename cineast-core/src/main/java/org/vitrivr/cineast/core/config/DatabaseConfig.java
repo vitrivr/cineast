@@ -2,12 +2,14 @@ package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.vitrivr.cineast.core.db.*;
+import java.util.function.Supplier;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DataSource;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
-import java.util.function.Supplier;
-
 public final class DatabaseConfig {
+
   /**
    * Default value for batchsize.
    */
@@ -25,7 +27,8 @@ public final class DatabaseConfig {
   private Integer batchsize = DEFAULT_BATCH_SIZE;
 
   @JsonCreator
-  public DatabaseConfig() {}
+  public DatabaseConfig() {
+  }
 
   @JsonProperty
   public String getHost() {
@@ -91,7 +94,9 @@ public final class DatabaseConfig {
     return this.writer.getWriterSupplier(this);
   }
 
-  public Supplier<EntityCreator> getEntityCreatorSupplier() { return this.writer.getEntityCreatorSupplier(this); }
+  public Supplier<EntityCreator> getEntityCreatorSupplier() {
+    return this.writer.getEntityCreatorSupplier(this);
+  }
 
   public Supplier<DBSelector> getSelectorSupplier() {
     return this.writer.getSelectorSupplier(this);

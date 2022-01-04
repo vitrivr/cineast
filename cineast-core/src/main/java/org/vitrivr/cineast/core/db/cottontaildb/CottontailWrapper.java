@@ -1,19 +1,15 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import io.grpc.ConnectivityState;
-import java.util.HashMap;
-import kotlin.jvm.Synchronized;
-import org.apache.commons.lang3.time.StopWatch;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
-
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
+import kotlin.jvm.Synchronized;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cottontail.client.SimpleClient;
 
 public final class CottontailWrapper implements AutoCloseable {
@@ -24,14 +20,15 @@ public final class CottontailWrapper implements AutoCloseable {
   public static final String WARREN_PREFIX = "warren";
   public static final String FQN_CINEAST_SCHEMA = WARREN_PREFIX + "." + CINEAST_SCHEMA;
 
-  /** Internal connection pool to re-use managed channels. */
+  /**
+   * Internal connection pool to re-use managed channels.
+   */
   private static final Map<String, ManagedChannel> POOL = new HashMap<>();
 
   /**
    * Returns a {@link ManagedChannel} object for the given database configuration.
-   *
-   * Tries to re-use existing {@link ManagedChannel} objects. Currently, {@link ManagedChannel} are kept
-   * alive as long as Cineast runs.
+   * <p>
+   * Tries to re-use existing {@link ManagedChannel} objects. Currently, {@link ManagedChannel} are kept alive as long as Cineast runs.
    *
    * @param host Hostname of the Cottontail DB server.
    * @param port Port of the Cottontail DB server.

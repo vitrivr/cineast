@@ -26,7 +26,6 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFulltextFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -70,7 +69,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   }
 
   @Override
-  public void init(Supplier<DBSelector>  selectorSupply) {
+  public void init(Supplier<DBSelector> selectorSupply) {
     this.selector = selectorSupply.get();
     this.selector.open(this.getEntityName());
   }

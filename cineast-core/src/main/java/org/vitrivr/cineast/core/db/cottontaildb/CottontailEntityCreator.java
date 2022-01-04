@@ -7,8 +7,17 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import io.grpc.StatusRuntimeException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
@@ -18,26 +27,17 @@ import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 import org.vitrivr.cottontail.client.language.ddl.CreateIndex;
 import org.vitrivr.cottontail.client.language.ddl.CreateSchema;
 import org.vitrivr.cottontail.client.language.ddl.DropEntity;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.TagReader;
-import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cottontail.client.language.ddl.ListSchemas;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType;
 
 public final class CottontailEntityCreator implements EntityCreator {
 
   public static final String COTTONTAIL_PREFIX = "cottontail";
-  public static final String INDEX_HINT = COTTONTAIL_PREFIX+".index";
+  public static final String INDEX_HINT = COTTONTAIL_PREFIX + ".index";
 
-  /** Internal reference to the {@link CottontailWrapper} used by this {@link CottontailEntityCreator}. */
+  /**
+   * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailEntityCreator}.
+   */
   private final CottontailWrapper cottontail;
 
   public CottontailEntityCreator(CottontailWrapper cottontailWrapper) {
@@ -255,7 +255,7 @@ public final class CottontailEntityCreator implements EntityCreator {
         }
         // TODO (LS, 18.11.2020) Shouldn't we also have abstract indices in the db abstraction layer?
         final Optional<String> hint = attribute.getHint(INDEX_HINT);
-        if (hint.isPresent()){
+        if (hint.isPresent()) {
           IndexType idx = IndexType.valueOf(hint.get());
           this.createIndex(CottontailWrapper.CINEAST_SCHEMA + "." + def.getEntityName(), attribute.getName(), idx, txId);
         }
