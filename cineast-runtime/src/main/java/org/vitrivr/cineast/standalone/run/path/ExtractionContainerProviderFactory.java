@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.standalone.run.path;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 
 public class ExtractionContainerProviderFactory {
@@ -16,11 +15,10 @@ public class ExtractionContainerProviderFactory {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Tries to create a {@link TreeWalkContainerIteratorProvider}. Will however create a {@link
-   * NoContainerProvider} if something goes wrong.
+   * Tries to create a {@link TreeWalkContainerIteratorProvider}. Will however create a {@link NoContainerProvider} if something goes wrong.
    */
   public static ExtractionContainerProvider tryCreatingTreeWalkPathProvider(File jobFile, ExtractionContextProvider context) {
-        /* Check if context could be read and an input path was specified. */
+    /* Check if context could be read and an input path was specified. */
     if (context == null || !context.inputPath().isPresent()) {
       return new NoContainerProvider();
     }

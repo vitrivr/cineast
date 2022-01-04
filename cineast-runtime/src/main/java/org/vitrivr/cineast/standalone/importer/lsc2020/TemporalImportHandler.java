@@ -9,8 +9,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 
 /**
- * Handler of temporal imports.
- * Basically uses file (i.e. segment id) information to populate segmentstart and segmentend fields
+ * Handler of temporal imports. Basically uses file (i.e. segment id) information to populate segmentstart and segmentend fields
  */
 public class TemporalImportHandler extends DataImportHandler {
 
@@ -28,10 +27,10 @@ public class TemporalImportHandler extends DataImportHandler {
 
 
   @Override
-  public void doImport(final Path path){
-    try{
+  public void doImport(final Path path) {
+    try {
       LSCUtilities.create(path);
-    }catch (IOException | CsvException e){
+    } catch (IOException | CsvException e) {
       LOGGER.fatal("Error during initialisation:", e);
       LOGGER.fatal("Stopping immediately.");
       return;

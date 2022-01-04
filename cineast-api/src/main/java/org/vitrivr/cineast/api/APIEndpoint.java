@@ -438,9 +438,6 @@ public class APIEndpoint {
 
   /**
    * If configured, this registers two special routes that serve the media objects as media content and additionally a thumbnails endpoint for them.
-   *
-   * @param service
-   * @param config
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {

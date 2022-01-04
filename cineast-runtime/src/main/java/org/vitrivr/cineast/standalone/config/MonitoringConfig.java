@@ -19,12 +19,14 @@ public final class MonitoringConfig {
   }
 
   @JsonCreator
-  public MonitoringConfig(){}
+  public MonitoringConfig() {
+  }
 
   @JsonProperty
   public boolean getEnablePrometheus() {
     return enablePrometheus;
   }
+
   public void setEnablePrometheus(boolean enablePrometheus) {
     this.enablePrometheus = enablePrometheus;
   }

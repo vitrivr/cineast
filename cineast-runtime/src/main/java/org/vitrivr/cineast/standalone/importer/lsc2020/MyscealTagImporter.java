@@ -32,8 +32,7 @@ public class MyscealTagImporter implements Importer<Map<String, PrimitiveTypePro
 
   /**
    * @param file      - The JSON file with the tags
-   * @param tagLookup - Whether the import is for the taglookup or actual tags with scores (true for
-   *                  lookup)
+   * @param tagLookup - Whether the import is for the taglookup or actual tags with scores (true for lookup)
    */
   public MyscealTagImporter(final Path file, boolean tagLookup) {
     this.file = file;
@@ -44,7 +43,7 @@ public class MyscealTagImporter implements Importer<Map<String, PrimitiveTypePro
       tagScoreIterator = reader.getTagScoreMap().entrySet().iterator();
       if (tagLookup) {
         tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-      }else{
+      } else {
         tagReader = null;
       }
     } catch (IOException e) {
@@ -54,28 +53,25 @@ public class MyscealTagImporter implements Importer<Map<String, PrimitiveTypePro
 
   @Override
   public Map<String, PrimitiveTypeProvider> readNext() {
-    if(this.tagLookup){
+    if (this.tagLookup) {
       return readNextTagLookup();
-    }else {
+    } else {
       return readNextTagScore();
     }
   }
 
   /**
-   * Returns the next tag score element.
-   * In other words, this returns the next triple segmentId, tagId, score als long as there are these triples.
-   * Those triples are constructed by first getting the current segmentId and then iterating over this segment's tags until they are all processed
-   * @return
+   * Returns the next tag score element. In other words, this returns the next triple segmentId, tagId, score als long as there are these triples. Those triples are constructed by first getting the current segmentId and then iterating over this segment's tags until they are all processed
    */
   private Map<String, PrimitiveTypeProvider> readNextTagScore() {
-    do{
-      if(currentSegmentId == null && tagScoreIterator.hasNext()){
+    do {
+      if (currentSegmentId == null && tagScoreIterator.hasNext()) {
         /* Get current segment id and iterator */
-        final Map.Entry<String, List<Pair<String,Float>>> entry = tagScoreIterator.next();
+        final Map.Entry<String, List<Pair<String, Float>>> entry = tagScoreIterator.next();
         currentSegmentId = entry.getKey();
         currentIterator = entry.getValue().iterator();
       }
-      if(currentIterator.hasNext()){
+      if (currentIterator.hasNext()) {
         /* Commit current segment tag with score */
         final Pair<String, Float> segmentTag = currentIterator.next();
         final Map<String, PrimitiveTypeProvider> map = new HashMap<>();
@@ -83,12 +79,12 @@ public class MyscealTagImporter implements Importer<Map<String, PrimitiveTypePro
         map.put("tagid", PrimitiveTypeProvider.fromObject(segmentTag.first));
         map.put("score", PrimitiveTypeProvider.fromObject(segmentTag.second));
         return map;
-      }else{
+      } else {
         /* Reset current iterator & segmentId */
         currentIterator = null;
         currentSegmentId = null;
       }
-    }while(currentIterator == null && tagScoreIterator.hasNext());
+    } while (currentIterator == null && tagScoreIterator.hasNext());
     return null;
   }
 

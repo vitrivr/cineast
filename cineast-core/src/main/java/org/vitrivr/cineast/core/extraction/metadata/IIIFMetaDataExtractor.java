@@ -1,4 +1,3 @@
-
 package org.vitrivr.cineast.core.extraction.metadata;
 
 import java.io.File;

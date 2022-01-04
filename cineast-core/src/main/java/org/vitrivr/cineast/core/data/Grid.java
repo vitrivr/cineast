@@ -12,7 +12,8 @@ public interface Grid<T> {
 
   /**
    * returns and removes the element at (x,y).
-   * @return the element at position (x,y) or null if there was no such element 
+   *
+   * @return the element at position (x,y) or null if there was no such element
    */
   T remove(int x, int y);
 
@@ -20,7 +21,7 @@ public interface Grid<T> {
    * compacts the grid by removing unnecessary data structures.
    */
   void compact();
-  
+
   Set<Position> getKeySet();
 
 }

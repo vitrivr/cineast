@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
 public enum ProviderDataType {
-  
+
   BOOLEAN,
   BYTE,
   SHORT,
@@ -13,5 +13,5 @@ public enum ProviderDataType {
   DOUBLE,
   STRING,
   UNKNOWN, BITSET;
-  
+
 }

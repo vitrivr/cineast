@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.types.TUint8;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -10,10 +16,12 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.*;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLab;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabAde20k;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabCityscapes;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabPascalVoc;
 import org.vitrivr.cineast.core.util.GridPartitioner;
-
-import java.util.*;
 
 public class ConceptMasks extends AbstractFeatureModule {
 
@@ -87,7 +95,6 @@ public class ConceptMasks extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
 
     Optional<SemanticMap> optional = sc.getSemanticMap();
     if (!optional.isPresent()) {

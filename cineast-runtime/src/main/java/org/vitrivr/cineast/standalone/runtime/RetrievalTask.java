@@ -64,8 +64,8 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
 
   private void nameThread() {
     String currentThreadName = Thread.currentThread().getName();
-    if(!currentThreadName.endsWith(retriever.getClass().getSimpleName())){
-      Thread.currentThread().setName(currentThreadName.substring(0, currentThreadName.lastIndexOf('-'))+"-"+retriever.getClass().getSimpleName());
+    if (!currentThreadName.endsWith(retriever.getClass().getSimpleName())) {
+      Thread.currentThread().setName(currentThreadName.substring(0, currentThreadName.lastIndexOf('-')) + "-" + retriever.getClass().getSimpleName());
     }
   }
 

@@ -13,11 +13,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
- * An {@link ExtractionItemContainer} contains all information for ONE item which is supposed to be
- * extracted. A container MUST contain a {@link #path} linking to the item to be extracted. The
- * corresponding {@link #object} MUST contain the {@link MediaObjectDescriptor#getMediatype()} so an
- * item can be handed out to different extractionhandlers.
- *
+ * An {@link ExtractionItemContainer} contains all information for ONE item which is supposed to be extracted. A container MUST contain a {@link #path} linking to the item to be extracted. The corresponding {@link #object} MUST contain the {@link MediaObjectDescriptor#getMediatype()} so an item can be handed out to different extractionhandlers.
  */
 public class ExtractionItemContainer {
 
@@ -56,16 +52,13 @@ public class ExtractionItemContainer {
 
   /**
    * To make fasterxml/jackson happy.
-   *
-   * @return
    */
   public String getUri() {
     return uri;
   }
 
   /**
-   * If a path has been specified directly, returns the path. If no path has been specified, tries
-   * to construct a path from the path of the underlying {@link MediaObjectDescriptor}
+   * If a path has been specified directly, returns the path. If no path has been specified, tries to construct a path from the path of the underlying {@link MediaObjectDescriptor}
    */
   @JsonIgnore
   public Path getPathForExtraction() {

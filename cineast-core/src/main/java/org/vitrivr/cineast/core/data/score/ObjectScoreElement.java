@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.score;
 
 public class ObjectScoreElement extends AbstractScoreElement {
+
   public ObjectScoreElement(String objectId, double score) {
     super(objectId, score);
   }

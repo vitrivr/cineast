@@ -3,6 +3,9 @@ package org.vitrivr.cineast.core.features;
 import boofcv.abst.feature.dense.DescribeImageDense;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayU8;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -15,10 +18,6 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
 import org.vitrivr.cineast.core.util.images.HOGHelper;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class HOG extends AbstractCodebookFeatureModule {
@@ -82,7 +81,7 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
    * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of ScoreElements is returned by the feature module during retrieval.
    *
    * @param partialResults List of partial results returned by the lookup stage.
-   * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
+   * @param qc             A ReadableQueryConfig object that contains query-related configuration parameters.
    * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
    */
   @Override

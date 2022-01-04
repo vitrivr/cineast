@@ -1,16 +1,6 @@
 package org.vitrivr.cineast.standalone.run.path;
 
 import io.prometheus.client.Counter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
-
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -19,6 +9,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
+import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 
 /*
  * Recursively add all files under that path to the List of files that should be processed. Uses
@@ -51,7 +49,7 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
       pathIterator = Files.walk(resolvedStartPath, this.depth, FileVisitOption.FOLLOW_LINKS)
           .filter(p -> {
             try {
-              return Files.exists(p)  && !Files.isHidden(p) && Files.isReadable(p);
+              return Files.exists(p) && !Files.isHidden(p) && Files.isReadable(p);
             } catch (IOException e) {
               LOGGER.error("An IO exception occurred while testing the media file at '{}': {}", p.toString(), LogHelper.getStackTrace(e));
               return false;
@@ -77,8 +75,7 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
   }
 
   /**
-   * Since no elements are added to the iterator, this provider is also closed when the iterator
-   * does not have further elements.
+   * Since no elements are added to the iterator, this provider is also closed when the iterator does not have further elements.
    */
   @Override
   public boolean isOpen() {

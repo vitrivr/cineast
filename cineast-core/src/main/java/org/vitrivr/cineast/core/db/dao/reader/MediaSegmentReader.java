@@ -1,23 +1,25 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
+
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringProviderImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.db.DBSelector;
 
 public class MediaSegmentReader extends AbstractEntityReader {
 
@@ -45,7 +47,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
         && properties.containsKey(FIELDNAMES[6])) {
 
       return Optional.of(
-              new MediaSegmentDescriptor(
+          new MediaSegmentDescriptor(
               properties.get(FIELDNAMES[1]).getString(),
               properties.get(FIELDNAMES[0]).getString(),
               properties.get(FIELDNAMES[2]).getInt(),
@@ -87,12 +89,12 @@ public class MediaSegmentReader extends AbstractEntityReader {
     return Multimaps.index(descriptors.iterator(), MediaSegmentDescriptor::getObjectId);
   }
 
-  public List<MediaSegmentDescriptor> lookUpSegmentByNumber(String objectId, int segmentNumber){
+  public List<MediaSegmentDescriptor> lookUpSegmentByNumber(String objectId, int segmentNumber) {
     List<MediaSegmentDescriptor> all = this.lookUpSegmentsOfObject(objectId);
     return all.stream().filter(it -> it.getSequenceNumber() == segmentNumber).collect(Collectors.toList());
   }
 
-  public List<MediaSegmentDescriptor> lookUpSegmentsByNumberRange(String objectId, int lower, int upper){ //TODO implementing this without selecting all segments would require additional functionality in DBSelector
+  public List<MediaSegmentDescriptor> lookUpSegmentsByNumberRange(String objectId, int lower, int upper) { //TODO implementing this without selecting all segments would require additional functionality in DBSelector
     List<MediaSegmentDescriptor> all = this.lookUpSegmentsOfObject(objectId);
     return all.stream().filter(it -> it.getSequenceNumber() >= lower && it.getSequenceNumber() <= upper).collect(Collectors.toList());
   }

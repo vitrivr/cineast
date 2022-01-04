@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.standalone.util;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
@@ -14,10 +17,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
 import org.vitrivr.cineast.standalone.runtime.ContinuousQueryDispatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class ContinuousRetrievalLogic {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -25,7 +24,7 @@ public class ContinuousRetrievalLogic {
   private final RetrieverInitializer initializer;
   private final MediaSegmentReader segmentReader;
 
-  public ContinuousRetrievalLogic(DatabaseConfig config){
+  public ContinuousRetrievalLogic(DatabaseConfig config) {
     this.config = config;
     this.initializer = r -> r.init(this.config.getSelectorSupplier());
     this.segmentReader = new MediaSegmentReader(this.config.getSelectorSupplier().get());

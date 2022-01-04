@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
 
 /**
- * So we don't clutter the {@link org.vitrivr.cineast.standalone.runtime.ExtractionTask} code.
- * Singleton where you can register an extraction time of features
- *
+ * So we don't clutter the ExtractionTask code. Singleton where you can register an extraction time of features
  */
 public class PrometheusExtractionTaskMonitor extends ImportTaskMonitor {
 

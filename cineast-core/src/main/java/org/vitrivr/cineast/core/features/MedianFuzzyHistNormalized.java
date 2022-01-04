@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.List;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -11,8 +12,6 @@ import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogram;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
-
-import java.util.List;
 
 public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 
