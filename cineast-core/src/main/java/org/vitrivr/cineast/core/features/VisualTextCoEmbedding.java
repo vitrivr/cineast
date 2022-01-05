@@ -77,31 +77,31 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   }
 
   @Override
-  public void processSegment(SegmentContainer shot) {
+  public void processSegment(SegmentContainer sc) {
     // Return if already processed
-    if (phandler.idExists(shot.getId())) {
+    if (phandler.idExists(sc.getId())) {
       return;
     }
 
     // Case: segment contains video frames
-    if (!(shot.getVideoFrames().size() > 0 && shot.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
-      List<MultiImage> frames = shot.getVideoFrames().stream()
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
+      List<MultiImage> frames = sc.getVideoFrames().stream()
           .map(VideoFrame::getImage)
           .collect(Collectors.toList());
 
       float[] embeddingArray = embedVideo(frames);
-      this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+      this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
 
       return;
     }
 
     // Case: segment contains image
-    if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 
       if (image != null) {
         float[] embeddingArray = embedImage(image);
-        this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+        this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
       }
 
       // Insert return here if additional cases are added!

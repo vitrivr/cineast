@@ -68,7 +68,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
     }
 
     // Case: segment contains video frames
-    if (!(sc.getVideoFrames().size() > 0 && sc.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
       List<MultiImage> frames = sc.getVideoFrames().stream()
           .map(VideoFrame::getImage)
           .collect(Collectors.toList());
@@ -96,7 +96,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     float[] encodingArray = null;
 
-    if (!(sc.getVideoFrames().size() > 0 && sc.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
       // Case: segment contains video frames
       List<MultiImage> frames = sc.getVideoFrames().stream()
           .map(VideoFrame::getImage)
@@ -175,13 +175,13 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
    * @return Mean of frame encodings as float array.
    */
   public static float[] encodeVideo(List<MultiImage> frames) {
-    List<float[]> encodings = frames.stream().map(image -> InceptionResnetV2.encodeImage(image.getBufferedImage())).collect(Collectors.toList());
+    List<float[]> encodings = frames.stream().map(image -> encodeImage(image.getBufferedImage())).collect(Collectors.toList());
 
     // Sum
-    float[] meanEncoding = encodings.stream().reduce(new float[InceptionResnetV2.ENCODING_SIZE], (encoding0, encoding1) -> {
-      float[] tempSum = new float[InceptionResnetV2.ENCODING_SIZE];
+    float[] meanEncoding = encodings.stream().reduce(new float[ENCODING_SIZE], (encoding0, encoding1) -> {
+      float[] tempSum = new float[ENCODING_SIZE];
 
-      for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
+      for (int i = 0; i < ENCODING_SIZE; i++) {
         tempSum[i] = encoding0[i] + encoding1[i];
       }
 
@@ -189,7 +189,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
     });
 
     // Calculate mean
-    for (int i = 0; i < InceptionResnetV2.ENCODING_SIZE; i++) {
+    for (int i = 0; i < ENCODING_SIZE; i++) {
       meanEncoding[i] /= encodings.size();
     }
 
