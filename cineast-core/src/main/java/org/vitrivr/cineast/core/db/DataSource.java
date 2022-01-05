@@ -50,7 +50,7 @@ public enum DataSource {
       case COTTONTAIL:
         return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()));
       case POLYPHENY:
-        return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost()));
+        return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost(), config.getPort()));
       case JSON:
         return () -> new JsonFileWriter(new File(config.getHost()));
       case ADAMPRO:
@@ -73,7 +73,7 @@ public enum DataSource {
       case COTTONTAIL:
         return () -> new CottontailSelector(new CottontailWrapper(config.getHost(), config.getPort()));
       case POLYPHENY:
-        return () -> new PolyphenySelector(new PolyphenyWrapper(config.getHost()));
+        return () -> new PolyphenySelector(new PolyphenyWrapper(config.getHost(), config.getPort()));
       case JSON:
         return () -> new JsonSelector(new File(config.getHost()));
       case ADAMPRO:
@@ -98,7 +98,7 @@ public enum DataSource {
       case COTTONTAIL:
         return () -> new CottontailEntityCreator(new CottontailWrapper(config.getHost(), config.getPort()));
       case POLYPHENY:
-        return () -> new PolyphenyEntityCreator(new PolyphenyWrapper(config.getHost()));
+        return () -> new PolyphenyEntityCreator(new PolyphenyWrapper(config.getHost(), config.getPort()));
       case ADAMPRO:
         return () -> new ADAMproEntityCreator(new ADAMproWrapper(config));
       default:
