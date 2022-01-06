@@ -56,6 +56,6 @@ public class PolyphenyIntegrationDBProvider implements IntegrationDBProvider<Pre
 
   @Override
   public void close() {
-    /* No op. */
+    this.wrapper.close();
   }
 }
