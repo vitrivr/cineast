@@ -222,15 +222,17 @@ public final class PolyphenyEntityCreator implements EntityCreator {
             throw new RuntimeException("Type " + attribute.getType() + " has no matching analogue in Cottontail DB");
         }
 
-        if (attribute.getHint(NULLABLE_HINT).map(h -> h.equals(Boolean.TRUE.toString())).orElse(true)) {
-          builder.append("NULL");
-        } else {
-          builder.append("NOT NULL");
-        }
-
         if (attribute.getHint(PK_HINT).map(h -> h.equals(Boolean.TRUE.toString())).orElse(false)) {
           pk.add(attribute.getName());
+          builder.append("NOT NULL");
+        } else {
+          if (attribute.getHint(NULLABLE_HINT).map(h -> h.equals(Boolean.TRUE.toString())).orElse(true)) {
+            builder.append("NULL");
+          } else {
+            builder.append("NOT NULL");
+          }
         }
+
         if ((index++) < entityDefinition.getAttributes().size() - 1) {
           builder.append(", ");
         }
