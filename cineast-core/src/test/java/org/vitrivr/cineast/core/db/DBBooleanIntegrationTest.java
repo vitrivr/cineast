@@ -51,19 +51,19 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBBooleanIntegrationTest<R> {
 
-  private static final int TABLE_CARD = 20;
-  private DBSelector selector;
-  private String testTableName;
-  private PersistencyWriter<R> writer;
-  private EntityCreator ec;
-  private QueryConfig queryConfig;
+  protected static final int TABLE_CARD = 20;
+  protected DBSelector selector;
+  protected String testTableName;
+  protected PersistencyWriter<R> writer;
+  protected EntityCreator ec;
+  protected QueryConfig queryConfig;
 
-  private static final String ID_COL_NAME = "id";
-  private static final String DATA_COL_NAME_1 = "data_1_string_data_id";
-  private static final String DATA_COL_NAME_2 = "data_2_id_negative";
-  private static final String DATA_COL_NAME_3 = "data_3_id_plus_card";
+  protected static final String ID_COL_NAME = "id";
+  protected static final String DATA_COL_NAME_1 = "data_1_string_data_id";
+  protected static final String DATA_COL_NAME_2 = "data_2_id_negative";
+  protected static final String DATA_COL_NAME_3 = "data_3_id_plus_card";
 
-  private IntegrationDBProvider<R> provider;
+  protected IntegrationDBProvider<R> provider;
 
   protected static final Logger LOGGER = LogManager.getLogger();
 
@@ -139,19 +139,19 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("Ping the database")
-  void ping() {
+  public void ping() {
     Assertions.assertTrue(provider.getSelector().ping());
   }
 
   @Test
   @DisplayName("Verify entity creation")
-  void entitiesExist() {
+  public void entitiesExist() {
     Assertions.assertTrue(selector.existsEntity(testTableName));
   }
 
   @Test
   @DisplayName("Verify element count")
-  void count() {
+  public void count() {
     selector.open(testTableName);
     Assertions.assertEquals(TABLE_CARD, selector.getAll().size());
     Assertions.assertEquals(TABLE_CARD, selector.getAll(DATA_COL_NAME_1).size());
@@ -159,7 +159,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("Verify unique value count")
-  void uniqueValueCountCorrect() {
+  public void uniqueValueCountCorrect() {
     selector.open(testTableName);
     Assertions.assertEquals(TABLE_CARD, selector.getUniqueValues(ID_COL_NAME).size());
     Assertions.assertEquals(TABLE_CARD, selector.getUniqueValues(DATA_COL_NAME_1).size());
@@ -169,7 +169,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test fulltext query")
-  void testFulltextQuery() {
+  public void testFulltextQuery() {
     this.selector.open(testTableName);
     int idToCheck = TABLE_CARD - 1;
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
@@ -180,7 +180,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test IN() query")
-  void testInQuery() {
+  public void testInQuery() {
     selector.open(testTableName);
     // test latest entry
     int idToCheck = TABLE_CARD - 1;
@@ -195,21 +195,21 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test BETWEEN() query")
-  void testBetweenQuery() {
-    selector.open(testTableName);
+  public void testBetweenQuery() {
+    this.selector.open(testTableName);
     int idToCheck = TABLE_CARD - 1;
-    List<PrimitiveTypeProvider> values = new ArrayList<>();
+    final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
     values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
     MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
   }
 
   @Test
   @DisplayName("test Greater() query")
-  void testGreaterQuery() {
-    selector.open(testTableName);
+  public void testGreaterQuery() {
+    this.selector.open(testTableName);
     int idToCheck = TABLE_CARD - 2; // query for greater than second-highest value
     if (idToCheck < -1) Assertions.fail(); // cardinality should be higher than 2
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
@@ -220,7 +220,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test Less() query")
-  void testLessQuery() {
+  public void testLessQuery() {
     selector.open(testTableName);
     int idToCheck = 1;
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
@@ -232,7 +232,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test BETWEEN() AND BETWEEN() query")
-  void testBetweenANDBetweenQuery() {
+  public void testBetweenANDBetweenQuery() {
     selector.open(testTableName);
     int idToCheck = TABLE_CARD / 2;
 
@@ -257,7 +257,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @Test
   @DisplayName("test BETWEEN() AND IN() query")
-  void testBetweenANDInQuery() {
+  public void testBetweenANDInQuery() {
     selector.open(testTableName);
     int idToCheck = TABLE_CARD / 2;
 

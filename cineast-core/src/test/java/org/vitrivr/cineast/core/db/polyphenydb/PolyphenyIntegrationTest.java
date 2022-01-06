@@ -1,10 +1,21 @@
 package org.vitrivr.cineast.core.db.polyphenydb;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+
 import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBIntegrationTest;
 import org.vitrivr.cineast.core.db.IntegrationDBProvider;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailIntegrationDBProvider;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 
 public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatement> {
@@ -21,6 +32,17 @@ public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatemen
     }
   }
 
+  /**
+   * Create both a table for vector retrieval & text retrieval
+   */
+  @Override
+  protected void createTables() {
+    final HashMap<String,String > hints = new HashMap<>();
+    hints.put("pk", "true");
+    this.ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
+    this.ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));
+  }
+
   @Override
   public void finishSetup() {
     //no-op
@@ -34,5 +56,65 @@ public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatemen
   @Override
   protected IntegrationDBProvider<PreparedStatement> provider() {
     return _provider;
+  }
+
+  /**
+   * This test verifies that a simple "hello" query retrieves exact and partial matches, but no fuzziness
+   */
+  @Test
+  @DisplayName("Text: One el, no quotes")
+  @Disabled
+  @Override
+  public void textRetrievalSingleLike() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+  @Test
+  @DisplayName("Text: two words, inverted, no quotes")
+  @Disabled
+  @Override
+  public void textRetrievalSingleTwoWordsLike() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+  @Test
+  @DisplayName("Text: One el (two words), quotes")
+  @Disabled
+  @Override
+  public void textRetrievalSingleTwoWordsQuotedLike() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+  @Test
+  @DisplayName("Text: One el, one word, Fuzzy")
+  @Disabled
+  @Override
+  public void testRetrievalSingleFuzzy() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+
+  @Test
+  @DisplayName("Text: Two elements w/ single word")
+  @Disabled
+  @Override
+  public void testRetrievalTwo() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+  @Test
+  @DisplayName("Text: Three elements, two are a match for the same id")
+  @Disabled
+  @Override
+  public void testRetrievalThreeDouble() {
+    /* TODO: Not supported by Polypheny DB yet. */
+  }
+
+  @Test
+  @DisplayName("Text: Three els, one of those with quotes")
+  @Disabled
+  @Override
+  public void testRetrievalThree() {
+    /* TODO: Not supported by Polypheny DB yet. */
   }
 }

@@ -6,6 +6,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_Q
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,6 +33,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.db.polypheny.PolyphenyWrapper;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -45,22 +47,22 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBIntegrationTest<R> {
 
-  private DBSelector selector;
-  private String testTextTableName;
-  private String testVectorTableName;
-  private PersistencyWriter<R> writer;
-  private EntityCreator ec;
-  private QueryConfig queryConfig;
-  private static final String ID_COL_NAME = "id";
-  private static final int VECTOR_ELEMENT_COUNT = 11;
-  private static final int MAX_VECTOR_ID = 10;
-  private static final int TEXT_ELEMENT_COUNT = 8;
-  private static final int MAX_TEXT_ID = 7;
+  protected DBSelector selector;
+  protected String testTextTableName;
+  protected String testVectorTableName;
+  protected PersistencyWriter<R> writer;
+  protected EntityCreator ec;
+  protected QueryConfig queryConfig;
+  protected static final String ID_COL_NAME = "id";
+  protected static final int VECTOR_ELEMENT_COUNT = 11;
+  protected static final int MAX_VECTOR_ID = 10;
+  protected static final int TEXT_ELEMENT_COUNT = 8;
+  protected static final int MAX_TEXT_ID = 7;
   /**
    * This is not called "feature" by design as it avoid the storage-layers doing optimization by col name
    */
-  private static final String FEATURE_VECTOR_COL_NAME = "vector";
-  private static final String TEXT_COL_NAME = "text";
+  protected static final String FEATURE_VECTOR_COL_NAME = "vector";
+  protected static final String TEXT_COL_NAME = "text";
   protected static final Logger LOGGER = LogManager.getLogger();
 
   private IntegrationDBProvider<R> provider;
@@ -145,10 +147,10 @@ public abstract class DBIntegrationTest<R> {
       vector[0] = i;
       vector[1] = 1;
       vector[2] = 0;
-      vectors.add(writer.generateTuple(i, vector));
+      vectors.add(writer.generateTuple(String.valueOf(i), vector));
     }
     /* We write a second vector with the same id in the db */
-    vectors.add(writer.generateTuple(0, new float[]{0, 0, 0}));
+    vectors.add(writer.generateTuple(String.valueOf(0), new float[]{0, 0, 0}));
     writer.persist(vectors);
   }
 
@@ -156,8 +158,8 @@ public abstract class DBIntegrationTest<R> {
    * Create both a table for vector retrieval & text retrieval
    */
   protected void createTables() {
-    ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
-    ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));
+    this.ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
+    this.ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));
   }
 
   protected void dropTables() {
@@ -222,8 +224,8 @@ public abstract class DBIntegrationTest<R> {
   @Test
   @DisplayName("get multiple feature vectors")
   void getFeatureVectors() {
-    selector.open(testVectorTableName);
-    List<PrimitiveTypeProvider> vectors = selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider("0"), FEATURE_VECTOR_COL_NAME);
+    this.selector.open(testVectorTableName);
+    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider("0"), FEATURE_VECTOR_COL_NAME);
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }
@@ -291,7 +293,7 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el, no quotes")
-  void textRetrievalSingleLike() {
+  public void textRetrievalSingleLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello");
     Assertions.assertEquals(3, results.size());
@@ -305,7 +307,7 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: two words, inverted, no quotes")
-  void textRetrievalSingleTwoWordsLike() {
+  public void textRetrievalSingleTwoWordsLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "name my");
     Assertions.assertEquals(1, results.size());
@@ -318,7 +320,7 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el (two words), quotes")
-  void textRetrievalSingleTwoWordsQuotedLike() {
+  public void textRetrievalSingleTwoWordsQuotedLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "\"hello world\"");
     Assertions.assertEquals(2, results.size());
@@ -331,7 +333,7 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el, one word, Fuzzy")
-  void testRetrievalSingleFuzzy() {
+  public void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello~1");
     Assertions.assertEquals(4, results.size());
@@ -359,7 +361,7 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: Two elements w/ single word")
-  void testRetrievalTwo() {
+  public void testRetrievalTwo() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "single", "double");
     Assertions.assertEquals(2, results.size());
@@ -369,7 +371,7 @@ public abstract class DBIntegrationTest<R> {
 
   @Test
   @DisplayName("Text: Three elements, two are a match for the same id")
-  void testRetrievalThreeDouble() {
+  public void testRetrievalThreeDouble() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "double", "single", "duplicate");
     Assertions.assertEquals(3, results.size());
@@ -382,7 +384,7 @@ public abstract class DBIntegrationTest<R> {
 
   @Test
   @DisplayName("Text: Three els, one of those with quotes")
-  void testRetrievalThree() {
+  public void testRetrievalThree() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "single", "double", "\"hello world\"");
     Assertions.assertEquals(4, results.size());
