@@ -1,22 +1,15 @@
 package org.vitrivr.cineast.core.db.polyphenydb;
 
-import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 
 import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBIntegrationTest;
 import org.vitrivr.cineast.core.db.IntegrationDBProvider;
-import org.vitrivr.cineast.core.db.cottontaildb.CottontailIntegrationDBProvider;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
-import org.vitrivr.cottontail.client.language.dml.Insert;
 
 public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatement> {
 

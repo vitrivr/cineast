@@ -77,7 +77,7 @@ public final class PolyphenySelector implements DBSelector {
         }).collect(Collectors.toList());
       }
     } catch (SQLException e) {
-      LOGGER.error("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+      LOGGER.error("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
       return new ArrayList<>(0);
     }
   }
@@ -98,14 +98,14 @@ public final class PolyphenySelector implements DBSelector {
         return processResults(rs);
       }
     } catch (SQLException e) {
-      LOGGER.error("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
+      LOGGER.error("Error occurred during query execution in getNearestNeighbourRows(): {}", e.getMessage());
       return new ArrayList<>(0);
     }
   }
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
-    try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " = ?")) {
+    try (final PreparedStatement statement = this.prepareStatement(fieldName, RelationalOperator.EQ, List.of(value))) {
       /* Execute query and return results. */
       final List<float[]> _return = new LinkedList<>();
       try (final ResultSet rs = statement.executeQuery()) {
