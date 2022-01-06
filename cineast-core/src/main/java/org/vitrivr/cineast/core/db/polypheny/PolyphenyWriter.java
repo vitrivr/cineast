@@ -44,7 +44,7 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
 
   @Override
   public boolean exists(String key, String value) {
-    try (final PreparedStatement stmt = this.wrapper.connection.prepareStatement("SELECT EXISTS(*) FROM " + this.fqn + " WHERE " + key + " = ?")) {
+    try (final PreparedStatement stmt = this.wrapper.connection.prepareStatement("SELECT EXISTS(SELECT " + key + " FROM " + this.fqn + " WHERE " + key + " = ?)")) {
       stmt.setString(1, value);
       final ResultSet rs = stmt.executeQuery();
       if (rs.next()) {
