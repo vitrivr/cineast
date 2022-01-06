@@ -325,7 +325,7 @@ public final class PolyphenySelector implements DBSelector {
       case LESS:
         return "< ?";
       case BETWEEN:
-        return "BETWEEN ?,?";
+        return "BETWEEN ? AND ?";
       case LIKE:
         return "LIKE ?";
       case NLIKE:
@@ -384,7 +384,7 @@ public final class PolyphenySelector implements DBSelector {
     switch (operator) {
       case ISNOTNULL:
       case ISNULL:
-        return this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+        return this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " " + toPredicate(operator));
       case EQ:
       case NEQ:
       case GEQ:
@@ -394,12 +394,12 @@ public final class PolyphenySelector implements DBSelector {
       case LIKE:
       case NLIKE:
         mapped = StreamSupport.stream(values.spliterator(), false).limit(1).toArray();
-        statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+        statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " " + toPredicate(operator));
         this.bindScalarValue(1, (PrimitiveTypeProvider) mapped[0], statement);
         return statement;
       case BETWEEN:
         mapped = StreamSupport.stream(values.spliterator(), false).limit(2).toArray();
-        statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + toPredicate(operator));
+        statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + fieldName + " " +  toPredicate(operator));
         this.bindScalarValue(1, (PrimitiveTypeProvider) mapped[0], statement);
         this.bindScalarValue(2, (PrimitiveTypeProvider) mapped[1], statement);
         return statement;
