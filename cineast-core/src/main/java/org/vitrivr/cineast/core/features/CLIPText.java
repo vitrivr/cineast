@@ -106,8 +106,6 @@ public class CLIPText implements Retriever {
 
         try (TInt64 textTensor = TInt64.tensorOf(arr)) {
 
-            System.out.println(textTensor.shape());
-
             HashMap<String, Tensor> inputMap = new HashMap<>();
             inputMap.put(EMBEDDING_INPUT, textTensor);
 

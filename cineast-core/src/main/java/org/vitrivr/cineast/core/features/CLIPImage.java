@@ -89,8 +89,6 @@ public class CLIPImage extends AbstractFeatureModule {
             HashMap<String, Tensor> inputMap = new HashMap<>();
             inputMap.put(EMBEDDING_INPUT, imageTensor);
 
-            System.out.println(imageTensor.shape());
-
             Map<String, Tensor> resultMap = model.call(inputMap);
 
             try (TFloat16 encoding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
