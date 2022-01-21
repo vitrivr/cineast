@@ -30,7 +30,7 @@ public class ManifestFactory {
    * Writes the {@link MetadataJson} generated from this {@link Manifest} to the filesystem
    *
    * @param jobDirectoryString The directory where the file has to be written to
-   * @param filename The name of the file with extension
+   * @param filename           The name of the file with extension
    */
   public void saveMetadataJson(String jobDirectoryString, String filename) {
     MetadataJson metadataJson = new MetadataJson(manifest);

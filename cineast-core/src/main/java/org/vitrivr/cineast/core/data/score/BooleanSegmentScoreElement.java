@@ -4,7 +4,7 @@ public class BooleanSegmentScoreElement implements ScoreElement {
 
   private final String id;
 
-  public BooleanSegmentScoreElement(String segmentId){
+  public BooleanSegmentScoreElement(String segmentId) {
     this.id = segmentId;
   }
 

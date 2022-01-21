@@ -4,10 +4,13 @@ package org.vitrivr.cineast.core.features.abstracts;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
-import boofcv.abst.scene.ImageClassifier.Score;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.function.Supplier;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -29,23 +32,17 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataFeatureExtractor;
-
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 /**
- * Feature module that bases its feature data on the object (usually metadata) itself instead of
- * individual segments by combining {@link MetadataFeatureExtractor} and {@link Retriever}.
+ * Feature module that bases its feature data on the object (usually metadata) itself instead of individual segments by combining {@link MetadataFeatureExtractor} and {@link Retriever}.
  *
  * @param <T> the specific type of the feature data
  */
 public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     implements MetadataFeatureExtractor<T>, Retriever {
+
   private static final String ID_COLUMN_NAME = GENERIC_ID_COLUMN_QUALIFIER;
   private static final String FEATURE_COLUMN_NAME = FEATURE_COLUMN_QUALIFIER;
 
@@ -65,13 +62,19 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     segmentRetrievalScope = Boolean.parseBoolean(properties.getOrDefault("segmentRetrievalScope", "false"));
   }
 
-  /** Returns the name of the feature entity as stored in the persistent layer. */
+  /**
+   * Returns the name of the feature entity as stored in the persistent layer.
+   */
   public abstract String featureEntityName();
 
-  /** Returns the default distance if none is set. */
+  /**
+   * Returns the default distance if none is set.
+   */
   public abstract Distance defaultDistance();
 
-  /** Returns the default correspondence function if none is set. */
+  /**
+   * Returns the default correspondence function if none is set.
+   */
   public abstract CorrespondenceFunction defaultCorrespondence();
 
   @Override
@@ -80,8 +83,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   }
 
   /**
-   * Returns an {@link Optional} containing the extracted feature data from the segment container,
-   * if available, otherwise an empty {@code Optional}.
+   * Returns an {@link Optional} containing the extracted feature data from the segment container, if available, otherwise an empty {@code Optional}.
    */
   public abstract Optional<T> extractFeature(SegmentContainer segmentContainer);
 
@@ -174,16 +176,16 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
         .orElse(Collections.emptyList());
   }
 
-  private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
+  protected List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
     List<SegmentDistanceElement> sDistances = new ArrayList<>();
     List<ObjectDistanceElement> oDistances = new ArrayList<>();
     CorrespondenceFunction correspondence = qc.getCorrespondenceFunction()
         .orElse(this.defaultCorrespondence());
-    if (this.segmentRetrievalScope){
+    if (this.segmentRetrievalScope) {
       sDistances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, SegmentDistanceElement.class, qc);
       return DistanceElement.toScore(sDistances, correspondence);
-    }else{
+    } else {
       oDistances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, ObjectDistanceElement.class, qc);
       return DistanceElement.toScore(oDistances, correspondence);
     }

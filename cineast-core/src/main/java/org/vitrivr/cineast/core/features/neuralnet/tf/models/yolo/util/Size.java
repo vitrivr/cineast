@@ -7,9 +7,7 @@ import java.util.Comparator;
  */
 public class Size {
 
-  public static final Comparator<Size> SIZE_COMPARATOR = new Comparator<Size>()
-
-  {
+  public static final Comparator<Size> SIZE_COMPARATOR = new Comparator<Size>() {
     @Override
     public int compare(final Size lhs, final Size rhs) {
       // We cast here to ensure the multiplications won't overflow

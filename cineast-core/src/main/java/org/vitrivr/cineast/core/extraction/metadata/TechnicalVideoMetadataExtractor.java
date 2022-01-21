@@ -49,7 +49,7 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
    * Extracts the technical video metadata from the specified path and returns a List of {@link MediaObjectMetadataDescriptor} objects (one for each metadata entry).
    *
    * @param objectId ID of the multimedia object for which metadata will be generated.
-   * @param path Path to the file for which metadata should be extracted.
+   * @param path     Path to the file for which metadata should be extracted.
    * @return List of {@link MediaObjectMetadataDescriptor}s or an empty list, if extracting metadata fails.
    */
   @Override

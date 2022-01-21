@@ -1,32 +1,24 @@
 package org.vitrivr.cineast.standalone.importer.handlers;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.OCRSearch;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.importer.PlainTextImporter;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
 public class OcrDataImportHandler extends DataImportHandler {
-
-  /** */
-  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    *
-   * @param threads
-   * @param batchsize
    */
+  private static final Logger LOGGER = LogManager.getLogger();
+
   public OcrDataImportHandler(int threads, int batchsize) {
     super(threads, batchsize);
   }
 
-  /**
-   *
-   * @param path
-   */
   @Override
   public void doImport(Path path) {
     try {

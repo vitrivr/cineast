@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.types.TUint8;
@@ -17,8 +23,6 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabAde2
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
 import org.vitrivr.cineast.core.util.GridPartitioner;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import java.util.*;
 
 public class ConceptMasksAde20k extends AbstractFeatureModule {
 
@@ -71,7 +75,6 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
     ArrayList<LinkedList<DeepLabLabel>> ade20kPartitions = GridPartitioner
         .partition(ade20kLabels, tmp.length, tmp[0].length, GRID_PARTITIONS, GRID_PARTITIONS);
 
-
     float[] vector = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
 
     for (int i = 0; i < GRID_PARTITIONS * GRID_PARTITIONS; ++i) {
@@ -86,7 +89,6 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
 
     Optional<SemanticMap> optional = sc.getSemanticMap();
     if (!optional.isPresent()) {

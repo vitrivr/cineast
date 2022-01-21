@@ -59,7 +59,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
         if (scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).containsKey(currentContainerId)) {
           scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
         } else {
-          scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId, (segmentDescriptor.getEndabs() - segmentDescriptor.getStartabs())));
+          scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId));
         }
       }
       currentContainerId++;
@@ -81,10 +81,6 @@ public abstract class AbstractTemporalScoringAlgorithm {
   }
 
   public abstract List<TemporalObject> score();
-
-  protected List<Float> getStartAbs(List<String> segments) {
-    return segments.stream().map(segmentId -> segmentMap.get(segmentId).getStartabs()).collect(Collectors.toList());
-  }
 
   protected List<Integer> getSequenceNumbers(List<String> segments) {
     return segments.stream().map(segmentId -> segmentMap.get(segmentId).getSequenceNumber()).collect(Collectors.toList());

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +24,6 @@ import org.vitrivr.cottontail.client.TupleIterator.Tuple;
 import org.vitrivr.cottontail.client.language.dml.Update;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ComparisonOperator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal.Builder;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.UpdateMessage.UpdateElement;
@@ -42,7 +40,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
   private boolean progress = false;
 
   private static MediaSegmentDescriptor convert(Tuple segmentTuple) {
-    final String oid = (String) segmentTuple.get(MediaSegmentDescriptor.OBJECT_ID_COL_NAME);
+    final String oid = (String) segmentTuple.get(CineastConstants.OBJECT_ID_COLUMN_QUALIFIER);
     final String sid = (String) segmentTuple.get(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER);
     final int number = (Integer) segmentTuple.get(MediaSegmentDescriptor.SEGMENT_NO_COL_NAME);
     final int start = (Integer) segmentTuple.get(MediaSegmentDescriptor.SEGMENT_START_COL_NAME);
@@ -71,7 +69,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       case CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER:
         builder.setStringData(segment.getSegmentId());
         break;
-      case MediaSegmentDescriptor.OBJECT_ID_COL_NAME:
+      case CineastConstants.OBJECT_ID_COLUMN_QUALIFIER:
         builder.setStringData(segment.getObjectId());
         break;
       case MediaSegmentDescriptor.SEGMENT_NO_COL_NAME:
@@ -127,9 +125,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
       final Update update = new Update(ENTITY_NAME)
           .values(
               new Pair<>(MediaSegmentDescriptor.SEGMENT_START_COL_NAME, (double) msAbs),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_STARTABS_COL_NAME, (double) msAbs),
-              new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
+              new Pair<>(MediaSegmentDescriptor.SEGMENT_END_COL_NAME, (double) msAbsNext)
           )
           .where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId()));
       cottontail.client.update(update, txId);

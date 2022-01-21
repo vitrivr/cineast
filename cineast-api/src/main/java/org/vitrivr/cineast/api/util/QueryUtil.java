@@ -13,18 +13,20 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
+import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.SegmentTags;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
@@ -32,9 +34,9 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 //TODO maybe this should be moved to core?
 public class QueryUtil {
 
-  public static HashMap<String, ArrayList<QueryContainer>> groupComponentsByCategory(
+  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupComponentsByCategory(
       List<QueryComponent> queryComponents) {
-    HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
     for (QueryComponent component : queryComponents) {
       for (QueryTerm term : component.getTerms()) {
         if (term.getCategories() == null) {
@@ -51,9 +53,9 @@ public class QueryUtil {
     return categoryMap;
   }
 
-  public static HashMap<String, ArrayList<Pair<QueryContainer, ReadableQueryConfig>>> groupTermsByCategory(
+  public static HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> groupTermsByCategory(
       List<org.vitrivr.cineast.api.grpc.data.QueryTerm> terms) {
-    HashMap<String, ArrayList<Pair<QueryContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
+    HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
     for (org.vitrivr.cineast.api.grpc.data.QueryTerm term : terms) {
       if (term.getCategories().isEmpty()) {
         continue;
@@ -71,15 +73,15 @@ public class QueryUtil {
 
   public static List<StringDoublePair> retrieveCategory(
       ContinuousRetrievalLogic continuousRetrievalLogic,
-      List<Pair<QueryContainer, ReadableQueryConfig>> queryContainers, String category) {
+      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
-    for (Pair<QueryContainer, ReadableQueryConfig> pair : queryContainers) {
+    for (Pair<AbstractQueryTermContainer, ReadableQueryConfig> pair : queryContainers) {
 
       if (pair == null) {
         continue;
       }
 
-      QueryContainer qc = pair.first;
+      AbstractQueryTermContainer qc = pair.first;
       ReadableQueryConfig qconf = pair.second;
 
       float weight = MathHelper.limit(qc.getWeight(), -1f, 1f);
@@ -122,15 +124,15 @@ public class QueryUtil {
   }
 
   public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic,
-      QueryContainer queryContainer, ReadableQueryConfig config, String category) {
-    float weight = MathHelper.limit(queryContainer.getWeight(), -1f, 1f);
+      AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
+    float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
 
     List<SegmentScoreElement> scoreResults;
-    if (queryContainer.hasId()) {
-      scoreResults = continuousRetrievalLogic.retrieve(queryContainer.getId(), category, config);
+    if (queryTermContainer.hasId()) {
+      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer.getId(), category, config);
     } else {
-      scoreResults = continuousRetrievalLogic.retrieve(queryContainer, category, config);
+      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer, category, config);
     }
 
     for (SegmentScoreElement element : scoreResults) {
@@ -192,7 +194,7 @@ public class QueryUtil {
             row.get(FEATURE_COLUMN_QUALIFIER).toObject()
         ).forEach(_return::add);
       });
-      return false; //no repeat invocations allowed
+      return true; // Return value false would break the foreEachKey
     });
     return _return;
   }
@@ -210,20 +212,67 @@ public class QueryUtil {
   public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {
     Map<String, Object[]> features = new HashMap<>();
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
-    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
     retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> {
-      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachKey(retriever -> {
-        List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
-        if (_features.size() == 0) {
-          return false; //no repeat invocations allowed
-        }
-        if (_features.get(0) != null) {
-          features.put(cat, _features.toArray());
-        }
-        return false; //no repeat invocations allowed
-      });
+      List<Object> _features = retrieveFeaturesForIDByCategory(id, cat);
+      if (_features.size() == 0) {
+        return;
+      }
+
+      if (_features.get(0) != null) {
+        features.put(cat, _features.toArray());
+      }
     });
+
     return new FeaturesAllCategoriesQueryResult("", features, id);
+  }
+
+  private static ArrayList<HashMap<String, Object>> getFeaturesFromEntity(String entityName, List<String> ids) {
+    final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+
+    ArrayList<HashMap<String, Object>> currList = new ArrayList<>();
+    selector.open(entityName);
+
+    List<Map<String, PrimitiveTypeProvider>> rows;
+
+    if (ids == null || ids.isEmpty()) {
+      rows = selector.getAll();
+    } else {
+      rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
+    }
+
+    for (Map<String, PrimitiveTypeProvider> row : rows) {
+      HashMap<String, Object> tempMap = new HashMap<>();
+
+      tempMap.put(FEATURE_COLUMN_QUALIFIER, row.get(FEATURE_COLUMN_QUALIFIER).toObject());
+      tempMap.put(GENERIC_ID_COLUMN_QUALIFIER, row.get(GENERIC_ID_COLUMN_QUALIFIER).toObject());
+
+      currList.add(tempMap);
+    }
+
+    return currList;
+  }
+
+  private static Map<String, ArrayList<HashMap<String, Object>>> getFeaturesForCategory(String category, List<String> ids) {
+    final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
+    Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
+
+    retrievalRuntimeConfig.getRetrieversByCategory(category).forEach(retriever -> {
+      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
+      return true;
+    });
+
+    return _return;
+  }
+
+  public static FeaturesByEntityQueryResult retrieveFeaturesForEntity(String entityName, List<String> ids) {
+    ArrayList<HashMap<String, Object>> features = getFeaturesFromEntity(entityName, ids);
+    return new FeaturesByEntityQueryResult("", features, entityName);
+  }
+
+  public static FeaturesByCategoryQueryResult retrieveFeaturesForCategory(String category, List<String> ids) {
+    Map<String, ArrayList<HashMap<String, Object>>> features = getFeaturesForCategory(category, ids);
+    return new FeaturesByCategoryQueryResult("", features, category);
   }
 
 }

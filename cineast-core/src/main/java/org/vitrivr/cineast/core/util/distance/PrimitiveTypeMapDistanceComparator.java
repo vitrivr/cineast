@@ -3,10 +3,9 @@ package org.vitrivr.cineast.core.util.distance;
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-
 import java.util.Comparator;
 import java.util.Map;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public class PrimitiveTypeMapDistanceComparator
     implements Comparator<Map<String, PrimitiveTypeProvider>> {

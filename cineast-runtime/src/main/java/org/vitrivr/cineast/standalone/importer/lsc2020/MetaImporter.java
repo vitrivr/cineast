@@ -50,7 +50,6 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
       throw new RuntimeException("Failed to prepare metadata readout", e);
     }
 
-
     createLogFiles();
     LOGGER.info("Finished setup of Importer. Importing now...");
   }
@@ -96,12 +95,6 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     }
     String minuteId = LSCUtilities.filenameToMinuteId(filename).get();
     List<Map<String, PrimitiveTypeProvider>> list = new ArrayList<>();
-//        for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
-//            if(items[i].equalsIgnoreCase("null")){
-//                continue;
-//            }
-//            list.add(parseMeta(filename, items, i));
-//        }
     for (int i = 0; i < LSCUtilities.META_NAMES.length; i++) {
       if (LSCUtilities.META_COLUMNS_IN_USE.contains(i)) {
         if (items[i].equalsIgnoreCase("null")) {
@@ -188,7 +181,7 @@ public class MetaImporter implements Importer<Map<String, PrimitiveTypeProvider>
     if (!logsEnabled) {
       return;
     }
-    if (nextsSinceLastDump++> logCadence) {
+    if (nextsSinceLastDump++ > logCadence) {
       try {
         writeLines(LSCUtilities.META_NO_PATH_FILE, metaNoPath);
         writeLines(LSCUtilities.WRITTEN_FILE, written);

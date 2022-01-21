@@ -1,40 +1,39 @@
 package org.vitrivr.cineast.api.grpc.data;
 
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 public class QueryTerm {
 
-    private final QueryContainer container;
-    private final ReadableQueryConfig queryConfig;
-    private final float weight;
-    private final List<String> categories = new ArrayList<>();
+  private final AbstractQueryTermContainer container;
+  private final ReadableQueryConfig queryConfig;
+  private final float weight;
+  private final List<String> categories = new ArrayList<>();
 
-    public QueryTerm(QueryContainer container, ReadableQueryConfig queryConfig, float weight, Collection<String> categories){
-        this.container = container;
-        this.queryConfig = queryConfig;
-        this.weight = weight;
-        this.categories.addAll(categories);
-    }
+  public QueryTerm(AbstractQueryTermContainer container, ReadableQueryConfig queryConfig, float weight, Collection<String> categories) {
+    this.container = container;
+    this.queryConfig = queryConfig;
+    this.weight = weight;
+    this.categories.addAll(categories);
+  }
 
-    public QueryContainer getContainer() {
-        return container;
-    }
+  public AbstractQueryTermContainer getContainer() {
+    return container;
+  }
 
-    public ReadableQueryConfig getQueryConfig() {
-        return queryConfig;
-    }
+  public ReadableQueryConfig getQueryConfig() {
+    return queryConfig;
+  }
 
-    public float getWeight() {
-        return weight;
-    }
+  public float getWeight() {
+    return weight;
+  }
 
-    public List<String> getCategories() {
-        return categories;
-    }
+  public List<String> getCategories() {
+    return categories;
+  }
 
 }

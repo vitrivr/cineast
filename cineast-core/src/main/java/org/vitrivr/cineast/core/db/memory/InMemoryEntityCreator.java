@@ -10,14 +10,10 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 
-import javax.management.Attribute;
-import java.util.stream.Collectors;
-
 /**
  * Implementation of a Cineast {@link EntityCreator} on top of the {@link InMemoryStore}.
  *
  * @see InMemoryStore
- *
  */
 public class InMemoryEntityCreator implements EntityCreator {
 
@@ -34,8 +30,8 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity() {
-    return this.store.createEntity(MediaObjectMetadataDescriptor.ENTITY,
+  public boolean createMetadataEntity(String tableName) {
+    return this.store.createEntity(tableName,
         MediaObjectMetadataDescriptor.FIELDNAMES[0],
         MediaObjectMetadataDescriptor.FIELDNAMES[1],
         MediaObjectMetadataDescriptor.FIELDNAMES[2],
@@ -44,8 +40,8 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createSegmentMetadataEntity() {
-    return this.store.createEntity(MediaSegmentMetadataDescriptor.ENTITY,
+  public boolean createSegmentMetadataEntity(String tableName) {
+    return this.store.createEntity(tableName,
         MediaSegmentMetadataDescriptor.FIELDNAMES[0],
         MediaSegmentMetadataDescriptor.FIELDNAMES[1],
         MediaSegmentMetadataDescriptor.FIELDNAMES[2],
@@ -83,8 +79,8 @@ public class InMemoryEntityCreator implements EntityCreator {
   public boolean createIdEntity(String entityName, AttributeDefinition... attributes) {
     final String[] columns = new String[attributes.length + 1];
     columns[0] = GENERIC_ID_COLUMN_QUALIFIER;
-    for (int i = 1; i<columns.length; i++) {
-      columns[i] = attributes[i-1].getName();
+    for (int i = 1; i < columns.length; i++) {
+      columns[i] = attributes[i - 1].getName();
     }
     return this.store.createEntity(entityName, columns).isPresent();
   }
@@ -97,7 +93,7 @@ public class InMemoryEntityCreator implements EntityCreator {
   @Override
   public boolean createEntity(EntityDefinition entityDefinition) {
     return this.store.createEntity(entityDefinition.getEntityName(),
-            entityDefinition.getAttributes().stream().map(AttributeDefinition::getName).toArray(String[]::new)).isPresent();
+        entityDefinition.getAttributes().stream().map(AttributeDefinition::getName).toArray(String[]::new)).isPresent();
   }
 
   @Override

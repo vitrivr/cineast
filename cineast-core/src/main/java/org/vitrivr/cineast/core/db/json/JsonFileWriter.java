@@ -4,28 +4,25 @@ package org.vitrivr.cineast.core.db.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistentTuple;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
-  
+
   private File baseFolder;
   private PrintWriter out;
   private boolean first = true;
-  
+
   public JsonFileWriter(File baseFolder) {
     this.baseFolder = baseFolder;
   }
-  
 
-  
+
   @Override
   public boolean open(String name) {
     baseFolder.mkdirs();
@@ -40,24 +37,23 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
       return false;
     }
   }
-  
+
   @Override
-  public synchronized boolean close() {
+  public synchronized void close() {
     if (out == null) {
-      return true;
+      return;
     }
     out.println();
     out.println(']');
     out.flush();
     out.close();
     out = null;
-    return true;
   }
-  
+
   @Override
   public boolean persist(PersistentTuple tuple) {
     synchronized (out) {
-      if(!this.first){
+      if (!this.first) {
         this.out.println(',');
       }
       this.out.print(this.getPersistentRepresentation(tuple).toString());
@@ -66,9 +62,9 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     }
 
     return true;
-    
+
   }
-  
+
   @Override
   public boolean persist(List<PersistentTuple> tuples) {
     boolean success = true;
@@ -84,20 +80,20 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   public boolean idExists(String id) {
     return false;
   }
-  
+
   @Override
   public boolean exists(String key, String value) {
     return false;
   }
 
-  
+
   @Override
   public JsonObject getPersistentRepresentation(PersistentTuple tuple) {
-    
+
     int nameIndex = 0;
-    
+
     JsonObject _return = new JsonObject();
-    
+
     for (Object o : tuple.getElements()) {
       if (o instanceof float[]) {
         _return.add(names[nameIndex++], toArray((float[]) o));
@@ -122,10 +118,10 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
         _return.add(names[nameIndex++], new JsonPrimitive(o.toString()));
       }
     }
-    
+
     return _return;
   }
-  
+
   private static JsonArray toArray(boolean[] arr) {
     JsonArray jarr = new JsonArray();
     for (int i = 0; i < arr.length; ++i) {
@@ -133,7 +129,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     }
     return jarr;
   }
-  
+
   private static JsonArray toArray(float[] arr) {
     JsonArray jarr = new JsonArray();
     for (int i = 0; i < arr.length; ++i) {
@@ -141,7 +137,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     }
     return jarr;
   }
-  
+
   private static JsonArray toArray(int[] arr) {
     JsonArray jarr = new JsonArray();
     for (int i = 0; i < arr.length; ++i) {

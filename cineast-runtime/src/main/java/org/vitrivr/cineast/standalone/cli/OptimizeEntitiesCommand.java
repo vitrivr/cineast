@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
-
 import org.vitrivr.cineast.core.config.DatabaseConfig.Selector;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;

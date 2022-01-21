@@ -41,7 +41,7 @@ public class Position implements Serializable {
   }
 
   public Position[] getNeighborPositions() {
-    return new Position[] { getPosTop(), getPosLeft(), getPosBottom(), getPosRight() };
+    return new Position[]{getPosTop(), getPosLeft(), getPosBottom(), getPosRight()};
   }
 
   @Override

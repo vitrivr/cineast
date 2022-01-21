@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 
 public class FindTagsForElementGetHandler implements GetRestHandler<TagIDsForElementQueryResult> {
 
-  public static final String ROUTE = "find/feature/tags/by/id/:" + ID_QUALIFIER;
+  public static final String ROUTE = "find/feature/tags/by/id/{" + ID_QUALIFIER + "}";
 
   @Override
   public TagIDsForElementQueryResult doGet(Context ctx) {

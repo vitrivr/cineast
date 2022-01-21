@@ -24,7 +24,8 @@
 		{"name": "MedianColor"},
 		{"name": "MedianColorGrid8"},
 		{"name": "HOGMirflickr25K512"},
-		{"name": "SURFMirflickr25K512"}
+		{"name": "SURFMirflickr25K512"},
+		{"name": "VisualTextCoEmbedding"}
 	],
 	"exporters":[
 		{

@@ -7,8 +7,9 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 public class ColorReductionUtil {
 
-  private ColorReductionUtil(){}
-  
+  private ColorReductionUtil() {
+  }
+
   private enum Color11 {
     RED(0xFF0000), ORANGE(0xFFAA00), YELLOW(0xFFFF00), GREEN(0x00FF00), CYAN(0x00FFFF), BLUE(
         0x0000FF), VIOLET(0xAA00FF), PURPLE(0xFF00AA), WHITE(0xFFFFFF), GREY(0x808080), BLACK(0);
@@ -20,37 +21,37 @@ public class ColorReductionUtil {
     }
 
   }
-  
-  public static int quantize15(int rgb){
+
+  public static int quantize15(int rgb) {
     return FuzzyColorHistogramQuantizer.quantize(ColorConverter.cachedRGBtoLab(rgb)).getRGB().toIntColor();
   }
-  
-  public static MultiImage quantize15(MultiImage img){
+
+  public static MultiImage quantize15(MultiImage img) {
     int[] inColors = img.getColors();
     int[] outColors = new int[inColors.length];
-    
-    for(int i = 0; i< inColors.length; ++i){
+
+    for (int i = 0; i < inColors.length; ++i) {
       outColors[i] = quantize15(inColors[i]);
     }
-    
+
     return img.factory().newMultiImage(img.getWidth(), img.getHeight(), outColors);
   }
-  
-  public static int quantize11(int rgb){
+
+  public static int quantize11(int rgb) {
     return quantize11(ColorConverter.cachedRGBtoHSV(rgb)).color;
   }
-  
-  public static MultiImage quantize11(MultiImage img){
+
+  public static MultiImage quantize11(MultiImage img) {
     int[] inColors = img.getColors();
     int[] outColors = new int[inColors.length];
-    
-    for(int i = 0; i< inColors.length; ++i){
+
+    for (int i = 0; i < inColors.length; ++i) {
       outColors[i] = quantize11(inColors[i]);
     }
-    
+
     return img.factory().newMultiImage(img.getWidth(), img.getHeight(), outColors);
   }
-  
+
   private static Color11 quantize11(ReadableHSVContainer hsv) {
     if (hsv.getV() < 0.25f) {
       return Color11.BLACK;
@@ -63,10 +64,10 @@ public class ColorReductionUtil {
       }
     }
 
-    if(hsv.getS() * hsv.getV() < 0.1f){
+    if (hsv.getS() * hsv.getV() < 0.1f) {
       return Color11.GREY;
     }
-    
+
     float angle = hsv.getH() * 360f;
 
     if (angle > 25f && angle <= 50f) {
@@ -86,5 +87,5 @@ public class ColorReductionUtil {
     }
     return Color11.RED;
   }
-  
+
 }

@@ -2,13 +2,10 @@ package org.vitrivr.cineast.core.data.score;
 
 import com.google.common.collect.ImmutableList;
 import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
-import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.GroupingUtil;
 
 /**

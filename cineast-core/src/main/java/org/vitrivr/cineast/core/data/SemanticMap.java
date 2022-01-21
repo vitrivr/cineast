@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.data;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
-
 import java.awt.image.BufferedImage;
 import java.util.Map;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
 
 public class SemanticMap {
 

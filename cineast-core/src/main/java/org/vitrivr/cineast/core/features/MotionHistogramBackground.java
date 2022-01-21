@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.features;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
@@ -13,11 +16,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
-import org.vitrivr.cineast.core.util.MathHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class MotionHistogramBackground extends SubDivMotionHistogram {
 

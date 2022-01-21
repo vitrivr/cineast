@@ -14,10 +14,6 @@
     },
     "version" : "v1"
   },
-  "servers" : [ {
-    "url" : "http://localhost:4567/",
-    "description" : "Cineast API Address"
-  } ],
   "tags" : [ {
     "name" : "/api/v1",
     "description" : "Cineast Default"
@@ -129,7 +125,7 @@
         }
       }
     },
-    "/api/v1/find/metadata/in/{domain}/by/id/{domain}" : {
+    "/api/v1/find/metadata/in/{domain}/by/id/{id}" : {
       "get" : {
         "tags" : [ "Metadata" ],
         "summary" : "Find metadata for specific object id in given domain",
@@ -538,6 +534,80 @@
         }
       }
     },
+    "/api/v1/find/feature/all/by/category/{category}" : {
+      "post" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find features for the given category for all (or specific) IDs",
+        "description" : "Find features for the given category for all (or specific) IDs",
+        "operationId" : "findFeaturesByCategory",
+        "parameters" : [ {
+          "name" : "category",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeaturesByCategoryQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/feature/all/by/entity/{entity}" : {
+      "post" : {
+        "tags" : [ "Metadata" ],
+        "summary" : "Find features for the given entity name for all (or specific) IDs",
+        "description" : "Find features for the given entity name for all (or specific) IDs",
+        "operationId" : "findFeaturesByEntity",
+        "parameters" : [ {
+          "name" : "entity",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IdList"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeaturesByEntityQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/find/feature/text/by/{id}/{category}" : {
       "get" : {
         "tags" : [ "Metadata" ],
@@ -920,6 +990,44 @@
           }
         }
       }
+    },
+    "/thumbnails/{id}" : {
+      "get" : {
+        "summary" : "Get thumbnails with id",
+        "operationId" : "getThumbnailsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
+          }
+        }
+      }
+    },
+    "/objects/{id}" : {
+      "get" : {
+        "summary" : "Get objects with id",
+        "operationId" : "getObjectsWithId",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Default response"
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -1229,19 +1337,19 @@
               "type" : "string"
             }
           },
-          "correspondenceFunctionIfEmpty" : {
+          "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "distanceIfEmpty" : {
+          "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
-          "distanceWeightsIfEmpty" : {
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "normIfEmpty" : {
+          "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1255,7 +1363,7 @@
         "properties" : {
           "type" : {
             "type" : "string",
-            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
+            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
           },
           "data" : {
             "type" : "string",
@@ -1368,6 +1476,49 @@
           }
         }
       },
+      "FeaturesByCategoryQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "featureMap" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "additionalProperties" : {
+                  "type" : "object"
+                }
+              }
+            }
+          },
+          "category" : {
+            "type" : "string"
+          }
+        }
+      },
+      "FeaturesByEntityQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "featureMap" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "entityName" : {
+            "type" : "string"
+          }
+        }
+      },
       "FeaturesTextCategoryQueryResult" : {
         "type" : "object",
         "properties" : {
@@ -1391,6 +1542,9 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
+          "description" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -1399,9 +1553,6 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
-            "type" : "string"
-          },
-          "description" : {
             "type" : "string"
           }
         }

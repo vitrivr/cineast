@@ -10,7 +10,6 @@ public class IntArrayTypeProvider extends IntArrayProviderImpl implements Primit
   }
 
 
-
   @Override
   public ProviderDataType getType() {
     return ProviderDataType.INT_ARRAY;
@@ -28,7 +27,7 @@ public class IntArrayTypeProvider extends IntArrayProviderImpl implements Primit
 
     int i = 0;
 
-    for(Integer in : list){
+    for (Integer in : list) {
       array[i++] = in;
     }
 
@@ -41,7 +40,7 @@ public class IntArrayTypeProvider extends IntArrayProviderImpl implements Primit
 
     int i = 0;
 
-    for(Long l : list){
+    for (Long l : list) {
       array[i++] = l.intValue();
     }
 

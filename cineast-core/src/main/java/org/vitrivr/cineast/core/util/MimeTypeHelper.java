@@ -6,11 +6,12 @@ import java.util.HashMap;
 
 public final class MimeTypeHelper {
 
-  private MimeTypeHelper(){}
+  private MimeTypeHelper() {
+  }
 
-  private static final HashMap<String,String> FILETYPES;
+  private static final HashMap<String, String> FILETYPES;
 
-  static{
+  static {
 
     FILETYPES = new HashMap<>();
 
@@ -60,19 +61,19 @@ public final class MimeTypeHelper {
     FILETYPES.put("off", "application/3d-off");
   }
 
-  public static String getContentType(File file){
+  public static String getContentType(File file) {
     return getContentType(file.getName());
 
   }
 
-  public static String getContentType(Path file){
+  public static String getContentType(Path file) {
     return getContentType(file.getFileName().toString());
   }
 
-  public static String getContentType(String filename){
+  public static String getContentType(String filename) {
     final String[] split = filename.split("\\.");
     if (split.length > 0) {
-      return FILETYPES.getOrDefault(split[split.length-1].toLowerCase(), "application/octet-stream");
+      return FILETYPES.getOrDefault(split[split.length - 1].toLowerCase(), "application/octet-stream");
     } else {
       return "application/octet-stream";
     }

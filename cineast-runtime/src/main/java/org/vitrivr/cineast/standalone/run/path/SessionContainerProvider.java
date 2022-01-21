@@ -2,6 +2,12 @@ package org.vitrivr.cineast.standalone.run.path;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -9,19 +15,8 @@ import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
- * A flexible Pathprovider with no caching. Simply stores a list of paths in memory. Differentiates
- * between three states - running, closing and closed(=!open). This is necessary because when a
- * Session is ended by the user, he still expects the submitted items to be extracted. Therefore, on
- * an {@link #endSession()} call, the instance is only {@link #closing}, but still {@link #open}.
- *
+ * A flexible Pathprovider with no caching. Simply stores a list of paths in memory. Differentiates between three states - running, closing and closed(=!open). This is necessary because when a Session is ended by the user, he still expects the submitted items to be extracted. Therefore, on an {@link #endSession()} call, the instance is only {@link #closing}, but still {@link #open}.
  */
 public class SessionContainerProvider implements ExtractionContainerProvider,
     ExtractionCompleteListener {
@@ -50,8 +45,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   }
 
   /**
-   * Delayed close. After every item has been taken from the buffer, the instance will report itself
-   * as closed.
+   * Delayed close. After every item has been taken from the buffer, the instance will report itself as closed.
    */
   public void endSession() {
     stateModification.lock();
@@ -128,8 +122,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   }
 
   /**
-   * Tells the container to not mark this instance as closing, no matter what the previous state
-   * was.
+   * Tells the container to not mark this instance as closing, no matter what the previous state was.
    */
   public boolean keepAliveCheckIfClosed() {
     stateModification.lock();
