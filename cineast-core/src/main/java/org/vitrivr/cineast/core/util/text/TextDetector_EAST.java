@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util;
+package org.vitrivr.cineast.core.util.text;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,7 +19,7 @@ import org.bytedeco.javacpp.avformat;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacpp.swscale;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
