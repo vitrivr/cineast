@@ -51,9 +51,14 @@ public final class CottontailWrapper implements AutoCloseable {
     }
     this.channel = builder.build();
     this.client = new SimpleClient(this.channel);
+
+    boolean pingSuccessful = this.client.ping();
     watch.stop();
-    LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS),
-        config.getHost(), config.getPort());
+    if (pingSuccessful) {
+      LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), config.getHost(), config.getPort());
+    } else {
+      LOGGER.warn("Could not connect to Cottontail at {}:{}", config.getHost(), config.getPort());
+    }
   }
 
   /**

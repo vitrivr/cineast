@@ -1,13 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.SavedModelBundle;
@@ -25,6 +17,14 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.util.images.ImagePreprocessingHelper;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InceptionResnetV2 extends AbstractFeatureModule {
 
@@ -39,6 +39,12 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
    */
   public static final int IMAGE_WIDTH = 299;
   public static final int IMAGE_HEIGHT = 299;
+
+  /**
+   * mean and std for color values
+   */
+  private static final float[] MEAN = new float[]{0.5f, 0.5f, 0.5f};
+  private static final float[] STD = new float[]{0.5f, 0.5f, 0.5f};
 
   /**
    * Resource paths.
@@ -202,49 +208,8 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
    * @return Float array representation of the input image.
    */
   public static float[] preprocessImage(BufferedImage image) {
-    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
-      try {
-        image = Thumbnails.of(image).forceSize(IMAGE_WIDTH, IMAGE_HEIGHT).asBufferedImage();
-      } catch (IOException e) {
-        LOGGER.error("Could not resize image", e);
-      }
-    }
-    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
-    int[] rgb = colorsToRGB(colors);
-    return preprocessInput(rgb);
-  }
-
-  /**
-   * Preprocesses input in a way equivalent to that performed in the Python TensorFlow library.
-   * <p>
-   * Maps all values from [0,255] to [-1, 1].
-   */
-  private static float[] preprocessInput(int[] colors) {
-    // x /= 127.5
-    // x -= 1.
-    float[] processedColors = new float[colors.length];
-    for (int i = 0; i < colors.length; i++) {
-      processedColors[i] = (colors[i] / 127.5f) - 1;
-    }
-
-    return processedColors;
-  }
-
-  /**
-   * Converts an integer colors array storing ARGB values in each integer into an integer array where each integer stores R, G or B value.
-   */
-  private static int[] colorsToRGB(int[] colors) {
-    int[] rgb = new int[colors.length * 3];
-
-    for (int i = 0; i < colors.length; i++) {
-      // Start index for rgb array
-      int j = i * 3;
-      rgb[j] = (colors[i] >> 16) & 0xFF; // r
-      rgb[j + 1] = (colors[i] >> 8) & 0xFF; // g
-      rgb[j + 2] = colors[i] & 0xFF; // b
-    }
-
-    return rgb;
+    BufferedImage img = ImagePreprocessingHelper.forceScale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
+    return ImagePreprocessingHelper.imageToHWCArray(img, MEAN, STD);
   }
 
   private static void initializeModel() {

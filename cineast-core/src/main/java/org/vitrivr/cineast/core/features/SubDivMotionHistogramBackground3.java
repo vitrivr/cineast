@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class SubDivMotionHistogramBackground3 extends SubDivMotionHistogram {
 
