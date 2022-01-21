@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.core.data;
 
 import com.google.common.collect.HashBiMap;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Deprecated
 public class UniqueElementGrid<T> implements Grid<T> {
 
   private final HashBiMap<Position, T> map = HashBiMap.create();

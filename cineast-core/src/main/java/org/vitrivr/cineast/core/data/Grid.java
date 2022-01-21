@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data;
 
 import java.util.Set;
 
+@Deprecated
 public interface Grid<T> {
 
   Grid<T> setElement(int x, int y, T element);

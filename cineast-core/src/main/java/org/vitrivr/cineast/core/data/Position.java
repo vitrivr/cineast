@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by silvanstich on 04.10.16.
  */
+@Deprecated
 public class Position implements Serializable {
 
   private static final long serialVersionUID = -4360148820779089159L;
