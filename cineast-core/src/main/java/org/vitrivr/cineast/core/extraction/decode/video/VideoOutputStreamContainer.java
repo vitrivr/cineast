@@ -21,7 +21,7 @@ import org.bytedeco.ffmpeg.global.swscale;
 import org.bytedeco.ffmpeg.swscale.SwsContext;
 import org.bytedeco.javacpp.DoublePointer;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
