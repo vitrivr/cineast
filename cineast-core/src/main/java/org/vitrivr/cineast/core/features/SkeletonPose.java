@@ -1,23 +1,34 @@
 package org.vitrivr.cineast.core.features;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.commons.lang3.NotImplementedException;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.Skeleton;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailEntityCreator;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -51,9 +62,39 @@ public class SkeletonPose extends AbstractFeatureModule {
                 );
     }
 
+    protected void persist(String shotId, Collection<Skeleton> skeletons) {
+        if (skeletons == null || skeletons.isEmpty()) {
+            return;
+        }
+
+        List<PersistentTuple> tuples = new ArrayList<>(skeletons.size());
+
+        int i = 0;
+        for (Skeleton skeleton : skeletons) {
+            Pair<float[], float[]> pair = getAnglesandWeights(skeleton);
+            tuples.add(this.phandler.generateTuple(
+                    shotId, i++, pair.first, pair.second
+            ));
+        }
+
+        this.phandler.persist(tuples);
+    }
+
+    private List<Skeleton> detectSkeletons(MultiImage img) {
+        throw new NotImplementedException("not currently available");
+    }
+
     @Override
     public void processSegment(SegmentContainer segmentContainer) {
-        throw new NotImplementedException("not currently available");
+
+        VideoFrame representativeFrame = segmentContainer.getMostRepresentativeFrame();
+
+        if (representativeFrame == VideoFrame.EMPTY_VIDEO_FRAME) {
+            return;
+        }
+
+        persist(segmentContainer.getId(), detectSkeletons(representativeFrame.getImage()));
+
     }
 
     @Override
@@ -151,7 +192,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         }
 
-
         return results;
     }
 
@@ -190,6 +230,63 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     private static float min(float f, float g, float h) {
         return Math.min(f, Math.min(g, h));
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        File baseDir = new File("../../Downloads/VBS2022/VBS2022");
+        File[] folders = baseDir.listFiles(File::isDirectory);
+
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<List<SkeletonEntry>> typeRef = new TypeReference<>() { };
+
+        DatabaseConfig config = new DatabaseConfig();
+        config.setHost("localhost");
+        config.setPort(1865);
+
+        CottontailWrapper ctWrapper = new CottontailWrapper(config, true);
+
+
+        SkeletonPose sp = new SkeletonPose();
+        sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
+        sp.init(() -> new CottontailWriter(ctWrapper), 100);
+
+
+        for (File folder : folders) {
+            for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
+
+                String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
+
+                List<SkeletonEntry> derialized = mapper.readValue(file, typeRef);
+
+                List<Skeleton> skeletons = derialized.stream().map(SkeletonEntry::toSkeleton).collect(Collectors.toList());
+
+                sp.persist(segmentId, skeletons);
+
+            }
+            System.out.println("done with " + folder.getName());
+        }
+
+    }
+
+    static class SkeletonEntry{
+        public int person_id;
+        public List<List<Float>> pose_keypoints;
+
+        public Skeleton toSkeleton() {
+            float[] weights = new float[17];
+            float[] coordinates = new float[34];
+
+            for (int i = 0; i < 17; ++i) {
+                coordinates[2 * i] = pose_keypoints.get(i).get(0);
+                coordinates[2 * i + 1] = pose_keypoints.get(i).get(1);
+                weights[i] = pose_keypoints.get(i).get(2);
+            }
+
+            return new Skeleton(coordinates, weights);
+
+        }
+
     }
 
 }
