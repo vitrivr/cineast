@@ -21,10 +21,19 @@ jobs:
         ports:
           - 1865:1865
         options: -it
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: polypheny
+          POSTGRES_PASSWORD: happy-jumping-alpaca
+          POSTGRES_USER: polypheny
       polypheny:
-        image: silvanheller/polypheny-docker-vitrivr
+        image: silvanheller/polypheny-cottontail
         ports:
           - 20591:20591
+          - 13137:13137
           - 8070:8070
 
     # Start actual job.
@@ -32,6 +41,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: nc connection test
       run: nc -zv 127.0.0.1 1865
+    - name: add polypheny adapter
+      run: curl POST localhost:13137/sql -d "@add-postgres-polypheny-payload"
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
