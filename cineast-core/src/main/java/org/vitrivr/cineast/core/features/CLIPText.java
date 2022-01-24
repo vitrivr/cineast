@@ -22,7 +22,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.text.ClipTokenizer;
@@ -78,7 +77,7 @@ public class CLIPText implements Retriever {
     }
 
     @Override
-    public void init(DBSelectorSupplier selectorSupply) {
+    public void init(Supplier<DBSelector> selectorSupply) {
         this.selector = selectorSupply.get();
         this.selector.open(TABLE_NAME);
     }
