@@ -61,6 +61,14 @@ public class Skeleton {
         return _return;
     }
 
+    public List<Point2D_F32> getPointsScaled(float scaleX, float scaleY) {
+        ArrayList<Point2D_F32> _return = new ArrayList<>(POINT_COUNT);
+        for (int i = 0; i < POINT_COUNT; ++i) {
+            _return.add(new Point2D_F32(points[i].x * scaleX, points[i].y * scaleY));
+        }
+        return _return;
+    }
+
     public Point2D_F32 getPoint(SkeletonPointName name) {
         return this.points[name.ordinal()].copy();
     }
