@@ -21,12 +21,19 @@ jobs:
         ports:
           - 1865:1865
         options: -it
+      polypheny:
+        image: silvanheller/polypheny-vitrivr
+        ports:
+          - 20591:20591
+          - 8070:8070
 
     # Start actual job.
     steps:
     - uses: actions/checkout@v2
     - name: nc connection test
       run: nc -zv 127.0.0.1 1865
+    - name: update polypheny docker container
+      run: curl -X POST -F 'clientId=-1' http://localhost:8070/control/update
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
