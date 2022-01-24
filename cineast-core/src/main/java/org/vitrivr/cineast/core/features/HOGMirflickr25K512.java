@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * A Extraction and Retrieval module that uses HOG descriptors and a 512 word codebook based on Mirflickr 25K to obtain a histograms of codewords. These histograms ares used as feature-vectors.
