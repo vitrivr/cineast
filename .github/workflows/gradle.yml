@@ -22,7 +22,7 @@ jobs:
           - 1865:1865
         options: -it
       polypheny:
-        image: silvanheller/polypheny-vitrivr
+        image: silvanheller/polypheny-docker-vitrivr
         ports:
           - 20591:20591
           - 8070:8070
