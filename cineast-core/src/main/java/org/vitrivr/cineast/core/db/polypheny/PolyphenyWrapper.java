@@ -35,7 +35,7 @@ public final class PolyphenyWrapper implements AutoCloseable {
   /**
    * Store name Cottontail DB instances.
    */
-  public static final String STORE_NAME_COTTONTAIL = "cottontail";
+  public static final String STORE_NAME_COTTONTAIL = "cottontaildb";
 
   /**
    * The JDBC {@link Connection} used to communicate with Polypheny DB.
@@ -50,7 +50,7 @@ public final class PolyphenyWrapper implements AutoCloseable {
       Class.forName("org.polypheny.jdbc.Driver"); /* Make sure, driver was loaded. */
       final Properties properties = new Properties();
       properties.put("username", "pa"); /* TODO: Could be configurable :-) */
-      this.connection = DriverManager.getConnection(String.format("jdbc:polypheny:http://%s:%s/", host, port), properties);
+      this.connection = DriverManager.getConnection(String.format("jdbc:polypheny:http://%s/", host, port), properties);
     } catch (ClassNotFoundException | SQLException e) {
       throw new IllegalStateException("Failed to initialize JDBC connection to Polypheny DB due to error: " + e.getMessage());
     }
