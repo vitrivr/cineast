@@ -55,7 +55,6 @@ public class SkeletonPose extends AbstractFeatureModule {
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
         supply.get().createFeatureEntity(this.tableName, false,
-                new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING),
                 new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
                 new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
                 new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
@@ -222,6 +221,10 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         return new Pair<>(angles, weights);
 
+    }
+
+    private void buildQuery() {
+        //...
     }
 
     private static float angle(Point2D_F32 p1, Point2D_F32 c, Point2D_F32 p2) {
