@@ -5,8 +5,6 @@ import org.vitrivr.cineast.core.config.DatabaseConfig.Selector;
 import org.vitrivr.cineast.core.config.DatabaseConfig.Writer;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cottontail.client.language.ddl.ListEntities;
-import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
 
 @Command(name = "optimize", description = "Optimize all entities for the Cineast schema. This command is only compatible with the Cottontail DB database.")
 public class OptimizeEntitiesCommand implements Runnable {
@@ -22,13 +20,13 @@ public class OptimizeEntitiesCommand implements Runnable {
       return;
     }
     try (final CottontailWrapper wrapper = new CottontailWrapper(Config.sharedConfig().getDatabase(), false)) {
-      System.out.println("Optimizing all entities for schema '" + CottontailWrapper.CINEAST_SCHEMA + "' in Cottontail");
+     /* System.out.println("Optimizing all entities for schema '" + CottontailWrapper.CINEAST_SCHEMA + "' in Cottontail");
       wrapper.client.list(new ListEntities(CottontailWrapper.CINEAST_SCHEMA), null).forEachRemaining(entity -> {
         System.out.println("Optimizing entity " + entity);
         final String name = entity.asString("dbo").replace("warren.", "");
         wrapper.client.optimize(new OptimizeEntity(name), null);
       });
-      System.out.println("Finished optimizing all entities");
+      System.out.println("Finished optimizing all entities");*/
     }
   }
 }

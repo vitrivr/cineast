@@ -9,10 +9,10 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.Skeleton;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -20,12 +20,17 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailEntityCreator;
+import org.vitrivr.cineast.core.db.cottontaildb.CottontailSelector;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
+import org.vitrivr.cottontail.client.SimpleClient;
+import org.vitrivr.cottontail.client.iterators.Tuple;
+import org.vitrivr.cottontail.client.iterators.TupleIterator;
+import org.vitrivr.cottontail.grpc.CottontailGrpc;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +63,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                 new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
                 new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
                 new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
-                );
+        );
     }
 
     protected void persist(String shotId, Collection<Skeleton> skeletons) {
@@ -105,6 +110,12 @@ public class SkeletonPose extends AbstractFeatureModule {
             return Collections.emptyList();
         }
 
+        if (!(this.selector instanceof CottontailSelector)) {
+            return Collections.emptyList();
+        }
+
+        SimpleClient client = ((CottontailSelector) this.selector).cottontail.client;
+
         HashMap<String, TObjectDoubleHashMap<Pair<Integer, Integer>>> segmentDistancesMap = new HashMap<>(qc.getRawResultsPerModule() * skeletons.size());
 
         int queryPersonId = 0;
@@ -114,19 +125,26 @@ public class SkeletonPose extends AbstractFeatureModule {
 
             Pair<float[], float[]> pair = getAnglesandWeights(skeleton);
 
-            List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(qc.getRawResultsPerModule(), pair.first, FEATURE_COL, QueryConfig.clone(qc)
-                    .setDistanceWeights(pair.second)
-                    .setDistance(ReadableQueryConfig.Distance.manhattan));
+//            List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(qc.getRawResultsPerModule(), pair.first, FEATURE_COL, QueryConfig.clone(qc)
+//                    .setDistanceWeights(pair.second)
+//                    .setDistance(ReadableQueryConfig.Distance.manhattan));
 
-            for (Map<String, PrimitiveTypeProvider> row : rows) {
 
-                String segment = row.get(GENERIC_ID_COLUMN_QUALIFIER).getString();
+            TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
+
+
+
+            while (tuples.hasNext()) {
+
+                Tuple tuple = tuples.next();
+
+                String segment = tuple.asString(GENERIC_ID_COLUMN_QUALIFIER);
 
                 if (!segmentDistancesMap.containsKey(segment)) {
                     segmentDistancesMap.put(segment, new TObjectDoubleHashMap<>());
                 }
 
-                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, row.get(PERSON_ID_COL).getInt()), row.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble());
+                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble(DB_DISTANCE_VALUE_QUALIFIER));
 
             }
 
@@ -170,7 +188,7 @@ public class SkeletonPose extends AbstractFeatureModule {
             double[][] costs = new double[skeletons.size()][personIds.size()];
             TIntIntHashMap inversePersonIdMapping = new TIntIntHashMap(personIds.size());
             int i = 0;
-            for (int personId : personIds){
+            for (int personId : personIds) {
                 inversePersonIdMapping.put(personId, i++);
             }
 
@@ -196,35 +214,62 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     private Pair<float[], float[]> getAnglesandWeights(Skeleton skeleton) {
         float[] angles = new float[]{
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ANKLE),skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE),skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP),skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP),skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ANKLE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
 
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_WRIST),skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW),skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER),skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER),skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_WRIST))
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_WRIST), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
+                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_WRIST))
         };
 
         float[] weights = new float[]{
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ANKLE),skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE),skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP),skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP),skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ANKLE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
 
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_WRIST),skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW),skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER),skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER),skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_WRIST)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_WRIST), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
+                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_WRIST)),
         };
 
         return new Pair<>(angles, weights);
 
     }
 
-    private void buildQuery() {
-        //...
+    private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
+        return CottontailGrpc.QueryMessage.newBuilder().setQuery(
+                CottontailGrpc.Query.newBuilder().setFrom(
+                        CottontailGrpc.From.newBuilder().setScan(CottontailGrpc.Scan.newBuilder().setEntity(CottontailGrpc.EntityName.newBuilder().setName(this.tableName).setSchema(CottontailGrpc.SchemaName.newBuilder().setName("cineast"))))
+                ).setProjection(
+                        CottontailGrpc.Projection.newBuilder()
+                                .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
+                                .addElements(
+                                        CottontailGrpc.Projection.ProjectionElement.newBuilder().setFunction(/* Distance function */
+                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")).addArguments(
+                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(FEATURE_COL))
+                                                ).addArguments(
+                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
+                                                        )))
+                                                ).addArguments(
+                                                        CottontailGrpc.Expression.newBuilder().setFunction(/* Nested, min() function */
+                                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("min")).addArguments(
+                                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
+                                                                ).addArguments(
+                                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
+                                                                        )))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                ).setLimit(limit).build()).build();
     }
 
     private static float angle(Point2D_F32 p1, Point2D_F32 c, Point2D_F32 p2) {
@@ -241,7 +286,8 @@ public class SkeletonPose extends AbstractFeatureModule {
         File[] folders = baseDir.listFiles(File::isDirectory);
 
         ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<SkeletonEntry>> typeRef = new TypeReference<>() { };
+        TypeReference<List<SkeletonEntry>> typeRef = new TypeReference<>() {
+        };
 
         DatabaseConfig config = new DatabaseConfig();
         config.setHost("localhost");
@@ -251,28 +297,77 @@ public class SkeletonPose extends AbstractFeatureModule {
 
 
         SkeletonPose sp = new SkeletonPose();
-        sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
-        sp.init(() -> new CottontailWriter(ctWrapper), 100);
 
 
-        for (File folder : folders) {
-            for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
+        boolean insert = false;
 
-                String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
+        if (insert) {
+            sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
+            sp.init(() -> new CottontailWriter(ctWrapper), 100);
 
-                List<SkeletonEntry> derialized = mapper.readValue(file, typeRef);
 
-                List<Skeleton> skeletons = derialized.stream().map(SkeletonEntry::toSkeleton).collect(Collectors.toList());
+            for (File folder : folders) {
+                for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
 
-                sp.persist(segmentId, skeletons);
+                    String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
+
+                    List<SkeletonEntry> derialized = mapper.readValue(file, typeRef);
+
+                    List<Skeleton> skeletons = derialized.stream().map(SkeletonEntry::toSkeleton).collect(Collectors.toList());
+
+                    sp.persist(segmentId, skeletons);
+
+                }
+                System.out.println("done with " + folder.getName());
+            }
+        }
+
+
+        sp.init(() -> new CottontailSelector(ctWrapper));
+
+        Skeleton skeleton = mapper.readValue(new File(baseDir, "00001/shot00001_10_RKF.json"), typeRef).get(0).toSkeleton();
+
+        SegmentContainer container = new SegmentContainer() {
+            @Override
+            public String getId() {
+                return null;
+            }
+
+            @Override
+            public String getSuperId() {
+                return null;
+            }
+
+            @Override
+            public void setId(String id) {
 
             }
-            System.out.println("done with " + folder.getName());
+
+            @Override
+            public void setSuperId(String id) {
+
+            }
+
+            @Override
+            public List<Skeleton> getSkeletons() {
+                return Collections.singletonList(skeleton);
+            }
+        };
+
+        List<ScoreElement> results = sp.getSimilar(container, new QueryConfig(null).setResultsPerModule(100));
+
+        int i = 0;
+
+        for (ScoreElement element : results) {
+            System.out.println(i++ + ": " + element);
+            if (i > 10) {
+                break;
+            }
         }
 
     }
 
-    static class SkeletonEntry{
+    static class SkeletonEntry {
         public int person_id;
         public List<List<Float>> pose_keypoints;
 
