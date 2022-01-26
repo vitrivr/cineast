@@ -20,11 +20,14 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
   /** The {@link CottontailWrapper} used to establish a database connection. */
   private final CottontailWrapper wrapper;
 
+  /** The {@link DatabaseConfig} to use to run this test.*/
+  private final DatabaseConfig config = WRAPPER_CONFIG_PROVIDER.get();
+
   /**
    * Constructor.
    */
   public CottontailIntegrationDBProvider() {
-    this.wrapper = new CottontailWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
+    this.wrapper = new CottontailWrapper(this.config.getHost(), this.config.getPort());
   }
 
   CottontailWrapper getWrapper() {
@@ -33,7 +36,7 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
   @Override
   public PersistencyWriter<Insert> getPersistencyWriter() {
-    return new CottontailWriter(getWrapper());
+    return new CottontailWriter(getWrapper(), this.config.getBatchsize());
   }
 
   @Override

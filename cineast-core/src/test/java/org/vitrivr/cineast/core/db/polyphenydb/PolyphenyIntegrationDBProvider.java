@@ -28,11 +28,14 @@ public class PolyphenyIntegrationDBProvider implements IntegrationDBProvider<Pre
 
   private final PolyphenyWrapper wrapper;
 
+  /** The {@link DatabaseConfig} to use to run this test.*/
+  private final DatabaseConfig config = WRAPPER_CONFIG_PROVIDER.get();
+
   /**
    * Constructor.
    */
   public PolyphenyIntegrationDBProvider() {
-    this.wrapper = new PolyphenyWrapper(WRAPPER_CONFIG_PROVIDER.get().getHost(), WRAPPER_CONFIG_PROVIDER.get().getPort());
+    this.wrapper = new PolyphenyWrapper(this.config.getHost(), this.config.getPort());
   }
 
   PolyphenyWrapper getWrapper() {
@@ -41,7 +44,7 @@ public class PolyphenyIntegrationDBProvider implements IntegrationDBProvider<Pre
 
   @Override
   public PersistencyWriter<PreparedStatement> getPersistencyWriter() {
-    return new PolyphenyWriter(getWrapper());
+    return new PolyphenyWriter(getWrapper(), this.config.getBatchsize());
   }
 
   @Override

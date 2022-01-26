@@ -27,7 +27,7 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
    */
   private String fqn;
 
-  /** The batch size to use for INSERTS. */
+  /** The batch size to use for INSERTS; this is simply a property exposed. Only batched persistency writers make use of batched INSERTS. */
   private final int batchSize;
 
 

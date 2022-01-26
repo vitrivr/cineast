@@ -80,8 +80,8 @@ public abstract class MetadataTest<R> {
     this.ec = provider.getEntityCreator();
     this.objPersWriter = provider.getPersistencyWriter();
     this.segPersWriter = provider.getPersistencyWriter();
-    this.objWriter = new MediaObjectMetadataWriter(objPersWriter, 1000, testObjMetaTableName);
-    this.segWriter = new MediaSegmentMetadataWriter(segPersWriter, 1000, testSegMetaTableName);
+    this.objWriter = new MediaObjectMetadataWriter(objPersWriter, testObjMetaTableName);
+    this.segWriter = new MediaSegmentMetadataWriter(segPersWriter, testSegMetaTableName);
 
     /* Prepare databases. */
     dropTables();
