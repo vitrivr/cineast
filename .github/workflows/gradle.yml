@@ -29,12 +29,14 @@ jobs:
           POSTGRES_DB: polypheny
           POSTGRES_PASSWORD: happy-jumping-alpaca
           POSTGRES_USER: polypheny
+	options: -d
       polypheny:
         image: silvanheller/polypheny-cottontail
         ports:
           - 20591:20591
           - 13137:13137
           - 8070:8070
+	options: -d
 
     # Start actual job.
     steps:
