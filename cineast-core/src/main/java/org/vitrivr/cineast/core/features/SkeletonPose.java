@@ -325,7 +325,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         sp.init(() -> new CottontailSelector(ctWrapper));
 
-        Skeleton skeleton = mapper.readValue(new File(baseDir, "00001/shot00001_10_RKF.json"), typeRef).get(0).toSkeleton();
+        Skeleton skeleton = mapper.readValue(new File(baseDir, "00006/shot00006_22_RKF.json"), typeRef).get(0).toSkeleton();
 
         SegmentContainer container = new SegmentContainer() {
             @Override
@@ -360,9 +360,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         for (ScoreElement element : results) {
             System.out.println(i++ + ": " + element);
-            if (i > 10) {
-                break;
-            }
         }
 
     }

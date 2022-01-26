@@ -1,23 +1,12 @@
 package org.vitrivr.cineast.api.messages.query;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.query.containers.*;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.AudioQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.BooleanQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.IdQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.InstantQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.MotionQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 
 /**
  * A {@link QueryTermType} represents the types of query terms used.
@@ -34,6 +23,7 @@ public enum QueryTermType {
   TEXT(TextQueryTermContainer.class),
   TAG(TagQueryTermContainer.class),
   SEMANTIC(SemanticMapQueryTermContainer.class),
+  SKELETON(SkeletonQueryTermContainer.class),
 
   /**
    * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
