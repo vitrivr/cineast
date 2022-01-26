@@ -23,9 +23,9 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
 import org.vitrivr.cineast.core.util.MultiTracker;
 import org.vitrivr.cineast.core.util.NeedlemanWunschMerge;
-import org.vitrivr.cineast.core.util.TextDetector_EAST;
-import org.vitrivr.cineast.core.util.TextRecognizer_CTC;
-import org.vitrivr.cineast.core.util.TextStream;
+import org.vitrivr.cineast.core.util.text.TextDetector_EAST;
+import org.vitrivr.cineast.core.util.text.TextRecognizer_CTC;
+import org.vitrivr.cineast.core.util.text.TextStream;
 import org.vitrivr.cineast.core.util.ThreadLocalObjectCache;
 
 /**

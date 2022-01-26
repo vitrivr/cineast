@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util;
+package org.vitrivr.cineast.core.util.text;
 
 import georegression.struct.shapes.Quadrilateral_F64;
 import java.util.ArrayList;

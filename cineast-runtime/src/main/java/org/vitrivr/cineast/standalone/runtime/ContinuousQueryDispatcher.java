@@ -28,7 +28,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;

@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.util.dsp.visualization;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.audio.CENS;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;

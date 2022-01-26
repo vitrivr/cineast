@@ -87,7 +87,15 @@ public final class CottontailWrapper implements AutoCloseable {
   }
 
   public CottontailWrapper(String host, int port) {
+    StopWatch watch = StopWatch.createStarted();
     this.client = new SimpleClient(sharedChannel(host, port));
+    boolean pingSuccessful = this.client.ping();
+    watch.stop();
+    if (pingSuccessful) {
+      LOGGER.info("Connected to Cottontail in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
+    } else {
+      LOGGER.warn("Could not connect to Cottontail at {}:{}", host, port);
+    }
   }
 
   /**
