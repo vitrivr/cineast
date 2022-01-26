@@ -121,7 +121,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return 1;
   }
 

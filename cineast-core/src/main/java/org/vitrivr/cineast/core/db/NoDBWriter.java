@@ -39,7 +39,7 @@ public class NoDBWriter extends AbstractPersistencyWriter<Object> {
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return 0;
   }
 }

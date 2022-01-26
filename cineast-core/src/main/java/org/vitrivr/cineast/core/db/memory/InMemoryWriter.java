@@ -60,7 +60,7 @@ public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return 1;
   }
 }

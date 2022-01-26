@@ -96,7 +96,7 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return this.batchSize;
   }
 

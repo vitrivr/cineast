@@ -25,9 +25,9 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
   private final boolean batch;
 
   protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer) {
-    this.batch = writer.batchSize() > 1;
+    this.batch = writer.supportedBatchSize() > 1;
     if (this.batch) {
-      this.buffer = new ArrayBlockingQueue<>(writer.batchSize());
+      this.buffer = new ArrayBlockingQueue<>(writer.supportedBatchSize());
     } else {
       this.buffer = null; //not used
     }

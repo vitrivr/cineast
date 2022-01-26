@@ -105,7 +105,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return this.batchSize;
   }
 }

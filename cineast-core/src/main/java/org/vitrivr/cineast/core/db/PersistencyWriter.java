@@ -34,9 +34,9 @@ public interface PersistencyWriter<R> extends Closeable {
   R getPersistentRepresentation(PersistentTuple tuple);
 
   /**
-   * Batch size used for inserting data.
+   * Batch size supported when inserting data. This is merely a hint to upper system components, that batching is supported.
    *
-   * @return The batch size that should be used when inserting data.
+   * @return The supported batch size when inserting data.
    */
-  int batchSize();
+  int supportedBatchSize();
 }

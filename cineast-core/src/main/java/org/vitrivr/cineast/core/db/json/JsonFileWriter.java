@@ -123,7 +123,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   }
 
   @Override
-  public int batchSize() {
+  public int supportedBatchSize() {
     return 1;
   }
 
