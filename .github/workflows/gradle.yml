@@ -34,7 +34,7 @@ jobs:
     - name: postgres connection test
       run: nc -zv 127.0.0.1 5432
     - name: Run polypheny
-      run: docker run --network=db -p 20591:20591 -p 13137:13137 -p 8070:8070 --name polypheny -d silvanheller/polypheny-cottontail
+      run: docker run --network db -p 20591:20591 -p 13137:13137 -p 8070:8070 --name polypheny -d silvanheller/polypheny-cottontail
     - name: polypheny connection test
       run: nc -zv 127.0.0.1 13137
     - name: add polypheny adapter
