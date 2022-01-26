@@ -38,7 +38,6 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 public class SkeletonPose extends AbstractFeatureModule {
@@ -144,7 +143,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                     segmentDistancesMap.put(segment, new TObjectDoubleHashMap<>());
                 }
 
-                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble(DB_DISTANCE_VALUE_QUALIFIER));
+                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble("manhattanw"));
 
             }
 
@@ -248,6 +247,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                 ).setProjection(
                         CottontailGrpc.Projection.newBuilder()
                                 .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
+                                .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(PERSON_ID_COL)))
                                 .addElements(
                                         CottontailGrpc.Projection.ProjectionElement.newBuilder().setFunction(/* Distance function */
                                                 CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")).addArguments(
@@ -258,7 +258,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                                                         )))
                                                 ).addArguments(
                                                         CottontailGrpc.Expression.newBuilder().setFunction(/* Nested, min() function */
-                                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("min")).addArguments(
+                                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
                                                                         CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
                                                                 ).addArguments(
                                                                         CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
