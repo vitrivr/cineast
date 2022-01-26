@@ -34,9 +34,11 @@ jobs:
     - name: postgres connection test
       run: nc -zv 127.0.0.1 5432
     - name: Run polypheny
-      run: docker run --network db -p 20591:20591 -p 13137:13137 -p 8070:8070 --name polypheny -d silvanheller/polypheny-cottontail
+      run: docker run --network db -p 8080:8080 -p 20591:20591 -p 13137:13137 -p 8070:8070 --name polypheny -d silvanheller/polypheny-cottontail
     - name: polypheny connection test
       run: nc -zv 127.0.0.1 13137
+    - name: polypheny curl -v connection test
+      run: curl -v 127.0.0.1:13137/sql
     - name: add polypheny adapter
       run: curl -X POST 127.0.0.1:13137/sql -d "@add-postgres-polypheny-payload"
     - name: Set up JDK 11
