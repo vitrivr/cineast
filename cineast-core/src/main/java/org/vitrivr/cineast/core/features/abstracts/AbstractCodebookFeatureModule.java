@@ -12,7 +12,9 @@ import org.ddogleg.clustering.AssignCluster;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 /**
  * An abstract feature module that leverages a named codebook and a set of features to obtain a histogram of codewords. It remains to the implementer which codebook and what descriptors to use. Once features have been obtained, use the histogram() method to get the histogram given the corpus.
@@ -43,8 +45,8 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    * Initializer for Extraction - must load the codebook.
    */
   @Override
-  public final void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
-    super.init(phandlerSupply, batchSize);
+  public final void init(PersistencyWriterSupplier phandlerSupply) {
+    super.init(phandlerSupply);
 
     /* Load the Codebook. */
     this.assignment = UtilIO.load(CODEBOOK_FOLDER + this.codebook());
@@ -54,7 +56,7 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    * Initializer for Retrieval - must load the codebook.
    */
   @Override
-  public final void init(Supplier<DBSelector> selectorSupply) {
+  public final void init(DBSelectorSupplier selectorSupply) {
     super.init(selectorSupply);
 
     /* Load the Codebook. */

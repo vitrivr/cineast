@@ -37,4 +37,9 @@ public class NoDBWriter extends AbstractPersistencyWriter<Object> {
   public Object getPersistentRepresentation(PersistentTuple tuple) {
     return new Object();
   }
+
+  @Override
+  public int batchSize() {
+    return 0;
+  }
 }

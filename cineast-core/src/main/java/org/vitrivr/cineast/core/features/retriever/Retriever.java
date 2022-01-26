@@ -7,11 +7,12 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 
 public interface Retriever extends PersistentOperator {
 
-  void init(Supplier<DBSelector> selectorSupply);
+  void init(DBSelectorSupplier selectorSupply);
 
   List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc);
 

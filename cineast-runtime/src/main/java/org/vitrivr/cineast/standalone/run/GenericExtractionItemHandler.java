@@ -109,8 +109,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     final Supplier<PersistencyWriter<?>> writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
-    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.batchSize());
-    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(), context.batchSize());
+    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get());
+    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get());
 
     final Supplier<DBSelector> readerSupplier = context.persistencyReader();
     this.objectReader = new MediaObjectReader(readerSupplier.get());
@@ -154,7 +154,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
-        ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter(), this.context.batchSize());
+        ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter());
       } else {
         extractor.init();
       }

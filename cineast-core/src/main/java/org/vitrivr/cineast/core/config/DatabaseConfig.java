@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.function.Supplier;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
 public final class DatabaseConfig {
@@ -46,7 +48,6 @@ public final class DatabaseConfig {
   public int getPort() {
     return this.port;
   }
-
   public void setPort(int port) {
     if (port < 1 || port > 65535) {
       throw new IllegalArgumentException(port + " is outside of valid port range");
@@ -65,7 +66,7 @@ public final class DatabaseConfig {
 
   @JsonProperty
   public Integer getBatchsize() {
-    return batchsize;
+    return this.batchsize;
   }
 
   public void setBatchsize(Integer batchsize) {
@@ -90,7 +91,7 @@ public final class DatabaseConfig {
     this.selector = selector;
   }
 
-  public Supplier<PersistencyWriter<?>> getWriterSupplier() {
+  public PersistencyWriterSupplier getWriterSupplier() {
     return this.writer.getWriterSupplier(this);
   }
 
@@ -98,7 +99,7 @@ public final class DatabaseConfig {
     return this.writer.getEntityCreatorSupplier(this);
   }
 
-  public Supplier<DBSelector> getSelectorSupplier() {
+  public DBSelectorSupplier getSelectorSupplier() {
     return this.writer.getSelectorSupplier(this);
   }
 }

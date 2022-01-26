@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -50,7 +51,7 @@ public class RepresentativeFrameExporter implements Extractor {
   }
 
   @Override
-  public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();
     this.phandler.open("cineast_representativeframes");
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame");

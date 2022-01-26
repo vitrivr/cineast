@@ -23,6 +23,7 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.BooleanExpression;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriever;
@@ -66,7 +67,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   protected abstract Collection<RelationalOperator> getSupportedOperators();
 
   @Override
-  public void init(Supplier<DBSelector> selectorSupply) {
+  public void init(DBSelectorSupplier selectorSupply) {
     this.selector = selectorSupply.get();
     this.selector.open(entity);
   }

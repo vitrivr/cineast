@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-
 import io.grpc.StatusRuntimeException;
 import java.util.List;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
@@ -25,8 +24,12 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    */
   private String fqn;
 
-  public CottontailWriter(CottontailWrapper wrapper) {
+  /** The batch size to use for INSERTS. */
+  private final int batchSize;
+
+  public CottontailWriter(CottontailWrapper wrapper, int batchSize) {
     this.cottontail = wrapper;
+    this.batchSize = batchSize;
   }
 
   @Override
@@ -99,5 +102,10 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
       }
     }
     return insert;
+  }
+
+  @Override
+  public int batchSize() {
+    return this.batchSize;
   }
 }

@@ -46,8 +46,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   }
 
   @Override
-  public void close() {
-  }
+  public void close() {}
 
   @Override
   public boolean exists(String key, String value) {
@@ -119,6 +118,11 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public int batchSize() {
+    return 1;
   }
 
 

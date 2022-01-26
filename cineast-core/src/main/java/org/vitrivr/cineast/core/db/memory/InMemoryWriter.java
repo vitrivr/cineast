@@ -58,4 +58,9 @@ public class InMemoryWriter extends AbstractPersistencyWriter<PersistentTuple> {
   public PersistentTuple getPersistentRepresentation(PersistentTuple tuple) {
     return tuple;
   }
+
+  @Override
+  public int batchSize() {
+    return 1;
+  }
 }

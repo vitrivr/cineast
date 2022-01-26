@@ -32,4 +32,11 @@ public interface PersistencyWriter<R> extends Closeable {
   boolean persist(List<PersistentTuple> tuples);
 
   R getPersistentRepresentation(PersistentTuple tuple);
+
+  /**
+   * Batch size used for inserting data.
+   *
+   * @return The batch size that should be used when inserting data.
+   */
+  int batchSize();
 }

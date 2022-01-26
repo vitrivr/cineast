@@ -27,8 +27,13 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
    */
   private String fqn;
 
-  public PolyphenyWriter(PolyphenyWrapper wrapper) {
+  /** The batch size to use for INSERTS. */
+  private final int batchSize;
+
+
+  public PolyphenyWriter(PolyphenyWrapper wrapper, int batchSize) {
     this.wrapper = wrapper;
+    this.batchSize = batchSize;
   }
 
   @Override
@@ -88,6 +93,11 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
       LOGGER.error("Error occurred while constructing INSERT on {}: {}", this.fqn, e);
       return null;
     }
+  }
+
+  @Override
+  public int batchSize() {
+    return this.batchSize;
   }
 
   /**

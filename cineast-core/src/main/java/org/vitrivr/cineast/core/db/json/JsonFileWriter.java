@@ -122,6 +122,11 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     return _return;
   }
 
+  @Override
+  public int batchSize() {
+    return 1;
+  }
+
   private static JsonArray toArray(boolean[] arr) {
     JsonArray jarr = new JsonArray();
     for (int i = 0; i < arr.length; ++i) {

@@ -38,19 +38,19 @@ public enum DataSource {
   ADAMPRO;
 
   /**
-   * Returns a new {@link Supplier} for an {@link PersistencyWriter}
+   * Returns a new {@link PersistencyWriterSupplier}
    *
    * @param config The {@link DatabaseConfig} to use.
-   * @return Resulting {@link Supplier<PersistencyWriter>}
+   * @return Resulting {@link PersistencyWriterSupplier}
    */
-  public Supplier<PersistencyWriter<?>> getWriterSupplier(DatabaseConfig config) {
+  public PersistencyWriterSupplier getWriterSupplier(DatabaseConfig config) {
     switch (this) {
       case NONE:
         return NoDBWriter::new;
       case COTTONTAIL:
-        return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()));
+        return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()), config.getBatchsize());
       case POLYPHENY:
-        return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost(), config.getPort()));
+        return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost(), config.getPort()), config.getBatchsize());
       case JSON:
         return () -> new JsonFileWriter(new File(config.getHost()));
       case ADAMPRO:
@@ -61,12 +61,12 @@ public enum DataSource {
   }
 
   /**
-   * Returns a new {@link Supplier} for a {@link DBSelector}
+   * Returns a new {@link DBSelectorSupplier}
    *
    * @param config The {@link DatabaseConfig} to use.
-   * @return Resulting {@link Supplier<DBSelector>}
+   * @return Resulting {@link DBSelectorSupplier}
    */
-  public Supplier<DBSelector> getSelectorSupplier(DatabaseConfig config) {
+  public DBSelectorSupplier getSelectorSupplier(DatabaseConfig config) {
     switch (this) {
       case NONE:
         return NoDBSelector::new;

@@ -3,13 +3,13 @@ package org.vitrivr.cineast.core.features.abstracts;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import java.util.List;
-import java.util.function.Supplier;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
@@ -22,7 +22,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   }
 
   @Override
-  public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();
     this.phandler.open(this.tableName);
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "sums", "hist");

@@ -26,7 +26,9 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -95,15 +97,15 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     supply.get().dropEntity(this.featureEntityName());
   }
 
-  public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     init(); //from MetadataFeatureExtractor
     PersistencyWriter<?> writer = supply.get();
-    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(), batchSize);
+    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName());
     this.featureWriter.init();
   }
 
   @Override
-  public void init(Supplier<DBSelector> selectorSupply) {
+  public void init(DBSelectorSupplier selectorSupply) {
     this.dbSelector = selectorSupply.get();
     this.dbSelector.open(this.featureEntityName());
     this.mediaSegmentReader = new MediaSegmentReader(selectorSupply.get());

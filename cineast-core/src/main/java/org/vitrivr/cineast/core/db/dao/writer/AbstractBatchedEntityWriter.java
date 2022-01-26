@@ -21,19 +21,17 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
    */
   protected PersistencyWriter<?> writer;
 
+  /** Flag indicating whether inserts should be batched in memory and submitted all at once. */
   private final boolean batch;
 
-  protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer, int batchsize, boolean init) {
-    this.batch = batchsize > 1;
+  protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer) {
+    this.batch = writer.batchSize() > 1;
     if (this.batch) {
-      this.buffer = new ArrayBlockingQueue<>(batchsize);
+      this.buffer = new ArrayBlockingQueue<>(writer.batchSize());
     } else {
       this.buffer = null; //not used
     }
     this.writer = writer;
-    if (init) {
-      this.init();
-    }
   }
 
   protected abstract void init();

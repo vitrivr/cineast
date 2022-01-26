@@ -28,14 +28,13 @@ public class GRPCEndpoint {
 
     LOGGER.info("Starting GRPC Endpoint at port {}", port);
 
-    server = ServerBuilder.forPort(port).addService(new CineastQueryService(APIEndpoint.retrievalLogic)) //FIXME this should come from a more reasonable location
-        .addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
+    //server = ServerBuilder.forPort(port).addService(new CineastQueryService(APIEndpoint.retrievalLogic)) //FIXME this should come from a more reasonable location
+    //    .addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
 
-    try {
-      server.start();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    //try {
+      //server.start();
+    //} catch (IOException e) {
+    //}
 
   }
 

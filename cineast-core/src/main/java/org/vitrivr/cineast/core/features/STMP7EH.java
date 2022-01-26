@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 import java.util.List;
-import java.util.function.Supplier;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +8,7 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 public class STMP7EH extends EHD {
 
@@ -20,7 +19,7 @@ public class STMP7EH extends EHD {
   }
 
   @Override
-  public void init(Supplier<PersistencyWriter<?>> supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();
     this.phandler.open("features_STMP7EH");
   }

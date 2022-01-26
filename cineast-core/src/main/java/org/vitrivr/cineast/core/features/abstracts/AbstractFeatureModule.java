@@ -24,7 +24,9 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.PrimitiveTypeProviderFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -59,14 +61,14 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   }
 
   @Override
-  public void init(Supplier<PersistencyWriter<?>> phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
-    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
+    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName);
+    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName);
   }
 
   @Override
-  public void init(Supplier<DBSelector> selectorSupply) {
+  public void init(DBSelectorSupplier selectorSupply) {
     this.selector = selectorSupply.get();
     this.selector.open(this.tableName);
   }
