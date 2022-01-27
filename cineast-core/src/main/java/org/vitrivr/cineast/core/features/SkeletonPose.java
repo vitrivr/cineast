@@ -37,7 +37,25 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Expression;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.FloatVector;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Function;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.FunctionName;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Order;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Component;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Direction;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Scan;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.SchemaName;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 public class SkeletonPose extends AbstractFeatureModule {
@@ -132,9 +150,9 @@ public class SkeletonPose extends AbstractFeatureModule {
             TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
 
 
-
+            int i = 0;
             while (tuples.hasNext()) {
-
+                i++;
                 Tuple tuple = tuples.next();
 
                 String segment = tuple.asString(GENERIC_ID_COLUMN_QUALIFIER);
@@ -143,7 +161,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                     segmentDistancesMap.put(segment, new TObjectDoubleHashMap<>());
                 }
 
-                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble("manhattanw"));
+                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble(DB_DISTANCE_VALUE_QUALIFIER));
 
             }
 
@@ -241,34 +259,38 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
-        return CottontailGrpc.QueryMessage.newBuilder().setQuery(
-                CottontailGrpc.Query.newBuilder().setFrom(
-                        CottontailGrpc.From.newBuilder().setScan(CottontailGrpc.Scan.newBuilder().setEntity(CottontailGrpc.EntityName.newBuilder().setName(this.tableName).setSchema(CottontailGrpc.SchemaName.newBuilder().setName("cineast"))))
+        return QueryMessage.newBuilder().setQuery(
+                Query.newBuilder().setFrom(
+                        From.newBuilder().setScan(Scan.newBuilder().setEntity(EntityName.newBuilder().setName(this.tableName).setSchema(SchemaName.newBuilder().setName("cineast"))))
                 ).setProjection(
-                        CottontailGrpc.Projection.newBuilder()
-                                .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
-                                .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(PERSON_ID_COL)))
+                        Projection.newBuilder()
+                                .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
+                                .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(PERSON_ID_COL)))
                                 .addElements(
-                                        CottontailGrpc.Projection.ProjectionElement.newBuilder().setFunction(/* Distance function */
-                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(FEATURE_COL))
+                                        ProjectionElement.newBuilder().setFunction(/* Distance function */
+                                                Function.newBuilder().setName(FunctionName.newBuilder().setName("manhattanw")).addArguments(
+                                                        Expression.newBuilder().setColumn(ColumnName.newBuilder().setName(FEATURE_COL))
                                                 ).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
+                                                        Expression.newBuilder().setLiteral(Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                                                FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
                                                         )))
                                                 ).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setFunction(/* Nested, min() function */
-                                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
-                                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
+                                                        Expression.newBuilder().setFunction(/* Nested, min() function */
+                                                                Function.newBuilder().setName(FunctionName.newBuilder().setName("vmin")).addArguments(
+                                                                        Expression.newBuilder().setColumn(ColumnName.newBuilder().setName(WEIGHT_COL))
                                                                 ).addArguments(
-                                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
+                                                                        Expression.newBuilder().setLiteral(Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                                                                FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
                                                                         )))
                                                                 )
                                                         )
                                                 )
-                                        )
+                                        ).setAlias(ColumnName.newBuilder().setName(DB_DISTANCE_VALUE_QUALIFIER))
                                 )
+                ).setOrder(
+                    Order.newBuilder()
+                        .addComponents(Component.newBuilder().setColumn(ColumnName.newBuilder().setName(DB_DISTANCE_VALUE_QUALIFIER))
+                        .setDirection(Direction.ASCENDING).build()).build()
                 ).setLimit(limit).build()).build();
     }
 
@@ -282,7 +304,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     public static void main(String[] args) throws IOException {
 
-        File baseDir = new File("../../Downloads/VBS2022/VBS2022");
+        File baseDir = new File("/Users/rgasser/Downloads/VBS2022");
         File[] folders = baseDir.listFiles(File::isDirectory);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -300,7 +322,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
 
         boolean insert = false;
-
         if (insert) {
             sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
             sp.init(() -> new CottontailWriter(ctWrapper), 100);
