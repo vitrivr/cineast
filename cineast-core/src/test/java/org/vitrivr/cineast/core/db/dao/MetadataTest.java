@@ -73,6 +73,9 @@ public abstract class MetadataTest<R> {
 
     /* Test database connection. */
     LOGGER.info("Trying to establish connection to Database");
+    if(!objSelector.ping()){
+      LOGGER.error("Connection to DB could not be established, failing test using assumeTrue()");
+    }
     assumeTrue(objSelector.ping(), "Connection to database could not be established");
     LOGGER.info("Connection to Database established");
 

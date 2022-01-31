@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -38,6 +40,8 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
  * @version 1.0.0
  */
 public final class PolyphenySelector implements DBSelector {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyEntityCreator}.
