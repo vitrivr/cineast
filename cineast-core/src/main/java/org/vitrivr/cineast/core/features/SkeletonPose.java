@@ -31,6 +31,9 @@ import org.vitrivr.cottontail.client.SimpleClient;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Expression;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Function;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,7 +133,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
 
             TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
-
 
 
             while (tuples.hasNext()) {
@@ -241,33 +243,70 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
+
+        float queryWeightSum = 0f;
+
+        for (float w : weights) {
+            queryWeightSum += w;
+        }
+
+        Expression vectorDifference = Expression.newBuilder().setFunction(/* Nested, min() function */
+                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
+                        Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
+                ).addArguments(
+                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
+                        )))
+                )
+        ).build();
+
+        Expression correctionTerm = Expression.newBuilder().setFunction(
+                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("mul")
+                ).addArguments( //constant
+                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData((float) Math.PI))
+                ).addArguments( //sub-expression
+                        Expression.newBuilder().setFunction(
+                                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("sub")
+                                ).addArguments(
+                                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData(queryWeightSum))
+                                ).addArguments(
+                                        Expression.newBuilder().setFunction(CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vsum")).addArguments(vectorDifference))
+                                )
+                        )
+                )
+
+        ).build();
+
+
+        ProjectionElement distanceFunction = ProjectionElement.newBuilder().setFunction(/* Distance function */
+
+                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("add")).addArguments(
+                        Expression.newBuilder().setFunction(Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")
+                        ).addArguments(
+                                Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(FEATURE_COL))
+                        ).addArguments(
+                                Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                        CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
+                                )))
+                        ).addArguments(
+                                vectorDifference
+                        ))
+                ).addArguments(
+                        correctionTerm
+                )
+        ).build();
+
+
         return CottontailGrpc.QueryMessage.newBuilder().setQuery(
                 CottontailGrpc.Query.newBuilder().setFrom(
-                        CottontailGrpc.From.newBuilder().setScan(CottontailGrpc.Scan.newBuilder().setEntity(CottontailGrpc.EntityName.newBuilder().setName(this.tableName).setSchema(CottontailGrpc.SchemaName.newBuilder().setName("cineast"))))
+                        CottontailGrpc.From.newBuilder().setScan(CottontailGrpc.Scan.newBuilder().setEntity(CottontailGrpc.EntityName.newBuilder()
+                                .setName(this.tableName).setSchema(CottontailGrpc.SchemaName.newBuilder().setName("cineast"))))
                 ).setProjection(
                         CottontailGrpc.Projection.newBuilder()
                                 .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
                                 .addElements(CottontailGrpc.Projection.ProjectionElement.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(PERSON_ID_COL)))
                                 .addElements(
-                                        CottontailGrpc.Projection.ProjectionElement.newBuilder().setFunction(/* Distance function */
-                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(FEATURE_COL))
-                                                ).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
-                                                        )))
-                                                ).addArguments(
-                                                        CottontailGrpc.Expression.newBuilder().setFunction(/* Nested, min() function */
-                                                                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
-                                                                        CottontailGrpc.Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
-                                                                ).addArguments(
-                                                                        CottontailGrpc.Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                                                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
-                                                                        )))
-                                                                )
-                                                        )
-                                                )
-                                        )
+                                        distanceFunction
                                 )
                 ).setLimit(limit).build()).build();
     }
