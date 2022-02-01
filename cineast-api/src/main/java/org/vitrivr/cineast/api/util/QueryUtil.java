@@ -9,10 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -32,10 +35,28 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 //TODO maybe this should be moved to core?
 public class QueryUtil {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
+  public static HashMap<String, List<StringDoublePair>> findSegmentSimilar(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryTerm> terms, QueryConfig config) {
+    HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
+
+    // Group terms by categories
+    var categoryMap = QueryUtil.groupQueryTermsByCategory(terms);
+
+    for (var category : categoryMap.keySet()) {
+      var containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, (ReadableQueryConfig) config)).collect(Collectors.toList());
+      var categoryResults = QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category);
+      returnMap.put(category, categoryResults);
+    }
+
+    return returnMap;
+  }
+
   public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupQueryTermsByCategory(List<QueryTerm> queryTerms) {
     HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
     for (QueryTerm term : queryTerms) {
       if (term.getCategories() == null) {
+        LOGGER.warn("Encountered query term without categories. Ignoring: {}", term.toString());
         continue;
       }
       term.getCategories().forEach((String category) -> {

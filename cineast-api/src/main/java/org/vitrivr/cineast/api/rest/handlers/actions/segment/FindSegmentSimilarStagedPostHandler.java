@@ -3,13 +3,19 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.query.QueryStage;
-import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
+import org.vitrivr.cineast.api.util.QueryUtil;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -42,14 +48,29 @@ public class FindSegmentSimilarStagedPostHandler implements ParsingPostRestHandl
   public SimilarityQueryResultBatch performPost(StagedSimilarityQuery query, Context ctx) {
     ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getConfig());
 
-    // TODO: Could staged queries be pushed down to DB to optimize?
+    var stageConfig = config.clone();
+
+    var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
+
     for (QueryStage stage : query.getStages()) {
-      for (QueryTerm term : stage.terms) {
-        // TODO
+      var stageResults = QueryUtil.findSegmentSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
+      stagedQueryResults.add(stageResults);
+
+      var relevantSegments = new HashSet<String>();
+      for (var result : stageResults.values()) {
+        relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
       }
+
+      // Return empty results if there are no more results in stage
+      if (relevantSegments.isEmpty()) {
+        return new SimilarityQueryResultBatch(stageResults, config.getQueryId().toString());
+      }
+
+      stageConfig.setRelevantSegmentIds(relevantSegments);
     }
 
-    return null;
+    // FIXME: Currently only returning final query stage result
+    return new SimilarityQueryResultBatch(stagedQueryResults.get(stagedQueryResults.size() - 1), config.getQueryId().toString());
   }
 
   @Override
