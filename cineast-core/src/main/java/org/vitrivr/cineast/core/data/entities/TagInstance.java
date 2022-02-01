@@ -10,6 +10,6 @@ public class TagInstance {
   public TagInstance(String id, Tag tag) {
     this.id = id;
     this.tag = tag;
-}
+  }
 
 }

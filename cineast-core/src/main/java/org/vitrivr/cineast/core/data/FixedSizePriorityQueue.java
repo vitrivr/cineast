@@ -4,10 +4,7 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 /**
- * 
- * based on
- * http://stackoverflow.com/questions/7878026/is-there-a-priorityqueue-implementation-with-fixed-
- * capacity-and-custom-comparato
+ * based on http://stackoverflow.com/questions/7878026/is-there-a-priorityqueue-implementation-with-fixed- capacity-and-custom-comparato
  */
 public class FixedSizePriorityQueue<E> extends TreeSet<E> {
 

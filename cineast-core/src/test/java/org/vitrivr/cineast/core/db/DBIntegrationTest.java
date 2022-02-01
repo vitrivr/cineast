@@ -32,6 +32,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.CineastIOUtils;
 
 /**
  * Performs Inserts and Retrieves Elements. Verifies that both writing and reading is performed correctly.
@@ -62,7 +63,7 @@ public abstract class DBIntegrationTest<R> {
   private IntegrationDBProvider<R> provider;
 
   @BeforeAll
-  void checkConnection(){
+  void checkConnection() {
     provider = provider();
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
@@ -99,16 +100,9 @@ public abstract class DBIntegrationTest<R> {
 
   @AfterEach
   void tearDownTest() {
-    if (writer != null) {
-      writer.close();
-    }
-    if (selector != null) {
-      selector.close();
-    }
+    CineastIOUtils.closeQuietly(writer, selector);
     dropTables();
-    if (ec != null) {
-      ec.close();
-    }
+    CineastIOUtils.closeQuietly(ec);
   }
 
   private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
@@ -246,29 +240,29 @@ public abstract class DBIntegrationTest<R> {
   @Disabled /* TODO: Currently not supported in Cottontail DB v0.12.0. Re-activate, once support is back. */
   @DisplayName("Batched KNN search")
   void batchedKnnSearch() {
-      selector.open(testVectorTableName);
-      List<float[]> queries = new ArrayList<>();
-      queries.add(new float[]{0.001f, 1, 0});
-      queries.add(new float[]{3.1f, 1, 0});
-      queries.add(new float[]{4.8f, 1, 0});
-      queryConfig.setDistanceIfEmpty(Distance.manhattan);
-      List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
-      List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
-      Assertions.assertEquals(3, result.size());
-      Assertions.assertEquals("0", result.get(0).getSegmentId());
-      Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
-      Assertions.assertEquals("3", result.get(1).getSegmentId());
-      Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
-      Assertions.assertEquals("5", result.get(2).getSegmentId());
-      Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
+    selector.open(testVectorTableName);
+    List<float[]> queries = new ArrayList<>();
+    queries.add(new float[]{0.001f, 1, 0});
+    queries.add(new float[]{3.1f, 1, 0});
+    queries.add(new float[]{4.8f, 1, 0});
+    queryConfig.setDistanceIfEmpty(Distance.manhattan);
+    List<ReadableQueryConfig> configs = queries.stream().map(el -> new ReadableQueryConfig(queryConfig)).collect(Collectors.toList());
+    List<SegmentDistanceElement> result = selector.getBatchedNearestNeighbours(1, queries, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, configs);
+    Assertions.assertEquals(3, result.size());
+    Assertions.assertEquals("0", result.get(0).getSegmentId());
+    Assertions.assertEquals(0.001, result.get(0).getDistance(), 0.0001);
+    Assertions.assertEquals("3", result.get(1).getSegmentId());
+    Assertions.assertEquals(0.1, result.get(1).getDistance(), 0.0001);
+    Assertions.assertEquals("5", result.get(2).getSegmentId());
+    Assertions.assertEquals(0.2, result.get(2).getDistance(), 0.0001);
   }
 
 
   /**
    * Verify that a resultSet satisfies a certain condition for a given column
    *
-   * @param results the full resultset
-   * @param col column for which the provided function should be executed
+   * @param results  the full resultset
+   * @param col      column for which the provided function should be executed
    * @param function function to be executed on the {@link PrimitiveTypeProvider} value at the column
    */
   private void checkContains(List<Map<String, PrimitiveTypeProvider>> results, String col, Function<PrimitiveTypeProvider, Boolean> function) {

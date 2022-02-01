@@ -162,7 +162,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                 sentObjectIds.addAll(limitedObjectIds);
                 LOGGER.trace("Queueing finalization and result submission for last stage, container {}", lambdaFinalContainerIdx);
                 futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, lambdaFinalContainerIdx, limitedResults));
-                List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+                List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
                 metadataRetrievalThreads.addAll(_threads);
               }
             }
@@ -248,7 +248,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       this.submitSegmentAndObjectInformationFromIds(session, uuid, segmentIds, objectIds);
 
       /* Retrieve and send metadata for items not already sent */
-      List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);
+      List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
       metadataRetrievalThreads.addAll(_threads);
     }
 

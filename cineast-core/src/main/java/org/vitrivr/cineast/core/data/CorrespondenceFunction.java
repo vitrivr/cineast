@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.data;
 
 import com.google.common.base.Preconditions;
-
 import java.util.function.DoubleUnaryOperator;
 
 public class CorrespondenceFunction implements DoubleUnaryOperator {
+
   private static final CorrespondenceFunction IDENTITY = new CorrespondenceFunction(DoubleUnaryOperator.identity());
 
   private final DoubleUnaryOperator function;

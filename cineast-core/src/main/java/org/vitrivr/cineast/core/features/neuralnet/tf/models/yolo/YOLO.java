@@ -2,6 +2,13 @@ package org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo;
 
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 import org.apache.commons.math3.analysis.function.Sigmoid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,16 +28,8 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.BoundingB
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.BoxPosition;
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.Recognition;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.MathHelper;
-import org.vitrivr.cineast.core.util.MathHelper.ArgMaxResult;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import org.vitrivr.cineast.core.util.math.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper.ArgMaxResult;
 
 
 /**
@@ -127,8 +126,7 @@ public class YOLO implements AutoCloseable {
   /**
    * It classifies the object/objects on the image
    *
-   * @param tensorFlowOutput output from the TensorFlow, it is a 13x13x((num_class +1) * 5) tensor
-   *                         125 = (numClass +  Tx, Ty, Tw, Th, To) * 5 - cause we have 5 boxes per each cell
+   * @param tensorFlowOutput output from the TensorFlow, it is a 13x13x((num_class +1) * 5) tensor 125 = (numClass +  Tx, Ty, Tw, Th, To) * 5 - cause we have 5 boxes per each cell
    * @param labels           a string vector with the labels
    * @return a list of recognition objects
    */
@@ -155,7 +153,7 @@ public class YOLO implements AutoCloseable {
   }
 
   private BoundingBox getModel(final float[] tensorFlowOutput, int cx, int cy, int b, int numClass,
-                               int offset) {
+      int offset) {
     BoundingBox model = new BoundingBox();
     Sigmoid sigmoid = new Sigmoid();
     model.setX((cx + sigmoid.value(tensorFlowOutput[offset])) * 32);
@@ -174,8 +172,8 @@ public class YOLO implements AutoCloseable {
   }
 
   private void calculateTopPredictions(final BoundingBox boundingBox,
-                                       final PriorityQueue<Recognition> predictionQueue,
-                                       final String[] labels) {
+      final PriorityQueue<Recognition> predictionQueue,
+      final String[] labels) {
     for (int i = 0; i < boundingBox.getClasses().length; i++) {
 
       ArgMaxResult argMax = MathHelper.argMax(MathHelper.softmax(boundingBox.getClasses()));

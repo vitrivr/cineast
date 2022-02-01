@@ -67,8 +67,8 @@ public class ProcessingMetaImportHandler extends DataImportHandler {
     } else {
       metaAsTable = false;
     }
-    if(clean){
-        createEntityForced();
+    if (clean) {
+      createEntityForced();
     }
   }
 

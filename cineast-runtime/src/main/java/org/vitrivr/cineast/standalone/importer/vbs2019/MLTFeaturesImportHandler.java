@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.features.DescriptionTextSearch;
 import org.vitrivr.cineast.core.features.ObjectInstances;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -18,7 +17,7 @@ public class MLTFeaturesImportHandler extends DataImportHandler {
 
   public MLTFeaturesImportHandler(int threads, int batchsize, boolean clean) {
     super(threads, batchsize);
-    if(clean){
+    if (clean) {
       final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
       LOGGER.info("Dropping table {}", ObjectInstances.TABLE_NAME);
       ec.dropEntity(ObjectInstances.TABLE_NAME);

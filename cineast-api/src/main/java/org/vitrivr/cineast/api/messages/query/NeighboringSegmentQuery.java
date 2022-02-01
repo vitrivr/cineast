@@ -2,9 +2,11 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 /**
  * A {@link NeighboringSegmentQuery} represents a query for neighbors of a given segment ID.
@@ -21,6 +23,8 @@ public class NeighboringSegmentQuery extends Query {
    */
   private final int count;
 
+  private final List<MetadataAccessSpecification> metadataAccessSpec;
+
   /**
    * Constructor for the NeighboringSegmentQuery object.
    *
@@ -31,10 +35,17 @@ public class NeighboringSegmentQuery extends Query {
   @JsonCreator
   public NeighboringSegmentQuery(@JsonProperty(value = "segmentId", required = true) String segmentId,
       @JsonProperty(value = "count", required = false) Integer count,
-      @JsonProperty(value = "config", required = false) QueryConfig config) {
+      @JsonProperty(value = "config", required = false) QueryConfig config,
+      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
+  ) {
     super(config);
     this.segmentId = segmentId;
     this.count = count == null ? 3 : count;
+    this.metadataAccessSpec = metadataAccessSpec;
+  }
+
+  public List<MetadataAccessSpecification> getMetadataAccessSpec() {
+    return metadataAccessSpec;
   }
 
   public String getSegmentId() {

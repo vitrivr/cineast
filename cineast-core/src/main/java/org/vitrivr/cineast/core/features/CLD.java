@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.List;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
@@ -8,8 +9,6 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorLayoutDescriptor;
-
-import java.util.List;
 
 public class CLD extends AbstractFeatureModule {
 

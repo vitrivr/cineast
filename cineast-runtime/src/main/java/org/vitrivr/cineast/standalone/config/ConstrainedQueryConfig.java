@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.standalone.config;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-
 import java.util.List;
 import java.util.Optional;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 public class ConstrainedQueryConfig extends QueryConfig {
 

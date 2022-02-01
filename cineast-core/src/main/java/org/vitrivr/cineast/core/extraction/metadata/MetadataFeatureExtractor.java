@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.extraction.metadata;
 
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * A {@link MetadataExtractor} that extracts only a specific feature.
@@ -13,12 +12,12 @@ import java.util.Optional;
  * @param <T> type of the feature data
  */
 public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
+
   /**
-   * Provides a default implementation by extracting the feature data and creating descriptors of
-   * it.
+   * Provides a default implementation by extracting the feature data and creating descriptors of it.
    *
    * @param objectId ID of the multimedia object for which metadata will be generated.
-   * @param path Path to the file for which metadata should be extracted.
+   * @param path     Path to the file for which metadata should be extracted.
    * @return list of descriptors describing the feature data, if found, otherwise an empty list.
    */
   @Override
@@ -29,11 +28,12 @@ public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
   }
 
   /**
-   * Returns an {@link Optional} containing the extracted feature data from the file, if found,
-   * otherwise an empty {@code Optional}.
+   * Returns an {@link Optional} containing the extracted feature data from the file, if found, otherwise an empty {@code Optional}.
    */
   Optional<T> extractFeature(String objectId, Path path);
 
-  /** Returns a list of descriptors of the given feature data. */
+  /**
+   * Returns a list of descriptors of the given feature data.
+   */
   List<MediaObjectMetadataDescriptor> createDescriptors(String objectId, T feature);
 }

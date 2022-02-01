@@ -2,13 +2,13 @@ package org.vitrivr.cineast.core.data;
 
 import com.drew.lang.GeoLocation;
 import com.google.common.base.Preconditions;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.MathHelper;
-
-import java.util.Objects;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class Location implements ReadableFloatVector {
+
   private static final int ELEMENT_COUNT = 2;
 
   private static final Logger logger = LogManager.getLogger();
@@ -82,9 +82,12 @@ public class Location implements ReadableFloatVector {
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return this.getLatitude();
-      case 1: return this.getLongitude();
-      default: throw new IndexOutOfBoundsException(num + " >= " + this.getElementCount());
+      case 0:
+        return this.getLatitude();
+      case 1:
+        return this.getLongitude();
+      default:
+        throw new IndexOutOfBoundsException(num + " >= " + this.getElementCount());
     }
   }
 
@@ -97,7 +100,7 @@ public class Location implements ReadableFloatVector {
       return false;
     }
     Location location = (Location) o;
-    return Float.compare(location.latitude, latitude)   == 0
+    return Float.compare(location.latitude, latitude) == 0
         && Float.compare(location.longitude, longitude) == 0;
   }
 

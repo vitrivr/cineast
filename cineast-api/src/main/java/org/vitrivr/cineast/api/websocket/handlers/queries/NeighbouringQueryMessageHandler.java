@@ -51,7 +51,7 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
     CompletableFuture<Void> future = this.write(session, new MediaSegmentQueryResult(uuid, segments));
 
     /* Load and transmit segment metadata. */
-    List<Thread> threads = this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched);
+    List<Thread> threads = this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
     for (Thread thread : threads) {
       thread.join();
     }

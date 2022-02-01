@@ -133,7 +133,7 @@ public class TemporalTestCases {
     segments1.add(descriptor1_5.getSegmentId());
     segments1.add(descriptor1_7.getSegmentId());
     /* optimal result is 1: (1,1), 2: (2,1) 3: (3, 0.5) , because 4 is not a valid result */
-    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 2.5/3f);
+    TemporalObject t1 = new TemporalObject(segments1, descriptor1_1.getObjectId(), 2.5 / 3f);
     expectedResults.add(t1);
 
     this.segmentMap = segmentMap;

@@ -2,6 +2,11 @@ package org.vitrivr.cineast.core.features;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -12,11 +17,11 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -28,12 +33,6 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.GridPartitioner;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class AverageColorRaster extends AbstractFeatureModule {
 
@@ -51,75 +50,75 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   protected static int get(Color c) {
     switch (c) {
-    case Black:
-      return 0;
-    case Blue:
-      return 1;
-    case Brown:
-      return 2;
-    case Cyan:
-      return 3;
-    case Green:
-      return 4;
-    case Grey:
-      return 5;
-    case Magenta:
-      return 6;
-    case Navy:
-      return 7;
-    case Orange:
-      return 8;
-    case Pink:
-      return 9;
-    case Red:
-      return 10;
-    case Teal:
-      return 11;
-    case Violet:
-      return 12;
-    case White:
-      return 13;
-    case Yellow:
-      return 14;
-    default:
-      return -1;
+      case Black:
+        return 0;
+      case Blue:
+        return 1;
+      case Brown:
+        return 2;
+      case Cyan:
+        return 3;
+      case Green:
+        return 4;
+      case Grey:
+        return 5;
+      case Magenta:
+        return 6;
+      case Navy:
+        return 7;
+      case Orange:
+        return 8;
+      case Pink:
+        return 9;
+      case Red:
+        return 10;
+      case Teal:
+        return 11;
+      case Violet:
+        return 12;
+      case White:
+        return 13;
+      case Yellow:
+        return 14;
+      default:
+        return -1;
     }
   }
 
   protected static Color get(int i) {
     switch (i) {
-    case 0:
-      return Color.Black;
-    case 1:
-      return Color.Blue;
-    case 2:
-      return Color.Brown;
-    case 3:
-      return Color.Cyan;
-    case 4:
-      return Color.Green;
-    case 5:
-      return Color.Grey;
-    case 6:
-      return Color.Magenta;
-    case 7:
-      return Color.Navy;
-    case 8:
-      return Color.Orange;
-    case 9:
-      return Color.Pink;
-    case 10:
-      return Color.Red;
-    case 11:
-      return Color.Teal;
-    case 12:
-      return Color.Violet;
-    case 13:
-      return Color.White;
-    case 14:
-      return Color.Yellow;
-    default:
-      return Color.Black;
+      case 0:
+        return Color.Black;
+      case 1:
+        return Color.Blue;
+      case 2:
+        return Color.Brown;
+      case 3:
+        return Color.Cyan;
+      case 4:
+        return Color.Green;
+      case 5:
+        return Color.Grey;
+      case 6:
+        return Color.Magenta;
+      case 7:
+        return Color.Navy;
+      case 8:
+        return Color.Orange;
+      case 9:
+        return Color.Pink;
+      case 10:
+        return Color.Red;
+      case 11:
+        return Color.Teal;
+      case 12:
+        return Color.Violet;
+      case 13:
+        return Color.White;
+      case 14:
+        return Color.Yellow;
+      default:
+        return Color.Black;
     }
   }
 
@@ -204,56 +203,56 @@ public class AverageColorRaster extends AbstractFeatureModule {
       return 1d;
     }
     switch (c1) {
-    case Black:
-      if (c2 == Color.Grey) {
-        return 0.25;
-      }
-      break;
-    case Blue:
-      if (c2 == Color.Navy || c2 == Color.Violet) {
-        return 0.5;
-      }
-      if (c2 == Color.Cyan) {
-        return 0.25;
-      }
-      break;
-    case Brown:
-      if (c2 == Color.Grey) {
-        return 0.5;
-      }
-      break;
-    case Cyan:
-      if (c2 == Color.White) {
-        return 0.25;
-      }
-      break;
-    case Green:
-      if (c2 == Color.Teal) {
-        return 0.5;
-      }
-      break;
-    case Grey:
-      if (c2 == Color.White || c2 == Color.Black) {
-        return 0.125;
-      }
-      break;
-    case Magenta:
-      if (c2 == Color.Violet || c2 == Color.Pink) {
-        return 0.5;
-      }
-      break;
-    case Orange:
-      if (c2 == Color.Red || c2 == Color.Yellow) {
-        return 0.5;
-      }
-      break;
-    case Pink:
-      if (c2 == Color.Red) {
-        return 0.5;
-      }
-      break;
-    default:
-      return 0;
+      case Black:
+        if (c2 == Color.Grey) {
+          return 0.25;
+        }
+        break;
+      case Blue:
+        if (c2 == Color.Navy || c2 == Color.Violet) {
+          return 0.5;
+        }
+        if (c2 == Color.Cyan) {
+          return 0.25;
+        }
+        break;
+      case Brown:
+        if (c2 == Color.Grey) {
+          return 0.5;
+        }
+        break;
+      case Cyan:
+        if (c2 == Color.White) {
+          return 0.25;
+        }
+        break;
+      case Green:
+        if (c2 == Color.Teal) {
+          return 0.5;
+        }
+        break;
+      case Grey:
+        if (c2 == Color.White || c2 == Color.Black) {
+          return 0.125;
+        }
+        break;
+      case Magenta:
+        if (c2 == Color.Violet || c2 == Color.Pink) {
+          return 0.5;
+        }
+        break;
+      case Orange:
+        if (c2 == Color.Red || c2 == Color.Yellow) {
+          return 0.5;
+        }
+        break;
+      case Pink:
+        if (c2 == Color.Red) {
+          return 0.5;
+        }
+        break;
+      default:
+        return 0;
     }
     return 0;
   }
@@ -288,7 +287,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER,  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return new ArrayList<>(1);

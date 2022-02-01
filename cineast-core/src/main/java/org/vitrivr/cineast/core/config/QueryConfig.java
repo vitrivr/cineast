@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
 public class QueryConfig extends ReadableQueryConfig {
@@ -18,7 +16,7 @@ public class QueryConfig extends ReadableQueryConfig {
    * Constructor used to parse a {@link QueryConfig} from JSON.
    *
    * @param queryId The ID of the query. If not set, a new ID will be generated.
-   * @param hints List of query {@link Hints} used by the query. May be null or empty.
+   * @param hints   List of query {@link Hints} used by the query. May be null or empty.
    */
   @JsonCreator
   public QueryConfig(@JsonProperty(value = "queryId", required = false) String queryId,
