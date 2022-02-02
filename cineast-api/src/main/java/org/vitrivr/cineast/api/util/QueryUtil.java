@@ -6,11 +6,13 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
@@ -37,7 +39,15 @@ public class QueryUtil {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static HashMap<String, List<StringDoublePair>> findSegmentSimilar(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryTerm> terms, QueryConfig config) {
+  /**
+   * Executes a similarity query specified by the list of {@link QueryTerm}s.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param terms                    The terms specifying the query.
+   * @param config                   The config to use for this query.
+   * @return The query results as a map of query term categories to scored segment lists.
+   */
+  public static HashMap<String, List<StringDoublePair>> findSegmentsSimilar(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryTerm> terms, QueryConfig config) {
     HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
 
     // Group terms by categories
@@ -50,6 +60,67 @@ public class QueryUtil {
     }
 
     return returnMap;
+  }
+
+  /**
+   * Executes a staged similarity query specified by the list of {@link QueryStage}s.
+   * <p>
+   * Each {@link QueryTerm} category is expected to appear no more than once in the entire query.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param stages                   The stages specifying the query.
+   * @param config                   The config to use for this query.
+   * @return The query results as a map of query term categories to scored segment lists.
+   */
+  public static HashMap<String, List<StringDoublePair>> findSegmentsSimilarStaged(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryStage> stages, QueryConfig config) {
+    var stageConfig = config.clone();
+
+    var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
+
+    for (QueryStage stage : stages) {
+      var stageResults = QueryUtil.findSegmentsSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
+      stagedQueryResults.add(stageResults);
+
+      var relevantSegments = new HashSet<String>();
+      for (var result : stageResults.values()) {
+        relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
+      }
+
+      // Return empty results if there are no more results in stage
+      if (relevantSegments.isEmpty()) {
+        return stageResults;
+      }
+
+      stageConfig.setRelevantSegmentIds(relevantSegments);
+    }
+
+    return mergeStagedQueryResults(stagedQueryResults);
+  }
+
+  /**
+   * Merges staged query results into a single result map.
+   *
+   * @param stagedQueryResults List of staged query results by stage. The results are expected to be in order of the stages.
+   */
+  public static HashMap<String, List<StringDoublePair>> mergeStagedQueryResults(ArrayList<HashMap<String, List<StringDoublePair>>> stagedQueryResults) {
+    var results = new HashMap<String, List<StringDoublePair>>();
+
+    var relevantSegments = new HashSet<String>();
+    for (var result : stagedQueryResults.get(stagedQueryResults.size() - 1).values()) {
+      relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
+    }
+
+    for (var stageResults : stagedQueryResults) {
+      for (var category : stageResults.keySet()) {
+        if (results.containsKey(category)) {
+          LOGGER.warn("Staged query contained the category \"{}\" multiple times.", category);
+        }
+        var filteredResults = stageResults.get(category).stream().filter(pair -> relevantSegments.contains(pair.key)).collect(Collectors.toList());
+        results.put(category, filteredResults);
+      }
+    }
+
+    return results;
   }
 
   public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupQueryTermsByCategory(List<QueryTerm> queryTerms) {

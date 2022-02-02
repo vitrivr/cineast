@@ -48,29 +48,9 @@ public class FindSegmentSimilarStagedPostHandler implements ParsingPostRestHandl
   public SimilarityQueryResultBatch performPost(StagedSimilarityQuery query, Context ctx) {
     ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getConfig());
 
-    var stageConfig = config.clone();
+    var results = QueryUtil.findSegmentsSimilarStaged(continuousRetrievalLogic, query.getStages(), config);
 
-    var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
-
-    for (QueryStage stage : query.getStages()) {
-      var stageResults = QueryUtil.findSegmentSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
-      stagedQueryResults.add(stageResults);
-
-      var relevantSegments = new HashSet<String>();
-      for (var result : stageResults.values()) {
-        relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
-      }
-
-      // Return empty results if there are no more results in stage
-      if (relevantSegments.isEmpty()) {
-        return new SimilarityQueryResultBatch(stageResults, config.getQueryId().toString());
-      }
-
-      stageConfig.setRelevantSegmentIds(relevantSegments);
-    }
-
-    // FIXME: Currently only returning final query stage result
-    return new SimilarityQueryResultBatch(stagedQueryResults.get(stagedQueryResults.size() - 1), config.getQueryId().toString());
+    return new SimilarityQueryResultBatch(results, config.getQueryId().toString());
   }
 
   @Override
