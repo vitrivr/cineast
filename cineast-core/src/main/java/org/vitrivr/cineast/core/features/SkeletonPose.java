@@ -164,7 +164,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                     segmentDistancesMap.put(segment, new TObjectDoubleHashMap<>());
                 }
 
-                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asDouble(DB_DISTANCE_VALUE_QUALIFIER));
+                segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asFloat(DB_DISTANCE_VALUE_QUALIFIER));
 
             }
 
@@ -299,13 +299,13 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         ProjectionElement distanceFunction = ProjectionElement.newBuilder().setFunction(/* Distance function */
 
-                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("add")).addArguments(
-                        Expression.newBuilder().setFunction(Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("manhattanw")
+                Function.newBuilder().setName(FunctionName.newBuilder().setName("add")).addArguments(
+                        Expression.newBuilder().setFunction(Function.newBuilder().setName(FunctionName.newBuilder().setName("manhattanw")
                         ).addArguments(
-                                Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(FEATURE_COL))
+                                Expression.newBuilder().setColumn(ColumnName.newBuilder().setName(FEATURE_COL))
                         ).addArguments(
-                                Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                        CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
+                                Expression.newBuilder().setLiteral(Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                                        FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
                                 )))
                         ).addArguments(
                                 vectorDifference
@@ -313,7 +313,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                 ).addArguments(
                         correctionTerm
                 )
-        ).build();
+        ).setAlias(ColumnName.newBuilder().setName("distance").build()).build();
 
 
         return QueryMessage.newBuilder().setQuery(
@@ -324,9 +324,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                         Projection.newBuilder()
                                 .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
                                 .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(PERSON_ID_COL)))
-                                .addElements(
-                                        distanceFunction
-                                )
+                                .addElements(distanceFunction)
                 ).setOrder(
                     Order.newBuilder()
                         .addComponents(Component.newBuilder().setColumn(ColumnName.newBuilder().setName(DB_DISTANCE_VALUE_QUALIFIER))
@@ -344,7 +342,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     public static void main(String[] args) throws IOException {
 
-        File baseDir = new File("../../Downloads/VBS2022/VBS2022");
+        File baseDir = new File("/Users/gassra02/Downloads/VBS2022/");
         File[] folders = baseDir.listFiles(File::isDirectory);
 
         ObjectMapper mapper = new ObjectMapper();
