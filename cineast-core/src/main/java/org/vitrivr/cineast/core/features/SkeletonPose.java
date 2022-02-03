@@ -86,21 +86,16 @@ public class SkeletonPose extends AbstractFeatureModule {
         );
     }
 
-    protected void persist(String shotId, Collection<Skeleton> skeletons) {
+    protected void persist(Collection<Pair<String,Skeleton>> skeletons) {
         if (skeletons == null || skeletons.isEmpty()) {
             return;
         }
-
-        List<PersistentTuple> tuples = new ArrayList<>(skeletons.size());
-
+        final List<PersistentTuple> tuples = new ArrayList<>(skeletons.size());
         int i = 0;
-        for (Skeleton skeleton : skeletons) {
-            Pair<float[], float[]> pair = getAnglesandWeights(skeleton);
-            tuples.add(this.phandler.generateTuple(
-                    shotId, i++, pair.first, pair.second
-            ));
+        for (Pair<String,Skeleton> skeleton : skeletons) {
+            final Pair<float[], float[]> pair = getAnglesandWeights(skeleton.second);
+            tuples.add(this.phandler.generateTuple(skeleton.first, i++, pair.first, pair.second));
         }
-
         this.phandler.persist(tuples);
     }
 
@@ -117,8 +112,7 @@ public class SkeletonPose extends AbstractFeatureModule {
             return;
         }
 
-        persist(segmentContainer.getId(), detectSkeletons(representativeFrame.getImage()));
-
+        this.persist(detectSkeletons(representativeFrame.getImage()).stream().map(it -> new Pair<>(segmentContainer.getId(), it)).collect(Collectors.toList()));
     }
 
     @Override
@@ -358,26 +352,30 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         SkeletonPose sp = new SkeletonPose();
 
-
+        int batchSize = 10000;
         boolean insert = false;
         if (insert) {
             sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
             sp.init(() -> new CottontailWriter(ctWrapper), 100);
-
-
+            final List<Pair<String,Skeleton>> skeletons = new LinkedList<>();
             for (File folder : folders) {
                 for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
-
-                    String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
-
-                    List<SkeletonEntry> derialized = mapper.readValue(file, typeRef);
-
-                    List<Skeleton> skeletons = derialized.stream().map(SkeletonEntry::toSkeleton).collect(Collectors.toList());
-
-                    sp.persist(segmentId, skeletons);
-
+                    final String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
+                    for (SkeletonEntry e : mapper.readValue(file, typeRef)) {
+                        skeletons.add(new Pair<>(segmentId, e.toSkeleton()));
+                    }
                 }
-                System.out.println("done with " + folder.getName());
+                if (skeletons.size() >= batchSize) {
+                    sp.persist(skeletons);
+                    System.out.println("Persisted " + skeletons.size() + " entries...");
+                    skeletons.clear();
+                }
+            }
+
+            /* Final persist. */
+            if (skeletons.size() > 0) {
+                sp.persist(skeletons);
+                System.out.println("Persisted " + skeletons.size() + " entries...");
             }
         }
 
