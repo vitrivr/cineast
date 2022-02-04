@@ -106,6 +106,11 @@ public interface ImageInformation {
       return Objects.equals(this$height, other$height);
     }
 
+    @Override
+    public int hashCode() {
+      return toString().hashCode();
+    }
+
     protected boolean canEqual(final Object other) {
       return other instanceof ImageInformation.SizesItem;
     }
@@ -171,6 +176,11 @@ public interface ImageInformation {
       final Object this$scaleFactors = this.getScaleFactors();
       final Object other$scaleFactors = other.getScaleFactors();
       return Objects.equals(this$scaleFactors, other$scaleFactors);
+    }
+
+    @Override
+    public int hashCode() {
+      return toString().hashCode();
     }
 
     protected boolean canEqual(final Object other) {

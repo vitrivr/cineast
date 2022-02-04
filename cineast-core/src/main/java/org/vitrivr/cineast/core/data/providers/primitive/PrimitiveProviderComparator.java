@@ -30,6 +30,6 @@ public class PrimitiveProviderComparator implements Comparator<PrimitiveTypeProv
       return 1;
     }
 
-    return Comparator.<Comparable>naturalOrder().compare((Comparable) PrimitiveTypeProvider.getObject(o1), (Comparable) PrimitiveTypeProvider.getObject(o2));
+    return Comparator.<Comparable>naturalOrder().compare((Comparable<?>) PrimitiveTypeProvider.getObject(o1), (Comparable<?>) PrimitiveTypeProvider.getObject(o2));
   }
 }

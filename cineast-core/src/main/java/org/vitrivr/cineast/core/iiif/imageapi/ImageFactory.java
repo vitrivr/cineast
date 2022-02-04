@@ -76,9 +76,9 @@ public class ImageFactory {
     }
 
     if (iiifConfig != null) {
-      if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE))) {
+      if (imageApiVersion.getVersion() == IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE) {
         new ApiJob_v2(iiifConfig).run(jobDirectoryString, itemPrefixString);
-      } else if (imageApiVersion.equals(new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO))) {
+      } else if (imageApiVersion.getVersion() == IMAGE_API_VERSION.THREE_POINT_ZERO) {
         new ApiJob_v3(iiifConfig).run(jobDirectoryString, itemPrefixString);
       }
     } else if (canvas != null) {
