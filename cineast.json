@@ -1,9 +1,7 @@
 {
   "database": {
     "host": "localhost",
-    "selector": "POLYPHENY",
-    "writer": "POLYPHENY",
-    "port": 80,
+    "port": 1865,
     "plaintext": true
   },
   "retriever": {
