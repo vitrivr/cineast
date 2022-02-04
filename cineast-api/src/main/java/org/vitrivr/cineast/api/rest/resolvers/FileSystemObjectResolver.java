@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 
-public class FileSystemObjectResolver implements ObjectResolver {
+public class FileSystemObjectResolver implements ObjectResolver, AutoCloseable {
 
   private final MediaObjectReader lookup;
   private final File baseDir;
@@ -47,8 +47,7 @@ public class FileSystemObjectResolver implements ObjectResolver {
   }
 
   @Override
-  protected void finalize() throws Throwable {
+  public void close() {
     this.lookup.close();
-    super.finalize();
   }
 }
