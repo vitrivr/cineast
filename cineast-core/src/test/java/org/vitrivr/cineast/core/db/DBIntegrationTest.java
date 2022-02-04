@@ -210,11 +210,11 @@ public abstract class DBIntegrationTest<R> {
   @Test
   @DisplayName("Verify elements exist by id")
   void entriesExistById() {
-    writer.open(testVectorTableName);
+    this.writer.open(testVectorTableName);
     for (int i = 0; i < MAX_VECTOR_ID; i++) {
       Assertions.assertTrue(writer.idExists(String.valueOf(i)));
     }
-    writer.open(testTextTableName);
+    this.writer.open(testTextTableName);
     for (int i = 0; i < MAX_TEXT_ID; i++) {
       Assertions.assertTrue(writer.idExists(String.valueOf(i)));
     }
