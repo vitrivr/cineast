@@ -263,8 +263,8 @@ public abstract class DBBooleanIntegrationTest<R> {
 
     //The result is between x-2 and x+2
     final List<PrimitiveTypeProvider> values1 = new ArrayList<>();
-    values1.add(PrimitiveTypeProvider.fromObject(idToCheck + 2));
     values1.add(PrimitiveTypeProvider.fromObject(idToCheck - 2));
+    values1.add(PrimitiveTypeProvider.fromObject(idToCheck + 2));
     final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element1 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values1);
 
     //The result range is either x+1 or x-1
