@@ -1,1 +1,0 @@
-{"query": "ALTER ADAPTERS ADD \"postgresql\" USING 'org.polypheny.db.adapter.jdbc.stores.PostgresqlStore' WITH '{\"mode\":\"remote\",\"database\":\"polypheny\",\"password\":\"happy-jumping-alpaca\",\"port\":\"5432\",\"host\":\"polypheny-postgres\",\"username\":\"polypheny\",\"maxConnections\":\"25\"}'"}
