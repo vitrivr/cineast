@@ -1,26 +1,6 @@
-plugins {
-    id 'maven'
-}
-
 repositories {
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-}
-
-
-if (!project.hasProperty("build_version")) {
-    ext.dbisNexusUsername = "no"
-    ext.dbisNexusPassword = "no"
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "https://dbis-nexus.dmi.unibas.ch/repository/maven-snapshots/") {
-                authentication(userName: "$dbisNexusUsername", password: "$dbisNexusPassword")
-            }
-        }
     }
 }
 
@@ -59,6 +39,11 @@ publishing {
                         id = 'ppanopticon'
                         name = 'Ralph Gasser'
                         email = 'ralph.gasser@unibas.ch'
+                    }
+                    developer {
+                        id = 'spiess'
+                        name = 'Florian Spiess'
+                        email = 'florian.spiess@unibas.ch'
                     }
                 }
                 scm {
