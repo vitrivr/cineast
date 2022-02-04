@@ -101,6 +101,7 @@ public abstract class MetadataTest<R> {
   @AfterAll
   void finalTearDownTest() {
     dropTables();
+    CineastIOUtils.closeQuietly(this.objWriter, this.segWriter, this.objReader, this.segReader);
     CineastIOUtils.closeQuietly(this.provider);
   }
 
