@@ -262,7 +262,8 @@ public class SkeletonPose extends AbstractFeatureModule {
         for (float w : weights) {
             queryWeightSum += w;
         }
-
+        // FIXME: Make it work
+        // TODO: Cleanup and document
         Expression vectorDifference = Expression.newBuilder().setFunction(/* Nested, min() function */
                 CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
                         Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
@@ -334,9 +335,10 @@ public class SkeletonPose extends AbstractFeatureModule {
         return Math.min(f, Math.min(g, h));
     }
 
+    // TODO or FIXME: Remove
     public static void main(String[] args) throws IOException {
 
-        File baseDir = new File("/Users/gassra02/Downloads/VBS2022/");
+        File baseDir = new File("/Users/rgasser/Downloads/VBS2022/");
         File[] folders = baseDir.listFiles(File::isDirectory);
 
         ObjectMapper mapper = new ObjectMapper();
