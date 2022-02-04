@@ -3,19 +3,10 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -23,8 +14,6 @@ public class FindSegmentSimilarStagedPostHandler implements ParsingPostRestHandl
 
   public static final String ROUTE = "find/segments/similar/staged";
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public FindSegmentSimilarStagedPostHandler(ContinuousRetrievalLogic continuousRetrievalLogic) {
     this.continuousRetrievalLogic = continuousRetrievalLogic;
