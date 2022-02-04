@@ -8,14 +8,17 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -158,6 +161,56 @@ public final class PolyphenySelector implements DBSelector {
       }
     } catch (SQLException e) {
       LOGGER.warn("Error occurred during query execution in getRows(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
+  }
+
+  /**
+   * Performs a boolean lookup based on multiple conditions, linked with AND. Each element of the list specifies one of the conditions - left middle right, i.e. id IN (1, 5, 7)
+   *
+   * @param conditions conditions which will be linked by AND
+   * @param identifier column upon which the retain operation will be performed if the database layer does not support compound boolean retrieval.
+   * @param projection Which columns shall be selected
+   */
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
+    final StringBuilder conditionBuilder = new StringBuilder();
+    final LinkedList<PrimitiveTypeProvider> values = new LinkedList<>();
+    int i = 0;
+    for (Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> condition: conditions) {
+        if (i++ > 0) conditionBuilder.append(" AND ");
+        conditionBuilder.append(condition.getLeft());
+        conditionBuilder.append(" ");
+        conditionBuilder.append(toPredicate(condition.getMiddle()));
+        if (condition.getMiddle() == RelationalOperator.IN) {
+          int j = 0;
+          conditionBuilder.append("(");
+          for (PrimitiveTypeProvider v : condition.getRight()) {
+            if (j++ > 0) conditionBuilder.append(",");
+            if (v instanceof StringProviderImpl) {
+              conditionBuilder.append("'");
+              conditionBuilder.append(v.getString());
+              conditionBuilder.append("'");
+            } else {
+              conditionBuilder.append(v.getString());
+            }
+          }
+          conditionBuilder.append(")");
+        } else {
+          values.addAll(condition.getRight());
+        }
+    }
+
+    try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT * FROM " + this.fqn + " WHERE " + conditionBuilder)) {
+      int k = 1;
+      for (PrimitiveTypeProvider v : values) {
+        this.bindScalarValue(k++, v, statement);
+      }
+      try (final ResultSet rs = statement.executeQuery()) {
+        return processResults(rs);
+      }
+    } catch (SQLException e) {
+      LOGGER.warn("Error occurred during query execution in getRowsAND(): {}", e.getMessage());
       return new ArrayList<>(0);
     }
   }
@@ -339,7 +392,7 @@ public final class PolyphenySelector implements DBSelector {
       case ISNOTNULL:
         return "IS NOT NULL";
       case IN:
-        return "IN ?";
+        return "IN ";
       default:
         throw new IllegalArgumentException("Operator '" + op + "' not supported by Cottontail DB.");
     }
