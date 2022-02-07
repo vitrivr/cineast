@@ -10,12 +10,12 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
 
   private final String tableName;
 
-  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
-    this(writer, batchsize, MediaObjectMetadataDescriptor.ENTITY);
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer) {
+    this(writer, MediaObjectMetadataDescriptor.ENTITY);
   }
 
-  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize, String tableName) {
-    super(writer, batchsize, false);
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, String tableName) {
+    super(writer);
     this.tableName = tableName;
     this.init();
   }

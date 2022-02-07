@@ -9,12 +9,8 @@ public class MediaSegmentMetadataWriter extends AbstractBatchedEntityWriter<Medi
 
   private final String tableName;
 
-  public MediaSegmentMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
-    this(writer, batchsize, MediaSegmentMetadataDescriptor.ENTITY);
-  }
-
-  public <R> MediaSegmentMetadataWriter(PersistencyWriter<R> writer, int batchsize, String testSegMetaTableName) {
-    super(writer, batchsize, false);
+  public <R> MediaSegmentMetadataWriter(PersistencyWriter<R> writer, String testSegMetaTableName) {
+    super(writer);
     this.tableName = testSegMetaTableName;
     this.init();
   }

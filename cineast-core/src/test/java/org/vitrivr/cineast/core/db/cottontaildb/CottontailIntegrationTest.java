@@ -12,15 +12,17 @@ public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {
   private final CottontailIntegrationDBProvider _provider;
 
   public CottontailIntegrationTest() {
-    _provider = new CottontailIntegrationDBProvider();
+    try {
+      _provider = new CottontailIntegrationDBProvider();
+    } catch (Throwable e) {
+      LOGGER.error("Error occurred while starting and connecting to Cottontail DB: " + e.getMessage());
+      throw e;
+    }
   }
 
   @Override
   public void finishSetup() {
-    final CottontailWrapper wrapper = _provider.getWrapper();
-    final String fqn = wrapper.fqnInput(this.getTestTextTableName());
-    wrapper.client.optimize(new OptimizeEntity(fqn));
-    wrapper.close();
+    //no-op
   }
 
   @Test

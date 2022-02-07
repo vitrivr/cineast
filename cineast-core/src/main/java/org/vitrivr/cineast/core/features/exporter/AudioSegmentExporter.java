@@ -125,7 +125,7 @@ public class AudioSegmentExporter implements Extractor {
 
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) { /* Nothing to init. */ }
+  public void init(PersistencyWriterSupplier phandlerSupply) { /* Nothing to init. */ }
 
   @Override
   public void finish() {  /* Nothing to finish. */}

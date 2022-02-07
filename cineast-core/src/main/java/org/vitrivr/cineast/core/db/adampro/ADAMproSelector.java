@@ -36,6 +36,7 @@ import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+@Deprecated
 public class ADAMproSelector extends AbstractADAMproSelector {
 
 

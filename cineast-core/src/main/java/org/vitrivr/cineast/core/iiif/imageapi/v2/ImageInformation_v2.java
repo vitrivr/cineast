@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
@@ -112,12 +113,12 @@ public class ImageInformation_v2 implements ImageInformation {
    * Custom getter for getProfile that converts List<Object> into a Pair<String, List<ProfileItem>>
    */
   public Pair<String, List<ProfileItem>> getProfile() {
-    if (this.profile instanceof List) {
-      List<Object> profile = (List<Object>) this.profile;
+    if (this.profile instanceof List<?>) {
+      var profile = (List<?>) this.profile;
       final String apiLevelString = profile.size() < 1 ? null : ((String) profile.get(0));
       final List<ProfileItem> profileItemList = new LinkedList<>();
-      for (int i = 1; i < profile.size(); i++) {
-        final LinkedHashMap<String, ArrayList<String>> map = (LinkedHashMap<String, ArrayList<String>>) profile.get(i);
+      for (var item : profile.stream().skip(1).collect(Collectors.toList())) {
+        final LinkedHashMap<String, ArrayList<String>> map = parseProfileSpec(item);
         final ProfileItem profileItem = new ProfileItem();
         profileItem.setSupports(map.getOrDefault("supports", new ArrayList<>()));
         profileItem.setQualities(map.getOrDefault("qualities", new ArrayList<>()));
@@ -128,6 +129,24 @@ public class ImageInformation_v2 implements ImageInformation {
     } else if (this.profile instanceof String) {
       return new Pair<>(((String) this.profile), null);
     }
+    return null;
+  }
+
+  private LinkedHashMap<String, ArrayList<String>> parseProfileSpec(Object profileSpec) {
+    if (profileSpec instanceof LinkedHashMap<?, ?>) {
+      var parsed = new LinkedHashMap<String, ArrayList<String>>();
+      var spec = (LinkedHashMap<?, ?>) profileSpec;
+      for (var key : spec.keySet()) {
+        if (key instanceof String && spec.get(key) instanceof ArrayList<?>) {
+          var list = (ArrayList<?>) spec.get(key);
+          var parsedList = list.stream().filter(item -> item instanceof String).map(item -> (String) item).collect(Collectors.toCollection(ArrayList::new));
+          parsed.put((String) key, parsedList);
+        }
+      }
+
+      return parsed;
+    }
+
     return null;
   }
 

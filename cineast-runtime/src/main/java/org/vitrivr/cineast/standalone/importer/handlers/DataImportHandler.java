@@ -2,7 +2,7 @@ package org.vitrivr.cineast.standalone.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
@@ -33,11 +33,11 @@ public abstract class DataImportHandler {
     /* Beware, this drops the table */
     CreateEntity createEntity = null;
     CottontailWrapper cottontail = null;
-    if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+    if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
       LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
     } else {
       LOGGER.info("Storing entity ({}) details for re-setup", entityName);
-      cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
+      cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase().getHost(), Config.sharedConfig().getDatabase().getPort());
       //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
     }
     LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
@@ -83,14 +83,9 @@ public abstract class DataImportHandler {
      */
     private final Importer<?> importer;
     /**
-     * A -possibly- human readable name for the import task
+     * A -possibly- human-readable name for the import task
      */
     private final String taskName;
-
-    /**
-     * Whether or not the table of the entity to import should be dropped beforehand. Basically, if this is true: its a TRUNCATE_EXISTING write, otherwise it's an APPEND write
-     */
-    private final boolean clean;
 
     /**
      * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}. If specified, drops the entity's table beforehand.
@@ -104,7 +99,6 @@ public abstract class DataImportHandler {
       this.entityName = entityName;
       this.importer = importer;
       this.taskName = taskName;
-      this.clean = clean;
       if (clean) {
         cleanOnDemand(this.entityName, this.taskName);
       }
@@ -146,7 +140,7 @@ public abstract class DataImportHandler {
         long start = System.currentTimeMillis();
         final Copier copier = new Copier(this.entityName, this.importer);
         LOGGER.info("Starting import on entity: {} with importer {}, task {}...", this.entityName, this.importer.getClass().getSimpleName(), taskName);
-        copier.copyBatched(DataImportHandler.this.batchsize);
+        copier.copyBatched(DataImportHandler.this.batchSize);
         copier.close();
         LOGGER.info("Completed import of entity: {}, task {}", this.entityName, taskName);
         long stop = System.currentTimeMillis();
@@ -168,8 +162,11 @@ public abstract class DataImportHandler {
   /**
    * Size of data batches (i.e. number if tuples) that are sent to the persistence layer.
    */
-  protected final int batchsize;
+  protected final int batchSize;
 
+  /**
+   * Number of threads to use for data import.
+   */
   protected int numberOfThreads;
 
   /**
@@ -181,11 +178,11 @@ public abstract class DataImportHandler {
    * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
    *
    * @param threads   Number of threads to use for data import.
-   * @param batchsize Size of data batches that are sent to the persistence layer.
+   * @param batchSize Size of data batches that are sent to the persistence layer.
    */
-  public DataImportHandler(int threads, int batchsize) {
+  public DataImportHandler(int threads, int batchSize) {
     this.service = Executors.newFixedThreadPool(threads);
-    this.batchsize = batchsize;
+    this.batchSize = batchSize;
     this.numberOfThreads = threads;
   }
 

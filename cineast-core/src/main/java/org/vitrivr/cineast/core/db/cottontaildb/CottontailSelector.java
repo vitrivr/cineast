@@ -1,10 +1,25 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
+import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
+
 import io.grpc.StatusRuntimeException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -23,21 +38,12 @@ import org.vitrivr.cottontail.client.language.extensions.Literal;
 import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.vitrivr.cineast.core.util.CineastConstants.*;
-
 public final class CottontailSelector implements DBSelector {
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailSelector}.
    */
-  public final CottontailWrapper cottontail;
+  private final CottontailWrapper cottontail;
 
   /**
    * The fully qualified name of the entity handled by this {@link CottontailSelector}.
@@ -157,8 +163,8 @@ public final class CottontailSelector implements DBSelector {
     /* Prepare plain query. */
     final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" OR "));
     final Query query = new Query(this.fqn)
-            .select("*", null)
-            .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER);
+        .select("*", null)
+        .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER);
 
     /* Process predicates. */
     if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
@@ -366,10 +372,10 @@ public final class CottontailSelector implements DBSelector {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
     final Query query = new Query(this.fqn)
-            .select(GENERIC_ID_COLUMN_QUALIFIER, null)
-            .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
-            .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
-            .limit(k);
+        .select(GENERIC_ID_COLUMN_QUALIFIER, null)
+        .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
+        .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
+        .limit(k);
 
     /* Add relevant segments (optional). */
     if (!relevant.isEmpty()) {

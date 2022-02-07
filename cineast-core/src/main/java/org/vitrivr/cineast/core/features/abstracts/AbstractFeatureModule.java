@@ -61,10 +61,10 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
-    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
+    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName);
+    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName);
   }
 
   @Override

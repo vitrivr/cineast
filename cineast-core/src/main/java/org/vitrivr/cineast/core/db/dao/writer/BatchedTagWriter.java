@@ -12,11 +12,7 @@ public class BatchedTagWriter extends AbstractBatchedEntityWriter<TagInstance> {
   private final String entityname;
 
   public BatchedTagWriter(PersistencyWriter<?> writer, String entityname) {
-    this(writer, entityname, 1);
-  }
-
-  public BatchedTagWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
-    super(writer, batchsize, false);
+    super(writer);
     this.entityname = entityname;
     this.init();
   }
