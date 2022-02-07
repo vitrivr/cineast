@@ -4,10 +4,13 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
@@ -98,16 +101,16 @@ public interface ExtractionContextProvider {
   IdConfig.ExistenceCheck existenceCheck();
 
   /**
-   * Returns the PersistencyWriterSupplier that can be used during the extraction run to obtain PersistencyWriter instance.
+   * Returns the {@link PersistencyWriterSupplier} that can be used during the extraction run to obtain {@link PersistencyWriter} instance.
    *
-   * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
+   * @return {@link PersistencyWriterSupplier} instance used obtain a {@link PersistencyWriter}.
    */
   PersistencyWriterSupplier persistencyWriter();
 
   /**
-   * Returns the DBSelectorSupplier that can be used during the extraction run to obtain a DBSelector instance.
+   * Returns the {@link DBSelectorSupplier} that can be used during the extraction run to obtain a {@link DBSelector} instance.
    *
-   * @return DBSelectorSupplier instance used obtain a DBSelector.
+   * @return {@link DBSelectorSupplier} instance used obtain a {@link DBSelector}.
    */
   DBSelectorSupplier persistencyReader();
 
