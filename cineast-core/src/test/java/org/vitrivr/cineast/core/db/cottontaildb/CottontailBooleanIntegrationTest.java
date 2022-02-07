@@ -9,7 +9,12 @@ public class CottontailBooleanIntegrationTest extends DBBooleanIntegrationTest<I
   private final CottontailIntegrationDBProvider _provider;
 
   public CottontailBooleanIntegrationTest() {
-    _provider = new CottontailIntegrationDBProvider();
+    try {
+      _provider = new CottontailIntegrationDBProvider();
+    } catch (Throwable e) {
+      LOGGER.error("Error occurred while starting and connecting to Cottontail DB: " + e.getMessage());
+      throw e;
+    }
   }
 
   @Override

@@ -9,11 +9,7 @@ public class PrimitiveTypeProviderFeatureDescriptorWriter extends AbstractBatche
   private final String entityname;
 
   public PrimitiveTypeProviderFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
-    this(writer, entityname, 1);
-  }
-
-  public PrimitiveTypeProviderFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
-    super(writer, batchsize, false);
+    super(writer);
     this.entityname = entityname;
     this.init();
   }

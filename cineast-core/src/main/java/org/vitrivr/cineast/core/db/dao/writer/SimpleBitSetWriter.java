@@ -10,8 +10,8 @@ public class SimpleBitSetWriter extends AbstractBatchedEntityWriter<Pair<String,
 
   private final String entityName;
 
-  public SimpleBitSetWriter(PersistencyWriter<?> writer, int batchsize, String entityName) {
-    super(writer, batchsize, false);
+  public SimpleBitSetWriter(PersistencyWriter<?> writer, String entityName) {
+    super(writer);
     this.entityName = entityName;
     this.init();
   }

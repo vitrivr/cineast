@@ -23,6 +23,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleBitSetWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
@@ -124,9 +125,9 @@ public class DCTImageHash extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleBitSetWriter(this.phandler, batchSize, this.tableName);
+    this.writer = new SimpleBitSetWriter(this.phandler, this.tableName);
   }
 
   @Override
