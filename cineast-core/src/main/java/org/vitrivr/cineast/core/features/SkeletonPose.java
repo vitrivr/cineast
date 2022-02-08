@@ -157,7 +157,7 @@ public class SkeletonPose extends AbstractFeatureModule {
                 double minDist = Arrays.stream(distances.values()).min().orElse(Double.MAX_VALUE);
                 results.add(new SegmentScoreElement(segment, this.correspondence.applyAsDouble(minDist)));
             }
-            results.sort(SegmentScoreElement.SCORE_COMPARATOR);
+            results.sort(SegmentScoreElement.SCORE_COMPARATOR.reversed());
             return results.subList(0, Math.min(results.size(), qc.getRawResultsPerModule()) - 1);
         }
 
@@ -232,6 +232,10 @@ public class SkeletonPose extends AbstractFeatureModule {
                 min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
                 min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_WRIST)),
         };
+
+        for (int i = 0; i < weights.length; ++i) {
+            weights[i] = weights[i] >= 0.5f ? 1f : 0f;
+        }
 
         return new Pair<>(angles, weights);
 
@@ -366,7 +370,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
         sp.init(() -> new CottontailSelector(ctWrapper));
 
-        Skeleton skeleton = mapper.readValue(new File(baseDir, "00006/shot00006_22_RKF.json"), typeRef).get(0).toSkeleton();
+        Skeleton skeleton = mapper.readValue(new File(baseDir, "00001/shot00001_10_RKF.json"), typeRef).get(0).toSkeleton();
 
         SegmentContainer container = new SegmentContainer() {
             @Override
