@@ -1,23 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
-import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
-import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
-import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
-
 import io.grpc.StatusRuntimeException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -37,6 +20,13 @@ import org.vitrivr.cottontail.client.language.extensions.And;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
 import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static org.vitrivr.cineast.core.util.CineastConstants.*;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -58,6 +48,10 @@ public final class CottontailSelector implements DBSelector {
   public boolean open(String name) {
     this.fqn = this.cottontail.fqnInput(name);
     return true;
+  }
+
+  public CottontailWrapper getWrapper() {
+    return this.cottontail;
   }
 
   @Override
@@ -258,13 +252,13 @@ public final class CottontailSelector implements DBSelector {
     }).collect(Collectors.toList());
 
     final Optional<Optional<Predicate>> reduce = atomics.stream().reduce((res, el) -> {
-      if (!res.isPresent() && !el.isPresent()) {
+      if (res.isEmpty() && el.isEmpty()) {
         return Optional.empty();
       }
-      if (!res.isPresent()) {
+      if (res.isEmpty()) {
         return el;
       }
-      if (!el.isPresent()) {
+      if (el.isEmpty()) {
         return res;
       }
       return Optional.of(new Or(res.get(), el.get()));
@@ -440,7 +434,38 @@ public final class CottontailSelector implements DBSelector {
       try {
         final Tuple t = response.next();
         final String id = t.asString(GENERIC_ID_COLUMN_QUALIFIER);
-        double distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER); /* This should be fine. */
+
+        double distance = Double.POSITIVE_INFINITY;
+
+        switch (t.type(DB_DISTANCE_VALUE_QUALIFIER)) {
+
+          case BOOLEAN: {
+            distance = Boolean.TRUE.equals(t.asBoolean(DB_DISTANCE_VALUE_QUALIFIER)) ? 1d : 0d;
+            break;
+          }
+          case BYTE: {
+            distance = t.asByte(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+          }
+          case SHORT:
+            distance = t.asShort(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+          case INTEGER:
+            distance = t.asInt(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+          case LONG:
+            distance = t.asLong(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+          case FLOAT:
+            distance = t.asFloat(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+          case DOUBLE:
+            distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER);
+            break;
+
+        }
+
+
         T e = DistanceElement.create(distanceElementClass, id, distance);
         result.add(e);
       } catch (NullPointerException e) {

@@ -31,8 +31,9 @@ import org.vitrivr.cottontail.client.SimpleClient;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Expression;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Function;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.*;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Component;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Direction;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 
 import java.io.File;
@@ -40,23 +41,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Expression;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.FloatVector;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Function;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.FunctionName;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Literal;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Order;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Component;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Direction;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Query;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.QueryMessage;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.Scan;
-import org.vitrivr.cottontail.grpc.CottontailGrpc.SchemaName;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
@@ -68,12 +52,12 @@ public class SkeletonPose extends AbstractFeatureModule {
     private static final String WEIGHT_COL = "weights";
 
     public SkeletonPose() {
-        super("feature_skeletonpose", 1, 8);
+        super("feature_skeletonpose", (float) (16 * Math.PI), 8);
     }
 
     @Override
-    public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
-        super.init(phandlerSupply, batchSize);
+    public void init(PersistencyWriterSupplier phandlerSupply) {
+        super.init(phandlerSupply);
         this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, PERSON_ID_COL, FEATURE_COL, WEIGHT_COL);
     }
 
@@ -128,7 +112,7 @@ public class SkeletonPose extends AbstractFeatureModule {
             return Collections.emptyList();
         }
 
-        SimpleClient client = ((CottontailSelector) this.selector).cottontail.client;
+        SimpleClient client = ((CottontailSelector) this.selector).getWrapper().client;
 
         HashMap<String, TObjectDoubleHashMap<Pair<Integer, Integer>>> segmentDistancesMap = new HashMap<>(qc.getRawResultsPerModule() * skeletons.size());
 
@@ -147,9 +131,7 @@ public class SkeletonPose extends AbstractFeatureModule {
             TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
 
 
-            int i = 0;
             while (tuples.hasNext()) {
-                i++;
                 Tuple tuple = tuples.next();
 
                 String segment = tuple.asString(GENERIC_ID_COLUMN_QUALIFIER);
@@ -338,7 +320,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     // TODO or FIXME: Remove
     public static void main(String[] args) throws IOException {
 
-        File baseDir = new File("/Users/rgasser/Downloads/VBS2022/");
+        File baseDir = new File("../../Downloads/VBS2022/VBS2022");
         File[] folders = baseDir.listFiles(File::isDirectory);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -349,7 +331,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         config.setHost("localhost");
         config.setPort(1865);
 
-        CottontailWrapper ctWrapper = new CottontailWrapper(config, true);
+        CottontailWrapper ctWrapper = new CottontailWrapper("localhost", 1865);
 
 
         SkeletonPose sp = new SkeletonPose();
@@ -358,7 +340,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         boolean insert = false;
         if (insert) {
             sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
-            sp.init(() -> new CottontailWriter(ctWrapper), 100);
+            sp.init(() -> new CottontailWriter(ctWrapper, 100));
             final List<Pair<String,Skeleton>> skeletons = new LinkedList<>();
             for (File folder : folders) {
                 for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
