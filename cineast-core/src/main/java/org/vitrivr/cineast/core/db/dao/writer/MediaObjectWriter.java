@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDescriptor> {
 
   public MediaObjectWriter(PersistencyWriter<?> writer) {
-    super(writer, 1, true);
+    super(writer);
   }
 
   /**

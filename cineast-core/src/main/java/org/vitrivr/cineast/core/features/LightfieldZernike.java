@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.images.ZernikeHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 import org.vitrivr.cineast.core.util.math.ZernikeMoments;

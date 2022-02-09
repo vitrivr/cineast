@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 
+@Deprecated
 public class ADAMproEntityCreator implements EntityCreator {
 
   /**

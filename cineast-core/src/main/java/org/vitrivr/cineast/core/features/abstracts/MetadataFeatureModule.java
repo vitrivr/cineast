@@ -97,10 +97,10 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     supply.get().dropEntity(this.featureEntityName());
   }
 
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     init(); //from MetadataFeatureExtractor
     PersistencyWriter<?> writer = supply.get();
-    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(), batchSize);
+    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName());
     this.featureWriter.init();
   }
 

@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02 see http://stackoverflow.com/questions/909542/opencv-edge-extraction

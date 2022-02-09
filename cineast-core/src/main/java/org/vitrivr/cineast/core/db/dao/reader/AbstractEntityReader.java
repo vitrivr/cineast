@@ -27,6 +27,4 @@ public abstract class AbstractEntityReader implements Closeable {
   public void close() {
     this.selector.close();
   }
-
-
 }

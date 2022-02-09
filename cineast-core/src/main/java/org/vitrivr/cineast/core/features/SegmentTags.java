@@ -32,7 +32,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
@@ -187,9 +187,9 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME, batchSize);
+    this.writer = new BatchedTagWriter(this.phandler, SEGMENT_TAGS_TABLE_NAME);
   }
 
   @Override
