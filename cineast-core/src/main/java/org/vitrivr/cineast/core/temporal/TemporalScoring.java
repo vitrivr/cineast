@@ -42,9 +42,9 @@ public class TemporalScoring {
    */
   public List<TemporalObject> score() {
     AbstractTemporalScoringAlgorithm temporalScoringAlgorithm;
-    float maxLength = this.maxLength;
-    if (maxLength < 0) {
-      maxLength = Float.MAX_VALUE;
+    float maxLength = Float.MAX_VALUE;
+    if (this.maxLength != null && this.maxLength > 0) {
+      maxLength = this.maxLength;
     }
     if (this.timeDistances.size() > 0) {
       temporalScoringAlgorithm = new TimeDistanceTemporalScoringAlgorithm(this.segmentMap, this.containerResults, maxLength, this.timeDistances);
