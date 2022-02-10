@@ -5,6 +5,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
 
+import io.grpc.Status.Code;
 import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -344,8 +345,13 @@ public final class CottontailSelector implements DBSelector {
     final AboutEntity about = new AboutEntity(this.cottontail.fqnInput(name));
     try (final TupleIterator results = this.cottontail.client.about(about)) {
       return results.hasNext();
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() != Code.NOT_FOUND) {
+        LOGGER.error("Error occurred during query execution in existsEntity(): {}!", e.getMessage());
+      }
+      return false;
     } catch (Exception e) {
-      LOGGER.error("Failed to close TupleIterator!", e);
+      LOGGER.error("Error occurred during query execution in existsEntity(): {}!", e.getMessage());
       return false;
     }
   }
