@@ -9,16 +9,15 @@ public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDe
 
   public MediaObjectWriter(PersistencyWriter<?> writer) {
     super(writer);
+    this.writer.setFieldNames(MediaObjectDescriptor.FIELDNAMES);
+    this.writer.open(MediaObjectDescriptor.ENTITY);
   }
 
   /**
    *
    */
   @Override
-  protected void init() {
-    this.writer.setFieldNames(MediaObjectDescriptor.FIELDNAMES);
-    this.writer.open(MediaObjectDescriptor.ENTITY);
-  }
+  protected void init() { }
 
   @Override
   protected PersistentTuple generateTuple(MediaObjectDescriptor entity) {
