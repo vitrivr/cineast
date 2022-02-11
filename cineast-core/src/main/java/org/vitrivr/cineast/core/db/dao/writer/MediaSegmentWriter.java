@@ -8,11 +8,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 public class MediaSegmentWriter extends AbstractBatchedEntityWriter<MediaSegmentDescriptor> {
 
   public MediaSegmentWriter(PersistencyWriter<?> writer) {
-    super(writer, 1, true);
-  }
-
-  public MediaSegmentWriter(PersistencyWriter<?> writer, int batchsize) {
-    super(writer, batchsize, true);
+    super(writer);
   }
 
   @Override

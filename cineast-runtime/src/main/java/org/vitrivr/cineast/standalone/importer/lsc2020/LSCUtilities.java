@@ -158,6 +158,9 @@ public class LSCUtilities {
    * In the LSC2020 dataset, image paths (from file lsc2020-visual-concepts.csv) do contain more than the actual (image) file, hence some conversion is required
    * <br>
    * Prepends <code>is_</code>, removes anything before a slash ("<code>/</code>"), if present, and after a dot ("<code>.</code>") (i.e., file extension), if present
+   *
+   * @param path
+   * @return
    */
   public static String pathToSegmentId(String path) {
     final int beginIdx = path.contains("/") ? path.lastIndexOf("/") + 1 : 0;
@@ -226,7 +229,6 @@ public class LSCUtilities {
    *
    * @param lscFormat The LSC UTC Timestamp in the format {@code yyyy-MM-dd_hh:mm}
    * @param zone      A zoneid in format {@code Area/Region}, see {@linkplain ZoneId}
-   * @return
    */
   public static ZonedDateTime convertLocal(String lscFormat, String zone) {
     final long epochSec = convert(lscFormat, false, zone);
@@ -337,11 +339,12 @@ public class LSCUtilities {
     // YYYYMMDD_HHMM
     // 0123456789012
     try {
+      final int endStrIdx = Math.min(minuteId.length(), 13);
       final int year = Integer.parseInt(minuteId.substring(0, 4));
       final int month = Integer.parseInt(minuteId.substring(4, 6));
       final int day = Integer.parseInt(minuteId.substring(6, 8));
       final int hour = Integer.parseInt(minuteId.substring(9, 11));
-      final int minute = Integer.parseInt(minuteId.substring(11));
+      final int minute = Integer.parseInt(minuteId.substring(11, endStrIdx));
       return LocalDateTime.of(year, month, day, hour, minute);
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Cannot parse due to invalid number format in minuteId");
@@ -427,8 +430,6 @@ public class LSCUtilities {
 
   /**
    * Immutable
-   *
-   * @return
    */
   @Deprecated
   public List<String[]> getHeaderlessMetaContents() {
@@ -445,8 +446,6 @@ public class LSCUtilities {
 
   /**
    * Immutable
-   *
-   * @return
    */
   @Deprecated
   public Map<String, String> getMinuteIdPathMap() {

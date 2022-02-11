@@ -45,7 +45,7 @@ public class ShotDescriptorExporter implements Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     if (!folder.exists()) {
       folder.mkdirs();
     }

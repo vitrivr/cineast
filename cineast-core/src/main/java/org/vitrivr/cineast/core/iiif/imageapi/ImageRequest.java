@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +30,7 @@ public class ImageRequest {
 
   public static ImageRequest fromUrl(String url) {
     ImageRequest imageRequest = new ImageRequest();
-    url = URLDecoder.decode(url);
+    url = URLDecoder.decode(url, StandardCharsets.UTF_8);
     String[] split = url.split("/");
     imageRequest.setRegion(split[split.length - 4]);
     imageRequest.setSize(split[split.length - 3]);
@@ -106,15 +107,15 @@ public class ImageRequest {
   public String generateIIIFRequestUrl() {
     String FORWARD_SLASH_DELIMITER = "/";
     return baseUrl + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(region)
+        + URLEncoder.encode(region, StandardCharsets.UTF_8)
         + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(size)
+        + URLEncoder.encode(size, StandardCharsets.UTF_8)
         + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(rotation)
+        + URLEncoder.encode(rotation, StandardCharsets.UTF_8)
         + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(quality)
+        + URLEncoder.encode(quality, StandardCharsets.UTF_8)
         + "."
-        + URLEncoder.encode(extension);
+        + URLEncoder.encode(extension, StandardCharsets.UTF_8);
   }
 
   /**

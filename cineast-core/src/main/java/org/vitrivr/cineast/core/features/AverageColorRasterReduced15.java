@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.util.ColorReductionUtil;
 public class AverageColorRasterReduced15 extends AverageColorRaster {
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     /* TODO: Respect batchSize. */
     this.phandler = supply.get();
     this.phandler.open("features_AverageColorRasterReduced15");

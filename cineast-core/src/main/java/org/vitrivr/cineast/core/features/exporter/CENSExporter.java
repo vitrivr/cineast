@@ -103,7 +103,7 @@ public class CENSExporter implements Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) { /* Noting to init. */}
+  public void init(PersistencyWriterSupplier phandlerSupply) { /* Noting to init. */}
 
   @Override
   public void finish() { /* Nothing to finish. */}
