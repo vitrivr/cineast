@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,18 +103,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
    * <p>
    * TODO: List may not be complete yet.
    */
-  public static final Set<String> supportedFiles;
-
-  static {
-    HashSet<String> tmp = new HashSet<>();
-    tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */
-    tmp.add("video/mp4");
-    tmp.add("video/avi");
-    tmp.add("video/mpeg");
-    tmp.add("video/quicktime");
-    tmp.add("video/webm");
-    supportedFiles = Collections.unmodifiableSet(tmp);
-  }
+  public static final Set<String> supportedFiles = Set.of("multimedia/mp4", "video/mp4", "video/avi", "video/mpeg", "video/quicktime", "video/webm");
 
   private byte[] bytes;
   private int[] pixels;
@@ -124,12 +111,12 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
   /**
    * Internal data structure used to hold decoded VideoFrames and the associated timestamp.
    */
-  private ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
+  private final ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
 
   /**
    * Internal data structure used to hold decoded AudioFrames and the associated timestamp.
    */
-  private ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
+  private final ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
 
   private AVFormatContext pFormatCtx;
 
@@ -156,7 +143,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
   private AVPacket packet;
   private BytePointer buffer = null;
 
-  private IntPointer out_linesize = new IntPointer();
+  private final IntPointer out_linesize = new IntPointer();
 
   private SwsContext sws_ctx = null;
   private SwrContext swr_ctx = null;
@@ -278,7 +265,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
   private void enqueueResampledAudio() {
     /* Convert decoded frame. Break if resampling fails.*/
     if (swresample.swr_convert(this.swr_ctx, null, 0, this.pFrame.data(), this.pFrame.nb_samples()) < 0) {
-      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
+      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).");
       return;
     }
 

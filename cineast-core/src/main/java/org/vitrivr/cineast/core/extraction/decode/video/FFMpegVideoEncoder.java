@@ -36,12 +36,12 @@ public class FFMpegVideoEncoder {
   private VideoOutputStreamContainer video_st = null;
   private AudioOutputStreamContainer audio_st = null;
   private AVOutputFormat fmt;
-  private AVFormatContext oc = new AVFormatContext();
+  private final AVFormatContext oc = new AVFormatContext();
 
-  private Queue<MultiImage> imageQueue = new LinkedList<>();
-  private Queue<AudioFrame> audioQueue = new LinkedList<>();
+  private final Queue<MultiImage> imageQueue = new LinkedList<>();
+  private final Queue<AudioFrame> audioQueue = new LinkedList<>();
 
-  private boolean useAudio = false;
+  private final boolean useAudio;
 
   public FFMpegVideoEncoder(int width, int height, float frameRate, int sampleRate, String filename, boolean useAudio) {
 
