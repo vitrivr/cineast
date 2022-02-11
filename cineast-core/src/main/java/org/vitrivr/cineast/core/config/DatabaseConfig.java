@@ -100,6 +100,6 @@ public final class DatabaseConfig {
   }
 
   public DBSelectorSupplier getSelectorSupplier() {
-    return this.writer.getSelectorSupplier(this);
+    return this.selector.getSelectorSupplier(this);
   }
 }
