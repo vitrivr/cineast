@@ -17,14 +17,12 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
   public MediaObjectMetadataWriter(PersistencyWriter<?> writer, String tableName) {
     super(writer);
     this.tableName = tableName;
-    this.init();
-  }
-
-  @Override
-  protected void init() {
     this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
     this.writer.open(tableName);
   }
+
+  @Override
+  protected void init() {}
 
   @Override
   protected PersistentTuple generateTuple(MediaObjectMetadataDescriptor entity) {
