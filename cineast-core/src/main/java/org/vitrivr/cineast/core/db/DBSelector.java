@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
@@ -25,6 +26,8 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 public interface DBSelector extends Closeable {
+
+  Logger LOGGER = LogManager.getLogger();
 
   boolean open(String name);
 

@@ -7,10 +7,13 @@ import boofcv.struct.feature.BrightFeature;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayF32;
 import java.util.List;
+import java.util.function.Supplier;
 import org.ddogleg.clustering.AssignCluster;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 /**
@@ -42,15 +45,15 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    * Initializer for Extraction - must load the codebook.
    */
   @Override
-  public final void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
-    super.init(phandlerSupply, batchSize);
+  public final void init(PersistencyWriterSupplier phandlerSupply) {
+    super.init(phandlerSupply);
 
     /* Load the Codebook. */
     this.assignment = UtilIO.load(CODEBOOK_FOLDER + this.codebook());
   }
 
   /**
-   * Initializer for Retrieval - must load the codebook.selectorSupply
+   * Initializer for Retrieval - must load the codebook.
    */
   @Override
   public final void init(DBSelectorSupplier selectorSupply) {

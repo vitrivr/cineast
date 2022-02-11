@@ -20,7 +20,7 @@ public class ColorlabelImportHandler extends DataImportHandler {
   @Override
   public void doImport(Path root) {
     try {
-      LOGGER.info("Starting data import for colorlabel files in: {} with {} threads and {} batchsize", root.toString(), this.numberOfThreads, this.batchsize);
+      LOGGER.info("Starting data import for colorlabel files in: {} with {} threads", root.toString(), this.numberOfThreads);
       Files.walk(root.resolve("colorlabels/"), 2).filter(p -> p.toString().toLowerCase().endsWith(".txt")).forEach(p -> {
         try {
           String color = p.getFileName().toString().split("\\.")[0];
