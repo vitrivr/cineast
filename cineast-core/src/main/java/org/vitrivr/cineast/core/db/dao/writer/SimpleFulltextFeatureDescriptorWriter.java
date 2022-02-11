@@ -9,13 +9,8 @@ public class SimpleFulltextFeatureDescriptorWriter extends AbstractBatchedEntity
   private final String entityname;
 
   public SimpleFulltextFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
-    this(writer, entityname, 1);
-  }
-
-  public SimpleFulltextFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
-    super(writer, batchsize, false);
+    super(writer);
     this.entityname = entityname;
-    this.init();
   }
 
   @Override

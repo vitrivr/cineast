@@ -1,26 +1,6 @@
-plugins {
-    id 'maven'
-}
-
 repositories {
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-}
-
-
-if (!project.hasProperty("build_version")) {
-    ext.dbisNexusUsername = "no"
-    ext.dbisNexusPassword = "no"
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "https://dbis-nexus.dmi.unibas.ch/repository/maven-snapshots/") {
-                authentication(userName: "$dbisNexusUsername", password: "$dbisNexusPassword")
-            }
-        }
     }
 }
 
@@ -60,6 +40,11 @@ publishing {
                         name = 'Ralph Gasser'
                         email = 'ralph.gasser@unibas.ch'
                     }
+                    developer {
+                        id = 'spiess'
+                        name = 'Florian Spiess'
+                        email = 'florian.spiess@unibas.ch'
+                    }
                 }
                 scm {
                     connection = 'scm:git:https://github.com/vitrivr/cineast.git'
@@ -98,8 +83,11 @@ signing {
 dependencies {
 
     /** THE Cottontail DB proto dependency */
-    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontail_proto
+    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb_proto
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
+
+    /** THE Polypheny dependency */
+    api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
 
     /** THE ADAMpro proto dependency (legacy) */
     api group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro

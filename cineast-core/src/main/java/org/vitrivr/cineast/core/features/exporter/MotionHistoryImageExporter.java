@@ -49,7 +49,7 @@ public class MotionHistoryImageExporter implements Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     if (!this.folder.exists()) {
       this.folder.mkdirs();
     }

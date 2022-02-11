@@ -22,7 +22,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();
     this.phandler.open(this.tableName);
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "sums", "hist");

@@ -32,6 +32,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
+@Deprecated
 public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
   private static final Logger LOGGER = LogManager.getLogger();

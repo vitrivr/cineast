@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.Pair;
 
 /**
@@ -83,8 +84,9 @@ public class Manifest {
    * Custom getter for getLabel that converts List<Object> into a Pair<String, List<LabelItem>>
    */
   public Pair<String, List<LabelItem>> getLabel() {
-    if (this.label instanceof List) {
-      return new Pair<>(null, (List<LabelItem>) this.label);
+    if (this.label instanceof List<?>) {
+      var list = ((List<?>) this.label).stream().filter(item -> item instanceof LabelItem).map(item -> (LabelItem) item).collect(Collectors.toList());
+      return new Pair<>(null, list);
     } else if (this.label instanceof String) {
       return new Pair<>(((String) this.label), null);
     }
@@ -195,8 +197,9 @@ public class Manifest {
    * Custom getter for getRendering that converts List<Object> into a Pair<String, List<Rendering>>
    */
   public Pair<String, List<Rendering>> getRendering() {
-    if (this.rendering instanceof List) {
-      return new Pair<>(null, (List<Rendering>) this.rendering);
+    if (this.rendering instanceof List<?>) {
+      var list = ((List<?>) this.rendering).stream().filter(item -> item instanceof Rendering).map(item -> (Rendering) item).collect(Collectors.toList());
+      return new Pair<>(null, list);
     } else if (this.rendering instanceof String) {
       return new Pair<>(((String) this.rendering), null);
     }
