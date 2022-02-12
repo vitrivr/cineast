@@ -18,7 +18,7 @@ public class GRPCEndpoint {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static void start() {
+  public static void start() throws IOException {
 
     if (!Config.sharedConfig().getApi().getEnableGRPC()) {
       return;
@@ -27,16 +27,11 @@ public class GRPCEndpoint {
     int port = Config.sharedConfig().getApi().getGrpcPort();
 
     LOGGER.info("Starting GRPC Endpoint at port {}", port);
-
     server = ServerBuilder.forPort(port).addService(new CineastQueryService(APIEndpoint.retrievalLogic)) //FIXME this should come from a more reasonable location
         .addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
-
-    try {
-      server.start();
-    } catch (IOException e) {
-    }
-
+    server.start();
   }
+
 
   public static void stop() {
     if (server == null || server.isShutdown()) {
@@ -51,5 +46,4 @@ public class GRPCEndpoint {
     }
     server.shutdownNow();
   }
-
 }
