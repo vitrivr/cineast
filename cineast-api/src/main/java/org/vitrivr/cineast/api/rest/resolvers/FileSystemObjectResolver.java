@@ -47,7 +47,7 @@ public class FileSystemObjectResolver implements ObjectResolver, AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     this.lookup.close();
   }
 }

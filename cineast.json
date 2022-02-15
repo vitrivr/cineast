@@ -1,8 +1,6 @@
 {
   "database": {
     "host": "localhost",
-    "selector": "COTTONTAIL",
-    "writer": "COTTONTAIL",
     "port": 1865,
     "plaintext": true
   },
@@ -51,6 +49,9 @@
       ],
       "audiofingerprint": [
         {"feature": "HPCP12Shingle", "weight": 1.0}
+      ],
+      "ocr": [
+        {"feature": "OCRSearch", "weight": 1.0}
       ],
       "visualtextcoembedding": [
         {"feature": "VisualTextCoEmbedding", "weight": 1.0}

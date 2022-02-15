@@ -57,7 +57,7 @@ public class ShotThumbnailsExporter implements Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     if (!this.folder.exists()) {
       this.folder.mkdirs();
     }

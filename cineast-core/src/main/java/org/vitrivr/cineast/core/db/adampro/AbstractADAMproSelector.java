@@ -25,6 +25,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
+@Deprecated
 public abstract class AbstractADAMproSelector implements DBSelector {
 
   /**
@@ -42,7 +43,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
    */
   protected FromMessage fromMessage;
 
-  final ADAMproWrapper adampro;
+  protected final ADAMproWrapper adampro;
 
   public AbstractADAMproSelector(ADAMproWrapper wrapper) {
     this.adampro = wrapper;

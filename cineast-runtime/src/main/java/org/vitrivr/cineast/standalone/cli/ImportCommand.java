@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
@@ -143,7 +143,7 @@ public class ImportCommand implements Runnable {
     }
 
     /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
-    if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
+    if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DataSource.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DataSource.COTTONTAIL) {
       OptimizeEntitiesCommand.optimizeAllCottontailEntities();
     }
 

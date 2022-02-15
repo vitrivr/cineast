@@ -36,6 +36,7 @@ import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+@Deprecated
 public class ADAMproWrapper implements AutoCloseable {
 
   private static final Logger LOGGER = LogManager.getLogger();

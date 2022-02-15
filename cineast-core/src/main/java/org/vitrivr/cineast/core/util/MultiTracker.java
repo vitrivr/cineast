@@ -15,8 +15,7 @@ public class MultiTracker {
 
   public enum TRACKER_TYPE {CIRCULANT, TLD}
 
-  ;
-  List<TrackerObjectQuad> trackers;
+  List<TrackerObjectQuad<GrayU8>> trackers;
   List<Quadrilateral_F64> coordinates;
   GrayU8 initialFrame;
 
@@ -29,8 +28,8 @@ public class MultiTracker {
     this.trackers = new ArrayList<>();
     this.coordinates = new ArrayList<>();
     this.initialFrame = frame;
-    for (int i = 0; i < coordinates.size(); i++) {
-      this.add(coordinates.get(i), type);
+    for (Quadrilateral_F64 coordinate : coordinates) {
+      this.add(coordinate, type);
     }
   }
 
@@ -39,7 +38,7 @@ public class MultiTracker {
    * @param type       Type of the tracker
    */
   public void add(Quadrilateral_F64 coordinate, TRACKER_TYPE type) {
-    TrackerObjectQuad tracker = null;
+    TrackerObjectQuad<GrayU8> tracker;
     if (type == TRACKER_TYPE.TLD) {
       tracker = FactoryTrackerObjectQuad.tld(null, GrayU8.class);
     } else if (type == TRACKER_TYPE.CIRCULANT) {
@@ -62,7 +61,6 @@ public class MultiTracker {
     List<Pair<Boolean, Quadrilateral_F64>> result = new ArrayList<>();
     for (int i = 0; i < trackers.size(); i++) {
       Quadrilateral_F64 new_coord = this.coordinates.get(i).copy();
-      @SuppressWarnings("unchecked")
       boolean found = this.trackers.get(i).process(frame, new_coord);
       if (new_coord.getA().x < 0) {
         new_coord.getA().x = 0;
