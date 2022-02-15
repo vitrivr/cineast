@@ -5,27 +5,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.ffmpeg.avcodec.AVCodec;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avcodec.AVPacket;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.global.swresample;
+import org.bytedeco.ffmpeg.swresample.SwrContext;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avcodec.AVCodec;
-import org.bytedeco.javacpp.avcodec.AVCodecContext;
-import org.bytedeco.javacpp.avcodec.AVPacket;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.avutil.AVDictionary;
-import org.bytedeco.javacpp.avutil.AVFrame;
-import org.bytedeco.javacpp.avutil.AVRational;
-import org.bytedeco.javacpp.swresample;
-import org.bytedeco.javacpp.swresample.SwrContext;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
@@ -45,19 +43,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
    * <p>
    * TODO: List may not be complete yet.
    */
-  private static final Set<String> supportedFiles;
-
-  static {
-    HashSet<String> tmp = new HashSet<>();
-    tmp.add("multimedia/mp4"); /* They share the same suffix with audio (.mp4). */
-    tmp.add("audio/mp4");
-    tmp.add("audio/aac");
-    tmp.add("audio/mpeg");
-    tmp.add("audio/ogg");
-    tmp.add("audio/wav");
-    tmp.add("audio/flac");
-    supportedFiles = Collections.unmodifiableSet(tmp);
-  }
+  private static final Set<String> supportedFiles = Set.of("multimedia/mp4", "audio/mp4", "audio/aac", "audio/mpeg", "audio/ogg", "audio/wav", "audio/flac");
 
   /**
    * Property name and default value for channel settings.
@@ -80,7 +66,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
   /**
    * Internal data structure used to hold decoded AudioFrames.
    */
-  private ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
+  private final ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
 
   private AVFormatContext pFormatCtx = null;
   private AVCodecContext pCodecCtx = null;
@@ -91,11 +77,11 @@ public class FFMpegAudioDecoder implements AudioDecoder {
   private AVFrame decodedFrame = null;
   private AVFrame resampledFrame = null;
 
-  private IntPointer out_linesize = new IntPointer();
+  private final IntPointer out_linesize = new IntPointer();
 
   private SwrContext swr_ctx = null;
 
-  private AtomicBoolean complete = new AtomicBoolean(false);
+  private final AtomicBoolean complete = new AtomicBoolean(false);
 
   private AudioDescriptor descriptor = null;
 
@@ -183,7 +169,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
   private void readResampled(int samples) {
     /* Convert decoded frame. Break if resampling fails.*/
     if (swresample.swr_convert(this.swr_ctx, null, 0, this.decodedFrame.data(), samples) < 0) {
-      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
+      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).");
       return;
     }
 
