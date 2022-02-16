@@ -78,7 +78,7 @@ public class QueryUtil {
     var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
 
     for (QueryStage stage : stages) {
-      var stageResults = QueryUtil.findSegmentsSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
+      var stageResults = findSegmentsSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
       stagedQueryResults.add(stageResults);
 
       var relevantSegments = new HashSet<String>();

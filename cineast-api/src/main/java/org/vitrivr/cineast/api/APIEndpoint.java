@@ -39,6 +39,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentMetadat
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarStagedPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarTemporalPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
@@ -406,6 +407,7 @@ public class APIEndpoint {
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
         new FindSegmentSimilarStagedPostHandler(retrievalLogic),
+        new FindSegmentSimilarTemporalPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
         new FindFeaturesByCategoryGetHandler(),
         new FindFeaturesByEntityGetHandler(),
