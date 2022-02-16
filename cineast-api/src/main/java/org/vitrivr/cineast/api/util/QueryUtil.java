@@ -5,6 +5,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
+import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
+import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
@@ -21,14 +24,17 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.SegmentTags;
+import org.vitrivr.cineast.core.temporal.TemporalScoring;
 import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
@@ -95,6 +101,38 @@ public class QueryUtil {
     }
 
     return mergeStagedQueryResults(stagedQueryResults);
+  }
+
+  /**
+   * Executes a temporal similarity query.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param query                    The temporal query to execute.
+   * @param config                   The config to use for the execution of the query
+   * @return The query results as a list of temporal objects.
+   */
+  public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
+    var stagedResults = query.getQueries().stream()
+        .map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.getStages(), config))
+        .collect(Collectors.toList());
+
+    // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
+    final var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+
+    var segmentIds = stagedResults.stream().flatMap(
+        resultsMap -> resultsMap.values().stream().flatMap(
+            pairs -> pairs.stream().map(pair -> pair.key)
+        )
+    ).distinct().collect(Collectors.toList());
+
+    var segmentDescriptors = segmentReader.lookUpSegments(segmentIds);
+    var stagedQueryResults = stagedResults.stream().map(
+        resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
+    ).collect(Collectors.toList());
+
+    var temporalScoring = new TemporalScoring(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
+
+    return temporalScoring.score();
   }
 
   /**

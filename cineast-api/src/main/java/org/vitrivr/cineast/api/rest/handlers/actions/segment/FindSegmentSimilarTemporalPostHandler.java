@@ -42,27 +42,7 @@ public class FindSegmentSimilarTemporalPostHandler implements ParsingPostRestHan
   public TemporalQueryResult performPost(TemporalQuery query, Context ctx) {
     ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getQueryConfig());
 
-    var stagedResults = query.getQueries().stream()
-        .map(stagedQuery -> QueryUtil.findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.getStages(), config))
-        .collect(Collectors.toList());
-
-    // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
-    final var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-
-    var segmentIds = stagedResults.stream().flatMap(
-        resultsMap -> resultsMap.values().stream().flatMap(
-            pairs -> pairs.stream().map(pair -> pair.key)
-        )
-    ).distinct().collect(Collectors.toList());
-
-    var segmentDescriptors = segmentReader.lookUpSegments(segmentIds);
-    var stagedQueryResults = stagedResults.stream().map(
-        resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
-    ).collect(Collectors.toList());
-
-    var temporalScoring = new TemporalScoring(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
-
-    var temporalResults = temporalScoring.score();
+    var temporalResults = QueryUtil.findSegmentsSimilarTemporal(continuousRetrievalLogic, query, config);
 
     return new TemporalQueryResult(config.getQueryId().toString(), temporalResults);
   }
