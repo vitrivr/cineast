@@ -222,10 +222,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
     IntStream.range(0, message.getQueries().size()).forEach(idx -> tmpContainerResults.add(containerResults.getOrDefault(idx, new ArrayList<>())));
 
-    TemporalScoring temporalScoring = new TemporalScoring(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
-
     /* Score and retrieve the results */
-    List<TemporalObject> results = temporalScoring.score();
+    List<TemporalObject> results = TemporalScoring.score(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
 
     List<TemporalObject> finalResults = results.stream()
         .sorted(TemporalObject.COMPARATOR.reversed())

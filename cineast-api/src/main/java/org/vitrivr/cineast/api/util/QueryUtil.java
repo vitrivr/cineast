@@ -129,9 +129,7 @@ public class QueryUtil {
         resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
     ).collect(Collectors.toList());
 
-    var temporalScoring = new TemporalScoring(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
-
-    return temporalScoring.score();
+    return TemporalScoring.score(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
   }
 
   /**
