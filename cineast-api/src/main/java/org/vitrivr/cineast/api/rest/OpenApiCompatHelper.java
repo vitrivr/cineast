@@ -113,7 +113,7 @@ public class OpenApiCompatHelper {
             apiEndpoint.getOpenApi().getOpenApiHandler().createOpenAPISchema());
         File file = new File(path);
         File folder = file.getParentFile();
-        if (folder != null && !folder.mkdirs()) {
+        if (folder != null && !folder.exists() && !folder.mkdirs()) {
           LOGGER.warn("Could not create OpenAPI documentation path: {}", folder.getAbsolutePath());
         }
         if (file.exists() && !file.delete()) {
