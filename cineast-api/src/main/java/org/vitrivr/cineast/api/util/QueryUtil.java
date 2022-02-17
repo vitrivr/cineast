@@ -136,6 +136,7 @@ public class QueryUtil {
    * Merges staged query results into a single result map.
    *
    * @param stagedQueryResults List of staged query results by stage. The results are expected to be in order of the stages.
+   * @return Map of merged results mapping categories to their results filtered to the final set of segments.
    */
   public static HashMap<String, List<StringDoublePair>> mergeStagedQueryResults(ArrayList<HashMap<String, List<StringDoublePair>>> stagedQueryResults) {
     var results = new HashMap<String, List<StringDoublePair>>();
