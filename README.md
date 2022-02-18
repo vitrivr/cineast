@@ -1,8 +1,8 @@
 [![vitrivr - cineast](https://img.shields.io/static/v1?label=vitrivr&message=cineast&color=blue&logo=github)](https://github.com/vitrivr/cineast)
 [![GitHub release](https://img.shields.io/github/release/vitrivr/cineast?include_prereleases=&sort=semver&color=2ea44f)](https://github.com/vitrivr/cineast/releases/)
-[![License](https://img.shields.io/badge/License-MIT-blueviolet)](#license)
+[![License](https://img.shields.io/badge/License-MIT-blueviolet)](LICENSE)
 [![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Release))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
-[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Dev))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/master/docs/openapi.json)
+[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=Open-Api%20(Dev))](https://editor.swagger.io/?url=https://raw.githubusercontent.com/vitrivr/cineast/dev/docs/openapi.json)
 [![Java CI with Gradle](https://github.com/vitrivr/cineast/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/vitrivr/cineast/actions?query=workflow:"Java+CI+with+Gradle")
 
 # Cineast
@@ -47,7 +47,7 @@ $> ./gradlew -PcineastConfig=<path/to/your/config> generateOpenApiSpecs
 ```
 
 You can omit `-PcineastConfig`, then the default config (`cineast.json`) is used.
-As a result, the OAS is stored at `docs/swagger.json`
+As a result, the OAS is stored at `docs/openapi.json`
 
 
 ## Prerequisites
