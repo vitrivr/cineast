@@ -8,33 +8,32 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 /**
- * A {@link SimilarityQuery} contains a list of {@link QueryComponent}s. This object represents a similarity-query message, i.e. a request for a similarity-search.
+ * A {@link SimilarityQuery} contains a list of {@link QueryTerm}s. This object represents a similarity-query message, i.e. a request for a similarity-search.
  */
 public class SimilarityQuery extends Query {
 
   /**
-   * List of {@link QueryComponent}s that are part of this {@link SimilarityQuery}.
+   * List of {@link QueryTerm}s that are part of this {@link SimilarityQuery}.
    */
-  private final List<QueryComponent> components;
+  private final List<QueryTerm> terms;
 
   /**
    * Constructor for the SimilarityQuery object.
    *
-   * @param components List of {@link QueryComponent}s.
+   * @param terms List of {@link QueryTerm}s.
    * @param config     The {@link ReadableQueryConfig}. May be null!
    */
   @JsonCreator
-  public SimilarityQuery(@JsonProperty(value = "containers", required = true) List<QueryComponent> components,
-      @JsonProperty(value = "config", required = false) QueryConfig config) {
+  public SimilarityQuery(@JsonProperty(value = "terms", required = true) List<QueryTerm> terms, @JsonProperty(value = "config") QueryConfig config) {
     super(config);
-    this.components = components;
+    this.terms = terms;
   }
 
   /**
    * Getter for containers.
    */
-  public List<QueryComponent> getComponents() {
-    return this.components;
+  public List<QueryTerm> getTerms() {
+    return this.terms;
   }
 
   /**
