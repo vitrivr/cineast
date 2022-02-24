@@ -4,9 +4,11 @@ plugins {
 
 
 application {
-    mainClassName = 'org.vitrivr.cineast.api.Main'
+    getMainClass().set('org.vitrivr.cineast.api.Main')
     applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
 }
+// Required for shadow
+mainClassName = application.mainClass.get()
 
 distributions {
     main {
