@@ -2,7 +2,9 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
+import kotlin.collections.ArrayDeque;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
@@ -39,8 +41,8 @@ public class TemporalQuery extends Query {
   ) {
     super(config);
     this.queries = queries;
-    this.timeDistances = timeDistances;
-    this.maxLength = maxLength;
+    this.timeDistances = timeDistances == null ? new ArrayList<>() : timeDistances;
+    this.maxLength = maxLength == null ? Float.MAX_VALUE : maxLength;
     this.metadataAccessSpec = metadataAccessSpec;
   }
 
