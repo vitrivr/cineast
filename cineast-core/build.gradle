@@ -141,7 +141,7 @@ dependencies {
 
     /** JavaCPP. */
     api group: "org.bytedeco", name: "javacpp", version: version_javacpp
-    api group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: version_ffmpeg
+    api group: "org.bytedeco", name: "ffmpeg-platform", version: version_ffmpeg
 
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
