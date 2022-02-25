@@ -65,11 +65,11 @@ public final class CottontailWrapper implements AutoCloseable {
     final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(host, port).usePlaintext();
     final ManagedChannel channel = builder.build();
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      LOGGER.debug("Closing connection to Cottontail DB.");
+      LOGGER.info("Closing connection to Cottontail DB.");
       channel.shutdownNow();
     }));
     watch.stop();
-    LOGGER.debug("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
+    LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
     return channel;
   }
 

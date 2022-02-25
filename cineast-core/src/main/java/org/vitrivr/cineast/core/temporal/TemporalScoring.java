@@ -27,7 +27,7 @@ public class TemporalScoring {
    */
   public static List<TemporalObject> score(Map<String, MediaSegmentDescriptor> segmentMap, List<List<StringDoublePair>> containerResults, List<Float> timeDistances, Float maxLength) {
     AbstractTemporalScoringAlgorithm temporalScoringAlgorithm;
-    if (maxLength < 0) {
+    if (maxLength == null || maxLength < 0) {
       maxLength = Float.MAX_VALUE;
     }
     if (timeDistances.size() > 0) {
