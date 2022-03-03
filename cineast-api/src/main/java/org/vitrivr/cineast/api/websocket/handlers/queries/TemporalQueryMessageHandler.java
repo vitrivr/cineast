@@ -212,6 +212,13 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       ssqThread.join();
     }
 
+    /* You can skip the computation of temporal objects in the config if you wish simply to execute all queries independently (e.g. for evaluation)*/
+    if (!message.getTemporalQueryConfig().computeTemporalObjects) {
+      LOGGER.debug("Not computing temporal objects due to query config");
+      finish(metadataRetrievalThreads, cleanupThreads);
+      return;
+    }
+
     LOGGER.debug("Starting fusion for temporal context");
     long start = System.currentTimeMillis();
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
@@ -256,6 +263,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.forEach(CompletableFuture::join);
     }
 
+    finish(metadataRetrievalThreads, cleanupThreads);
+  }
+
+  private void finish(List<Thread> metadataRetrievalThreads, List<Thread> cleanupThreads) throws InterruptedException {
     for (Thread cleanupThread : cleanupThreads) {
       cleanupThread.join();
     }
