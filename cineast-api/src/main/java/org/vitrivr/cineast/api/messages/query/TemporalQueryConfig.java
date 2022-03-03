@@ -17,6 +17,9 @@ public class TemporalQueryConfig extends QueryConfig {
    */
   public final Float maxLength;
 
+  /**
+   * If set explicitly to false, there will be no temporal aggregation for the temporal queries. This is mainly done for testing or evaluation purposes.
+   */
   public final boolean computeTemporalObjects;
 
 
