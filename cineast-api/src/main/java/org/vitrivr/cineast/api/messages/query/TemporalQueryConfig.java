@@ -29,6 +29,6 @@ public class TemporalQueryConfig extends QueryConfig {
     super(queryId, hints);
     this.timeDistances = timeDistances == null ? new ArrayList<>() : timeDistances;
     this.maxLength = maxLength == null ? Float.MAX_VALUE : maxLength;
-    this.computeTemporalObjects = computeTemporalObjects == null ? true : computeTemporalObjects;
+    this.computeTemporalObjects = computeTemporalObjects == null || computeTemporalObjects;
   }
 }
