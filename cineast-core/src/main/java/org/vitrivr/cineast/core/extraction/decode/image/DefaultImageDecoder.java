@@ -8,9 +8,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
@@ -35,7 +32,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
   /**
    * HashSet containing all the mime-types supported by this ImageDecoder instance.
    */
-  private static Set<String> supportedFiles = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes())));
+  private static final Set<String> supportedFiles = Set.of(ImageIO.getReaderMIMETypes());
 
   /**
    * Bounds used to rescale the image.
@@ -45,7 +42,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
   /**
    * Flag indicating whether or not the Decoder is done decoding and the content has been obtained.
    */
-  private AtomicBoolean complete = new AtomicBoolean(false);
+  private final AtomicBoolean complete = new AtomicBoolean(false);
 
   /**
    * Path to the input file.
@@ -67,6 +64,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     if (decoderConfig != null) {
       this.rescale_bounds = decoderConfig.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
     }
+    LOGGER.debug("Supported: {}", supportedFiles);
     return true;
   }
 
