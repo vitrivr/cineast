@@ -29,6 +29,9 @@ public class TemporalQuery extends Query {
    */
   private final Float maxLength;
 
+  /**
+   * Provide an empty list to fetch no metadata at all. If the field is not filled (i.e. null), all metadata is provided for backwards-compatibility
+   */
   private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   @JsonCreator
