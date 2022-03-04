@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import georegression.struct.point.Point2D_F32;
 
 import java.util.ArrayList;
@@ -40,7 +42,11 @@ public class Skeleton {
     private final Point2D_F32[] points = new Point2D_F32[POINT_COUNT];
     private final float[] weights = new float[POINT_COUNT];
 
-    public Skeleton(float[] coordinates, float[] weights) {
+    @JsonCreator
+    public Skeleton(
+        @JsonProperty("coordinates") float[] coordinates,
+        @JsonProperty("weights") float[] weights
+    ) {
 
         if (coordinates == null || coordinates.length < 2 * POINT_COUNT || weights == null || weights.length < POINT_COUNT) {
             throw new IllegalArgumentException();
