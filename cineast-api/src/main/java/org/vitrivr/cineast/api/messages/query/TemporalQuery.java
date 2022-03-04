@@ -2,8 +2,11 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
+import kotlin.collections.ArrayDeque;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 /**
@@ -16,6 +19,9 @@ public class TemporalQuery extends Query {
    */
   private final List<StagedSimilarityQuery> queries;
 
+  /**
+   * Provide an empty list to fetch no metadata at all. If the field is not filled (i.e. null), all metadata is provided for backwards-compatibility
+   */
   private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   @JsonCreator
