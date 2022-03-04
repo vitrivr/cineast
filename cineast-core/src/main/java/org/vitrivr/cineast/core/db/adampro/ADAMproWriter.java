@@ -20,6 +20,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+@Deprecated
 public class ADAMproWriter extends ProtobufTupleGenerator {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -45,8 +46,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   }
 
   @Override
-  public void close() {
-  }
+  public void close() {}
 
   @Override
   public boolean exists(String key, String value) {
@@ -118,6 +118,11 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public int supportedBatchSize() {
+    return 1;
   }
 
 

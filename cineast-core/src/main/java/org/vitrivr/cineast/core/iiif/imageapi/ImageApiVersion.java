@@ -93,6 +93,11 @@ public class ImageApiVersion {
     }
   }
 
+  @Override
+  public int hashCode() {
+    return toNumericString().hashCode();
+  }
+
   public IMAGE_API_VERSION getVersion() {
     return this.version;
   }

@@ -1,8 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-
 import io.grpc.StatusRuntimeException;
-import org.apache.logging.log4j.LogManager;
+import java.util.List;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -13,8 +12,6 @@ import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.client.language.extensions.Literal;
 
-import java.util.List;
-
 public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   /**
@@ -22,15 +19,17 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    */
   private final CottontailWrapper cottontail;
 
-  private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
-
   /**
    * The fully qualified name of the entity handled by this {@link CottontailWriter}.
    */
   private String fqn;
 
-  public CottontailWriter(CottontailWrapper wrapper) {
+  /** The batch size to use for INSERTS. */
+  private final int batchSize;
+
+  public CottontailWriter(CottontailWrapper wrapper, int batchSize) {
     this.cottontail = wrapper;
+    this.batchSize = batchSize;
   }
 
   @Override
@@ -40,9 +39,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
   }
 
   @Override
-  public void close() {
-    this.cottontail.close();
-  }
+  public void close() { /* No op */ }
 
   @Override
   public boolean exists(String key, String value) {
@@ -62,7 +59,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     int size = tuples.size();
     final long txId = this.cottontail.client.begin();
     try {
-      BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names);
+      BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names).txId(txId);
       while (!tuples.isEmpty()) {
         final PersistentTuple tuple = tuples.remove(0);
         final Object[] values = tuple.getElements().stream().map(o -> {
@@ -105,5 +102,10 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
       }
     }
     return insert;
+  }
+
+  @Override
+  public int supportedBatchSize() {
+    return this.batchSize;
   }
 }

@@ -27,8 +27,8 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.writer.MediaObjectMetadataWriter;
@@ -107,12 +107,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pathProvider = pathProvider;
     this.mediaType = mediaType;
 
-    final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
+    final Supplier<PersistencyWriter<?>> writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
-    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.batchSize());
-    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(), context.batchSize());
+    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get());
+    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get());
 
-    final DBSelectorSupplier readerSupplier = context.persistencyReader();
+    final Supplier<DBSelector> readerSupplier = context.persistencyReader();
     this.objectReader = new MediaObjectReader(readerSupplier.get());
     this.segmentReader = new MediaSegmentReader(readerSupplier.get());
 
@@ -154,7 +154,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
-        ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter(), this.context.batchSize());
+        ((MetadataFeatureModule<?>) extractor).init(this.context.persistencyWriter());
       } else {
         extractor.init();
       }

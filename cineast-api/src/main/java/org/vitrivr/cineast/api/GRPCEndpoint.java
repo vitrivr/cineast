@@ -34,7 +34,6 @@ public class GRPCEndpoint {
     try {
       server.start();
     } catch (IOException e) {
-      e.printStackTrace();
     }
 
   }

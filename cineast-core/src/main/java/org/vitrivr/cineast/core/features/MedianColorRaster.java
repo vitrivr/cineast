@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 public class MedianColorRaster extends AverageColorRaster {
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     /* TODO: Respect batchSize. */
     this.phandler = supply.get();
     this.phandler.open("features_MedianColorRaster");
