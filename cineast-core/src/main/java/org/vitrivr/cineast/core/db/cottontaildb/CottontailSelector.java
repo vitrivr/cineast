@@ -85,7 +85,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
-    final Query query = knn(k, vector, column, config);
+    final Query query = knn(k, vector, column, config, "*");
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -314,7 +314,7 @@ public final class CottontailSelector implements DBSelector {
   }
 
   public Map<String, Integer> countDistinctValues(String column) {
-    final Query query = new Query(this.fqn).select("*", null);
+    final Query query = new Query(this.fqn).select(column, null);
     final Map<String, Integer> count = new HashMap<>();
     try {
       final TupleIterator results = this.cottontail.client.query(query);
@@ -375,13 +375,31 @@ public final class CottontailSelector implements DBSelector {
    * @return {@link Query}
    */
   private Query knn(int k, float[] vector, String column, ReadableQueryConfig config) {
+    return knn(k, vector, column, config, GENERIC_ID_COLUMN_QUALIFIER);
+  }
+
+  /**
+   * Creates and returns a basic {@link Query} object for the given kNN parameters.
+   *
+   * @param k      The k parameter used for kNN
+   * @param vector The query vector (= float array).
+   * @param column The name of the column that should be queried.
+   * @param config The {@link ReadableQueryConfig} with additional parameters.
+   * @param select which rows should be selected
+   * @return {@link Query}
+   */
+  private Query knn(int k, float[] vector, String column, ReadableQueryConfig config, String... select) {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
     final Query query = new Query(this.fqn)
-        .select(GENERIC_ID_COLUMN_QUALIFIER, null)
         .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
         .limit(k);
+
+    for (String s : select) {
+      query.select(s, null);
+    }
+
 
     /* Add relevant segments (optional). */
     if (!relevant.isEmpty()) {
