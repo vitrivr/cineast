@@ -60,7 +60,7 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
-    System.out.printf("Starting import of type %s for '%s'.%n", this.type, this.input);
+    System.out.printf("Starting import of type %s for '%s'. Batchsize %d, %d threads. Clean %b, no-finalize %b .%n", this.type, this.input, this.batchsize, this.threads, this.clean, this.doNotFinalize);
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
     DataImportHandler handler = null;
