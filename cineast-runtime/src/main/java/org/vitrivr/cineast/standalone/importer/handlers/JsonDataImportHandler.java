@@ -28,7 +28,7 @@ public class JsonDataImportHandler extends DataImportHandler {
   public void doImport(Path path) {
     try {
       LOGGER.info("Starting data import with JSON files in: {}", path.toString());
-      Files.walk(path, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
+      Files.walk(path, 3).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         final String filename = p.getFileName().toString();
         final String suffix = filename.substring(filename.lastIndexOf("."));
         try {

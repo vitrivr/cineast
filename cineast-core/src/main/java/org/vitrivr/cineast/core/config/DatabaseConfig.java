@@ -27,6 +27,7 @@ public final class DatabaseConfig {
   private DataSource selector = DataSource.COTTONTAIL;
 
   private Integer batchsize = DEFAULT_BATCH_SIZE;
+  private boolean useTransactions = true;
 
   @JsonCreator
   public DatabaseConfig() {
@@ -101,5 +102,14 @@ public final class DatabaseConfig {
 
   public DBSelectorSupplier getSelectorSupplier() {
     return this.selector.getSelectorSupplier(this);
+  }
+
+  @JsonProperty
+  public boolean getUseTransactions() {
+    return useTransactions;
+  }
+
+  public void setUseTransactions(boolean useTransactions) {
+    this.useTransactions = useTransactions;
   }
 }
