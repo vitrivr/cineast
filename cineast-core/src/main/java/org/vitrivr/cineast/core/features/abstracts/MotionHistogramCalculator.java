@@ -128,7 +128,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<float[]> list = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), this.fieldName);
+    List<float[]> list = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), this.fieldName, qc);
     if (list.isEmpty()) {
       return new ArrayList<>(1);
     }

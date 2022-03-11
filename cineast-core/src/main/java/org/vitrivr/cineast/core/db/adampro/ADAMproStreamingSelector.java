@@ -205,7 +205,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName) {
+  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
     QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value.getString())), null, null);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro.streamingStandardQuery(qbqm);

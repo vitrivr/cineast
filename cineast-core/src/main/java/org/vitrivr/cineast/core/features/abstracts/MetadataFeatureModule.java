@@ -170,7 +170,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     return this.mediaSegmentReader.lookUpSegment(segmentId)
         .map(MediaSegmentDescriptor::getObjectId)
-        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, new StringTypeProvider(objId), FEATURE_COLUMN_NAME))
+        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, new StringTypeProvider(objId), FEATURE_COLUMN_NAME, rqc))
         .flatMap(features -> features.stream().findFirst()) // Feature vectors are unique per id
         .map(feature -> this.getSimilar(feature, rqc))
         .orElse(Collections.emptyList());

@@ -95,7 +95,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     QueryConfig qcc = this.defaultQueryConfig(qc);
 
     /* Lookup features. */
-    List<float[]> features = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
+    List<float[]> features = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
     if (features.isEmpty()) {
       LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
       return new ArrayList<>(0);

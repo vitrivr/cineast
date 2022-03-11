@@ -88,14 +88,14 @@ public interface DBSelector extends Closeable {
   /**
    * SELECT 'vectorname' from entity where 'fieldname' = 'value'
    */
-  List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName);
+  List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig);
 
   /**
    * for legacy support, takes the float[] method by default
    */
   default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value,
-      String vectorName) {
-    return getFeatureVectors(fieldName, value, vectorName).stream().map(FloatArrayTypeProvider::new)
+      String vectorName, ReadableQueryConfig qc) {
+    return getFeatureVectors(fieldName, value, vectorName, qc).stream().map(FloatArrayTypeProvider::new)
         .collect(Collectors.toList());
   }
 

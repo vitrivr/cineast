@@ -5,6 +5,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class QueryIDGenerator {
 
   public static String generateQueryID() {
-    return "q-" + RandomStringUtils.randomNumeric(3);
+    return generateQueryID("");
+  }
+
+  public static String generateQueryID(String infix) {
+    return "q-" + infix + RandomStringUtils.randomNumeric(3);
   }
 }
