@@ -48,7 +48,7 @@ public enum DataSource {
       case NONE:
         return NoDBWriter::new;
       case COTTONTAIL:
-        return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()), config.getBatchsize());
+        return () -> new CottontailWriter(new CottontailWrapper(config.getHost(), config.getPort()), config.getBatchsize(), config.getUseTransactions());
       case POLYPHENY:
         return () -> new PolyphenyWriter(new PolyphenyWrapper(config.getHost(), config.getPort()), config.getBatchsize());
       case JSON:

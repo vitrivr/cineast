@@ -58,10 +58,16 @@ public class ImportCommand implements Runnable {
   @Option(name = {"--no-finalize"}, title = "Do Not Finalize", description = "If this flag is not set, automatically rebuilds indices & optimizes all entities when writing to cottontail after the import. Set this flag when you want more performance with external parallelism.")
   private boolean doNotFinalize = false;
 
+  @Option(name = {"--no-transactions"}, title = "Do Not Use Transactions", description = "If this flag is not set, the default behavior is used which means transactions are enabled during import. Set this flag when you want more performance and manage transactional aspects yourself.")
+  private boolean noTransactions = false;
+
   @Override
   public void run() {
-    System.out.printf("Starting import of type %s for '%s'.%n", this.type, this.input);
+    System.out.printf("Starting import of type %s for '%s'. Batchsize %d, %d threads. Clean %b, no-finalize %b .%n", this.type, this.input, this.batchsize, this.threads, this.clean, this.doNotFinalize);
     final Path path = Paths.get(this.input);
+    if(noTransactions){
+      Config.sharedConfig().getDatabase().setUseTransactions(false);
+    }
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
     DataImportHandler handler = null;
     boolean isGoogleVision = false;
