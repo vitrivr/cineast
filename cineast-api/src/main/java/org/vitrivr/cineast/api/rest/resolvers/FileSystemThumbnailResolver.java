@@ -24,9 +24,9 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
       return null;
     }
 
-    String fileName = segmentId.substring(0, segmentId.lastIndexOf("_"));
+    //String fileName = segmentId.substring(0, segmentId.lastIndexOf("_"));
 
-    File dir = new File(this.baseFolder, fileName);
+    File dir = new File(this.baseFolder, split[1]);
 
     if (!dir.exists() || !dir.isDirectory()) {
       return null;
@@ -35,7 +35,7 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
     File[] candidates = dir.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
-        return name.startsWith(segmentId);
+        return name.startsWith("shot" + split[1] + "_" + split[2]);
       }
     });
 
