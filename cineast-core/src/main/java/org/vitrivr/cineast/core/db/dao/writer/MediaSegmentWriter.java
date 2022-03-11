@@ -9,13 +9,12 @@ public class MediaSegmentWriter extends AbstractBatchedEntityWriter<MediaSegment
 
   public MediaSegmentWriter(PersistencyWriter<?> writer) {
     super(writer);
-  }
-
-  @Override
-  protected void init() {
     this.writer.setFieldNames(MediaSegmentDescriptor.FIELDNAMES);
     this.writer.open(MediaSegmentDescriptor.ENTITY);
   }
+
+  @Override
+  protected void init() { }
 
   @Override
   protected PersistentTuple generateTuple(MediaSegmentDescriptor entity) {

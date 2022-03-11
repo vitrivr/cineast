@@ -60,6 +60,10 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       LOGGER.warn("provided id-list {} or spec {} is null, returning empty list", ids, spec);
       return new ArrayList<>();
     }
+    if (spec.size() == 0) {
+      LOGGER.trace("Not returning any metadata since spec was an empty list.");
+      return new ArrayList<>();
+    }
     StopWatch watch = StopWatch.createStarted();
     ids = sanitizeIds(ids);
     spec = sanitizeSpec(spec);
@@ -69,6 +73,14 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
   }
 
   public List<R> findBySpec(List<MetadataAccessSpecification> spec) {
+    if (spec == null) {
+      LOGGER.warn("Provided spec is null, returning empty list");
+      return new ArrayList<>();
+    }
+    if (spec.size() == 0) {
+      LOGGER.trace("Not returning any metadata since spec was an empty list.");
+      return new ArrayList<>();
+    }
     StopWatch watch = StopWatch.createStarted();
     spec = sanitizeSpec(spec);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec);

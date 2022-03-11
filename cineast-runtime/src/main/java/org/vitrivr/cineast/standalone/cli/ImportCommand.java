@@ -27,7 +27,6 @@ import org.vitrivr.cineast.standalone.importer.lsc2020.VisualConceptTagImportHan
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
-import org.vitrivr.cineast.standalone.importer.vbs2019.MLTFeaturesImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
@@ -61,7 +60,7 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
-    System.out.println(String.format("Starting import of type %s for '%s'.", this.type, this.input));
+    System.out.printf("Starting import of type %s for '%s'. Batchsize %d, %d threads. Clean %b, no-finalize %b .%n", this.type, this.input, this.batchsize, this.threads, this.clean, this.doNotFinalize);
     final Path path = Paths.get(this.input);
     final ImportType type = ImportType.valueOf(this.type.toUpperCase());
     DataImportHandler handler = null;
@@ -101,9 +100,6 @@ public class ImportCommand implements Runnable {
       case V3C1COLORLABELS:
         /* Be aware that this is metadata which might already be comprised in merged vbs metadata */
         handler = new ColorlabelImportHandler(this.threads, this.batchsize);
-        break;
-      case OBJECTINSTANCE:
-        handler = new MLTFeaturesImportHandler(this.threads, this.batchsize, this.clean);
         break;
       case LSCMETA:
         handler = new MetaImportHandler(this.threads, this.batchsize, this.clean);
@@ -165,6 +161,6 @@ public class ImportCommand implements Runnable {
    * Enum of the available types of data imports.
    */
   private enum ImportType {
-    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, OBJECTINSTANCE, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
+    PROTO, JSON, LIRE, ASR, OCR, AUDIO, TAGS, METADATA, CAPTIONING, GOOGLEVISION, V3C1COLORLABELS, LSCMETA, LSCCONCEPT, LSCCAPTION, LSCX, LSCTABLE, LSCTAGSALL, LSCOCR, LSCSPATIAL, LSC21TAGS
   }
 }

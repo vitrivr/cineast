@@ -11,7 +11,7 @@ allprojects {
     group = 'org.vitrivr'
 
     /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
-    version = '3.7.0'
+    version = '3.8.4'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -35,6 +35,10 @@ subprojects {
     }
 
     apply plugin: 'com.github.johnrengelman.shadow'
+
+    shadowJar {
+        zip64 true // Required to allow more than 65535 entries in final archive
+    }
 
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
@@ -110,7 +114,7 @@ task getExternalFiles {
 
 task generateOpenApiSpecs(type: JavaExec) {
     classpath = project(":cineast-api").sourceSets.main.runtimeClasspath
-    main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
+    mainClass.set('org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs')
 
     def config = project.hasProperty("cineastConfig") ? project.getProperty("cineastConfig") : "cineast.json"
 

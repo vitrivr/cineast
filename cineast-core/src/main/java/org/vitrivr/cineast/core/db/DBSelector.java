@@ -79,6 +79,9 @@ public interface DBSelector extends Closeable {
   <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors,
       String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
 
+  /**
+   * In contrast to {@link #getNearestNeighboursGeneric(int, float[], String, Class, ReadableQueryConfig)}, this method returns all elements of a row
+   */
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config);
 

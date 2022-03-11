@@ -20,8 +20,12 @@ public class Main {
       System.exit(1);
     }
 
-    /* Initalize Monitoring */
-    PrometheusServer.initialize();
+    /* Initialize Monitoring */
+    try {
+      PrometheusServer.initialize();
+    } catch (Throwable e) {
+      System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
+    }
 
     if (args.length == 1) {
       CLI.start(CineastCli.class);

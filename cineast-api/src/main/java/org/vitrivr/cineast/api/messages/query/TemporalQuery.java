@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 /**
@@ -18,29 +17,18 @@ public class TemporalQuery extends Query {
   private final List<StagedSimilarityQuery> queries;
 
   /**
-   * List of time distances as floats that can be part of this {@link TemporalQuery}.
+   * Provide an empty list to fetch no metadata at all. If the field is not filled (i.e. null), all metadata is provided for backwards-compatibility
    */
-  private final List<Float> timeDistances;
-
-  /**
-   * The max length of the temporal sequences as float that can be part of this {@link TemporalQuery}.
-   */
-  private final Float maxLength;
-
   private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   @JsonCreator
   public TemporalQuery(
       @JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries,
-      @JsonProperty(value = "config", required = false) QueryConfig config,
-      @JsonProperty(value = "timeDistances", required = false) List<Float> timeDistances,
-      @JsonProperty(value = "maxLength", required = false) Float maxLength,
+      @JsonProperty(value = "config", required = false) TemporalQueryConfig config,
       @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
   ) {
     super(config);
     this.queries = queries;
-    this.timeDistances = timeDistances;
-    this.maxLength = maxLength;
     this.metadataAccessSpec = metadataAccessSpec;
   }
 
@@ -59,7 +47,7 @@ public class TemporalQuery extends Query {
    * @return List<Float>
    */
   public List<Float> getTimeDistances() {
-    return timeDistances;
+    return getTemporalQueryConfig().timeDistances;
   }
 
   /**
@@ -68,7 +56,11 @@ public class TemporalQuery extends Query {
    * @return Float
    */
   public Float getMaxLength() {
-    return maxLength;
+    return getTemporalQueryConfig().maxLength;
+  }
+
+  public TemporalQueryConfig getTemporalQueryConfig() {
+    return (TemporalQueryConfig) this.config;
   }
 
   public List<MetadataAccessSpecification> getMetadataAccessSpec() {
