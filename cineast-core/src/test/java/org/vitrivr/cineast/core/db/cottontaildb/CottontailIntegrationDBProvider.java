@@ -36,7 +36,7 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
 
   @Override
   public PersistencyWriter<Insert> getPersistencyWriter() {
-    return new CottontailWriter(getWrapper(), this.config.getBatchsize());
+    return new CottontailWriter(getWrapper(), this.config.getBatchsize(), true);
   }
 
   @Override
