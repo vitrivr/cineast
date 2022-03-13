@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -41,6 +43,8 @@ import org.vitrivr.cottontail.client.language.extensions.Or;
 import org.vitrivr.cottontail.client.language.extensions.Predicate;
 
 public final class CottontailSelector implements DBSelector {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailSelector}.

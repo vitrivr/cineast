@@ -15,11 +15,11 @@ public class CollectionBooleanRetriever extends BooleanRetriever {
                             RelationalOperator.IN,
                             RelationalOperator.LIKE));
 
-    protected CollectionBooleanRetriever(String entity, Collection<String> attributes) {
+    public CollectionBooleanRetriever(String entity, Collection<String> attributes) {
         super(entity, attributes);
     }
 
-    protected CollectionBooleanRetriever(LinkedHashMap<String, String> properties) {
+    public CollectionBooleanRetriever(LinkedHashMap<String, String> properties) {
         super(properties);
     }
 
