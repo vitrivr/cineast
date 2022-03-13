@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.temporal;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -56,7 +56,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
         /*
         Else assign the scored segment to the ScoredSegment and if there is already a scored Segment present att this score to the one present.
          */
-        scoredSegmentStorage.putIfAbsent(segmentDescriptor.getSegmentId(), new Int2ObjectLinkedOpenHashMap<>());
+        scoredSegmentStorage.putIfAbsent(segmentDescriptor.getSegmentId(), new TIntObjectHashMap());
         if (scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).containsKey(currentContainerId)) {
           scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
         } else {

@@ -91,8 +91,6 @@ dependencies {
     api group: "net.sf.trove4j", name: "trove4j", version: version_trove4j
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
-    implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.8'
-
 
     /** Mockito for unit testing */
     implementation 'org.mockito:mockito-inline:3.11.0'
