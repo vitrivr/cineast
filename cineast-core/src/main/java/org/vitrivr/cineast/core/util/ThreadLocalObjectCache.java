@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.ocr;
+package org.vitrivr.cineast.core.util;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

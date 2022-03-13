@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.ocr;
+package org.vitrivr.cineast.core.util;
 
 import java.util.Arrays;
 
