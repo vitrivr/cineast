@@ -236,7 +236,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                   continue;
                 }
 
-                Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds);
+                Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds, uuid);
 
                 responseObserver.onNext(
                     QueryContainerUtil.queryResult(
@@ -261,7 +261,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                 if (objectIds.isEmpty()) {
                   continue;
                 }
-                Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
+                Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds, uuid);
 
                 responseObserver.onNext(
                     QueryContainerUtil.queryResult(

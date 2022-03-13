@@ -4,6 +4,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_Q
 import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
+import static org.vitrivr.cineast.core.util.DBQueryIDGenerator.generateQueryID;
 
 import io.grpc.Status.Code;
 import io.grpc.StatusRuntimeException;
@@ -28,7 +29,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
-import org.vitrivr.cineast.core.util.QueryIDGenerator;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Direction;
@@ -97,7 +97,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject())).queryId(queryConfig.getQueryId().toString());
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject())).queryId(generateQueryID("get-fv", queryConfig));
     try {
       final TupleIterator results = this.cottontail.client.query(query);
       final List<float[]> _return = new LinkedList<>();
@@ -114,7 +114,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject())).queryId(qc.getQueryId().toString());
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Literal(fieldName, "==", value.toObject())).queryId(generateQueryID("get-fv-gen", qc));
     try {
       return toSingleCol(this.cottontail.client.query(query), vectorName);
     } catch (StatusRuntimeException e) {
@@ -136,15 +136,26 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values, String dbQueryID) {
+    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
+    return getRowsHelper(fieldName, "IN", mapped, dbQueryID);
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values, String dbQueryID) {
+    final Object[] mapped = values.toArray();
+    return getRowsHelper(fieldName, "IN", mapped, dbQueryID);
+  }
+
+  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
     final String op = toOperator(operator);
     return getRowsHelper(fieldName, op, mapped, "get-rows-" + op + "-iterable");
   }
 
-  private List<Map<String, PrimitiveTypeProvider>> getRowsHelper(String fieldName, String op, Object[] mapped, String qIdInfix) {
-    String queryId = QueryIDGenerator.generateQueryID(qIdInfix);
-    final Query query = new Query(this.fqn).select("*", null).where(new Literal(fieldName, op, mapped)).queryId(queryId);
+  private List<Map<String, PrimitiveTypeProvider>> getRowsHelper(String fieldName, String op, Object[] mapped, String dbQueryID) {
+    final Query query = new Query(this.fqn).select("*", null).where(new Literal(fieldName, op, mapped)).queryId(dbQueryID);
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -159,14 +170,15 @@ public final class CottontailSelector implements DBSelector {
     final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" OR "));
     final Query query = new Query(this.fqn)
         .select("*", null)
-        .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER);
+        .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER)
+        .queryId(generateQueryID("ft-rows", queryConfig));
+
 
     /* Process predicates. */
     if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = queryConfig.getRelevantSegmentIds();
       final Literal segmentIds = new Literal(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
       query.where(new And(segmentIds, new Literal(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0)));
-      query.queryId(queryConfig.getQueryId().toString());
     } else {
       query.where(new Literal(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0));
     }
@@ -182,10 +194,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
     /* Prepare plain query. */
-    final Query query = new Query(this.fqn);
-    if (qc != null) {
-      query.queryId(qc.getQueryId().toString());
-    }
+    final Query query = new Query(this.fqn).queryId(generateQueryID("get-rows-and", qc));
     if (projection.isEmpty()) {
       query.select("*", null);
     } else {
@@ -223,16 +232,16 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
-    final Query query = new Query(this.fqn).select("*", null);
+  public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryID) {
+    final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     predicates.ifPresent(query::where);
     return processResults(this.cottontail.client.query(query));
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
-    final Query query = new Query(this.fqn).select("*", null);
+  public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID) {
+    final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID == null ? "md-id-spec" : dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     final Literal segmentIds = new Literal(idColName, "IN", ids.toArray());
     if (predicates.isPresent()) {
@@ -274,7 +283,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    final Query query = new Query(this.fqn).select(column, null).queryId(QueryIDGenerator.generateQueryID("all-" + column));
+    final Query query = new Query(this.fqn).select(column, null).queryId(generateQueryID("all-" + column));
     try {
       return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
@@ -286,7 +295,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
     final Query query = new Query(this.fqn);
-    query.queryId(QueryIDGenerator.generateQueryID("all-cols-limit-" + limit));
+    query.queryId(generateQueryID("all-cols-limit-" + limit));
     for (String c : columns) {
       query.select(c, null);
     }
@@ -304,7 +313,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     final Query query = new Query(this.fqn).distinct(column, null).
-        queryId(QueryIDGenerator.generateQueryID("unique-" + column));
+        queryId(generateQueryID("unique-" + column));
     try {
       return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
@@ -315,7 +324,7 @@ public final class CottontailSelector implements DBSelector {
 
   public Map<String, Integer> countDistinctValues(String column) {
     final Query query = new Query(this.fqn).select(column, null)
-        .queryId(QueryIDGenerator.generateQueryID("count-distinct-" + column));
+        .queryId(generateQueryID("count-distinct-" + column));
     final Map<String, Integer> count = new HashMap<>();
     try {
       final TupleIterator results = this.cottontail.client.query(query);
@@ -333,7 +342,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     final Query query = new Query(this.fqn).select("*", null)
-        .queryId("get-all");
+        .queryId(generateQueryID("get-all-" + this.fqn));
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -397,7 +406,7 @@ public final class CottontailSelector implements DBSelector {
         .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
         .limit(k)
-        .queryId(config.getQueryId().toString());
+        .queryId(generateQueryID("knn", config));
 
     for (String s : select) {
       query.select(s, null);
