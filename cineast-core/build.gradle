@@ -75,11 +75,6 @@ signing {
     sign publishing.publications.mavenJava
 }
 
-
-/**
- * We cannot switch to implementation yet in multi-module setups.
- * With Gradle 6.7 and MacOS, declaring dependencies as implementation means they do not get exposed to other projects
- */
 dependencies {
 
     /** THE Cottontail DB proto dependency */
@@ -89,9 +84,6 @@ dependencies {
     /** THE Polypheny dependency */
     api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
 
-    /** THE ADAMpro proto dependency (legacy) */
-    api group: 'org.vitrivr', name: 'adampro-proto', version: version_adampro
-
     /* Google Json: GSON, since JSON db layer is based on this */
     api group: 'com.google.code.gson', name: 'gson', version: version_gson
 
@@ -99,6 +91,8 @@ dependencies {
     api group: "net.sf.trove4j", name: "trove4j", version: version_trove4j
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
+    implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.8'
+
 
     /** Mockito for unit testing */
     implementation 'org.mockito:mockito-inline:3.11.0'
@@ -152,6 +146,7 @@ dependencies {
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
     api group: 'javax.activation', name: 'activation', version: '1.1.1'
+
 }
 
 shadowJar {

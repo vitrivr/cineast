@@ -8,7 +8,6 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
-import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 
@@ -21,17 +20,11 @@ public class RetrieveCommand implements Runnable {
   @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve. By default, all categories are searched")
   private String category;
 
-  @Option(name = {"-e", "--export"}, title = "Export", description = "Indicates whether the results should be exported. Defaults to false.")
-  private boolean export = false;
-
   @Option(name = {"-r", "--relevantSegments"}, title = "Relevant segments", description = "Comma separated list of segment IDs to which the query is to be limited.")
   private String relevantSegments;
 
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
-    if (export) {
-      retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));
-    }
 
     QueryConfig qc = QueryConfig.newQueryConfigFromOther(new ConstrainedQueryConfig("cli-query", new ArrayList<>()));
 

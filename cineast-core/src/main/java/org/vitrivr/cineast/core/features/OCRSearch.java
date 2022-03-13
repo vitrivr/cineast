@@ -20,13 +20,13 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
-import org.vitrivr.cineast.core.util.HungarianAlgorithm;
-import org.vitrivr.cineast.core.util.MultiTracker;
-import org.vitrivr.cineast.core.util.NeedlemanWunschMerge;
+import org.vitrivr.cineast.core.util.ocr.HungarianAlgorithm;
+import org.vitrivr.cineast.core.util.ocr.MultiTracker;
+import org.vitrivr.cineast.core.util.ocr.NeedlemanWunschMerge;
 import org.vitrivr.cineast.core.util.text.TextDetector_EAST;
 import org.vitrivr.cineast.core.util.text.TextRecognizer_CTC;
 import org.vitrivr.cineast.core.util.text.TextStream;
-import org.vitrivr.cineast.core.util.ThreadLocalObjectCache;
+import org.vitrivr.cineast.core.util.ocr.ThreadLocalObjectCache;
 
 /**
  * OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision) This makes sense here since we expect small errors from OCR sources

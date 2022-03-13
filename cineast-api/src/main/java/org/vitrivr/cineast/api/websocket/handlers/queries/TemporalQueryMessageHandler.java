@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import io.netty.util.collection.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -53,7 +54,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<Thread> cleanupThreads = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new Int2ObjectLinkedOpenHashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
 
     Set<String> sentSegmentIds = new HashSet<>();

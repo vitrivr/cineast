@@ -68,6 +68,10 @@ subprojects {
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: version_jackson
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
 
+        /** Protobuf */
+        implementation group: 'io.grpc', name: 'grpc-stub', version: '1.45.0'
+        implementation group: 'io.grpc', name: 'grpc-netty', version: '1.45.0'
+
         /** Test dependencies (JUnit 5) */
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version_junit
         testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: version_junit

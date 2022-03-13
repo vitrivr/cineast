@@ -111,6 +111,8 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson
     implementation group: 'de.svenkubiak', name: 'jBCrypt', version: version_jbcrypt
     implementation group: 'org.vitrivr', name: 'cineast-proto', version: version_cineast_proto
+    implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.8'
+
 }
 
 
