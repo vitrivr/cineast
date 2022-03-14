@@ -31,7 +31,6 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
 
 public class ContinuousQueryDispatcher {
 
@@ -43,8 +42,6 @@ public class ContinuousQueryDispatcher {
   private static final int THREAD_COUNT = Config.sharedConfig().getRetriever().getThreadPoolSize();
   private static final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
   private static final int KEEP_ALIVE_TIME = 60;
-
-  private static final List<RetrievalResultListener> resultListeners = new ArrayList<>();
 
   private static final LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
   private static ExecutorService executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT,
@@ -76,18 +73,6 @@ public class ContinuousQueryDispatcher {
 
   public static void shutdown() {
     clearExecutor();
-  }
-
-  public static void addRetrievalResultListener(RetrievalResultListener listener) {
-    Objects.requireNonNull(listener, LISTENER_NULL_MESSAGE);
-    if (!resultListeners.contains(listener)) {
-      resultListeners.add(listener);
-    }
-  }
-
-  public static void removeRetrievalResultListener(RetrievalResultListener listener) {
-    Objects.requireNonNull(listener, LISTENER_NULL_MESSAGE);
-    resultListeners.remove(listener);
   }
 
   private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
@@ -196,10 +181,6 @@ public class ContinuousQueryDispatcher {
     if (scoreElements == null) {
       LOGGER.warn("Retrieval task {} returned 'null' results.", task);
       return;
-    }
-
-    for (RetrievalResultListener listener : resultListeners) {
-      listener.notify(scoreElements, task);
     }
 
     double retrieverWeight = this.retrieverWeights.get(task.getRetriever());

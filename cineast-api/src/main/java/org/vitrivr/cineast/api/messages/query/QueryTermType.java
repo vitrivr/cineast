@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.InstantQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.MotionQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
@@ -26,7 +25,6 @@ public enum QueryTermType {
 
   IMAGE(ImageQueryTermContainer.class),
   AUDIO(AudioQueryTermContainer.class),
-  MOTION(MotionQueryTermContainer.class),
   MODEL3D(ModelQueryTermContainer.class),
   LOCATION(LocationQueryTermContainer.class),
   PARAMETERISED_LOCATION(ParameterisedLocationQueryTermContainer.class),

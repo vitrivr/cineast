@@ -14,7 +14,6 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
 import org.vitrivr.cineast.standalone.runtime.ContinuousQueryDispatcher;
 
 public class ContinuousRetrievalLogic {
@@ -90,14 +89,6 @@ public class ContinuousRetrievalLogic {
       return new ArrayList<>(0);
     }
     return retrieveByRetriever(qc, retriever.get(), config);
-  }
-
-  public void addRetrievalResultListener(RetrievalResultListener listener) {
-    ContinuousQueryDispatcher.addRetrievalResultListener(listener);
-  }
-
-  public void removeRetrievalResultListener(RetrievalResultListener listener) {
-    ContinuousQueryDispatcher.removeRetrievalResultListener(listener);
   }
 
   public void shutdown() {

@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 import org.vitrivr.cineast.core.db.dao.MetadataType;
+import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
 /**
  * Abstraction layer for segment and object metadata retrieval.
@@ -56,6 +57,10 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
   }
 
   public List<R> findBySpec(List<String> ids, List<MetadataAccessSpecification> spec) {
+    return findBySpec(ids, spec, null);
+  }
+
+  public List<R> findBySpec(List<String> ids, List<MetadataAccessSpecification> spec, String queryID) {
     if (ids == null || spec == null) {
       LOGGER.warn("provided id-list {} or spec {} is null, returning empty list", ids, spec);
       return new ArrayList<>();
@@ -67,12 +72,17 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     StopWatch watch = StopWatch.createStarted();
     ids = sanitizeIds(ids);
     spec = sanitizeSpec(spec);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName);
+    String dbQueryID = DBQueryIDGenerator.generateQueryID("find-md-spec-" + tableName, queryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName, dbQueryID);
     LOGGER.debug("Performed metadata lookup for {} ids in {} ms. {} results.", ids.size(), watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }
 
   public List<R> findBySpec(List<MetadataAccessSpecification> spec) {
+    return findBySpec(spec, null);
+  }
+
+  public List<R> findBySpec(List<MetadataAccessSpecification> spec, String queryID) {
     if (spec == null) {
       LOGGER.warn("Provided spec is null, returning empty list");
       return new ArrayList<>();
@@ -83,7 +93,8 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     }
     StopWatch watch = StopWatch.createStarted();
     spec = sanitizeSpec(spec);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec);
+    String dbQueryID = DBQueryIDGenerator.generateQueryID("find-my-spec-" + tableName, queryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec, dbQueryID);
     LOGGER.debug("Performed metadata lookup in {} ms. {} results.", watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }
@@ -105,11 +116,17 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
   }
 
   public List<R> findBySpec(MetadataAccessSpecification... spec) {
-    return this.findBySpec(Lists.newArrayList(spec));
+    return this.findBySpec(Lists.newArrayList(spec), null);
   }
 
-  public List<R> findBySpec(MetadataAccessSpecification spec) {
-    return this.findBySpec(Lists.newArrayList(spec));
+  /**
+   * Returns metadata according to spec
+   *
+   * @param spec    access specification
+   * @param queryID can be null
+   */
+  public List<R> findBySpec(MetadataAccessSpecification spec, String queryID) {
+    return this.findBySpec(Lists.newArrayList(spec), queryID);
   }
 
   public List<MetadataAccessSpecification> sanitizeSpec(List<MetadataAccessSpecification> spec) {
