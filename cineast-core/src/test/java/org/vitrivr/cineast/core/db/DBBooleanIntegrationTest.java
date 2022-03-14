@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.db;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.ArrayList;
@@ -13,14 +12,11 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -189,8 +185,9 @@ public abstract class DBBooleanIntegrationTest<R> {
     values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
     values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, values);
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck)));
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck - 1)));
   }
 
   @Test
@@ -202,8 +199,9 @@ public abstract class DBBooleanIntegrationTest<R> {
     values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
     values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck)));
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck)));
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck - 1)));
   }
 
   @Test
@@ -211,11 +209,14 @@ public abstract class DBBooleanIntegrationTest<R> {
   public void testGreaterQuery() {
     this.selector.open(testTableName);
     int idToCheck = TABLE_CARD - 2; // query for greater than second-highest value
-    if (idToCheck < -1) Assertions.fail(); // cardinality should be higher than 2
+    if (idToCheck < -1) {
+      Assertions.fail(); // cardinality should be higher than 2
+    }
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.GREATER, values);
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(TABLE_CARD - 1)));
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(TABLE_CARD - 1)));
   }
 
   @Test
@@ -226,7 +227,8 @@ public abstract class DBBooleanIntegrationTest<R> {
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.LESS, values);
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(0)));
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(0)));
   }
 
 
@@ -249,8 +251,9 @@ public abstract class DBBooleanIntegrationTest<R> {
     final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.BETWEEN, values2);
 
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck + 1)));
 
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck + 1)));
     Assertions.assertEquals(1, result.size());
   }
 
@@ -274,10 +277,14 @@ public abstract class DBBooleanIntegrationTest<R> {
     final Triple<String, RelationalOperator, List<PrimitiveTypeProvider>> element2 = new ImmutableTriple<>(ID_COL_NAME, RelationalOperator.IN, values2);
 
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getRowsAND(asList(element1, element2), ID_COL_NAME, asList(ID_COL_NAME), null);
-
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck - 1)));
-    MatcherAssert.assertThat(result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList()), hasItem(String.valueOf(idToCheck + 1)));
+    var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck - 1)));
+    Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck + 1)));
     Assertions.assertEquals(2, result.size());
+  }
+
+  private boolean hasItem(List<String> list, String s) {
+    return list.stream().anyMatch(e -> e.equals(s));
   }
 
 }

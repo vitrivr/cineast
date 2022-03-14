@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util;
+package org.vitrivr.cineast.core.util.ocr;
 
 /**
  * NeedlemanWunschMerge takes two (ideally similar) strings and is able to return a substring which is similar in both strings

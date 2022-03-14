@@ -43,7 +43,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.QueryIDGenerator;
+import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
@@ -135,20 +135,16 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param segmentIds List of segment IDs that should be looked up.
    * @return List of found {@link MediaSegmentDescriptor}
    */
-  protected List<MediaSegmentDescriptor> loadSegments(List<String> segmentIds) {
-    return loadSegments(segmentIds, QueryIDGenerator.generateQueryID());
-  }
-
   protected List<MediaSegmentDescriptor> loadSegments(List<String> segmentIds, String queryID) {
-    queryID = queryID + "-loadseg";
     LOGGER.trace("Loading segment information for {} segmentIDs, qid {}", segmentIds.size(), queryID);
     return TimeHelper.timeCall(() -> {
-      final Map<String, MediaSegmentDescriptor> map = this.mediaSegmentReader.lookUpSegments(segmentIds);
+      final Map<String, MediaSegmentDescriptor> map = this.mediaSegmentReader.lookUpSegments(segmentIds, queryID);
       final ArrayList<MediaSegmentDescriptor> sdList = new ArrayList<>(map.size());
       segmentIds.stream().filter(map::containsKey).forEach(s -> sdList.add(map.get(s)));
       return sdList;
     }, "loading segment information, qid " + queryID, Level.TRACE);
   }
+
 
   /**
    * Performs a lookup for the {@link MediaObjectDescriptor} identified by the provided object IDs and returns a list of the {@link MediaSegmentDescriptor}s that were found.
@@ -156,15 +152,10 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param objectIds List of object IDs that should be looked up.
    * @return List of found {@link MediaObjectDescriptor}
    */
-  protected List<MediaObjectDescriptor> loadObjects(List<String> objectIds) {
-    return loadObjects(objectIds, QueryIDGenerator.generateQueryID());
-  }
-
   protected List<MediaObjectDescriptor> loadObjects(List<String> objectIds, String queryID) {
-    queryID = queryID + "-loadobj";
     LOGGER.trace("Loading object information for {} segmentIDs, qid {}", objectIds.size(), queryID);
     return TimeHelper.timeCall(() -> {
-      final Map<String, MediaObjectDescriptor> map = this.mediaObjectReader.lookUpObjects(objectIds);
+      final Map<String, MediaObjectDescriptor> map = this.mediaObjectReader.lookUpObjects(objectIds, queryID);
       final ArrayList<MediaObjectDescriptor> vdList = new ArrayList<>(map.size());
       objectIds.stream().filter(map::containsKey).forEach(s -> vdList.add(map.get(s)));
       return vdList;
@@ -189,7 +180,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       return Lists.partition(objectIds, 100_000).stream().map(list -> loadAndWriteObjectMetadata(session, queryId, list, objectIdsForWhichMetadataIsFetched, metadataAccessSpec)).flatMap(Collection::stream).collect(Collectors.toList());
     }
     Thread thread = new Thread(() -> {
-      final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.findBySpec(objectIds, metadataAccessSpec);
+      final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.findBySpec(objectIds, metadataAccessSpec, queryId);
       if (objectMetadata.isEmpty()) {
         return;
       }
@@ -225,7 +216,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       return Lists.partition(segmentIds, 100_000).stream().map(list -> loadAndWriteSegmentMetadata(session, queryId, list, segmentIdsForWhichMetadataIsFetched, metadataAccessSpec)).flatMap(Collection::stream).collect(Collectors.toList());
     }
     Thread fetching = new Thread(() -> {
-      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.findBySpec(segmentIds, metadataAccessSpec);
+      final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.findBySpec(segmentIds, metadataAccessSpec, queryId);
       if (segmentMetadata.isEmpty()) {
         return;
       }
@@ -257,21 +248,21 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    *
    * @return objectIds retrieved for the segmentIds
    */
-  protected List<String> submitSegmentAndObjectInformation(Session session, String queryId, List<String> segmentIds) {
+  protected List<String> submitSegmentAndObjectInformation(Session session, String queryID, List<String> segmentIds) {
     /* Load segment & object information. */
-    LOGGER.trace("Loading segment and object information for submission, {} segments, qid {}", segmentIds.size(), queryId);
-    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryId);
-    return submitPrefetchedSegmentAndObjectInformation(session, queryId, segments);
+    LOGGER.trace("Loading segment and object information for submission, {} segments, qid {}", segmentIds.size(), queryID);
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryID);
+    return submitPrefetchedSegmentAndObjectInformation(session, queryID, segments);
   }
 
-  protected List<String> submitPrefetchedSegmentAndObjectInformation(Session session, String queryId, List<MediaSegmentDescriptor> segments) {
+  protected List<String> submitPrefetchedSegmentAndObjectInformation(Session session, String queryID, List<MediaSegmentDescriptor> segments) {
     final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-    return submitPrefetchedSegmentandObjectInformationfromIDs(session, queryId, segments, objectIds);
+    return submitPrefetchedSegmentandObjectInformationfromIDs(session, queryID, segments, objectIds);
   }
 
-  List<String> submitPrefetchedSegmentandObjectInformationfromIDs(Session session, String queryId, List<MediaSegmentDescriptor> segments, List<String> objectIds) {
+  List<String> submitPrefetchedSegmentandObjectInformationfromIDs(Session session, String queryID, List<MediaSegmentDescriptor> segments, List<String> objectIds) {
     LOGGER.trace("Loading object information");
-    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds, queryId.substring(0, 3));
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds, queryID);
 
     if (segments.isEmpty() || objects.isEmpty()) {
       LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
@@ -280,8 +271,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     LOGGER.trace("Writing results to the websocket");
 
     /* Write segments, objects and similarity search data to stream. */
-    this.write(session, new MediaObjectQueryResult(queryId, objects));
-    this.write(session, new MediaSegmentQueryResult(queryId, segments));
+    this.write(session, new MediaObjectQueryResult(queryID, objects));
+    this.write(session, new MediaSegmentQueryResult(queryID, segments));
     return objectIds;
   }
 
@@ -291,7 +282,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   void submitSegmentAndObjectInformationFromIds(Session session, String queryId, List<String> segmentIds, List<String> objectIds) {
     /* Load segment & object information. */
     LOGGER.trace("Loading segment and object information for submission, {} segments {} objects", segmentIds.size(), objectIds.size());
-    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryId.substring(0, 3));
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryId);
     submitPrefetchedSegmentandObjectInformationfromIDs(session, queryId, segments, objectIds);
   }
 

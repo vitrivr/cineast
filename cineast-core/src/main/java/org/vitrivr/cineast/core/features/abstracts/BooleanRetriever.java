@@ -38,6 +38,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   protected final String entity;
   protected final HashSet<String> attributes = new HashSet<>();
   protected final HashMap<String, ProviderDataType> columnTypes = new HashMap<>();
+  private String idCol = GENERIC_ID_COLUMN_QUALIFIER;
 
   protected BooleanRetriever(String entity, Collection<String> attributes) {
     this.entity = entity;
@@ -57,6 +58,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
       this.attributes.addAll(attrs);
     }
 
+    this.idCol = properties.getOrDefault("idCol", GENERIC_ID_COLUMN_QUALIFIER);
   }
 
   @Override
@@ -103,10 +105,10 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
             be.getValues()
         )).collect(Collectors.toList()),
         GENERIC_ID_COLUMN_QUALIFIER, // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
-        Collections.singletonList(GENERIC_ID_COLUMN_QUALIFIER),  // we're only interested in the ids
+        Collections.singletonList(idCol),  // we're only interested in the ids
         qc);
     // we're returning a boolean score element since the score is always 1 if a query matches here
-    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(GENERIC_ID_COLUMN_QUALIFIER).getString())).collect(Collectors.toList());
+    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(idCol).getString())).collect(Collectors.toList());
   }
 
   @Override

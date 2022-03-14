@@ -40,7 +40,6 @@ import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.InstantQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.MotionQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
@@ -159,13 +158,6 @@ public class QueryContainerUtil {
     return null;
   }
 
-  public static MotionQueryTermContainer motionQueryContainer(CineastGrpc.MotionQueryContainer container) {
-    MotionQueryTermContainer motionQueryContainer = new MotionQueryTermContainer();
-    container.getBackgroundPathList().stream().forEach(path -> motionQueryContainer.addBgPath(motionPath(path)));
-    container.getForegroundPathList().stream().forEach(path -> motionQueryContainer.addPath(motionPath(path)));
-    return motionQueryContainer;
-  }
-
   public static LinkedList<Point2D_F32> motionPath(CineastGrpc.MotionQueryContainer.MotionPath path) {
     LinkedList<Point2D_F32> list = new LinkedList<>();
     list.addAll(path.getPathList().stream().map(QueryContainerUtil::point).collect(Collectors.toList()));
@@ -199,7 +191,6 @@ public class QueryContainerUtil {
 
   public static AbstractQueryTermContainer queryTermContainer(CineastGrpc.QueryTerm term) {
     switch (term.getContainerCase()) {
-
       case AUDIOQUERYCONTAINER:
         return audioQueryContainer(term.getAudioQueryContainer());
       case BOOLEANQUERYCONTAINER:
@@ -214,8 +205,6 @@ public class QueryContainerUtil {
         return locationQueryContainer(term.getLocationQueryContainer());
       case MODELQUERYCONTAINER:
         return modelQueryContainer(term.getModelQueryContainer());
-      case MOTIONQUERYCONTAINER:
-        return motionQueryContainer(term.getMotionQueryContainer());
       case SEMANTICMAPQUERYCONTAINER:
         return semanticMapQueryContainer(term.getSemanticMapQueryContainer());
       case TAGQUERYCONTAINER:
