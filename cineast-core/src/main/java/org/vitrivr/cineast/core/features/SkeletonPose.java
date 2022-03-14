@@ -370,7 +370,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         config.setHost("localhost");
         config.setPort(1865);
 
-        CottontailWrapper ctWrapper = new CottontailWrapper("localhost", 1865);
+        final CottontailWrapper ctWrapper = new CottontailWrapper("localhost", 1865);
 
 
         SkeletonPose sp = new SkeletonPose();
@@ -379,7 +379,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         boolean insert = true;
         if (insert) {
             sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
-            sp.init(() -> new CottontailWriter(ctWrapper, 100));
+            sp.init(() -> new CottontailWriter(ctWrapper, 100, true));
             final List<Pair<String,Skeleton>> skeletons = new LinkedList<>();
             for (File folder : folders) {
                 for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
