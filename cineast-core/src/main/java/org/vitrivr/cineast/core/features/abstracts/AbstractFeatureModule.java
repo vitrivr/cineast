@@ -94,7 +94,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
+    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
     if (list.isEmpty()) {
       LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
       return new ArrayList<>(0);

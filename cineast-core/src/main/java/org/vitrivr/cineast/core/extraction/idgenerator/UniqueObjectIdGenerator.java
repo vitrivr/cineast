@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.extraction.idgenerator;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.util.RandomStringGenerator;
 
 /**
  * Generates an objectId from a random string.
@@ -54,7 +54,7 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
   public String next(Path path, MediaType type) {
     String rawId;
     do {
-      rawId = RandomStringGenerator.generateRandomString(this.length);
+      rawId = RandomStringUtils.randomAlphanumeric(this.length);
     } while (this.usedIds.contains(rawId));
     this.usedIds.add(rawId);
     return MediaType.generateId(type, rawId);

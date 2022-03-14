@@ -306,6 +306,8 @@ public class ReflectionHelper {
       targetClass = (Class<T>) c;
     } catch (UnsupportedOperationException e) {
       LOGGER.warn("'name' was not a string during class instantiation in instantiateFromJson");
+    } catch(ClassNotFoundException e){
+      LOGGER.warn("Class {} was not found", className);
     }
     return targetClass;
   }

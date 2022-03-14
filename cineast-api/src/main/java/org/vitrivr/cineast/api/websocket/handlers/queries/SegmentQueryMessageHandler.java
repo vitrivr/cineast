@@ -35,14 +35,14 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
     /* Retrieve segments; if empty, abort query. */
     final List<String> segmentId = new ArrayList<>(0);
     segmentId.add(message.getSegmentId());
-    final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentId);
+    final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentId, uuid);
     if (segment.isEmpty()) {
       return;
     }
 
     /* Retrieve media objects; if empty, abort query. */
     final List<String> objectId = segment.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-    final List<MediaObjectDescriptor> object = this.loadObjects(objectId);
+    final List<MediaObjectDescriptor> object = this.loadObjects(objectId, uuid);
     if (object.isEmpty()) {
       return;
     }
