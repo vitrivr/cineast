@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.api.messages.query;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.query.containers.*;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
@@ -19,6 +15,7 @@ import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.SkeletonQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 
