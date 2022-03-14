@@ -52,7 +52,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     private static final String WEIGHT_COL = "weights";
 
     public SkeletonPose() {
-        super("feature_skeletonpose", (float) (16 * Math.PI), 8);
+        super("feature_skeletonpose", (float) (16 * Math.PI), 12);
     }
 
     @Override
@@ -122,14 +122,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         for (Skeleton skeleton : skeletons) {
 
             Pair<float[], float[]> pair = getAnglesandWeights(skeleton);
-
-//            List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(qc.getRawResultsPerModule(), pair.first, FEATURE_COL, QueryConfig.clone(qc)
-//                    .setDistanceWeights(pair.second)
-//                    .setDistance(ReadableQueryConfig.Distance.manhattan));
-
-
             TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
-
 
             while (tuples.hasNext()) {
                 Tuple tuple = tuples.next();
@@ -210,27 +203,39 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     private Pair<float[], float[]> getAnglesandWeights(Skeleton skeleton) {
         float[] angles = new float[]{
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ANKLE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_ANKLE, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP),
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.RIGHT_HIP),
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_KNEE),
+                angle(skeleton, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_KNEE, Skeleton.SkeletonPointName.RIGHT_ANKLE),
 
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_WRIST), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
-                angle(skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getPoint(Skeleton.SkeletonPointName.RIGHT_WRIST))
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_WRIST, Skeleton.SkeletonPointName.LEFT_ELBOW, Skeleton.SkeletonPointName.LEFT_SHOULDER),
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_ELBOW, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_SHOULDER),
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_ELBOW),
+                angle(skeleton, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_ELBOW, Skeleton.SkeletonPointName.RIGHT_WRIST),
+
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.LEFT_SHOULDER),
+                angle(skeleton, Skeleton.SkeletonPointName.RIGHT_KNEE, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_SHOULDER),
+
+                angle(skeleton, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.NOSE, Skeleton.SkeletonPointName.LEFT_EAR),
+                angle(skeleton, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.NOSE, Skeleton.SkeletonPointName.RIGHT_EAR)
         };
 
         float[] weights = new float[]{
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ANKLE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_HIP), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_KNEE), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ANKLE)),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_ANKLE, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.RIGHT_HIP),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_KNEE),
+                min(skeleton, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_KNEE, Skeleton.SkeletonPointName.RIGHT_ANKLE),
 
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_WRIST), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.LEFT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW)),
-                min(skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_SHOULDER), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_ELBOW), skeleton.getWeight(Skeleton.SkeletonPointName.RIGHT_WRIST)),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_WRIST, Skeleton.SkeletonPointName.LEFT_ELBOW, Skeleton.SkeletonPointName.LEFT_SHOULDER),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_ELBOW, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_SHOULDER),
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_ELBOW),
+                min(skeleton, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.RIGHT_ELBOW, Skeleton.SkeletonPointName.RIGHT_WRIST),
+
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.LEFT_SHOULDER),
+                min(skeleton, Skeleton.SkeletonPointName.RIGHT_KNEE, Skeleton.SkeletonPointName.RIGHT_HIP, Skeleton.SkeletonPointName.RIGHT_SHOULDER),
+
+                min(skeleton, Skeleton.SkeletonPointName.LEFT_SHOULDER, Skeleton.SkeletonPointName.NOSE, Skeleton.SkeletonPointName.LEFT_EAR),
+                min(skeleton, Skeleton.SkeletonPointName.RIGHT_SHOULDER, Skeleton.SkeletonPointName.NOSE, Skeleton.SkeletonPointName.RIGHT_EAR)
         };
 
         for (int i = 0; i < weights.length; ++i) {
@@ -241,6 +246,28 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     }
 
+    private static Expression expression(float f) {
+        return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData(f)).build();
+    }
+
+    private static Expression expression(float[] f) {
+        return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(f))
+        ))).build();
+    }
+
+    private static Function.Builder functionBuilder(String name) {
+        return CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName(name));
+    }
+
+    private static ColumnName columnName(String name) {
+        return ColumnName.newBuilder().setName(name).build();
+    }
+
+    private static ProjectionElement projectionElement(String name) {
+        return ProjectionElement.newBuilder().setColumn(columnName(name)).build();
+    }
+
     private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
 
         float queryWeightSum = 0f;
@@ -248,53 +275,53 @@ public class SkeletonPose extends AbstractFeatureModule {
         for (float w : weights) {
             queryWeightSum += w;
         }
-        // FIXME: Make it work
-        // TODO: Cleanup and document
+
+        // element-wise difference between stored and provided weights
+        // counts how many elements are set in the query but are not set in the feature
         Expression vectorDifference = Expression.newBuilder().setFunction(/* Nested, min() function */
-                CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vmin")).addArguments(
-                        Expression.newBuilder().setColumn(CottontailGrpc.ColumnName.newBuilder().setName(WEIGHT_COL))
+                functionBuilder("vmin").addArguments(
+                        Expression.newBuilder().setColumn(columnName(WEIGHT_COL))
                 ).addArguments(
-                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(weights))
-                        )))
+                       expression(weights)
                 )
         ).build();
 
+        //assigns maximum distance for each element specified in the query but not present in the feature
         Expression correctionTerm = Expression.newBuilder().setFunction(
-                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("mul")
-                ).addArguments( //constant
-                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData((float) Math.PI))
+                functionBuilder("mul")
+                .addArguments( //constant
+                        expression((float) Math.PI)
                 ).addArguments( //sub-expression
                         Expression.newBuilder().setFunction(
                                 Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("sub")
                                 ).addArguments(
-                                        Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData(queryWeightSum))
+                                        expression(queryWeightSum)
                                 ).addArguments(
-                                        Expression.newBuilder().setFunction(CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("vsum")).addArguments(vectorDifference))
+                                        Expression.newBuilder().setFunction(
+                                        functionBuilder("vsum")
+                                                .addArguments(vectorDifference)
+                                        )
                                 )
                         )
                 )
 
         ).build();
 
-
+        //weighted Manhattan-distance plus correction term for missing elements
         ProjectionElement distanceFunction = ProjectionElement.newBuilder().setFunction(/* Distance function */
-
-                Function.newBuilder().setName(FunctionName.newBuilder().setName("add")).addArguments(
-                        Expression.newBuilder().setFunction(Function.newBuilder().setName(FunctionName.newBuilder().setName("manhattanw")
+                functionBuilder("add").addArguments(
+                        Expression.newBuilder().setFunction(functionBuilder("manhattanw")
+                        .addArguments(
+                                Expression.newBuilder().setColumn(columnName(FEATURE_COL))
                         ).addArguments(
-                                Expression.newBuilder().setColumn(ColumnName.newBuilder().setName(FEATURE_COL))
-                        ).addArguments(
-                                Expression.newBuilder().setLiteral(Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-                                        FloatVector.newBuilder().addAllVector(new FloatArrayIterable(query))
-                                )))
+                                expression(query)
                         ).addArguments(
                                 vectorDifference
                         ))
                 ).addArguments(
                         correctionTerm
                 )
-        ).setAlias(ColumnName.newBuilder().setName("distance").build()).build();
+        ).setAlias(columnName("distance")).build();
 
 
         return QueryMessage.newBuilder().setQuery(
@@ -303,22 +330,30 @@ public class SkeletonPose extends AbstractFeatureModule {
                                 .setName(this.tableName).setSchema(SchemaName.newBuilder().setName("cineast"))))
                 ).setProjection(
                         Projection.newBuilder()
-                                .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(GENERIC_ID_COLUMN_QUALIFIER)))
-                                .addElements(ProjectionElement.newBuilder().setColumn(ColumnName.newBuilder().setName(PERSON_ID_COL)))
+                                .addElements(projectionElement(GENERIC_ID_COLUMN_QUALIFIER))
+                                .addElements(projectionElement(PERSON_ID_COL))
                                 .addElements(distanceFunction)
                 ).setOrder(
                     Order.newBuilder()
-                        .addComponents(Component.newBuilder().setColumn(ColumnName.newBuilder().setName(DB_DISTANCE_VALUE_QUALIFIER))
-                        .setDirection(Direction.ASCENDING).build()).build()
-                ).setLimit(limit).build()).build();
+                        .addComponents(Component.newBuilder().setColumn(columnName(DB_DISTANCE_VALUE_QUALIFIER))
+                        .setDirection(Direction.ASCENDING)).build()
+                ).setLimit(limit)).build();
     }
 
     private static float angle(Point2D_F32 p1, Point2D_F32 c, Point2D_F32 p2) {
         return (float) (Math.atan2(p2.y - c.y, p2.x - c.x) - Math.atan2(p1.y - c.y, p1.x - c.x));
     }
 
+    private static float angle(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
+        return angle(skeleton.getPoint(p1), skeleton.getPoint(p2), skeleton.getPoint(p3));
+    }
+
     private static float min(float f, float g, float h) {
         return Math.min(f, Math.min(g, h));
+    }
+
+    private static float min(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
+        return min(skeleton.getWeight(p1), skeleton.getWeight(p2), skeleton.getWeight(p3));
     }
 
     // TODO or FIXME: Remove
@@ -341,7 +376,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         SkeletonPose sp = new SkeletonPose();
 
         int batchSize = 10000;
-        boolean insert = false;
+        boolean insert = true;
         if (insert) {
             sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
             sp.init(() -> new CottontailWriter(ctWrapper, 100));
