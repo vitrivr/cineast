@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import org.apache.commons.lang3.NotImplementedException;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -27,6 +26,7 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
+import org.vitrivr.cineast.core.util.pose.OpenPoseDetector;
 import org.vitrivr.cottontail.client.SimpleClient;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
@@ -50,6 +50,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     private static final String PERSON_ID_COL = "person";
     private static final String FEATURE_COL = "skeleton";
     private static final String WEIGHT_COL = "weights";
+    private OpenPoseDetector detector = new OpenPoseDetector();
 
     public SkeletonPose() {
         super("feature_skeletonpose", (float) (16 * Math.PI), 12);
@@ -83,8 +84,8 @@ public class SkeletonPose extends AbstractFeatureModule {
         this.phandler.persist(tuples);
     }
 
-    private List<Skeleton> detectSkeletons(MultiImage img) {
-        throw new NotImplementedException("not currently available");
+    private synchronized List<Skeleton> detectSkeletons(MultiImage img) {
+        return detector.recognizePoses(img.getBufferedImage());
     }
 
     @Override
