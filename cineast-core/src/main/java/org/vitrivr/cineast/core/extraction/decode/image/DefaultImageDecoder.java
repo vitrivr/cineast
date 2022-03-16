@@ -64,7 +64,6 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     if (decoderConfig != null) {
       this.rescale_bounds = decoderConfig.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
     }
-    LOGGER.debug("Supported: {}", supportedFiles);
     return true;
   }
 
