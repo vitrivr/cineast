@@ -40,23 +40,23 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private final double halfeSimilarityDistance; // distance in meters where similarity equals 50% (default: 1000/3
+  private final double halfSimilarityDistance; // distance in meters where similarity equals 50% (default: 1000/3
   private final CorrespondenceFunction correspondenceFunction;
 
   // Empty public constructor necessary for instantiation through reflection
   public SpatialDistance() {
     super(2);
-    halfeSimilarityDistance = 1000.0 / 3.0;
-    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
+    halfSimilarityDistance = 1000.0 / 3.0;
+    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfSimilarityDistance);
   }
 
   public SpatialDistance(LinkedHashMap<String, String> properties) {
     super(2, properties);
     String halfSimDistFromConfig = properties.getOrDefault("halfSimilarityDistance", "1000.0/3.0");
-    halfeSimilarityDistance = parseAndEvaluateHalfSimilarityDistance(halfSimDistFromConfig);
-    LOGGER.debug("Half Similarity Distance (m): {} ({})", halfeSimilarityDistance,
+    halfSimilarityDistance = parseAndEvaluateHalfSimilarityDistance(halfSimDistFromConfig);
+    LOGGER.debug("Half Similarity Distance (m): {} ({})", halfSimilarityDistance,
         halfSimDistFromConfig);
-    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfeSimilarityDistance);
+    correspondenceFunction = CorrespondenceFunction.hyperbolic(halfSimilarityDistance);
   }
 
   @Override
