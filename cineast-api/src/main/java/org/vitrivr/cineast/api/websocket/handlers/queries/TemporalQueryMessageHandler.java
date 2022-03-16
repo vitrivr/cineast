@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import io.netty.util.collection.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +52,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<Thread> cleanupThreads = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new HashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
 
     Set<String> sentSegmentIds = new HashSet<>();
@@ -212,6 +211,13 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       ssqThread.join();
     }
 
+    /* You can skip the computation of temporal objects in the config if you wish simply to execute all queries independently (e.g. for evaluation)*/
+    if (!message.getTemporalQueryConfig().computeTemporalObjects) {
+      LOGGER.debug("Not computing temporal objects due to query config");
+      finish(metadataRetrievalThreads, cleanupThreads);
+      return;
+    }
+
     LOGGER.debug("Starting fusion for temporal context");
     long start = System.currentTimeMillis();
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
@@ -256,6 +262,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.forEach(CompletableFuture::join);
     }
 
+    finish(metadataRetrievalThreads, cleanupThreads);
+  }
+
+  private void finish(List<Thread> metadataRetrievalThreads, List<Thread> cleanupThreads) throws InterruptedException {
     for (Thread cleanupThread : cleanupThreads) {
       cleanupThread.join();
     }

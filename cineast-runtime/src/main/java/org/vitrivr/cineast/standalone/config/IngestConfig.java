@@ -143,6 +143,9 @@ public class IngestConfig implements ExtractionContextProvider {
     if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) {
       this.database.setPlaintext(globalDb.getPlaintext());
     }
+    if (this.database.getUseTransactions()) {
+      this.database.setUseTransactions(globalDb.getUseTransactions());
+    }
 
     /* Merge with global settings if not set. */
     final ExtractionPipelineConfig globalExt = Config.sharedConfig().getExtractor();
