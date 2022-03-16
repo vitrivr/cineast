@@ -29,13 +29,27 @@ public class Skeleton {
         RIGHT_ANKLE
     }
 
-    /*
-
-    [15, 13], [13, 11], [16, 14], [14, 12], [11, 12], [5, 11], [6, 12], [5, 6], [5, 7],
-    [6, 8], [7, 9], [8, 10], [1, 2], [0, 1], [0, 2], [1, 3], [2, 4],
-    [0, 5], [0, 6]
-
-     */
+    public static final SkeletonPointName[][] BONES = {
+            {SkeletonPointName.LEFT_ANKLE, SkeletonPointName.LEFT_KNEE},
+            {SkeletonPointName.LEFT_KNEE, SkeletonPointName.LEFT_HIP},
+            {SkeletonPointName.RIGHT_ANKLE, SkeletonPointName.RIGHT_KNEE},
+            {SkeletonPointName.RIGHT_KNEE, SkeletonPointName.RIGHT_HIP},
+            {SkeletonPointName.LEFT_HIP, SkeletonPointName.RIGHT_HIP},
+            {SkeletonPointName.LEFT_SHOULDER, SkeletonPointName.LEFT_HIP},
+            {SkeletonPointName.RIGHT_SHOULDER, SkeletonPointName.RIGHT_HIP},
+            {SkeletonPointName.LEFT_SHOULDER, SkeletonPointName.RIGHT_SHOULDER},
+            {SkeletonPointName.LEFT_SHOULDER, SkeletonPointName.LEFT_ELBOW},
+            {SkeletonPointName.RIGHT_SHOULDER, SkeletonPointName.RIGHT_ELBOW},
+            {SkeletonPointName.LEFT_ELBOW, SkeletonPointName.LEFT_WRIST},
+            {SkeletonPointName.RIGHT_ELBOW, SkeletonPointName.RIGHT_WRIST},
+            {SkeletonPointName.LEFT_EYE, SkeletonPointName.RIGHT_EYE},
+            {SkeletonPointName.NOSE, SkeletonPointName.LEFT_EYE},
+            {SkeletonPointName.NOSE, SkeletonPointName.RIGHT_EYE},
+            {SkeletonPointName.LEFT_EYE, SkeletonPointName.LEFT_EAR},
+            {SkeletonPointName.RIGHT_EYE, SkeletonPointName.RIGHT_EAR},
+            {SkeletonPointName.NOSE, SkeletonPointName.LEFT_SHOULDER},
+            {SkeletonPointName.NOSE, SkeletonPointName.RIGHT_SHOULDER}
+    };
 
     private static final int POINT_COUNT = 17;
 
