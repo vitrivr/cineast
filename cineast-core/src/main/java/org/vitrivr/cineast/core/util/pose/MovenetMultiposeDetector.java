@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.data.Skeleton;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,7 +20,7 @@ import java.util.List;
  * Detects up to 6 complete poses
  * see https://tfhub.dev/google/movenet/multipose/lightning/1
  */
-public class MovenetMultiposeDetector {
+public class MovenetMultiposeDetector implements PoseDetector {
 
     private static final String RESOURCE_PATH = "resources/movenet_multipose_lightning/";
     private static final String FUNCTION = "serving_default";
@@ -34,7 +34,7 @@ public class MovenetMultiposeDetector {
     }
 
 
-    public List<Skeleton> recognizePoses(BufferedImage img) {
+    public List<Skeleton> detectPoses(BufferedImage img) {
 
         final int imageSize = 256;
         float scaling = ((float) imageSize) / Math.max(img.getWidth(), img.getHeight());

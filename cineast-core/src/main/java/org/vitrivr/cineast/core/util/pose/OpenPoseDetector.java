@@ -24,7 +24,7 @@ import java.util.Vector;
 /**
  * Based on https://github.com/liljom/openpose-tf-mobilenet-java
  */
-public class OpenPoseDetector implements AutoCloseable
+public class OpenPoseDetector implements PoseDetector, AutoCloseable
 {
     private static final String MODEL_FILE = "resources/thin.pb";
     private static final String INPUT_NAME = "image";
@@ -65,7 +65,7 @@ public class OpenPoseDetector implements AutoCloseable
         this.graph.close();
     }
 
-    public List<Skeleton> recognizePoses(BufferedImage img)
+    public List<Skeleton> detectPoses(BufferedImage img)
     {
 
         final int imageSize = 512;

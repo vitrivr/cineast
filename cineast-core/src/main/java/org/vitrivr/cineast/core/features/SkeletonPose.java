@@ -26,7 +26,9 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
+import org.vitrivr.cineast.core.util.pose.MergingPoseDetector;
 import org.vitrivr.cineast.core.util.pose.OpenPoseDetector;
+import org.vitrivr.cineast.core.util.pose.PoseDetector;
 import org.vitrivr.cottontail.client.SimpleClient;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
@@ -50,7 +52,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     private static final String PERSON_ID_COL = "person";
     private static final String FEATURE_COL = "skeleton";
     private static final String WEIGHT_COL = "weights";
-    private OpenPoseDetector detector = new OpenPoseDetector();
+    private PoseDetector detector = new MergingPoseDetector();
 
     public SkeletonPose() {
         super("feature_skeletonpose", (float) (16 * Math.PI), 12);
@@ -85,7 +87,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private synchronized List<Skeleton> detectSkeletons(MultiImage img) {
-        return detector.recognizePoses(img.getBufferedImage());
+        return detector.detectPoses(img.getBufferedImage());
     }
 
     @Override

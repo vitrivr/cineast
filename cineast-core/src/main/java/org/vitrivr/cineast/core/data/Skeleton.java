@@ -73,6 +73,10 @@ public class Skeleton {
 
     }
 
+    public Skeleton() {
+        //empty skeleton
+    }
+
     public List<Point2D_F32> getPoints() {
         ArrayList<Point2D_F32> _return = new ArrayList<>(POINT_COUNT);
         for (int i = 0; i < POINT_COUNT; ++i) {
@@ -95,6 +99,11 @@ public class Skeleton {
 
     public float getWeight(SkeletonPointName name) {
         return this.weights[name.ordinal()];
+    }
+
+    public void setPointWeighted(SkeletonPointName pointName, float weight, Point2D_F32 point) {
+        this.weights[pointName.ordinal()] = weight;
+        this.points[pointName.ordinal()] = point;
     }
 
 
