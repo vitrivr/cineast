@@ -124,7 +124,7 @@ public class QueryUtil {
         )
     ).distinct().collect(Collectors.toList());
 
-    var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId().toString());
+    var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
     var stagedQueryResults = stagedResults.stream().map(
         resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
     ).collect(Collectors.toList());

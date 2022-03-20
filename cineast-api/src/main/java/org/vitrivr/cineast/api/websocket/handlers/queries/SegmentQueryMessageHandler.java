@@ -30,7 +30,7 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
   @Override
   public void execute(Session session, QueryConfig qconf, SegmentQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Prepare QueryConfig (so as to obtain a QueryId). */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
 
     /* Retrieve segments; if empty, abort query. */
     final List<String> segmentId = new ArrayList<>(0);

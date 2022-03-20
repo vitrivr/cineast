@@ -40,7 +40,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
 
     /* Prepare the query config and get the QueryId */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
     String qid = uuid.substring(0, 3);
     final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);

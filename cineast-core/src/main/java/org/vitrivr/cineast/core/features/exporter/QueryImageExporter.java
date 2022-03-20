@@ -76,7 +76,7 @@ public class QueryImageExporter implements Retriever {
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     BufferedImage bimg = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
     try {
-      String filename = (qc != null && qc.getQueryId() != null) ? qc.getQueryId().toString() : this.df.format(Calendar.getInstance().getTime());
+      String filename = (qc != null && qc.getQueryId() != null) ? qc.getQueryId() : this.df.format(Calendar.getInstance().getTime());
       ImageIO.write(bimg, "PNG", new File(folder, filename + ".png"));
     } catch (IOException e) {
       LOGGER.error(LogHelper.getStackTrace(e));
