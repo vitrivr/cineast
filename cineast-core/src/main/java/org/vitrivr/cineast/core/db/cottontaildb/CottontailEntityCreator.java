@@ -5,10 +5,13 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+import static org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType.HASH;
+import static org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType.HASH_UQ;
 
 import io.grpc.StatusRuntimeException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
@@ -85,7 +88,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(create);
 
       /* tag ids should be unique */
-      this.createIndex(entityName, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ, txId);
+      this.createIndex(entityName, TagReader.TAG_ID_COLUMNNAME, HASH_UQ, txId);
       /* tag names do not necessarily have to be unique */
       this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH, txId);
       /* could be used for autocomplete */
@@ -114,7 +117,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create index. */
-      this.createIndex(entityName, MediaObjectDescriptor.FIELDNAMES[0], IndexType.HASH_UQ, txId);
+      this.createIndex(entityName, MediaObjectDescriptor.FIELDNAMES[0], HASH_UQ, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -141,7 +144,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create indexes. */
-      this.createIndex(entityName, MediaSegmentDescriptor.FIELDNAMES[0], IndexType.HASH_UQ, txId);
+      this.createIndex(entityName, MediaSegmentDescriptor.FIELDNAMES[0], HASH_UQ, txId);
       this.createIndex(entityName, MediaSegmentDescriptor.FIELDNAMES[1], IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
@@ -205,7 +208,9 @@ public final class CottontailEntityCreator implements EntityCreator {
     final AttributeDefinition[] attributes = Arrays.stream(featureNames)
         .map(s -> new AttributeDefinition(s, VECTOR, length))
         .toArray(AttributeDefinition[]::new);
-    return this.createFeatureEntity(featureEntityName, unique, attributes);
+    var feature = this.createFeatureEntity(featureEntityName, unique, attributes);
+    this.createIndex(featureEntityName, GENERIC_ID_COLUMN_QUALIFIER, unique ? IndexType.HASH_UQ : IndexType.HASH, null);
+    return feature;
   }
 
   @Override
@@ -214,7 +219,9 @@ public final class CottontailEntityCreator implements EntityCreator {
     final HashMap<String, String> hints = new HashMap<>(1);
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(featureEntityName, extended);
+    var feature = this.createEntity(featureEntityName, extended);
+    this.createIndex(featureEntityName, GENERIC_ID_COLUMN_QUALIFIER, unique ? IndexType.HASH_UQ : IndexType.HASH, null);
+    return feature;
   }
 
   @Override
@@ -222,7 +229,9 @@ public final class CottontailEntityCreator implements EntityCreator {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(entityName, extended);
+    var ent = this.createEntity(entityName, extended);
+    this.createIndex(entityName, GENERIC_ID_COLUMN_QUALIFIER, IndexType.HASH, null);
+    return ent;
   }
 
   @Override
@@ -341,9 +350,13 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
 
-  private void createIndex(String entityName, String attribute, IndexType type, long txId) {
+  private void createIndex(String entityName, String attribute, IndexType type, Long txId) {
     final String indexName = entityName + ".idx_" + attribute + "_" + type.name().toLowerCase();
-    final CreateIndex index = new CreateIndex(indexName, type).column(entityName + "." + attribute).txId(txId);
+    final CreateIndex index = new CreateIndex(indexName, type).column(entityName + "." + attribute);
+    if (txId != null) {
+      index.txId(txId);
+    }
     this.cottontail.client.create(index);
   }
+
 }
