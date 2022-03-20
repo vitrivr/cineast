@@ -267,7 +267,7 @@ public class QueryUtil {
       return _return;
     } catch (Exception e) {
       LOGGER.error("Exception while looking up tags", e);
-      return new ArrayList<>();
+      return _return;
     }
   }
 
