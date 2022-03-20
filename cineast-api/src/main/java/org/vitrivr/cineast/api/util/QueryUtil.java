@@ -261,10 +261,14 @@ public class QueryUtil {
     List<String> _return = new ArrayList<>();
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
-
-    rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
-    return _return;
+    try {
+      List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
+      rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
+      return _return;
+    } catch (Exception e) {
+      LOGGER.error("Exception while looking up tags", e);
+      return new ArrayList<>();
+    }
   }
 
   /**
