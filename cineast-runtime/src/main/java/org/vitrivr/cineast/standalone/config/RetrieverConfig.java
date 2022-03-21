@@ -9,11 +9,13 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 public class RetrieverConfig {
 
   private final Class<? extends Retriever> retrieverClass;
+  private final String retrieverClassName;
   private final double weight;
   private final Map<String, String> properties;
 
   RetrieverConfig(Class<? extends Retriever> retrieverClass, double weight, Map<String, String> properties) {
     this.retrieverClass = retrieverClass;
+    this.retrieverClassName = retrieverClass == null ? null : retrieverClass.getSimpleName();
     this.weight = weight;
     this.properties = properties;
   }
@@ -24,6 +26,7 @@ public class RetrieverConfig {
       @JsonProperty(value = "weight", required = false, defaultValue = "1.0") Double weight,
       @JsonProperty(value = "properties", required = false) Map<String, String> properties
   ) throws InstantiationException, ClassNotFoundException {
+    this.retrieverClassName = retrieverClassName;
     this.retrieverClass = ReflectionHelper.getClassFromName(retrieverClassName, Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
     this.weight = weight;
     this.properties = properties;
@@ -49,4 +52,7 @@ public class RetrieverConfig {
     return this.properties;
   }
 
+  public String getRetrieverClassName() {
+    return retrieverClassName;
+  }
 }
