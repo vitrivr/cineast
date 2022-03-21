@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.AverageColor;
 import org.vitrivr.cineast.core.features.AverageColorARP44;
 import org.vitrivr.cineast.core.features.AverageColorCLD;
@@ -40,6 +42,8 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 public final class RetrievalRuntimeConfig {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private static final HashMap<String, List<RetrieverConfig>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
 
@@ -156,6 +160,11 @@ public final class RetrievalRuntimeConfig {
     for (RetrieverConfig config : list) {
 
       Retriever rev;
+
+      if(config.getRetrieverClass()==null){
+        LOGGER.error("Could not find class {} in category {}, skipping retriever instantiation", config.getRetrieverClassName(), category);
+        continue;
+      }
 
       if (config.getProperties() == null) {
         rev = ReflectionHelper.instantiate(config.getRetrieverClass());
