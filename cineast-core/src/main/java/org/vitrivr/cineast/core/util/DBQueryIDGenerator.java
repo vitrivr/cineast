@@ -34,7 +34,7 @@ public class DBQueryIDGenerator {
    * uses {@link ReadableQueryConfig#getQueryId()} as a basis for postfix
    */
   public static String generateQueryID(String infix, ReadableQueryConfig qc) {
-    return qc == null ? generate(infix, "qc-null") : generate(infix, qc.getQueryId().toString().substring(0, 3));
+    return qc == null ? generate(infix, "qc-null") : generate(infix, qc.getQueryId().substring(0, 3));
   }
 
   private static String generate(String infix, String postfix) {
