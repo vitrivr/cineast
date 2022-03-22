@@ -5,7 +5,9 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
+import static org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType.HASH_UQ;
 
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,11 +87,11 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(create);
 
       /* tag ids should be unique */
-      this.createIndex(entityName, TagReader.TAG_ID_COLUMNNAME, IndexType.HASH_UQ, txId);
+      this.createIndexWithoutSchemaName(TagReader.TAG_ENTITY_NAME, TagReader.TAG_ID_COLUMNNAME, HASH_UQ, txId);
       /* tag names do not necessarily have to be unique */
-      this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH, txId);
+      this.createIndexWithoutSchemaName(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.HASH, txId);
       /* could be used for autocomplete */
-      this.createIndex(entityName, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE, txId);
+      this.createIndexWithoutSchemaName(TagReader.TAG_ENTITY_NAME, TagReader.TAG_NAME_COLUMNNAME, IndexType.LUCENE, txId);
 
       this.cottontail.client.commit(txId);
       return true;
@@ -114,7 +116,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create index. */
-      this.createIndex(entityName, MediaObjectDescriptor.FIELDNAMES[0], IndexType.HASH_UQ, txId);
+      this.createIndexWithoutSchemaName(MediaObjectDescriptor.ENTITY, MediaObjectDescriptor.FIELDNAMES[0], HASH_UQ, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -141,8 +143,8 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create indexes. */
-      this.createIndex(entityName, MediaSegmentDescriptor.FIELDNAMES[0], IndexType.HASH_UQ, txId);
-      this.createIndex(entityName, MediaSegmentDescriptor.FIELDNAMES[1], IndexType.HASH, txId);
+      this.createIndexWithoutSchemaName(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[0], HASH_UQ, txId);
+      this.createIndexWithoutSchemaName(MediaSegmentDescriptor.ENTITY, MediaSegmentDescriptor.FIELDNAMES[1], IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -166,7 +168,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create Index. */
-      this.createIndex(entityName, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.HASH, txId);
+      this.createIndexWithoutSchemaName(tableName, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -190,7 +192,7 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create Index. */
-      this.createIndex(entityName, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.HASH, txId);
+      this.createIndexWithoutSchemaName(tableName, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -214,7 +216,15 @@ public final class CottontailEntityCreator implements EntityCreator {
     final HashMap<String, String> hints = new HashMap<>(1);
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(featureEntityName, extended);
+    var feature = this.createEntity(featureEntityName, extended);
+    long txId = this.cottontail.client.begin();
+    boolean success = this.createIndexWithoutSchemaName(featureEntityName, GENERIC_ID_COLUMN_QUALIFIER, unique ? IndexType.HASH_UQ : IndexType.HASH, txId);
+    if (success) {
+      this.cottontail.client.commit(txId);
+    } else {
+      this.cottontail.client.rollback(txId);
+    }
+    return feature;
   }
 
   @Override
@@ -222,7 +232,15 @@ public final class CottontailEntityCreator implements EntityCreator {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
-    return this.createEntity(entityName, extended);
+    var ent = this.createEntity(entityName, extended);
+    long txId = this.cottontail.client.begin();
+    boolean success =this.createIndexWithoutSchemaName(entityName, GENERIC_ID_COLUMN_QUALIFIER, IndexType.HASH, txId);
+    if (success) {
+      this.cottontail.client.commit(txId);
+    } else {
+      this.cottontail.client.rollback(txId);
+    }
+    return ent;
   }
 
   @Override
@@ -251,13 +269,13 @@ public final class CottontailEntityCreator implements EntityCreator {
       /* Create Index. */
       for (AttributeDefinition attribute : def.getAttributes()) {
         if (attribute.getType() == TEXT) {
-          this.createIndex(CottontailWrapper.CINEAST_SCHEMA + "." + def.getEntityName(), attribute.getName(), IndexType.LUCENE, txId);
+          this.createIndexWithoutSchemaName(def.getEntityName(), attribute.getName(), IndexType.LUCENE, txId);
         }
         // TODO (LS, 18.11.2020) Shouldn't we also have abstract indices in the db abstraction layer?
         final Optional<String> hint = attribute.getHint(INDEX_HINT);
         if (hint.isPresent()) {
           IndexType idx = IndexType.valueOf(hint.get());
-          this.createIndex(CottontailWrapper.CINEAST_SCHEMA + "." + def.getEntityName(), attribute.getName(), idx, txId);
+          this.createIndexWithoutSchemaName(def.getEntityName(), attribute.getName(), idx, txId);
         }
       }
       this.cottontail.client.commit(txId);
@@ -272,8 +290,7 @@ public final class CottontailEntityCreator implements EntityCreator {
   public boolean createHashNonUniqueIndex(String entityName, String column) {
     final long txId = this.cottontail.client.begin();
     try {
-      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
-      this.createIndex(fqn, column, IndexType.HASH, txId);
+      this.createIndexWithoutSchemaName(entityName, column, IndexType.HASH, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -341,9 +358,20 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
 
-  private void createIndex(String entityName, String attribute, IndexType type, long txId) {
-    final String indexName = entityName + ".idx_" + attribute + "_" + type.name().toLowerCase();
+  private boolean createIndexWithoutSchemaName(String entityName, String attribute, IndexType type, long txId) {
+    var fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
+    final String indexName = fqn + ".idx_" + attribute + "_" + type.name().toLowerCase();
     final CreateIndex index = new CreateIndex(indexName, type).column(entityName + "." + attribute).txId(txId);
-    this.cottontail.client.create(index);
+    try{
+      this.cottontail.client.create(index);
+    }catch(StatusRuntimeException e){
+      if(e.getStatus().getCode()== Status.ALREADY_EXISTS.getCode()){
+        LOGGER.warn("Index {} was not created because it already exists", indexName);
+        return false;
+      }
+      throw e;
+    }
+    return true;
   }
+
 }
