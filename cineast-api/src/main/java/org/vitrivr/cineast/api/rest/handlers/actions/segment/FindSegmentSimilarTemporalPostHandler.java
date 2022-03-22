@@ -39,7 +39,7 @@ public class FindSegmentSimilarTemporalPostHandler implements ParsingPostRestHan
 
     var temporalResults = QueryUtil.findSegmentsSimilarTemporal(continuousRetrievalLogic, query, config);
 
-    return new TemporalQueryResult(config.getQueryId().toString(), temporalResults);
+    return new TemporalQueryResult(config.getQueryId(), temporalResults);
   }
 
   @Override
