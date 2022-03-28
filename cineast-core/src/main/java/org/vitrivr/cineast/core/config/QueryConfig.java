@@ -29,7 +29,7 @@ public class QueryConfig extends ReadableQueryConfig {
   }
 
   private QueryConfig(ReadableQueryConfig qc, UUID uuid) {
-    super(qc, uuid);
+    super(qc, uuid.toString());
   }
 
   public QueryConfig setDistanceWeights(float[] weights) {

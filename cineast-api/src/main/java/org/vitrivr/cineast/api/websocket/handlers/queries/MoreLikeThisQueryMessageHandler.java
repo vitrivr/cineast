@@ -34,7 +34,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
   @Override
   public void execute(Session session, QueryConfig qconf, MoreLikeThisQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Extract categories from MoreLikeThisQuery. */
-    final String queryId = qconf.getQueryId().toString();
+    final String queryId = qconf.getQueryId();
     final HashSet<String> categoryMap = new HashSet<>(message.getCategories());
 
     List<Thread> threads = new ArrayList<>();

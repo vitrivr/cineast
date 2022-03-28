@@ -25,7 +25,7 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
 
     var returnMap = QueryUtil.findSegmentsSimilar(continuousRetrievalLogic, query.getTerms(), config);
 
-    return new SimilarityQueryResultBatch(returnMap, config.getQueryId().toString());
+    return new SimilarityQueryResultBatch(returnMap, config.getQueryId());
   }
 
   @Override

@@ -87,14 +87,14 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       return;
     }
     try {
-      final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
-      final String uuid = qconf.getQueryId().toString();
+      QueryConfig qconf = message.getQueryConfig() == null ? new ConstrainedQueryConfig() : message.getQueryConfig();
+      final String uuid = qconf.getQueryId();
+
       final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
       qconf.setMaxResults(max);
       final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
       qconf.setResultsPerModule(resultsPerModule);
-      String qid = uuid.substring(0, 3);
-      Thread.currentThread().setName("query-msg-handler-" + uuid.substring(0, 3));
+      Thread.currentThread().setName("q-msg-handler-" + uuid.substring(0, 3));
       try {
         /* Begin of Query: Send QueryStart Message to Client.
          *  We could wait for future-completion here, but there will likely never be a case where a simple write would fall behind the first message we send to the client.
@@ -102,7 +102,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
          */
         this.write(session, new QueryStart(uuid));
         /* Execute actual query. */
-        LOGGER.trace("Executing query with id {} from message {}", qid, message);
+        LOGGER.trace("Executing query with id {} from message {}", uuid, message);
         final Set<String> segmentIdsForWhichMetadataIsFetched = new HashSet<>();
         final Set<String> objectIdsForWhichMetadataIsFetched = new HashSet<>();
         this.execute(session, qconf, message, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched);

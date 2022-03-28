@@ -72,7 +72,7 @@ public final class ImageSequence {
    */
   public void add(Path path) {
     this.images.add(() -> {
-      try (final InputStream is = Files.newInputStream(path, StandardOpenOption.READ);) {
+      try (final InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
         final BufferedImage input = ImageIO.read(is);
         if (input != null) {
           int width = input.getWidth();

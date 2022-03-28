@@ -38,6 +38,7 @@ public final class MimeTypeHelper {
     FILETYPES.put("jpg", "image/jpeg");
     FILETYPES.put("jpeg", "image/jpeg");
     FILETYPES.put("jpe", "image/jpeg");
+    FILETYPES.put("jp2", "image/jp2");
     FILETYPES.put("png", "image/png");
     FILETYPES.put("tif", "image/tiff");
     FILETYPES.put("tiff", "image/tiff");
