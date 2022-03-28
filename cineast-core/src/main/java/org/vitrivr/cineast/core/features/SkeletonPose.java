@@ -1,12 +1,8 @@
 package org.vitrivr.cineast.core.features;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.Pair;
@@ -18,16 +14,12 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.cottontaildb.CottontailEntityCreator;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailSelector;
-import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
-import org.vitrivr.cineast.core.db.cottontaildb.CottontailWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
 import org.vitrivr.cineast.core.util.pose.MergingPoseDetector;
-import org.vitrivr.cineast.core.util.pose.OpenPoseDetector;
 import org.vitrivr.cineast.core.util.pose.PoseDetector;
 import org.vitrivr.cottontail.client.SimpleClient;
 import org.vitrivr.cottontail.client.iterators.Tuple;
@@ -38,8 +30,6 @@ import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Component;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Order.Direction;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.Projection.ProjectionElement;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -52,7 +42,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     private static final String PERSON_ID_COL = "person";
     private static final String FEATURE_COL = "skeleton";
     private static final String WEIGHT_COL = "weights";
-    private PoseDetector detector = new MergingPoseDetector();
+    private final PoseDetector detector = new MergingPoseDetector();
 
     public SkeletonPose() {
         super("features_skeletonpose", (float) (16 * Math.PI), 12);
@@ -67,20 +57,20 @@ public class SkeletonPose extends AbstractFeatureModule {
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
         supply.get().createFeatureEntity(this.tableName, false,
-            new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
-            new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
-            new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
+                new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
+                new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
+                new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
         );
     }
 
-    protected void persist(Collection<Pair<String,Skeleton>> skeletons) {
+    public void persist(Collection<Pair<String, Skeleton>> skeletons) {
         if (skeletons == null || skeletons.isEmpty()) {
             return;
         }
         final List<PersistentTuple> tuples = new ArrayList<>(skeletons.size());
         int i = 0;
-        for (Pair<String,Skeleton> skeleton : skeletons) {
-            final Pair<float[], float[]> pair = getAnglesandWeights(skeleton.second);
+        for (Pair<String, Skeleton> skeleton : skeletons) {
+            final Pair<float[], float[]> pair = getAnglesAndWeights(skeleton.second);
             tuples.add(this.phandler.generateTuple(skeleton.first, i++, pair.first, pair.second));
         }
         this.phandler.persist(tuples);
@@ -124,7 +114,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         //query all skeletons
         for (Skeleton skeleton : skeletons) {
 
-            Pair<float[], float[]> pair = getAnglesandWeights(skeleton);
+            Pair<float[], float[]> pair = getAnglesAndWeights(skeleton);
             TupleIterator tuples = client.query(buildQuery(pair.first, pair.second, qc.getRawResultsPerModule()));
 
             while (tuples.hasNext()) {
@@ -204,7 +194,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         return results;
     }
 
-    private Pair<float[], float[]> getAnglesandWeights(Skeleton skeleton) {
+    private Pair<float[], float[]> getAnglesAndWeights(Skeleton skeleton) {
         float[] angles = new float[]{
                 angle(skeleton, Skeleton.SkeletonPointName.LEFT_ANKLE, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP),
                 angle(skeleton, Skeleton.SkeletonPointName.LEFT_KNEE, Skeleton.SkeletonPointName.LEFT_HIP, Skeleton.SkeletonPointName.RIGHT_HIP),
@@ -285,42 +275,42 @@ public class SkeletonPose extends AbstractFeatureModule {
                 functionBuilder("vmin").addArguments(
                         Expression.newBuilder().setColumn(columnName(WEIGHT_COL))
                 ).addArguments(
-                       expression(weights)
+                        expression(weights)
                 )
         ).build();
 
         //assigns maximum distance for each element specified in the query but not present in the feature
         Expression correctionTerm = Expression.newBuilder().setFunction(
                 functionBuilder("mul")
-                .addArguments( //constant
-                        expression((float) Math.PI)
-                ).addArguments( //sub-expression
-                        Expression.newBuilder().setFunction(
-                                Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("sub")
-                                ).addArguments(
-                                        expression(queryWeightSum)
-                                ).addArguments(
-                                        Expression.newBuilder().setFunction(
-                                        functionBuilder("vsum")
-                                                .addArguments(vectorDifference)
+                        .addArguments( //constant
+                                expression((float) Math.PI)
+                        ).addArguments( //sub-expression
+                                Expression.newBuilder().setFunction(
+                                        Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName("sub")
+                                        ).addArguments(
+                                                expression(queryWeightSum)
+                                        ).addArguments(
+                                                Expression.newBuilder().setFunction(
+                                                        functionBuilder("vsum")
+                                                                .addArguments(vectorDifference)
+                                                )
                                         )
                                 )
                         )
-                )
 
         ).build();
 
         //weighted Manhattan-distance plus correction term for missing elements
         ProjectionElement distanceFunction = ProjectionElement.newBuilder().setExpression(Expression.newBuilder().setFunction(/* Distance function */
                 functionBuilder("add").addArguments(
-                    Expression.newBuilder().setFunction(functionBuilder("manhattanw")
-                    .addArguments(
-                            Expression.newBuilder().setColumn(columnName(FEATURE_COL))
-                    ).addArguments(
-                            expression(query)
-                    ).addArguments(
-                            vectorDifference
-                    ))
+                        Expression.newBuilder().setFunction(functionBuilder("manhattanw")
+                                .addArguments(
+                                        Expression.newBuilder().setColumn(columnName(FEATURE_COL))
+                                ).addArguments(
+                                        expression(query)
+                                ).addArguments(
+                                        vectorDifference
+                                ))
                 ).addArguments(
                         correctionTerm
                 )
@@ -337,9 +327,9 @@ public class SkeletonPose extends AbstractFeatureModule {
                                 .addElements(projectionElement(PERSON_ID_COL))
                                 .addElements(distanceFunction)
                 ).setOrder(
-                    Order.newBuilder()
-                        .addComponents(Component.newBuilder().setColumn(columnName(DB_DISTANCE_VALUE_QUALIFIER))
-                        .setDirection(Direction.ASCENDING)).build()
+                        Order.newBuilder()
+                                .addComponents(Component.newBuilder().setColumn(columnName(DB_DISTANCE_VALUE_QUALIFIER))
+                                        .setDirection(Direction.ASCENDING)).build()
                 ).setLimit(limit)).build();
     }
 
@@ -357,114 +347,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     private static float min(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
         return min(skeleton.getWeight(p1), skeleton.getWeight(p2), skeleton.getWeight(p3));
-    }
-
-    // TODO or FIXME: Remove
-    public static void main(String[] args) throws IOException {
-
-        File baseDir = new File("../../Downloads/VBS2022/VBS2022");
-        File[] folders = baseDir.listFiles(File::isDirectory);
-
-        ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<SkeletonEntry>> typeRef = new TypeReference<>() {
-        };
-
-        DatabaseConfig config = new DatabaseConfig();
-        config.setHost("localhost");
-        config.setPort(1865);
-
-        final CottontailWrapper ctWrapper = new CottontailWrapper("localhost", 1865);
-
-
-        SkeletonPose sp = new SkeletonPose();
-
-        int batchSize = 10000;
-        boolean insert = true;
-        if (insert) {
-            sp.initalizePersistentLayer(() -> new CottontailEntityCreator(ctWrapper));
-            sp.init(() -> new CottontailWriter(ctWrapper, 100, true));
-            final List<Pair<String,Skeleton>> skeletons = new LinkedList<>();
-            for (File folder : folders) {
-                for (File file : folder.listFiles(f -> f.getName().endsWith(".json"))) {
-                    final String segmentId = "v_" + file.getName().replaceAll("shot", "").replaceAll("_RKF.json", "");
-                    for (SkeletonEntry e : mapper.readValue(file, typeRef)) {
-                        skeletons.add(new Pair<>(segmentId, e.toSkeleton()));
-                    }
-                }
-                if (skeletons.size() >= batchSize) {
-                    sp.persist(skeletons);
-                    System.out.println("Persisted " + skeletons.size() + " entries...");
-                    skeletons.clear();
-                }
-            }
-
-            /* Final persist. */
-            if (skeletons.size() > 0) {
-                sp.persist(skeletons);
-                System.out.println("Persisted " + skeletons.size() + " entries...");
-            }
-        }
-
-
-        sp.init(() -> new CottontailSelector(ctWrapper));
-
-        Skeleton skeleton = mapper.readValue(new File(baseDir, "00001/shot00001_10_RKF.json"), typeRef).get(0).toSkeleton();
-
-        SegmentContainer container = new SegmentContainer() {
-            @Override
-            public String getId() {
-                return null;
-            }
-
-            @Override
-            public String getSuperId() {
-                return null;
-            }
-
-            @Override
-            public void setId(String id) {
-
-            }
-
-            @Override
-            public void setSuperId(String id) {
-
-            }
-
-            @Override
-            public List<Skeleton> getSkeletons() {
-                return Collections.singletonList(skeleton);
-            }
-        };
-
-        List<ScoreElement> results = sp.getSimilar(container, new QueryConfig(null).setResultsPerModule(100));
-
-        int i = 0;
-
-        for (ScoreElement element : results) {
-            System.out.println(i++ + ": " + element);
-        }
-
-    }
-
-    static class SkeletonEntry {
-        public int person_id;
-        public List<List<Float>> pose_keypoints;
-
-        public Skeleton toSkeleton() {
-            float[] weights = new float[17];
-            float[] coordinates = new float[34];
-
-            for (int i = 0; i < 17; ++i) {
-                coordinates[2 * i] = pose_keypoints.get(i).get(0);
-                coordinates[2 * i + 1] = pose_keypoints.get(i).get(1);
-                weights[i] = pose_keypoints.get(i).get(2);
-            }
-
-            return new Skeleton(coordinates, weights);
-
-        }
-
     }
 
 }
