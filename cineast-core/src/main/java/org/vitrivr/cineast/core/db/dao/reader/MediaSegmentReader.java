@@ -14,16 +14,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
 public class MediaSegmentReader extends AbstractEntityReader {
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Constructor for MediaSegmentReader
@@ -69,7 +66,11 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds) {
-    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
+    return lookUpSegments(segmentIds, null);
+  }
+
+  public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds, String queryID) {
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds, queryID);
     //this implicitly deduplicates the stream
     Map<String, MediaSegmentDescriptor> _return = new HashMap<>();
     descriptors.forEach(msd -> _return.put(msd.getSegmentId(), msd));
@@ -106,11 +107,16 @@ public class MediaSegmentReader extends AbstractEntityReader {
 
   private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
       String fieldName, Iterable<String> fieldValues) {
+    return lookUpSegmentsByField(fieldName, fieldValues, null);
+  }
+
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
+      String fieldName, Iterable<String> fieldValues, String queryID) {
+    String dbQueryID = DBQueryIDGenerator.generateQueryID("seg-lookup", queryID);
     Set<PrimitiveTypeProvider> uniqueFieldValues = new HashSet<>();
     fieldValues.forEach(el -> uniqueFieldValues.add(new StringTypeProvider(el)));
 
-    List<Map<String, PrimitiveTypeProvider>> segmentsProperties =
-        this.selector.getRows(fieldName, Lists.newArrayList(uniqueFieldValues));
+    List<Map<String, PrimitiveTypeProvider>> segmentsProperties = this.selector.getRows(fieldName, Lists.newArrayList(uniqueFieldValues), dbQueryID);
     return segmentsProperties
         .stream()
         .map(MediaSegmentReader::propertiesToDescriptor)

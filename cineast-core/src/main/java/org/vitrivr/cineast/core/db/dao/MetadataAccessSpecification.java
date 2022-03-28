@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.db.dao;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Use '*' in either domain or key to retrieve simply all information
+ * Use '*' in either domain or key to retrieve simply all information. In general, if an empty specification list is provided, no metadata is returned.
  */
 public class MetadataAccessSpecification {
 

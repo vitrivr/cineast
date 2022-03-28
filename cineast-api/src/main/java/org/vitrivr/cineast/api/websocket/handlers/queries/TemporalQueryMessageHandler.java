@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import io.netty.util.collection.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
 
     /* Prepare the query config and get the QueryId */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
     String qid = uuid.substring(0, 3);
     final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);
@@ -53,7 +52,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<Thread> cleanupThreads = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new HashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
 
     Set<String> sentSegmentIds = new HashSet<>();
@@ -127,7 +126,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .collect(Collectors.toList());
 
               if (results.isEmpty()) {
-                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full compoment: {}", category, qt.getType(), lambdaFinalContainerIdx, stage);
+                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full component: {}", category, qt.getType(), lambdaFinalContainerIdx, stage);
               }
               if (cache.get(stageIndex).containsKey(category)) {
                 LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, stageIndex);
@@ -137,7 +136,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               results.forEach(res -> relevantSegments.add(res.key));
 
               /*
-               * If this is the last stage, we can collect the results and send relevant results per category back the the requester.
+               * If this is the last stage, we can collect the results and send relevant results per category back the requester.
                * Otherwise we shouldn't yet send since we might send results to the requester that would be filtered at a later stage.
                */
               if (stageIndex == stagedSimilarityQuery.getStages().size() - 1) {
@@ -212,6 +211,13 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       ssqThread.join();
     }
 
+    /* You can skip the computation of temporal objects in the config if you wish simply to execute all queries independently (e.g. for evaluation)*/
+    if (!message.getTemporalQueryConfig().computeTemporalObjects) {
+      LOGGER.debug("Not computing temporal objects due to query config");
+      finish(metadataRetrievalThreads, cleanupThreads);
+      return;
+    }
+
     LOGGER.debug("Starting fusion for temporal context");
     long start = System.currentTimeMillis();
     /* Retrieve the MediaSegmentDescriptors needed for the temporal scoring retrieval */
@@ -222,10 +228,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
     IntStream.range(0, message.getQueries().size()).forEach(idx -> tmpContainerResults.add(containerResults.getOrDefault(idx, new ArrayList<>())));
 
-    TemporalScoring temporalScoring = new TemporalScoring(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
-
     /* Score and retrieve the results */
-    List<TemporalObject> results = temporalScoring.score();
+    List<TemporalObject> results = TemporalScoring.score(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
 
     List<TemporalObject> finalResults = results.stream()
         .sorted(TemporalObject.COMPARATOR.reversed())
@@ -258,6 +262,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.forEach(CompletableFuture::join);
     }
 
+    finish(metadataRetrievalThreads, cleanupThreads);
+  }
+
+  private void finish(List<Thread> metadataRetrievalThreads, List<Thread> cleanupThreads) throws InterruptedException {
     for (Thread cleanupThread : cleanupThreads) {
       cleanupThread.join();
     }

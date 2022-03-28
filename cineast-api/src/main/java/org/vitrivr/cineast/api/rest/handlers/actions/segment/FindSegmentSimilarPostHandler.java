@@ -3,20 +3,10 @@ package org.vitrivr.cineast.api.rest.handlers.actions.segment;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
-import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -31,28 +21,11 @@ public class FindSegmentSimilarPostHandler implements ParsingPostRestHandler<Sim
 
   @Override
   public SimilarityQueryResultBatch performPost(SimilarityQuery query, Context ctx) {
+    ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getQueryConfig());
 
-    HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
-    /*
-     * Prepare map that maps categories to QueryTerm components.
-     */
-    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = QueryUtil.groupComponentsByCategory(query.getComponents());
+    var returnMap = QueryUtil.findSegmentsSimilar(continuousRetrievalLogic, query.getTerms(), config);
 
-    QueryConfig config = query.getQueryConfig();
-    ConstrainedQueryConfig qconf = new ConstrainedQueryConfig(config);
-    if (config == null) {
-      final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
-      qconf.setMaxResults(max);
-      final int resultsPerModule = Math.min(qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
-      qconf.setResultsPerModule(resultsPerModule);
-    }
-
-    for (String category : categoryMap.keySet()) {
-      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, (ReadableQueryConfig) qconf)).collect(Collectors.toList());
-      returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category));
-    }
-
-    return new SimilarityQueryResultBatch(returnMap, qconf.getQueryId().toString());
+    return new SimilarityQueryResultBatch(returnMap, config.getQueryId());
   }
 
   @Override

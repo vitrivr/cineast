@@ -34,8 +34,6 @@ public class TextRetrievalCommand implements Runnable {
     retrievers.add(new SubtitleFulltextSearch());
     retrievers.add(new OCRSearch());
     retrievers.add(new AudioTranscriptionSearch());
-    retrievers.add(new DescriptionTextSearch());
-    retrievers.add(new TagsFtSearch());
     CliUtils.retrieveAndLog(retrievers, retrieval, limit, printDetail, qc);
     System.out.println("Done");
   }

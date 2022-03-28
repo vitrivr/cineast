@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.AverageColor;
 import org.vitrivr.cineast.core.features.AverageColorARP44;
 import org.vitrivr.cineast.core.features.AverageColorCLD;
@@ -31,24 +33,17 @@ import org.vitrivr.cineast.core.features.MedianColorARP44;
 import org.vitrivr.cineast.core.features.MedianColorGrid8;
 import org.vitrivr.cineast.core.features.MedianColorRaster;
 import org.vitrivr.cineast.core.features.MedianFuzzyHist;
-import org.vitrivr.cineast.core.features.MotionHistogram;
 import org.vitrivr.cineast.core.features.SaturationGrid8;
 import org.vitrivr.cineast.core.features.SubDivAverageFuzzyColor;
 import org.vitrivr.cineast.core.features.SubDivMedianFuzzyColor;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram2;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram3;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram4;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram5;
-import org.vitrivr.cineast.core.features.SubDivMotionSum2;
-import org.vitrivr.cineast.core.features.SubDivMotionSum3;
-import org.vitrivr.cineast.core.features.SubDivMotionSum4;
-import org.vitrivr.cineast.core.features.SubDivMotionSum5;
 import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 public final class RetrievalRuntimeConfig {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private static final HashMap<String, List<RetrieverConfig>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
 
@@ -96,18 +91,6 @@ public final class RetrievalRuntimeConfig {
     list.add(new RetrieverConfig(DominantEdgeGrid16.class, 1.4));
     list.add(new RetrieverConfig(DominantEdgeGrid8.class, 1.4));
     DEFAULT_RETRIEVER_CATEGORIES.put("edge", list);
-
-    list = new ArrayList<>(9);
-    list.add(new RetrieverConfig(MotionHistogram.class, 0.5));
-    list.add(new RetrieverConfig(SubDivMotionHistogram2.class, 1.0));
-    list.add(new RetrieverConfig(SubDivMotionHistogram3.class, 1.0));
-    list.add(new RetrieverConfig(SubDivMotionHistogram4.class, 1.0));
-    list.add(new RetrieverConfig(SubDivMotionHistogram5.class, 1.0));
-    list.add(new RetrieverConfig(SubDivMotionSum2.class, 0.5));
-    list.add(new RetrieverConfig(SubDivMotionSum3.class, 0.5));
-    list.add(new RetrieverConfig(SubDivMotionSum4.class, 0.5));
-    list.add(new RetrieverConfig(SubDivMotionSum5.class, 0.5));
-    DEFAULT_RETRIEVER_CATEGORIES.put("motion", list);
 
     list = new ArrayList<>(3);
     list.add(new RetrieverConfig(SubtitleFulltextSearch.class, 1.0));
@@ -177,6 +160,11 @@ public final class RetrievalRuntimeConfig {
     for (RetrieverConfig config : list) {
 
       Retriever rev;
+
+      if(config.getRetrieverClass()==null){
+        LOGGER.error("Could not find class {} in category {}, skipping retriever instantiation", config.getRetrieverClassName(), category);
+        continue;
+      }
 
       if (config.getProperties() == null) {
         rev = ReflectionHelper.instantiate(config.getRetrieverClass());

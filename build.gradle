@@ -11,7 +11,7 @@ allprojects {
     group = 'org.vitrivr'
 
     /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
-    version = '3.7.3'
+    version = '3.10.2'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -35,6 +35,10 @@ subprojects {
     }
 
     apply plugin: 'com.github.johnrengelman.shadow'
+
+    shadowJar {
+        zip64 true // Required to allow more than 65535 entries in final archive
+    }
 
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
@@ -63,6 +67,10 @@ subprojects {
         /** Jackson (JSON conversion) */
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: version_jackson
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
+
+        /** Protobuf */
+        implementation group: 'io.grpc', name: 'grpc-stub', version: '1.45.0'
+        implementation group: 'io.grpc', name: 'grpc-netty', version: '1.45.0'
 
         /** Test dependencies (JUnit 5) */
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version_junit
@@ -110,7 +118,7 @@ task getExternalFiles {
 
 task generateOpenApiSpecs(type: JavaExec) {
     classpath = project(":cineast-api").sourceSets.main.runtimeClasspath
-    main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
+    mainClass.set('org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs')
 
     def config = project.hasProperty("cineastConfig") ? project.getProperty("cineastConfig") : "cineast.json"
 

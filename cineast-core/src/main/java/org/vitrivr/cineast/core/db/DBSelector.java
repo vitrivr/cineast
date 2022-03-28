@@ -79,20 +79,23 @@ public interface DBSelector extends Closeable {
   <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors,
       String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
 
+  /**
+   * In contrast to {@link #getNearestNeighboursGeneric(int, float[], String, Class, ReadableQueryConfig)}, this method returns all elements of a row
+   */
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config);
 
   /**
    * SELECT 'vectorname' from entity where 'fieldname' = 'value'
    */
-  List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName);
+  List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig);
 
   /**
    * for legacy support, takes the float[] method by default
    */
   default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value,
-      String vectorName) {
-    return getFeatureVectors(fieldName, value, vectorName).stream().map(FloatArrayTypeProvider::new)
+      String vectorName, ReadableQueryConfig qc) {
+    return getFeatureVectors(fieldName, value, vectorName, qc).stream().map(FloatArrayTypeProvider::new)
         .collect(Collectors.toList());
   }
 
@@ -110,9 +113,23 @@ public interface DBSelector extends Closeable {
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values);
 
   /**
+   * By default, the queryID is ignored
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values, String dbQueryID) {
+    return getRows(fieldName, values);
+  }
+
+  /**
    * Conversion to PrimitiveTypeProviders is expensive so feel free to use & implement extension for generic objects
    */
   default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values) {
+    return getRows(fieldName, values.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
+  }
+
+  /**
+   * Conversion to PrimitiveTypeProviders is expensive so feel free to use & implement extension for generic objects
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, List<String> values, String dbQueryID) {
     return getRows(fieldName, values.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
   }
 
@@ -200,14 +217,19 @@ public interface DBSelector extends Closeable {
   /**
    * by default just calls the implementation with a null-list for ids
    */
-  default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec) {
-    return this.getMetadataByIdAndSpec(null, spec, null);
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryID) {
+    return this.getMetadataByIdAndSpec(null, spec, null, dbQueryID);
+  }
+
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
+    return getMetadataByIdAndSpec(ids, spec, idColName, null);
   }
 
   /**
    * Horribly slow default implementation which iterates over the whole table
    */
-  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID) {
+    LOGGER.trace("fetching metadata with spec, dbQueryID {}", dbQueryID);
     return getAll().stream().filter(tuple -> {
       // check if there are any elements of the specification which do not work
       if (spec.stream().noneMatch(el -> {
@@ -280,6 +302,7 @@ public interface DBSelector extends Closeable {
    * Get all rows from all tables
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
+
 
   boolean existsEntity(String name);
 
