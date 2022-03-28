@@ -55,7 +55,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     private PoseDetector detector = new MergingPoseDetector();
 
     public SkeletonPose() {
-        super("feature_skeletonpose", (float) (16 * Math.PI), 12);
+        super("features_skeletonpose", (float) (16 * Math.PI), 12);
     }
 
     @Override
@@ -67,9 +67,9 @@ public class SkeletonPose extends AbstractFeatureModule {
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
         supply.get().createFeatureEntity(this.tableName, false,
-                new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
-                new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
-                new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
+            new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
+            new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
+            new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
         );
     }
 
@@ -87,7 +87,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private synchronized List<Skeleton> detectSkeletons(MultiImage img) {
-        return detector.detectPoses(img.getBufferedImage());
+        return new ArrayList<>();
     }
 
     @Override
@@ -268,7 +268,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private static ProjectionElement projectionElement(String name) {
-        return ProjectionElement.newBuilder().setColumn(columnName(name)).build();
+        return ProjectionElement.newBuilder().setExpression(Expression.newBuilder().setColumn(columnName(name)).build()).build();
     }
 
     private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
@@ -311,20 +311,20 @@ public class SkeletonPose extends AbstractFeatureModule {
         ).build();
 
         //weighted Manhattan-distance plus correction term for missing elements
-        ProjectionElement distanceFunction = ProjectionElement.newBuilder().setFunction(/* Distance function */
+        ProjectionElement distanceFunction = ProjectionElement.newBuilder().setExpression(Expression.newBuilder().setFunction(/* Distance function */
                 functionBuilder("add").addArguments(
-                        Expression.newBuilder().setFunction(functionBuilder("manhattanw")
-                        .addArguments(
-                                Expression.newBuilder().setColumn(columnName(FEATURE_COL))
-                        ).addArguments(
-                                expression(query)
-                        ).addArguments(
-                                vectorDifference
-                        ))
+                    Expression.newBuilder().setFunction(functionBuilder("manhattanw")
+                    .addArguments(
+                            Expression.newBuilder().setColumn(columnName(FEATURE_COL))
+                    ).addArguments(
+                            expression(query)
+                    ).addArguments(
+                            vectorDifference
+                    ))
                 ).addArguments(
                         correctionTerm
                 )
-        ).setAlias(columnName("distance")).build();
+        )).setAlias(columnName("distance")).build();
 
 
         return QueryMessage.newBuilder().setQuery(
