@@ -26,7 +26,7 @@ import java.util.Vector;
  */
 public class OpenPoseDetector implements PoseDetector, AutoCloseable
 {
-    private static final String MODEL_FILE = "resources/thin.pb";
+    private static final String MODEL_FILE = "resources/openpose/pose.pb";
     private static final String INPUT_NAME = "image";
     private static final String OUTPUT_NAME = "Openpose/concat_stage7";
     private static final int[][] COCO_PAIRS = {{1, 2}, {1, 5}, {2, 3}, {3, 4}, {5, 6}, {6, 7}, {1, 8}, {8, 9}, {9, 10}, {1, 11},

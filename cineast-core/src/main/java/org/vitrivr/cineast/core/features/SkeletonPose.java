@@ -87,7 +87,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     }
 
     private synchronized List<Skeleton> detectSkeletons(MultiImage img) {
-        return new ArrayList<>();
+        return detector.detectPoses(img.getBufferedImage());
     }
 
     @Override
