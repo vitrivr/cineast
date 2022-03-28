@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.util.CineastConstants;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
+import org.vitrivr.cottontail.client.language.basics.predicate.Expression;
 import org.vitrivr.cottontail.client.language.dml.Update;
 import org.vitrivr.cottontail.client.language.dql.Query;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
@@ -132,7 +133,7 @@ public class LSC21TemporalUpdateCommand implements Runnable {
                 resetAbsTime ? 0.0 : sAbs),
             new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME,
                 resetAbsTime ? 0.0 : (sAbs + 1))
-        ).where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId())).txId(txId);
+        ).where(new Expression(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId())).txId(txId);
         updates.add(update);
       } catch (Exception e) {
         LOGGER.warn("Could not update " + segment.getSegmentId() + " due to exception: " + e.getMessage());

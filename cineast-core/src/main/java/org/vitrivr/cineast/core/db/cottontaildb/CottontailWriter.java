@@ -7,10 +7,10 @@ import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
+import org.vitrivr.cottontail.client.language.basics.predicate.Expression;
 import org.vitrivr.cottontail.client.language.dml.BatchInsert;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
-import org.vitrivr.cottontail.client.language.extensions.Literal;
 
 public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
@@ -45,7 +45,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   @Override
   public boolean exists(String key, String value) {
-    final Query query = new Query(this.fqn).exists().where(new Literal(key, "=", value));
+    final Query query = new Query(this.fqn).exists().where(new Expression(key, "=", value));
     final TupleIterator results = this.cottontail.client.query(query);
     final Boolean b = results.next().asBoolean("exists");
     if (b != null) {
