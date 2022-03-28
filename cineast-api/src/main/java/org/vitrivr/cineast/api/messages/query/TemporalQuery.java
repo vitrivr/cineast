@@ -78,7 +78,4 @@ public class TemporalQuery extends Query {
     return MessageType.Q_TEMPORAL;
   }
 
-  public void setTimeDistances(List<Float> distances) {
-    //FIXME there is a timeDistances field in the request that should presumably not be there. This is just a hotfix to get the message to serialize again.
-  }
 }
