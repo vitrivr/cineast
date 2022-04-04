@@ -23,25 +23,28 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
       return null;
     }
 
-    File dir = new File(this.baseFolder, split[1]);
+    File[] candidates = new File[]{
+      new File(baseFolder, split[0] + "_" + split[1] + "/" + split[2] + ".jpg"),
+      new File(baseFolder, split[0] + "_" + split[1] + "/" + split[2] + ".png"),
+      new File(baseFolder, split[1] + "/" + split[2] + ".jpg"),
+      new File(baseFolder, split[1] + "/" + split[2] + ".png"),
+      new File(baseFolder, split[1] + "/" + split[1] + "_" + split[2] + ".jpg"),
+      new File(baseFolder, split[1] + "/" + split[1] + "_" + split[2] + ".png"),
+      new File(baseFolder, split[1] + "/shot" + split[1] + "_" + split[2] + ".jpg"),
+      new File(baseFolder, split[1] + "/shot" + split[1] + "_" + split[2] + ".png"),
+    };
 
-    if (!dir.exists() || !dir.isDirectory()) {
-      return null;
+    for (File candidate : candidates) {
+      if (candidate.exists() && candidate.canRead()) {
+        try {
+          return new ResolutionResult(candidate);
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+          return null;
+        }
+      }
     }
 
-    File[] candidates = dir.listFiles((dir1, name) -> name.startsWith("shot" + split[1] + "_" + split[2]));
-
-    if (candidates.length == 0) {
-      return null;
-    }
-
-    //TODO prioritize file endings
-
-    try {
-      return new ResolutionResult(candidates[0]);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return null;
-    }
+    return null;
   }
 }
