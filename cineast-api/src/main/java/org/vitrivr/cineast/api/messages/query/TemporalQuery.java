@@ -2,10 +2,9 @@ package org.vitrivr.cineast.api.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
-
-import java.util.List;
 
 /**
  * This object represents a temporal-query message of temporal query version 2, i.e. a request for a temporally staged similarity-search.
@@ -23,11 +22,7 @@ public class TemporalQuery extends Query {
   private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   @JsonCreator
-  public TemporalQuery(
-      @JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries,
-      @JsonProperty(value = "config", required = false) TemporalQueryConfig config,
-      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
-  ) {
+  public TemporalQuery(@JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries, @JsonProperty(value = "config", required = false) TemporalQueryConfig config, @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec) {
     super(config);
     this.queries = queries;
     this.metadataAccessSpec = metadataAccessSpec;
@@ -77,5 +72,4 @@ public class TemporalQuery extends Query {
   public MessageType getMessageType() {
     return MessageType.Q_TEMPORAL;
   }
-
 }

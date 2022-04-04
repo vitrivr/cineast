@@ -1,5 +1,12 @@
 package org.vitrivr.cineast.standalone.importer.handlers;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.DataSource;
@@ -13,10 +20,6 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.concurrent.*;
 
 
 public abstract class DataImportHandler {

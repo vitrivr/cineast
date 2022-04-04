@@ -24,7 +24,9 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    */
   private String fqn;
 
-  /** The batch size to use for INSERTS. */
+  /**
+   * The batch size to use for INSERTS.
+   */
   private final int batchSize;
   private final boolean useTransactions;
 
@@ -60,12 +62,12 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     long start = System.currentTimeMillis();
     int size = tuples.size();
     long txId = 0L;
-    if(useTransactions){
+    if (useTransactions) {
       txId = this.cottontail.client.begin();
     }
     try {
       BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names);
-      if(useTransactions){
+      if (useTransactions) {
         insert.txId(txId);
       }
       while (!tuples.isEmpty()) {
@@ -88,14 +90,14 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
         LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
         this.cottontail.client.insert(insert);
       }
-      if(useTransactions){
+      if (useTransactions) {
         this.cottontail.client.commit(txId);
       }
       long stop = System.currentTimeMillis();
       LOGGER.trace("Completed insert of {} elements in {} ms", size, stop - start);
       return true;
     } catch (StatusRuntimeException e) {
-      if(useTransactions){
+      if (useTransactions) {
         this.cottontail.client.rollback(txId);
       }
       return false;

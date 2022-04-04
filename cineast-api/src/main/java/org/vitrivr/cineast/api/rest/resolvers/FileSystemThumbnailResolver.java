@@ -2,7 +2,6 @@ package org.vitrivr.cineast.api.rest.resolvers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 
 public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
@@ -24,20 +23,13 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
       return null;
     }
 
-    //String fileName = segmentId.substring(0, segmentId.lastIndexOf("_"));
-
     File dir = new File(this.baseFolder, split[1]);
 
     if (!dir.exists() || !dir.isDirectory()) {
       return null;
     }
 
-    File[] candidates = dir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.startsWith("shot" + split[1] + "_" + split[2]);
-      }
-    });
+    File[] candidates = dir.listFiles((dir1, name) -> name.startsWith("shot" + split[1] + "_" + split[2]));
 
     if (candidates.length == 0) {
       return null;

@@ -8,6 +8,18 @@ import static org.vitrivr.cineast.core.util.DBQueryIDGenerator.generateQueryID;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
@@ -29,11 +41,6 @@ import org.vitrivr.cottontail.client.language.basics.predicate.Or;
 import org.vitrivr.cottontail.client.language.basics.predicate.Predicate;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -507,7 +514,6 @@ public final class CottontailSelector implements DBSelector {
             break;
 
         }
-
 
         T e = DistanceElement.create(distanceElementClass, id, distance);
         result.add(e);
