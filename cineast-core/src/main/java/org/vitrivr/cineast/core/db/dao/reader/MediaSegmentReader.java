@@ -32,8 +32,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
     this.selector.open(MediaSegmentDescriptor.ENTITY);
   }
 
-  private static Optional<MediaSegmentDescriptor> propertiesToDescriptor(
-      Map<String, PrimitiveTypeProvider> properties) {
+  private static Optional<MediaSegmentDescriptor> propertiesToDescriptor(Map<String, PrimitiveTypeProvider> properties) {
 
     if (properties.containsKey(FIELDNAMES[0])
         && properties.containsKey(FIELDNAMES[1])
@@ -60,8 +59,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public Optional<MediaSegmentDescriptor> lookUpSegment(String segmentId) {
-    Stream<MediaSegmentDescriptor> descriptors =
-        this.lookUpSegmentsByField(FIELDNAMES[0], segmentId);
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentId);
     return descriptors.findFirst();
   }
 
@@ -78,15 +76,12 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public List<MediaSegmentDescriptor> lookUpSegmentsOfObject(String objectId) {
-    Stream<MediaSegmentDescriptor> descriptors =
-        this.lookUpSegmentsByField(FIELDNAMES[1], objectId);
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectId);
     return descriptors.collect(Collectors.toList());
   }
 
-  public ListMultimap<String, MediaSegmentDescriptor> lookUpSegmentsOfObjects(
-      Iterable<String> objectIds) {
-    Stream<MediaSegmentDescriptor> descriptors =
-        this.lookUpSegmentsByField(FIELDNAMES[1], objectIds);
+  public ListMultimap<String, MediaSegmentDescriptor> lookUpSegmentsOfObjects(Iterable<String> objectIds) {
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectIds);
     return Multimaps.index(descriptors.iterator(), MediaSegmentDescriptor::getObjectId);
   }
 
@@ -100,18 +95,15 @@ public class MediaSegmentReader extends AbstractEntityReader {
     return all.stream().filter(it -> it.getSequenceNumber() >= lower && it.getSequenceNumber() <= upper).collect(Collectors.toList());
   }
 
-  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
-      String fieldName, String fieldValue) {
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, String fieldValue) {
     return lookUpSegmentsByField(fieldName, Collections.singletonList(fieldValue));
   }
 
-  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
-      String fieldName, Iterable<String> fieldValues) {
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, Iterable<String> fieldValues) {
     return lookUpSegmentsByField(fieldName, fieldValues, null);
   }
 
-  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
-      String fieldName, Iterable<String> fieldValues, String queryID) {
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, Iterable<String> fieldValues, String queryID) {
     String dbQueryID = DBQueryIDGenerator.generateQueryID("seg-lookup", queryID);
     Set<PrimitiveTypeProvider> uniqueFieldValues = new HashSet<>();
     fieldValues.forEach(el -> uniqueFieldValues.add(new StringTypeProvider(el)));

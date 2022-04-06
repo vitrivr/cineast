@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.compare.ObjectToStringComparator;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,17 +52,12 @@ public interface DBSelector extends Closeable {
    * @param <E>                  type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
-  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
-      PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
-      ReadableQueryConfig config) {
-    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
-        .equals(ProviderDataType.INT_ARRAY)) {
+  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
+    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType().equals(ProviderDataType.INT_ARRAY)) {
       //Default-implementation for backwards compatibility.
-      return getNearestNeighboursGeneric(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column,
-          distanceElementClass, config);
+      return getNearestNeighboursGeneric(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column, distanceElementClass, config);
     }
-    LogManager.getLogger().error("{} does not support other queries than float-arrays.",
-        this.getClass().getSimpleName());
+    LogManager.getLogger().error("{} does not support other queries than float-arrays.", this.getClass().getSimpleName());
     throw new UnsupportedOperationException();
   }
 
@@ -76,14 +72,12 @@ public interface DBSelector extends Closeable {
    * @param <T>                  The type T of the resulting <T> type of the {@link DistanceElement}.
    * @return List of results.
    */
-  <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors,
-      String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
+  <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
 
   /**
    * In contrast to {@link #getNearestNeighboursGeneric(int, float[], String, Class, ReadableQueryConfig)}, this method returns all elements of a row
    */
-  List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, ReadableQueryConfig config);
+  List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config);
 
   /**
    * SELECT 'vectorname' from entity where 'fieldname' = 'value'
@@ -93,10 +87,8 @@ public interface DBSelector extends Closeable {
   /**
    * for legacy support, takes the float[] method by default
    */
-  default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value,
-      String vectorName, ReadableQueryConfig qc) {
-    return getFeatureVectors(fieldName, value, vectorName, qc).stream().map(FloatArrayTypeProvider::new)
-        .collect(Collectors.toList());
+  default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
+    return getFeatureVectors(fieldName, value, vectorName, qc).stream().map(FloatArrayTypeProvider::new).collect(Collectors.toList());
   }
 
   default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, PrimitiveTypeProvider value) {
@@ -141,14 +133,12 @@ public interface DBSelector extends Closeable {
    * @param terms     The query terms. Individual terms will be connected by a logical OR.
    * @return List of rows that math the fulltext search.
    */
-  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
-      String... terms);
+  List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms);
 
   /**
    * {@link #getRows(String, RelationalOperator, Iterable)}
    */
-  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      PrimitiveTypeProvider value) {
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, PrimitiveTypeProvider value) {
     return getRows(fieldName, operator, Collections.singleton(value));
   }
 
@@ -162,8 +152,7 @@ public interface DBSelector extends Closeable {
    * @param values    The values the field should be compared to.
    * @return List of rows (one row is represented by one Map of the field ames and the data contained in the field).
    */
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      Iterable<PrimitiveTypeProvider> values);
+  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values);
 
   /**
    * Performs a boolean lookup based on multiple conditions, linked with AND. Each element of the list specifies one of the conditions - left middle right, i.e. id IN (1, 5, 7)
@@ -179,8 +168,7 @@ public interface DBSelector extends Closeable {
       if (rows.isEmpty()) {
         return Collections.emptyList();
       }
-      Set<String> ids = rows.stream().map(x -> x.get(identifier).getString())
-          .collect(Collectors.toSet());
+      Set<String> ids = rows.stream().map(x -> x.get(identifier).getString()).collect(Collectors.toSet());
 
       if (relevant.size() == 0) {
         rows.forEach(map -> relevant.put(map.get(identifier).getString(), map));
@@ -275,7 +263,9 @@ public interface DBSelector extends Closeable {
   /**
    * SELECT column from the table. Be careful with large entities
    */
-  List<PrimitiveTypeProvider> getAll(String column);
+  default List<PrimitiveTypeProvider> getAll(String column) {
+    return getAll().stream().map(el -> el.get(column)).collect(Collectors.toList());
+  }
 
   /**
    * SELECT columns from the table. Be careful with large entities
@@ -299,10 +289,18 @@ public interface DBSelector extends Closeable {
   }
 
   /**
+   * SELECT * FROM entity ORDER BY order ASC LIMIT limit SKIP skip
+   * <br>
+   * skip is also sometimes called offset. This is horribly inefficient in the default implementation, as it serializes to string and then sorts.
+   */
+  default List<Map<String, PrimitiveTypeProvider>> getAll(String order, int skip, int limit) {
+    return getAll().stream().sorted((o1, o2) -> ObjectToStringComparator.INSTANCE.compare(o1.get(order), o2.get(order))).skip(skip).limit(limit).collect(Collectors.toList());
+  }
+
+  /**
    * Get all rows from all tables
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
-
 
   boolean existsEntity(String name);
 

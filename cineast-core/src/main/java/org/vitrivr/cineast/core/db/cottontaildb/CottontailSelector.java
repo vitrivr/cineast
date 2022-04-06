@@ -356,6 +356,16 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getAll(String order, int skip, int limit) {
+    final Query query = new Query(this.fqn).select("*", null)
+        .queryId(generateQueryID("get-all-order-skip-limit"+this.fqn))
+        .order(order, Direction.ASC)
+        .skip(skip)
+        .limit(limit);
+    return processResults(this.cottontail.client.query(query));
+  }
+
+  @Override
   public boolean existsEntity(String name) {
     final AboutEntity about = new AboutEntity(this.cottontail.fqnInput(name));
     try (final TupleIterator results = this.cottontail.client.about(about)) {
