@@ -17,6 +17,7 @@ public class APIConstants {
   public static final String ATTRIBUTE_NAME = "attribute";
   public static final String LIMIT_NAME = "limit";
   public static final String SKIP_NAME = "skip";
+  public static final String TABLE_NAME = "table";
 
 
   static {

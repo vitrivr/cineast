@@ -25,6 +25,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByEntit
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.CountRowsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
@@ -429,6 +430,7 @@ public class APIEndpoint {
         /* Boolean */
         new FindDistinctElementsByColumnPostHandler(),
         new SelectFromTablePostHandler(),
+        new CountRowsGetHandler(),
         /* Status */
         new StatusInvocationHandler()
     ));

@@ -53,7 +53,7 @@ public abstract class DBIntegrationTest<R> {
   protected static final String ID_COL_NAME = "id";
   protected static final int VECTOR_ELEMENT_COUNT = 110;
   protected static final int MAX_VECTOR_ID = VECTOR_ELEMENT_COUNT - 1;
-  protected static final int TEXT_ELEMENT_COUNT = 80;
+  protected static final int TEXT_ELEMENT_COUNT = 8;
   protected static final int MAX_TEXT_ID = TEXT_ELEMENT_COUNT - 1;
   /**
    * This is not called "feature" by design as it avoid the storage-layers doing optimization by col name
@@ -196,12 +196,21 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Verify element count")
-  void count() {
+  @DisplayName("Verify element count using getAll()")
+  void countGetAll() {
     selector.open(testVectorTableName);
     Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.getAll().size());
     selector.open(testTextTableName);
     Assertions.assertEquals(TEXT_ELEMENT_COUNT, selector.getAll().size());
+  }
+
+  @Test
+  @DisplayName("Verify element count using rowCount()")
+  void countRowCount() {
+    selector.open(testVectorTableName);
+    Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.rowCount());
+    selector.open(testTextTableName);
+    Assertions.assertEquals(TEXT_ELEMENT_COUNT, selector.rowCount());
   }
 
   @Test

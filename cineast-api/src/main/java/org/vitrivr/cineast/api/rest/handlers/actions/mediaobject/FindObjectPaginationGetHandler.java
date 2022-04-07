@@ -6,14 +6,11 @@ import static org.vitrivr.cineast.api.util.APIConstants.SKIP_NAME;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
@@ -31,7 +28,9 @@ public class FindObjectPaginationGetHandler implements GetRestHandler<MediaObjec
     final var limit = Integer.parseInt(parameters.get(LIMIT_NAME));
 
     try (final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
-      return new MediaObjectQueryResult("", ol.getAllObjects(limit, skip));
+      var result = ol.getAllObjects(skip, limit);
+      LOGGER.trace("returning {} elements for limit {} and skip {}", result.size(), limit, skip);
+      return new MediaObjectQueryResult("", result);
     }
   }
 

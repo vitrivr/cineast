@@ -132,12 +132,12 @@ public class MediaObjectReader extends AbstractEntityReader {
   /**
    * SELECT * from mediaobjects ORDER BY id ASC LIMIT limit SKIP skip
    *
-   * @param limit how many objects should be fetched
    * @param skip  how many objects should be skipped
+   * @param limit how many objects should be fetched
    * @return descriptors
    */
-  public List<MediaObjectDescriptor> getAllObjects(int limit, int skip) {
-    List<Map<String, PrimitiveTypeProvider>> all = selector.getAll(MediaObjectDescriptor.FIELDNAMES[0], limit, skip);
+  public List<MediaObjectDescriptor> getAllObjects(int skip, int limit) {
+    List<Map<String, PrimitiveTypeProvider>> all = selector.getAll(MediaObjectDescriptor.FIELDNAMES[0], skip, limit);
     List<MediaObjectDescriptor> _return = new ArrayList<>(all.size());
     for (Map<String, PrimitiveTypeProvider> map : all) {
       _return.add(mapToDescriptor(map));

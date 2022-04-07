@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
@@ -302,10 +303,18 @@ public interface DBSelector extends Closeable {
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
+  /**
+   * SELECT count(*) FROM table
+   */
+  default Integer rowCount(){
+    return getAll().size();
+  }
+
   boolean existsEntity(String name);
 
   /**
    * Healthcheck. Returns false if something is wrong
    */
   boolean ping();
+
 }
