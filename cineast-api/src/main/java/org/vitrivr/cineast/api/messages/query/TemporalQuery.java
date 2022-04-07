@@ -22,11 +22,7 @@ public class TemporalQuery extends Query {
   private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   @JsonCreator
-  public TemporalQuery(
-      @JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries,
-      @JsonProperty(value = "config", required = false) TemporalQueryConfig config,
-      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
-  ) {
+  public TemporalQuery(@JsonProperty(value = "queries", required = true) List<StagedSimilarityQuery> queries, @JsonProperty(value = "config", required = false) TemporalQueryConfig config, @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec) {
     super(config);
     this.queries = queries;
     this.metadataAccessSpec = metadataAccessSpec;
