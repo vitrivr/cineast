@@ -362,7 +362,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(String order, int skip, int limit) {
     final Query query = new Query(this.fqn).select("*", null)
-        .queryId(generateQueryID("get-all-order-skip-limit"+this.fqn))
+        .queryId(generateQueryID("get-all-order-skip-limit-"+this.fqn))
         .order(order, Direction.ASC)
         .skip(skip)
         .limit(limit);
