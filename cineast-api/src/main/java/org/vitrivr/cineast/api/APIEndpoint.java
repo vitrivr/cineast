@@ -28,6 +28,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementG
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectPaginationGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByKeyGetHandler;
@@ -401,6 +402,7 @@ public class APIEndpoint {
         new FindObjectAllGetHandler(),
         new FindObjectByIdPostHandler(),
         new FindObjectGetHandler(),
+        new FindObjectPaginationGetHandler(),
         /* Segments */
         new FindSegmentByIdPostHandler(),
         new FindSegmentsByIdGetHandler(),

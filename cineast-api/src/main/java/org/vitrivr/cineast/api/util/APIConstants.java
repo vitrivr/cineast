@@ -11,6 +11,13 @@ public class APIConstants {
   public static final String CATEGORY_NAME = "category";
   public static final String ENTITY_NAME = "entity";
   public static final List<MetadataAccessSpecification> ACCESS_ALL_METADATA;
+  public static final String DOMAIN_NAME = "domain";
+  public static final String KEY_NAME = "key";
+  public static final String VALUE_NAME = "value";
+  public static final String ATTRIBUTE_NAME = "attribute";
+  public static final String LIMIT_NAME = "limit";
+  public static final String SKIP_NAME = "skip";
+
 
   static {
     List<MetadataAccessSpecification> _spec = new ArrayList<>();

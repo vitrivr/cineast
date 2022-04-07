@@ -8,6 +8,7 @@ import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
+import org.vitrivr.cineast.api.util.APIConstants;
 
 /**
  * This class handles GET requests with an object id, domain and key and returns all matching metadata descriptors.
@@ -20,20 +21,17 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
     GetRestHandler<MediaObjectMetadataQueryResult> {
 
   public static final String OBJECT_ID_NAME = "id";
-  public static final String DOMAIN_NAME = "domain";
-  public static final String KEY_NAME = "key";
 
-  public static final String ROUTE = "find/metadata/of/{" + OBJECT_ID_NAME + "}/in/{" + DOMAIN_NAME + "}/with/{" + KEY_NAME + "}";
+  public static final String ROUTE = "find/metadata/of/{" + OBJECT_ID_NAME + "}/in/{" + APIConstants.DOMAIN_NAME + "}/with/{" + APIConstants.KEY_NAME + "}";
 
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
     final String objectId = parameters.get(OBJECT_ID_NAME);
-    final String domain = parameters.get(DOMAIN_NAME);
-    final String key = parameters.get(KEY_NAME);
+    final String domain = parameters.get(APIConstants.DOMAIN_NAME);
+    final String key = parameters.get(APIConstants.KEY_NAME);
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    return new MediaObjectMetadataQueryResult("", service.find(objectId, domain, key)
-    );
+    return new MediaObjectMetadataQueryResult("", service.find(objectId, domain, key));
   }
 
   public OpenApiDocumentation docs() {
@@ -47,10 +45,10 @@ public class FindObjectMetadataFullyQualifiedGetHandler implements
         .pathParam(OBJECT_ID_NAME, String.class, param -> {
           param.description("The object id");
         })
-        .pathParam(DOMAIN_NAME, String.class, param -> {
+        .pathParam(APIConstants.DOMAIN_NAME, String.class, param -> {
           param.description("The domain name");
         })
-        .pathParam(KEY_NAME, String.class, param -> param.description("Metadata key"))
+        .pathParam(APIConstants.KEY_NAME, String.class, param -> param.description("Metadata key"))
         .json("200", outClass());
   }
 

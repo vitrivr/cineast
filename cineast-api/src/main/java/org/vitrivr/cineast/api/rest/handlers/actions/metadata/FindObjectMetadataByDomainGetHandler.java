@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.DOMAIN_NAME;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
@@ -21,8 +21,7 @@ import org.vitrivr.cineast.api.util.APIConstants;
 public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<MediaObjectMetadataQueryResult> {
 
 
-  public static final String ROUTE = "find/metadata/in/{" + DOMAIN_NAME + "}/by/id/{" + APIConstants.ID_QUALIFIER
-      + "}";
+  public static final String ROUTE = "find/metadata/in/{" + DOMAIN_NAME + "}/by/id/{" + APIConstants.ID_QUALIFIER + "}";
 
   @Override
   public MediaObjectMetadataQueryResult doGet(Context ctx) {
@@ -30,8 +29,7 @@ public class FindObjectMetadataByDomainGetHandler implements GetRestHandler<Medi
     final String objectId = parameters.get(OBJECT_ID_NAME);
     final String domain = parameters.get(DOMAIN_NAME);
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    return new MediaObjectMetadataQueryResult("",
-        service.findByDomain(objectId, domain));
+    return new MediaObjectMetadataQueryResult("", service.findByDomain(objectId, domain));
   }
 
   @Override

@@ -19,14 +19,12 @@ public class FindObjectByIdPostHandler implements ParsingPostRestHandler<IdList,
 
   @Override
   public MediaObjectQueryResult performPost(IdList context, Context ctx) {
-    final Map<String, String> parameters = ctx.pathParamMap();
     if (context == null || context.getIds().length == 0) {
       return new MediaObjectQueryResult("", new ArrayList<>(0));
     }
-    final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final Map<String, MediaObjectDescriptor> objects = ol.lookUpObjects(Arrays.asList(context.getIds()));
-    ol.close();
-    return new MediaObjectQueryResult("", new ArrayList<>(objects.values()));
+    try (final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());) {
+      return new MediaObjectQueryResult("", new ArrayList<>(ol.lookUpObjects(Arrays.asList(context.getIds())).values()));
+    }
   }
 
   @Override
