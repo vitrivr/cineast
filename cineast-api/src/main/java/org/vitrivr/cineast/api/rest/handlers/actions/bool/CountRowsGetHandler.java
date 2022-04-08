@@ -12,7 +12,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class CountRowsGetHandler implements GetRestHandler<Integer> {
 
-  public static final String ROUTE = "count/table{" + TABLE_NAME + "}";
+  public static final String ROUTE = "count/table/{" + TABLE_NAME + "}";
 
   private static final Logger LOGGER = LogManager.getLogger(CountRowsGetHandler.class);
 
