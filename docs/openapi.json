@@ -370,9 +370,49 @@
         }, {
           "name" : "value",
           "in" : "path",
+          "description" : "The actual value that you want to filter for",
           "required" : true,
           "schema" : {
             "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/all/{skip}/{limit}" : {
+      "get" : {
+        "tags" : [ "Object" ],
+        "summary" : "Get a fixed amount of objects from the sorted list",
+        "description" : "Equivalent to calling SELECT * FROM multimediaobject ORDER BY objectid ASC LIMIT limit SKIP skip. Mostly used for pagination when wanting to retrieve all objects",
+        "operationId" : "findObjectsPagination",
+        "parameters" : [ {
+          "name" : "skip",
+          "in" : "path",
+          "description" : "How many objects should be skipped",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "path",
+          "description" : "How many object at most should be fetched",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         } ],
         "responses" : {
@@ -1030,6 +1070,35 @@
         }
       }
     },
+    "/api/v1/count/table/{table}" : {
+      "get" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Count objects",
+        "description" : "Equivalent to calling SELECT count(*) FROM table. Used to determined #pages for pagination in a frontend or statistical purposes",
+        "operationId" : "countRows",
+        "parameters" : [ {
+          "name" : "table",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/status" : {
       "get" : {
         "tags" : [ "Status" ],
@@ -1248,8 +1317,7 @@
         "type" : "object",
         "properties" : {
           "objectid" : {
-            "type" : "string",
-            "writeOnly" : true
+            "type" : "string"
           },
           "name" : {
             "type" : "string"
@@ -1264,9 +1332,6 @@
           "exists" : {
             "type" : "boolean",
             "writeOnly" : true
-          },
-          "objectId" : {
-            "type" : "string"
           },
           "contentURL" : {
             "type" : "string"
@@ -1351,8 +1416,7 @@
         "type" : "object",
         "properties" : {
           "queryId" : {
-            "type" : "string",
-            "format" : "uuid"
+            "type" : "string"
           },
           "hints" : {
             "uniqueItems" : true,
@@ -1395,16 +1459,16 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "distanceIfEmpty" : {
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
-          "distanceWeightsIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "normIfEmpty" : {
+          "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1418,7 +1482,7 @@
         "properties" : {
           "type" : {
             "type" : "string",
-            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
+            "enum" : [ "IMAGE", "AUDIO", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "SKELETON", "ID", "BOOLEAN" ]
           },
           "data" : {
             "type" : "string",
@@ -1558,7 +1622,47 @@
             }
           },
           "config" : {
-            "$ref" : "#/components/schemas/QueryConfig"
+            "$ref" : "#/components/schemas/TemporalQueryConfig"
+          },
+          "metadataAccessSpec" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataAccessSpecification"
+            }
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          },
+          "timeDistances" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "float"
+            }
+          },
+          "temporalQueryConfig" : {
+            "$ref" : "#/components/schemas/TemporalQueryConfig"
+          }
+        }
+      },
+      "TemporalQueryConfig" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "hints" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "exact", "inexact", "lsh", "ecp", "mi", "pq", "sh", "va", "vaf", "vav", "sequential", "empirical" ]
+            }
           },
           "timeDistances" : {
             "type" : "array",
@@ -1571,15 +1675,57 @@
             "type" : "number",
             "format" : "float"
           },
-          "metadataAccessSpec" : {
+          "computeTemporalObjects" : {
+            "type" : "boolean"
+          },
+          "distance" : {
+            "type" : "string",
+            "enum" : [ "chisquared", "correlation", "cosine", "hamming", "jaccard", "kullbackleibler", "chebyshev", "euclidean", "squaredeuclidean", "manhattan", "minkowski", "spannorm", "haversine" ]
+          },
+          "distanceWeights" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/MetadataAccessSpecification"
+              "type" : "number",
+              "format" : "float"
             }
           },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          "norm" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "resultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxResults" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "relevantSegmentIds" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "rawResultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -1705,6 +1851,9 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
+          "description" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -1713,9 +1862,6 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
-            "type" : "string"
-          },
-          "description" : {
             "type" : "string"
           }
         }
