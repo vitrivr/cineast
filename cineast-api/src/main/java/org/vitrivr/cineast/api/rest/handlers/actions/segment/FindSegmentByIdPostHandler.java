@@ -23,10 +23,10 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
     if (ids == null || ids.getIds().length == 0) {
       return new MediaSegmentQueryResult("", new ArrayList<>(0));
     }
-    final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(ids.getIds()));
-    sl.close();
-    return new MediaSegmentQueryResult("", new ArrayList<>(segments.values()));
+    try (var sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());) {
+      final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(ids.getIds()));
+      return new MediaSegmentQueryResult("", new ArrayList<>(segments.values()));
+    }
   }
 
   @Override

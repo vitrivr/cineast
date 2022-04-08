@@ -22,14 +22,14 @@ public class FindSegmentsByIdGetHandler implements GetRestHandler<MediaSegmentQu
   public MediaSegmentQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
     final String segmentId = parameters.get(ID_NAME);
-    final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final List<MediaSegmentDescriptor> list = sl.lookUpSegment(segmentId).map(s -> {
-      final List<MediaSegmentDescriptor> segments = new ArrayList<>(1);
-      segments.add(s);
-      return segments;
-    }).orElse(new ArrayList<>(0));
-    sl.close();
-    return new MediaSegmentQueryResult("", list);
+    try (var sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
+      final List<MediaSegmentDescriptor> list = sl.lookUpSegment(segmentId).map(s -> {
+        final List<MediaSegmentDescriptor> segments = new ArrayList<>(1);
+        segments.add(s);
+        return segments;
+      }).orElse(new ArrayList<>(0));
+      return new MediaSegmentQueryResult("", list);
+    }
   }
 
   @Override
