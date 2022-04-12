@@ -1090,8 +1090,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "integer",
-                  "format" : "int32"
+                  "$ref" : "#/components/schemas/IntegerMessage"
                 }
               }
             }
@@ -1459,6 +1458,9 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1467,9 +1469,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1630,13 +1629,13 @@
               "$ref" : "#/components/schemas/MetadataAccessSpecification"
             }
           },
-          "maxLength" : {
-            "type" : "number",
-            "format" : "float"
-          },
           "messageType" : {
             "type" : "string",
             "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
           },
           "timeDistances" : {
             "type" : "array",
@@ -1711,6 +1710,9 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1719,9 +1721,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -2030,6 +2029,15 @@
                 "type" : "string"
               }
             }
+          }
+        }
+      },
+      "IntegerMessage" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },

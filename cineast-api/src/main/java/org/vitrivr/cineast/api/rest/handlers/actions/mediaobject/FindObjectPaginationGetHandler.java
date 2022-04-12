@@ -24,8 +24,10 @@ public class FindObjectPaginationGetHandler implements GetRestHandler<MediaObjec
   public MediaObjectQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
 
-    final var skip = Integer.parseInt(parameters.get(SKIP_NAME));
-    final var limit = Integer.parseInt(parameters.get(LIMIT_NAME));
+    final var skipParam = parameters.get(SKIP_NAME);
+    final var skip = skipParam == null ? 0 : Integer.parseInt(skipParam);
+    final var limitParam = parameters.get(LIMIT_NAME);
+    final var limit = limitParam == null ? Integer.MAX_VALUE : Integer.parseInt(LIMIT_NAME);
 
     try (final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
       var result = ol.getAllObjects(skip, limit);

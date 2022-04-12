@@ -306,7 +306,7 @@ public interface DBSelector extends Closeable {
   /**
    * SELECT count(*) FROM table
    */
-  default Integer rowCount(){
+  default int rowCount(){
     return getAll().size();
   }
 

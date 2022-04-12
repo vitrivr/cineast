@@ -370,7 +370,7 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public Integer rowCount() {
+  public int rowCount() {
     final Query query = new Query(this.fqn).count().queryId("count-star-"+this.fqn);
     return Math.toIntExact(this.cottontail.client.query(query).next().asLong(0));
   }
