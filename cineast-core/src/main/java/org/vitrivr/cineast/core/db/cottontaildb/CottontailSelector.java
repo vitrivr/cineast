@@ -163,6 +163,10 @@ public final class CottontailSelector implements DBSelector {
   }
 
   private List<Map<String, PrimitiveTypeProvider>> getRowsHelper(String fieldName, String op, Object[] mapped, String dbQueryID) {
+    if (op.equals("IN") && mapped.length == 0) {
+      LOGGER.debug("empty in-clause, not executing query {}", dbQueryID);
+      return new ArrayList<>(0);
+    }
     final Query query = new Query(this.fqn).select("*", null).where(new Expression(fieldName, op, mapped)).queryId(dbQueryID);
     try {
       return processResults(this.cottontail.client.query(query));
