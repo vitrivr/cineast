@@ -1455,9 +1455,6 @@
               "type" : "string"
             }
           },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1469,6 +1466,9 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1707,9 +1707,6 @@
               "type" : "string"
             }
           },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1721,6 +1718,9 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
