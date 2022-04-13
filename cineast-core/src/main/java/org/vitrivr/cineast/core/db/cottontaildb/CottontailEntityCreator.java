@@ -359,14 +359,13 @@ public final class CottontailEntityCreator implements EntityCreator {
 
 
   private boolean createIndex(String entityName, String attribute, IndexType type, long txId) {
-    final String entityNameFqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
-    final String indexName = "idx_" + attribute + "_" + type.name().toLowerCase();
-    final CreateIndex index = new CreateIndex(entityNameFqn, attribute, type).column(attribute).name(indexName).txId(txId);
+    var fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
+    final CreateIndex index = new CreateIndex(fqn, attribute, type).txId(txId);
     try {
       this.cottontail.client.create(index);
     } catch (StatusRuntimeException e) {
       if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
-        LOGGER.warn("Index {} was not created because it already exists", indexName);
+        LOGGER.warn("Index on entity {}, attribute {}, type {} was not created because it already exists", entityName, attribute, type);
         return false;
       }
       throw e;
