@@ -360,7 +360,7 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   private boolean createIndex(String entityName, String attribute, IndexType type, long txId) {
     var fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
-    final CreateIndex index = new CreateIndex(fqn, attribute, type).column(entityName + "." + attribute).txId(txId);
+    final CreateIndex index = new CreateIndex(fqn, attribute, type).txId(txId);
     try {
       this.cottontail.client.create(index);
     } catch (StatusRuntimeException e) {
