@@ -1242,15 +1242,15 @@
               "type" : "string"
             }
           },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
-          },
           "idList" : {
             "type" : "array",
             "items" : {
               "type" : "string"
             }
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1454,6 +1454,9 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1462,9 +1465,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1706,6 +1706,9 @@
           "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1714,9 +1717,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
