@@ -110,4 +110,16 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector {
     return this;
   }
 
+  public int getR() {
+    return this.r;
+  }
+
+  public int getG() {
+    return this.g;
+  }
+
+  public int getB() {
+    return this.b;
+  }
+
 }
