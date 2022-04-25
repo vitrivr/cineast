@@ -84,6 +84,9 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
           this.cottontail.client.insert(insert);
           insert = new BatchInsert().into(this.fqn).columns(this.names);
+          if(useTransactions){
+            insert.txId(txId);
+          }
         }
       }
       if (insert.getBuilder().getInsertsCount() > 0) {

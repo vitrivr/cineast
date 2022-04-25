@@ -52,10 +52,11 @@
       ],
       "boolean": [
         {
-          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "feature": "CollectionBooleanRetriever", "weight": 1.0,
           "properties": {
-            "entity": "table_name",
-            "attribute": "text,option,range"
+            "entity": "cineast_segment",
+            "attribute": "segmentid,objectid",
+            "idCol": "segmentid"
           }
         }
       ]
