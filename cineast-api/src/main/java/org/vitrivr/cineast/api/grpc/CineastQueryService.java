@@ -104,7 +104,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
           if (lastStage) {
             responseObserver.onNext(QueryContainerUtil.similarityQueryResult(
-                term.getQueryConfig().getQueryId().toString(),
+                term.getQueryConfig().getQueryId(),
                 category,
                 results
             ));
@@ -141,7 +141,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
     QueryConfig qconf = new QueryConfig(rqconf);
 
     /* Prepare QueryConfig (so as to obtain a QueryId). */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
     final int max = qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);
     final int resultsPerModule = qconf.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : qconf.getResultsPerModule();
@@ -226,7 +226,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                 responseObserver.onNext(
                     QueryContainerUtil.queryResult(
                         QueryContainerUtil.similarityQueryResult(
-                            qt.getQueryConfig().getQueryId().toString(),
+                            qt.getQueryConfig().getQueryId(),
                             category,
                             results
                         )));
@@ -236,7 +236,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                   continue;
                 }
 
-                Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds);
+                Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(segmentIds, uuid);
 
                 responseObserver.onNext(
                     QueryContainerUtil.queryResult(
@@ -261,7 +261,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                 if (objectIds.isEmpty()) {
                   continue;
                 }
-                Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
+                Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds, uuid);
 
                 responseObserver.onNext(
                     QueryContainerUtil.queryResult(

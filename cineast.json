@@ -35,12 +35,6 @@
         {"feature": "DominantEdgeGrid16", "weight": 1.4},
         {"feature": "DominantEdgeGrid8", "weight": 1.4}
       ],
-      "motion": [
-        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
-      ],
       "localfeatures": [
         {"feature": "HOGMirflickr25K512", "weight": 1.0}
       ],
@@ -58,10 +52,11 @@
       ],
       "boolean": [
         {
-          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "feature": "CollectionBooleanRetriever", "weight": 1.0,
           "properties": {
-            "entity": "table_name",
-            "attribute": "text,option,range"
+            "entity": "cineast_segment",
+            "attribute": "segmentid,objectid",
+            "idCol": "segmentid"
           }
         }
       ]

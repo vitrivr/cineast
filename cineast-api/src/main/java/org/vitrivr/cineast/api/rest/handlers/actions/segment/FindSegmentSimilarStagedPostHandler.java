@@ -39,7 +39,7 @@ public class FindSegmentSimilarStagedPostHandler implements ParsingPostRestHandl
 
     var results = QueryUtil.findSegmentsSimilarStaged(continuousRetrievalLogic, query.getStages(), config);
 
-    return new SimilarityQueryResultBatch(results, config.getQueryId().toString());
+    return new SimilarityQueryResultBatch(results, config.getQueryId());
   }
 
   @Override

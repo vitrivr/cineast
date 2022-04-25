@@ -28,7 +28,7 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
   @Override
   public void execute(Session session, QueryConfig qconf, NeighboringSegmentQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Prepare QueryConfig (so as to obtain a QueryId). */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
 
     /* Retrieve segments. If empty, abort query. */
     final String segmentId = message.getSegmentId();

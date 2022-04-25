@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import io.netty.util.collection.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
 
     /* Prepare the query config and get the QueryId */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
     String qid = uuid.substring(0, 3);
     final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
     qconf.setMaxResults(max);
@@ -53,7 +52,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<Thread> cleanupThreads = new ArrayList<>();
 
     /* We need a set of segments and objects to be used for temporal scoring as well as a storage of all container results where are the index of the outer list is where container i was scored */
-    Map<Integer, List<StringDoublePair>> containerResults = new IntObjectHashMap<>();
+    Map<Integer, List<StringDoublePair>> containerResults = new HashMap<>();
     Set<MediaSegmentDescriptor> segments = new HashSet<>();
 
     Set<String> sentSegmentIds = new HashSet<>();

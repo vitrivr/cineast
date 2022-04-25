@@ -30,7 +30,7 @@ public class ReadableQueryConfig {
     lsh, ecp, mi, pq, sh, va, vaf, vav, sequential, empirical
   }
 
-  private final UUID queryId;
+  private final String queryId;
   protected Distance distance = null;
   protected float[] distanceWeights = null;
   protected float norm = Float.NaN;
@@ -50,13 +50,7 @@ public class ReadableQueryConfig {
   public ReadableQueryConfig(@JsonProperty(value = "queryId", required = false) String queryId,
       @JsonProperty(value = "hints", required = false) List<Hints> hints) {
 
-    UUID uuid = null;
-    try {
-      uuid = UUID.fromString(queryId);
-    } catch (IllegalArgumentException | NullPointerException e) {
-      uuid = UUID.randomUUID();
-    }
-    this.queryId = uuid;
+    this.queryId = queryId == null? UUID.randomUUID().toString() : queryId;
     if (hints != null) {
       this.hints = new HashSet<>(hints);
     } else {
@@ -77,10 +71,10 @@ public class ReadableQueryConfig {
    * Internal constructor used to create a {@link ReadableQueryConfig} from another {@link ReadableQueryConfig}.
    *
    * @param qc   The {@link ReadableQueryConfig} that should be used. May be null.
-   * @param uuid The UUID for the new {@link ReadableQueryConfig}. If null, a new UUID will be created.
+   * @param queryId The queryId for the new {@link ReadableQueryConfig}. If null, a new UUID will be created.
    */
-  protected ReadableQueryConfig(ReadableQueryConfig qc, UUID uuid) {
-    this.queryId = (uuid == null) ? UUID.randomUUID() : uuid;
+  protected ReadableQueryConfig(ReadableQueryConfig qc, String queryId) {
+    this.queryId = (queryId == null) ? UUID.randomUUID().toString() : queryId;
     this.hints = new HashSet<>();
     if (qc == null) {
       return;
@@ -95,7 +89,7 @@ public class ReadableQueryConfig {
     this.relevantSegmentIds.addAll(qc.relevantSegmentIds);
   }
 
-  public final UUID getQueryId() {
+  public final String getQueryId() {
     return this.queryId;
   }
 
