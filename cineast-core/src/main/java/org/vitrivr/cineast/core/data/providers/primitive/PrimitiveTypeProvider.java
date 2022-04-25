@@ -18,13 +18,6 @@ public interface PrimitiveTypeProvider
     BitSetProvider {
 
   /**
-   * Convenience-method to convert to object
-   */
-  default Object toObject() {
-    return PrimitiveTypeProvider.getObject(this);
-  }
-
-  /**
    * Casts an int[] to float[] if need be
    */
   public static float[] getSafeFloatArray(PrimitiveTypeProvider provider) {
@@ -217,6 +210,13 @@ public interface PrimitiveTypeProvider
 
     // TODO are arrays relevant here?
     return NothingProvider.INSTANCE;
+  }
+
+  /**
+   * Convenience-method to convert to object
+   */
+  default Object toObject() {
+    return PrimitiveTypeProvider.getObject(this);
   }
 
   ProviderDataType getType();

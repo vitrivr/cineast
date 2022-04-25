@@ -12,13 +12,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 public class Ping implements Message {
 
   /**
-   * Enum of the Ping status.
-   */
-  public enum StatusEnum {
-    UNKNOWN, OK, ERROR
-  }
-
-  /**
    * Status of the Ping.
    */
   private StatusEnum status = StatusEnum.UNKNOWN;
@@ -43,5 +36,12 @@ public class Ping implements Message {
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+  }
+
+  /**
+   * Enum of the Ping status.
+   */
+  public enum StatusEnum {
+    UNKNOWN, OK, ERROR
   }
 }

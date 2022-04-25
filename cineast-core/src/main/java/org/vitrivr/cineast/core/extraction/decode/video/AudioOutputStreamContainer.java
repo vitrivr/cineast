@@ -33,14 +33,13 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 class AudioOutputStreamContainer extends AbstractAVStreamContainer {
 
   private static final Logger LOGGER = LogManager.getLogger();
+  private final int channels = 1;
   long next_pts;
   AVFrame tmp_frame;
   private int samples_count;
   private AVFrame frame;
   private SwrContext swr_ctx;
   private AVRational rat = new AVRational();
-
-  private final int channels = 1;
 
   AudioOutputStreamContainer(AVFormatContext oc, int codec_id, int sampleRate, int bitRate, AVDictionary opt) {
     super(oc, codec_id);

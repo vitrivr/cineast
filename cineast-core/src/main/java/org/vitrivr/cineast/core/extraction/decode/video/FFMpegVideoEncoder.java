@@ -30,18 +30,14 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 public class FFMpegVideoEncoder {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
+  private final AVFormatContext oc = new AVFormatContext();
+  private final Queue<MultiImage> imageQueue = new LinkedList<>();
+  private final Queue<AudioFrame> audioQueue = new LinkedList<>();
+  private final boolean useAudio;
   private AudioFrame tmpFrame = null;
-
   private VideoOutputStreamContainer video_st = null;
   private AudioOutputStreamContainer audio_st = null;
   private AVOutputFormat fmt;
-  private final AVFormatContext oc = new AVFormatContext();
-
-  private final Queue<MultiImage> imageQueue = new LinkedList<>();
-  private final Queue<AudioFrame> audioQueue = new LinkedList<>();
-
-  private final boolean useAudio;
 
   public FFMpegVideoEncoder(int width, int height, float frameRate, int sampleRate, String filename, boolean useAudio) {
 

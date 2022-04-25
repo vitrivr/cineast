@@ -63,6 +63,44 @@ public class SkeletonPose extends AbstractFeatureModule {
     super("features_skeletonpose", (float) (16 * Math.PI), 12);
   }
 
+  private static Expression expression(float f) {
+    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData(f)).build();
+  }
+
+  private static Expression expression(float[] f) {
+    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+        CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(f))
+    ))).build();
+  }
+
+  private static Function.Builder functionBuilder(String name) {
+    return CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName(name));
+  }
+
+  private static ColumnName columnName(String name) {
+    return ColumnName.newBuilder().setName(name).build();
+  }
+
+  private static ProjectionElement projectionElement(String name) {
+    return ProjectionElement.newBuilder().setExpression(Expression.newBuilder().setColumn(columnName(name)).build()).build();
+  }
+
+  private static float angle(Point2D_F32 p1, Point2D_F32 c, Point2D_F32 p2) {
+    return (float) (Math.atan2(p2.y - c.y, p2.x - c.x) - Math.atan2(p1.y - c.y, p1.x - c.x));
+  }
+
+  private static float angle(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
+    return angle(skeleton.getPoint(p1), skeleton.getPoint(p2), skeleton.getPoint(p3));
+  }
+
+  private static float min(float f, float g, float h) {
+    return Math.min(f, Math.min(g, h));
+  }
+
+  private static float min(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
+    return min(skeleton.getWeight(p1), skeleton.getWeight(p2), skeleton.getWeight(p3));
+  }
+
   @Override
   public void init(PersistencyWriterSupplier phandlerSupply) {
     super.init(phandlerSupply);
@@ -253,28 +291,6 @@ public class SkeletonPose extends AbstractFeatureModule {
 
   }
 
-  private static Expression expression(float f) {
-    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setFloatData(f)).build();
-  }
-
-  private static Expression expression(float[] f) {
-    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
-        CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(f))
-    ))).build();
-  }
-
-  private static Function.Builder functionBuilder(String name) {
-    return CottontailGrpc.Function.newBuilder().setName(CottontailGrpc.FunctionName.newBuilder().setName(name));
-  }
-
-  private static ColumnName columnName(String name) {
-    return ColumnName.newBuilder().setName(name).build();
-  }
-
-  private static ProjectionElement projectionElement(String name) {
-    return ProjectionElement.newBuilder().setExpression(Expression.newBuilder().setColumn(columnName(name)).build()).build();
-  }
-
   private CottontailGrpc.QueryMessage buildQuery(float[] query, float[] weights, int limit) {
 
     float queryWeightSum = 0f;
@@ -344,22 +360,6 @@ public class SkeletonPose extends AbstractFeatureModule {
                 .addComponents(Component.newBuilder().setColumn(columnName(DB_DISTANCE_VALUE_QUALIFIER))
                     .setDirection(Direction.ASCENDING)).build()
         ).setLimit(limit)).build();
-  }
-
-  private static float angle(Point2D_F32 p1, Point2D_F32 c, Point2D_F32 p2) {
-    return (float) (Math.atan2(p2.y - c.y, p2.x - c.x) - Math.atan2(p1.y - c.y, p1.x - c.x));
-  }
-
-  private static float angle(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
-    return angle(skeleton.getPoint(p1), skeleton.getPoint(p2), skeleton.getPoint(p3));
-  }
-
-  private static float min(float f, float g, float h) {
-    return Math.min(f, Math.min(g, h));
-  }
-
-  private static float min(Skeleton skeleton, Skeleton.SkeletonPointName p1, Skeleton.SkeletonPointName p2, Skeleton.SkeletonPointName p3) {
-    return min(skeleton.getWeight(p1), skeleton.getWeight(p2), skeleton.getWeight(p3));
   }
 
 }

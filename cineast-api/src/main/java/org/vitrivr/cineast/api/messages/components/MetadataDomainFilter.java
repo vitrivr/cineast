@@ -14,16 +14,6 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
     Predicate<MediaObjectMetadataDescriptor> {
 
   /**
-   * Test filter to get a keywords list as lowercase to be applied on a {@link MediaObjectMetadataDescriptor}.
-   *
-   * @return boolean
-   */
-  @Override
-  public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
-    return getKeywordsAsListLowercase().contains(mediaObjectMetadataDescriptor.getDomain().toLowerCase());
-  }
-
-  /**
    * Create a metadata domain filter instance for the given keywords.
    *
    * @return {@link MetadataDomainFilter}
@@ -32,6 +22,16 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
     MetadataDomainFilter filter = new MetadataDomainFilter();
     filter.setKeywords(keywords);
     return filter;
+  }
+
+  /**
+   * Test filter to get a keywords list as lowercase to be applied on a {@link MediaObjectMetadataDescriptor}.
+   *
+   * @return boolean
+   */
+  @Override
+  public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
+    return getKeywordsAsListLowercase().contains(mediaObjectMetadataDescriptor.getDomain().toLowerCase());
   }
 
   @Override

@@ -15,11 +15,11 @@ import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. These shingles can be used for cover-song and version identification.

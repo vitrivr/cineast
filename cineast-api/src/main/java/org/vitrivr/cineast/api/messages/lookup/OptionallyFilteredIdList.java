@@ -48,6 +48,11 @@ public class OptionallyFilteredIdList implements Message {
     return filters;
   }
 
+  public void setFilters(
+      AbstractMetadataFilterDescriptor[] filters) {
+    this.filters = Arrays.asList(filters);
+  }
+
   /**
    * Check if the optionally filtered list contains filters.
    *
@@ -58,11 +63,6 @@ public class OptionallyFilteredIdList implements Message {
   @JsonIgnore
   public boolean hasFilters() {
     return filters != null;
-  }
-
-  public void setFilters(
-      AbstractMetadataFilterDescriptor[] filters) {
-    this.filters = Arrays.asList(filters);
   }
 
   /**

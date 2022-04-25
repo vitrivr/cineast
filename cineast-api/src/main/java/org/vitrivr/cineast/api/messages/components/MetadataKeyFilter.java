@@ -14,17 +14,6 @@ public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implemen
     Predicate<MediaObjectMetadataDescriptor> {
 
   /**
-   * Test filter to get a keywords list as lowercase to be applied on a {@link MediaObjectMetadataDescriptor}.
-   *
-   * @return boolean
-   */
-  @Override
-  public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
-    return getKeywordsAsListLowercase()
-        .contains(mediaObjectMetadataDescriptor.getKey().toLowerCase());
-  }
-
-  /**
    * Create a metadata key filter instance for the given keywords.
    *
    * @return {@link MetadataDomainFilter}
@@ -33,6 +22,17 @@ public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implemen
     MetadataKeyFilter filter = new MetadataKeyFilter();
     filter.setKeywords(keywords);
     return filter;
+  }
+
+  /**
+   * Test filter to get a keywords list as lowercase to be applied on a {@link MediaObjectMetadataDescriptor}.
+   *
+   * @return boolean
+   */
+  @Override
+  public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
+    return getKeywordsAsListLowercase()
+        .contains(mediaObjectMetadataDescriptor.getKey().toLowerCase());
   }
 
   @Override

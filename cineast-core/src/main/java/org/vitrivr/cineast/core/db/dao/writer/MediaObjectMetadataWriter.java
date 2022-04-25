@@ -22,7 +22,8 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
   }
 
   @Override
-  protected void init() {}
+  protected void init() {
+  }
 
   @Override
   protected PersistentTuple generateTuple(MediaObjectMetadataDescriptor entity) {

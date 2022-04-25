@@ -26,20 +26,6 @@ public class DominantEdgeGrid16 extends AbstractFeatureModule {
     super("features_DominantEdgeGrid16", 530f / 4f, 16 * 16);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      short[][][] edgeHist = new short[16][16][4];
-      buildEdgeHist(edgeHist, shot.getMostRepresentativeFrame().getImage());
-      short[] dominant = getDominants(edgeHist);
-      FloatVector fv = new FloatVectorImpl(dominant);
-      persist(shot.getId(), fv);
-    }
-  }
-
   static void buildEdgeHist(short[][][] edgeHist, MultiImage img) {
     List<EdgeContour> contourList = EdgeList.getEdgeList(img);
     for (EdgeContour contour : contourList) {
@@ -81,6 +67,20 @@ public class DominantEdgeGrid16 extends AbstractFeatureModule {
       }
     }
     return dominant;
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      short[][][] edgeHist = new short[16][16][4];
+      buildEdgeHist(edgeHist, shot.getMostRepresentativeFrame().getImage());
+      short[] dominant = getDominants(edgeHist);
+      FloatVector fv = new FloatVectorImpl(dominant);
+      persist(shot.getId(), fv);
+    }
   }
 
   @Override

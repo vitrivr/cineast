@@ -7,13 +7,10 @@ import boofcv.struct.feature.BrightFeature;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayF32;
 import java.util.List;
-import java.util.function.Supplier;
 import org.ddogleg.clustering.AssignCluster;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 /**
@@ -28,14 +25,13 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule {
 
   /**
-   * The Assignment used for the codebook.
-   */
-  private AssignCluster<double[]> assignment;
-
-  /**
    * The folder that contains the Codebook(s).
    */
   private static String CODEBOOK_FOLDER = "resources/codebooks/";
+  /**
+   * The Assignment used for the codebook.
+   */
+  private AssignCluster<double[]> assignment;
 
   protected AbstractCodebookFeatureModule(String tableName, float maxDist, int vectorLength) {
     super(tableName, maxDist, vectorLength);

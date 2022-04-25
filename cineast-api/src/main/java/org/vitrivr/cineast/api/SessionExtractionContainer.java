@@ -19,8 +19,8 @@ import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
  */
 public class SessionExtractionContainer {
 
-  private static SessionContainerProvider provider;
   private static final Logger LOGGER = LogManager.getLogger();
+  private static SessionContainerProvider provider;
   private static boolean open = false;
   private static Counter submittedPaths;
   private static File configFile;

@@ -11,6 +11,23 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 public class TemporalTestCases {
 
+  private final MediaSegmentDescriptor descriptor1_1 = new MediaSegmentDescriptor("Test1", "Test1_1", 1, 0, 10, 0f, 10f, true);
+  private final MediaSegmentDescriptor descriptor1_2 = new MediaSegmentDescriptor("Test1", "Test1_2", 2, 10, 20, 10f, 20f, true);
+  private final MediaSegmentDescriptor descriptor1_3 = new MediaSegmentDescriptor("Test1", "Test1_3", 3, 20, 30, 20f, 30f, true);
+  private final MediaSegmentDescriptor descriptor1_4 = new MediaSegmentDescriptor("Test1", "Test1_4", 4, 30, 40, 30f, 40f, true);
+  private final MediaSegmentDescriptor descriptor1_5 = new MediaSegmentDescriptor("Test1", "Test1_5", 5, 40, 50, 40f, 50f, true);
+  private final MediaSegmentDescriptor descriptor1_6 = new MediaSegmentDescriptor("Test1", "Test1_6", 6, 50, 60, 50f, 60f, true);
+  private final MediaSegmentDescriptor descriptor1_7 = new MediaSegmentDescriptor("Test1", "Test1_7", 7, 60, 70, 60f, 70f, true);
+  private final MediaSegmentDescriptor descriptor2_1 = new MediaSegmentDescriptor("Test2", "Test2_1", 1, 0, 10, 0f, 10f, true);
+  private final MediaSegmentDescriptor descriptor2_2 = new MediaSegmentDescriptor("Test2", "Test2_2", 2, 10, 20, 10f, 20f, true);
+  private final MediaSegmentDescriptor descriptor2_3 = new MediaSegmentDescriptor("Test2", "Test2_3", 3, 20, 30, 20f, 30f, true);
+  private final MediaSegmentDescriptor descriptor2_4 = new MediaSegmentDescriptor("Test2", "Test2_4", 4, 30, 40, 30f, 40f, true);
+  private final MediaSegmentDescriptor descriptor2_5 = new MediaSegmentDescriptor("Test2", "Test2_5", 5, 40, 50, 40f, 50f, true);
+  private final MediaSegmentDescriptor descriptor2_6 = new MediaSegmentDescriptor("Test2", "Test2_6", 6, 50, 60, 50f, 60f, true);
+  private final MediaSegmentDescriptor descriptor2_7 = new MediaSegmentDescriptor("Test2", "Test2_7", 7, 60, 70, 60f, 70f, true);
+  private final MediaSegmentDescriptor descriptor3_5 = new MediaSegmentDescriptor("Test3", "Test3_5", 5, 40, 50, 40f, 50f, true);
+  private final MediaSegmentDescriptor descriptor3_6 = new MediaSegmentDescriptor("Test3", "Test3_6", 6, 50, 60, 50f, 60f, true);
+  private final MediaSegmentDescriptor descriptor3_7 = new MediaSegmentDescriptor("Test3", "Test3_7", 7, 60, 70, 60f, 70f, true);
   private Map<String, MediaSegmentDescriptor> segmentMap;
   private List<List<StringDoublePair>> containerResults;
   private float maxLength;
@@ -242,26 +259,6 @@ public class TemporalTestCases {
   public List<TemporalObject> getExpectedResults() {
     return expectedResults;
   }
-
-  private final MediaSegmentDescriptor descriptor1_1 = new MediaSegmentDescriptor("Test1", "Test1_1", 1, 0, 10, 0f, 10f, true);
-  private final MediaSegmentDescriptor descriptor1_2 = new MediaSegmentDescriptor("Test1", "Test1_2", 2, 10, 20, 10f, 20f, true);
-  private final MediaSegmentDescriptor descriptor1_3 = new MediaSegmentDescriptor("Test1", "Test1_3", 3, 20, 30, 20f, 30f, true);
-  private final MediaSegmentDescriptor descriptor1_4 = new MediaSegmentDescriptor("Test1", "Test1_4", 4, 30, 40, 30f, 40f, true);
-  private final MediaSegmentDescriptor descriptor1_5 = new MediaSegmentDescriptor("Test1", "Test1_5", 5, 40, 50, 40f, 50f, true);
-  private final MediaSegmentDescriptor descriptor1_6 = new MediaSegmentDescriptor("Test1", "Test1_6", 6, 50, 60, 50f, 60f, true);
-  private final MediaSegmentDescriptor descriptor1_7 = new MediaSegmentDescriptor("Test1", "Test1_7", 7, 60, 70, 60f, 70f, true);
-
-  private final MediaSegmentDescriptor descriptor2_1 = new MediaSegmentDescriptor("Test2", "Test2_1", 1, 0, 10, 0f, 10f, true);
-  private final MediaSegmentDescriptor descriptor2_2 = new MediaSegmentDescriptor("Test2", "Test2_2", 2, 10, 20, 10f, 20f, true);
-  private final MediaSegmentDescriptor descriptor2_3 = new MediaSegmentDescriptor("Test2", "Test2_3", 3, 20, 30, 20f, 30f, true);
-  private final MediaSegmentDescriptor descriptor2_4 = new MediaSegmentDescriptor("Test2", "Test2_4", 4, 30, 40, 30f, 40f, true);
-  private final MediaSegmentDescriptor descriptor2_5 = new MediaSegmentDescriptor("Test2", "Test2_5", 5, 40, 50, 40f, 50f, true);
-  private final MediaSegmentDescriptor descriptor2_6 = new MediaSegmentDescriptor("Test2", "Test2_6", 6, 50, 60, 50f, 60f, true);
-  private final MediaSegmentDescriptor descriptor2_7 = new MediaSegmentDescriptor("Test2", "Test2_7", 7, 60, 70, 60f, 70f, true);
-
-  private final MediaSegmentDescriptor descriptor3_5 = new MediaSegmentDescriptor("Test3", "Test3_5", 5, 40, 50, 40f, 50f, true);
-  private final MediaSegmentDescriptor descriptor3_6 = new MediaSegmentDescriptor("Test3", "Test3_6", 6, 50, 60, 50f, 60f, true);
-  private final MediaSegmentDescriptor descriptor3_7 = new MediaSegmentDescriptor("Test3", "Test3_7", 7, 60, 70, 60f, 70f, true);
 
   public boolean assertListSame(List<TemporalObject> l1, List<TemporalObject> l2) {
     if (l1.size() == l2.size()) {

@@ -54,19 +54,6 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
     this((color >> 16 & 0xFF), (color >> 8 & 0xFF), (color & 0xFF), (color >> 24 & 0xFF));
   }
 
-  public int toIntColor() {
-    return (b & 0xFF) | ((g & 0xFF) << 8) | ((r & 0xFF) << 16) | (a << 24);
-  }
-
-  @Override
-  public String toString() {
-    return "RGBContainer(" + r + ", " + g + ", " + b + ")";
-  }
-
-  public float getLuminance() {
-    return 0.2126f * r + 0.7152f * g + 0.0722f * b;
-  }
-
   /**
    * http://www.itu.int/rec/R-REC-BT.601
    */
@@ -107,26 +94,6 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
     return (b & 0xFF) | ((g & 0xFF) << 8) | ((r & 0xFF) << 16) | (a << 24);
   }
 
-  @Override
-  public float getElement(int num) {
-    switch (num) {
-      case 0:
-        return r / 255f;
-      case 1:
-        return g / 255f;
-      case 2:
-        return b / 255f;
-      case 3:
-        return a / 255f;
-      default:
-        throw new IndexOutOfBoundsException(num + ">= 4");
-    }
-  }
-
-  public String toFeatureString() {
-    return "<" + r + ", " + g + ", " + b + ">";
-  }
-
   public static ReadableRGBContainer fromColorString(String colorString) {
     if (colorString == null || colorString.length() != 7) {
       return new ReadableRGBContainer(0);
@@ -151,5 +118,38 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
 
     return new ReadableRGBContainer(r, g, b);
 
+  }
+
+  public int toIntColor() {
+    return (b & 0xFF) | ((g & 0xFF) << 8) | ((r & 0xFF) << 16) | (a << 24);
+  }
+
+  @Override
+  public String toString() {
+    return "RGBContainer(" + r + ", " + g + ", " + b + ")";
+  }
+
+  public float getLuminance() {
+    return 0.2126f * r + 0.7152f * g + 0.0722f * b;
+  }
+
+  @Override
+  public float getElement(int num) {
+    switch (num) {
+      case 0:
+        return r / 255f;
+      case 1:
+        return g / 255f;
+      case 2:
+        return b / 255f;
+      case 3:
+        return a / 255f;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 4");
+    }
+  }
+
+  public String toFeatureString() {
+    return "<" + r + ", " + g + ", " + b + ">";
   }
 }

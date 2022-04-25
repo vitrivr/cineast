@@ -10,9 +10,6 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 public class ImageHistogramEqualizer {
 
-  private ImageHistogramEqualizer() {
-  }
-
   private static LoadingCache<MultiImage, MultiImage> cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(new CacheLoader<MultiImage, MultiImage>() {
 
     @Override
@@ -20,6 +17,9 @@ public class ImageHistogramEqualizer {
       return equalizeHistogram(in);
     }
   });
+
+  private ImageHistogramEqualizer() {
+  }
 
   public static MultiImage getEqualized(MultiImage in) {
     try {

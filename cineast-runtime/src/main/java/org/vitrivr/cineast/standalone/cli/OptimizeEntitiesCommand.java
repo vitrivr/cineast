@@ -10,11 +10,6 @@ import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
 @Command(name = "optimize", description = "Optimize all entities for the Cineast schema. This command is only compatible with the Cottontail DB database.")
 public class OptimizeEntitiesCommand implements Runnable {
 
-  @Override
-  public void run() {
-    optimizeAllCottontailEntities();
-  }
-
   public static void optimizeAllCottontailEntities() {
     if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
       System.err.println("Cottontail DB is not both selector & writer in the config. exiting");
@@ -29,5 +24,10 @@ public class OptimizeEntitiesCommand implements Runnable {
       });
       System.out.println("Finished optimizing all entities");
     }
+  }
+
+  @Override
+  public void run() {
+    optimizeAllCottontailEntities();
   }
 }

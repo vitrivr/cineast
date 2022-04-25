@@ -13,54 +13,26 @@ public class VoxelGrid {
    * The default, empty VoxelGrid.
    */
   public static final VoxelGrid EMPTY = new VoxelGrid(5, 5, 5, 0.1f);
-
-  /**
-   * Represents a single Voxel which can either can be visible or invisible.
-   */
-  public enum Voxel {
-    VISIBLE, INVISIBLE
-  }
-
-  /**
-   * Determines the size of a single voxel.
-   */
-  private float resolution;
-
   /**
    * The size of the voxel grid in X direction.
    */
   private final int sizeX;
-
   /**
    * The size of the voxel grid in X direction.
    */
   private final int sizeY;
-
   /**
    * The size of the voxel grid in X direction.
    */
   private final int sizeZ;
-
   /**
    * The total length ot the voxel grid (i.e. the number of voxels in the grid).
    */
   private final int length;
-
-  /**
-   * Number of visible voxels in the grid.
-   */
-  private int visible = 0;
-
-  /**
-   * Number of invisible voxels in the grid.
-   */
-  private int invisible = 0;
-
   /**
    * Array holding the actual voxels.
    */
   private final Voxel[][][] voxelGrid;
-
   /**
    * Defines the center of the voxel-grid (in the world coordinate system). It corresponds to the center of the voxel at (sizeX/2, sizeY/2, sizeZ/2).
    *
@@ -68,6 +40,18 @@ public class VoxelGrid {
    * <p>Important: </p> Transformation into world coordinates are based on this center!
    */
   private final Vector3f center = new Vector3f(0f, 0f, 0f);
+  /**
+   * Determines the size of a single voxel.
+   */
+  private float resolution;
+  /**
+   * Number of visible voxels in the grid.
+   */
+  private int visible = 0;
+  /**
+   * Number of invisible voxels in the grid.
+   */
+  private int invisible = 0;
 
   /**
    * Default constructor: Initializes a new, fully active Voxel-Grid
@@ -282,5 +266,12 @@ public class VoxelGrid {
     }
     buffer.append("]");
     return buffer.toString();
+  }
+
+  /**
+   * Represents a single Voxel which can either can be visible or invisible.
+   */
+  public enum Voxel {
+    VISIBLE, INVISIBLE
   }
 }

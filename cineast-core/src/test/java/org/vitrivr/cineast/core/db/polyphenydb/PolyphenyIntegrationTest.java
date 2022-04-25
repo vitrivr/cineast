@@ -30,7 +30,7 @@ public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatemen
    */
   @Override
   protected void createTables() {
-    final HashMap<String,String > hints = new HashMap<>();
+    final HashMap<String, String> hints = new HashMap<>();
     hints.put("pk", "true");
     this.ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
     this.ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));

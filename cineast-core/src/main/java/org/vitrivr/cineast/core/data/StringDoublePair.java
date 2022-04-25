@@ -4,15 +4,6 @@ import java.util.Comparator;
 
 public class StringDoublePair extends DoublePair<String> {
 
-  @Override
-  public String toString() {
-    return "StringDoublePair(" + key + ", " + value + ")";
-  }
-
-  public StringDoublePair(String k, double v) {
-    super(k, v);
-  }
-
   public static final Comparator<StringDoublePair> COMPARATOR = new Comparator<StringDoublePair>() {
 
     @Override
@@ -21,5 +12,14 @@ public class StringDoublePair extends DoublePair<String> {
     }
 
   };
+
+  public StringDoublePair(String k, double v) {
+    super(k, v);
+  }
+
+  @Override
+  public String toString() {
+    return "StringDoublePair(" + key + ", " + value + ")";
+  }
 
 }

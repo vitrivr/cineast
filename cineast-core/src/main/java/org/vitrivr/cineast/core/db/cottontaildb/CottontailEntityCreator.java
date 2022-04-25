@@ -47,6 +47,34 @@ public final class CottontailEntityCreator implements EntityCreator {
     init();
   }
 
+  public static Type mapAttributeType(AttributeDefinition.AttributeType type) {
+    switch (type) {
+      case BOOLEAN:
+        return Type.BOOLEAN;
+      case DOUBLE:
+        return Type.DOUBLE;
+      case VECTOR:
+        return Type.FLOAT_VECTOR;
+      case BITSET:
+        return Type.BOOLEAN_VECTOR;
+      case FLOAT:
+        return Type.FLOAT;
+      /*case GEOGRAPHY:
+        return Type.GEOGRAPHY;
+      case GEOMETRY:
+        return Type.GEOMETRY;*/
+      case INT:
+        return Type.INTEGER;
+      case LONG:
+        return Type.LONG;
+      case STRING:
+      case TEXT:
+        return Type.STRING;
+      default:
+        throw new RuntimeException("type " + type + " has no matching analogue in Cottontail DB");
+    }
+  }
+
   /**
    * Makes sure that schema 'cineast' is available.
    */
@@ -203,7 +231,6 @@ public final class CottontailEntityCreator implements EntityCreator {
     }
   }
 
-
   @Override
   public boolean createFeatureEntity(String featureEntityName, boolean unique, int length, String... featureNames) {
     final AttributeDefinition[] attributes = Arrays.stream(featureNames)
@@ -328,35 +355,6 @@ public final class CottontailEntityCreator implements EntityCreator {
   public void close() {
     this.cottontail.close();
   }
-
-  public static Type mapAttributeType(AttributeDefinition.AttributeType type) {
-    switch (type) {
-      case BOOLEAN:
-        return Type.BOOLEAN;
-      case DOUBLE:
-        return Type.DOUBLE;
-      case VECTOR:
-        return Type.FLOAT_VECTOR;
-      case BITSET:
-        return Type.BOOLEAN_VECTOR;
-      case FLOAT:
-        return Type.FLOAT;
-      /*case GEOGRAPHY:
-        return Type.GEOGRAPHY;
-      case GEOMETRY:
-        return Type.GEOMETRY;*/
-      case INT:
-        return Type.INTEGER;
-      case LONG:
-        return Type.LONG;
-      case STRING:
-      case TEXT:
-        return Type.STRING;
-      default:
-        throw new RuntimeException("type " + type + " has no matching analogue in Cottontail DB");
-    }
-  }
-
 
   private boolean createIndex(String entityName, String attribute, IndexType type, long txId) {
     var fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;

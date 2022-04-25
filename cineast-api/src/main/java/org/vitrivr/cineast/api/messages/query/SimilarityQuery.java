@@ -20,8 +20,8 @@ public class SimilarityQuery extends Query {
   /**
    * Constructor for the SimilarityQuery object.
    *
-   * @param terms List of {@link QueryTerm}s.
-   * @param config     The {@link ReadableQueryConfig}. May be null!
+   * @param terms  List of {@link QueryTerm}s.
+   * @param config The {@link ReadableQueryConfig}. May be null!
    */
   @JsonCreator
   public SimilarityQuery(@JsonProperty(value = "terms", required = true) List<QueryTerm> terms, @JsonProperty(value = "config") QueryConfig config) {

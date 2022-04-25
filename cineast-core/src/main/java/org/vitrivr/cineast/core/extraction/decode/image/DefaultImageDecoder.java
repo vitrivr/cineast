@@ -33,17 +33,14 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
    * HashSet containing all the mime-types supported by this ImageDecoder instance.
    */
   private static final Set<String> supportedFiles = Set.of(ImageIO.getReaderMIMETypes());
-
-  /**
-   * Bounds used to rescale the image.
-   */
-  private int rescale_bounds = CONFIG_BOUNDS_DEFAULT;
-
   /**
    * Flag indicating whether or not the Decoder is done decoding and the content has been obtained.
    */
   private final AtomicBoolean complete = new AtomicBoolean(false);
-
+  /**
+   * Bounds used to rescale the image.
+   */
+  private int rescale_bounds = CONFIG_BOUNDS_DEFAULT;
   /**
    * Path to the input file.
    */

@@ -19,7 +19,7 @@ public class QueryStage {
   /**
    * Constructor for the QueryStage object.
    *
-   * @param terms  List of {@link QueryTerm}s.
+   * @param terms List of {@link QueryTerm}s.
    */
   @JsonCreator
   public QueryStage(@JsonProperty(value = "terms", required = true) List<QueryTerm> terms) {

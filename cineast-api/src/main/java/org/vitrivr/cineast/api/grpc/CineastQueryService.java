@@ -37,10 +37,8 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
   private static final int DEFAULT_NEIGHBORING_SEGMENTS = 10;
-
-  private final ContinuousRetrievalLogic continuousRetrievalLogic;
-
   private static final Logger LOGGER = LogManager.getLogger();
+  private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
   public CineastQueryService(ContinuousRetrievalLogic continuousRetrievalLogic) {
     this.continuousRetrievalLogic = continuousRetrievalLogic;

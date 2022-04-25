@@ -12,11 +12,6 @@ public class BitSetTypeProvider implements PrimitiveTypeProvider {
     this.value = value;
   }
 
-  public BitSet getValue() {
-    return value;
-  }
-
-
   public static BitSetTypeProvider fromBooleanList(List<Boolean> list) {
     final BitSet bitSet = new BitSet(list.size());
     for (int i = 0; i < list.size(); i++) {
@@ -38,6 +33,10 @@ public class BitSetTypeProvider implements PrimitiveTypeProvider {
     final BitSet bitSet = new BitSet(64); //TODO We assume fixed size here
     Arrays.stream(raw.split(",")).forEach(el -> bitSet.set(Integer.parseInt(el)));
     return new BitSetTypeProvider(bitSet);
+  }
+
+  public BitSet getValue() {
+    return value;
   }
 
   @Override

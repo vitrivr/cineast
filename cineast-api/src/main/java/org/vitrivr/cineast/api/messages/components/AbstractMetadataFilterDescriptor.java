@@ -82,13 +82,13 @@ public abstract class AbstractMetadataFilterDescriptor implements
   }
 
   @JsonIgnore
-  public String[] getKeywordsAsArray() {
-    return keywords.toArray(new String[0]);
+  public void setKeywords(String[] keywords) {
+    this.keywords = Arrays.asList(keywords);
   }
 
   @JsonIgnore
-  public void setKeywords(String[] keywords) {
-    this.keywords = Arrays.asList(keywords);
+  public String[] getKeywordsAsArray() {
+    return keywords.toArray(new String[0]);
   }
 
   @JsonIgnore

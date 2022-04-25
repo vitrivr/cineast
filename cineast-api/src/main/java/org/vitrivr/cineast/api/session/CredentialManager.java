@@ -16,12 +16,8 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class CredentialManager {
 
-  private CredentialManager() {
-  }
-
   private static final Logger LOGGER = LogManager.getLogger();
   private static final File storedUserFile = new File("users"); //TODO move to config
-
   private static HashMap<String, User> userMap = new HashMap<>();
 
   static {
@@ -37,6 +33,9 @@ public class CredentialManager {
       }
 
     }
+  }
+
+  private CredentialManager() {
   }
 
   public static SessionType authenticate(Credentials credentials) {

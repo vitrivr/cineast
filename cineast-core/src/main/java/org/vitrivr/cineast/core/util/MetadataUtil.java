@@ -15,13 +15,11 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 public final class MetadataUtil {
 
-  private MetadataUtil() {
-  }
-
   private static final String JSON_EXTENSION = "json";
-
   private static final Logger logger = LogManager.getLogger();
   private static final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
+  private MetadataUtil() {
+  }
 
   /**
    * Reads the {@link Metadata} from the given {@link Path} and returns the first {@link Directory} of the specified type, if present.

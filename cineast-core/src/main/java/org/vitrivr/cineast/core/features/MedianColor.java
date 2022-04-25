@@ -23,10 +23,6 @@ public class MedianColor extends AbstractFeatureModule {
     super("features_MedianColor", 196f / 4f, 3);
   }
 
-  protected LabContainer getMedian(MedianImgProvider provider) {
-    return getMedian(provider.getMedianImg());
-  }
-
   public static LabContainer getMedian(MultiImage img) {
     int[] r = new int[256], g = new int[256], b = new int[256];
     int[] colors = img.getColors();
@@ -56,6 +52,10 @@ public class MedianColor extends AbstractFeatureModule {
       }
     }
     return pos_l;
+  }
+
+  protected LabContainer getMedian(MedianImgProvider provider) {
+    return getMedian(provider.getMedianImg());
   }
 
   @Override

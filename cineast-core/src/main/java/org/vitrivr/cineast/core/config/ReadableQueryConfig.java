@@ -13,23 +13,8 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 public class ReadableQueryConfig {
 
   private static final int DEFAULT_RESULTS_PER_MODULE = 250;
-
-  /**
-   * Possible distance functions that can be configured in the {@link QueryConfig}. It's up to the implementing selector to support these distances and / or provide fallback options.
-   */
-  public enum Distance {
-    chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm, haversine
-  }
-
-  /**
-   * List of Query-Hints that can be configured in the {@link QueryConfig}. It's up to the implementing selector to actually consider these hints.
-   */
-  public enum Hints {
-    exact, /* Only exact lookup methods should be considered. */
-    inexact, /* Inexact lookup methods can be used as well. */
-    lsh, ecp, mi, pq, sh, va, vaf, vav, sequential, empirical
-  }
-
+  protected final Set<Hints> hints;
+  protected final Set<String> relevantSegmentIds = new HashSet<>();
   private final String queryId;
   protected Distance distance = null;
   protected float[] distanceWeights = null;
@@ -37,9 +22,6 @@ public class ReadableQueryConfig {
   protected CorrespondenceFunction correspondence = null;
   protected int resultsPerModule = -1;
   protected Optional<Integer> maxResults = Optional.empty();
-  protected final Set<Hints> hints;
-  protected final Set<String> relevantSegmentIds = new HashSet<>();
-
   /**
    * Constructor used to parse a {@link ReadableQueryConfig} from JSON.
    *
@@ -50,14 +32,13 @@ public class ReadableQueryConfig {
   public ReadableQueryConfig(@JsonProperty(value = "queryId", required = false) String queryId,
       @JsonProperty(value = "hints", required = false) List<Hints> hints) {
 
-    this.queryId = queryId == null? UUID.randomUUID().toString() : queryId;
+    this.queryId = queryId == null ? UUID.randomUUID().toString() : queryId;
     if (hints != null) {
       this.hints = new HashSet<>(hints);
     } else {
       this.hints = new HashSet<>();
     }
   }
-
   /**
    * Constructor used to create a {@link ReadableQueryConfig} from another {@link ReadableQueryConfig}.
    *
@@ -70,7 +51,7 @@ public class ReadableQueryConfig {
   /**
    * Internal constructor used to create a {@link ReadableQueryConfig} from another {@link ReadableQueryConfig}.
    *
-   * @param qc   The {@link ReadableQueryConfig} that should be used. May be null.
+   * @param qc      The {@link ReadableQueryConfig} that should be used. May be null.
    * @param queryId The queryId for the new {@link ReadableQueryConfig}. If null, a new UUID will be created.
    */
   protected ReadableQueryConfig(ReadableQueryConfig qc, String queryId) {
@@ -118,7 +99,6 @@ public class ReadableQueryConfig {
   public Optional<Float> getNorm() {
     return Optional.ofNullable(Float.isNaN(norm) ? null : norm);
   }
-
 
   public Optional<CorrespondenceFunction> getCorrespondenceFunction() {
     return Optional.ofNullable(this.correspondence);
@@ -174,5 +154,21 @@ public class ReadableQueryConfig {
 
     return _return;
 
+  }
+
+  /**
+   * Possible distance functions that can be configured in the {@link QueryConfig}. It's up to the implementing selector to support these distances and / or provide fallback options.
+   */
+  public enum Distance {
+    chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm, haversine
+  }
+
+  /**
+   * List of Query-Hints that can be configured in the {@link QueryConfig}. It's up to the implementing selector to actually consider these hints.
+   */
+  public enum Hints {
+    exact, /* Only exact lookup methods should be considered. */
+    inexact, /* Inexact lookup methods can be used as well. */
+    lsh, ecp, mi, pq, sh, va, vaf, vav, sequential, empirical
   }
 }

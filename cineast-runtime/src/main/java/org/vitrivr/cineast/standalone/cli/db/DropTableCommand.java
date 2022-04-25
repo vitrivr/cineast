@@ -17,11 +17,6 @@ public class DropTableCommand implements Runnable {
   @Required
   private String tableName;
 
-  @Override
-  public void run() {
-    dropTable(tableName);
-  }
-
   public static void dropTable(String tableName) {
     final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
@@ -32,5 +27,10 @@ public class DropTableCommand implements Runnable {
       /* Closes the EntityCreator. */
       ec.close();
     }
+  }
+
+  @Override
+  public void run() {
+    dropTable(tableName);
   }
 }

@@ -26,16 +26,6 @@ public class EdgeARP88 extends AbstractFeatureModule {
     super("features_EdgeARP88", 31f / 4f, 64);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));
-    }
-  }
-
   private static FloatVector getEdges(MultiImage img) {
     SummaryStatistics[] stats = new SummaryStatistics[64];
     for (int i = 0; i < 64; ++i) {
@@ -58,6 +48,16 @@ public class EdgeARP88 extends AbstractFeatureModule {
     }
 
     return new FloatVectorImpl(f);
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));
+    }
   }
 
   @Override

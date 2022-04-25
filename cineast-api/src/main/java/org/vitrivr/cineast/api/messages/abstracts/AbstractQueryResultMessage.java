@@ -11,11 +11,9 @@ import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
  */
 public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
 
-  private List<T> content;
-
   private final Class<T> contentType;
-
   private final String queryId;
+  private List<T> content;
 
   /**
    * Constructor for the AbstractQueryResultMessage object.

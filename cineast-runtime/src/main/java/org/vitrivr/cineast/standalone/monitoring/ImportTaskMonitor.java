@@ -9,11 +9,11 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class ImportTaskMonitor {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private static boolean initalized = false;
   private static Summary executionTime;
   private static Summary batchImportTime;
   private static Gauge importProgress;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public static void init() {
     if (initalized) {

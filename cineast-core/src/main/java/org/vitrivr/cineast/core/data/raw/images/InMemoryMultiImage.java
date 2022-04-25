@@ -16,34 +16,29 @@ import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 public class InMemoryMultiImage implements MultiImage {
 
   /**
-   * Thumbnail image. This reference will remain in memory as long as {@link InMemoryMultiImage} does.
-   */
-  private SoftReference<BufferedImage> thumb;
-
-  /**
-   * Reference to the colors array of the image.
-   */
-  private int[] colors;
-
-  /**
    * The width of the cached {@link MultiImage}.
    */
   private final int width;
-
   /**
    * The height of the cached {@link MultiImage}.
    */
   private final int height;
-
   /**
    * The height of the cached {@link MultiImage}.
    */
   private final int type;
-
   /**
    * Reference to the {@link CachedDataFactory} that created this {@link InMemoryMultiImage}.
    */
   private final CachedDataFactory factory;
+  /**
+   * Thumbnail image. This reference will remain in memory as long as {@link InMemoryMultiImage} does.
+   */
+  private SoftReference<BufferedImage> thumb;
+  /**
+   * Reference to the colors array of the image.
+   */
+  private int[] colors;
 
   /**
    * Constructor for {@link InMemoryMultiImage}.

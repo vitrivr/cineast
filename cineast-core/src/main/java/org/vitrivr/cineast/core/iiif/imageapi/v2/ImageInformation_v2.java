@@ -132,6 +132,14 @@ public class ImageInformation_v2 implements ImageInformation {
     return null;
   }
 
+  /**
+   * A list of profiles, indicated by either a URI or an object describing the features supported. The first entry in the list must be a compliance level URI.
+   */
+  @JsonProperty(required = true)
+  public void setProfile(Object profile) {
+    this.profile = profile;
+  }
+
   private LinkedHashMap<String, ArrayList<String>> parseProfileSpec(Object profileSpec) {
     if (profileSpec instanceof LinkedHashMap<?, ?>) {
       var parsed = new LinkedHashMap<String, ArrayList<String>>();
@@ -148,14 +156,6 @@ public class ImageInformation_v2 implements ImageInformation {
     }
 
     return null;
-  }
-
-  /**
-   * A list of profiles, indicated by either a URI or an object describing the features supported. The first entry in the list must be a compliance level URI.
-   */
-  @JsonProperty(required = true)
-  public void setProfile(Object profile) {
-    this.profile = profile;
   }
 
   @Override

@@ -23,13 +23,6 @@ public final class SubtitleDecoderFactory {
    *
    */
   private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
-   * Private constructor for this class cannot be instantiated.
-   */
-  private SubtitleDecoderFactory() {
-  }
-
   /**
    * Map of the different subtitle file suffices and the associated {@link SubTitleDecoder} decoder instances.
    */
@@ -38,6 +31,12 @@ public final class SubtitleDecoderFactory {
   static {
     registerSubtitleDecoder(".srt", SRTSubTitleDecoder.class);
     registerSubtitleDecoder(".cc", CCSubTitleDecoder.class);
+  }
+
+  /**
+   * Private constructor for this class cannot be instantiated.
+   */
+  private SubtitleDecoderFactory() {
   }
 
   /**

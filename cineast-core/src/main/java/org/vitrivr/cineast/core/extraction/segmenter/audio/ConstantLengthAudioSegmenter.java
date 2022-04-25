@@ -44,27 +44,22 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
 
   private static final int SEGMENT_QUEUE_LENGTH = 10;
   private static final int SEGMENT_POLLING_TIMEOUT = 1000;
-
-  /**
-   * Decoder<AudioFrame> used for file decoding.
-   */
-  private Decoder<AudioFrame> decoder;
-
   /**
    * A LinkedBlockingQueue used that holds the resulting AudioSegments.
    */
   private final LinkedBlockingQueue<SegmentContainer> outputQueue = new LinkedBlockingQueue<SegmentContainer>(SEGMENT_QUEUE_LENGTH);
-
   /**
    * The length in AudioFrames of a resulting AudioSegment.
    */
   private final float length;
-
   /**
    * Length of the overlap between two segments in seconds.
    */
   private final float overlap;
-
+  /**
+   * Decoder<AudioFrame> used for file decoding.
+   */
+  private Decoder<AudioFrame> decoder;
   /**
    * AudioSegment that is currently filled with AudioFrames.
    */

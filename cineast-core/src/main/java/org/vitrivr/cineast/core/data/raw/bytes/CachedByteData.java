@@ -30,22 +30,18 @@ public class CachedByteData implements ByteData {
    * Logger instance used to log errors.
    */
   private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
-   * Reference to the {@link CachedDataFactory} that created this {@link CachedMultiImage}.
-   */
-  private final CachedDataFactory factory;
-
   /**
    * The file that backs this {@link CachedByteData} object.
    */
   protected final Path path;
-
   /**
    * Size of the {@link CachedByteData}. Because the reference to the underlying data is volatile, this value is stored separately.
    */
   protected final int size;
-
+  /**
+   * Reference to the {@link CachedDataFactory} that created this {@link CachedMultiImage}.
+   */
+  private final CachedDataFactory factory;
   /**
    * ByteBuffer holding the raw data.
    */

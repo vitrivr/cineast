@@ -13,75 +13,25 @@ import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 public class SpectralWhiteningFilter implements FrequencyDomainFilterInterface {
 
   /**
-   * Represents a filter-band Hb with a triangular response.
-   */
-  public class FilterBand {
-
-    /**
-     * Index of the lowest band-frequency (cut-off) in the provided FFT bin array.
-     */
-    private final int lowerBandIndex;
-
-    /**
-     * Center-frequency of the band.
-     */
-    private final int centerBandIndex;
-
-    /**
-     * Index of the highest band-frequency (cut-off) in the provided FFT bin array.
-     */
-    private final int upperBandIndex;
-
-    /**
-     * Triangular weights in the filter band.
-     */
-    private float[] weights;
-
-    /**
-     * Constructor for filter band.
-     *
-     * @param bandindex Index of the filter band.
-     */
-    private FilterBand(int bandindex) {
-      this.lowerBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex - 1], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
-      this.centerBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
-      this.upperBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex + 1], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
-
-      int length = upperBandIndex - lowerBandIndex + 1;
-
-      this.weights = new float[length];
-      for (int i = 0; i < weights.length; i++) {
-        weights[i] = 1.0f - Math.abs((float) (centerBandIndex - (lowerBandIndex + i)) / (float) (length));
-      }
-    }
-  }
-
-
-  /**
    * Size of the FFT window.
    */
   private final int windowsize;
-
   /**
    * Rate at which the original signal has been sampled.
    */
   private final float samplingrate;
-
   /**
    * Amount of spectral whitening between 0.0 and 1.0 that is applied to a FFT.
    */
   private final float amount;
-
   /**
    * Number of filter-bands to use.
    */
   private final int bands;
-
   /**
    * Center-frequencies in the critical bands.
    */
   private float[] centerfrequencies;
-
   /**
    * Array holding the FilterBands.
    */
@@ -160,5 +110,49 @@ public class SpectralWhiteningFilter implements FrequencyDomainFilterInterface {
       }
     }
     return fftbins;
+  }
+
+  /**
+   * Represents a filter-band Hb with a triangular response.
+   */
+  public class FilterBand {
+
+    /**
+     * Index of the lowest band-frequency (cut-off) in the provided FFT bin array.
+     */
+    private final int lowerBandIndex;
+
+    /**
+     * Center-frequency of the band.
+     */
+    private final int centerBandIndex;
+
+    /**
+     * Index of the highest band-frequency (cut-off) in the provided FFT bin array.
+     */
+    private final int upperBandIndex;
+
+    /**
+     * Triangular weights in the filter band.
+     */
+    private float[] weights;
+
+    /**
+     * Constructor for filter band.
+     *
+     * @param bandindex Index of the filter band.
+     */
+    private FilterBand(int bandindex) {
+      this.lowerBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex - 1], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
+      this.centerBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
+      this.upperBandIndex = FFTUtil.binIndex(SpectralWhiteningFilter.this.centerfrequencies[bandindex + 1], SpectralWhiteningFilter.this.windowsize, SpectralWhiteningFilter.this.samplingrate);
+
+      int length = upperBandIndex - lowerBandIndex + 1;
+
+      this.weights = new float[length];
+      for (int i = 0; i < weights.length; i++) {
+        weights[i] = 1.0f - Math.abs((float) (centerBandIndex - (lowerBandIndex + i)) / (float) (length));
+      }
+    }
   }
 }

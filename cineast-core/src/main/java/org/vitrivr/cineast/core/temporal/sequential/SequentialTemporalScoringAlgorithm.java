@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.temporal.sequential;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.procedure.TObjectProcedure;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;

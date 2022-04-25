@@ -34,11 +34,6 @@ public class QueryTerm {
    */
   private AbstractQueryTermContainer cachedQueryTermContainer;
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
-
   /**
    * Constructor for the QueryTerm object.
    *
@@ -53,6 +48,11 @@ public class QueryTerm {
     this.type = type;
     this.categories = categories;
     this.data = data;
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
   /**

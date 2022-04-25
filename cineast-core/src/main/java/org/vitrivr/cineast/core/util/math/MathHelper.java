@@ -4,11 +4,10 @@ import java.util.Arrays;
 
 public class MathHelper {
 
-  private MathHelper() {
-  }
-
   public static final double SQRT2 = Math.sqrt(2);
   public static final float SQRT2_f = (float) SQRT2;
+  private MathHelper() {
+  }
 
   public static double getScore(double dist, double maxDist) {
     if (Double.isNaN(dist) || Double.isNaN(maxDist)) {
@@ -226,26 +225,6 @@ public class MathHelper {
     return new ArgMaxResult(maxIndex, params[maxIndex]);
   }
 
-
-  public static class ArgMaxResult {
-
-    private int index;
-    private double maxValue;
-
-    public ArgMaxResult(int index, double maxValue) {
-      this.index = index;
-      this.maxValue = maxValue;
-    }
-
-    public int getIndex() {
-      return index;
-    }
-
-    public double getMaxValue() {
-      return maxValue;
-    }
-  }
-
   //based on https://jonisalonen.com/2012/converting-decimal-numbers-to-ratios/
   public static int[] toFraction(double d) {
     if (d < 0) {
@@ -278,5 +257,24 @@ public class MathHelper {
       _result += arr[i];
     }
     return _result;
+  }
+
+  public static class ArgMaxResult {
+
+    private int index;
+    private double maxValue;
+
+    public ArgMaxResult(int index, double maxValue) {
+      this.index = index;
+      this.maxValue = maxValue;
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
+    public double getMaxValue() {
+      return maxValue;
+    }
   }
 }

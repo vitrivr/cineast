@@ -36,6 +36,14 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     this.selector.open(tableName);
   }
 
+  public static List<String> sanitizeIds(List<String> ids) {
+    if (ids.stream().anyMatch(el -> el == null || el.isEmpty())) {
+      LOGGER.warn("provided id-list contains null or empty elements which will be ignored");
+      ids = ids.stream().filter(el -> el != null && !el.isEmpty()).collect(Collectors.toList());
+    }
+    return ids;
+  }
+
   abstract R resultToDescriptor(Map<String, PrimitiveTypeProvider> result) throws DatabaseLookupException;
 
   public List<R> lookupMultimediaMetadata(String id) {
@@ -158,14 +166,6 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       }
     });
     return list;
-  }
-
-  public static List<String> sanitizeIds(List<String> ids) {
-    if (ids.stream().anyMatch(el -> el == null || el.isEmpty())) {
-      LOGGER.warn("provided id-list contains null or empty elements which will be ignored");
-      ids = ids.stream().filter(el -> el != null && !el.isEmpty()).collect(Collectors.toList());
-    }
-    return ids;
   }
 
 }

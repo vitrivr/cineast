@@ -44,6 +44,17 @@ public final class APIConfig {
    * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
    */
   private boolean objectsFilesAreIDed = false;
+  /**
+   * A hack to use mp4 for object servings
+   */
+  private String videoExtension = "mp4";
+  private boolean serveUI = false;
+  private String thumbnailLocation = "";
+  private String objectLocation = "";
+  private String uiLocation = "";
+  @JsonCreator
+  public APIConfig() {
+  }
 
   @JsonProperty
   public String getVideoExtension() {
@@ -53,22 +64,6 @@ public final class APIConfig {
   @JsonProperty
   public void setVideoExtension(String videoExtension) {
     this.videoExtension = videoExtension;
-  }
-
-  /**
-   * A hack to use mp4 for object servings
-   */
-  private String videoExtension = "mp4";
-
-
-  private boolean serveUI = false;
-  private String thumbnailLocation = "";
-  private String objectLocation = "";
-  private String uiLocation = "";
-
-
-  @JsonCreator
-  public APIConfig() {
   }
 
   @JsonProperty

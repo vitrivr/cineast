@@ -13,12 +13,9 @@ import org.vitrivr.cineast.core.data.Pair;
  */
 public class MultiTracker {
 
-  public enum TRACKER_TYPE {CIRCULANT, TLD}
-
   List<TrackerObjectQuad<GrayU8>> trackers;
   List<Quadrilateral_F64> coordinates;
   GrayU8 initialFrame;
-
   /**
    * @param frame       The initialization frame
    * @param coordinates The coordinates within the initialization frame it should track
@@ -82,4 +79,6 @@ public class MultiTracker {
     }
     return result;
   }
+
+  public enum TRACKER_TYPE {CIRCULANT, TLD}
 }

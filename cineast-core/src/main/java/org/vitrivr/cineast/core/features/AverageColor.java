@@ -15,11 +15,11 @@ import org.vitrivr.cineast.core.util.ColorUtils;
 
 public class AverageColor extends AbstractFeatureModule {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   public AverageColor() {
     super("features_AverageColor", 196f / 4f, 3);
   }
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public static ReadableLabContainer getAvg(MultiImage img) {
     int avg = ColorUtils.getAvg(img.getColors());

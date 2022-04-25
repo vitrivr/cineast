@@ -44,24 +44,31 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBIntegrationTest<R> {
 
-  protected DBSelector selector;
-  protected String testTextTableName;
-  protected String testVectorTableName;
-  protected PersistencyWriter<R> writer;
-  protected EntityCreator ec;
-  protected QueryConfig queryConfig;
   protected static final String ID_COL_NAME = "id";
   protected static final int VECTOR_ELEMENT_COUNT = 110;
   protected static final int MAX_VECTOR_ID = VECTOR_ELEMENT_COUNT - 1;
   protected static final int TEXT_ELEMENT_COUNT = 8;
   protected static final int MAX_TEXT_ID = TEXT_ELEMENT_COUNT - 1;
+  private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
+  private static final int HELLA_WORLD_ID = MAX_TEXT_ID - 6;
+  private static final int SINGLE_ID = MAX_TEXT_ID - 5;
+  private static final int DOUBLE_ID = MAX_TEXT_ID - 4;
+  private static final int DUPLICATE_ID = MAX_TEXT_ID - 4;
+  private static final int HELLO_ID = MAX_TEXT_ID - 3;
+  private static final int WORLD_ID = MAX_TEXT_ID - 2;
+  private static final int HELLO_WORLD_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
   /**
    * This is not called "feature" by design as it avoid the storage-layers doing optimization by col name
    */
   protected static final String FEATURE_VECTOR_COL_NAME = "vector";
   protected static final String TEXT_COL_NAME = "text";
   protected static final Logger LOGGER = LogManager.getLogger();
-
+  protected DBSelector selector;
+  protected String testTextTableName;
+  protected String testVectorTableName;
+  protected PersistencyWriter<R> writer;
+  protected EntityCreator ec;
+  protected QueryConfig queryConfig;
   private IntegrationDBProvider<R> provider;
 
   @BeforeAll
@@ -106,15 +113,6 @@ public abstract class DBIntegrationTest<R> {
   }
 
   protected abstract IntegrationDBProvider<R> provider();
-
-  private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
-  private static final int HELLA_WORLD_ID = MAX_TEXT_ID - 6;
-  private static final int SINGLE_ID = MAX_TEXT_ID - 5;
-  private static final int DOUBLE_ID = MAX_TEXT_ID - 4;
-  private static final int DUPLICATE_ID = MAX_TEXT_ID - 4;
-  private static final int HELLO_ID = MAX_TEXT_ID - 3;
-  private static final int WORLD_ID = MAX_TEXT_ID - 2;
-  private static final int HELLO_WORLD_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
 
   protected void fillTextData() {
     writer.open(testTextTableName);

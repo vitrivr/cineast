@@ -20,24 +20,20 @@ import org.vitrivr.cineast.core.db.DBSelector;
 
 public class TagReader implements Closeable {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  private static boolean initialized = false;
-  private final DBSelector selector;
-
   /**
    * Name of the entity that contains the {@link Tag}s.
    */
   public static final String TAG_ENTITY_NAME = "cineast_tags";
-
   public static final String TAG_ID_COLUMNNAME = "id";
   public static final String TAG_NAME_COLUMNNAME = "name";
   public static final String TAG_DESCRIPTION_COLUMNNAME = "description";
-
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * A map containing cached {@link Tag}s.
    */
   private final static HashMap<String, Tag> tagCache = new HashMap<>();
+  private static boolean initialized = false;
+  private final DBSelector selector;
 
   /**
    * Constructor for {@link TagReader}
@@ -53,6 +49,51 @@ public class TagReader implements Closeable {
 
     this.selector.open(TAG_ENTITY_NAME);
     TagReader.initCache(selector);
+  }
+
+  /**
+   * Returns a list of all {@link Tag}s contained in the database.
+   * <p>
+   *
+   * @return List of all {@link Tag}s contained in the database
+   */
+  public static List<Tag> getAll(DBSelector selector) {
+    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
+  }
+
+  public static synchronized void initCache(DBSelector selector) {
+    if (initialized) {
+      return;
+    }
+    StopWatch watch = StopWatch.createStarted();
+    if (selector.existsEntity(TAG_ENTITY_NAME)) {
+      List<Tag> all = getAll(selector);
+      for (Tag tag : all) {
+        tagCache.put(tag.getId(), tag);
+      }
+    }
+    initialized = true;
+    watch.stop();
+    LOGGER.debug("Tag Reader initialized in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+  }
+
+  private static Tag fromMap(Map<String, PrimitiveTypeProvider> map) {
+    if (map == null || map.isEmpty()) {
+      return null;
+    }
+
+    if (!map.containsKey(TAG_ID_COLUMNNAME) || !map.containsKey(TAG_NAME_COLUMNNAME)) {
+      return null;
+    }
+
+    if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
+
+    } else {
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
+          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
+    }
+
   }
 
   /**
@@ -136,38 +177,12 @@ public class TagReader implements Closeable {
   }
 
   /**
-   * Returns a list of all {@link Tag}s contained in the database.
-   * <p>
-   *
-   * @return List of all {@link Tag}s contained in the database
-   */
-  public static List<Tag> getAll(DBSelector selector) {
-    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
-  }
-
-  /**
    * Returns a list of all cached {@link Tag}s.
    *
    * @return List of all {@link Tag}s contained in the cache.
    */
   public List<Tag> getAllCached() {
     return new ArrayList<>(tagCache.values());
-  }
-
-  public static synchronized void initCache(DBSelector selector) {
-    if (initialized) {
-      return;
-    }
-    StopWatch watch = StopWatch.createStarted();
-    if (selector.existsEntity(TAG_ENTITY_NAME)) {
-      List<Tag> all = getAll(selector);
-      for (Tag tag : all) {
-        tagCache.put(tag.getId(), tag);
-      }
-    }
-    initialized = true;
-    watch.stop();
-    LOGGER.debug("Tag Reader initialized in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
   }
 
   public void flushCache() {
@@ -186,25 +201,6 @@ public class TagReader implements Closeable {
       }
     }
     return _return;
-  }
-
-  private static Tag fromMap(Map<String, PrimitiveTypeProvider> map) {
-    if (map == null || map.isEmpty()) {
-      return null;
-    }
-
-    if (!map.containsKey(TAG_ID_COLUMNNAME) || !map.containsKey(TAG_NAME_COLUMNNAME)) {
-      return null;
-    }
-
-    if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
-
-    } else {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
-          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
-    }
-
   }
 
   @Override
