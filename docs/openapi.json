@@ -1782,6 +1782,9 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
+          "description" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -1790,9 +1793,6 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
-            "type" : "string"
-          },
-          "description" : {
             "type" : "string"
           }
         }
