@@ -10,6 +10,9 @@ public class SimpleFulltextFeatureDescriptorWriter extends AbstractBatchedEntity
 
   public SimpleFulltextFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
     super(writer);
+    if (entityname == null) {
+      throw new IllegalArgumentException("An entity name cannot be null");
+    }
     this.entityname = entityname;
   }
 
