@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
 import java.io.Closeable;
+import java.util.List;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.DBSelector;
 
 
@@ -26,5 +28,9 @@ public abstract class AbstractEntityReader implements Closeable {
   @Override
   public void close() {
     this.selector.close();
+  }
+
+  public int rowCount(){
+    return this.selector.rowCount();
   }
 }

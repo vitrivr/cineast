@@ -21,10 +21,10 @@ public class FindSegmentsByObjectIdGetHandler implements GetRestHandler<MediaSeg
   public MediaSegmentQueryResult doGet(Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
     final String objectId = parameters.get(ID_NAME);
-    final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    final List<MediaSegmentDescriptor> list = sl.lookUpSegmentsOfObject(objectId);
-    sl.close();
-    return new MediaSegmentQueryResult("", list);
+    try (var sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
+      final List<MediaSegmentDescriptor> list = sl.lookUpSegmentsOfObject(objectId);
+      return new MediaSegmentQueryResult("", list);
+    }
   }
 
   @Override

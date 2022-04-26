@@ -29,31 +29,33 @@ public class CliUtils {
 
   public static void printInfoForObject(String objectId, DBSelector selector) {
     System.out.println("= Retrieving object information for " + objectId + " =");
-    MediaObjectReader objectReader = new MediaObjectReader(selector);
-    System.out.println(objectReader.lookUpObjectById(objectId));
-
+    try (var objectReader = new MediaObjectReader(selector)) {
+      System.out.println(objectReader.lookUpObjectById(objectId));
+    }
     System.out.println("= Retrieving object metadata for =");
-    MediaObjectMetadataReader reader = new MediaObjectMetadataReader(selector);
-    List<MediaObjectMetadataDescriptor> metadataDescriptors = reader.lookupMultimediaMetadata(objectId);
-    metadataDescriptors.forEach(System.out::println);
+    try (var reader = new MediaObjectMetadataReader(selector)) {
+      List<MediaObjectMetadataDescriptor> metadataDescriptors = reader.lookupMultimediaMetadata(objectId);
+      metadataDescriptors.forEach(System.out::println);
+    }
   }
 
   public static void printInfoForSegment(String segmentId, DBSelector selector, String _filterCategory, boolean printObjInfo) {
 
     System.out.println("= Retrieving segment information for " + segmentId + "=");
-    MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
-    Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
-    segmentDescriptor.ifPresent(System.out::println);
-
-    segmentDescriptor.ifPresent(descriptor -> {
-      if (printObjInfo) {
-        printInfoForObject(descriptor.getObjectId(), selector);
-      }
-    });
+    try (var segmentReader = new MediaSegmentReader(selector)) {
+      Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
+      segmentDescriptor.ifPresent(System.out::println);
+      segmentDescriptor.ifPresent(descriptor -> {
+        if (printObjInfo) {
+          printInfoForObject(descriptor.getObjectId(), selector);
+        }
+      });
+    }
 
     System.out.println("= Retrieving segment metadata =");
-    MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
-    reader.lookupMultimediaMetadata(segmentId).forEach(System.out::println);
+    try (var reader = new MediaSegmentMetadataReader(selector)) {
+      reader.lookupMultimediaMetadata(segmentId).forEach(System.out::println);
+    }
 
     System.out.println("Retrieving all columns for segment " + segmentId);
     RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,10 +51,10 @@ public abstract class DBIntegrationTest<R> {
   protected EntityCreator ec;
   protected QueryConfig queryConfig;
   protected static final String ID_COL_NAME = "id";
-  protected static final int VECTOR_ELEMENT_COUNT = 11;
-  protected static final int MAX_VECTOR_ID = 10;
+  protected static final int VECTOR_ELEMENT_COUNT = 110;
+  protected static final int MAX_VECTOR_ID = VECTOR_ELEMENT_COUNT - 1;
   protected static final int TEXT_ELEMENT_COUNT = 8;
-  protected static final int MAX_TEXT_ID = 7;
+  protected static final int MAX_TEXT_ID = TEXT_ELEMENT_COUNT - 1;
   /**
    * This is not called "feature" by design as it avoid the storage-layers doing optimization by col name
    */
@@ -143,10 +144,10 @@ public abstract class DBIntegrationTest<R> {
       vector[0] = i;
       vector[1] = 1;
       vector[2] = 0;
-      vectors.add(writer.generateTuple(String.valueOf(i), vector));
+      vectors.add(writer.generateTuple(String.format("%05d", i), vector));
     }
     /* We write a second vector with the same id in the db */
-    vectors.add(writer.generateTuple(String.valueOf(0), new float[]{0, 0, 0}));
+    vectors.add(writer.generateTuple(String.format("%05d", 0), new float[]{0, 0, 0}));
     writer.persist(vectors);
   }
 
@@ -195,12 +196,21 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Verify element count")
-  void count() {
+  @DisplayName("Verify element count using getAll()")
+  void countGetAll() {
     selector.open(testVectorTableName);
     Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.getAll().size());
     selector.open(testTextTableName);
     Assertions.assertEquals(TEXT_ELEMENT_COUNT, selector.getAll().size());
+  }
+
+  @Test
+  @DisplayName("Verify element count using rowCount()")
+  void countRowCount() {
+    selector.open(testVectorTableName);
+    Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.rowCount());
+    selector.open(testTextTableName);
+    Assertions.assertEquals(TEXT_ELEMENT_COUNT, selector.rowCount());
   }
 
   @Test
@@ -235,6 +245,26 @@ public abstract class DBIntegrationTest<R> {
     Assertions.assertEquals("1", result.get(0).getSegmentId());
     Assertions.assertTrue(result.get(1).getSegmentId().equals("2") || result.get(2).getSegmentId().equals("2"));
     Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
+  }
+
+  @Test
+  @DisplayName("Get all skip limit")
+  void getAllSkip() {
+    selector.open(testVectorTableName);
+    int limit = 10;
+    IntStream.range(0, 3).forEach(i -> {
+      List<Map<String, PrimitiveTypeProvider>> all = selector.getAll(ID_COL_NAME, i, limit);
+      Assertions.assertEquals(all.size(), limit);
+      all.forEach(el -> {
+        Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) >= i - 1, "id " + el.get(ID_COL_NAME).getString() + " was smaller than " + i);
+        // we use <= for 0 because there are two elements with id 0 in the table
+        if (i == 0 || i == 1) {
+          Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) <= i + limit, "id " + el.get(ID_COL_NAME).getString() + " was larger than " + (i + limit));
+        } else {
+          Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) < i + limit, "id " + el.get(ID_COL_NAME).getString() + " was larger than " + (i + limit));
+        }
+      });
+    });
   }
 
   /**
@@ -340,7 +370,7 @@ public abstract class DBIntegrationTest<R> {
 
   /**
    * TODO: Fuzzy search on whole phrases is currently not supported.
-   *
+   * <p>
    * Something like "hello world"~1 would need to be implemented as either hello~1 AND world~1, but that is not implemented in the DBSelector / cottontail.
    * The cottontail implementation in december 19 parses hello world~1 as hello .. world~1, which is not what we're looking for
    * Therefore, this test serves as a note that this functionality is lacking.

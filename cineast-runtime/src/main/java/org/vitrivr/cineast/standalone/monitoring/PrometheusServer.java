@@ -32,7 +32,7 @@ public class PrometheusServer {
       return;
     }
     if (!Config.sharedConfig().getMonitoring().enablePrometheus) {
-      LOGGER.info("Prometheus monitoring not enabled");
+      LOGGER.trace("Prometheus monitoring not enabled");
       lock.release();
       return;
     }

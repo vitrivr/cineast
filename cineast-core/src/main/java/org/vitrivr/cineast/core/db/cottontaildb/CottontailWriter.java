@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import io.grpc.StatusRuntimeException;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -59,6 +61,9 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   @Override
   public boolean persist(List<PersistentTuple> tuples) {
+    if (this.fqn == null) {
+      LOGGER.warn("fqn was null, not inserting {} tuples {}", tuples.size(), StringUtils.join(tuples, ", "));
+    }
     long start = System.currentTimeMillis();
     int size = tuples.size();
     long txId = 0L;
@@ -84,7 +89,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
           this.cottontail.client.insert(insert);
           insert = new BatchInsert().into(this.fqn).columns(this.names);
-          if(useTransactions){
+          if (useTransactions) {
             insert.txId(txId);
           }
         }

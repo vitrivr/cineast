@@ -43,7 +43,6 @@ public class MetadataConfig {
 
   @JsonIgnore
   public MetadataExtractor getMetadataExtractor() {
-    MetadataExtractor extractor = ReflectionHelper.newMetadataExtractor(this.name);
-    return extractor;
+    return ReflectionHelper.newMetadataExtractor(this.name);
   }
 }

@@ -370,9 +370,49 @@
         }, {
           "name" : "value",
           "in" : "path",
+          "description" : "The actual value that you want to filter for",
           "required" : true,
           "schema" : {
             "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/all/{skip}/{limit}" : {
+      "get" : {
+        "tags" : [ "Object" ],
+        "summary" : "Get a fixed amount of objects from the sorted list",
+        "description" : "Equivalent to calling SELECT * FROM multimediaobject ORDER BY objectid ASC LIMIT limit SKIP skip. Mostly used for pagination when wanting to retrieve all objects",
+        "operationId" : "findObjectsPagination",
+        "parameters" : [ {
+          "name" : "skip",
+          "in" : "path",
+          "description" : "How many objects should be skipped",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "path",
+          "description" : "How many object at most should be fetched",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         } ],
         "responses" : {
@@ -1030,6 +1070,34 @@
         }
       }
     },
+    "/api/v1/count/table/{table}" : {
+      "get" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Count objects",
+        "description" : "Equivalent to calling SELECT count(*) FROM table. Used to determined #pages for pagination in a frontend or statistical purposes",
+        "operationId" : "countRows",
+        "parameters" : [ {
+          "name" : "table",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntegerMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/status" : {
       "get" : {
         "tags" : [ "Status" ],
@@ -1094,8 +1162,7 @@
         "type" : "object",
         "properties" : {
           "objectid" : {
-            "type" : "string",
-            "writeOnly" : true
+            "type" : "string"
           },
           "domain" : {
             "type" : "string"
@@ -1109,9 +1176,6 @@
           "exists" : {
             "type" : "boolean",
             "writeOnly" : true
-          },
-          "objectId" : {
-            "type" : "string"
           }
         }
       },
@@ -1387,6 +1451,9 @@
               "type" : "string"
             }
           },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1398,9 +1465,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1561,6 +1625,14 @@
               "$ref" : "#/components/schemas/MetadataAccessSpecification"
             }
           },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
+          },
           "timeDistances" : {
             "type" : "array",
             "items" : {
@@ -1570,14 +1642,6 @@
           },
           "temporalQueryConfig" : {
             "$ref" : "#/components/schemas/TemporalQueryConfig"
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
-          },
-          "maxLength" : {
-            "type" : "number",
-            "format" : "float"
           }
         }
       },
@@ -1639,6 +1703,9 @@
               "type" : "string"
             }
           },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
@@ -1650,9 +1717,6 @@
           },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
             "type" : "integer",
@@ -1961,6 +2025,15 @@
                 "type" : "string"
               }
             }
+          }
+        }
+      },
+      "IntegerMessage" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },

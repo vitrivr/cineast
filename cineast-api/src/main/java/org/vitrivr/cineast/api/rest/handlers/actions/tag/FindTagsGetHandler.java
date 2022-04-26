@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.tag;
 
+import static org.vitrivr.cineast.api.util.APIConstants.ATTRIBUTE_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.VALUE_NAME;
+
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
@@ -20,9 +23,6 @@ public class FindTagsGetHandler implements GetRestHandler<TagsQueryResult> {
   public static final String ID_NAME = "id";
   public static final String NAME_NAME = "name";
   public static final String MATCHING_NAME = "matchingname";
-
-  public static final String ATTRIBUTE_NAME = "attribute";
-  public static final String VALUE_NAME = "value";
 
   public static final String ROUTE = "find/tags/by/{" + ATTRIBUTE_NAME + "}/{" + VALUE_NAME + "}";
 

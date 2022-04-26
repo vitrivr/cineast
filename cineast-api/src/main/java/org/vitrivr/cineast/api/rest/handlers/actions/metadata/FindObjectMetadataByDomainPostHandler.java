@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.DOMAIN_NAME;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
@@ -33,8 +33,7 @@ public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHan
     }
     final String domain = parameters.get(DOMAIN_NAME);
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    return new MediaObjectMetadataQueryResult("",
-        service.findByDomain(ids.getIdList(), domain));
+    return new MediaObjectMetadataQueryResult("", service.findByDomain(ids.getIdList(), domain));
   }
 
   @Override
