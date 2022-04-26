@@ -48,7 +48,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
   /**
    * ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
    */
-  private final String objectId;
+  private final String objectid;
 
   /**
    * String value that identifies the metadata domain (e.g. EXIF, IPTC, DC...)
@@ -95,7 +95,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
       @JsonProperty(KEY_COL_NAME) String key,
       @JsonProperty(VAL_COL_NAME) @Nullable Object value,
       @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
-    this.objectId = objectId;
+    this.objectid = objectId;
     this.key = key;
     this.domain = domain;
     this.exists = exists;
@@ -135,7 +135,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
    */
   public MediaObjectMetadataDescriptor(Map<String, PrimitiveTypeProvider> data) throws DatabaseLookupException {
     if (data.get(FIELDNAMES[0]) != null && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
-      this.objectId = data.get(FIELDNAMES[0]).getString();
+      this.objectid = data.get(FIELDNAMES[0]).getString();
     } else {
       throw new DatabaseLookupException("Could not read column '" + FIELDNAMES[0] + "' for MediaObjectDescriptor.");
     }
@@ -156,9 +156,9 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
     this.exists = true;
   }
 
-  @JsonProperty
-  public String getObjectId() {
-    return objectId;
+  @JsonProperty(OBJECT_ID_COLUMN_QUALIFIER)
+  public String getObjectid() {
+    return objectid;
   }
 
   @JsonProperty
@@ -212,12 +212,12 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
       return false;
     }
     MediaObjectMetadataDescriptor that = (MediaObjectMetadataDescriptor) o;
-    return exists == that.exists && Objects.equals(objectId, that.objectId) && Objects.equals(domain, that.domain) && Objects.equals(key, that.key) && Objects.equals(value, that.value);
+    return exists == that.exists && Objects.equals(objectid, that.objectid) && Objects.equals(domain, that.domain) && Objects.equals(key, that.key) && Objects.equals(value, that.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(objectId, domain, key, value, exists);
+    return Objects.hash(objectid, domain, key, value, exists);
   }
 }
 

@@ -47,11 +47,6 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public List<PrimitiveTypeProvider> getAll(String column) {
-    return new ArrayList<>(0);
-  }
-
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     return new ArrayList<>(0);
   }

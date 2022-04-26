@@ -55,33 +55,23 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
-      PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
-      ReadableQueryConfig config) {
+  public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     List<Map<String, PrimitiveTypeProvider>> results;
-    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
-        .equals(ProviderDataType.INT_ARRAY)) {
+    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType().equals(ProviderDataType.INT_ARRAY)) {
       results = getNearestNeighbourRows(k, queryProvider.getFloatArray(), column, config);
     } else {
       results = getNearestNeighbourRows(k, queryProvider, column, config);
     }
-    return results.stream()
-        .map(m -> DistanceElement.create(
-            distanceElementClass, m.get(GENERIC_ID_COLUMN_QUALIFIER).getString(), m.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble()))
-        .limit(k)
-        .collect(Collectors.toList());
+    return results.stream().map(m -> DistanceElement.create(distanceElementClass, m.get(GENERIC_ID_COLUMN_QUALIFIER).getString(), m.get(DB_DISTANCE_VALUE_QUALIFIER).getDouble())).limit(k).collect(Collectors.toList());
   }
 
   /**
    * Full table scan. Don't do it for performance-intensive stuff.
    */
   @SuppressWarnings("unchecked")
-  private List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k,
-      PrimitiveTypeProvider queryProvider, String column, ReadableQueryConfig config) {
-    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
-        .equals(ProviderDataType.INT_ARRAY)) {
-      return getNearestNeighbourRows(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider),
-          column, config);
+  private List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, PrimitiveTypeProvider queryProvider, String column, ReadableQueryConfig config) {
+    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType().equals(ProviderDataType.INT_ARRAY)) {
+      return getNearestNeighbourRows(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column, config);
     }
     LOGGER.debug("Switching to non-float based lookup, reading from file");
     Importer<?> importer = newImporter(this.file);
@@ -90,8 +80,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn;
     if (queryProvider.getType().equals(ProviderDataType.BITSET)) {
       distance = new BitSetHammingDistance();
-      knn = FixedSizePriorityQueue
-          .create(k, new BitSetComparator(column, distance, queryProvider.getBitSet()));
+      knn = FixedSizePriorityQueue.create(k, new BitSetComparator(column, distance, queryProvider.getBitSet()));
     } else {
       throw new RuntimeException(queryProvider.getType().toString());
     }
@@ -103,8 +92,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       }
       double d;
       if (queryProvider.getType().equals(ProviderDataType.BITSET)) {
-        d = distance
-            .applyAsDouble(queryProvider.getBitSet(), map.get(column).getBitSet());
+        d = distance.applyAsDouble(queryProvider.getBitSet(), map.get(column).getBitSet());
         map.put("distance", new FloatTypeProvider((float) d));
         knn.add(map);
       } else {
@@ -127,8 +115,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, ReadableQueryConfig config) {
+  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
 
     config = QueryConfig.clone(config);
 
@@ -136,8 +123,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
     FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
-    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue
-        .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue.create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
 
     HashSet<String> relevant = null;
     if (config.hasRelevantSegmentIds()) {
@@ -154,8 +140,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       if (relevant != null && !relevant.contains(map.get(GENERIC_ID_COLUMN_QUALIFIER))) {
         continue;
       }
-      double d = distance
-          .applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
+      double d = distance.applyAsDouble(vector, PrimitiveTypeProvider.getSafeFloatArray(map.get(column)));
       map.put("distance", new FloatTypeProvider((float) d));
       knn.add(map);
     }
@@ -225,8 +210,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      Iterable<PrimitiveTypeProvider> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
     if (values == null) {
       return new ArrayList<>(0);
     }
@@ -240,21 +224,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     tmp.toArray(valueArr);
 
     return this.getRows(fieldName, valueArr);
-  }
-
-  @Override
-  public List<PrimitiveTypeProvider> getAll(String column) {
-    List<PrimitiveTypeProvider> _return = new ArrayList<>();
-
-    Importer<?> importer = newImporter(this.file);
-    Map<String, PrimitiveTypeProvider> map;
-    while ((map = importer.readNextAsMap()) != null) {
-      PrimitiveTypeProvider p = map.get(column);
-      if (p != null) {
-        _return.add(p);
-      }
-    }
-    return _return;
   }
 
   @Override
@@ -281,21 +250,17 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   protected abstract String getFileExtension();
 
   @Override
-  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k,
-      List<float[]> vectors, String column, Class<T> distanceElementClass,
-      List<ReadableQueryConfig> configs) {
+  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
     throw new IllegalStateException("Not implemented.");
   }
 
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig,
-      String... terms) {
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     throw new IllegalStateException("Not implemented.");
   }
 

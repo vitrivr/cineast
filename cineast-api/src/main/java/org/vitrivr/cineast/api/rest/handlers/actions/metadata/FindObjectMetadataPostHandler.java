@@ -24,8 +24,7 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    List<MediaObjectMetadataDescriptor> descriptors = service
-        .lookupMultimediaMetadata(ids.getIdList());
+    List<MediaObjectMetadataDescriptor> descriptors = service.lookupMultimediaMetadata(ids.getIdList());
     if (ids.hasFilters()) {
       final List<AbstractMetadataFilterDescriptor> filters = ids.getFilterList();
       for (AbstractMetadataFilterDescriptor filter : filters) {

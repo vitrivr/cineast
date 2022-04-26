@@ -11,8 +11,7 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 
-public class FindSegmentFeaturesGetHandler implements
-    GetRestHandler<FeaturesAllCategoriesQueryResult> {
+public class FindSegmentFeaturesGetHandler implements GetRestHandler<FeaturesAllCategoriesQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/id/{" + ID_QUALIFIER + "}";
 

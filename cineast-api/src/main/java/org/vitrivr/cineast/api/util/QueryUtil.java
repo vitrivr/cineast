@@ -116,20 +116,20 @@ public class QueryUtil {
         .collect(Collectors.toList());
 
     // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
-    final var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+    try (var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
+      var segmentIds = stagedResults.stream().flatMap(
+          resultsMap -> resultsMap.values().stream().flatMap(
+              pairs -> pairs.stream().map(pair -> pair.key)
+          )
+      ).distinct().collect(Collectors.toList());
 
-    var segmentIds = stagedResults.stream().flatMap(
-        resultsMap -> resultsMap.values().stream().flatMap(
-            pairs -> pairs.stream().map(pair -> pair.key)
-        )
-    ).distinct().collect(Collectors.toList());
+      var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
+      var stagedQueryResults = stagedResults.stream().map(
+          resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
+      ).collect(Collectors.toList());
 
-    var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
-    var stagedQueryResults = stagedResults.stream().map(
-        resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
-    ).collect(Collectors.toList());
-
-    return TemporalScoring.score(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
+      return TemporalScoring.score(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
+    }
   }
 
   /**

@@ -54,8 +54,9 @@ public class Config {
       LOGGER.warn("Could not read config file '{}'.", name);
       return null;
     } else {
-      LOGGER.info("Config file loaded!");
+      LOGGER.trace("Config file loaded!");
       initSharedConfig(config);
+      LOGGER.trace("Config initialized!");
       return config;
     }
   }
