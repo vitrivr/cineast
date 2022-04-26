@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.SkeletonQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 
@@ -32,6 +33,7 @@ public enum QueryTermType {
   TEXT(TextQueryTermContainer.class),
   TAG(TagQueryTermContainer.class),
   SEMANTIC(SemanticMapQueryTermContainer.class),
+  SKELETON(SkeletonQueryTermContainer.class),
 
   /**
    * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.

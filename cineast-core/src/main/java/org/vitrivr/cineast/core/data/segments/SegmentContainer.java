@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.data.providers.MeshProvider;
 import org.vitrivr.cineast.core.data.providers.MostRepresentativeFrameProvider;
 import org.vitrivr.cineast.core.data.providers.PathProvider;
 import org.vitrivr.cineast.core.data.providers.SemanticMapProvider;
+import org.vitrivr.cineast.core.data.providers.SkeletonProvider;
 import org.vitrivr.cineast.core.data.providers.SubtitleItemProvider;
 import org.vitrivr.cineast.core.data.providers.TagProvider;
 import org.vitrivr.cineast.core.data.providers.TextProvider;
@@ -44,6 +45,7 @@ public interface SegmentContainer
     InstantProvider,
     TextProvider,
     SemanticMapProvider,
-    BooleanExpressionProvider {
+    BooleanExpressionProvider,
+    SkeletonProvider {
 
 }

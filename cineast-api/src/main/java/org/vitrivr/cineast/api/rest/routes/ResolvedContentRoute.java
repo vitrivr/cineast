@@ -36,7 +36,7 @@ public class ResolvedContentRoute implements Handler {
       return;
     }
 
-    ctx.contentType(rresult.mimeType); // Can be removed with the next javalin release
+    ctx.header("Cache-Control", "public, max-age=86400");
     ctx.seekableStream(rresult.stream, rresult.mimeType);
     ctx.status(200);
   }
