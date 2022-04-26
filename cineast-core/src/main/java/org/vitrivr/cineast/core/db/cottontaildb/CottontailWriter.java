@@ -7,10 +7,10 @@ import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
+import org.vitrivr.cottontail.client.language.basics.predicate.Expression;
 import org.vitrivr.cottontail.client.language.dml.BatchInsert;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
-import org.vitrivr.cottontail.client.language.extensions.Literal;
 
 public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
@@ -24,7 +24,9 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    */
   private String fqn;
 
-  /** The batch size to use for INSERTS. */
+  /**
+   * The batch size to use for INSERTS.
+   */
   private final int batchSize;
   private final boolean useTransactions;
 
@@ -45,7 +47,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   @Override
   public boolean exists(String key, String value) {
-    final Query query = new Query(this.fqn).exists().where(new Literal(key, "=", value));
+    final Query query = new Query(this.fqn).exists().where(new Expression(key, "=", value));
     final TupleIterator results = this.cottontail.client.query(query);
     final Boolean b = results.next().asBoolean("exists");
     if (b != null) {
@@ -60,12 +62,12 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     long start = System.currentTimeMillis();
     int size = tuples.size();
     long txId = 0L;
-    if(useTransactions){
+    if (useTransactions) {
       txId = this.cottontail.client.begin();
     }
     try {
       BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names);
-      if(useTransactions){
+      if (useTransactions) {
         insert.txId(txId);
       }
       while (!tuples.isEmpty()) {
@@ -91,14 +93,14 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
         LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
         this.cottontail.client.insert(insert);
       }
-      if(useTransactions){
+      if (useTransactions) {
         this.cottontail.client.commit(txId);
       }
       long stop = System.currentTimeMillis();
       LOGGER.trace("Completed insert of {} elements in {} ms", size, stop - start);
       return true;
     } catch (StatusRuntimeException e) {
-      if(useTransactions){
+      if (useTransactions) {
         this.cottontail.client.rollback(txId);
       }
       return false;

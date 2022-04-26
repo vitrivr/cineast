@@ -14,3 +14,5 @@ http://data.vitrivr.org/VisualTextCoEmbedding/visual-co-embedding.tar.gz,resourc
 https://tfhub.dev/google/universal-sentence-encoder/4?tf-hub-format=compressed,resources/VisualTextCoEmbedding/universal-sentence-encoder_4.tar.gz
 http://data.vitrivr.org/VisualTextCoEmbedding/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop.tar.gz,resources/VisualTextCoEmbedding/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop.tar.gz
 http://data.vitrivr.org/clip/clip.tar.gz,resources/CLIP.tar.gz
+https://tfhub.dev/google/movenet/multipose/lightning/1?tf-hub-format=compressed,resources/movenet_multipose_lightning.tar.gz
+http://data.vitrivr.org/pose/pose.pb,resources/openpose/pose.pb

@@ -94,7 +94,7 @@ public class MediaObjectDescriptor implements ExistenceCheck {
     // Config.sharedConfig().getApi().getObjectLocation() + path;
   }
 
-  @JsonProperty
+  @JsonProperty(OBJECT_ID_COLUMN_QUALIFIER)
   public final String getObjectId() {
     return objectId;
   }

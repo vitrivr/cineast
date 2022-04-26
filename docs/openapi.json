@@ -1248,8 +1248,7 @@
         "type" : "object",
         "properties" : {
           "objectid" : {
-            "type" : "string",
-            "writeOnly" : true
+            "type" : "string"
           },
           "name" : {
             "type" : "string"
@@ -1264,9 +1263,6 @@
           "exists" : {
             "type" : "boolean",
             "writeOnly" : true
-          },
-          "objectId" : {
-            "type" : "string"
           },
           "contentURL" : {
             "type" : "string"
@@ -1351,8 +1347,7 @@
         "type" : "object",
         "properties" : {
           "queryId" : {
-            "type" : "string",
-            "format" : "uuid"
+            "type" : "string"
           },
           "hints" : {
             "uniqueItems" : true,
@@ -1392,19 +1387,19 @@
               "type" : "string"
             }
           },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1418,7 +1413,7 @@
         "properties" : {
           "type" : {
             "type" : "string",
-            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
+            "enum" : [ "IMAGE", "AUDIO", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "SKELETON", "ID", "BOOLEAN" ]
           },
           "data" : {
             "type" : "string",
@@ -1558,7 +1553,47 @@
             }
           },
           "config" : {
-            "$ref" : "#/components/schemas/QueryConfig"
+            "$ref" : "#/components/schemas/TemporalQueryConfig"
+          },
+          "metadataAccessSpec" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataAccessSpecification"
+            }
+          },
+          "timeDistances" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "float"
+            }
+          },
+          "temporalQueryConfig" : {
+            "$ref" : "#/components/schemas/TemporalQueryConfig"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
+          }
+        }
+      },
+      "TemporalQueryConfig" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "hints" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "exact", "inexact", "lsh", "ecp", "mi", "pq", "sh", "va", "vaf", "vav", "sequential", "empirical" ]
+            }
           },
           "timeDistances" : {
             "type" : "array",
@@ -1571,15 +1606,57 @@
             "type" : "number",
             "format" : "float"
           },
-          "metadataAccessSpec" : {
+          "computeTemporalObjects" : {
+            "type" : "boolean"
+          },
+          "distance" : {
+            "type" : "string",
+            "enum" : [ "chisquared", "correlation", "cosine", "hamming", "jaccard", "kullbackleibler", "chebyshev", "euclidean", "squaredeuclidean", "manhattan", "minkowski", "spannorm", "haversine" ]
+          },
+          "distanceWeights" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/MetadataAccessSpecification"
+              "type" : "number",
+              "format" : "float"
             }
           },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          "norm" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "resultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxResults" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "relevantSegmentIds" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "rawResultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -1705,6 +1782,9 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
+          "description" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -1713,9 +1793,6 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
-            "type" : "string"
-          },
-          "description" : {
             "type" : "string"
           }
         }
