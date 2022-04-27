@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.api.messages.components;
 
 import java.util.function.Predicate;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
@@ -10,8 +8,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * <p>
  * This class servers as filter descriptor and as actual filter.
  */
-public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implements
-    Predicate<MediaObjectMetadataDescriptor> {
+public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implements Predicate<MediaObjectMetadataDescriptor> {
 
   /**
    * Create a metadata key filter instance for the given keywords.
@@ -31,12 +28,7 @@ public class MetadataKeyFilter extends AbstractMetadataFilterDescriptor implemen
    */
   @Override
   public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
-    return getKeywordsAsListLowercase()
-        .contains(mediaObjectMetadataDescriptor.getKey().toLowerCase());
+    return getKeywordsAsListLowercase().contains(mediaObjectMetadataDescriptor.getKey().toLowerCase());
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

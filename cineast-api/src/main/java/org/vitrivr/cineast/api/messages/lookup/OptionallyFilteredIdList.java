@@ -2,13 +2,9 @@ package org.vitrivr.cineast.api.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
-import org.vitrivr.cineast.api.messages.interfaces.Message;
-import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Ignores unkown json properties, e.g. may contain no filter at all. Message of an optionally filtered list of IDs and filters to be applied on the metadata lookup.
@@ -18,7 +14,7 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * still realise that there are unknown properties</p>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OptionallyFilteredIdList implements Message {
+public class OptionallyFilteredIdList extends AbstractMessage {
 
   /**
    * List of {@link AbstractMetadataFilterDescriptor} to be applied on the metadata lookup.
@@ -48,11 +44,6 @@ public class OptionallyFilteredIdList implements Message {
     return filters;
   }
 
-  public void setFilters(
-      AbstractMetadataFilterDescriptor[] filters) {
-    this.filters = Arrays.asList(filters);
-  }
-
   /**
    * Check if the optionally filtered list contains filters.
    *
@@ -75,18 +66,5 @@ public class OptionallyFilteredIdList implements Message {
   @JsonIgnore
   public List<AbstractMetadataFilterDescriptor> getFilterList() {
     return this.filters;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public MessageType getMessageType() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

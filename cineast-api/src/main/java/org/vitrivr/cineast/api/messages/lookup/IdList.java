@@ -6,13 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 
 /**
  * Object to store a list of string IDs.
  */
-public class IdList {
+public class IdList extends AbstractMessage {
 
   /**
    * List of String IDs to be stored by this object.
@@ -45,10 +44,5 @@ public class IdList {
   @JsonIgnore
   public List<String> getIdList() {
     return this.ids;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

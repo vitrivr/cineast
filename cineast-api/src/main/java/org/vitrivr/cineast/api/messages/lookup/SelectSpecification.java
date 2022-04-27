@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 
-public class SelectSpecification {
+public class SelectSpecification extends AbstractMessage {
 
-  private String table;
-  private List<String> columns;
-  private int limit;
+  private final String table;
+  private final List<String> columns;
+  private final int limit;
 
   @JsonCreator
   public SelectSpecification(@JsonProperty("table") String table, @JsonProperty("columns") List<String> columns, @JsonProperty("limit") int limit) {
@@ -32,8 +33,4 @@ public class SelectSpecification {
     return table;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

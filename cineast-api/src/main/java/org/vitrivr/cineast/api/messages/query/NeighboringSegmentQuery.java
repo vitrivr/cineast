@@ -56,9 +56,6 @@ public class NeighboringSegmentQuery extends Query {
     return count;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.Q_NESEG;

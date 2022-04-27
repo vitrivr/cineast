@@ -36,9 +36,6 @@ public class SimilarityQuery extends Query {
     return this.terms;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.Q_SIM;

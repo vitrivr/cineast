@@ -5,25 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.api.messages.interfaces.Message;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message of a metadata lookup query by a requester.
  */
-public class MetadataLookup implements Message {
+public class MetadataLookup extends AbstractMessage {
 
   /**
    * List of object ID's for which metadata should be looked up.
    */
-  private String[] objectIds;
+  private final String[] objectIds;
 
   /**
    * List of metadata domains that should be considered. If empty, all domains are considered!
    */
-  private String[] domains;
+  private final String[] domains;
 
   /**
    * Constructor for the MetadataLookup object.
@@ -54,16 +52,9 @@ public class MetadataLookup implements Message {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.M_LOOKUP;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

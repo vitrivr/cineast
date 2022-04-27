@@ -41,9 +41,4 @@ public class FeaturesByCategoryQueryResult {
     this.category = category;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
-
 }

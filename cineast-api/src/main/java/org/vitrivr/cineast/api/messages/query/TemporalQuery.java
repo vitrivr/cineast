@@ -63,11 +63,6 @@ public class TemporalQuery extends Query {
     return metadataAccessSpec;
   }
 
-  /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
-   *
-   * @return {@link MessageType}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.Q_TEMPORAL;

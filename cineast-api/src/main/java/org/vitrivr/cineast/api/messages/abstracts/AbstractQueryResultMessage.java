@@ -1,19 +1,16 @@
 package org.vitrivr.cineast.api.messages.abstracts;
 
 import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.api.messages.interfaces.QueryResultMessage;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
 /**
  * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
  */
-public abstract class AbstractQueryResultMessage<T> implements QueryResultMessage<T> {
+public abstract class AbstractQueryResultMessage<T> extends AbstractMessage {
 
   private final Class<T> contentType;
   private final String queryId;
-  private List<T> content;
+  private final List<T> content;
 
   /**
    * Constructor for the AbstractQueryResultMessage object.
@@ -28,32 +25,31 @@ public abstract class AbstractQueryResultMessage<T> implements QueryResultMessag
     this.content = content;
   }
 
-  @Override
+  /**
+   * Returns the unique QueryId to which this QueryResultMessage belongs.
+   *
+   * @return QueryId (unique)
+   */
   public String getQueryId() {
     return this.queryId;
   }
 
-  @Override
+  /**
+   * Returns a list of the content this QueryResultMessage contains. Has type
+   *
+   * @return List of type T
+   */
   public List<T> getContent() {
     return this.content;
   }
 
-  @Override
+  /**
+   * Returns the type of the query result content
+   *
+   * @return Class instance of type T
+   */
   public Class<T> getContentType() {
     return this.contentType;
   }
 
-  @Override
-  public int count() {
-    if (this.content != null) {
-      return this.content.size();
-    } else {
-      return 0;
-    }
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

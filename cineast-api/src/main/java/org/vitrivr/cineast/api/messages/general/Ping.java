@@ -1,41 +1,31 @@
 package org.vitrivr.cineast.api.messages.general;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.vitrivr.cineast.api.messages.interfaces.Message;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
- * Message object for an ping message.
+ * Message object for a ping message.
  */
-public class Ping implements Message {
+public class Ping extends AbstractMessage {
 
   /**
    * Status of the Ping.
    */
-  private StatusEnum status = StatusEnum.UNKNOWN;
+  private final StatusEnum status;
+
+  public Ping(StatusEnum status) {
+    this.status = status;
+  }
 
   @JsonProperty
   public StatusEnum getStatus() {
     return status;
   }
 
-  public void setStatus(StatusEnum status) {
-    this.status = status;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.PING;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
   /**

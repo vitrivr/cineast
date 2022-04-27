@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
 
 /**
  * A {@link DistinctElementsResult} contains the response to a {@link FindDistinctElementsByColumnPostHandler} request. It contains a list of elements which can be considered as a set.
  */
-public class DistinctElementsResult {
+public class DistinctElementsResult extends AbstractMessage {
 
   /**
    * The query ID to which this distinct elements result belongs.
@@ -33,8 +34,4 @@ public class DistinctElementsResult {
     this.distinctElements = distinctElements;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

@@ -24,16 +24,9 @@ public class MediaSegmentMetadataQueryResult extends AbstractQueryResultMessage<
     super(queryId, MediaSegmentMetadataDescriptor.class, content);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.QR_METADATA_S;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

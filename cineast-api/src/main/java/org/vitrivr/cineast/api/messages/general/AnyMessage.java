@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api.messages.general;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
@@ -10,7 +11,7 @@ import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 /**
  * Message type for a non-particular message that implements the message interface. Is used in the {@link WebsocketAPI} to find out the {@link MessageType} of arriving messages
  */
-public class AnyMessage implements Message {
+public class AnyMessage extends AbstractMessage {
 
   /**
    * {@link MessageType} of the message.
@@ -27,8 +28,4 @@ public class AnyMessage implements Message {
     this.messageType = messageType;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

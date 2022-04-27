@@ -34,10 +34,6 @@ public enum QueryTermType {
   TAG(TagQueryTermContainer.class),
   SEMANTIC(SemanticMapQueryTermContainer.class),
   SKELETON(SkeletonQueryTermContainer.class),
-
-  /**
-   * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
-   */
   ID(IdQueryTermContainer.class),
   BOOLEAN(BooleanQueryTermContainer.class);
 

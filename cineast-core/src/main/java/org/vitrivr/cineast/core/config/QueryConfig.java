@@ -169,17 +169,4 @@ public class QueryConfig extends ReadableQueryConfig {
     this.addRelevantSegmentIds(relevantSegments);
   }
 
-  @Override
-  public String toString() {
-    return "QueryConfig{" +
-        "distance=" + distance +
-        ", distanceWeights=" + Arrays.toString(distanceWeights) +
-        ", norm=" + norm +
-        ", correspondence=" + correspondence +
-        ", resultsPerModule=" + resultsPerModule +
-        ", maxResults=" + maxResults +
-        ", hints=" + hints +
-        ", relevantSegmentIds (Excerpt)=" + Arrays.toString(relevantSegmentIds.stream().limit(5).toArray()) +
-        '}';
-  }
 }

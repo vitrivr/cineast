@@ -24,16 +24,9 @@ public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObje
     super(queryId, MediaObjectDescriptor.class, content);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.QR_OBJECT;
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

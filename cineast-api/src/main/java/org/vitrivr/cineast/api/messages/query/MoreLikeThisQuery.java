@@ -22,7 +22,7 @@ public class MoreLikeThisQuery extends Query {
    * List of feature categories that should be considered by the MLT query.
    */
   private final List<String> categories;
-  private List<MetadataAccessSpecification> metadataAccessSpec;
+  private final List<MetadataAccessSpecification> metadataAccessSpec;
 
   /**
    * Constructor for the SimilarityQuery object.
@@ -32,11 +32,7 @@ public class MoreLikeThisQuery extends Query {
    * @param config     The {@link ReadableQueryConfig}. May be null!
    */
   @JsonCreator
-  public MoreLikeThisQuery(@JsonProperty(value = "segmentId", required = true) String segmentId,
-      @JsonProperty(value = "categories", required = true) List<String> categories,
-      @JsonProperty(value = "config", required = false) QueryConfig config,
-      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
-  ) {
+  public MoreLikeThisQuery(@JsonProperty(value = "segmentId", required = true) String segmentId, @JsonProperty(value = "categories", required = true) List<String> categories, @JsonProperty(value = "config", required = false) QueryConfig config, @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec) {
     super(config);
     this.segmentId = segmentId;
     this.categories = categories;
@@ -51,9 +47,6 @@ public class MoreLikeThisQuery extends Query {
     return this.categories;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.Q_MLT;

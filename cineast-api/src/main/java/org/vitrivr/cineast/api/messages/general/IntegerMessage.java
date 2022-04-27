@@ -2,8 +2,9 @@ package org.vitrivr.cineast.api.messages.general;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 
-public class IntegerMessage {
+public class IntegerMessage extends AbstractMessage {
 
   private final int value;
 
@@ -15,4 +16,5 @@ public class IntegerMessage {
   public int getValue() {
     return value;
   }
+
 }

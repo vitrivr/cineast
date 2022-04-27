@@ -25,16 +25,9 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
  * <p>
  * The ultimate goal is to list keywords, on which a list of {@link MediaObjectMetadataDescriptor}s is filtered. Subclasses define on how to apply these keywords.
  */
-@JsonTypeInfo(
-    use = Id.NAME,
-    include = As.PROPERTY,
-    property = "type")
-@JsonSubTypes({
-    @Type(value = MetadataDomainFilter.class, name = "domain"),
-    @Type(value = MetadataKeyFilter.class, name = "key")
-})
-public abstract class AbstractMetadataFilterDescriptor implements
-    Predicate<MediaObjectMetadataDescriptor> {
+@JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "type")
+@JsonSubTypes({@Type(value = MetadataDomainFilter.class, name = "domain"), @Type(value = MetadataKeyFilter.class, name = "key")})
+public abstract class AbstractMetadataFilterDescriptor implements Predicate<MediaObjectMetadataDescriptor> {
 
   /**
    * Keywords name variable necessary for JSON creation.

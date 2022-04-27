@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 
 /**
  * Contains the data of a particular {@link QueryTerm}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class QueryTerm {
+public class QueryTerm extends AbstractMessage {
 
   /**
    * List of categories defined as part of this {@link QueryTerm}. This ultimately determines the features used for retrieval.
@@ -42,17 +43,10 @@ public class QueryTerm {
    * @param categories List of categories of the {@link QueryTerm}
    */
   @JsonCreator
-  public QueryTerm(@JsonProperty("type") QueryTermType type,
-      @JsonProperty("data") String data,
-      @JsonProperty("categories") List<String> categories) {
+  public QueryTerm(@JsonProperty("type") QueryTermType type, @JsonProperty("data") String data, @JsonProperty("categories") List<String> categories) {
     this.type = type;
     this.categories = categories;
     this.data = data;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
   /**

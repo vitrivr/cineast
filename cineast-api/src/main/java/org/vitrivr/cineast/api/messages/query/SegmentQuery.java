@@ -27,9 +27,7 @@ public class SegmentQuery extends Query {
    * @param config The {@link QueryConfig}
    */
   @JsonCreator
-  public SegmentQuery(@JsonProperty(value = "segmentId", required = true) String segmentId,
-      @JsonProperty(value = "config", required = false) QueryConfig config,
-      @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
+  public SegmentQuery(@JsonProperty(value = "segmentId", required = true) String segmentId, @JsonProperty(value = "config", required = false) QueryConfig config, @JsonProperty(value = "metadataAccessSpec", required = false) List<MetadataAccessSpecification> metadataAccessSpec
 
   ) {
     super(config);
@@ -45,9 +43,6 @@ public class SegmentQuery extends Query {
     return segmentId;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public MessageType getMessageType() {
     return MessageType.Q_SEG;
