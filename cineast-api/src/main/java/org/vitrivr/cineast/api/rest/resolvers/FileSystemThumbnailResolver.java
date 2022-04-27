@@ -9,6 +9,8 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
   private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
   private final File baseFolder;
 
+  private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+
   public FileSystemThumbnailResolver(File baseFolder) {
     this.baseFolder = baseFolder;
   }
