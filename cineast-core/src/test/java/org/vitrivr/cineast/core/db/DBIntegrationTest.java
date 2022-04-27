@@ -144,11 +144,15 @@ public abstract class DBIntegrationTest<R> {
       vector[0] = i;
       vector[1] = 1;
       vector[2] = 0;
-      vectors.add(writer.generateTuple(String.format("%05d", i), vector));
+      vectors.add(writer.generateTuple(toId(i), vector));
     }
     /* We write a second vector with the same id in the db */
-    vectors.add(writer.generateTuple(String.format("%05d", 0), new float[]{0, 0, 0}));
+    vectors.add(writer.generateTuple(toId(0), new float[]{0, 0, 0}));
     writer.persist(vectors);
+  }
+
+  private String toId(int id){
+    return String.format("%05d", id);
   }
 
   /**
@@ -218,7 +222,7 @@ public abstract class DBIntegrationTest<R> {
   void entriesExistById() {
     this.writer.open(testVectorTableName);
     for (int i = 0; i < MAX_VECTOR_ID; i++) {
-      Assertions.assertTrue(writer.idExists(String.valueOf(i)));
+      Assertions.assertTrue(writer.idExists(toId(i)));
     }
     this.writer.open(testTextTableName);
     for (int i = 0; i < MAX_TEXT_ID; i++) {
@@ -231,7 +235,7 @@ public abstract class DBIntegrationTest<R> {
   @DisplayName("get multiple feature vectors")
   void getFeatureVectors() {
     this.selector.open(testVectorTableName);
-    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider("0"), FEATURE_VECTOR_COL_NAME, queryConfig);
+    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider(toId(0)), FEATURE_VECTOR_COL_NAME, queryConfig);
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }
@@ -242,9 +246,9 @@ public abstract class DBIntegrationTest<R> {
     selector.open(testVectorTableName);
     List<SegmentDistanceElement> result = selector.getNearestNeighboursGeneric(3, new float[]{1, 1, 0}, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, queryConfig);
     Assertions.assertEquals(3, result.size());
-    Assertions.assertEquals("1", result.get(0).getSegmentId());
-    Assertions.assertTrue(result.get(1).getSegmentId().equals("2") || result.get(2).getSegmentId().equals("2"));
-    Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
+    Assertions.assertEquals(toId(1), result.get(0).getSegmentId());
+    Assertions.assertTrue(result.get(1).getSegmentId().equals(toId(2)) || result.get(2).getSegmentId().equals(toId(2)));
+    Assertions.assertTrue(result.get(1).getSegmentId().equals(toId(0)) || result.get(2).getSegmentId().equals(toId(0)));
   }
 
   @Test
