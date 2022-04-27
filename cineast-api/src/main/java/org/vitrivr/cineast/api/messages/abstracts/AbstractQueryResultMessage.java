@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.api.messages.abstracts;
 
 import java.util.List;
+import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
 /**
  * A {@link AbstractQueryResultMessage} represents an abstract Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
  */
-public abstract class AbstractQueryResultMessage<T> extends AbstractMessage {
+public abstract class AbstractQueryResultMessage<T> implements Message {
 
   private final Class<T> contentType;
   private final String queryId;

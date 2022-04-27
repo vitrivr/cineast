@@ -14,35 +14,7 @@ import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescrip
  * still realise that there are unknown properties</p>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OptionallyFilteredIdList extends AbstractMessage {
-
-  /**
-   * List of {@link AbstractMetadataFilterDescriptor} to be applied on the metadata lookup.
-   */
-  private List<AbstractMetadataFilterDescriptor> filters;
-
-  /**
-   * List of IDs for which the metadata lookup should be performed.
-   */
-  private List<String> ids;
-
-  /**
-   * This default constructor is required for deserialization by fasterxml/jackson.
-   */
-  public OptionallyFilteredIdList() {
-  }
-
-  public String[] getIds() {
-    return this.ids.toArray(new String[0]);
-  }
-
-  public List<String> getIdList() {
-    return this.ids;
-  }
-
-  public List<AbstractMetadataFilterDescriptor> getFilters() {
-    return filters;
-  }
+public record OptionallyFilteredIdList(List<AbstractMetadataFilterDescriptor> filters, List<String> ids) {
 
   /**
    * Check if the optionally filtered list contains filters.

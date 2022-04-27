@@ -16,7 +16,7 @@ public class TemporalQueryResult extends AbstractQueryResultMessage<TemporalObje
   }
 
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.QR_TEMPORAL;
   }
 

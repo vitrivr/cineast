@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.dao.reader;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,8 +89,7 @@ public class TagReader implements Closeable {
       return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
 
     } else {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
-          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
     }
 
   }
@@ -104,25 +102,23 @@ public class TagReader implements Closeable {
    */
   public List<Tag> getTagsByMatchingName(final String name) {
     final String lname = name.toLowerCase();
-    return tagCache.values().stream().filter(x -> x.getName().toLowerCase().contains(lname))
-        .sorted((o1, o2) -> {
-          boolean o1l = o1.getName().toLowerCase().startsWith(lname);
-          boolean o2l = o2.getName().toLowerCase().startsWith(lname);
-          boolean o1e = o1.getName().toLowerCase().equals(lname);
-          boolean o2e = o2.getName().toLowerCase().equals(lname);
-          if (o1e && !o2e) {
-            return -1;
-          } else if (!o1e && o2e) {
-            return 1;
-          } else if (o1l && !o2l) {
-            return -1;
-          } else if (!o1l && o2l) {
-            return 1;
-          } else {
-            return o1.getName().compareTo(o2.getName());
-          }
-        })
-        .collect(Collectors.toList());
+    return tagCache.values().stream().filter(x -> x.getName().toLowerCase().contains(lname)).sorted((o1, o2) -> {
+      boolean o1l = o1.getName().toLowerCase().startsWith(lname);
+      boolean o2l = o2.getName().toLowerCase().startsWith(lname);
+      boolean o1e = o1.getName().toLowerCase().equals(lname);
+      boolean o2e = o2.getName().toLowerCase().equals(lname);
+      if (o1e && !o2e) {
+        return -1;
+      } else if (!o1e && o2e) {
+        return 1;
+      } else if (o1l && !o2l) {
+        return -1;
+      } else if (!o1l && o2l) {
+        return 1;
+      } else {
+        return o1.getName().compareTo(o2.getName());
+      }
+    }).collect(Collectors.toList());
 
   }
 
@@ -133,8 +129,7 @@ public class TagReader implements Closeable {
    * @return List of matching {@link Tag}s.
    */
   public List<Tag> getTagsByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
-        .getRows("name", new StringTypeProvider(name));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", new StringTypeProvider(name));
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       Tag t = fromMap(row);
@@ -157,11 +152,11 @@ public class TagReader implements Closeable {
 
   }
 
-  public List<Tag> getTagsById(String... ids) {
+  public List<Tag> getTagsById(List<String> ids) {
     if (ids == null) {
       return new ArrayList<>();
     }
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, Arrays.asList(ids));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, ids);
     if (rows.isEmpty()) {
       return new ArrayList<>();
     }
@@ -173,7 +168,6 @@ public class TagReader implements Closeable {
       }
     }
     return _return;
-
   }
 
   /**

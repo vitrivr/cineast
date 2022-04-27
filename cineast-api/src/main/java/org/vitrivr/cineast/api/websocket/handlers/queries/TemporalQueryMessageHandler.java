@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
+import org.vitrivr.cineast.api.messages.query.QueryTermType;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -89,18 +90,18 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
        */
       Thread ssqThread = new Thread(() -> {
         /* Iterate over all stages in their respective order as each term of one stage will be used as a filter for its successors */
-        for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size(); stageIndex++) {
+        for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages().size(); stageIndex++) {
           /* Create hashmap for this stage as cache */
           cache.add(stageIndex, new HashMap<>());
 
-          QueryStage stage = stagedSimilarityQuery.getStages().get(stageIndex);
+          QueryStage stage = stagedSimilarityQuery.stages().get(stageIndex);
 
           /*
            * Iterate over all QueryTerms for this stage and add their results to the list of relevant segments for the next query stage.
            * Only update the list of relevant query terms once we iterated over all terms
            */
-          for (int i = 0; i < stage.terms.size(); i++) {
-            QueryTerm qt = stage.terms.get(i);
+          for (int i = 0; i < stage.terms().size(); i++) {
+            QueryTerm qt = stage.terms().get(i);
 
             /* Prepare the QueryTerm and perform sanity checks */
             if (qt == null) {
@@ -108,15 +109,14 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               LOGGER.warn("QueryTerm was null for stage {}", stage);
               return;
             }
-            AbstractQueryTermContainer qc = qt.toContainer();
+            AbstractQueryTermContainer qc = QueryTermType.createFromQueryTerm(qt);
             if (qc == null) {
-              LOGGER.warn(
-                  "Likely an empty query, as it could not be converted to a query container. Ignoring it");
+              LOGGER.warn("Likely an empty query, as it could not be converted to a query container. Ignoring it");
               return;
             }
 
             /* We retrieve the results for each category of a QueryTerm independently. The relevant ids will not yet be changed after this call as we are still in the same stage. */
-            for (String category : qt.getCategories()) {
+            for (String category : qt.categories()) {
               List<SegmentScoreElement> scores = continuousRetrievalLogic.retrieve(qc, category, stageQConf);
 
               final List<StringDoublePair> results = scores.stream()
@@ -126,7 +126,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .collect(Collectors.toList());
 
               if (results.isEmpty()) {
-                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full component: {}", category, qt.getType(), lambdaFinalContainerIdx, stage);
+                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full component: {}", category, qt.type(), lambdaFinalContainerIdx, stage);
               }
               if (cache.get(stageIndex).containsKey(category)) {
                 LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, stageIndex);
@@ -139,7 +139,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                * If this is the last stage, we can collect the results and send relevant results per category back the requester.
                * Otherwise we shouldn't yet send since we might send results to the requester that would be filtered at a later stage.
                */
-              if (stageIndex == stagedSimilarityQuery.getStages().size() - 1) {
+              if (stageIndex == stagedSimilarityQuery.stages().size() - 1) {
 
                 /* We limit the results to be sent back to the requester to the max limit. This is so that the original view is not affected by the changes of temporal query version 2 */
                 List<StringDoublePair> limitedResults = results.stream()
@@ -180,7 +180,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
         limitedStageQConf.setRelevantSegmentIds(limitedRelevantSegments);
 
         /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
-        for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.getStages().size() - 1; stageIndex++) {
+        for (int stageIndex = 0; stageIndex < stagedSimilarityQuery.stages().size() - 1; stageIndex++) {
           int finalStageIndex = stageIndex;
           /* Add the results from the last filter from all previous stages also to the list of results */
           cache.get(stageIndex).forEach((category, results) -> {

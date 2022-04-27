@@ -44,7 +44,7 @@ public class SegmentQuery extends Query {
   }
 
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.Q_SEG;
   }
 }

@@ -39,29 +39,29 @@ public class CredentialManager {
   }
 
   public static SessionType authenticate(Credentials credentials) {
-    if (credentials == null || credentials.getUsername() == null) {
+    if (credentials == null || credentials.username() == null) {
       LOGGER.error("cannot authenticate when credentials are null");
       return SessionType.UNAUTHENTICATED;
     }
 
-    User user = userMap.get(credentials.getUsername());
+    User user = userMap.get(credentials.username());
 
     if (user == null) {
-      LOGGER.error("cannot authenticate unknown user '{}'", credentials.getUsername());
+      LOGGER.error("cannot authenticate unknown user '{}'", credentials.username());
       return SessionType.UNAUTHENTICATED;
     }
 
-    if (!user.checkPassword(credentials.getPassword())) {
-      LOGGER.error("cannot authenticate user '{}', wrong password", credentials.getUsername());
+    if (!user.checkPassword(credentials.password())) {
+      LOGGER.error("cannot authenticate user '{}', wrong password", credentials.username());
       return SessionType.UNAUTHENTICATED;
     }
 
     if (user.isAdmin) {
-      LOGGER.info("authenticated admin user '{}'", credentials.getUsername());
+      LOGGER.info("authenticated admin user '{}'", credentials.username());
       return SessionType.ADMIN;
     }
 
-    LOGGER.info("authenticated user '{}'", credentials.getUsername());
+    LOGGER.info("authenticated user '{}'", credentials.username());
     return SessionType.USER;
 
   }

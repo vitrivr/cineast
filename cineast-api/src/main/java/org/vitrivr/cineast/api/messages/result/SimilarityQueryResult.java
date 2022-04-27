@@ -50,7 +50,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
    * {@inheritDoc}
    */
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.QR_SIMILARITY;
   }
 

@@ -58,6 +58,10 @@ public enum QueryTermType {
    * @param data Data from which to construct a {@link AbstractQueryTermContainer}
    */
   public Optional<AbstractQueryTermContainer> getQueryContainer(String data) {
+    if (data == null) {
+      LOGGER.warn("No data provided for query term");
+      return Optional.empty();
+    }
     try {
       Constructor<? extends AbstractQueryTermContainer> constructor = this.c.getConstructor(String.class);
       return Optional.of(constructor.newInstance(data));
@@ -65,5 +69,10 @@ public enum QueryTermType {
       LOGGER.error("Error while constructing query container", e);
       return Optional.empty();
     }
+  }
+
+
+  public static AbstractQueryTermContainer createFromQueryTerm(QueryTerm qt) {
+    return qt.type().getQueryContainer(qt.data()).orElse(null);
   }
 }

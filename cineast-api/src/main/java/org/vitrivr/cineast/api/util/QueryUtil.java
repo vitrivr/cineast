@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
+import org.vitrivr.cineast.api.messages.query.QueryTermType;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
@@ -83,7 +84,7 @@ public class QueryUtil {
     var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
 
     for (QueryStage stage : stages) {
-      var stageResults = findSegmentsSimilar(continuousRetrievalLogic, stage.terms, stageConfig);
+      var stageResults = findSegmentsSimilar(continuousRetrievalLogic, stage.terms(), stageConfig);
       stagedQueryResults.add(stageResults);
 
       var relevantSegments = new HashSet<String>();
@@ -111,22 +112,14 @@ public class QueryUtil {
    * @return The query results as a list of temporal objects.
    */
   public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
-    var stagedResults = query.getQueries().stream()
-        .map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.getStages(), config))
-        .collect(Collectors.toList());
+    var stagedResults = query.getQueries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).collect(Collectors.toList());
 
     // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
     try (var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
-      var segmentIds = stagedResults.stream().flatMap(
-          resultsMap -> resultsMap.values().stream().flatMap(
-              pairs -> pairs.stream().map(pair -> pair.key)
-          )
-      ).distinct().collect(Collectors.toList());
+      var segmentIds = stagedResults.stream().flatMap(resultsMap -> resultsMap.values().stream().flatMap(pairs -> pairs.stream().map(pair -> pair.key))).distinct().collect(Collectors.toList());
 
       var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
-      var stagedQueryResults = stagedResults.stream().map(
-          resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())
-      ).collect(Collectors.toList());
+      var stagedQueryResults = stagedResults.stream().map(resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())).collect(Collectors.toList());
 
       return TemporalScoring.score(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
     }
@@ -162,23 +155,22 @@ public class QueryUtil {
   public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupQueryTermsByCategory(List<QueryTerm> queryTerms) {
     HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
     for (QueryTerm term : queryTerms) {
-      if (term.getCategories() == null) {
+      if (term.categories() == null) {
         LOGGER.warn("Encountered query term without categories. Ignoring: {}", term.toString());
         continue;
       }
-      term.getCategories().forEach((String category) -> {
+      var qt = QueryTermType.createFromQueryTerm(term);
+      term.categories().forEach((String category) -> {
         if (!categoryMap.containsKey(category)) {
           categoryMap.put(category, new ArrayList<>());
         }
-        categoryMap.get(category).add(term.toContainer());
+        categoryMap.get(category).add(qt);
       });
     }
     return categoryMap;
   }
 
-  public static List<StringDoublePair> retrieveCategory(
-      ContinuousRetrievalLogic continuousRetrievalLogic,
-      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
+  public static List<StringDoublePair> retrieveCategory(ContinuousRetrievalLogic continuousRetrievalLogic, List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
     for (Pair<AbstractQueryTermContainer, ReadableQueryConfig> pair : queryContainers) {
 
@@ -205,8 +197,7 @@ public class QueryUtil {
     list.sort(StringDoublePair.COMPARATOR);
 
     // FIXME: Using an arbitrary query config to limit results is prone to errors
-    final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults()
-        .orElse(Config.sharedConfig().getRetriever().getMaxResults());
+    final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
     List<StringDoublePair> resultList = list;
     if (list.size() > MAX_RESULTS) {
       resultList = resultList.subList(0, MAX_RESULTS);
@@ -214,8 +205,7 @@ public class QueryUtil {
     return resultList;
   }
 
-  public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic,
-      AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
+  public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic, AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
     float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
 
@@ -289,9 +279,7 @@ public class QueryUtil {
       retriever.getTableNames().forEach(tableName -> {
         selector.open(tableName);
         List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(id));
-        rows.stream().map(row ->
-            row.get(FEATURE_COLUMN_QUALIFIER).toObject()
-        ).forEach(_return::add);
+        rows.stream().map(row -> row.get(FEATURE_COLUMN_QUALIFIER).toObject()).forEach(_return::add);
       });
       return true; // Return value false would break the foreEachKey
     });
@@ -301,11 +289,10 @@ public class QueryUtil {
   /**
    * Returns all tags for a given list of tagsids
    */
-  public static List<Tag> resolveTagsById(
-      List<String> tagIds) {
+  public static List<Tag> resolveTagsById(List<String> tagIds) {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     TagReader tagReader = new TagReader(selector);
-    return tagReader.getTagsById(tagIds.toArray(new String[0]));
+    return tagReader.getTagsById(tagIds);
   }
 
   public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {

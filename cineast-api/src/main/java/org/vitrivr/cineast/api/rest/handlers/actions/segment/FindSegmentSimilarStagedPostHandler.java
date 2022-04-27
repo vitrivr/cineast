@@ -35,9 +35,9 @@ public class FindSegmentSimilarStagedPostHandler implements ParsingPostRestHandl
 
   @Override
   public SimilarityQueryResultBatch performPost(StagedSimilarityQuery query, Context ctx) {
-    ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getConfig());
+    ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.config());
 
-    var results = QueryUtil.findSegmentsSimilarStaged(continuousRetrievalLogic, query.getStages(), config);
+    var results = QueryUtil.findSegmentsSimilarStaged(continuousRetrievalLogic, query.stages(), config);
 
     return new SimilarityQueryResultBatch(results, config.getQueryId());
   }

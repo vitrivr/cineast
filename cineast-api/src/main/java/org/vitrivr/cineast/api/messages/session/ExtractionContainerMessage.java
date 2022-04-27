@@ -53,7 +53,7 @@ public class ExtractionContainerMessage implements Message {
    * {@inheritDoc}
    */
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return null;
   }
 

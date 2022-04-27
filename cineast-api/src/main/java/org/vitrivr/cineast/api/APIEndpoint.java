@@ -282,16 +282,17 @@ public class APIEndpoint {
       }
       /* Serve the UI if requested statically*/
       if (config.getServeUI()) {
+        LOGGER.info("UI serving is enabled");
         /* Add css, js and other static files */
         serviceConfig.addStaticFiles(config.getUiLocation(), Location.EXTERNAL);
-        /* Add index.html - the ui's front page as default route. Anything reroutes to thre */
-        serviceConfig
-            .addSinglePageRoot("/", config.getUiLocation() + "/index.html", Location.EXTERNAL);
+        /* Add index.html - the ui's front page as default route. Anything reroutes to there */
+        serviceConfig.addSinglePageRoot("/", config.getUiLocation() + "/index.html", Location.EXTERNAL);
       }
     });
 
     /* Enable WebSocket (if configured). */
     if (config.getEnableWebsocket()) {
+      LOGGER.info("Starting WS API");
       this.webSocketApi = new WebsocketAPI();
 
       service.ws(String.format("%s/websocket", namespace()), handler -> {
@@ -309,6 +310,7 @@ public class APIEndpoint {
 
     /* Setup HTTP/RESTful connection (if configured). */
     if (config.getEnableRest() || config.getEnableRestSecure()) {
+      LOGGER.info("Starting REST API");
       this.restHandlers.forEach(handler -> registerRestHandler(service, handler));
       this.registerServingRoutes(service, config);
     }
@@ -327,8 +329,7 @@ public class APIEndpoint {
         service.start();
       }
     } catch (Exception ex) {
-      LOGGER.log(Level.FATAL,
-          "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
+      LOGGER.log(Level.FATAL, "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
       System.exit(100);
     }
 
@@ -442,6 +443,7 @@ public class APIEndpoint {
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {
+      LOGGER.info("Serving content is enabled");
       service.get("/thumbnails/{id}", new ResolvedContentRoute(
           new FileSystemThumbnailResolver(
               new File(Config.sharedConfig().getApi().getThumbnailLocation()))));

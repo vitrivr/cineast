@@ -20,7 +20,6 @@ import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
-import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
@@ -64,7 +63,6 @@ public class WebsocketAPI {
     STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
     STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
     STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
-    STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
   }
 
   /* */
@@ -126,7 +124,7 @@ public class WebsocketAPI {
   public void message(Session session, String message) throws IOException {
     final AnyMessage testMessage = this.reader.toObject(message, AnyMessage.class);
     if (testMessage != null) {
-      final MessageType type = testMessage.getMessageType();
+      final MessageType type = testMessage.messageType();
       final WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
       if (handler != null) {
         EXECUTORS.execute(() -> handler.handle(session, this.reader.toObject(message, type.getMessageClass())));

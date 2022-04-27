@@ -36,7 +36,7 @@ public class StartSessionMessage implements Message {
    * {@inheritDoc}
    */
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.SESSION_START;
   }
 

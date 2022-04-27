@@ -48,7 +48,7 @@ public class MoreLikeThisQuery extends Query {
   }
 
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.Q_MLT;
   }
 

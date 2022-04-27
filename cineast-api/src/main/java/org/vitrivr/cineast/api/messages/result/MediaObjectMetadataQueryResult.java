@@ -25,7 +25,7 @@ public class MediaObjectMetadataQueryResult extends AbstractQueryResultMessage<M
   }
 
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.QR_METADATA_O;
   }
 

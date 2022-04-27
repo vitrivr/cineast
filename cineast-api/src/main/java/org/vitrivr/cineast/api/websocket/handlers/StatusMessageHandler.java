@@ -2,7 +2,7 @@ package org.vitrivr.cineast.api.websocket.handlers;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.general.Ping;
-import org.vitrivr.cineast.api.messages.general.Ping.StatusEnum;
+import org.vitrivr.cineast.api.messages.general.StatusEnum;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 
 /**

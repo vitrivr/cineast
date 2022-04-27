@@ -15,11 +15,4 @@ public abstract class AbstractMessage implements Message {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
-  /**
-   * Message Types which are not used in a WS context can simply have null as message type
-   */
-  @Override
-  public MessageType getMessageType() {
-    return null;
-  }
 }

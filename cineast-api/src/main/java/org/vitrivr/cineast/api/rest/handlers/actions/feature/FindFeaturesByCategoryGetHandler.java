@@ -26,7 +26,7 @@ public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<
     // Category name from path params.
     final String cat = parameters.get(CATEGORY_NAME);
 
-    return QueryUtil.retrieveFeaturesForCategory(cat, idList.getIdList());
+    return QueryUtil.retrieveFeaturesForCategory(cat, idList.ids());
   }
 
   @Override

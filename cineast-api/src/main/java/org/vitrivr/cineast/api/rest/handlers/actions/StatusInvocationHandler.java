@@ -5,8 +5,7 @@ import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.general.Ping;
-import org.vitrivr.cineast.api.messages.general.Ping.StatusEnum;
-import org.vitrivr.cineast.api.rest.RestHttpMethod;
+import org.vitrivr.cineast.api.messages.general.StatusEnum;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
 
 public class StatusInvocationHandler implements GetRestHandler<Ping> {

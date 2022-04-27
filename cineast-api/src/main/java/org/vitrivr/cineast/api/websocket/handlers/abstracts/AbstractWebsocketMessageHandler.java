@@ -33,8 +33,8 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
 
     StopWatch watch = StopWatch.createStarted();
     String json = this.writer.toJson(message);
-    if (message.getMessageType() != MessageType.PING) {
-      LOGGER.trace("Serialization for {} in {} ms", message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
+    if (message.messageType() != MessageType.PING) {
+      LOGGER.trace("Serialization for {} in {} ms", message.messageType(), watch.getTime(TimeUnit.MILLISECONDS));
     }
     String callbackName = Thread.currentThread().getName();
     CompletableFuture<Void> future = new CompletableFuture<>();
@@ -42,17 +42,18 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
       @Override
       public void writeFailed(Throwable x) {
         future.completeExceptionally(x);
-        LOGGER.fatal("Failed to write {} message to WebSocket stream!", message.getMessageType());
+        LOGGER.fatal("Failed to write {} message to WebSocket stream!", message.messageType());
+        LOGGER.error(x);
       }
 
       @Override
       public void writeSuccess() {
         future.complete(null);
-        if (message.getMessageType() == MessageType.PING) {
+        if (message.messageType() == MessageType.PING) {
           return;
         }
         watch.stop();
-        LOGGER.trace("{}: Successfully wrote message {} in {} ms", callbackName, message.getMessageType(), watch.getTime(TimeUnit.MILLISECONDS));
+        LOGGER.trace("{}: Successfully wrote message {} in {} ms", callbackName, message.messageType(), watch.getTime(TimeUnit.MILLISECONDS));
       }
     });
     return future;

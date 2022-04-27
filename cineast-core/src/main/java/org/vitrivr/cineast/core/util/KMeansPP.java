@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
-public strictfp class KMeansPP {
+public class KMeansPP {
 
   private static final Random random = new Random(1);
 

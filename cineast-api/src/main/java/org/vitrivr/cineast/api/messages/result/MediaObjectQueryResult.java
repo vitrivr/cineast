@@ -25,7 +25,7 @@ public class MediaObjectQueryResult extends AbstractQueryResultMessage<MediaObje
   }
 
   @Override
-  public MessageType getMessageType() {
+  public MessageType messageType() {
     return MessageType.QR_OBJECT;
   }
 
