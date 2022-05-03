@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 /**
  * Handler for the API call to retrieve all features for all objects for a given category.
  */
-public class FindFeaturesByCategoryGetHandler implements ParsingPostRestHandler<IdList, FeaturesByCategoryQueryResult> {
+public class FindFeaturesByCategoryPostHandler implements ParsingPostRestHandler<IdList, FeaturesByCategoryQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/category/{" + CATEGORY_NAME + "}";
 
