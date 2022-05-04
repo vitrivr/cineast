@@ -1629,10 +1629,6 @@
             "type" : "string",
             "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           },
-          "maxLength" : {
-            "type" : "number",
-            "format" : "float"
-          },
           "timeDistances" : {
             "type" : "array",
             "items" : {
@@ -1642,6 +1638,10 @@
           },
           "temporalQueryConfig" : {
             "$ref" : "#/components/schemas/TemporalQueryConfig"
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
           }
         }
       },
@@ -1846,9 +1846,6 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
-          "description" : {
-            "type" : "string"
-          },
           "name" : {
             "type" : "string"
           },
@@ -1857,6 +1854,9 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
+            "type" : "string"
+          },
+          "description" : {
             "type" : "string"
           }
         }
