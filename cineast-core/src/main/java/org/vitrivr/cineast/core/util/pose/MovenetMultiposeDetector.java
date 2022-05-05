@@ -6,8 +6,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import org.tensorflow.ConcreteFunction;
 import org.tensorflow.SavedModelBundle;
+import org.tensorflow.SessionFunction;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
@@ -26,11 +26,11 @@ public class MovenetMultiposeDetector implements PoseDetector {
   private static final String FUNCTION = "serving_default";
 
   private final SavedModelBundle multiPose;
-  private final ConcreteFunction function;
+  private final SessionFunction function;
 
   public MovenetMultiposeDetector() {
     this.multiPose = SavedModelBundle.load(RESOURCE_PATH);
-    this.function = this.multiPose.graph().getFunction(FUNCTION);
+    this.function = this.multiPose.function(FUNCTION);
   }
 
 
