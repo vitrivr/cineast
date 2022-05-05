@@ -39,7 +39,7 @@ public class GraphBuilder {
   }
 
   public <T extends TType, U extends TType> Output<U> cast(Output<T> value, DataType dtype) {
-    return g.opBuilder("Cast", "Cast")
+    return g.opBuilder("Cast", "Cast", g.baseScope())
         .addInput(value)
         .setAttr("DstT", dtype)
         .build()
@@ -47,7 +47,7 @@ public class GraphBuilder {
   }
 
   public Output<TUint8> decodeJpeg(Output<TString> contents, long channels) {
-    return g.opBuilder("DecodeJpeg", "DecodeJpeg")
+    return g.opBuilder("DecodeJpeg", "DecodeJpeg", g.baseScope())
         .addInput(contents)
         .setAttr("channels", channels)
         .build()
@@ -55,7 +55,7 @@ public class GraphBuilder {
   }
 
   public <T extends TType> Output<T> constant(String name, Tensor t) {
-    return g.opBuilder("Const", name)
+    return g.opBuilder("Const", name, g.baseScope())
         .setAttr("dtype", t.dataType())
         .setAttr("value", t)
         .build()
@@ -80,18 +80,18 @@ public class GraphBuilder {
   }
 
   public <T extends TType> Output<T> placeholder(String name, DataType type) {
-    return g.opBuilder("Placeholder", name)
+    return g.opBuilder("Placeholder", name, g.baseScope())
         .setAttr("dtype", type)
         .build()
         .output(0);
   }
 
   private <T extends TType> Output<T> binaryOp(String type, Output<T> in1, Output<T> in2) {
-    return g.opBuilder(type, type).addInput(in1).addInput(in2).build().output(0);
+    return g.opBuilder(type, type, g.baseScope()).addInput(in1).addInput(in2).build().output(0);
   }
 
   private <T extends TType, U extends TType, V extends TType> Output<T> binaryOp3(String type, Output<U> in1, Output<V> in2) {
-    return g.opBuilder(type, type).addInput(in1).addInput(in2).build().output(0);
+    return g.opBuilder(type, type, g.baseScope()).addInput(in1).addInput(in2).build().output(0);
   }
 
 }

@@ -30,7 +30,7 @@ public class MovenetMultiposeDetector implements PoseDetector {
 
   public MovenetMultiposeDetector() {
     this.multiPose = SavedModelBundle.load(RESOURCE_PATH);
-    this.function = this.multiPose.function(FUNCTION);
+    this.function = this.multiPose.graph().getFunction(FUNCTION);
   }
 
 
