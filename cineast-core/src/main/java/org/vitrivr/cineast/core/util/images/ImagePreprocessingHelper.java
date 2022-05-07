@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.images;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.resizers.Resizers;
+import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,9 +48,9 @@ public class ImagePreprocessingHelper {
             BufferedImage tmp;
 
             if (img.getWidth() > img.getHeight()) {
-                tmp = Thumbnails.of(img).height(size).asBufferedImage();
+                tmp = Thumbnails.of(img).height(size).resizer(Resizers.BICUBIC).antialiasing(Antialiasing.OFF).asBufferedImage();
             } else {
-                tmp = Thumbnails.of(img).width(size).asBufferedImage();
+                tmp = Thumbnails.of(img).width(size).resizer(Resizers.BICUBIC).antialiasing(Antialiasing.OFF).asBufferedImage();
             }
 
             return Thumbnails.of(tmp).crop(Positions.CENTER).size(size, size).asBufferedImage();
