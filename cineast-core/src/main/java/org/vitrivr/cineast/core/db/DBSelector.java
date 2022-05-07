@@ -20,7 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
@@ -61,6 +61,11 @@ public interface DBSelector extends Closeable {
     LogManager.getLogger().error("{} does not support other queries than float-arrays.", this.getClass().getSimpleName());
     throw new UnsupportedOperationException();
   }
+
+  default List<SegmentDistanceElement> getFarthestNeighboursGeneric(int k, PrimitiveTypeProvider queryProvider, String column, Class<SegmentDistanceElement> distanceElementClass, ReadableQueryConfig config) {
+    throw new UnsupportedOperationException("Farthest neighbors are not supported");
+  }
+
 
   /**
    * Performs a batched kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector in the provided list and returns the union of the results for every query.
@@ -306,7 +311,7 @@ public interface DBSelector extends Closeable {
   /**
    * SELECT count(*) FROM table
    */
-  default int rowCount(){
+  default int rowCount() {
     return getAll().size();
   }
 

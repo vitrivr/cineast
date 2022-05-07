@@ -27,7 +27,9 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
@@ -88,6 +90,22 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<SegmentDistanceElement> getFarthestNeighboursGeneric(int k, PrimitiveTypeProvider queryProvider, String column, Class<SegmentDistanceElement> distanceElementClass, ReadableQueryConfig config) {
+    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType().equals(ProviderDataType.INT_ARRAY)) {
+      //Default-implementation for backwards compatibility.
+      var vector = PrimitiveTypeProvider.getSafeFloatArray(queryProvider);
+      final var query = kn(k, vector, column, config, Direction.DESC);
+      try {
+        return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
+      } catch (StatusRuntimeException e) {
+        LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
+        return new ArrayList<>(0);
+      }
+    }
+    throw new UnsupportedOperationException("other types than float vectors are not supported for farthest neighbors");
+  }
+
+  @Override
   public <E extends DistanceElement> List<E> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<E> distanceElementClass, List<ReadableQueryConfig> configs) {
     return new ArrayList<>(0); /* TODO. */
   }
@@ -119,6 +137,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
   }
+
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
@@ -366,7 +385,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(String order, int skip, int limit) {
     final Query query = new Query(this.fqn).select("*", null)
-        .queryId(generateQueryID("get-all-order-skip-limit-"+this.fqn))
+        .queryId(generateQueryID("get-all-order-skip-limit-" + this.fqn))
         .order(order, Direction.ASC)
         .skip(skip)
         .limit(limit);
@@ -375,7 +394,7 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public int rowCount() {
-    final Query query = new Query(this.fqn).count().queryId("count-star-"+this.fqn);
+    final Query query = new Query(this.fqn).count().queryId("count-star-" + this.fqn);
     return Math.toIntExact(this.cottontail.client.query(query).next().asLong(0));
   }
 
@@ -428,13 +447,28 @@ public final class CottontailSelector implements DBSelector {
    * @return {@link Query}
    */
   private Query knn(int k, float[] vector, String column, ReadableQueryConfig config, String... select) {
+    return kn(k, vector, column, config, Direction.ASC, select);
+  }
+
+  /**
+   * Creates and returns a basic {@link Query} object for the given k(f|n)N parameters.
+   *
+   * @param k      The k parameter used for the search
+   * @param vector The query vector (= float array).
+   * @param column The name of the column that should be queried.
+   * @param config The {@link ReadableQueryConfig} with additional parameters.
+   * @param config ASC for knn DESC for farthest neighbor
+   * @param select which rows should be selected
+   * @return {@link Query}
+   */
+  private Query kn(int k, float[] vector, String column, ReadableQueryConfig config, Direction direction, String... select) {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
     final Query query = new Query(this.fqn)
         .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
-        .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
+        .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
         .limit(k)
-        .queryId(generateQueryID("knn", config));
+        .queryId(generateQueryID("kfn", config));
 
     for (String s : select) {
       query.select(s, null);
