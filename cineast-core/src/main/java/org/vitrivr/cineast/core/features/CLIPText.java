@@ -57,14 +57,14 @@ public class CLIPText implements Retriever {
     private DBSelector selector;
     private ClipTokenizer ct = new ClipTokenizer();
 
-    private static void init() {
+    private static void loadModel() {
         if (model == null) {
             model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
         }
     }
 
     public CLIPText() {
-        init();
+        loadModel();
     }
 
     @Override
