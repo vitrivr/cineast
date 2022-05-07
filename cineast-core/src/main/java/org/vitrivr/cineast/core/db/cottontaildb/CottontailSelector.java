@@ -94,7 +94,7 @@ public final class CottontailSelector implements DBSelector {
     if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType().equals(ProviderDataType.INT_ARRAY)) {
       //Default-implementation for backwards compatibility.
       var vector = PrimitiveTypeProvider.getSafeFloatArray(queryProvider);
-      final var query = kn(k, vector, column, config, Direction.DESC);
+      final var query = kn(k, vector, column, config, Direction.DESC, "id");
       try {
         return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
       } catch (StatusRuntimeException e) {
