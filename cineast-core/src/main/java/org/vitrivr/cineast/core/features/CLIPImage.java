@@ -54,7 +54,7 @@ public class CLIPImage extends AbstractFeatureModule {
   public CLIPImage() {
     super(TABLE_NAME, 1f, EMBEDDING_SIZE);
     model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
-    this.correspondence = CorrespondenceFunction.identity();
+    this.correspondence = CorrespondenceFunction.linear(0.5);
   }
 
   @Override
