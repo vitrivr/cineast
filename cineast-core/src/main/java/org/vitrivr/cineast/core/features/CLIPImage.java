@@ -91,7 +91,9 @@ public class CLIPImage extends AbstractFeatureModule {
     var dists = new HashMap<String, Double>();
     images.keySet().forEach(file -> {
       images.values().forEach(prompt -> {
+        var alt = "This is "+prompt;
         dists.put(file + " + " + prompt, CosineDistance.cosineDist(imgCache.get(file), textCache.get(prompt)));
+        dists.put(file + " + " + alt, CosineDistance.cosineDist(imgCache.get(file), textCache.get(alt)));
       });
     });
     var sorted = dists.entrySet().stream().sorted(Comparator.comparingDouble((Entry<String, Double> o) -> o.getValue()).reversed())
