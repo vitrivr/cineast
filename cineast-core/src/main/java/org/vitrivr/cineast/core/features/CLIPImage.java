@@ -57,51 +57,6 @@ public class CLIPImage extends AbstractFeatureModule {
     this.correspondence = CorrespondenceFunction.identity();
   }
 
-  public static void main(String[] args) {
-    var images = new HashMap<String, String>();
-    images.put("page.png", "a page of text about segmentation");
-    images.put("chelsea.png", "a facial photo of a tabby cat");
-    images.put("astronaut.png", "a portrait of an astronaut with the American flag");
-    images.put("rocket.jpg", "a rocket standing on a launchpad");
-    images.put("motorcycle_right.png", "a red motorcycle standing in a garage");
-    images.put("camera.png", "a person looking at a camera on a tripod");
-    images.put("horse.png", "a black-and-white silhouette of a horse");
-    images.put("coffee.png", "a cup of coffee on a saucer");
-
-    var imgCache = new HashMap<String, float[]>();
-    var textCache = new HashMap<String, float[]>();
-
-    var clipImg = new CLIPImage();
-    var clipTxt = new CLIPText();
-
-    images.forEach((key, text) -> {
-      BufferedImage img = null;
-      try {
-        img = ImageIO.read(new File(key));
-        var vec = clipImg.embedImage(img);
-        imgCache.put(key, vec);
-        var txt = clipTxt.embedText(text);
-        textCache.put(text, txt);
-        var txt2 = clipTxt.embedText("This is " + text);
-        textCache.put("This is " + text, txt);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
-    var dists = new HashMap<String, Double>();
-    images.keySet().forEach(file -> {
-      images.values().forEach(prompt -> {
-        var alt = "This is "+prompt;
-        dists.put(file + " + " + prompt, CosineDistance.cosineDist(imgCache.get(file), textCache.get(prompt)));
-        dists.put(file + " + " + alt, CosineDistance.cosineDist(imgCache.get(file), textCache.get(alt)));
-      });
-    });
-    var sorted = dists.entrySet().stream().sorted(Comparator.comparingDouble((Entry<String, Double> o) -> o.getValue()).reversed())
-        .map(entry -> entry.getKey() + ": " + entry.getValue())
-        .collect(Collectors.toList());
-    sorted.forEach(System.out::println);
-  }
-
   @Override
   public void processSegment(SegmentContainer shot) {
 
