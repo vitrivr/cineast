@@ -10,6 +10,7 @@ import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat16;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -47,6 +48,7 @@ public class CLIPImage extends AbstractFeatureModule {
     public CLIPImage() {
         super(TABLE_NAME, 1f, EMBEDDING_SIZE);
         model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+        this.correspondence = CorrespondenceFunction.identity();
     }
 
     @Override
