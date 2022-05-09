@@ -10,6 +10,12 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  */
 public record QueryStart(String queryId, MessageType messageType) implements Message {
 
+  public QueryStart {
+    if (messageType != MessageType.QR_START) {
+      throw new IllegalStateException("MessageType was not QR_START, but " + messageType);
+    }
+  }
+
   public QueryStart(String queryId) {
     this(queryId, MessageType.QR_START);
   }

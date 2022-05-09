@@ -26,14 +26,14 @@ public class SelectFromTablePostHandler implements ParsingPostRestHandler<Select
 
   @Override
   public SelectResult performPost(SelectSpecification input, Context ctx) {
-    if (input == null || input.getTable().isEmpty() || input.columns().isEmpty()) {
+    if (input == null || input.table().isEmpty() || input.columns().isEmpty()) {
       LOGGER.warn("returning empty list, invalid input {}", input);
       return new SelectResult(new ArrayList<>());
     }
     StopWatch watch = StopWatch.createStarted();
     try (var selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get()) {
 
-      selector.open(input.getTable());
+      selector.open(input.table());
       var _result = selector.getAll(input.columns(), input.limit());
       var stringified = _result.stream().map(el -> {
         Map<String, String> m = new HashMap<>();
@@ -42,7 +42,7 @@ public class SelectFromTablePostHandler implements ParsingPostRestHandler<Select
       }).collect(Collectors.toList());
 
       watch.stop();
-      LOGGER.trace("Performed select on {}.{} in {} ms", input.getTable(), input.columns(), watch.getTime(TimeUnit.MILLISECONDS));
+      LOGGER.trace("Performed select on {}.{} in {} ms", input.table(), input.columns(), watch.getTime(TimeUnit.MILLISECONDS));
       return new SelectResult(stringified);
     }
   }

@@ -63,8 +63,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     List<Thread> ssqThreads = new ArrayList<>();
 
     /* Iterate over all temporal query containers independently */
-    for (int containerIdx = 0; containerIdx < message.getQueries().size(); containerIdx++) {
-      StagedSimilarityQuery stagedSimilarityQuery = message.getQueries().get(containerIdx);
+    for (int containerIdx = 0; containerIdx < message.queries().size(); containerIdx++) {
+      StagedSimilarityQuery stagedSimilarityQuery = message.queries().get(containerIdx);
 
       /* Make a new Query config for this container because the relevant segments from the previous stage will differ within this container from stage to stage.  */
       QueryConfig stageQConf = QueryConfig.clone(qconf);
@@ -161,7 +161,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                 sentObjectIds.addAll(limitedObjectIds);
                 LOGGER.trace("Queueing finalization and result submission for last stage, container {}", lambdaFinalContainerIdx);
                 futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, lambdaFinalContainerIdx, limitedResults));
-                List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
+                List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
                 metadataRetrievalThreads.addAll(_threads);
               }
             }
@@ -212,7 +212,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     }
 
     /* You can skip the computation of temporal objects in the config if you wish simply to execute all queries independently (e.g. for evaluation)*/
-    if (!message.getTemporalQueryConfig().computeTemporalObjects) {
+    if (!message.config().computeTemporalObjects) {
       LOGGER.debug("Not computing temporal objects due to query config");
       finish(metadataRetrievalThreads, cleanupThreads);
       return;
@@ -226,7 +226,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     /* Initialise the temporal scoring algorithms depending on timeDistances list */
     List<List<StringDoublePair>> tmpContainerResults = new ArrayList<>();
 
-    IntStream.range(0, message.getQueries().size()).forEach(idx -> tmpContainerResults.add(containerResults.getOrDefault(idx, new ArrayList<>())));
+    IntStream.range(0, message.queries().size()).forEach(idx -> tmpContainerResults.add(containerResults.getOrDefault(idx, new ArrayList<>())));
 
     /* Score and retrieve the results */
     List<TemporalObject> results = TemporalScoring.score(segmentMap, tmpContainerResults, message.getTimeDistances(), message.getMaxLength());
@@ -252,7 +252,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       this.submitSegmentAndObjectInformationFromIds(session, uuid, segmentIds, objectIds);
 
       /* Retrieve and send metadata for items not already sent */
-      List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
+      List<Thread> _threads = this.submitMetadata(session, uuid, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
       metadataRetrievalThreads.addAll(_threads);
     }
 

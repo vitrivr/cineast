@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.general;
 
-public record IntegerMessage(int value) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record IntegerMessage(@JsonProperty(required = true) Integer value) {
 
 }

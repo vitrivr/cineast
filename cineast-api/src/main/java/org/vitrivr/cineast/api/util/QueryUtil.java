@@ -112,7 +112,7 @@ public class QueryUtil {
    * @return The query results as a list of temporal objects.
    */
   public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
-    var stagedResults = query.getQueries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).collect(Collectors.toList());
+    var stagedResults = query.queries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).collect(Collectors.toList());
 
     // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
     try (var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {

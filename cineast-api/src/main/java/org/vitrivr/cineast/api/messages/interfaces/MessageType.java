@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.api.messages.interfaces;
 
-import org.vitrivr.cineast.api.messages.credentials.Credentials;
 import org.vitrivr.cineast.api.messages.general.Ping;
-import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SegmentQuery;

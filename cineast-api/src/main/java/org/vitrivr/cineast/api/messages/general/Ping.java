@@ -1,12 +1,19 @@
 package org.vitrivr.cineast.api.messages.general;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Message object for a ping message.
  */
-public record Ping(StatusEnum status, MessageType messageType) implements Message {
+public record Ping(StatusEnum status, @JsonProperty(required = true) MessageType messageType) implements Message {
+
+  public Ping {
+    if (messageType != MessageType.PING) {
+      throw new IllegalStateException("MessageType was not PING, but " + messageType);
+    }
+  }
 
   public Ping(StatusEnum status) {
     this(status, MessageType.PING);

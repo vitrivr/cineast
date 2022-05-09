@@ -35,7 +35,7 @@ public class FindSegmentSimilarTemporalPostHandler implements ParsingPostRestHan
 
   @Override
   public TemporalQueryResult performPost(TemporalQuery query, Context ctx) {
-    ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.getQueryConfig());
+    ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.config());
 
     var temporalResults = QueryUtil.findSegmentsSimilarTemporal(continuousRetrievalLogic, query, config);
 

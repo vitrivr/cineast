@@ -2,8 +2,8 @@ package org.vitrivr.cineast.api.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.vitrivr.cineast.api.messages.abstracts.AbstractMessage;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
 
 /**
@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescrip
  * still realise that there are unknown properties</p>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record OptionallyFilteredIdList(List<AbstractMetadataFilterDescriptor> filters, List<String> ids) {
+public record OptionallyFilteredIdList(@JsonProperty(required = true) List<AbstractMetadataFilterDescriptor> filters, @JsonProperty(required = true) List<String> ids) {
 
   /**
    * Check if the optionally filtered list contains filters.

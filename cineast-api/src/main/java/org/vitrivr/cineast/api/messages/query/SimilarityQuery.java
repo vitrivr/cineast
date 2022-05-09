@@ -1,43 +1,21 @@
 package org.vitrivr.cineast.api.messages.query;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
+import org.vitrivr.cineast.api.messages.interfaces.Query;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 
 /**
  * A {@link SimilarityQuery} contains a list of {@link QueryTerm}s. This object represents a similarity-query message, i.e. a request for a similarity-search.
  */
-public class SimilarityQuery extends Query {
+public record SimilarityQuery(@JsonProperty(required = true) List<QueryTerm> terms, @JsonProperty(required = true) List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, MessageType messageType) implements Query {
 
-  /**
-   * List of {@link QueryTerm}s that are part of this {@link SimilarityQuery}.
-   */
-  private final List<QueryTerm> terms;
-
-  /**
-   * Constructor for the SimilarityQuery object.
-   *
-   * @param terms  List of {@link QueryTerm}s.
-   * @param config The {@link ReadableQueryConfig}. May be null!
-   */
-  @JsonCreator
-  public SimilarityQuery(@JsonProperty(value = "terms", required = true) List<QueryTerm> terms, @JsonProperty(value = "config") QueryConfig config) {
-    super(config);
-    this.terms = terms;
+  public SimilarityQuery {
+    if (messageType != MessageType.Q_SIM) {
+      throw new IllegalStateException("MessageType was not Q_SIM, but " + messageType);
+    }
   }
 
-  /**
-   * Getter for containers.
-   */
-  public List<QueryTerm> getTerms() {
-    return this.terms;
-  }
-
-  @Override
-  public MessageType messageType() {
-    return MessageType.Q_SIM;
-  }
 }
