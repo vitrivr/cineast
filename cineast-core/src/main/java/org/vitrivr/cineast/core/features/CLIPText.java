@@ -50,21 +50,21 @@ public class CLIPText implements Retriever {
     private static final String EMBEDDING_INPUT = "input";
     private static final String EMBEDDING_OUTPUT = "output";
 
-    private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(1f);
+    private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(0.5);
 
     private static SavedModelBundle model;
 
     private DBSelector selector;
     private ClipTokenizer ct = new ClipTokenizer();
 
-    private static void init() {
+    private static void loadModel() {
         if (model == null) {
             model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
         }
     }
 
     public CLIPText() {
-        init();
+        loadModel();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CLIPText implements Retriever {
         return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
     }
 
-    private float[] embedText(String text) {
+    public float[] embedText(String text) {
 
         long[] tokens = ct.clipTokenize(text);
 
