@@ -16,7 +16,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
-          java-version: 11.0.6
+          java-version: 17
           server-id: maven
       - id: get_version
         name: Extract publication version from tag.
