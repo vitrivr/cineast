@@ -21,6 +21,11 @@ public class CorrespondenceFunction implements DoubleUnaryOperator {
     return IDENTITY;
   }
 
+  public static CorrespondenceFunction identityMultiple(double multiplier) {
+    Preconditions.checkArgument(multiplier > 0, "Multiplier must be larger than 0, but found: " + multiplier);
+    return new CorrespondenceFunction(distance -> distance * multiplier);
+  }
+
   public static CorrespondenceFunction linear(double maximumDistance) {
     Preconditions.checkArgument(maximumDistance > 0, "Maximum distance cannot be zero or smaller than zero, but found: " + maximumDistance);
     return new CorrespondenceFunction(distance -> 1d - (distance / maximumDistance));
