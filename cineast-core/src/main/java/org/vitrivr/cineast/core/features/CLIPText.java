@@ -134,8 +134,6 @@ public class CLIPText implements Retriever {
   private List<ScoreElement> getSimilar(PrimitiveTypeProvider queryProvider, ReadableQueryConfig qc) {
     ReadableQueryConfig qcc = QueryConfig.clone(qc).setDistance(DISTANCE);
     List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), queryProvider, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, qcc);
-    System.out.println(distances.get(0).getDistance() + " / " + distances.get(distances.size() - 1).getDistance());
-    System.out.println(qcc.getCorrespondenceFunction());
     CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(CORRESPONDENCE);
     return DistanceElement.toScore(distances, function);
   }
