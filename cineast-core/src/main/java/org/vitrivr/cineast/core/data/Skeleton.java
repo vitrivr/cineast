@@ -51,6 +51,9 @@ public class Skeleton {
 
   public Skeleton() {
     //empty skeleton
+    for (int i = 0; i < POINT_COUNT; ++i) {
+      this.points[i] = new Point2D_F32(0f, 0f);
+    }
   }
 
   public List<Point2D_F32> getPoints() {

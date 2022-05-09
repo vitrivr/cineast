@@ -15,7 +15,7 @@ import org.vitrivr.cineast.api.util.QueryUtil;
 /**
  * Handler for the API call to retrieve all features for all objects for a given table/entity name.
  */
-public class FindFeaturesByEntityGetHandler implements ParsingPostRestHandler<IdList, FeaturesByEntityQueryResult> {
+public class FindFeaturesByEntityPostHandler implements ParsingPostRestHandler<IdList, FeaturesByEntityQueryResult> {
 
   public static final String ROUTE = "find/feature/all/by/entity/{" + ENTITY_NAME + "}";
 
