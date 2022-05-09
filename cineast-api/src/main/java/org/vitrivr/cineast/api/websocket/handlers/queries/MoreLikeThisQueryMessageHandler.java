@@ -46,7 +46,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
           .sorted(StringDoublePair.COMPARATOR)
           .limit(Config.sharedConfig().getRetriever().getMaxResults())
           .collect(Collectors.toList());
-      List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
+      List<String> segmentIds = results.stream().map(StringDoublePair::key).collect(Collectors.toList());
       List<String> objectIds = this.submitSegmentAndObjectInformation(session, queryId, segmentIds);
 
       /* Finalize and submit per-category results. */

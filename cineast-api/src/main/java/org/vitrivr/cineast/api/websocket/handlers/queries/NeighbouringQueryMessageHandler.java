@@ -45,7 +45,7 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
 
     MediaSegmentDescriptor segment = segmentOption.get();
 
-    final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.count(), segment.getSequenceNumber() + message.getCount());
+    final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.count(), segment.getSequenceNumber() + message.count());
 
     /* Write segments to stream. */
     CompletableFuture<Void> future = this.write(session, new MediaSegmentQueryResult(uuid, segments));

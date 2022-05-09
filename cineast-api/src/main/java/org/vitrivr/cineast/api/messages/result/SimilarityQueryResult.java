@@ -15,7 +15,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
  */
 public record SimilarityQueryResult(String queryId, List<StringDoublePair> content, String category, int containerId, MessageType messageType) implements QueryResultMessage<StringDoublePair> {
 
-
   public SimilarityQueryResult {
     if (messageType != MessageType.QR_SIMILARITY) {
       throw new IllegalStateException("MessageType was not QR_SIMILARITY, but " + messageType);

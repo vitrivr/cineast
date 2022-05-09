@@ -89,7 +89,7 @@ public class QueryUtil {
 
       var relevantSegments = new HashSet<String>();
       for (var result : stageResults.values()) {
-        relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
+        relevantSegments.addAll(result.stream().map(StringDoublePair::key).toList());
       }
 
       // Return empty results if there are no more results in stage
@@ -112,11 +112,11 @@ public class QueryUtil {
    * @return The query results as a list of temporal objects.
    */
   public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
-    var stagedResults = query.queries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).collect(Collectors.toList());
+    var stagedResults = query.queries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).toList();
 
     // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
     try (var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
-      var segmentIds = stagedResults.stream().flatMap(resultsMap -> resultsMap.values().stream().flatMap(pairs -> pairs.stream().map(pair -> pair.key))).distinct().collect(Collectors.toList());
+      var segmentIds = stagedResults.stream().flatMap(resultsMap -> resultsMap.values().stream().flatMap(pairs -> pairs.stream().map(StringDoublePair::key))).distinct().collect(Collectors.toList());
 
       var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
       var stagedQueryResults = stagedResults.stream().map(resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())).collect(Collectors.toList());
@@ -136,7 +136,7 @@ public class QueryUtil {
 
     var relevantSegments = new HashSet<String>();
     for (var result : stagedQueryResults.get(stagedQueryResults.size() - 1).values()) {
-      relevantSegments.addAll(result.stream().map(pair -> pair.key).collect(Collectors.toList()));
+      relevantSegments.addAll(result.stream().map(StringDoublePair::key).toList());
     }
 
     for (var stageResults : stagedQueryResults) {
@@ -144,7 +144,7 @@ public class QueryUtil {
         if (results.containsKey(category)) {
           LOGGER.warn("Staged query contained the category \"{}\" multiple times.", category);
         }
-        var filteredResults = stageResults.get(category).stream().filter(pair -> relevantSegments.contains(pair.key)).collect(Collectors.toList());
+        var filteredResults = stageResults.get(category).stream().filter(pair -> relevantSegments.contains(pair.key())).collect(Collectors.toList());
         results.put(category, filteredResults);
       }
     }

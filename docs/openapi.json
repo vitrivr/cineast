@@ -1228,6 +1228,7 @@
         } ]
       },
       "OptionallyFilteredIdList" : {
+        "required" : [ "filters", "ids" ],
         "type" : "object",
         "properties" : {
           "filters" : {
@@ -1245,6 +1246,7 @@
         }
       },
       "IdList" : {
+        "required" : [ "ids" ],
         "type" : "object",
         "properties" : {
           "ids" : {
@@ -1397,6 +1399,21 @@
       "CorrespondenceFunction" : {
         "type" : "object"
       },
+      "MetadataAccessSpecification" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "OBJECT", "SEGMENT" ]
+          },
+          "domain" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          }
+        }
+      },
       "QueryConfig" : {
         "type" : "object",
         "properties" : {
@@ -1441,19 +1458,19 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "correspondenceFunctionIfEmpty" : {
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceWeightsIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "normIfEmpty" : {
+          "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1463,6 +1480,7 @@
         }
       },
       "QueryTerm" : {
+        "required" : [ "categories", "data", "type" ],
         "type" : "object",
         "properties" : {
           "categories" : {
@@ -1481,13 +1499,19 @@
         }
       },
       "SimilarityQuery" : {
-        "required" : [ "terms" ],
+        "required" : [ "metadataAccessSpec", "terms" ],
         "type" : "object",
         "properties" : {
           "terms" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/QueryTerm"
+            }
+          },
+          "metadataAccessSpec" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataAccessSpecification"
             }
           },
           "config" : {
@@ -1554,6 +1578,7 @@
         }
       },
       "QueryStage" : {
+        "required" : [ "terms" ],
         "type" : "object",
         "properties" : {
           "terms" : {
@@ -1578,23 +1603,8 @@
           }
         }
       },
-      "MetadataAccessSpecification" : {
-        "type" : "object",
-        "properties" : {
-          "type" : {
-            "type" : "string",
-            "enum" : [ "OBJECT", "SEGMENT" ]
-          },
-          "domain" : {
-            "type" : "string"
-          },
-          "key" : {
-            "type" : "string"
-          }
-        }
-      },
       "TemporalQuery" : {
-        "required" : [ "queries" ],
+        "required" : [ "messageType", "metadataAccessSpec", "queries" ],
         "type" : "object",
         "properties" : {
           "queries" : {
@@ -1603,28 +1613,14 @@
               "$ref" : "#/components/schemas/StagedSimilarityQuery"
             }
           },
-          "config" : {
-            "$ref" : "#/components/schemas/TemporalQueryConfig"
-          },
           "metadataAccessSpec" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MetadataAccessSpecification"
             }
           },
-          "maxLength" : {
-            "type" : "number",
-            "format" : "float"
-          },
-          "temporalQueryConfig" : {
+          "config" : {
             "$ref" : "#/components/schemas/TemporalQueryConfig"
-          },
-          "timeDistances" : {
-            "type" : "array",
-            "items" : {
-              "type" : "number",
-              "format" : "float"
-            }
           },
           "messageType" : {
             "type" : "string",
@@ -1690,19 +1686,19 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "correspondenceFunctionIfEmpty" : {
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "distanceWeightsIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "normIfEmpty" : {
+          "correspondenceFunctionIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1868,7 +1864,7 @@
           "queryId" : {
             "type" : "string"
           },
-          "tagIDs" : {
+          "tags" : {
             "type" : "array",
             "items" : {
               "type" : "string"
@@ -1880,6 +1876,7 @@
         }
       },
       "Credentials" : {
+        "required" : [ "password", "username" ],
         "type" : "object",
         "properties" : {
           "username" : {
@@ -1906,8 +1903,7 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "string",
-            "writeOnly" : true
+            "type" : "string"
           },
           "validUntil" : {
             "type" : "integer",
@@ -1916,9 +1912,6 @@
           "type" : {
             "type" : "string",
             "enum" : [ "UNAUTHENTICATED", "USER", "ADMIN" ]
-          },
-          "sessionId" : {
-            "type" : "string"
           }
         }
       },
@@ -1930,10 +1923,6 @@
             "items" : {
               "$ref" : "#/components/schemas/ExtractionItemContainer"
             }
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1955,6 +1944,7 @@
         }
       },
       "ColumnSpecification" : {
+        "required" : [ "column", "table" ],
         "type" : "object",
         "properties" : {
           "column" : {
@@ -1980,6 +1970,7 @@
         }
       },
       "SelectSpecification" : {
+        "required" : [ "columns", "limit", "table" ],
         "type" : "object",
         "properties" : {
           "table" : {
@@ -2012,6 +2003,7 @@
         }
       },
       "IntegerMessage" : {
+        "required" : [ "value" ],
         "type" : "object",
         "properties" : {
           "value" : {
@@ -2021,6 +2013,7 @@
         }
       },
       "Ping" : {
+        "required" : [ "messageType" ],
         "type" : "object",
         "properties" : {
           "status" : {

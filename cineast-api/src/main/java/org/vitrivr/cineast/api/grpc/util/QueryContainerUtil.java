@@ -266,7 +266,7 @@ public class QueryContainerUtil {
   }
 
   public static CineastGrpc.MediaSegmentIdScore mediaSegmentIdScore(StringDoublePair pair) {
-    return CineastGrpc.MediaSegmentIdScore.newBuilder().setId(mediaSegmentId(pair.key)).setScore(pair.value).build();
+    return CineastGrpc.MediaSegmentIdScore.newBuilder().setId(mediaSegmentId(pair.key())).setScore(pair.value()).build();
   }
 
   public static CineastGrpc.QueryId queryId(String id) {

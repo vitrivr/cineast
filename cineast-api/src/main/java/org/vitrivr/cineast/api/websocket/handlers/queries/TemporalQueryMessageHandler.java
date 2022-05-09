@@ -121,7 +121,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
               final List<StringDoublePair> results = scores.stream()
                   .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
-                  .filter(p -> p.value > 0d)
+                  .filter(p -> p.value() > 0d)
                   .sorted(StringDoublePair.COMPARATOR)
                   .collect(Collectors.toList());
 
@@ -133,7 +133,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               }
 
               cache.get(stageIndex).put(category, results);
-              results.forEach(res -> relevantSegments.add(res.key));
+              results.forEach(res -> relevantSegments.add(res.key()));
 
               /*
                * If this is the last stage, we can collect the results and send relevant results per category back the requester.
@@ -145,9 +145,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                 List<StringDoublePair> limitedResults = results.stream()
                     .limit(max)
                     .collect(Collectors.toList());
-                results.forEach(res -> limitedRelevantSegments.add(res.key));
+                results.forEach(res -> limitedRelevantSegments.add(res.key()));
                 List<String> limitedSegmentIds = limitedResults.stream()
-                    .map(el -> el.key)
+                    .map(StringDoublePair::key)
                     .collect(Collectors.toList());
                 sentSegmentIds.addAll(limitedSegmentIds);
 
@@ -184,12 +184,12 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
           int finalStageIndex = stageIndex;
           /* Add the results from the last filter from all previous stages also to the list of results */
           cache.get(stageIndex).forEach((category, results) -> {
-            results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
+            results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key()));
             stageResults.addAll(results);
           });
           /* Return the limited results from all stages that are within the filter */
           cache.get(stageIndex).forEach((category, results) -> {
-            results.removeIf(pair -> !limitedStageQConf.getRelevantSegmentIds().contains(pair.key));
+            results.removeIf(pair -> !limitedStageQConf.getRelevantSegmentIds().contains(pair.key()));
             Thread thread = new Thread(() -> {
               LOGGER.trace("Queuing finalization & result submission for stage {} and container {}", finalStageIndex, lambdaFinalContainerIdx);
               futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, lambdaFinalContainerIdx, results));
