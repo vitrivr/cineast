@@ -49,7 +49,7 @@ public class CLIPText implements Retriever {
   private static final String EMBEDDING_INPUT = "input";
   private static final String EMBEDDING_OUTPUT = "output";
 
-  private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(0.5);
+  private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(1);
 
   private static SavedModelBundle model;
 
