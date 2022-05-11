@@ -57,12 +57,14 @@ public abstract class MetadataTest<R> {
       Assertions.fail("ELEMENT_COUNT must be an even number");
     }
     this.provider = provider();
+    assumeTrue(provider != null);
     this.testObjMetaTableName = getTestObjMetaTableName();
     this.testSegMetaTableName = getTestSegMetaTableName();
   }
 
   @BeforeEach
   void setupTest() {
+    assumeTrue(provider != null);
     /* Open all readers. */
     this.objSelector = this.provider.getSelector();
     this.segSelector = this.provider.getSelector();

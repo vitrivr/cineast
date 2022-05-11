@@ -14,14 +14,14 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatement> {
 
 
-  private final PolyphenyIntegrationDBProvider _provider;
+  private PolyphenyIntegrationDBProvider _provider;
 
   public PolyphenyIntegrationTest() {
     try {
       _provider = new PolyphenyIntegrationDBProvider();
     } catch (Throwable e) {
       LOGGER.error("Error occurred while starting and connecting to Polypheny: " + e.getMessage());
-      throw e;
+      _provider = null;
     }
   }
 

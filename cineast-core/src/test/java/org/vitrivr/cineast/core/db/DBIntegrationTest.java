@@ -74,6 +74,7 @@ public abstract class DBIntegrationTest<R> {
   @BeforeAll
   void checkConnection() {
     provider = provider();
+    assumeTrue(provider != null);
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
@@ -87,6 +88,7 @@ public abstract class DBIntegrationTest<R> {
 
   @BeforeEach
   void setupTest() {
+    assumeTrue(provider != null);
     dropTables();
     createTables();
     fillVectorData();
@@ -149,7 +151,7 @@ public abstract class DBIntegrationTest<R> {
     writer.persist(vectors);
   }
 
-  private String toId(int id){
+  private String toId(int id) {
     return String.format("%05d", id);
   }
 

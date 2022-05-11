@@ -8,14 +8,14 @@ import org.vitrivr.cineast.core.db.dao.MetadataTest;
 public class PolyphenyMetadataTest extends MetadataTest<PreparedStatement> {
 
 
-  private final PolyphenyIntegrationDBProvider _provider;
+  private PolyphenyIntegrationDBProvider _provider;
 
   public PolyphenyMetadataTest() {
     try {
       _provider = new PolyphenyIntegrationDBProvider();
     } catch (Throwable e) {
       LOGGER.error("Error occurred while starting and connecting to Polypheny: " + e.getMessage());
-      throw e;
+      _provider = null;
     }
   }
 
