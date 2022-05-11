@@ -82,7 +82,7 @@ public abstract class DataImportHandler {
       setupCmd.doSetup();
     } else {
       cottontail.client.create(createEntity);
-      LOGGER.info("Re-created entity: {}", createEntity.getBuilder().getDefinition().getEntity().getName());
+      LOGGER.info("Re-created entity: {}", entityName);
     }
   }
 
