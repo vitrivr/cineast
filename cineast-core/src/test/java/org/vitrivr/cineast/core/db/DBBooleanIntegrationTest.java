@@ -63,6 +63,7 @@ public abstract class DBBooleanIntegrationTest<R> {
   @BeforeAll
   void checkConnection() {
     provider = provider();
+    assumeTrue(provider!=null);
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
@@ -75,6 +76,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @BeforeEach
   void setupTest() {
+    assumeTrue(provider!=null);
     dropTables();
     createTables();
     fillData();
