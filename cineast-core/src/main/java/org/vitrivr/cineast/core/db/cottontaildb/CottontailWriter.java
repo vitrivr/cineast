@@ -82,8 +82,8 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           }
         }).toArray();
         insert.append(values);
-        if (insert.size() >= Constants.MAX_PAGE_SIZE_BYTES) {
-          LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
+        if (insert.serializedSize() >= Constants.MAX_PAGE_SIZE_BYTES) {
+          LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
           this.cottontail.client.insert(insert);
           insert = new BatchInsert().into(this.fqn).columns(this.names);
           if (useTransactions) {
@@ -91,8 +91,8 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           }
         }
       }
-      if (insert.getBuilder().getInsertsCount() > 0) {
-        LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
+      if (insert.count() > 0) {
+        LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
         this.cottontail.client.insert(insert);
       }
       if (useTransactions) {
