@@ -82,7 +82,7 @@ dependencies {
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE Polypheny dependency */
-    api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
+    //api group: "org.polypheny", name: "polypheny-jdbc-driver", version: version_polypheny
 
     /* Google Json: GSON, since JSON db layer is based on this */
     api group: 'com.google.code.gson', name: 'gson', version: version_gson
