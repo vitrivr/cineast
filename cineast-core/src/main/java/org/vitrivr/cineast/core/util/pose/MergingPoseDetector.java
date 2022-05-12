@@ -9,9 +9,8 @@ import org.vitrivr.cineast.core.data.Skeleton;
 
 public class MergingPoseDetector implements PoseDetector {
 
-  private final PoseDetector pd1, pd2;
-
   private static final float weightThreshold = 0.25f;
+  private final PoseDetector pd1, pd2;
 
   public MergingPoseDetector(PoseDetector pd1, PoseDetector pd2) {
     this.pd1 = pd1;

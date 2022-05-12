@@ -15,9 +15,9 @@ import org.bytedeco.ffmpeg.global.avutil;
 public abstract class AbstractAVStreamContainer {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  AVPacket pkt;
   protected AVStream st;
   protected AVCodec codec;
+  AVPacket pkt;
   AVCodecContext c;
   private AVFormatContext oc;
 

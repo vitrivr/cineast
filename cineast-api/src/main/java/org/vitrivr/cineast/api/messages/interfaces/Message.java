@@ -6,9 +6,13 @@ package org.vitrivr.cineast.api.messages.interfaces;
 public interface Message {
 
   /**
-   * Returns the type of particular message. Expressed as MessageTypes enum.
+   * Returns the type of particular message. Used to determine an appropriate handler in the websocket-context. Used in this way to ensure compatibility with records who call the variable appropriately
    *
    * @return {@link MessageType}
    */
-  public MessageType getMessageType();
+  MessageType messageType();
+
+  default MessageType getMessageType() {
+    return messageType();
+  }
 }

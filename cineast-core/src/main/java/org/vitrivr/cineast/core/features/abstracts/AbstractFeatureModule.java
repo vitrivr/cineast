@@ -36,12 +36,12 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  protected SimpleFeatureDescriptorWriter writer;
-  protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
-  protected DBSelector selector;
   protected final float maxDist;
   protected final int vectorLength;
   protected final String tableName;
+  protected SimpleFeatureDescriptorWriter writer;
+  protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
+  protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
   protected CorrespondenceFunction correspondence;
 

@@ -21,14 +21,14 @@ public final class PolyphenyWriter extends AbstractPersistencyWriter<PreparedSta
    * Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyWriter}.
    */
   private final PolyphenyWrapper wrapper;
-
+  /**
+   * The batch size to use for INSERTS; this is simply a property exposed. Only batched persistency writers make use of batched INSERTS.
+   */
+  private final int batchSize;
   /**
    * The fully qualified name of the entity handled by this {@link PolyphenyWriter}.
    */
   private String fqn;
-
-  /** The batch size to use for INSERTS; this is simply a property exposed. Only batched persistency writers make use of batched INSERTS. */
-  private final int batchSize;
 
 
   public PolyphenyWriter(PolyphenyWrapper wrapper, int batchSize) {

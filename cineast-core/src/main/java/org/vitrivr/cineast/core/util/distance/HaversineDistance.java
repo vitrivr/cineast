@@ -7,6 +7,10 @@ public class HaversineDistance implements FloatArrayDistance {
 
   private static final double EARTH_RADIUS = 6371d; // Approx Earth radius in KM
 
+  private static double haversin(double val) {
+    return Math.pow(Math.sin(val / 2), 2);
+  }
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     double dLat = Math.toRadians((u[0] - t[0]));
@@ -19,10 +23,6 @@ public class HaversineDistance implements FloatArrayDistance {
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return EARTH_RADIUS * c;
-  }
-
-  private static double haversin(double val) {
-    return Math.pow(Math.sin(val / 2), 2);
   }
 
 }

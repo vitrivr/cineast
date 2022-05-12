@@ -26,16 +26,6 @@ public class EdgeGrid16 extends AbstractFeatureModule {
     super("features_EdgeGrid16", 124f / 4f, 256);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));
-    }
-  }
-
   private static FloatVector getEdges(MultiImage img) {
     SummaryStatistics[] stats = new SummaryStatistics[256];
     for (int i = 0; i < 256; ++i) {
@@ -58,6 +48,16 @@ public class EdgeGrid16 extends AbstractFeatureModule {
     }
 
     return new FloatVectorImpl(f);
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));
+    }
   }
 
   @Override

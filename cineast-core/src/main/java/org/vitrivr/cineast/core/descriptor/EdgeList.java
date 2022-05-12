@@ -21,13 +21,24 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 public class EdgeList {
 
-  private EdgeList() {
-  }
-
   private static final int CACHE_SIZE = 8;
-
   private static final Logger LOGGER = LogManager.getLogger();
   private static final float THRESHOLD_LOW = 0.1f, THRESHOLD_HIGH = 0.3f;
+  private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder
+      .newBuilder()
+      .maximumSize(CACHE_SIZE)
+      .expireAfterAccess(10, TimeUnit.MINUTES)
+      .build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>() {
+
+        @Override
+        public CannyEdge<GrayU8, GrayS16> load(Thread arg0) {
+          return FactoryEdgeDetectors.canny(2, true, true,
+              GrayU8.class, GrayS16.class);
+        }
+      });
+
+  private EdgeList() {
+  }
 
   public static List<EdgeContour> getEdgeList(MultiImage img) {
     LOGGER.traceEntry();
@@ -43,19 +54,6 @@ public class EdgeList {
     LOGGER.traceExit();
     return _return;
   }
-
-  private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder
-      .newBuilder()
-      .maximumSize(CACHE_SIZE)
-      .expireAfterAccess(10, TimeUnit.MINUTES)
-      .build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>() {
-
-        @Override
-        public CannyEdge<GrayU8, GrayS16> load(Thread arg0) {
-          return FactoryEdgeDetectors.canny(2, true, true,
-              GrayU8.class, GrayS16.class);
-        }
-      });
 
   private static synchronized CannyEdge<GrayU8, GrayS16> getCanny() {
     Thread current = Thread.currentThread();

@@ -14,14 +14,11 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 
 public class FileSystemObjectResolver implements ObjectResolver, AutoCloseable {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final MediaObjectReader lookup;
   private final File baseDir;
-
   private final LoadingCache<String, MediaObjectDescriptor> descriptorLoadingCache;
-
   private final ObjectToFileResolver object2File;
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public FileSystemObjectResolver(File basedir, MediaObjectReader lookup) {
     this(basedir, lookup, (dir, obj) -> new File(dir, obj.getPath()));

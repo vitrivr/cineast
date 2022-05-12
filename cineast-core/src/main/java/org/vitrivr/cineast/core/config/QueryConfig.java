@@ -32,6 +32,19 @@ public class QueryConfig extends ReadableQueryConfig {
     super(qc, uuid.toString());
   }
 
+  public static QueryConfig clone(ReadableQueryConfig qc) {
+    return new QueryConfig(qc);
+  }
+
+  /**
+   * Creates and returns a new {@link QueryConfig} which is identical to the provided one except for the query ID.
+   *
+   * @return New {@link QueryConfig}
+   */
+  public static QueryConfig newQueryConfigFromOther(QueryConfig qc) {
+    return new QueryConfig(qc, null);
+  }
+
   public QueryConfig setDistanceWeights(float[] weights) {
     this.distanceWeights = weights;
     return this;
@@ -107,19 +120,6 @@ public class QueryConfig extends ReadableQueryConfig {
     return new QueryConfig(this);
   }
 
-  public static QueryConfig clone(ReadableQueryConfig qc) {
-    return new QueryConfig(qc);
-  }
-
-  /**
-   * Creates and returns a new {@link QueryConfig} which is identical to the provided one except for the query ID.
-   *
-   * @return New {@link QueryConfig}
-   */
-  public static QueryConfig newQueryConfigFromOther(QueryConfig qc) {
-    return new QueryConfig(qc, null);
-  }
-
   public QueryConfig setDistance(Distance distance) {
     this.distance = distance;
     if (distance == Distance.euclidean) {
@@ -169,17 +169,4 @@ public class QueryConfig extends ReadableQueryConfig {
     this.addRelevantSegmentIds(relevantSegments);
   }
 
-  @Override
-  public String toString() {
-    return "QueryConfig{" +
-        "distance=" + distance +
-        ", distanceWeights=" + Arrays.toString(distanceWeights) +
-        ", norm=" + norm +
-        ", correspondence=" + correspondence +
-        ", resultsPerModule=" + resultsPerModule +
-        ", maxResults=" + maxResults +
-        ", hints=" + hints +
-        ", relevantSegmentIds (Excerpt)=" + Arrays.toString(relevantSegmentIds.stream().limit(5).toArray()) +
-        '}';
-  }
 }

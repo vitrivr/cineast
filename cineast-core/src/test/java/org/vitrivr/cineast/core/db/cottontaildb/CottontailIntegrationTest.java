@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.db.DBIntegrationTest;
 import org.vitrivr.cineast.core.db.IntegrationDBProvider;
-import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 
 public class CottontailIntegrationTest extends DBIntegrationTest<Insert> {

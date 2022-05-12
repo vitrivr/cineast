@@ -5,10 +5,6 @@ import java.util.List;
 
 public interface ReadableFloatVector {
 
-  int getElementCount();
-
-  float getElement(int num);
-
   /**
    * @param vector the vector
    * @return a new array containing the vector elements
@@ -63,4 +59,8 @@ public interface ReadableFloatVector {
     }
     return Math.sqrt(sum);
   }
+
+  int getElementCount();
+
+  float getElement(int num);
 }

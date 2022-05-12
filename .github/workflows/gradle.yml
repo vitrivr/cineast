@@ -17,7 +17,7 @@ jobs:
     # Setup Cottontail DB service container
     services:
       cottontail:
-        image: vitrivr/cottontaildb:0.15.0
+        image: vitrivr/cottontaildb:0.15.1
         ports:
           - 1865:1865
         options: -it
@@ -35,10 +35,10 @@ jobs:
       run: nc -zv 127.0.0.1 1865
     - name: polypheny connection test
       run: nc -zv 127.0.0.1 13137
-    - name: Set up JDK 11
+    - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'adopt'
     - name: Cleanup Gradle Cache
       # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.

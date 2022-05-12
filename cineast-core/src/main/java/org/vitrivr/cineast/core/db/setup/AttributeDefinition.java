@@ -7,37 +7,18 @@ import java.util.function.Consumer;
 
 public final class AttributeDefinition {
 
-  public enum AttributeType {
-    UNKOWNAT,
-    AUTO,
-    LONG,
-    INT,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    TEXT,
-    BOOLEAN,
-    VECTOR,
-    BITSET,
-    GEOMETRY,
-    GEOGRAPHY
-  }
-
   /**
    * The name of the {@link AttributeDefinition}.
    */
   private final String name;
-
   /**
    * The {@link AttributeType} of the {@link AttributeDefinition}.
    */
   private final AttributeType type;
-
   /**
    * Hints to the underlying storage engine. Those hints are highly implementation specific! l.
    */
   private final Map<String, String> hints;
-
   private final int length;
 
   /**
@@ -110,5 +91,21 @@ public final class AttributeDefinition {
 
   public int getLength() {
     return this.length;
+  }
+
+  public enum AttributeType {
+    UNKOWNAT,
+    AUTO,
+    LONG,
+    INT,
+    FLOAT,
+    DOUBLE,
+    STRING,
+    TEXT,
+    BOOLEAN,
+    VECTOR,
+    BITSET,
+    GEOMETRY,
+    GEOGRAPHY
   }
 }

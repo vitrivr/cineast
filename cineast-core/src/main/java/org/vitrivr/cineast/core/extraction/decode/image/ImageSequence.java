@@ -28,20 +28,17 @@ import org.vitrivr.cineast.core.data.Pair;
  */
 public final class ImageSequence {
 
-  /* Configuration property-names and defaults for the DefaultImageDecoder. */
-  private static final String CONFIG_BOUNDS_PROPERTY = "bounds";
-  private static final int CONFIG_BOUNDS_DEFAULT = 1024;
-
-  /**
-   * Default logging facility.
-   */
-  private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * HashSet containing all the mime-types supported by this ImageDecoder instance.
    */
   public static final Set<String> SUPPORTED_FILES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes())));
-
+  /* Configuration property-names and defaults for the DefaultImageDecoder. */
+  private static final String CONFIG_BOUNDS_PROPERTY = "bounds";
+  private static final int CONFIG_BOUNDS_DEFAULT = 1024;
+  /**
+   * Default logging facility.
+   */
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Bounds used to rescale the image.
    */

@@ -45,25 +45,17 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
   private final double threshold;
 
   private final int maxShotLength;
-
-  private Decoder<VideoFrame> decoder;
-
   private final LinkedList<VideoFrame> videoFrameList = new LinkedList<>();
-
   private final LinkedList<Pair<VideoFrame, Double>> preShotList = new LinkedList<>();
-
   private final LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
-
   private final List<MediaSegmentDescriptor> knownShotBoundaries = new LinkedList<>();
-
-  private volatile boolean complete = false;
-
-  private volatile boolean isrunning = false;
-
   /**
    * MediaSegmentReader used to lookup existing SegmentDescriptors during the extraction.
    */
   private final MediaSegmentReader segmentReader;
+  private Decoder<VideoFrame> decoder;
+  private volatile boolean complete = false;
+  private volatile boolean isrunning = false;
 
 
   /**

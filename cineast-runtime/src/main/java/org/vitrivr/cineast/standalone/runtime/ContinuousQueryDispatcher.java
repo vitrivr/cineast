@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -28,8 +27,8 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 
 public class ContinuousQueryDispatcher {
@@ -53,6 +52,24 @@ public class ContinuousQueryDispatcher {
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
+  private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
+      TObjectDoubleMap<Retriever> retrieverWeights,
+      RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
+    this.taskFactory = taskFactory;
+    this.initializer = initializer;
+    this.retrieverWeights = retrieverWeights;
+    this.mediaSegmentReader = mediaSegmentReader;
+
+    double weightSum = 0d;
+    TDoubleIterator i = retrieverWeights.valueCollection().iterator();
+    while (i.hasNext()) {
+      weightSum += i.next();
+    }
+    this.retrieverWeightSum = weightSum;
+    LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
+
+  }
+
   public static List<SegmentScoreElement> retrieve(AbstractQueryTermContainer query,
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
@@ -73,36 +90,6 @@ public class ContinuousQueryDispatcher {
 
   public static void shutdown() {
     clearExecutor();
-  }
-
-  private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
-      TObjectDoubleMap<Retriever> retrieverWeights,
-      RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
-    this.taskFactory = taskFactory;
-    this.initializer = initializer;
-    this.retrieverWeights = retrieverWeights;
-    this.mediaSegmentReader = mediaSegmentReader;
-
-    double weightSum = 0d;
-    TDoubleIterator i = retrieverWeights.valueCollection().iterator();
-    while (i.hasNext()) {
-      weightSum += i.next();
-    }
-    this.retrieverWeightSum = weightSum;
-    LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
-
-  }
-
-  private List<SegmentScoreElement> doRetrieve() {
-    LOGGER.trace("Initializing executor with retrievers {}", retrieverWeights);
-    initExecutor();
-    LOGGER.trace("Starting tasks with retrievers {}", retrieverWeights);
-    List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
-    LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
-    List<SegmentScoreElement> segmentScores = this.extractResults(futures, this.mediaSegmentReader);
-    LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
-    this.finish();
-    return segmentScores;
   }
 
   private static void initExecutor() { //FIXME this should be somewhere else
@@ -130,6 +117,18 @@ public class ContinuousQueryDispatcher {
       }
       executor = null;
     }
+  }
+
+  private List<SegmentScoreElement> doRetrieve() {
+    LOGGER.trace("Initializing executor with retrievers {}", retrieverWeights);
+    initExecutor();
+    LOGGER.trace("Starting tasks with retrievers {}", retrieverWeights);
+    List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
+    LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
+    List<SegmentScoreElement> segmentScores = this.extractResults(futures, this.mediaSegmentReader);
+    LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
+    this.finish();
+    return segmentScores;
   }
 
   private List<Future<Pair<RetrievalTask, List<ScoreElement>>>> startTasks() {

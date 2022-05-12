@@ -58,6 +58,10 @@ public class VideoSegment implements SegmentContainer {
    * {@link VideoDescriptor} for the video stream in this {@link VideoSegment}. Can be null!
    */
   private VideoDescriptor videoDescriptor = null;
+  private Object getAvgLock = new Object();
+  private Object getMedianLock = new Object();
+  private Object getPathsLock = new Object();
+  private Object getMostRepresentativeLock = new Object();
 
   /**
    *
@@ -77,7 +81,6 @@ public class VideoSegment implements SegmentContainer {
   public int getNumberOfFrames() {
     return this.videoFrames.size();
   }
-
 
   /**
    * Getter for the list of {@link VideoFrame}s associated with this {@link VideoSegment}.
@@ -194,8 +197,6 @@ public class VideoSegment implements SegmentContainer {
     return stft;
   }
 
-  private Object getAvgLock = new Object();
-
   @Override
   public MultiImage getAvgImg() {
     synchronized (getAvgLock) {
@@ -206,8 +207,6 @@ public class VideoSegment implements SegmentContainer {
     }
   }
 
-  private Object getMedianLock = new Object();
-
   @Override
   public MultiImage getMedianImg() {
     synchronized (getMedianLock) {
@@ -217,8 +216,6 @@ public class VideoSegment implements SegmentContainer {
       return this.medianImg;
     }
   }
-
-  private Object getPathsLock = new Object();
 
   @Override
   public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
@@ -272,8 +269,6 @@ public class VideoSegment implements SegmentContainer {
     this.mostRepresentative = null;
   }
 
-  private Object getMostRepresentativeLock = new Object();
-
   @Override
   public VideoFrame getMostRepresentativeFrame() {
     synchronized (getMostRepresentativeLock) {
@@ -290,13 +285,13 @@ public class VideoSegment implements SegmentContainer {
   }
 
   @Override
-  public String getSuperId() {
-    return this.movieId;
+  public void setId(String id) {
+    this.shotId = id;
   }
 
   @Override
-  public void setId(String id) {
-    this.shotId = id;
+  public String getSuperId() {
+    return this.movieId;
   }
 
   @Override

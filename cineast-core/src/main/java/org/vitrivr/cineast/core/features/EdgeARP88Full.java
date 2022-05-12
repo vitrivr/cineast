@@ -26,6 +26,30 @@ public class EdgeARP88Full extends AbstractFeatureModule {
     super("features_EdgeARP88Full", 31f / 4f, 64);
   }
 
+  private static FloatVector getEdges(MultiImage img) {
+    SummaryStatistics[] stats = new SummaryStatistics[64];
+    for (int i = 0; i < 64; ++i) {
+      stats[i] = new SummaryStatistics();
+    }
+    List<Boolean> edgePixels = EdgeImg.getEdgePixels(img,
+        new ArrayList<Boolean>(img.getWidth() * img.getHeight()));
+    ArrayList<LinkedList<Boolean>> partition = ARPartioner.partition(edgePixels, img.getWidth(),
+        img.getHeight(), 8, 8);
+    for (int i = 0; i < partition.size(); ++i) {
+      LinkedList<Boolean> edge = partition.get(i);
+      SummaryStatistics stat = stats[i];
+      for (boolean b : edge) {
+        stat.addValue(b ? 1 : 0);
+      }
+    }
+    float[] f = new float[64];
+    for (int i = 0; i < 64; ++i) {
+      f[i] = (float) stats[i].getMean();
+    }
+
+    return new FloatVectorImpl(f);
+  }
+
   @Override
   public void processSegment(SegmentContainer shot) {
     if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
@@ -57,30 +81,6 @@ public class EdgeARP88Full extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(result));
     }
-  }
-
-  private static FloatVector getEdges(MultiImage img) {
-    SummaryStatistics[] stats = new SummaryStatistics[64];
-    for (int i = 0; i < 64; ++i) {
-      stats[i] = new SummaryStatistics();
-    }
-    List<Boolean> edgePixels = EdgeImg.getEdgePixels(img,
-        new ArrayList<Boolean>(img.getWidth() * img.getHeight()));
-    ArrayList<LinkedList<Boolean>> partition = ARPartioner.partition(edgePixels, img.getWidth(),
-        img.getHeight(), 8, 8);
-    for (int i = 0; i < partition.size(); ++i) {
-      LinkedList<Boolean> edge = partition.get(i);
-      SummaryStatistics stat = stats[i];
-      for (boolean b : edge) {
-        stat.addValue(b ? 1 : 0);
-      }
-    }
-    float[] f = new float[64];
-    for (int i = 0; i < 64; ++i) {
-      f[i] = (float) stats[i].getMean();
-    }
-
-    return new FloatVectorImpl(f);
   }
 
   @Override

@@ -34,7 +34,7 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
 
     /* Retrieve segments; if empty, abort query. */
     final List<String> segmentId = new ArrayList<>(0);
-    segmentId.add(message.getSegmentId());
+    segmentId.add(message.segmentId());
     final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentId, uuid);
     if (segment.isEmpty()) {
       return;
@@ -55,8 +55,8 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
     futures.add(this.write(session, new MediaObjectQueryResult(uuid, object)));
 
     /* Load and transmit segment & object metadata. */
-    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
-    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
+    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched, message.metadataAccessSpec()));
+    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec()));
     for (Thread thread : threads) {
       thread.join();
     }

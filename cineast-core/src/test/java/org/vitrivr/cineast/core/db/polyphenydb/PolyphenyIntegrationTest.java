@@ -14,14 +14,14 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatement> {
 
 
-  private final PolyphenyIntegrationDBProvider _provider;
+  private PolyphenyIntegrationDBProvider _provider;
 
   public PolyphenyIntegrationTest() {
     try {
       _provider = new PolyphenyIntegrationDBProvider();
     } catch (Throwable e) {
       LOGGER.error("Error occurred while starting and connecting to Polypheny: " + e.getMessage());
-      throw e;
+      _provider = null;
     }
   }
 
@@ -30,7 +30,7 @@ public class PolyphenyIntegrationTest extends DBIntegrationTest<PreparedStatemen
    */
   @Override
   protected void createTables() {
-    final HashMap<String,String > hints = new HashMap<>();
+    final HashMap<String, String> hints = new HashMap<>();
     hints.put("pk", "true");
     this.ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
     this.ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING, hints), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));

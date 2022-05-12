@@ -26,7 +26,7 @@ public class FindFeaturesByEntityPostHandler implements ParsingPostRestHandler<I
     // Entity name from path params.
     final String entity = parameters.get(ENTITY_NAME);
 
-    return QueryUtil.retrieveFeaturesForEntity(entity, idList.getIdList());
+    return QueryUtil.retrieveFeaturesForEntity(entity, idList.ids());
   }
 
   @Override

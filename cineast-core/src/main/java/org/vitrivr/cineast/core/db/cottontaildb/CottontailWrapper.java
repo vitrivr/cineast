@@ -14,16 +14,28 @@ import org.vitrivr.cottontail.client.SimpleClient;
 
 public final class CottontailWrapper implements AutoCloseable {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
   public static final String CINEAST_SCHEMA = "cineast";
   public static final String WARREN_PREFIX = "warren";
   public static final String FQN_CINEAST_SCHEMA = WARREN_PREFIX + "." + CINEAST_SCHEMA;
-
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Internal connection pool to re-use managed channels.
    */
   private static final Map<String, ManagedChannel> POOL = new HashMap<>();
+  /**
+   * The {@link SimpleClient} instance that facilitates access to Cottontail DB.
+   */
+  public final SimpleClient client;
+
+  public CottontailWrapper(String host, int port) {
+    StopWatch watch = StopWatch.createStarted();
+    this.client = new SimpleClient(sharedChannel(host, port));
+    boolean pingSuccessful = this.client.ping();
+    watch.stop();
+    if (!pingSuccessful) {
+      LOGGER.warn("Could not ping Cottontail DB instance at {}:{}", host, port);
+    }
+  }
 
   /**
    * Returns a {@link ManagedChannel} object for the given database configuration.
@@ -73,25 +85,12 @@ public final class CottontailWrapper implements AutoCloseable {
     return channel;
   }
 
-  /**
-   * The {@link SimpleClient} instance that facilitates access to Cottontail DB.
-   */
-  public final SimpleClient client;
-
   public String fqnInput(String entity) {
     return CINEAST_SCHEMA + "." + entity;
   }
 
   public String fqnOutput(String entity) {
     return FQN_CINEAST_SCHEMA + "." + entity;
-  }
-
-  public CottontailWrapper(String host, int port) {
-    StopWatch watch = StopWatch.createStarted();
-    this.client = new SimpleClient(sharedChannel(host, port));
-    boolean pingSuccessful = this.client.ping();
-    watch.stop();
-    if (!pingSuccessful) LOGGER.warn("Could not ping Cottontail DB instance at {}:{}", host, port);
   }
 
   /**

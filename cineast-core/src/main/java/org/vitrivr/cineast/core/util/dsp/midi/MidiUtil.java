@@ -14,13 +14,11 @@ import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 
 public final class MidiUtil {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
-
   /**
    * Reference frequency in Hz. Corresponds to the musical note A (A440 or A4) above the middle C.
    */
   public static final double F_REF = 440.0f;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Private constructor; class cannot be instantiated.

@@ -48,24 +48,22 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 public abstract class DBBooleanIntegrationTest<R> {
 
   protected static final int TABLE_CARD = 20;
+  protected static final String ID_COL_NAME = "id";
+  protected static final String DATA_COL_NAME_1 = "data_1_string_data_id";
+  protected static final String DATA_COL_NAME_2 = "data_2_id_negative";
+  protected static final String DATA_COL_NAME_3 = "data_3_id_plus_card";
+  protected static final Logger LOGGER = LogManager.getLogger();
   protected DBSelector selector;
   protected String testTableName;
   protected PersistencyWriter<R> writer;
   protected EntityCreator ec;
   protected QueryConfig queryConfig;
-
-  protected static final String ID_COL_NAME = "id";
-  protected static final String DATA_COL_NAME_1 = "data_1_string_data_id";
-  protected static final String DATA_COL_NAME_2 = "data_2_id_negative";
-  protected static final String DATA_COL_NAME_3 = "data_3_id_plus_card";
-
   protected IntegrationDBProvider<R> provider;
-
-  protected static final Logger LOGGER = LogManager.getLogger();
 
   @BeforeAll
   void checkConnection() {
     provider = provider();
+    assumeTrue(provider!=null);
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
@@ -78,6 +76,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @BeforeEach
   void setupTest() {
+    assumeTrue(provider!=null);
     dropTables();
     createTables();
     fillData();

@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.core.util.pose;
 
-import org.vitrivr.cineast.core.data.Skeleton;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
+import org.vitrivr.cineast.core.data.Skeleton;
 
 public interface PoseDetector {
 
-    List<Skeleton> detectPoses(BufferedImage img);
+  List<Skeleton> detectPoses(BufferedImage img);
 
 }

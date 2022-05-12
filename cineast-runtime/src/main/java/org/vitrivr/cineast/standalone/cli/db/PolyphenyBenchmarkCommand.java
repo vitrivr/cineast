@@ -30,40 +30,51 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 public class PolyphenyBenchmarkCommand implements Runnable {
 
 
+  /**
+   * {@link SplittableRandom} used to generate random query vectors.
+   */
+  private final SplittableRandom random = new SplittableRandom();
   @Option(name = {"--host"}, description = "The host IP or name where Polypheny DB runs.")
   private String host = "localhost";
-
   @Option(name = {"--schema"}, description = "The name of the schema to run Polypheny DB tests against.")
   private String schema = "cineast";
-
   @Option(name = {"--limit"}, description = "The number of features to retrieve (the k in kNN).")
   private int limit = 500;
-
   @Option(name = {"--repeat"}, description = "The number of repetitions.")
   private int repeat = 5;
-
   @Option(name = {"--table"}, description = "The feature table to benchmark.")
   @Required
   private String table;
-
   @Option(name = {"--out"}, description = "Path to the output directory.")
   @Required
   private String out;
-
   /**
    * The JDBC {@link Connection} used to communicate with Polypheny DB.
    */
   private Connection connection;
-
   /**
    * The dimensionality
    */
   private int dimensionality = 0;
 
   /**
-   * {@link SplittableRandom} used to generate random query vectors.
+   * Converts a flat vector to a string representation usable by Polypheny DB.
+   *
+   * @param vector {@link Distance} The float vector to convert.
+   * @return The resulting name.
    */
-  private final SplittableRandom random = new SplittableRandom();
+  private static String toVectorString(float[] vector) {
+    final StringBuilder arrayString = new StringBuilder("ARRAY[");
+    int i = 0;
+    for (float v : vector) {
+      if (i++ > 0) {
+        arrayString.append(",");
+      }
+      arrayString.append(v);
+    }
+    arrayString.append("]");
+    return arrayString.toString();
+  }
 
   private boolean prepare() {
     /* Try to instantiate Polypheny driver. */
@@ -114,7 +125,6 @@ public class PolyphenyBenchmarkCommand implements Runnable {
     }
     return true;
   }
-
 
   @Override
   public void run() {
@@ -255,25 +265,6 @@ public class PolyphenyBenchmarkCommand implements Runnable {
       vector[i] = (float) this.random.nextDouble();
     }
     return vector;
-  }
-
-  /**
-   * Converts a flat vector to a string representation usable by Polypheny DB.
-   *
-   * @param vector {@link Distance} The float vector to convert.
-   * @return The resulting name.
-   */
-  private static String toVectorString(float[] vector) {
-    final StringBuilder arrayString = new StringBuilder("ARRAY[");
-    int i = 0;
-    for (float v : vector) {
-      if (i++ > 0) {
-        arrayString.append(",");
-      }
-      arrayString.append(v);
-    }
-    arrayString.append("]");
-    return arrayString.toString();
   }
 
   /**

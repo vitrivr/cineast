@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import io.grpc.StatusRuntimeException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
@@ -20,17 +19,15 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
    * Internal reference to the {@link CottontailWrapper} used by this {@link CottontailWriter}.
    */
   private final CottontailWrapper cottontail;
-
-  /**
-   * The fully qualified name of the entity handled by this {@link CottontailWriter}.
-   */
-  private String fqn;
-
   /**
    * The batch size to use for INSERTS.
    */
   private final int batchSize;
   private final boolean useTransactions;
+  /**
+   * The fully qualified name of the entity handled by this {@link CottontailWriter}.
+   */
+  private String fqn;
 
   public CottontailWriter(CottontailWrapper wrapper, int batchSize, boolean useTransactions) {
     this.cottontail = wrapper;
@@ -85,8 +82,8 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           }
         }).toArray();
         insert.append(values);
-        if (insert.size() >= Constants.MAX_PAGE_SIZE_BYTES) {
-          LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
+        if (insert.serializedSize() >= Constants.MAX_PAGE_SIZE_BYTES) {
+          LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
           this.cottontail.client.insert(insert);
           insert = new BatchInsert().into(this.fqn).columns(this.names);
           if (useTransactions) {
@@ -94,8 +91,8 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
           }
         }
       }
-      if (insert.getBuilder().getInsertsCount() > 0) {
-        LOGGER.trace("Inserting msg of size {} into {}", insert.size(), this.fqn);
+      if (insert.count() > 0) {
+        LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
         this.cottontail.client.insert(insert);
       }
       if (useTransactions) {

@@ -20,7 +20,7 @@ public class StartSessionHandler implements ParsingPostRestHandler<StartSessionM
   public SessionState performPost(StartSessionMessage context, Context ctx) {
     SessionType type = SessionType.UNAUTHENTICATED;
     if (context != null) {
-      Credentials credentials = context.getCredentials();
+      Credentials credentials = context.credentials();
       type = CredentialManager.authenticate(credentials);
     }
     Session s = SessionManager.newSession(60 * 60 * 24, type); //TODO move life time to config

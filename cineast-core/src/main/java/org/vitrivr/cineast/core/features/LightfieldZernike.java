@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.images.ZernikeHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.math.ZernikeMoments;
 
 /**
@@ -24,14 +24,6 @@ public class LightfieldZernike extends Lightfield {
    * Size of the feature vector.
    */
   private static final int SIZE = 36 + 1; /* Number of Coefficients + Pose Idx */
-
-  /**
-   * Default constructor for LightfieldZernike class.
-   */
-  public LightfieldZernike() {
-    super("features_lightfieldzernike", 2.0f, SIZE, MathConstants.VERTICES_3D_DODECAHEDRON);
-  }
-
   /**
    * Weights used for kNN retrieval based on images / sketches. Higher frequency components (standing for finer details) have less weight towards the final result.
    * <p>
@@ -47,6 +39,13 @@ public class LightfieldZernike extends Lightfield {
       WEIGHTS_POSE[i] = 1.0f - (i - 2) * (1.0f / (2 * SIZE));
       WEIGHTS_NOPOSE[i] = 1.0f - (i - 2) * (1.0f / (2 * SIZE));
     }
+  }
+
+  /**
+   * Default constructor for LightfieldZernike class.
+   */
+  public LightfieldZernike() {
+    super("features_lightfieldzernike", 2.0f, SIZE, MathConstants.VERTICES_3D_DODECAHEDRON);
   }
 
   /**

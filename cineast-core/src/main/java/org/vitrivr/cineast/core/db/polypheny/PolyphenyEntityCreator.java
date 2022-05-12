@@ -26,19 +26,17 @@ import org.vitrivr.cineast.core.db.setup.EntityDefinition;
 public final class PolyphenyEntityCreator implements EntityCreator {
 
   /**
-   * Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyEntityCreator}.
-   */
-  private final PolyphenyWrapper wrapper;
-
-  /**
    * Hint used to indicate primary key fields.
    */
   private final static String PK_HINT = "pk";
-
   /**
    * Hint used to indicate that a field is nullable.
    */
   private final static String NULLABLE_HINT = "nullable";
+  /**
+   * Internal reference to the {@link PolyphenyWrapper} used by this {@link PolyphenyEntityCreator}.
+   */
+  private final PolyphenyWrapper wrapper;
 
   /**
    * Constructor

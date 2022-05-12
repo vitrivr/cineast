@@ -34,19 +34,6 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
     super(tableName, maxDist, 192);
   }
 
-
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      MultiImage medimg = shot.getMedianImg();
-
-      persist(shot.getId(), partition(medimg).first);
-    }
-  }
-
   protected static Pair<FloatVector, float[]> partition(MultiImage img) {
     ArrayList<Integer> labs = new ArrayList<Integer>(img.getWidth() * img.getHeight());
     ArrayList<Float> alphas = new ArrayList<Float>(img.getWidth() * img.getHeight());
@@ -85,6 +72,18 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
     }
 
     return new Pair<FloatVector, float[]>(new FloatVectorImpl(result), weights);
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      MultiImage medimg = shot.getMedianImg();
+
+      persist(shot.getId(), partition(medimg).first);
+    }
   }
 
   @Override

@@ -7,9 +7,8 @@ import org.apache.logging.log4j.LogManager;
 
 public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
-  private final File baseFolder;
-
   private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+  private final File baseFolder;
 
   public FileSystemThumbnailResolver(File baseFolder) {
     this.baseFolder = baseFolder;

@@ -31,7 +31,7 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
     final String uuid = qconf.getQueryId();
 
     /* Retrieve segments. If empty, abort query. */
-    final String segmentId = message.getSegmentId();
+    final String segmentId = message.segmentId();
 
     if (segmentId == null || segmentId.isEmpty()) {
       return;
@@ -45,13 +45,13 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
 
     MediaSegmentDescriptor segment = segmentOption.get();
 
-    final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.getCount(), segment.getSequenceNumber() + message.getCount());
+    final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.count(), segment.getSequenceNumber() + message.count());
 
     /* Write segments to stream. */
     CompletableFuture<Void> future = this.write(session, new MediaSegmentQueryResult(uuid, segments));
 
     /* Load and transmit segment metadata. */
-    List<Thread> threads = this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
+    List<Thread> threads = this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()), segmentIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
     for (Thread thread : threads) {
       thread.join();
     }

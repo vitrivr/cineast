@@ -47,6 +47,27 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     MAPPER.enable(JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS.mappedFeature());
   }
 
+  private static void logIOExceptionOfRead(IOException e, String jsonString) {
+    logIOExceptionOfReadWithMessage(e, "string '" + jsonString + "'");
+  }
+
+  private static void logIOExceptionOfRead(IOException e, File jsonFile) {
+    logIOExceptionOfReadWithMessage(e, "file '" + jsonFile + "'");
+  }
+
+  private static void logIOExceptionOfReadWithMessage(IOException e, String jsonTypeMessage) {
+    if (e instanceof JsonParseException) {
+      LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof JsonMappingException) {
+      LOGGER.error("Could not map JSON {} to POJO. Please check your object definitions.\n{}",
+          jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof FileNotFoundException) {
+      LOGGER.warn("Could not find JSON {}", jsonTypeMessage);
+    } else {
+      LOGGER.error("Could not read JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
+    }
+  }
+
   @Override
   @Nullable
   public <T> T toObject(String jsonString, Class<T> c) {
@@ -86,27 +107,6 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     } catch (IOException e) {
       logIOExceptionOfRead(e, json.toFile());
       return null;
-    }
-  }
-
-  private static void logIOExceptionOfRead(IOException e, String jsonString) {
-    logIOExceptionOfReadWithMessage(e, "string '" + jsonString + "'");
-  }
-
-  private static void logIOExceptionOfRead(IOException e, File jsonFile) {
-    logIOExceptionOfReadWithMessage(e, "file '" + jsonFile + "'");
-  }
-
-  private static void logIOExceptionOfReadWithMessage(IOException e, String jsonTypeMessage) {
-    if (e instanceof JsonParseException) {
-      LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
-    } else if (e instanceof JsonMappingException) {
-      LOGGER.error("Could not map JSON {} to POJO. Please check your object definitions.\n{}",
-          jsonTypeMessage, LogHelper.getStackTrace(e));
-    } else if (e instanceof FileNotFoundException) {
-      LOGGER.warn("Could not find JSON {}", jsonTypeMessage);
-    } else {
-      LOGGER.error("Could not read JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
     }
   }
 

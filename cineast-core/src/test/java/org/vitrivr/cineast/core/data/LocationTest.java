@@ -12,6 +12,37 @@ public class LocationTest {
 
   private static final float COORDINATES_DELTA = 1e-5f;
 
+  private static void assertFixedCoordinates(float latitude, float longitude) {
+    for (Location location : getTestLocations(latitude, longitude)) {
+      assertLocationEquals(latitude, longitude, location);
+    }
+  }
+
+  private static void assertNormalizedCoordinates(float expectedLat, float expectedLng, float actualLat, float actualLng) {
+    for (Location location : getTestLocations(actualLat, actualLng)) {
+      assertLocationEquals(expectedLat, expectedLng, location);
+    }
+  }
+
+  private static List<Location> getTestLocations(float latitude, float longitude) {
+    return ImmutableList.of(
+        Location.of(latitude, longitude),
+        Location.of(new float[]{latitude, longitude})
+    );
+  }
+
+  private static void assertLocationEquals(float expectedLatitude, float expectedLongitude, Location actual) {
+    assertEquals(expectedLatitude, actual.getLatitude(), COORDINATES_DELTA,
+        "Latitude of Location did not match expected");
+    assertEquals(expectedLongitude, actual.getLongitude(), COORDINATES_DELTA,
+        "Longitude of Location did not match expected");
+
+    assertEquals(expectedLatitude, actual.getElement(0), COORDINATES_DELTA,
+        "First element of Location did not match expected");
+    assertEquals(expectedLongitude, actual.getElement(1), COORDINATES_DELTA,
+        "Second element of Location did not match expected");
+  }
+
   @Test
   @DisplayName("Null Island")
   public void testNullIsland() {
@@ -60,36 +91,5 @@ public class LocationTest {
   public void testNanValues() {
     assertThrows(IllegalArgumentException.class, () -> Location.of(Float.NaN, 0f));
     assertThrows(IllegalArgumentException.class, () -> Location.of(0f, Float.NaN));
-  }
-
-  private static void assertFixedCoordinates(float latitude, float longitude) {
-    for (Location location : getTestLocations(latitude, longitude)) {
-      assertLocationEquals(latitude, longitude, location);
-    }
-  }
-
-  private static void assertNormalizedCoordinates(float expectedLat, float expectedLng, float actualLat, float actualLng) {
-    for (Location location : getTestLocations(actualLat, actualLng)) {
-      assertLocationEquals(expectedLat, expectedLng, location);
-    }
-  }
-
-  private static List<Location> getTestLocations(float latitude, float longitude) {
-    return ImmutableList.of(
-        Location.of(latitude, longitude),
-        Location.of(new float[]{latitude, longitude})
-    );
-  }
-
-  private static void assertLocationEquals(float expectedLatitude, float expectedLongitude, Location actual) {
-    assertEquals(expectedLatitude, actual.getLatitude(), COORDINATES_DELTA,
-        "Latitude of Location did not match expected");
-    assertEquals(expectedLongitude, actual.getLongitude(), COORDINATES_DELTA,
-        "Longitude of Location did not match expected");
-
-    assertEquals(expectedLatitude, actual.getElement(0), COORDINATES_DELTA,
-        "First element of Location did not match expected");
-    assertEquals(expectedLongitude, actual.getElement(1), COORDINATES_DELTA,
-        "Second element of Location did not match expected");
   }
 }

@@ -53,20 +53,6 @@ public class SphericalHarmonicsFunction {
     this.legendre = new AssociatedLegendrePolynomial(l, Math.abs(m));
   }
 
-
-  /**
-   * Compute the value of the function.
-   *
-   * @param theta Point at which the function value should be computed.
-   * @param phi   Point at which the function value should be computed.
-   * @return the complex value of the function.
-   */
-  public Complex value(final double theta, final double phi) {
-    double r = this.Nlm * this.legendre.value(FastMath.cos(theta));
-    double arg = this.m * phi;
-    return new Complex(r * FastMath.cos(arg), r * FastMath.sin(arg));
-  }
-
   /**
    * Calculates and returns the normalisation factor for the Spherical Harmonics Function
    *
@@ -95,5 +81,18 @@ public class SphericalHarmonicsFunction {
       }
     }
     return number;
+  }
+
+  /**
+   * Compute the value of the function.
+   *
+   * @param theta Point at which the function value should be computed.
+   * @param phi   Point at which the function value should be computed.
+   * @return the complex value of the function.
+   */
+  public Complex value(final double theta, final double phi) {
+    double r = this.Nlm * this.legendre.value(FastMath.cos(theta));
+    double arg = this.m * phi;
+    return new Complex(r * FastMath.cos(arg), r * FastMath.sin(arg));
   }
 }
