@@ -114,6 +114,54 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
+   * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s accordingly.
+   *
+   * @param msr The file containing the master shot references.
+   */
+  public static List<Pair<Long, Long>> decode(Path msr) {
+    final List<Pair<Long, Long>> _return = new ArrayList<>();
+    try (final BufferedReader reader = Files.newBufferedReader(msr, StandardCharsets.ISO_8859_1)) {
+      String line = null;
+      int shotCounter = 0;
+      while ((line = reader.readLine()) != null) {
+        line = line.trim();
+
+        if (line.isEmpty()) { //skip empty lines
+          continue;
+        }
+
+        if (!Character.isDigit(line.charAt(0))) {//line does not start with a number
+          continue;
+        }
+
+        String[] split = line.split(" ");
+        if (split.length < 2) {//there are not two blocks on this line
+          continue;
+        }
+
+        long start, end;
+        try {
+          start = 1 + Long.parseLong(split[0]); //TRECVID msr starts with 0
+          end = 1 + Long.parseLong(split[1]);
+        } catch (NumberFormatException e) {
+          continue;
+        }
+
+        ++shotCounter;
+
+        /* TODO: Derive absolute start and end position of MediaSegmentDescriptor. */
+        _return.add(new ImmutablePair<>(start, end));
+      }
+    } catch (FileNotFoundException e) {
+      LOGGER.error("TRECVid MSR file '{}' was not found.", msr.toString());
+    } catch (IOException e) {
+      LOGGER.error("Error while reading RECVid MSR file '{}': {}", msr.toString(), e.getMessage());
+    }
+
+    return _return;
+  }
+
+  /**
    * @param decoder Decoder used for media-decoding.
    * @param object  Media object that is about to be segmented.
    */
@@ -226,53 +274,5 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
     synchronized (this) {
       this.running = false;
     }
-  }
-
-  /**
-   * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s accordingly.
-   *
-   * @param msr The file containing the master shot references.
-   */
-  public static List<Pair<Long, Long>> decode(Path msr) {
-    final List<Pair<Long, Long>> _return = new ArrayList<>();
-    try (final BufferedReader reader = Files.newBufferedReader(msr, StandardCharsets.ISO_8859_1)) {
-      String line = null;
-      int shotCounter = 0;
-      while ((line = reader.readLine()) != null) {
-        line = line.trim();
-
-        if (line.isEmpty()) { //skip empty lines
-          continue;
-        }
-
-        if (!Character.isDigit(line.charAt(0))) {//line does not start with a number
-          continue;
-        }
-
-        String[] split = line.split(" ");
-        if (split.length < 2) {//there are not two blocks on this line
-          continue;
-        }
-
-        long start, end;
-        try {
-          start = 1 + Long.parseLong(split[0]); //TRECVID msr starts with 0
-          end = 1 + Long.parseLong(split[1]);
-        } catch (NumberFormatException e) {
-          continue;
-        }
-
-        ++shotCounter;
-
-        /* TODO: Derive absolute start and end position of MediaSegmentDescriptor. */
-        _return.add(new ImmutablePair<>(start, end));
-      }
-    } catch (FileNotFoundException e) {
-      LOGGER.error("TRECVid MSR file '{}' was not found.", msr.toString());
-    } catch (IOException e) {
-      LOGGER.error("Error while reading RECVid MSR file '{}': {}", msr.toString(), e.getMessage());
-    }
-
-    return _return;
   }
 }

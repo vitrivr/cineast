@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import org.vitrivr.cineast.api.messages.query.Query;
+import org.vitrivr.cineast.api.messages.interfaces.Query;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
@@ -43,7 +43,6 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
@@ -87,7 +86,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       return;
     }
     try {
-      QueryConfig qconf = message.getQueryConfig() == null ? new ConstrainedQueryConfig() : message.getQueryConfig();
+      QueryConfig qconf = message.config() == null ? new ConstrainedQueryConfig() : message.config();
       final String uuid = qconf.getQueryId();
 
       final int max = Math.min(qconf.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
@@ -322,7 +321,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     List<CompletableFuture<Void>> futures = new ArrayList<>();
     for (int i = 0; i < Math.floorDiv(raw.size(), stride) + 1; i++) {
       final List<StringDoublePair> sub = raw.subList(i * stride, Math.min((i + 1) * stride, raw.size()));
-      futures.add(this.write(session, new SimilarityQueryResult(queryId, category, containerId, sub)));
+      futures.add(this.write(session, new SimilarityQueryResult(queryId, sub, category, containerId)));
     }
     watch.stop();
     LOGGER.trace("Finalizing & submitting results took {} ms", watch.getTime(TimeUnit.MILLISECONDS));

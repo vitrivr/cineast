@@ -13,21 +13,6 @@ public class CorrespondenceFunction implements DoubleUnaryOperator {
     this.function = function;
   }
 
-  @Override
-  public final double applyAsDouble(double distance) {
-    double score = function.applyAsDouble(distance);
-    if (Double.isNaN(score)) {
-      return 0d;
-    }
-    if (score > 1d) {
-      return 1d;
-    }
-    if (score < 0d) {
-      return 0d;
-    }
-    return score;
-  }
-
   public static CorrespondenceFunction fromFunction(DoubleUnaryOperator function) {
     return new CorrespondenceFunction(function);
   }
@@ -49,5 +34,20 @@ public class CorrespondenceFunction implements DoubleUnaryOperator {
   public static CorrespondenceFunction hyperbolic(double divisor) {
     Preconditions.checkArgument(divisor > 0, "Hyperbolic divisor cannot be zero or smaller than zero, but found: " + divisor);
     return new CorrespondenceFunction(distance -> 1d / (1d + distance / divisor));
+  }
+
+  @Override
+  public final double applyAsDouble(double distance) {
+    double score = function.applyAsDouble(distance);
+    if (Double.isNaN(score)) {
+      return 0d;
+    }
+    if (score > 1d) {
+      return 1d;
+    }
+    if (score < 0d) {
+      return 0d;
+    }
+    return score;
   }
 }

@@ -10,18 +10,6 @@ public class ColorReductionUtil {
   private ColorReductionUtil() {
   }
 
-  private enum Color11 {
-    RED(0xFF0000), ORANGE(0xFFAA00), YELLOW(0xFFFF00), GREEN(0x00FF00), CYAN(0x00FFFF), BLUE(
-        0x0000FF), VIOLET(0xAA00FF), PURPLE(0xFF00AA), WHITE(0xFFFFFF), GREY(0x808080), BLACK(0);
-
-    private final int color;
-
-    Color11(int color) {
-      this.color = color;
-    }
-
-  }
-
   public static int quantize15(int rgb) {
     return FuzzyColorHistogramQuantizer.quantize(ColorConverter.cachedRGBtoLab(rgb)).getRGB().toIntColor();
   }
@@ -86,6 +74,18 @@ public class ColorReductionUtil {
       return Color11.PURPLE;
     }
     return Color11.RED;
+  }
+
+  private enum Color11 {
+    RED(0xFF0000), ORANGE(0xFFAA00), YELLOW(0xFFFF00), GREEN(0x00FF00), CYAN(0x00FFFF), BLUE(
+        0x0000FF), VIOLET(0xAA00FF), PURPLE(0xFF00AA), WHITE(0xFFFFFF), GREY(0x808080), BLACK(0);
+
+    private final int color;
+
+    Color11(int color) {
+      this.color = color;
+    }
+
   }
 
 }

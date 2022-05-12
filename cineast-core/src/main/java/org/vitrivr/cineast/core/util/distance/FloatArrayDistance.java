@@ -8,31 +8,6 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
 
   static final long serialVersionUID = 1L;
 
-  /**
-   * returns the distance between the two provided arrays or NaN if at least one of them is
-   * <code>null</code>.
-   */
-  @Override
-  double applyAsDouble(float[] t, float[] u);
-
-
-  @Override
-  default double compute(double[] a, double[] b) throws DimensionMismatchException {
-    if (a == null || b == null) {
-      throw new NullPointerException();
-    }
-    if (a.length != b.length) {
-      throw new DimensionMismatchException(a.length, b.length);
-    }
-    float[] fa = new float[a.length], fb = new float[b.length];
-    for (int i = 0; i < a.length; ++i) {
-      fa[i] = (float) a[i];
-      fb[i] = (float) b[i];
-    }
-    return applyAsDouble(fa, fb);
-  }
-
-
   public static FloatArrayDistance fromDistance(final ReadableQueryConfig.Distance distance) {
     if (distance == null) {
       throw new NullPointerException("distance cannot be null");
@@ -130,6 +105,29 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
 
     return fromDistance(distance);
 
+  }
+
+  /**
+   * returns the distance between the two provided arrays or NaN if at least one of them is
+   * <code>null</code>.
+   */
+  @Override
+  double applyAsDouble(float[] t, float[] u);
+
+  @Override
+  default double compute(double[] a, double[] b) throws DimensionMismatchException {
+    if (a == null || b == null) {
+      throw new NullPointerException();
+    }
+    if (a.length != b.length) {
+      throw new DimensionMismatchException(a.length, b.length);
+    }
+    float[] fa = new float[a.length], fb = new float[b.length];
+    for (int i = 0; i < a.length; ++i) {
+      fa[i] = (float) a[i];
+      fb[i] = (float) b[i];
+    }
+    return applyAsDouble(fa, fb);
   }
 
 }

@@ -12,25 +12,18 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 public final class IdConfig {
 
-  public enum ExistenceCheck {
-    CHECK_SKIP,
-    CHECK_PROCEED
-  }
-
   /**
    * Name of the ObjectIdGenerator. Must correspond to the simple-name or the FQN of the respective class.
    *
    * @see ObjectIdGenerator
    */
   private final String name;
-
   /**
    * Properties that are being used to initialize the ObjectIdGenerator.
    *
    * @see ObjectIdGenerator
    */
   private final Map<String, String> properties;
-
   /**
    * Determines the 'existence check mode' for objectId's of {@link MediaObjectDescriptor}s, i.e. whether their uniqueness should be explicitly checked and what the consequences of the a collision should be.
    * <p>
@@ -44,7 +37,6 @@ public final class IdConfig {
   public IdConfig() {
     this("UniqueObjectIdGenerator", ExistenceCheck.CHECK_SKIP, new HashMap<>());
   }
-
 
   /**
    * Constructor for {@link IdConfig}. Used for deserialization of a {@link IdConfig} instance from a configuration file.
@@ -61,7 +53,6 @@ public final class IdConfig {
     this.existenceCheckMode = (existenceCheckMode == null ? ExistenceCheck.CHECK_SKIP : existenceCheckMode);
     this.properties = (properties == null ? new HashMap<>(0) : properties);
   }
-
 
   public String getName() {
     return this.name;
@@ -83,5 +74,10 @@ public final class IdConfig {
   @JsonIgnore
   public ObjectIdGenerator getGenerator() {
     return ReflectionHelper.newIdGenerator(this.name, this.properties);
+  }
+
+  public enum ExistenceCheck {
+    CHECK_SKIP,
+    CHECK_PROCEED
   }
 }

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class TemporalObject {
 
+  public static final Comparator<TemporalObject> COMPARATOR = Comparator.comparingDouble(TemporalObject::getScore);
   private final List<String> segments;
   private final String objectId;
   private final double score;
@@ -31,8 +32,6 @@ public class TemporalObject {
   public List<String> getSegments() {
     return segments;
   }
-
-  public static final Comparator<TemporalObject> COMPARATOR = Comparator.comparingDouble(TemporalObject::getScore);
 
   @Override
   public String toString() {

@@ -3,10 +3,8 @@ package org.vitrivr.cineast.core.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.function.Supplier;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.DataSource;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
@@ -49,6 +47,7 @@ public final class DatabaseConfig {
   public int getPort() {
     return this.port;
   }
+
   public void setPort(int port) {
     if (port < 1 || port > 65535) {
       throw new IllegalArgumentException(port + " is outside of valid port range");

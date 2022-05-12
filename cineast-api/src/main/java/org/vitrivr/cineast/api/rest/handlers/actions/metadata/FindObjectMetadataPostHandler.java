@@ -20,11 +20,11 @@ public class FindObjectMetadataPostHandler implements ParsingPostRestHandler<Opt
 
   @Override
   public MediaObjectMetadataQueryResult performPost(OptionallyFilteredIdList ids, Context ctx) {
-    if (ids == null || ids.getIds().length == 0) {
+    if (ids == null || ids.ids().isEmpty()) {
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    List<MediaObjectMetadataDescriptor> descriptors = service.lookupMultimediaMetadata(ids.getIdList());
+    List<MediaObjectMetadataDescriptor> descriptors = service.lookupMultimediaMetadata(ids.ids());
     if (ids.hasFilters()) {
       final List<AbstractMetadataFilterDescriptor> filters = ids.getFilterList();
       for (AbstractMetadataFilterDescriptor filter : filters) {

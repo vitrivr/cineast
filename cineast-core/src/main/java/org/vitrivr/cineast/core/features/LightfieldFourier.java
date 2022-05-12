@@ -11,9 +11,9 @@ import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Fourier based light field descriptors and as proposed in [1] and [2].

@@ -15,33 +15,21 @@ import org.vitrivr.cineast.core.util.json.JsonReader;
 public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
 
   /**
-   * Defines the assignment-modes for provided objectIds.
-   */
-  private enum AssignmentMode {
-    MAP, /* Expects a JSON object with {<filename>:<id>} pairs as entries. Each path is mapped to its ID. */
-    CONTINUOUS /* Expects a JSON array with one ID per row. The ID's are assigned in a continuous fashion. */
-  }
-
-  /**
    * Property-name for a custom start value (can be set in the configuration).
    */
   private static final String PROPERTY_NAME_SOURCE = "source";
-
   /**
    * Property-name for a custom format (can be set  in the configuration).
    */
   private static final String PROPERTY_NAME_ASSIGNMENT = "assignment";
-
   /**
    * Map that maps filenames to ID's. Only used in MAP mode.
    */
   private final HashMap<String, Object> pathIdMap;
-
   /**
    * List of ID's. Only used in CONTINUOUS mode.
    */
   private final LinkedList<String> idList;
-
   /**
    * The mode of assignment for ID's.
    */
@@ -85,5 +73,13 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     } else {
       return this.idList.poll();
     }
+  }
+
+  /**
+   * Defines the assignment-modes for provided objectIds.
+   */
+  private enum AssignmentMode {
+    MAP, /* Expects a JSON object with {<filename>:<id>} pairs as entries. Each path is mapped to its ID. */
+    CONTINUOUS /* Expects a JSON array with one ID per row. The ID's are assigned in a continuous fashion. */
   }
 }

@@ -14,7 +14,8 @@ public class MediaSegmentWriter extends AbstractBatchedEntityWriter<MediaSegment
   }
 
   @Override
-  protected void init() { }
+  protected void init() {
+  }
 
   @Override
   protected PersistentTuple generateTuple(MediaSegmentDescriptor entity) {

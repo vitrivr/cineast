@@ -26,6 +26,30 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
     super("features_EdgeGrid16Full", 124f / 4f, 256);
   }
 
+  private static FloatVector getEdges(MultiImage img) {
+    SummaryStatistics[] stats = new SummaryStatistics[256];
+    for (int i = 0; i < 256; ++i) {
+      stats[i] = new SummaryStatistics();
+    }
+    List<Boolean> edgePixels = EdgeImg.getEdgePixels(img,
+        new ArrayList<Boolean>(img.getWidth() * img.getHeight()));
+    ArrayList<LinkedList<Boolean>> partition = GridPartitioner.partition(edgePixels, img.getWidth(),
+        img.getHeight(), 16, 16);
+    for (int i = 0; i < partition.size(); ++i) {
+      LinkedList<Boolean> edge = partition.get(i);
+      SummaryStatistics stat = stats[i];
+      for (boolean b : edge) {
+        stat.addValue(b ? 1 : 0);
+      }
+    }
+    float[] f = new float[256];
+    for (int i = 0; i < 256; ++i) {
+      f[i] = (float) stats[i].getMean();
+    }
+
+    return new FloatVectorImpl(f);
+  }
+
   @Override
   public void processSegment(SegmentContainer shot) {
     if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
@@ -57,30 +81,6 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(result));
     }
-  }
-
-  private static FloatVector getEdges(MultiImage img) {
-    SummaryStatistics[] stats = new SummaryStatistics[256];
-    for (int i = 0; i < 256; ++i) {
-      stats[i] = new SummaryStatistics();
-    }
-    List<Boolean> edgePixels = EdgeImg.getEdgePixels(img,
-        new ArrayList<Boolean>(img.getWidth() * img.getHeight()));
-    ArrayList<LinkedList<Boolean>> partition = GridPartitioner.partition(edgePixels, img.getWidth(),
-        img.getHeight(), 16, 16);
-    for (int i = 0; i < partition.size(); ++i) {
-      LinkedList<Boolean> edge = partition.get(i);
-      SummaryStatistics stat = stats[i];
-      for (boolean b : edge) {
-        stat.addValue(b ? 1 : 0);
-      }
-    }
-    float[] f = new float[256];
-    for (int i = 0; i < 256; ++i) {
-      f[i] = (float) stats[i].getMean();
-    }
-
-    return new FloatVectorImpl(f);
   }
 
   @Override

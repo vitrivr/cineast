@@ -2,13 +2,9 @@ package org.vitrivr.cineast.api.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
-import org.vitrivr.cineast.api.messages.interfaces.Message;
-import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 
 /**
  * Ignores unkown json properties, e.g. may contain no filter at all. Message of an optionally filtered list of IDs and filters to be applied on the metadata lookup.
@@ -18,35 +14,7 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  * still realise that there are unknown properties</p>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OptionallyFilteredIdList implements Message {
-
-  /**
-   * List of {@link AbstractMetadataFilterDescriptor} to be applied on the metadata lookup.
-   */
-  private List<AbstractMetadataFilterDescriptor> filters;
-
-  /**
-   * List of IDs for which the metadata lookup should be performed.
-   */
-  private List<String> ids;
-
-  /**
-   * This default constructor is required for deserialization by fasterxml/jackson.
-   */
-  public OptionallyFilteredIdList() {
-  }
-
-  public String[] getIds() {
-    return this.ids.toArray(new String[0]);
-  }
-
-  public List<String> getIdList() {
-    return this.ids;
-  }
-
-  public List<AbstractMetadataFilterDescriptor> getFilters() {
-    return filters;
-  }
+public record OptionallyFilteredIdList(@JsonProperty(required = true) List<AbstractMetadataFilterDescriptor> filters, @JsonProperty(required = true) List<String> ids) {
 
   /**
    * Check if the optionally filtered list contains filters.
@@ -60,11 +28,6 @@ public class OptionallyFilteredIdList implements Message {
     return filters != null;
   }
 
-  public void setFilters(
-      AbstractMetadataFilterDescriptor[] filters) {
-    this.filters = Arrays.asList(filters);
-  }
-
   /**
    * Get the list of abstract metadata filter descriptors.
    *
@@ -75,18 +38,5 @@ public class OptionallyFilteredIdList implements Message {
   @JsonIgnore
   public List<AbstractMetadataFilterDescriptor> getFilterList() {
     return this.filters;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public MessageType getMessageType() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 }

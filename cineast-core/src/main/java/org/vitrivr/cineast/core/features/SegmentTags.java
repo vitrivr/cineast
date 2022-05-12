@@ -36,14 +36,12 @@ import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class SegmentTags implements Extractor, Retriever {
 
+  public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
+  public static final String TAG_ID_QUALIFIER = "tagid";
+  private static final Logger LOGGER = LogManager.getLogger();
   protected BatchedTagWriter writer;
   protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  public static final String SEGMENT_TAGS_TABLE_NAME = "features_segmenttags";
-
-  public static final String TAG_ID_QUALIFIER = "tagid";
 
   public SegmentTags() {
   }

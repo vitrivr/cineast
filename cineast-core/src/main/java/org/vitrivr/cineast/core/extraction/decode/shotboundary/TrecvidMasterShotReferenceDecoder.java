@@ -14,10 +14,10 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 public class TrecvidMasterShotReferenceDecoder {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   private TrecvidMasterShotReferenceDecoder() {
   }
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * decodes shot boundaries in the format used for TRECVID

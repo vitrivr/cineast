@@ -31,6 +31,7 @@ public class Main {
     try {
       APIEndpoint.getInstance().start();
     } catch (Throwable e) {
+      e.printStackTrace();
       System.err.println("Failed to initialize API endpoint due to an exception: " + e.getMessage());
     }
 
@@ -38,6 +39,7 @@ public class Main {
     try {
       GRPCEndpoint.start();
     } catch (Throwable e) {
+      e.printStackTrace();
       System.err.println("Failed to initialize gRPC endpoint due to an exception: " + e.getMessage());
     }
 
@@ -45,6 +47,7 @@ public class Main {
     try {
       PrometheusServer.initialize();
     } catch (Throwable e) {
+      e.printStackTrace();
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
 

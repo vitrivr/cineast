@@ -10,16 +10,6 @@ public class FloatArrayTypeProvider extends FloatArrayProviderImpl
     super(value);
   }
 
-  @Override
-  public ProviderDataType getType() {
-    return ProviderDataType.FLOAT_ARRAY;
-  }
-
-  @Override
-  public String getString() {
-    return Arrays.toString(getFloatArray());
-  }
-
   public static FloatArrayTypeProvider fromList(List<Float> list) {
     float[] array = new float[list.size()];
 
@@ -33,7 +23,6 @@ public class FloatArrayTypeProvider extends FloatArrayProviderImpl
 
   }
 
-
   public static PrimitiveTypeProvider fromDoubleList(List<Double> list) {
 
     float[] array = new float[list.size()];
@@ -46,5 +35,15 @@ public class FloatArrayTypeProvider extends FloatArrayProviderImpl
 
     return new FloatArrayTypeProvider(array);
 
+  }
+
+  @Override
+  public ProviderDataType getType() {
+    return ProviderDataType.FLOAT_ARRAY;
+  }
+
+  @Override
+  public String getString() {
+    return Arrays.toString(getFloatArray());
   }
 }

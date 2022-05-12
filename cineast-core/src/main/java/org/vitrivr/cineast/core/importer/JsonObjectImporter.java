@@ -17,10 +17,10 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public class JsonObjectImporter implements Importer<ObjectNode> {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final JsonParser parser;
   private final ObjectMapper mapper = new ObjectMapper();
   private final File inputFile;
-  private static final Logger LOGGER = LogManager.getLogger();
   private boolean open = false;
 
   public JsonObjectImporter(File input) throws IOException {

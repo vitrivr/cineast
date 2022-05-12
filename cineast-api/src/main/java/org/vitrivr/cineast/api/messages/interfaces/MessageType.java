@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.messages.interfaces;
 
 import org.vitrivr.cineast.api.messages.general.Ping;
-import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.api.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.api.messages.query.SegmentQuery;
@@ -18,7 +17,7 @@ import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 /**
- * Defines the different MessageTypes used by the WebSocket and JSON API.
+ * Defines the different MessageTypes used by the WebSocket API.
  */
 public enum MessageType {
   /* Messages related to status updates. */
@@ -29,7 +28,6 @@ public enum MessageType {
   Q_MLT(MoreLikeThisQuery.class),
   Q_NESEG(NeighboringSegmentQuery.class),
   Q_SEG(SegmentQuery.class),
-  M_LOOKUP(MetadataLookup.class),
   Q_TEMPORAL(TemporalQuery.class),
 
 

@@ -14,9 +14,8 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class GRPCEndpoint {
 
-  private static Server server;
-
   private static final Logger LOGGER = LogManager.getLogger();
+  private static Server server;
 
   public static void start() throws IOException {
 

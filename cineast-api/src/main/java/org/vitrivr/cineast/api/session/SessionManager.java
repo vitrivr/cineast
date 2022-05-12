@@ -5,10 +5,10 @@ import java.util.Set;
 
 public class SessionManager {
 
+  private static HashMap<String, Session> sessions = new HashMap<>();
+
   private SessionManager() {
   }
-
-  private static HashMap<String, Session> sessions = new HashMap<>();
 
   public static Session newSession(int lifetime, SessionType type) {
     Session s;

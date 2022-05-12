@@ -1,16 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.SavedModelBundle;
@@ -27,7 +21,6 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.util.distance.CosineDistance;
 import org.vitrivr.cineast.core.util.images.ImagePreprocessingHelper;
 
 public class CLIPImage extends AbstractFeatureModule {
@@ -55,6 +48,12 @@ public class CLIPImage extends AbstractFeatureModule {
     super(TABLE_NAME, 1f, EMBEDDING_SIZE);
     model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
     this.correspondence = CorrespondenceFunction.linear(0.5);
+  }
+
+  private static float[] prepareImage(BufferedImage img) {
+    return ImagePreprocessingHelper.imageToCHWArray(
+        ImagePreprocessingHelper.squaredScaleCenterCrop(img, IMAGE_SIZE),
+        MEAN, STD);
   }
 
   @Override
@@ -109,11 +108,5 @@ public class CLIPImage extends AbstractFeatureModule {
 
       }
     }
-  }
-
-  private static float[] prepareImage(BufferedImage img) {
-    return ImagePreprocessingHelper.imageToCHWArray(
-        ImagePreprocessingHelper.squaredScaleCenterCrop(img, IMAGE_SIZE),
-        MEAN, STD);
   }
 }

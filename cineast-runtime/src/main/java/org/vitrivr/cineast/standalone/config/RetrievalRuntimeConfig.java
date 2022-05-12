@@ -47,12 +47,6 @@ public final class RetrievalRuntimeConfig {
 
   private static final HashMap<String, List<RetrieverConfig>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
 
-  private int threadPoolSize = 4;
-  private int taskQueueSize = 10;
-  private int maxResults = 100;
-  private int resultsPerModule = 50;
-  private HashMap<String, List<RetrieverConfig>> retrieverCategories = DEFAULT_RETRIEVER_CATEGORIES;
-
   static {
 
     List<RetrieverConfig> list;
@@ -99,6 +93,12 @@ public final class RetrievalRuntimeConfig {
 //		list.add(new RetrieverConfig(QueryImageExporter.class, 			0.001));
     DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
   }
+
+  private int threadPoolSize = 4;
+  private int taskQueueSize = 10;
+  private int maxResults = 100;
+  private int resultsPerModule = 50;
+  private HashMap<String, List<RetrieverConfig>> retrieverCategories = DEFAULT_RETRIEVER_CATEGORIES;
 
   @JsonCreator
   public RetrievalRuntimeConfig() {
@@ -161,7 +161,7 @@ public final class RetrievalRuntimeConfig {
 
       Retriever rev;
 
-      if(config.getRetrieverClass()==null){
+      if (config.getRetrieverClass() == null) {
         LOGGER.error("Could not find class {} in category {}, skipping retriever instantiation", config.getRetrieverClassName(), category);
         continue;
       }

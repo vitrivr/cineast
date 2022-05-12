@@ -34,38 +34,6 @@ public class DeepLab implements AutoCloseable {
     this.labels = labels;
   }
 
-
-  /**
-   * returns the class label index for every pixel of the rescaled image
-   */
-  public synchronized int[][] processImage(BufferedImage img) {
-    TUint8 input = prepareImage(img);
-    int[][] _return = processImage(input);
-    input.close();
-    return _return;
-  }
-
-
-  public synchronized int[][] processImage(TUint8 input) {
-
-    TInt64 result = (TInt64) session.runner().feed("ImageTensor", input).fetch("SemanticPredictions").run().get(0);
-
-    int w = (int) result.shape().size(2);
-    int h = (int) result.shape().size(1);
-
-    int[][] resultMatrix = new int[w][h];
-
-    for (int x = 0; x < w; ++x) {
-      for (int y = 0; y < h; ++y) {
-        resultMatrix[x][y] = (int) result.getLong(0, y, x);
-      }
-    }
-
-    result.close();
-
-    return resultMatrix;
-  }
-
   public static TUint8 prepareImage(BufferedImage input) {
 
     float ratio = 513f / Math.max(input.getWidth(), input.getHeight());
@@ -97,6 +65,45 @@ public class DeepLab implements AutoCloseable {
     return imageTensor;
   }
 
+  protected static byte[] load(String path) {
+    try {
+      return Files.readAllBytes((Paths.get(path)));
+    } catch (IOException e) {
+      throw new RuntimeException(
+          "could not load graph for DeepLab: " + LogHelper.getStackTrace(e));
+    }
+  }
+
+  /**
+   * returns the class label index for every pixel of the rescaled image
+   */
+  public synchronized int[][] processImage(BufferedImage img) {
+    TUint8 input = prepareImage(img);
+    int[][] _return = processImage(input);
+    input.close();
+    return _return;
+  }
+
+  public synchronized int[][] processImage(TUint8 input) {
+
+    TInt64 result = (TInt64) session.runner().feed("ImageTensor", input).fetch("SemanticPredictions").run().get(0);
+
+    int w = (int) result.shape().size(2);
+    int h = (int) result.shape().size(1);
+
+    int[][] resultMatrix = new int[w][h];
+
+    for (int x = 0; x < w; ++x) {
+      for (int y = 0; y < h; ++y) {
+        resultMatrix[x][y] = (int) result.getLong(0, y, x);
+      }
+    }
+
+    result.close();
+
+    return resultMatrix;
+  }
+
   public int getColor(long cls) {
     if (cls == 0) {
       return Color.BLACK.getRGB();
@@ -108,14 +115,5 @@ public class DeepLab implements AutoCloseable {
   public void close() {
     this.session.close();
     this.graph.close();
-  }
-
-  protected static byte[] load(String path) {
-    try {
-      return Files.readAllBytes((Paths.get(path)));
-    } catch (IOException e) {
-      throw new RuntimeException(
-          "could not load graph for DeepLab: " + LogHelper.getStackTrace(e));
-    }
   }
 }

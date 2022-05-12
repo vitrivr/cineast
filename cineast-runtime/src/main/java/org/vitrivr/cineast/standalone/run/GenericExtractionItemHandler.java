@@ -140,6 +140,33 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
   }
 
+  /**
+   * create a new descriptor based on the provided one.
+   * <p>
+   * if an id is already given in the descriptor, it takes precedence over generating a new one. if a new path is provided as an argument, it takes precedence over one which might already be existing in the descriptor. if a new type is provided as an argument, it takes precedence over one which might already be existing in the descriptor.
+   * <p>
+   * The exists variable is taken from the provided descriptor, since that is more current than the one provided in the item
+   */
+  public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
+      ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
+    Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
+        : item.getPathForExtraction();
+    String _name =
+        StringUtils.isEmpty(item.getObject().getName()) ? StringUtils.isEmpty(descriptor.getName())
+            ? MediaObjectDescriptor.cleanPath(_path.getFileName()) : descriptor.getName()
+            : item.getObject().getName();
+    boolean exists = descriptor.exists();
+    MediaType _type = type == null ? descriptor.getMediatype() : type;
+    String _id =
+        StringUtils.isEmpty(item.getObject().getObjectId()) ?
+            StringUtils.isEmpty(descriptor.getObjectId())
+                ? generator.next(_path, _type) : descriptor.getObjectId()
+            : item.getObject().getObjectId();
+    String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
+        : item.getObject().getPath();
+    return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
+  }
+
   @Override
   @SuppressWarnings("unchecked")
   public void run() {
@@ -504,34 +531,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       }
     }
   }
-
-  /**
-   * create a new descriptor based on the provided one.
-   * <p>
-   * if an id is already given in the descriptor, it takes precedence over generating a new one. if a new path is provided as an argument, it takes precedence over one which might already be existing in the descriptor. if a new type is provided as an argument, it takes precedence over one which might already be existing in the descriptor.
-   * <p>
-   * The exists variable is taken from the provided descriptor, since that is more current than the one provided in the item
-   */
-  public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
-      ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
-    Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
-        : item.getPathForExtraction();
-    String _name =
-        StringUtils.isEmpty(item.getObject().getName()) ? StringUtils.isEmpty(descriptor.getName())
-            ? MediaObjectDescriptor.cleanPath(_path.getFileName()) : descriptor.getName()
-            : item.getObject().getName();
-    boolean exists = descriptor.exists();
-    MediaType _type = type == null ? descriptor.getMediatype() : type;
-    String _id =
-        StringUtils.isEmpty(item.getObject().getObjectId()) ?
-            StringUtils.isEmpty(descriptor.getObjectId())
-                ? generator.next(_path, _type) : descriptor.getObjectId()
-            : item.getObject().getObjectId();
-    String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
-        : item.getObject().getPath();
-    return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
-  }
-
 
   @Override
   public void addExtractionCompleteListener(ExtractionCompleteListener listener) {

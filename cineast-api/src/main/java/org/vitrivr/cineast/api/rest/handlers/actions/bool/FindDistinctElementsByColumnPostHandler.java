@@ -38,19 +38,19 @@ public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestH
   @Override
   public DistinctElementsResult performPost(ColumnSpecification specification, Context ctx) {
     List<String> distinct = new ArrayList<>();
-    if (specification == null || specification.getTable().isEmpty() || specification.getColumn().isEmpty()) {
+    if (specification == null || specification.table().isEmpty() || specification.column().isEmpty()) {
       LOGGER.warn("No column specified, returning empty list: {}", specification);
       return new DistinctElementsResult("", distinct);
     }
-    if (cache.containsKey(specification.getTable() + specification.getColumn())) {
+    if (cache.containsKey(specification.table() + specification.column())) {
       LOGGER.trace("Cache-hit for distinct lookup {}", specification);
-      return new DistinctElementsResult("", cache.get(specification.getTable() + specification.getColumn()));
+      return new DistinctElementsResult("", cache.get(specification.table() + specification.column()));
     }
     StopWatch watch = StopWatch.createStarted();
-    selector.open(specification.getTable());
-    distinct = selector.getUniqueValues(specification.getColumn()).stream().map(PrimitiveTypeProvider::getString).collect(Collectors.toList());
-    cache.put(specification.getTable() + specification.getColumn(), distinct);
-    LOGGER.trace("Retrieved unique values for {} in {} ms", specification.getTable() + "." + specification.getColumn(), watch.getTime(TimeUnit.MILLISECONDS));
+    selector.open(specification.table());
+    distinct = selector.getUniqueValues(specification.column()).stream().map(PrimitiveTypeProvider::getString).collect(Collectors.toList());
+    cache.put(specification.table() + specification.column(), distinct);
+    LOGGER.trace("Retrieved unique values for {} in {} ms", specification.table() + "." + specification.column(), watch.getTime(TimeUnit.MILLISECONDS));
     return new DistinctElementsResult("", distinct);
   }
 

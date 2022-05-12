@@ -15,10 +15,9 @@ import org.vitrivr.cineast.core.importer.Importer;
 
 public class LIREImporter implements Importer<StringFloatArrayPair> {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final BufferedReader reader;
   private final File file;
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public LIREImporter(File file) throws IOException {
     this.file = file;

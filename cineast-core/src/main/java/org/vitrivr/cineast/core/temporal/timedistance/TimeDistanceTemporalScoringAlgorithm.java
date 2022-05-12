@@ -147,8 +147,8 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
 
     /* Mapping the SegmentNumber to the segmentId, we utilise a tree map to easily retrieve the values sorted by key */
     private final Map<Integer, String> segments = new TreeMap<>();
-    private double score = 0D;
     private final String objectId;
+    private double score = 0D;
 
     public ResultStorage(String objectId) {
       this.objectId = objectId;

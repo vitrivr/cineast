@@ -14,31 +14,26 @@ public class Model3DSegment implements SegmentContainer {
    * Default Voxelizer instance used for Mesh voxelization.
    */
   private static final Voxelizer DEFAULT_VOXELIZER = new Voxelizer(0.002f);
-
-  /**
-   * Segment ID of the AudioSegment.
-   */
-  private String segmentId;
-
-  /**
-   * ID of the multimedia object this AudioSegment belongs to.
-   */
-  private String objectId;
-
   /**
    * The original 3D Mesh as extracted from a model file.
    */
   private final Mesh mesh;
-
   /**
    * The KHL transformed version of the original Mesh.
    */
   private final Mesh normalizedMesh;
-
   /**
    * The 3D VoxelGrid associated with the Model3DSegment. This grid is created lazily.
    */
   private final Object gridLock = new Object();
+  /**
+   * Segment ID of the AudioSegment.
+   */
+  private String segmentId;
+  /**
+   * ID of the multimedia object this AudioSegment belongs to.
+   */
+  private String objectId;
   private VoxelGrid grid;
 
   /**

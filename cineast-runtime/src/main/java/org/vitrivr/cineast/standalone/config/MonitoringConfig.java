@@ -9,6 +9,10 @@ public final class MonitoringConfig {
   public boolean enablePrometheus = false;
   public int prometheusPort = 4569;
 
+  @JsonCreator
+  public MonitoringConfig() {
+  }
+
   @JsonProperty
   public int getPrometheusPort() {
     return prometheusPort;
@@ -16,10 +20,6 @@ public final class MonitoringConfig {
 
   public void setPrometheusPort(int prometheusPort) {
     this.prometheusPort = prometheusPort;
-  }
-
-  @JsonCreator
-  public MonitoringConfig() {
   }
 
   @JsonProperty

@@ -56,12 +56,6 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
     return this.id != null;
   }
 
-
-  @Override
-  public void setSuperId(String id) {
-    this.superId = id;
-  }
-
   /**
    * Online: If this is set, it is assumed to be the id of a {@link MediaObjectDescriptor}
    * <p>
@@ -73,7 +67,13 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
   }
 
   @Override
+  public void setSuperId(String id) {
+    this.superId = id;
+  }
+
+  @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
+
 }

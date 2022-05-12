@@ -35,6 +35,9 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class MetadataTest<R> {
 
+  protected static final Logger LOGGER = LogManager.getLogger();
+  private static final int ELEMENT_COUNT = 8;
+  private static final int METADATA_PER_ELEMENT_COUNT = 7;
   private DBSelector objSelector;
   private DBSelector segSelector;
   private String testObjMetaTableName;
@@ -46,11 +49,6 @@ public abstract class MetadataTest<R> {
   private MediaSegmentMetadataWriter segWriter;
   private MediaObjectMetadataReader objReader;
   private MediaSegmentMetadataReader segReader;
-  private static final int ELEMENT_COUNT = 8;
-  private static final int METADATA_PER_ELEMENT_COUNT = 7;
-
-  protected static final Logger LOGGER = LogManager.getLogger();
-
   private IntegrationDBProvider<R> provider;
 
   @BeforeAll
@@ -59,12 +57,14 @@ public abstract class MetadataTest<R> {
       Assertions.fail("ELEMENT_COUNT must be an even number");
     }
     this.provider = provider();
+    assumeTrue(provider != null);
     this.testObjMetaTableName = getTestObjMetaTableName();
     this.testSegMetaTableName = getTestSegMetaTableName();
   }
 
   @BeforeEach
   void setupTest() {
+    assumeTrue(provider != null);
     /* Open all readers. */
     this.objSelector = this.provider.getSelector();
     this.segSelector = this.provider.getSelector();
@@ -73,7 +73,7 @@ public abstract class MetadataTest<R> {
 
     /* Test database connection. */
     LOGGER.info("Trying to establish connection to Database");
-    if(!objSelector.ping()){
+    if (!objSelector.ping()) {
       LOGGER.error("Connection to DB could not be established, failing test using assumeTrue()");
     }
     assumeTrue(objSelector.ping(), "Connection to database could not be established");
@@ -221,7 +221,7 @@ public abstract class MetadataTest<R> {
     final MetadataAccessSpecification objSpec = new MetadataAccessSpecification(MetadataType.OBJECT, "one", "*");
     final MetadataAccessSpecification segSpec = new MetadataAccessSpecification(MetadataType.SEGMENT, "one", "*");
     final List<MediaObjectMetadataDescriptor> oneDomainObject = this.objReader.findBySpec(objSpec);
-    final  List<MediaSegmentMetadataDescriptor> oneDomainSegment = this.segReader.findBySpec(segSpec);
+    final List<MediaSegmentMetadataDescriptor> oneDomainSegment = this.segReader.findBySpec(segSpec);
     final List<MediaObjectMetadataDescriptor> objDescriptors = new ArrayList<>();
     final List<MediaSegmentMetadataDescriptor> segDescriptors = new ArrayList<>();
     for (int i = 0; i < ELEMENT_COUNT / 2; i++) {

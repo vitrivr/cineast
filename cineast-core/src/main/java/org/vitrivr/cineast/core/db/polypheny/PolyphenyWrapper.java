@@ -18,25 +18,21 @@ import org.apache.logging.log4j.Logger;
 public final class PolyphenyWrapper implements AutoCloseable {
 
   /**
-   * {@link Logger} used by this PolyphenyWrapper.
-   */
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
    * Name of the cineast schema in Polypheny DB.
    */
   public static final String CINEAST_SCHEMA = "cineast";
-
   /**
    * Store name PostgreSQL instances.
    */
   public static final String STORE_NAME_POSTGRESQL = "postgresql";
-
   /**
    * Store name Cottontail DB instances.
    */
   public static final String STORE_NAME_COTTONTAIL = "cottontaildb";
-
+  /**
+   * {@link Logger} used by this PolyphenyWrapper.
+   */
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * The JDBC {@link Connection} used to communicate with Polypheny DB.
    */

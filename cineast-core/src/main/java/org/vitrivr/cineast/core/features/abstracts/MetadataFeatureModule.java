@@ -45,12 +45,11 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   private static final String ID_COLUMN_NAME = GENERIC_ID_COLUMN_QUALIFIER;
   private static final String FEATURE_COLUMN_NAME = FEATURE_COLUMN_QUALIFIER;
-
+  private final int vectorLength;
+  private final boolean segmentRetrievalScope;
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;
   private MediaSegmentReader mediaSegmentReader;
-  private final int vectorLength;
-  private final boolean segmentRetrievalScope;
 
   protected MetadataFeatureModule(int vectorLength) {
     this.vectorLength = vectorLength;

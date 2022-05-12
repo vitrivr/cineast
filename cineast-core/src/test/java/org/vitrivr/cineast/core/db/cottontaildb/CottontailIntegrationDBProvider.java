@@ -17,10 +17,14 @@ public class CottontailIntegrationDBProvider implements IntegrationDBProvider<In
     return config;
   };
 
-  /** The {@link CottontailWrapper} used to establish a database connection. */
+  /**
+   * The {@link CottontailWrapper} used to establish a database connection.
+   */
   private final CottontailWrapper wrapper;
 
-  /** The {@link DatabaseConfig} to use to run this test.*/
+  /**
+   * The {@link DatabaseConfig} to use to run this test.
+   */
   private final DatabaseConfig config = WRAPPER_CONFIG_PROVIDER.get();
 
   /**

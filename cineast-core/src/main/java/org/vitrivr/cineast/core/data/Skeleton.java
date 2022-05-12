@@ -8,26 +8,6 @@ import java.util.List;
 
 public class Skeleton {
 
-  public enum SkeletonPointName {
-    NOSE,
-    LEFT_EYE,
-    RIGHT_EYE,
-    LEFT_EAR,
-    RIGHT_EAR,
-    LEFT_SHOULDER,
-    RIGHT_SHOULDER,
-    LEFT_ELBOW,
-    RIGHT_ELBOW,
-    LEFT_WRIST,
-    RIGHT_WRIST,
-    LEFT_HIP,
-    RIGHT_HIP,
-    LEFT_KNEE,
-    RIGHT_KNEE,
-    LEFT_ANKLE,
-    RIGHT_ANKLE
-  }
-
   public static final SkeletonPointName[][] BONES = {
       {SkeletonPointName.LEFT_ANKLE, SkeletonPointName.LEFT_KNEE},
       {SkeletonPointName.LEFT_KNEE, SkeletonPointName.LEFT_HIP},
@@ -49,12 +29,9 @@ public class Skeleton {
       {SkeletonPointName.NOSE, SkeletonPointName.LEFT_SHOULDER},
       {SkeletonPointName.NOSE, SkeletonPointName.RIGHT_SHOULDER}
   };
-
   private static final int POINT_COUNT = 17;
-
   private final Point2D_F32[] points = new Point2D_F32[POINT_COUNT];
   private final float[] weights = new float[POINT_COUNT];
-
   @JsonCreator
   public Skeleton(
       @JsonProperty("coordinates") float[] coordinates,
@@ -106,6 +83,26 @@ public class Skeleton {
   public void setPointWeighted(SkeletonPointName pointName, float weight, Point2D_F32 point) {
     this.weights[pointName.ordinal()] = weight;
     this.points[pointName.ordinal()] = point;
+  }
+
+  public enum SkeletonPointName {
+    NOSE,
+    LEFT_EYE,
+    RIGHT_EYE,
+    LEFT_EAR,
+    RIGHT_EAR,
+    LEFT_SHOULDER,
+    RIGHT_SHOULDER,
+    LEFT_ELBOW,
+    RIGHT_ELBOW,
+    LEFT_WRIST,
+    RIGHT_WRIST,
+    LEFT_HIP,
+    RIGHT_HIP,
+    LEFT_KNEE,
+    RIGHT_KNEE,
+    LEFT_ANKLE,
+    RIGHT_ANKLE
   }
 
 

@@ -35,16 +35,14 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 
 public class PathList {
 
-  private PathList() {
-  }
-
   public static int samplingInterval = 15;
   public static int frameInterval = 2;
-
   public static double backwardTrackingDistanceThreshold = 5.0;
   public static double successTrackingRatioThreshold = 0.50;
   public static double ransacInlierRatioThreshold = 0.65;
   public static double successFrameSRatioThreshold = 0.70;
+  private PathList() {
+  }
 
   public static void showBineryImage(GrayU8 image) {
     PixelMath.multiply(image, 255, image);

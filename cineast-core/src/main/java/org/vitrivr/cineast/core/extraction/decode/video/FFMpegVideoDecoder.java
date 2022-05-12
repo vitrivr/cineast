@@ -49,124 +49,97 @@ import org.vitrivr.cineast.core.util.LogHelper;
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
   /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video.
-   */
-  private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video.
-   */
-  private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded.
-   */
-  private static final String CONFIG_CHANNELS_PROPERTY = "channels";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio.
-   */
-  private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well.
-   */
-  private static final String CONFIG_SUBTITLE_PROPERTY = "subtitles";
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: max width of the converted video.
-   */
-  private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: max height of the converted video.
-   */
-  private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio.
-   */
-  private static final int CONFIG_CHANNELS_DEFAULT = 1;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio
-   */
-  private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
-
-  private static final int TARGET_FORMAT = avutil.AV_SAMPLE_FMT_S16;
-  private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
    * Lists the mime types supported by the FFMpegVideoDecoder.
    * <p>
    * TODO: List may not be complete yet.
    */
   public static final Set<String> supportedFiles = Set.of("multimedia/mp4", "video/mp4", "video/avi", "video/mpeg", "video/quicktime", "video/webm");
-
-  private byte[] bytes;
-  private int[] pixels;
-
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video.
+   */
+  private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video.
+   */
+  private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded.
+   */
+  private static final String CONFIG_CHANNELS_PROPERTY = "channels";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio.
+   */
+  private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well.
+   */
+  private static final String CONFIG_SUBTITLE_PROPERTY = "subtitles";
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: max width of the converted video.
+   */
+  private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: max height of the converted video.
+   */
+  private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio.
+   */
+  private static final int CONFIG_CHANNELS_DEFAULT = 1;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio
+   */
+  private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
+  private static final int TARGET_FORMAT = avutil.AV_SAMPLE_FMT_S16;
+  private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Internal data structure used to hold decoded VideoFrames and the associated timestamp.
    */
   private final ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
-
   /**
    * Internal data structure used to hold decoded AudioFrames and the associated timestamp.
    */
   private final ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
-
-  private AVFormatContext pFormatCtx;
-
-  private int videoStream = -1;
-  private int audioStream = -1;
-  private AVCodecContext pCodecCtxVideo = null;
-  private AVCodecContext pCodecCtxAudio = null;
-
-  /**
-   * Field for raw frame as returned by decoder (regardless of being audio or video).
-   */
-  private AVFrame pFrame = null;
-
-  /**
-   * Field for RGB frame (decoded video frame).
-   */
-  private AVFrame pFrameRGB = null;
-
-  /**
-   * Field for re-sampled audio-sample.
-   */
-  private AVFrame resampledFrame = null;
-
-  private AVPacket packet;
-  private BytePointer buffer = null;
-
   private final IntPointer out_linesize = new IntPointer();
-
-  private SwsContext sws_ctx = null;
-  private SwrContext swr_ctx = null;
-
-  private VideoDescriptor videoDescriptor = null;
-  private AudioDescriptor audioDescriptor = null;
-  private SubTitleDecoder subtitles = null;
-
   /**
    * Indicates that decoding of video-data is complete.
    */
   private final AtomicBoolean videoComplete = new AtomicBoolean(false);
-
   /**
    * Indicates that decoding of video-data is complete.
    */
   private final AtomicBoolean audioComplete = new AtomicBoolean(false);
-
   /**
    * Indicates the EOF has been reached during decoding.
    */
   private final AtomicBoolean eof = new AtomicBoolean(false);
-
+  private byte[] bytes;
+  private int[] pixels;
+  private AVFormatContext pFormatCtx;
+  private int videoStream = -1;
+  private int audioStream = -1;
+  private AVCodecContext pCodecCtxVideo = null;
+  private AVCodecContext pCodecCtxAudio = null;
+  /**
+   * Field for raw frame as returned by decoder (regardless of being audio or video).
+   */
+  private AVFrame pFrame = null;
+  /**
+   * Field for RGB frame (decoded video frame).
+   */
+  private AVFrame pFrameRGB = null;
+  /**
+   * Field for re-sampled audio-sample.
+   */
+  private AVFrame resampledFrame = null;
+  private AVPacket packet;
+  private BytePointer buffer = null;
+  private SwsContext sws_ctx = null;
+  private SwrContext swr_ctx = null;
+  private VideoDescriptor videoDescriptor = null;
+  private AudioDescriptor audioDescriptor = null;
+  private SubTitleDecoder subtitles = null;
   /**
    * The {@link CachedDataFactory} reference used to create {@link MultiImage} objects.
    */

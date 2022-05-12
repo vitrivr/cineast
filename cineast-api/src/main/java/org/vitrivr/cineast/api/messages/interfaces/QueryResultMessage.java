@@ -1,9 +1,12 @@
 package org.vitrivr.cineast.api.messages.interfaces;
 
 import java.util.List;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentMetadataQueryResult;
 
 /**
- * Defines the abstracts structure of a QueryResultMessage.
+ * A {@link QueryResultMessage} represents a Query result to be implemented e.g. a result for a metadata lookup {@link MediaSegmentMetadataQueryResult}.
+ * <br>
+ * It is an interface so it can be extended with record classes using appropriate variable names
  */
 public interface QueryResultMessage<T> extends Message {
 
@@ -12,26 +15,20 @@ public interface QueryResultMessage<T> extends Message {
    *
    * @return QueryId (unique)
    */
-  public String getQueryId();
+  String queryId();
 
   /**
    * Returns a list of the content this QueryResultMessage contains. Has type
    *
    * @return List of type T
    */
-  public List<T> getContent();
+  List<T> content();
 
   /**
    * Returns the type of the query result content
    *
    * @return Class instance of type T
    */
-  public Class<T> getContentType();
+  Class<T> contentType();
 
-  /**
-   * Returns the number of items in the QueryResultMessage.
-   *
-   * @return Number of item in List<T>, returned by getContent()
-   */
-  int count();
 }

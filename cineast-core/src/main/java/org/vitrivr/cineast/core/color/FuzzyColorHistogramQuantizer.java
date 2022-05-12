@@ -11,40 +11,11 @@ public class FuzzyColorHistogramQuantizer {
   private FuzzyColorHistogramQuantizer() {
   }
 
-  public static enum Color {
-    Black(new RGBContainer(0, 0, 0)),
-    Blue(new RGBContainer(0, 0, 255)),
-    Navy(new RGBContainer(0, 0, 128)),
-    Red(new RGBContainer(255, 0, 0)),
-    Yellow(new RGBContainer(255, 255, 0)),
-    Magenta(new RGBContainer(255, 0, 255)),
-    Brown(new RGBContainer(150, 75, 0)),
-    Grey(new RGBContainer(128, 128, 128)),
-    Green(new RGBContainer(0, 255, 0)),
-    Teal(new RGBContainer(0, 128, 128)),
-    Violet(new RGBContainer(143, 0, 255)),
-    Orange(new RGBContainer(255, 127, 0)),
-    Pink(new RGBContainer(255, 192, 203)),
-    White(new RGBContainer(255, 255, 255)),
-    Cyan(new RGBContainer(0, 255, 255));
-
-    private final ReadableRGBContainer rgbc;
-
-    Color(ReadableRGBContainer rgbc) {
-      this.rgbc = rgbc;
-    }
-
-    public ReadableRGBContainer getRGB() {
-      return this.rgbc;
-    }
-
-  }
-
-  ;
-
   static boolean isBlack(ReadableLabContainer lab) {
     return lab.L < 40f;
   }
+
+  ;
 
   static boolean isGrey(ReadableLabContainer lab) {
     return lab.L > 10f && lab.L < 90f;
@@ -253,6 +224,35 @@ public class FuzzyColorHistogramQuantizer {
 
     LOGGER.warn("Error while quantizing {} returning Black", lab);
     return Color.Black;
+  }
+
+  public static enum Color {
+    Black(new RGBContainer(0, 0, 0)),
+    Blue(new RGBContainer(0, 0, 255)),
+    Navy(new RGBContainer(0, 0, 128)),
+    Red(new RGBContainer(255, 0, 0)),
+    Yellow(new RGBContainer(255, 255, 0)),
+    Magenta(new RGBContainer(255, 0, 255)),
+    Brown(new RGBContainer(150, 75, 0)),
+    Grey(new RGBContainer(128, 128, 128)),
+    Green(new RGBContainer(0, 255, 0)),
+    Teal(new RGBContainer(0, 128, 128)),
+    Violet(new RGBContainer(143, 0, 255)),
+    Orange(new RGBContainer(255, 127, 0)),
+    Pink(new RGBContainer(255, 192, 203)),
+    White(new RGBContainer(255, 255, 255)),
+    Cyan(new RGBContainer(0, 255, 255));
+
+    private final ReadableRGBContainer rgbc;
+
+    Color(ReadableRGBContainer rgbc) {
+      this.rgbc = rgbc;
+    }
+
+    public ReadableRGBContainer getRGB() {
+      return this.rgbc;
+    }
+
   }
 
 }

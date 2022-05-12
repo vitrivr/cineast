@@ -18,22 +18,18 @@ public class PitchContour {
    * The minimum frequency in Hz on the (artifical) cent-scale.
    */
   private static final float CENT_SCALE_MINIMUM = 55.0f;
-
-  /**
-   * Entity that keeps track of salience related contour statistics.
-   */
-  private SummaryStatistics salienceStatistics = new SummaryStatistics();
-
-  /**
-   * Entity that keeps track of frequency related contour statistics.
-   */
-  private SummaryStatistics frequencyStatistics = new SummaryStatistics();
-
   /**
    * Sequence of pitches that form the PitchContour.
    */
   private final List<Pitch> contour = new LinkedList<>();
-
+  /**
+   * Entity that keeps track of salience related contour statistics.
+   */
+  private SummaryStatistics salienceStatistics = new SummaryStatistics();
+  /**
+   * Entity that keeps track of frequency related contour statistics.
+   */
+  private SummaryStatistics frequencyStatistics = new SummaryStatistics();
   /**
    * Indicates that the PitchContour statistics require recalculation.
    */

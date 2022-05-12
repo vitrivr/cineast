@@ -26,13 +26,13 @@ import org.jline.utils.AttributedStyle;
  */
 public class CLI {
 
+  final static Pattern lineSplitRegex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
   private static final String PROMPT = "cineast> ";
-
   private static final String LOGO = "################################################################################\u0085#                                                                              #\u0085#                @@@                           @@@                             #\u0085#                @@@                           @@@                             #\u0085#                     @@@@                                                     #\u0085#   @@@     @@@  @@@  @@@@@@@         @@@@@    @@@  @@@     @@@     @@@@@      #\u0085#   @@@@   @@@@  @@@  @@@@          @@@@@@@@@  @@@  @@@@   @@@@   @@@@@@@@@    #\u0085#     @@@@@@@    @@@  @@@@    @@@  @@@@        @@@    @@@@@@@    @@@@          #\u0085#      @@@@@     @@@   @@@@@@@@@@  @@@@        @@@     @@@@@     @@@@          #\u0085#       @@@      @@@     @@@@@     @@@         @@@      @@@      @@@           #\u0085#                                                                              #\u0085################################################################################";
+
 
   private CLI() {
   }
-
 
   /**
    * Starts the interactive CLI. This is method will block.
@@ -102,8 +102,6 @@ public class CLI {
       System.out.println("System.in was closed; exiting");
     }
   }
-
-  final static Pattern lineSplitRegex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
 
   //based on https://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double/366532
   private static String[] splitLine(String line) {
