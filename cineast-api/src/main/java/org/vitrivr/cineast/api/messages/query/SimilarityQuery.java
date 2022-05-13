@@ -10,12 +10,6 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 /**
  * A {@link SimilarityQuery} contains a list of {@link QueryTerm}s. This object represents a similarity-query message, i.e. a request for a similarity-search.
  */
-public record SimilarityQuery(@JsonProperty(required = true) List<QueryTerm> terms, @JsonProperty(required = true) List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, MessageType messageType) implements Query {
-
-  public SimilarityQuery {
-    if (messageType != MessageType.Q_SIM) {
-      throw new IllegalStateException("MessageType was not Q_SIM, but " + messageType);
-    }
-  }
+public record SimilarityQuery(@JsonProperty(required = true) List<QueryTerm> terms, List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, MessageType messageType) implements Query {
 
 }

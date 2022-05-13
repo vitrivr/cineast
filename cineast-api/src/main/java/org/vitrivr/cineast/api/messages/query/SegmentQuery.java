@@ -12,10 +12,4 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
  */
 public record SegmentQuery(@JsonProperty(required = true) String segmentId, @JsonProperty(required = true) List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, @JsonProperty(required = true) MessageType messageType) implements Query {
 
-  public SegmentQuery {
-    if (messageType != MessageType.Q_SEG) {
-      throw new IllegalStateException("MessageType was not Q_SEG, but " + messageType);
-    }
-  }
-
 }
