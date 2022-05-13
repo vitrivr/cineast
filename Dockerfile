@@ -1,4 +1,4 @@
-FROM openjdk:14-buster AS build
+FROM openjdk:17-buster AS build
 
 RUN apt-get update && \
   apt-get install -y maven
@@ -7,7 +7,7 @@ RUN cd /cineast-src && \
   ./gradlew getExternalFiles && \
   ./gradlew shadowJar
 
-FROM openjdk:14-slim-buster
+FROM openjdk:17-slim-buster
 
 RUN mkdir -p /opt/cineast
 
