@@ -12,10 +12,4 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
  */
 public record SimilarityQuery(@JsonProperty(required = true) List<QueryTerm> terms, @JsonProperty(required = true) List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, MessageType messageType) implements Query {
 
-  public SimilarityQuery {
-    if (messageType != MessageType.Q_SIM) {
-      throw new IllegalStateException("MessageType was not Q_SIM, but " + messageType);
-    }
-  }
-
 }

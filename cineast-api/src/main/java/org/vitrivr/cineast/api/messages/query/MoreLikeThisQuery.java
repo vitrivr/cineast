@@ -15,12 +15,6 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
  */
 public record MoreLikeThisQuery(@JsonProperty(required = true) String segmentId, @JsonProperty(required = true) List<String> categories, List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, @JsonProperty(required = true) MessageType messageType) implements Query {
 
-  public MoreLikeThisQuery {
-    if (messageType != MessageType.Q_MLT) {
-      throw new IllegalStateException("MessageType was not Q_MLT, but " + messageType);
-    }
-  }
-
 }
 
 

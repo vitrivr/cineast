@@ -12,12 +12,6 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
  */
 public record TemporalQuery(@JsonProperty(required = true) List<StagedSimilarityQuery> queries, List<MetadataAccessSpecification> metadataAccessSpec, TemporalQueryConfig config, @JsonProperty(required = true) MessageType messageType) implements Query {
 
-  public TemporalQuery {
-    if (messageType != MessageType.Q_TEMPORAL) {
-      throw new IllegalStateException("MessageType was not Q_TEMPORAL, but " + messageType);
-    }
-  }
-
   /**
    * Convenience getter for timeDistances.
    *

@@ -11,12 +11,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  */
 public record StartSessionMessage(Credentials credentials, MessageType messageType) implements Message {
 
-  public StartSessionMessage {
-    if (messageType != MessageType.SESSION_START) {
-      throw new IllegalStateException("MessageType was not SESSION_START, but " + messageType);
-    }
-  }
-
   public StartSessionMessage(Credentials credentials) {
     this(credentials, MessageType.SESSION_START);
   }

@@ -18,9 +18,4 @@ import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
  */
 public record NeighboringSegmentQuery(@JsonProperty(required = true) String segmentId, @JsonProperty(required = true) Integer count, List<MetadataAccessSpecification> metadataAccessSpec, QueryConfig config, @JsonProperty(required = true) MessageType messageType) implements Query {
 
-  public NeighboringSegmentQuery {
-    if (messageType != MessageType.Q_NESEG) {
-      throw new IllegalStateException("MessageType was not Q_NESEG, but " + messageType);
-    }
-  }
 }
