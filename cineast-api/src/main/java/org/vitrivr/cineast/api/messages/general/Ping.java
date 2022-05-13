@@ -9,12 +9,6 @@ import org.vitrivr.cineast.api.messages.interfaces.MessageType;
  */
 public record Ping(StatusEnum status, @JsonProperty(required = true) MessageType messageType) implements Message {
 
-  public Ping {
-    if (messageType != MessageType.PING) {
-      throw new IllegalStateException("MessageType was not PING, but " + messageType);
-    }
-  }
-
   public Ping(StatusEnum status) {
     this(status, MessageType.PING);
   }
