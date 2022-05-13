@@ -31,7 +31,7 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
  * A CLI command that can be used to start a media extraction based on an extraction definition file.
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
-public class ExtractionCommand implements Runnable {
+public class ExtractionCommand extends AbstractCineastCommand {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -48,7 +48,7 @@ public class ExtractionCommand implements Runnable {
   private Runnable postExtractionIIIFCleanup;
 
   @Override
-  public void run() {
+  public void execute() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     final File file = new File(this.extractionConfig);
     if (file.exists()) {

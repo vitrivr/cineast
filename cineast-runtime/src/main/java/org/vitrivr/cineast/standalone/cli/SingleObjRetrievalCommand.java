@@ -6,7 +6,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
 @Command(name = "retrieve-single", description = "Retrieves all information from the database for a given segment / object.")
-public class SingleObjRetrievalCommand implements Runnable {
+public class SingleObjRetrievalCommand extends AbstractCineastCommand {
 
   @Option(name = {"--segmentid"}, title = "Segment ID", description = "The ID of the segment for which to retrieve detailed information.")
   private String segmentId;
@@ -23,7 +23,8 @@ public class SingleObjRetrievalCommand implements Runnable {
   @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve. By default, all categories are retrieved for a segment.")
   private String category;
 
-  public void run() {
+  @Override
+  public void execute() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     if (segmentId != null) {
       CliUtils.printInfoForSegment(segmentId, selector, category, true);

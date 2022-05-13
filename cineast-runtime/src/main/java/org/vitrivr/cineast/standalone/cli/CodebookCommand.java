@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
  * A CLI command that can be used to generate SURF or HOG codebooks based on a set of images.
  */
 @Command(name = "codebook", description = "Generates a codebook of defined size based on a set of images using some specified features.")
-public class CodebookCommand implements Runnable {
+public class CodebookCommand extends AbstractCineastCommand {
 
   @Option(name = {"-n", "--name"}, description = "The fully qualified name of the codebook generator. Supported values are HOGCodebookGenerator and SURFCodebookGenerator.")
   private String name;
@@ -27,7 +27,7 @@ public class CodebookCommand implements Runnable {
   private int words;
 
   @Override
-  public void run() {
+  public void execute() {
     final CodebookGenerator generator = ReflectionHelper.newCodebookGenerator(name);
     final Path input = Paths.get(this.input);
     final Path output = Paths.get(this.output);

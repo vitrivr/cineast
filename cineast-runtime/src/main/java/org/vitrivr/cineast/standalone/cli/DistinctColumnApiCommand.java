@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
 @Command(name = "distinct-column", description = "Retrieves all distinct elements from the database for a given table and a given column")
-public class DistinctColumnApiCommand implements Runnable {
+public class DistinctColumnApiCommand extends AbstractCineastCommand {
 
   @Option(name = {"--table"}, title = "Table", description = "Table in the underlying database")
   @Required
@@ -26,7 +26,7 @@ public class DistinctColumnApiCommand implements Runnable {
   private int limit = -1;
 
   @Override
-  public void run() {
+  public void execute() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(table);
     long start = System.currentTimeMillis();

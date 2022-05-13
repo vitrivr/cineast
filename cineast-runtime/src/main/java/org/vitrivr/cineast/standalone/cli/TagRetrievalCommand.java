@@ -11,7 +11,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 @Command(name = "retrieve-tags", description = "Retrieves objects from the database using text as query input.")
-public class TagRetrievalCommand implements Runnable {
+public class TagRetrievalCommand extends AbstractCineastCommand {
 
   private String data = "data:application/json;base64,W3siaWQiOiJRODUwMiIsIm5hbWUiOiJtb3VudGFpbiIsImRlc2NyaXB0aW9uIjoiIn0seyJpZCI6IlE2OTMwMTcwNSIsIm5hbWUiOiJzaGVlcCIsImRlc2NyaXB0aW9uIjoiIn0seyJpZCI6IlE3MzY4IiwibmFtZSI6InNoZWVwIiwiZGVzY3JpcHRpb24iOiIifV0=";
 
@@ -21,7 +21,8 @@ public class TagRetrievalCommand implements Runnable {
   @Option(name = {"--detail"}, title = "detailed results", description = "also list detailed results for retrieved segments.")
   private Boolean printDetail = false;
 
-  public void run() {
+  @Override
+  public void execute() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
     TagQueryTermContainer qc = new TagQueryTermContainer(data);
     List<Retriever> retrievers = new ArrayList<>();
