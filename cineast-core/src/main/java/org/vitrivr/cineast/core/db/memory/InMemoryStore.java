@@ -37,6 +37,9 @@ public class InMemoryStore {
    */
   private final StampedLock storeLock = new StampedLock();
 
+  public InMemoryStore() {
+  }
+
   /**
    * Access to an application wide singleton instance of {@link InMemoryStore}.
    *
@@ -44,9 +47,6 @@ public class InMemoryStore {
    */
   public static InMemoryStore sharedInMemoryStore() {
     return SHARED_STORE;
-  }
-
-  public InMemoryStore() {
   }
 
   /**

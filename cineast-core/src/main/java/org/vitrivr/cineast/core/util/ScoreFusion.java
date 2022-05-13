@@ -11,10 +11,10 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 public class ScoreFusion {
 
+  private static final Logger logger = LogManager.getLogger();
+
   private ScoreFusion() {
   }
-
-  private static final Logger logger = LogManager.getLogger();
 
   /**
    * Fuses the object scores into the segment scores by adding every object score to the scores of its segments. If an object without any of its segments was found, the first segment gets added and used instead. Note that this method <i>modifies {@code scoreBySegmentId} in place without changing {@code scoreByObjectId}</i>.

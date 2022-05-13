@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.features;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.SavedModelBundle;
@@ -19,44 +25,31 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.images.ImagePreprocessingHelper;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class InceptionResnetV2 extends AbstractFeatureModule {
 
   public static final int ENCODING_SIZE = 1536;
-  private static final String TABLE_NAME = "features_inceptionresnetv2";
-  private static final Distance DISTANCE = Distance.manhattan;
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * Required dimensions of visual embedding model.
    */
   public static final int IMAGE_WIDTH = 299;
   public static final int IMAGE_HEIGHT = 299;
-
-  /**
-   * mean and std for color values
-   */
-  private static final float[] MEAN = new float[]{0.5f, 0.5f, 0.5f};
-  private static final float[] STD = new float[]{0.5f, 0.5f, 0.5f};
-
-  /**
-   * Resource paths.
-   */
-  private static final String MODEL_PATH = "resources/VisualTextCoEmbedding/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop";
-
   /**
    * Model input and output names.
    */
   public static final String INPUT = "input_1";
   public static final String OUTPUT = "global_average_pooling2d";
-
+  private static final String TABLE_NAME = "features_inceptionresnetv2";
+  private static final Distance DISTANCE = Distance.manhattan;
+  private static final Logger LOGGER = LogManager.getLogger();
+  /**
+   * mean and std for color values
+   */
+  private static final float[] MEAN = new float[]{0.5f, 0.5f, 0.5f};
+  private static final float[] STD = new float[]{0.5f, 0.5f, 0.5f};
+  /**
+   * Resource paths.
+   */
+  private static final String MODEL_PATH = "resources/VisualTextCoEmbedding/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop";
   /**
    * InceptionResNetV2 pretrained on ImageNet: https://storage.googleapis.com/tensorflow/keras-applications/inception_resnet_v2/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop.h5
    */
@@ -64,81 +57,6 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
 
   public InceptionResnetV2() {
     super(TABLE_NAME, ENCODING_SIZE, ENCODING_SIZE);
-  }
-
-  @Override
-  public void processSegment(SegmentContainer sc) {
-    // Return if already processed
-    if (phandler.idExists(sc.getId())) {
-      return;
-    }
-
-    // Case: segment contains video frames
-    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
-      List<MultiImage> frames = sc.getVideoFrames().stream()
-          .map(VideoFrame::getImage)
-          .collect(Collectors.toList());
-
-      float[] encodingArray = encodeVideo(frames);
-      this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
-
-      return;
-    }
-
-    // Case: segment contains image
-    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
-
-      if (image != null) {
-        float[] encodingArray = encodeImage(image);
-        this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
-      }
-
-      // Insert return here if additional cases are added!
-    }
-  }
-
-  @Override
-  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    float[] encodingArray = null;
-
-    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
-      // Case: segment contains video frames
-      List<MultiImage> frames = sc.getVideoFrames().stream()
-          .map(VideoFrame::getImage)
-          .collect(Collectors.toList());
-
-      encodingArray = encodeVideo(frames);
-    } else if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      // Case: segment contains image
-      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
-
-      if (image != null) {
-        encodingArray = encodeImage(image);
-      } else {
-        LOGGER.error("Could not get similar because image could not be converted to BufferedImage.");
-      }
-    }
-
-    if (encodingArray == null) {
-      LOGGER.error("Could not get similar because no acceptable modality was provided.");
-      return new ArrayList<>();
-    }
-
-    // Ensure the correct distance function is used
-    QueryConfig queryConfig = QueryConfig.clone(qc);
-    queryConfig.setDistance(DISTANCE);
-
-    return getSimilar(encodingArray, queryConfig);
-  }
-
-  @Override
-  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    // Ensure the correct distance function is used
-    QueryConfig queryConfig = QueryConfig.clone(qc);
-    queryConfig.setDistance(DISTANCE);
-
-    return super.getSimilar(segmentId, queryConfig);
   }
 
   public static SavedModelBundle getModel() {
@@ -216,5 +134,80 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
     if (model == null) {
       model = SavedModelBundle.load(MODEL_PATH);
     }
+  }
+
+  @Override
+  public void processSegment(SegmentContainer sc) {
+    // Return if already processed
+    if (phandler.idExists(sc.getId())) {
+      return;
+    }
+
+    // Case: segment contains video frames
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
+      List<MultiImage> frames = sc.getVideoFrames().stream()
+          .map(VideoFrame::getImage)
+          .collect(Collectors.toList());
+
+      float[] encodingArray = encodeVideo(frames);
+      this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
+
+      return;
+    }
+
+    // Case: segment contains image
+    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
+
+      if (image != null) {
+        float[] encodingArray = encodeImage(image);
+        this.persist(sc.getId(), new FloatVectorImpl(encodingArray));
+      }
+
+      // Insert return here if additional cases are added!
+    }
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    float[] encodingArray = null;
+
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
+      // Case: segment contains video frames
+      List<MultiImage> frames = sc.getVideoFrames().stream()
+          .map(VideoFrame::getImage)
+          .collect(Collectors.toList());
+
+      encodingArray = encodeVideo(frames);
+    } else if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      // Case: segment contains image
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
+
+      if (image != null) {
+        encodingArray = encodeImage(image);
+      } else {
+        LOGGER.error("Could not get similar because image could not be converted to BufferedImage.");
+      }
+    }
+
+    if (encodingArray == null) {
+      LOGGER.error("Could not get similar because no acceptable modality was provided.");
+      return new ArrayList<>();
+    }
+
+    // Ensure the correct distance function is used
+    QueryConfig queryConfig = QueryConfig.clone(qc);
+    queryConfig.setDistance(DISTANCE);
+
+    return getSimilar(encodingArray, queryConfig);
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+    // Ensure the correct distance function is used
+    QueryConfig queryConfig = QueryConfig.clone(qc);
+    queryConfig.setDistance(DISTANCE);
+
+    return super.getSimilar(segmentId, queryConfig);
   }
 }

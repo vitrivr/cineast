@@ -14,10 +14,10 @@ import org.vitrivr.cineast.core.temporal.ScoredSegment;
 public class SequentialPath implements Comparable<SequentialPath> {
 
   private final String objectId;
-  private double score;
   private final List<ScoredSegment> segments;
-  private int lastContainerId;
   private final float startAbs;
+  private double score;
+  private int lastContainerId;
 
   /**
    * Constructor to initiate a sequential path.

@@ -4,8 +4,9 @@ import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
@@ -16,15 +17,17 @@ import org.vitrivr.cineast.standalone.config.Config;
 public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList, MediaSegmentQueryResult> {
 
   public static final String ROUTE = "find/segments/by/id";
+  private static final Logger LOGGER = LogManager.getLogger();
 
 
   @Override
   public MediaSegmentQueryResult performPost(IdList ids, Context ctx) {
-    if (ids == null || ids.getIds().length == 0) {
+    if (ids == null || ids.ids().isEmpty()) {
+      LOGGER.warn("no ids provided, returning empty list");
       return new MediaSegmentQueryResult("", new ArrayList<>(0));
     }
     try (var sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());) {
-      final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(ids.getIds()));
+      final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(ids.ids());
       return new MediaSegmentQueryResult("", new ArrayList<>(segments.values()));
     }
   }
@@ -46,14 +49,11 @@ public class FindSegmentByIdPostHandler implements ParsingPostRestHandler<IdList
 
   @Override
   public OpenApiDocumentation docs() {
-    return OpenApiBuilder.document()
-        .operation(op -> {
-          op.summary("Finds segments for specified ids");
-          op.description("Finds segments for specified ids");
-          op.operationId("findSegmentByIdBatched");
-          op.addTagsItem("Segment");
-        })
-        .body(inClass())
-        .json("200", outClass());
+    return OpenApiBuilder.document().operation(op -> {
+      op.summary("Finds segments for specified ids");
+      op.description("Finds segments for specified ids");
+      op.operationId("findSegmentByIdBatched");
+      op.addTagsItem("Segment");
+    }).body(inClass()).json("200", outClass());
   }
 }

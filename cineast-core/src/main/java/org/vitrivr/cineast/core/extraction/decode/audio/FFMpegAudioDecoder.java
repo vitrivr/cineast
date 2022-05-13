@@ -67,22 +67,15 @@ public class FFMpegAudioDecoder implements AudioDecoder {
    * Internal data structure used to hold decoded AudioFrames.
    */
   private final ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
-
+  private final IntPointer out_linesize = new IntPointer();
+  private final AtomicBoolean complete = new AtomicBoolean(false);
   private AVFormatContext pFormatCtx = null;
   private AVCodecContext pCodecCtx = null;
   private int audioStream = -1;
-
   private AVPacket packet = null;
-
   private AVFrame decodedFrame = null;
   private AVFrame resampledFrame = null;
-
-  private final IntPointer out_linesize = new IntPointer();
-
   private SwrContext swr_ctx = null;
-
-  private final AtomicBoolean complete = new AtomicBoolean(false);
-
   private AudioDescriptor descriptor = null;
 
   /**

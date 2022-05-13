@@ -21,13 +21,13 @@ import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 public class SessionContainerProvider implements ExtractionContainerProvider,
     ExtractionCompleteListener {
 
+  private static final AtomicInteger queueNumber = new AtomicInteger();
   private static Logger LOGGER = LogManager.getLogger();
+  private final int instance;
   private volatile boolean open = true;
   private List<ExtractionItemContainer> buffer = new ArrayList<>();
   private Gauge pathsInQueue;
   private Counter pathsCompleted;
-  private static final AtomicInteger queueNumber = new AtomicInteger();
-  private final int instance;
   private volatile boolean closing = false;
   private Lock stateModification = new ReentrantLock();
 

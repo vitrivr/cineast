@@ -1,7 +1,7 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'de.undercouch.download' version "4.1.1"
-    id 'com.google.osdetector' version '1.6.2'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'de.undercouch.download' version "5.0.5"
+    id 'com.google.osdetector' version '1.7.0'
     id 'java-library'
     id 'idea'
 }
@@ -11,7 +11,7 @@ allprojects {
     group = 'org.vitrivr'
 
     /* Our current version, on dev branch this should always be release+1-SNAPSHOT */
-    version = '3.11.1'
+    version = '3.11.3'
 
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -28,9 +28,7 @@ subprojects {
         }
 
         dependencies {
-            classpath "gradle.plugin.com.google.gradle:osdetector-gradle-plugin:1.6.2"
-            classpath "gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.14"
-            classpath "de.undercouch:gradle-download-task:4.1.1"
+            classpath "gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.18"
         }
     }
 
@@ -40,8 +38,8 @@ subprojects {
         zip64 true // Required to allow more than 65535 entries in final archive
     }
 
-    sourceCompatibility = 1.11
-    targetCompatibility = 1.11
+    sourceCompatibility = 17
+    targetCompatibility = 17
 
     repositories {
         mavenCentral()
@@ -69,8 +67,8 @@ subprojects {
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
 
         /** Protobuf */
-        implementation group: 'io.grpc', name: 'grpc-stub', version: '1.45.0'
-        implementation group: 'io.grpc', name: 'grpc-netty', version: '1.45.0'
+        implementation group: 'io.grpc', name: 'grpc-stub', version: '1.45.1'
+        implementation group: 'io.grpc', name: 'grpc-netty', version: '1.45.1'
 
         /** Test dependencies (JUnit 5) */
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: version_junit
@@ -97,7 +95,7 @@ task getExternalFiles {
         fileList.eachLine { String line ->
             def split = line.split(",")
             def destination = split[1]
-            download {
+            download.run {
                 src split[0]
                 dest destination
             }

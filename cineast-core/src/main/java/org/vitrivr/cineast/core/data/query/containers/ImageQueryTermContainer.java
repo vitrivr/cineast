@@ -87,13 +87,13 @@ public class ImageQueryTermContainer extends AbstractQueryTermContainer {
     return relativeStart;
   }
 
+  public void setRelativeStart(float relativeStart) {
+    this.relativeStart = relativeStart;
+  }
+
   @Override
   public float getRelativeEnd() {
     return relativeEnd;
-  }
-
-  public void setRelativeStart(float relativeStart) {
-    this.relativeStart = relativeStart;
   }
 
   public void setRelativeEnd(float relativeEnd) {

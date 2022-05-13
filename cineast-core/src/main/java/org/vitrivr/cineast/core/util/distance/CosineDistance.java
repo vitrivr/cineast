@@ -6,6 +6,10 @@ public class CosineDistance implements FloatArrayDistance {
 
   @Override
   public double applyAsDouble(float[] t, float[] u) {
+    return cosineDist(t, u);
+  }
+
+  public static double cosineDist(float[] t, float[] u) {
     if (t == null || u == null) {
       return Double.NaN;
     }
@@ -31,6 +35,7 @@ public class CosineDistance implements FloatArrayDistance {
     }
 
     return 1d - (dot / div);
+
   }
 
 }

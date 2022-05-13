@@ -4,6 +4,7 @@ import io.prometheus.client.Counter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -19,8 +20,8 @@ import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
  */
 public class SessionExtractionContainer {
 
-  private static SessionContainerProvider provider;
   private static final Logger LOGGER = LogManager.getLogger();
+  private static SessionContainerProvider provider;
   private static boolean open = false;
   private static Counter submittedPaths;
   private static File configFile;
@@ -85,10 +86,10 @@ public class SessionExtractionContainer {
     getProviderOrExit().endSession();
   }
 
-  public static void addPaths(ExtractionItemContainer[] items) {
-    getOpenProviderOrExit().addPaths(Arrays.asList(items));
+  public static void addPaths(List<ExtractionItemContainer> items) {
+    getOpenProviderOrExit().addPaths(items);
     if (submittedPaths != null) {
-      submittedPaths.inc(items.length);
+      submittedPaths.inc(items.size());
     }
   }
 

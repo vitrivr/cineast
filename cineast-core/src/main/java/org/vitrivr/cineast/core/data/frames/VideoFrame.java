@@ -28,26 +28,22 @@ public class VideoFrame {
    * Timestamp in milliseconds of the VideoFrame relative to the whole file.
    */
   private final long timestamp;
-
-  /**
-   * MultiImage representing the current VideoFrame.
-   */
-  private MultiImage img;
-
-  /**
-   * {@link AudioFrame} that is associated with the current frame. May be null!
-   */
-  private AudioFrame audioFrame = null;
-
-  /**
-   * {@link SubtitleItem} that is associated with the current video frame. May be null!
-   */
-  private List<SubtitleItem> subtitleItems = null;
-
   /**
    * VideoDescriptor that describes the video this frame belongs to.
    */
   private final VideoDescriptor descriptor;
+  /**
+   * MultiImage representing the current VideoFrame.
+   */
+  private MultiImage img;
+  /**
+   * {@link AudioFrame} that is associated with the current frame. May be null!
+   */
+  private AudioFrame audioFrame = null;
+  /**
+   * {@link SubtitleItem} that is associated with the current video frame. May be null!
+   */
+  private List<SubtitleItem> subtitleItems = null;
 
   /**
    * Constructor vor VideoFrame.

@@ -13,10 +13,10 @@ import org.vitrivr.cineast.standalone.monitoring.RetrievalTaskMonitor;
 
 public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final Retriever retriever;
   private final AbstractQueryTermContainer query;
   private final String segmentId;
-  private static final Logger LOGGER = LogManager.getLogger();
   private final ReadableQueryConfig config;
 
 

@@ -6,6 +6,11 @@ import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SegmentScoreElement extends AbstractScoreElement {
 
+  /**
+   * An id to map this {@link SegmentScoreElement} to a {@link AbstractQueryTermContainer}.
+   */
+  private String queryContainerId;
+
   public SegmentScoreElement(String segmentId, double score) {
     super(segmentId, score);
   }
@@ -13,11 +18,6 @@ public class SegmentScoreElement extends AbstractScoreElement {
   public String getSegmentId() {
     return this.getId();
   }
-
-  /**
-   * An id to map this {@link SegmentScoreElement} to a {@link AbstractQueryTermContainer}.
-   */
-  private String queryContainerId;
 
   /**
    * Getter for the {@link AbstractQueryTermContainer}'s ID, this {@link SegmentScoreElement} relates to

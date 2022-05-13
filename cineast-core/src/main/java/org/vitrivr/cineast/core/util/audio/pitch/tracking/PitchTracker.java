@@ -18,54 +18,45 @@ import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
 public class PitchTracker {
 
   /**
-   * Pitch-candidates that have been ruled out.
-   */
-  private Pitch[][] s0;
-
-  /**
-   * Active pitch-candidates.
-   */
-  private Pitch[][] s1;
-
-  /**
-   * Number of ms that passes between two adjacent bins.
-   */
-  private float t_stepsize;
-
-  /**
    * Threshold in first (per-frame) filter step.
    */
   private final float t1;
-
   /**
    * Threshold in second (global) filter step.
    */
   private final float t2;
-
   /**
    * Voicing threshold according to [1].
    */
   private final float v_threshold;
-
   /**
    * Maximum distance between two pitches in subsequent frames (in cents) according to [1].
    */
   private final float d_max;
-
   /**
    * Maximum amount of misses in seconds before contour tracking is aborted.
    */
   private final float m_max;
-
   /**
    * SummaryStatistics for the PitchContours.
    */
   private final SummaryStatistics contourStatistics = new SummaryStatistics();
-
   /**
    * List of PitchContours. This list is generated int the pitch-tracking step.
    */
   private final List<PitchContour> pitchContours = new ArrayList<>();
+  /**
+   * Pitch-candidates that have been ruled out.
+   */
+  private Pitch[][] s0;
+  /**
+   * Active pitch-candidates.
+   */
+  private Pitch[][] s1;
+  /**
+   * Number of ms that passes between two adjacent bins.
+   */
+  private float t_stepsize;
 
   /**
    * Default constructor for PitchTracker. Uses the settings described in [1].

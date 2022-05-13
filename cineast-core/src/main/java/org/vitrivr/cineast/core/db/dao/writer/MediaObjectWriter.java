@@ -17,7 +17,8 @@ public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDe
    *
    */
   @Override
-  protected void init() { }
+  protected void init() {
+  }
 
   @Override
   protected PersistentTuple generateTuple(MediaObjectDescriptor entity) {

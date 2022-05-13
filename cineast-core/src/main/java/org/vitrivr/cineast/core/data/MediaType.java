@@ -15,43 +15,10 @@ public enum MediaType {
   IMAGE_SEQUENCE(4, "is", "imagesequence"),
   UNKNOWN(99, "u", "unknown");
 
-  private final int id;
-  private final String prefix;
-  private final String name;
-
-  /**
-   * Constructs a new media type given the id, the prefix and the name.
-   *
-   * @param id     numeric id to use to identify the type in the persistent storage layer
-   * @param prefix the prefix of the MediaType without a trailing delimiter such as '_'
-   * @param name   the name of the media type
-   */
-  MediaType(int id, String prefix, String name) {
-    this.id = id;
-    this.prefix = prefix;
-    this.name = name.trim();
-  }
-
-  public int getId() {
-    return this.id;
-  }
-
-  /**
-   * @return the prefix of the MediaType without a trailing delimiter such as '_'.
-   */
-  public String getPrefix() {
-    return this.prefix;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
+  public static final char DELIMITER = '_';
   private static final TIntObjectHashMap<MediaType> idToType = new TIntObjectHashMap<>();
   private static final HashMap<String, MediaType> prefixToType = new HashMap<>();
   private static final HashMap<String, MediaType> nameToType = new HashMap<>();
-
-  public static final char DELIMITER = '_';
 
   static {
     for (MediaType t : EnumSet.allOf(MediaType.class)) {
@@ -73,6 +40,22 @@ public enum MediaType {
       }
       nameToType.put(t.getName().toLowerCase(), t);
     }
+  }
+
+  private final int id;
+  private final String prefix;
+  private final String name;
+  /**
+   * Constructs a new media type given the id, the prefix and the name.
+   *
+   * @param id     numeric id to use to identify the type in the persistent storage layer
+   * @param prefix the prefix of the MediaType without a trailing delimiter such as '_'
+   * @param name   the name of the media type
+   */
+  MediaType(int id, String prefix, String name) {
+    this.id = id;
+    this.prefix = prefix;
+    this.name = name.trim();
   }
 
   /**
@@ -196,5 +179,20 @@ public enum MediaType {
       sb.append(components[i]);
     }
     return new ImmutablePair<>(sb.toString(), Long.valueOf(components[components.length - 1]));
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  /**
+   * @return the prefix of the MediaType without a trailing delimiter such as '_'.
+   */
+  public String getPrefix() {
+    return this.prefix;
+  }
+
+  public String getName() {
+    return this.name;
   }
 }

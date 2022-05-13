@@ -43,25 +43,6 @@ public final class ZernikeMoments {
   }
 
   /**
-   * Computes the Zernike Moments up to order n.
-   *
-   * @param n Maximum order n.
-   */
-  public void compute(int n) {
-    this.moments.clear();
-    this.moments.addAll(ZernikeMoments.calculateZernikeMoments(n, this.f, this.width, this.height));
-  }
-
-  /**
-   * Getter for the moments array. Must be computed prior to calling this method. Otherwise the list will be empty.
-   *
-   * @return List of Zernike Moments.
-   */
-  public List<Complex> getMoments() {
-    return this.moments;
-  }
-
-  /**
    * Compute Zernike moments at specified order.
    *
    * @param w Width of the bounding box of the shape.
@@ -110,6 +91,25 @@ public final class ZernikeMoments {
       }
     }
     return list;
+  }
+
+  /**
+   * Computes the Zernike Moments up to order n.
+   *
+   * @param n Maximum order n.
+   */
+  public void compute(int n) {
+    this.moments.clear();
+    this.moments.addAll(ZernikeMoments.calculateZernikeMoments(n, this.f, this.width, this.height));
+  }
+
+  /**
+   * Getter for the moments array. Must be computed prior to calling this method. Otherwise the list will be empty.
+   *
+   * @return List of Zernike Moments.
+   */
+  public List<Complex> getMoments() {
+    return this.moments;
   }
 
   /**

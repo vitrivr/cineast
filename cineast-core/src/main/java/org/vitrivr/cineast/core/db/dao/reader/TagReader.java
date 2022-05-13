@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.dao.reader;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,24 +19,20 @@ import org.vitrivr.cineast.core.db.DBSelector;
 
 public class TagReader implements Closeable {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  private static boolean initialized = false;
-  private final DBSelector selector;
-
   /**
    * Name of the entity that contains the {@link Tag}s.
    */
   public static final String TAG_ENTITY_NAME = "cineast_tags";
-
   public static final String TAG_ID_COLUMNNAME = "id";
   public static final String TAG_NAME_COLUMNNAME = "name";
   public static final String TAG_DESCRIPTION_COLUMNNAME = "description";
-
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * A map containing cached {@link Tag}s.
    */
   private final static HashMap<String, Tag> tagCache = new HashMap<>();
+  private static boolean initialized = false;
+  private final DBSelector selector;
 
   /**
    * Constructor for {@link TagReader}
@@ -56,6 +51,50 @@ public class TagReader implements Closeable {
   }
 
   /**
+   * Returns a list of all {@link Tag}s contained in the database.
+   * <p>
+   *
+   * @return List of all {@link Tag}s contained in the database
+   */
+  public static List<Tag> getAll(DBSelector selector) {
+    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
+  }
+
+  public static synchronized void initCache(DBSelector selector) {
+    if (initialized) {
+      return;
+    }
+    StopWatch watch = StopWatch.createStarted();
+    if (selector.existsEntity(TAG_ENTITY_NAME)) {
+      List<Tag> all = getAll(selector);
+      for (Tag tag : all) {
+        tagCache.put(tag.getId(), tag);
+      }
+    }
+    initialized = true;
+    watch.stop();
+    LOGGER.debug("Tag Reader initialized in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+  }
+
+  private static Tag fromMap(Map<String, PrimitiveTypeProvider> map) {
+    if (map == null || map.isEmpty()) {
+      return null;
+    }
+
+    if (!map.containsKey(TAG_ID_COLUMNNAME) || !map.containsKey(TAG_NAME_COLUMNNAME)) {
+      return null;
+    }
+
+    if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
+
+    } else {
+      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
+    }
+
+  }
+
+  /**
    * Returns all {@link Tag}s that match the specified name. For matching, case-insensitive a left and right side truncation comparison is used. The matching tags are returned in order of their expected relevance.
    *
    * @param name To value with which to match the {@link Tag}s.
@@ -63,25 +102,23 @@ public class TagReader implements Closeable {
    */
   public List<Tag> getTagsByMatchingName(final String name) {
     final String lname = name.toLowerCase();
-    return tagCache.values().stream().filter(x -> x.getName().toLowerCase().contains(lname))
-        .sorted((o1, o2) -> {
-          boolean o1l = o1.getName().toLowerCase().startsWith(lname);
-          boolean o2l = o2.getName().toLowerCase().startsWith(lname);
-          boolean o1e = o1.getName().toLowerCase().equals(lname);
-          boolean o2e = o2.getName().toLowerCase().equals(lname);
-          if (o1e && !o2e) {
-            return -1;
-          } else if (!o1e && o2e) {
-            return 1;
-          } else if (o1l && !o2l) {
-            return -1;
-          } else if (!o1l && o2l) {
-            return 1;
-          } else {
-            return o1.getName().compareTo(o2.getName());
-          }
-        })
-        .collect(Collectors.toList());
+    return tagCache.values().stream().filter(x -> x.getName().toLowerCase().contains(lname)).sorted((o1, o2) -> {
+      boolean o1l = o1.getName().toLowerCase().startsWith(lname);
+      boolean o2l = o2.getName().toLowerCase().startsWith(lname);
+      boolean o1e = o1.getName().toLowerCase().equals(lname);
+      boolean o2e = o2.getName().toLowerCase().equals(lname);
+      if (o1e && !o2e) {
+        return -1;
+      } else if (!o1e && o2e) {
+        return 1;
+      } else if (o1l && !o2l) {
+        return -1;
+      } else if (!o1l && o2l) {
+        return 1;
+      } else {
+        return o1.getName().compareTo(o2.getName());
+      }
+    }).collect(Collectors.toList());
 
   }
 
@@ -92,8 +129,7 @@ public class TagReader implements Closeable {
    * @return List of matching {@link Tag}s.
    */
   public List<Tag> getTagsByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
-        .getRows("name", new StringTypeProvider(name));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", new StringTypeProvider(name));
     ArrayList<Tag> _return = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       Tag t = fromMap(row);
@@ -116,11 +152,11 @@ public class TagReader implements Closeable {
 
   }
 
-  public List<Tag> getTagsById(String... ids) {
+  public List<Tag> getTagsById(List<String> ids) {
     if (ids == null) {
       return new ArrayList<>();
     }
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, Arrays.asList(ids));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(TAG_ID_COLUMNNAME, ids);
     if (rows.isEmpty()) {
       return new ArrayList<>();
     }
@@ -132,17 +168,6 @@ public class TagReader implements Closeable {
       }
     }
     return _return;
-
-  }
-
-  /**
-   * Returns a list of all {@link Tag}s contained in the database.
-   * <p>
-   *
-   * @return List of all {@link Tag}s contained in the database
-   */
-  public static List<Tag> getAll(DBSelector selector) {
-    return selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull).collect(Collectors.toList());
   }
 
   /**
@@ -152,22 +177,6 @@ public class TagReader implements Closeable {
    */
   public List<Tag> getAllCached() {
     return new ArrayList<>(tagCache.values());
-  }
-
-  public static synchronized void initCache(DBSelector selector) {
-    if (initialized) {
-      return;
-    }
-    StopWatch watch = StopWatch.createStarted();
-    if (selector.existsEntity(TAG_ENTITY_NAME)) {
-      List<Tag> all = getAll(selector);
-      for (Tag tag : all) {
-        tagCache.put(tag.getId(), tag);
-      }
-    }
-    initialized = true;
-    watch.stop();
-    LOGGER.debug("Tag Reader initialized in {} ms", watch.getTime(TimeUnit.MILLISECONDS));
   }
 
   public void flushCache() {
@@ -186,25 +195,6 @@ public class TagReader implements Closeable {
       }
     }
     return _return;
-  }
-
-  private static Tag fromMap(Map<String, PrimitiveTypeProvider> map) {
-    if (map == null || map.isEmpty()) {
-      return null;
-    }
-
-    if (!map.containsKey(TAG_ID_COLUMNNAME) || !map.containsKey(TAG_NAME_COLUMNNAME)) {
-      return null;
-    }
-
-    if (!map.containsKey(TAG_DESCRIPTION_COLUMNNAME)) {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(), "");
-
-    } else {
-      return new CompleteTag(map.get(TAG_ID_COLUMNNAME).getString(), map.get(TAG_NAME_COLUMNNAME).getString(),
-          map.get(TAG_DESCRIPTION_COLUMNNAME).getString());
-    }
-
   }
 
   @Override

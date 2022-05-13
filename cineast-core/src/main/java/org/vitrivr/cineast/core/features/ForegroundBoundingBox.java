@@ -15,7 +15,6 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
@@ -26,11 +25,12 @@ import org.vitrivr.cineast.core.util.MaskGenerator;
 
 public class ForegroundBoundingBox extends AbstractFeatureModule {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  private float[] arrayCache = null;
+
   public ForegroundBoundingBox() {
     super("features_ForegroundBoundingBox", 0.5f, 4);
   }
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public void processSegment(SegmentContainer shot) {
@@ -54,8 +54,6 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
 
     return getSimilar(ReadableFloatVector.toArray(fv), qc);
   }
-
-  private float[] arrayCache = null;
 
   protected void persist(String shotId, long frameIdx, FloatVector fs) {
     PersistentTuple tuple = this.phandler.generateTuple(shotId, frameIdx, arrayCache = ReadableFloatVector.toArray(fs, arrayCache));

@@ -18,20 +18,17 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 public class AudioSegment implements SegmentContainer {
 
   /**
+   * List of AudioFrames in the AudioSegment.
+   */
+  private final List<AudioFrame> frames = new ArrayList<>();
+  /**
    * Segment ID of the AudioSegment.
    */
   private String segmentId;
-
   /**
    * ID of the multimedia object this AudioSegment belongs to.
    */
   private String objectId;
-
-  /**
-   * List of AudioFrames in the AudioSegment.
-   */
-  private final List<AudioFrame> frames = new ArrayList<>();
-
   /**
    * Total number of samples in the AudioSegment.
    */

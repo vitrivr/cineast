@@ -16,34 +16,29 @@ import java.awt.image.BufferedImage;
 public final class SURFHelper {
 
   /**
+   * Size of the SURF descriptor.
+   */
+  public final static int SURF_VECTOR_SIZE = 64;
+  /**
    * Number of Octaves to consider in the interest point detection step (Fast Hessian) of SURF. Defaults to 4 for FH-9 described in [1].
    */
   private final static int FH_NUMBER_OF_OCTAVES = 4;
-
   /**
    * Number of scales to consider in the interest point detection step (Fast Hessian)  of SURF. Defaults to 4 for FH-9 described in [1].
    */
   private final static int FH_NUMBER_SCALES_PER_OCTAVE = 4;
-
   /**
    * How often pixels are sampled in the first octave during the interest point detection step (Fast Hessian) of SURF. Defaults to 1 for FH-9 described in [1]
    */
   private final static int FH_INITIAL_SAMPLE_SIZE = 1;
-
   /**
    * Size/width of the smallest feature/kernel in the first octave during the interest point detection step (Fast Hessian)  f SURF. Defaults to 9 for FH-9 described in [1]
    */
   private final static int FH_INITIAL_SIZE = 9;
-
   /**
    * Limits the number of images obtained per scale and thus the number images persisted during the extraction.
    */
   private final static int FH_MAX_FEATURES_PER_SCALE = -1;
-
-  /**
-   * Size of the SURF descriptor.
-   */
-  public final static int SURF_VECTOR_SIZE = 64;
 
   /**
    * Private constructor; do not instantiate!

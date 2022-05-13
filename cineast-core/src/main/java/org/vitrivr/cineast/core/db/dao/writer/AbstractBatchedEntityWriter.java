@@ -15,14 +15,14 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
    * The {@link Queue} used to store {@link PersistentTuple}s until they are flushed to disk.
    */
   private final ArrayBlockingQueue<PersistentTuple> buffer;
-
+  /**
+   * Flag indicating whether inserts should be batched in memory and submitted all at once.
+   */
+  private final boolean batch;
   /**
    * {@link PersistencyWriter} instance used to persist changes to the underlying persistence layer.
    */
   protected PersistencyWriter<?> writer;
-
-  /** Flag indicating whether inserts should be batched in memory and submitted all at once. */
-  private final boolean batch;
 
   protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer) {
     this.batch = writer.supportedBatchSize() > 1;

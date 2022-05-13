@@ -34,10 +34,10 @@ import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriev
 public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  protected DBSelector selector;
   protected final String entity;
   protected final HashSet<String> attributes = new HashSet<>();
   protected final HashMap<String, ProviderDataType> columnTypes = new HashMap<>();
+  protected DBSelector selector;
   private String idCol = GENERIC_ID_COLUMN_QUALIFIER;
 
   protected BooleanRetriever(String entity, Collection<String> attributes) {

@@ -22,12 +22,30 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
 public class DatabaseSetupCommand implements Runnable {
 
   private static final Logger LOGGER = LogManager.getLogger(DatabaseSetupCommand.class);
-
+  /**
+   * This is a hacky way to support CLI and non CLI usage.
+   * <p>
+   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used. See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
+   */
+  private final boolean isNotCommand;
   @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
   private boolean clean = false;
-
   @Option(name = {"-e", "--extraction"}, title = "Extraction config", description = "If specified, setup database based upon Cineast extraction config file.")
   private String extractionConfig = null;
+
+  /**
+   * For CLI
+   */
+  public DatabaseSetupCommand() {
+    this(false);
+  }
+
+  /**
+   * Other usages, i.e. in Import
+   */
+  public DatabaseSetupCommand(boolean nonCli) {
+    this.isNotCommand = nonCli;
+  }
 
   private HashSet<PersistentOperator> configPersistentOperators() {
     /* Collects all the relevant retriever classes based on the application config. */
@@ -51,27 +69,6 @@ public class DatabaseSetupCommand implements Runnable {
       System.err.println(String.format("Could not setup database based upon extraction config '%s'; the file does not exist!", file.toString()));
     }
     return persistentOperators;
-  }
-
-  /**
-   * This is a hacky way to support CLI and non CLI usage.
-   * <p>
-   * TL;DR The functionality of this class is used in a non-cottontail configuration when clean-before-import is used. See {@link org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler} for further explanation.
-   */
-  private final boolean isNotCommand;
-
-  /**
-   * For CLI
-   */
-  public DatabaseSetupCommand() {
-    this(false);
-  }
-
-  /**
-   * Other usages, i.e. in Import
-   */
-  public DatabaseSetupCommand(boolean nonCli) {
-    this.isNotCommand = nonCli;
   }
 
   @Override

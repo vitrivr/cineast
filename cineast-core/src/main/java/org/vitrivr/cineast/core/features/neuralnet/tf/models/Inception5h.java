@@ -237,6 +237,41 @@ public class Inception5h implements AutoCloseable {
 
   }
 
+  private static TFloat32 readImage(MultiImage img) {
+    TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(img.getHeight(), img.getWidth(), 3));
+
+    double sum = 0d;
+
+    int[] colors = img.getColors();
+
+    for (int y = 0; y < img.getHeight(); ++y) {
+      for (int x = 0; x < img.getWidth(); ++x) {
+        int c = colors[x + img.getWidth() * y];
+        float r = (float) RGBContainer.getRed(c);
+        float g = (float) RGBContainer.getGreen(c);
+        float b = (float) RGBContainer.getBlue(c);
+
+        imageTensor.setFloat(r, y, x, 0);
+        imageTensor.setFloat(g, y, x, 1);
+        imageTensor.setFloat(b, y, x, 2);
+
+        sum += r + g + b;
+      }
+    }
+
+    sum /= (img.getWidth() * img.getHeight());
+
+    for (int y = 0; y < img.getHeight(); ++y) {
+      for (int x = 0; x < img.getWidth(); ++x) {
+        for (int c = 0; c < 3; ++c) {
+          imageTensor.setFloat((float) (imageTensor.getFloat(y, x, c) - sum), y, x, c);
+        }
+      }
+    }
+
+    return imageTensor;
+
+  }
 
   public HashMap<String, float[]> transform(MultiImage img) {
 
@@ -274,42 +309,6 @@ public class Inception5h implements AutoCloseable {
     classificationGraph.close();
     preProcessingSession.close();
     preprocessingGraph.close();
-
-  }
-
-  private static TFloat32 readImage(MultiImage img) {
-    TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(img.getHeight(), img.getWidth(), 3));
-
-    double sum = 0d;
-
-    int[] colors = img.getColors();
-
-    for (int y = 0; y < img.getHeight(); ++y) {
-      for (int x = 0; x < img.getWidth(); ++x) {
-        int c = colors[x + img.getWidth() * y];
-        float r = (float) RGBContainer.getRed(c);
-        float g = (float) RGBContainer.getGreen(c);
-        float b = (float) RGBContainer.getBlue(c);
-
-        imageTensor.setFloat(r, y, x, 0);
-        imageTensor.setFloat(g, y, x, 1);
-        imageTensor.setFloat(b, y, x, 2);
-
-        sum += r + g + b;
-      }
-    }
-
-    sum /= (img.getWidth() * img.getHeight());
-
-    for (int y = 0; y < img.getHeight(); ++y) {
-      for (int x = 0; x < img.getWidth(); ++x) {
-        for (int c = 0; c < 3; ++c) {
-          imageTensor.setFloat((float) (imageTensor.getFloat(y, x, c) - sum), y, x, c);
-        }
-      }
-    }
-
-    return imageTensor;
 
   }
 }

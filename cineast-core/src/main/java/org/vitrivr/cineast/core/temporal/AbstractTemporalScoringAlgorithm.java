@@ -45,7 +45,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
         Get the current media segment descriptor to save the necessary information in the
         ScoredSegment.
         */
-        MediaSegmentDescriptor segmentDescriptor = segmentMap.get(stringDoublePair.key);
+        MediaSegmentDescriptor segmentDescriptor = segmentMap.get(stringDoublePair.key());
         /*
         If there is such a segment as found in a string double pair, add this to the
         scoredSegmentStorage for later usage.
@@ -60,7 +60,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
         if (scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).containsKey(currentContainerId)) {
           scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
         } else {
-          scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value, currentContainerId));
+          scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).put(currentContainerId, new ScoredSegment(segmentDescriptor, stringDoublePair.value(), currentContainerId));
         }
       }
       currentContainerId++;

@@ -39,6 +39,11 @@ public class BoxPosition {
     init();
   }
 
+  public static boolean overlaps(BoxPosition primary, BoxPosition secondary) {
+    return primary.getLeft() < secondary.getRight() && primary.getRight() > secondary.getLeft()
+        && primary.getTop() < secondary.getBottom() && primary.getBottom() > secondary.getTop();
+  }
+
   public void init() {
     float tmpLeft = this.left;
     float tmpTop = this.top;
@@ -49,11 +54,6 @@ public class BoxPosition {
     this.top = Math.min(tmpTop, tmpBottom);  // top should have lower value as bottom
     this.right = Math.max(tmpLeft, tmpRight);
     this.bottom = Math.max(tmpTop, tmpBottom);
-  }
-
-  public static boolean overlaps(BoxPosition primary, BoxPosition secondary) {
-    return primary.getLeft() < secondary.getRight() && primary.getRight() > secondary.getLeft()
-        && primary.getTop() < secondary.getBottom() && primary.getBottom() > secondary.getTop();
   }
 
   public float getLeft() {

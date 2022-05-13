@@ -8,9 +8,9 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class RetrievalTaskMonitor {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private static boolean initalized = false;
   private static Summary executionTime;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public static void init() {
     if (initalized) {

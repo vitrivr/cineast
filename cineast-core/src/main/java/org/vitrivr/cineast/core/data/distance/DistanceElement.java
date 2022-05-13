@@ -11,11 +11,8 @@ import org.vitrivr.cineast.core.util.GroupingUtil;
 
 public interface DistanceElement {
 
-  String getId();
-
-  double getDistance();
-
-  ScoreElement toScore(CorrespondenceFunction f);
+  Comparator<DistanceElement> INVERSE_DISTANCE_COMPARATOR =
+      Comparator.<DistanceElement>comparingDouble(e -> e.getDistance()).reversed();
 
   static <T extends DistanceElement> List<ScoreElement> toScore(List<T> distances,
       CorrespondenceFunction f) {
@@ -35,10 +32,13 @@ public interface DistanceElement {
     }
   }
 
-  Comparator<DistanceElement> INVERSE_DISTANCE_COMPARATOR =
-      Comparator.<DistanceElement>comparingDouble(e -> e.getDistance()).reversed();
-
   static List<DistanceElement> filterMinimumDistances(Stream<DistanceElement> elements) {
     return GroupingUtil.filterMaxByGroup(elements, e -> e.getId(), INVERSE_DISTANCE_COMPARATOR);
   }
+
+  String getId();
+
+  double getDistance();
+
+  ScoreElement toScore(CorrespondenceFunction f);
 }

@@ -9,18 +9,6 @@ public class IntArrayTypeProvider extends IntArrayProviderImpl implements Primit
     super(value);
   }
 
-
-  @Override
-  public ProviderDataType getType() {
-    return ProviderDataType.INT_ARRAY;
-  }
-
-  @Override
-  public String getString() {
-    return Arrays.toString(getIntArray());
-  }
-
-
   public static PrimitiveTypeProvider fromList(List<Integer> list) {
 
     int[] array = new int[list.size()];
@@ -46,6 +34,16 @@ public class IntArrayTypeProvider extends IntArrayProviderImpl implements Primit
 
     return new IntArrayTypeProvider(array);
 
+  }
+
+  @Override
+  public ProviderDataType getType() {
+    return ProviderDataType.INT_ARRAY;
+  }
+
+  @Override
+  public String getString() {
+    return Arrays.toString(getIntArray());
   }
 
 }

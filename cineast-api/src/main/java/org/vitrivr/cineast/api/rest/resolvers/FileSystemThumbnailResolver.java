@@ -2,13 +2,13 @@ package org.vitrivr.cineast.api.rest.resolvers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 
 public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
-  private final File baseFolder;
-
   private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+  private final File baseFolder;
 
   public FileSystemThumbnailResolver(File baseFolder) {
     this.baseFolder = baseFolder;
@@ -31,6 +31,8 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
     File[] candidates = new File[]{
         new File(baseFolder, split[0] + "_" + split[1] + "/" + split[2] + ".jpg"),
         new File(baseFolder, split[0] + "_" + split[1] + "/" + segmentId + ".jpg"),
+        new File(baseFolder, split[0] + "_" + String.join("_", Arrays.copyOfRange(split, 1, split.length - 1)) + "/" + segmentId + ".jpg"),
+        new File(baseFolder, split[0] + "_" + String.join("_", Arrays.copyOfRange(split, 1, split.length - 1)) + "/" + segmentId + ".png"),
         new File(baseFolder, split[0] + "_" + split[1] + "/" + split[2] + ".png"),
         new File(baseFolder, split[0] + "_" + split[1] + "/" + segmentId + ".png"),
         new File(baseFolder, split[1] + "/" + split[2] + ".jpg"),

@@ -39,26 +39,22 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
+  /**
+   * Generate a query term which will then be used for retrieval.
+   */
+  private static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
   /**
    * Name of the table/entity used to store the data.
    */
   private final String tableName;
-
   /**
    * The {@link DBSelector} used for database lookup.
    */
   protected DBSelector selector = null;
-
   /**
    * The {@link SimpleFulltextFeatureDescriptorWriter} used to persist data.
    */
   protected SimpleFulltextFeatureDescriptorWriter writer;
-
-  @Override
-  public List<String> getTableNames() {
-    return Collections.singletonList(tableName);
-  }
 
   /**
    * Constructor for {@link AbstractTextRetriever}
@@ -67,6 +63,11 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    */
   public AbstractTextRetriever(String tableName) {
     this.tableName = tableName;
+  }
+
+  @Override
+  public List<String> getTableNames() {
+    return Collections.singletonList(tableName);
   }
 
   @Override
@@ -150,11 +151,6 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     final String[] terms = generateQuery(sc, qc);
     return this.getSimilar(qc, terms);
   }
-
-  /**
-   * Generate a query term which will then be used for retrieval.
-   */
-  private static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
 

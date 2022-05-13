@@ -23,7 +23,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleBitSetWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
@@ -43,8 +42,6 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   private static final DMatrixRMaj DCT_MATRIX;
   private static final DMatrixRMaj DCT_MATRIX_TRANSPOSED;
-  private SimpleBitSetWriter writer;
-
   /**
    * DCT Matrix size
    */
@@ -70,6 +67,7 @@ public class DCTImageHash extends AbstractFeatureModule {
   private final DMatrixRMaj resizedMat = new DMatrixRMaj(N, N);
   private final DMatrixRMaj intermediateMat = new DMatrixRMaj(N, N);
   private final DMatrixRMaj outputMat = new DMatrixRMaj(N, N);
+  private SimpleBitSetWriter writer;
 
   /**
    * No-args constructor for reflection

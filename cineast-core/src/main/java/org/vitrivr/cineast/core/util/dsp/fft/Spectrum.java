@@ -14,41 +14,42 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 public class Spectrum implements Iterable<Pair<Float, Double>> {
 
   /**
-   * Available type of spectra.
-   */
-  public enum Type {
-    POWER, MAGNITUDE;
-  }
-
-  /**
    * Values of the spectrum. They depend on the kind of spectrum being used.
    */
   private final double[] spectrum;
-
   /**
    * Frequency labels of the spectrum (usually the x-axis).
    */
   private final float[] frequencies;
-
   /**
    * Length of the spectrum (i.e. the number of bins).
    */
   private final int length;
-
   /**
    * Type of spectrum as defined in the Type enum.
    */
   private final Type type;
-
   /**
    *
    */
   private Integer maximumIndex;
-
   /**
    *
    */
   private Integer minimumIndex;
+
+  public Spectrum(Type type, double[] spectrum, float[] frequencies) {
+    /* Check if the length of both array is the same. */
+    if (spectrum.length != frequencies.length) {
+      throw new IllegalArgumentException("The length of the spectrum and the frequency-label array must be the same!");
+    }
+
+    /* Store values for further reference. */
+    this.length = spectrum.length;
+    this.spectrum = spectrum;
+    this.frequencies = frequencies;
+    this.type = type;
+  }
 
   /**
    * Calculates and returns the power spectrum for the provided, complex data input (usually stemming from a FFT).
@@ -90,19 +91,6 @@ public class Spectrum implements Iterable<Pair<Float, Double>> {
     }
 
     return new Spectrum(Type.MAGNITUDE, magnitudeSpectrum, FFTUtil.binCenterFrequencies(data.length, samplingrate));
-  }
-
-  public Spectrum(Type type, double[] spectrum, float[] frequencies) {
-    /* Check if the length of both array is the same. */
-    if (spectrum.length != frequencies.length) {
-      throw new IllegalArgumentException("The length of the spectrum and the frequency-label array must be the same!");
-    }
-
-    /* Store values for further reference. */
-    this.length = spectrum.length;
-    this.spectrum = spectrum;
-    this.frequencies = frequencies;
-    this.type = type;
   }
 
   /**
@@ -322,5 +310,12 @@ public class Spectrum implements Iterable<Pair<Float, Double>> {
         return new Pair<>(Spectrum.this.frequencies[this.idx], Spectrum.this.spectrum[this.idx++]);
       }
     };
+  }
+
+  /**
+   * Available type of spectra.
+   */
+  public enum Type {
+    POWER, MAGNITUDE;
   }
 }

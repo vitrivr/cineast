@@ -17,6 +17,19 @@ public class HueHistogram extends AbstractFeatureModule {
     super("features_huehistogram", 16f, 16);
   }
 
+  private static float[] updateHist(float[] hist, int[] colors) {
+    for (int color : colors) {
+      HSVContainer container = ColorConverter.RGBtoHSV(new ReadableRGBContainer(color));
+      if (container.getS() > 0.2f && container.getV() > 0.3f) {
+        float h = container.getH() * hist.length;
+        int idx = (int) h;
+        hist[idx] += h - idx;
+        hist[(idx + 1) % hist.length] += idx + 1 - h;
+      }
+    }
+    return hist;
+  }
+
   @Override
   public void processSegment(SegmentContainer shot) {
     if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
@@ -49,19 +62,6 @@ public class HueHistogram extends AbstractFeatureModule {
     float[] query = updateHist(new float[16], sc.getMostRepresentativeFrame().getImage().getThumbnailColors());
     return getSimilar(query, qc);
 
-  }
-
-  private static float[] updateHist(float[] hist, int[] colors) {
-    for (int color : colors) {
-      HSVContainer container = ColorConverter.RGBtoHSV(new ReadableRGBContainer(color));
-      if (container.getS() > 0.2f && container.getV() > 0.3f) {
-        float h = container.getH() * hist.length;
-        int idx = (int) h;
-        hist[idx] += h - idx;
-        hist[(idx + 1) % hist.length] += idx + 1 - h;
-      }
-    }
-    return hist;
   }
 
 }

@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.audio.pitch.Melody;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.audio.pitch.estimation.KLF0PitchEstimator;
@@ -21,6 +20,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 import org.vitrivr.cineast.core.util.dsp.filter.frequency.SpectralWhiteningFilter;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 
 public class MelodyEstimate extends StagedFeatureModule {

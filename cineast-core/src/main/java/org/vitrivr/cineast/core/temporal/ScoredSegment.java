@@ -69,9 +69,9 @@ public class ScoredSegment implements Comparable<ScoredSegment> {
    */
   public void addScore(StringDoublePair stringDoublePair) {
     // Implementation note: currently uses averagepooling. We could also use maxpooling, or weighted pooling.
-    if (stringDoublePair.key.equals(this.segmentId) && stringDoublePair.value > 0) {
+    if (stringDoublePair.key().equals(this.segmentId) && stringDoublePair.value() > 0) {
       this.normalizer++;
-      this.totalScore += stringDoublePair.value;
+      this.totalScore += stringDoublePair.value();
       this.score = totalScore / normalizer;
     }
   }

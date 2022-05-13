@@ -20,316 +20,22 @@ public class Mesh implements WritableMesh {
    * The default, empty mesh.
    */
   public static final Mesh EMPTY = new Mesh(1, 1);
-
-  /**
-   * A single vertex, which contains all the information about position, normal and color.
-   */
-  public class Vertex {
-
-    /**
-     * Position of the vertex in 3D space.
-     */
-    private final Vector3f position;
-
-    /**
-     * The vertex-normal.
-     */
-    private final Vector3f normal;
-
-    /**
-     * Color of the vertex.
-     */
-    private final Vector3f color;
-
-    /**
-     * List of faces the current vertex participates in.
-     */
-    private final List<Face> faces = new ArrayList<>(4);
-
-    public Vertex(Vector3f position) {
-      this(position, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-    }
-
-    public Vertex(Vector3f position, Vector3f color, Vector3f normal) {
-      this.position = position;
-      this.normal = normal;
-      this.color = color;
-    }
-
-    /**
-     * Returns the number of faces this vertex participates in.
-     *
-     * @return Number of faces.
-     */
-    public int numberOfFaces() {
-      return this.faces.size();
-    }
-
-
-    /**
-     * Getter to the position vector.
-     *
-     * @return Immutable version of the position vector.
-     */
-    public Vector3fc getPosition() {
-      return this.position;
-    }
-
-    /**
-     * Getter to the vertex normal.
-     *
-     * @return Immutable version of the vertex normal.
-     */
-    public Vector3fc getNormal() {
-      return this.normal;
-    }
-
-    /**
-     * Getter to the vertex color.
-     *
-     * @return Immutable version of the vertex normal.
-     */
-    public Vector3fc getColor() {
-      return this.color;
-    }
-
-    /**
-     * Attaches the vertex to a face, which causes the vertex-normal to be re-calculated.
-     *
-     * @param face Face to which the vertex should be attached.
-     */
-    private void attachToFace(Face face) {
-      if (!this.faces.contains(face)) {
-        this.faces.add(face);
-        this.rebuild();
-      }
-    }
-
-    /**
-     * Detaches the vertex from a face, which causes the vertex-normal to be re-calculated.
-     *
-     * @param face Face to which the vertex should be attached.
-     */
-    private void detachFromFace(Face face) {
-      if (!this.faces.contains(face)) {
-        this.faces.remove(face);
-        this.rebuild();
-      }
-    }
-
-    /**
-     * Re-calculates the vertex-normal by calculating the weighted mean of all face-normals this vertex participates in.
-     */
-    private void rebuild() {
-      this.normal.x = 0.0f;
-      this.normal.y = 0.0f;
-      this.normal.z = 0.0f;
-
-      for (Face face : this.faces) {
-        Vector3f fn = face.normal();
-        if (!Float.isNaN(fn.x) && !Float.isNaN(fn.y) && !Float.isNaN(fn.z)) {
-          this.normal.x += fn.x / this.numberOfFaces();
-          this.normal.y += fn.y / this.numberOfFaces();
-          this.normal.z += fn.z / this.numberOfFaces();
-        }
-      }
-    }
-  }
-
-  /**
-   * A face defined that is made up by either three or four vertices.
-   */
-  public class Face {
-
-    /**
-     * Type of face, defaults to TRI (= three vertices).
-     */
-    private final FaceType type;
-
-    /**
-     * List of vertices in this face.
-     */
-    private final Vertex[] vertices;
-
-    /**
-     * Vertex indices.
-     */
-    private final int[] vertexIndices;
-
-    /**
-     * Getter for the face's type.
-     *
-     * @return Type of the face.
-     */
-    public final FaceType getType() {
-      return type;
-    }
-
-    /**
-     * Constructor for a face.
-     */
-    private Face(Vector4i indices) {
-      /* If the w-index is greater than -1 a QUAD face is created. */
-      if (indices.w > -1) {
-        this.type = FaceType.QUAD;
-        this.vertices = new Vertex[4];
-        this.vertexIndices = new int[4];
-      } else {
-        this.type = FaceType.TRI;
-        this.vertices = new Vertex[3];
-        this.vertexIndices = new int[3];
-      }
-
-      /* Store vertex-indices. */
-      this.vertexIndices[0] = indices.x;
-      this.vertexIndices[1] = indices.y;
-      this.vertexIndices[2] = indices.z;
-      if (this.getType() == FaceType.QUAD) {
-        this.vertexIndices[3] = indices.w;
-      }
-
-      /* Add vertices to face. */
-      this.vertices[0] = Mesh.this.vertices.get(this.vertexIndices[0]);
-      this.vertices[1] = Mesh.this.vertices.get(this.vertexIndices[1]);
-      this.vertices[2] = Mesh.this.vertices.get(this.vertexIndices[2]);
-      if (this.getType() == FaceType.QUAD) {
-        this.vertices[3] = Mesh.this.vertices.get(this.vertexIndices[3]);
-      }
-
-      /* Attach face to vertices. */
-      this.vertices[0].attachToFace(this);
-      this.vertices[1].attachToFace(this);
-      this.vertices[2].attachToFace(this);
-      if (this.getType() == FaceType.QUAD) {
-        this.vertices[3].attachToFace(this);
-      }
-    }
-
-    /**
-     * Returns the list of vertices that make up this face.
-     *
-     * @return Unmodifiable list of vertices.
-     */
-    public final List<Vertex> getVertices() {
-      return Arrays.asList(this.vertices);
-    }
-
-    /**
-     * Calculates and returns the area of a face.
-     *
-     * @return Area of the face.
-     */
-    public double area() {
-      if (this.type == FaceType.TRI) {
-        /* Extract vertices. */
-        Vector3f v1 = this.vertices[0].position;
-        Vector3f v2 = this.vertices[1].position;
-        Vector3f v3 = this.vertices[2].position;
-
-        /* Generate the edges and sort them in ascending order. */
-        List<Vector3f> edges = new ArrayList<>();
-        edges.add(new Vector3f(v1).sub(v2));
-        edges.add(new Vector3f(v2).sub(v3));
-        edges.add(new Vector3f(v3).sub(v1));
-
-        edges.sort((o1, o2) -> {
-          float difference = o1.length() - o2.length();
-          if (difference < 0) {
-            return -1;
-          } else if (difference > 0) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-
-        float a = edges.get(2).length();
-        float b = edges.get(1).length();
-        float c = edges.get(0).length();
-
-        /* Returns the area of the triangle according to Heron's Formula. */
-        double area = 0.25 * FastMath.sqrt((a + (b + c)) * (c - (a - b)) * (c + (a - b)) * (a + (b - c)));
-        if (Double.isNaN(area)) {
-          return 0.0f;
-        } else {
-          return area;
-        }
-      } else {
-        /* Extract vertices. */
-        Vector3f v1 = this.vertices[0].position;
-        Vector3f v2 = this.vertices[1].position;
-        Vector3f v3 = this.vertices[2].position;
-        Vector3f v4 = this.vertices[3].position;
-
-        /* Calculates the area of the face using Bretschneider's Formula. */
-        Vector3f s1 = new Vector3f(v1).sub(v2);
-        Vector3f s2 = new Vector3f(v2).sub(v3);
-        Vector3f s3 = new Vector3f(v3).sub(v4);
-        Vector3f s4 = new Vector3f(v4).sub(v1);
-
-        Vector3f d1 = new Vector3f(v1).sub(v3);
-        Vector3f d2 = new Vector3f(v2).sub(v4);
-        return 0.25 * FastMath.sqrt(4 * FastMath.pow(d1.length(), 2) * FastMath.pow(d2.length(), 2) - FastMath.pow((FastMath.pow(s2.length(), 2) + FastMath.pow(s4.length(), 2) - FastMath.pow(s1.length(), 2) - FastMath.pow(s3.length(), 2)), 2));
-      }
-    }
-
-    /**
-     * Calculates and returns the face normal.
-     */
-    public Vector3f normal() {
-      Vector3f e1 = new Vector3f(this.vertices[1].position).sub(this.vertices[0].position);
-      Vector3f e2 = new Vector3f(this.vertices[2].position).sub(this.vertices[0].position);
-      return e1.cross(e2).normalize();
-    }
-
-    /**
-     * Calculates and returns the centroid of the face.
-     *
-     * @return Centroid of the face.
-     */
-    public Vector3f centroid() {
-      Vector3f centroid = new Vector3f(0f, 0f, 0f);
-      for (Vertex vertex : this.vertices) {
-        centroid.add(vertex.position);
-      }
-
-      if (this.type == FaceType.TRI) {
-        centroid.div(3.0f);
-      } else {
-        centroid.div(4.0f);
-      }
-
-      return centroid;
-    }
-  }
-
-  /**
-   * Enumeration used to distinguish between triangular and quadratic faces.
-   */
-  public enum FaceType {
-    TRI, QUAD;
-  }
-
   /**
    * List of vertices in the Mesh.
    */
   private final List<Vertex> vertices;
-
   /**
    * List of faces in the mesh.
    */
   private final List<Face> faces;
-
   /**
    * The position of the Mesh's barycenter. Its value is lazily calculated during invocation of the @see barycenter() method.
    */
   private Vector3f barycenter;
-
   /**
    * The surface-area of the mesh. Its value is lazily calculated during invocation of the @see surfaceArea() method.
    */
   private Double surfaceArea;
-
   /**
    * The bounding box of the mesh. Its value is lazily calculated during invocation of the @see bounds() method.
    */
@@ -590,5 +296,294 @@ public class Mesh implements WritableMesh {
     vertex.color.x = color.getRed() / 255.0f;
     vertex.color.y = color.getBlue() / 255.0f;
     vertex.color.z = color.getGreen() / 255.0f;
+  }
+
+  /**
+   * Enumeration used to distinguish between triangular and quadratic faces.
+   */
+  public enum FaceType {
+    TRI, QUAD;
+  }
+
+  /**
+   * A single vertex, which contains all the information about position, normal and color.
+   */
+  public class Vertex {
+
+    /**
+     * Position of the vertex in 3D space.
+     */
+    private final Vector3f position;
+
+    /**
+     * The vertex-normal.
+     */
+    private final Vector3f normal;
+
+    /**
+     * Color of the vertex.
+     */
+    private final Vector3f color;
+
+    /**
+     * List of faces the current vertex participates in.
+     */
+    private final List<Face> faces = new ArrayList<>(4);
+
+    public Vertex(Vector3f position) {
+      this(position, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+    }
+
+    public Vertex(Vector3f position, Vector3f color, Vector3f normal) {
+      this.position = position;
+      this.normal = normal;
+      this.color = color;
+    }
+
+    /**
+     * Returns the number of faces this vertex participates in.
+     *
+     * @return Number of faces.
+     */
+    public int numberOfFaces() {
+      return this.faces.size();
+    }
+
+
+    /**
+     * Getter to the position vector.
+     *
+     * @return Immutable version of the position vector.
+     */
+    public Vector3fc getPosition() {
+      return this.position;
+    }
+
+    /**
+     * Getter to the vertex normal.
+     *
+     * @return Immutable version of the vertex normal.
+     */
+    public Vector3fc getNormal() {
+      return this.normal;
+    }
+
+    /**
+     * Getter to the vertex color.
+     *
+     * @return Immutable version of the vertex normal.
+     */
+    public Vector3fc getColor() {
+      return this.color;
+    }
+
+    /**
+     * Attaches the vertex to a face, which causes the vertex-normal to be re-calculated.
+     *
+     * @param face Face to which the vertex should be attached.
+     */
+    private void attachToFace(Face face) {
+      if (!this.faces.contains(face)) {
+        this.faces.add(face);
+        this.rebuild();
+      }
+    }
+
+    /**
+     * Detaches the vertex from a face, which causes the vertex-normal to be re-calculated.
+     *
+     * @param face Face to which the vertex should be attached.
+     */
+    private void detachFromFace(Face face) {
+      if (!this.faces.contains(face)) {
+        this.faces.remove(face);
+        this.rebuild();
+      }
+    }
+
+    /**
+     * Re-calculates the vertex-normal by calculating the weighted mean of all face-normals this vertex participates in.
+     */
+    private void rebuild() {
+      this.normal.x = 0.0f;
+      this.normal.y = 0.0f;
+      this.normal.z = 0.0f;
+
+      for (Face face : this.faces) {
+        Vector3f fn = face.normal();
+        if (!Float.isNaN(fn.x) && !Float.isNaN(fn.y) && !Float.isNaN(fn.z)) {
+          this.normal.x += fn.x / this.numberOfFaces();
+          this.normal.y += fn.y / this.numberOfFaces();
+          this.normal.z += fn.z / this.numberOfFaces();
+        }
+      }
+    }
+  }
+
+  /**
+   * A face defined that is made up by either three or four vertices.
+   */
+  public class Face {
+
+    /**
+     * Type of face, defaults to TRI (= three vertices).
+     */
+    private final FaceType type;
+
+    /**
+     * List of vertices in this face.
+     */
+    private final Vertex[] vertices;
+
+    /**
+     * Vertex indices.
+     */
+    private final int[] vertexIndices;
+
+    /**
+     * Constructor for a face.
+     */
+    private Face(Vector4i indices) {
+      /* If the w-index is greater than -1 a QUAD face is created. */
+      if (indices.w > -1) {
+        this.type = FaceType.QUAD;
+        this.vertices = new Vertex[4];
+        this.vertexIndices = new int[4];
+      } else {
+        this.type = FaceType.TRI;
+        this.vertices = new Vertex[3];
+        this.vertexIndices = new int[3];
+      }
+
+      /* Store vertex-indices. */
+      this.vertexIndices[0] = indices.x;
+      this.vertexIndices[1] = indices.y;
+      this.vertexIndices[2] = indices.z;
+      if (this.getType() == FaceType.QUAD) {
+        this.vertexIndices[3] = indices.w;
+      }
+
+      /* Add vertices to face. */
+      this.vertices[0] = Mesh.this.vertices.get(this.vertexIndices[0]);
+      this.vertices[1] = Mesh.this.vertices.get(this.vertexIndices[1]);
+      this.vertices[2] = Mesh.this.vertices.get(this.vertexIndices[2]);
+      if (this.getType() == FaceType.QUAD) {
+        this.vertices[3] = Mesh.this.vertices.get(this.vertexIndices[3]);
+      }
+
+      /* Attach face to vertices. */
+      this.vertices[0].attachToFace(this);
+      this.vertices[1].attachToFace(this);
+      this.vertices[2].attachToFace(this);
+      if (this.getType() == FaceType.QUAD) {
+        this.vertices[3].attachToFace(this);
+      }
+    }
+
+    /**
+     * Getter for the face's type.
+     *
+     * @return Type of the face.
+     */
+    public final FaceType getType() {
+      return type;
+    }
+
+    /**
+     * Returns the list of vertices that make up this face.
+     *
+     * @return Unmodifiable list of vertices.
+     */
+    public final List<Vertex> getVertices() {
+      return Arrays.asList(this.vertices);
+    }
+
+    /**
+     * Calculates and returns the area of a face.
+     *
+     * @return Area of the face.
+     */
+    public double area() {
+      if (this.type == FaceType.TRI) {
+        /* Extract vertices. */
+        Vector3f v1 = this.vertices[0].position;
+        Vector3f v2 = this.vertices[1].position;
+        Vector3f v3 = this.vertices[2].position;
+
+        /* Generate the edges and sort them in ascending order. */
+        List<Vector3f> edges = new ArrayList<>();
+        edges.add(new Vector3f(v1).sub(v2));
+        edges.add(new Vector3f(v2).sub(v3));
+        edges.add(new Vector3f(v3).sub(v1));
+
+        edges.sort((o1, o2) -> {
+          float difference = o1.length() - o2.length();
+          if (difference < 0) {
+            return -1;
+          } else if (difference > 0) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
+        float a = edges.get(2).length();
+        float b = edges.get(1).length();
+        float c = edges.get(0).length();
+
+        /* Returns the area of the triangle according to Heron's Formula. */
+        double area = 0.25 * FastMath.sqrt((a + (b + c)) * (c - (a - b)) * (c + (a - b)) * (a + (b - c)));
+        if (Double.isNaN(area)) {
+          return 0.0f;
+        } else {
+          return area;
+        }
+      } else {
+        /* Extract vertices. */
+        Vector3f v1 = this.vertices[0].position;
+        Vector3f v2 = this.vertices[1].position;
+        Vector3f v3 = this.vertices[2].position;
+        Vector3f v4 = this.vertices[3].position;
+
+        /* Calculates the area of the face using Bretschneider's Formula. */
+        Vector3f s1 = new Vector3f(v1).sub(v2);
+        Vector3f s2 = new Vector3f(v2).sub(v3);
+        Vector3f s3 = new Vector3f(v3).sub(v4);
+        Vector3f s4 = new Vector3f(v4).sub(v1);
+
+        Vector3f d1 = new Vector3f(v1).sub(v3);
+        Vector3f d2 = new Vector3f(v2).sub(v4);
+        return 0.25 * FastMath.sqrt(4 * FastMath.pow(d1.length(), 2) * FastMath.pow(d2.length(), 2) - FastMath.pow((FastMath.pow(s2.length(), 2) + FastMath.pow(s4.length(), 2) - FastMath.pow(s1.length(), 2) - FastMath.pow(s3.length(), 2)), 2));
+      }
+    }
+
+    /**
+     * Calculates and returns the face normal.
+     */
+    public Vector3f normal() {
+      Vector3f e1 = new Vector3f(this.vertices[1].position).sub(this.vertices[0].position);
+      Vector3f e2 = new Vector3f(this.vertices[2].position).sub(this.vertices[0].position);
+      return e1.cross(e2).normalize();
+    }
+
+    /**
+     * Calculates and returns the centroid of the face.
+     *
+     * @return Centroid of the face.
+     */
+    public Vector3f centroid() {
+      Vector3f centroid = new Vector3f(0f, 0f, 0f);
+      for (Vertex vertex : this.vertices) {
+        centroid.add(vertex.position);
+      }
+
+      if (this.type == FaceType.TRI) {
+        centroid.div(3.0f);
+      } else {
+        centroid.div(4.0f);
+      }
+
+      return centroid;
+    }
   }
 }

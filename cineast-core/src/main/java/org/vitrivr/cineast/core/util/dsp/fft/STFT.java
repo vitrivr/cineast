@@ -36,26 +36,22 @@ public class STFT {
    * Overlap in samples between two subsequent windows.
    */
   private final int overlap;
-
-  /**
-   * Height of the STFT (i.e. the number of frequency bins per FFT).
-   */
-  private int height;
-
   /**
    * Frequency labels in ascending order (for all FFTs).
    */
   private final float[] frequencies;
-
-  /**
-   * Time labels in ascending order (for each entry in the stft list).
-   */
-  private float[] time;
-
   /**
    * List containing one FFT entry per timepoint. Same order as time[]
    */
   private final List<FFT> stft;
+  /**
+   * Height of the STFT (i.e. the number of frequency bins per FFT).
+   */
+  private int height;
+  /**
+   * Time labels in ascending order (for each entry in the stft list).
+   */
+  private float[] time;
 
   public STFT(int windowsize, int overlap, int padding, WindowFunction function, float samplingrate) {
     /* Make sure that the windowsize is a power of two. */

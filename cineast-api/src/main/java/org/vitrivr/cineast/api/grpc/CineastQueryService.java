@@ -37,10 +37,8 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
 
   private static final int DEFAULT_NEIGHBORING_SEGMENTS = 10;
-
-  private final ContinuousRetrievalLogic continuousRetrievalLogic;
-
   private static final Logger LOGGER = LogManager.getLogger();
+  private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
   public CineastQueryService(ContinuousRetrievalLogic continuousRetrievalLogic) {
     this.continuousRetrievalLogic = continuousRetrievalLogic;
@@ -114,7 +112,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
               break stages;
             }
 
-            results.stream().forEach(x -> relevantSegments.add(x.key));
+            results.forEach(x -> relevantSegments.add(x.key()));
           }
         }
       }
@@ -203,7 +201,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
               /* Transform raw results into list of StringDoublePairs (segmentId -> score) */
               final List<StringDoublePair> results = scores.stream()
                   .map(elem -> new StringDoublePair(elem.getSegmentId(), elem.getScore()))
-                  .filter(p -> p.value > 0d)
+                  .filter(p -> p.value() > 0d)
                   .sorted(StringDoublePair.COMPARATOR)
                   .limit(max)
                   .collect(Collectors.toList());
@@ -215,7 +213,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                 LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, finalStageIndex);
               }
               cache.get(finalStageIndex).put(category, results);
-              results.forEach(res -> relevantSegments.add(res.key));
+              results.forEach(res -> relevantSegments.add(res.key()));
               LOGGER.trace("Category {} at stage {} executed @ {} ms", category, finalStageIndex, watch.getTime(TimeUnit.MILLISECONDS));
 
               /* If this is the last stage, we can send relevant results per category back to the UI.
@@ -231,7 +229,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
                             results
                         )));
 
-                List<String> segmentIds = results.stream().map(x -> x.key).filter(x -> !sentSegmentIds.contains(x)).collect(Collectors.toList());
+                List<String> segmentIds = results.stream().map(StringDoublePair::key).filter(x -> !sentSegmentIds.contains(x)).collect(Collectors.toList());
                 if (segmentIds.isEmpty()) {
                   continue;
                 }
@@ -313,7 +311,7 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
       /* At this point, we have iterated over all stages. Now, we need to go back for all stages and send the results for the relevant ids. */
       for (int stageIndex = 0; stageIndex < stages.size() - 1; stageIndex++) {
         cache.get(stageIndex).forEach((category, results) -> {
-          results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key));
+          results.removeIf(pair -> !stageQConf.getRelevantSegmentIds().contains(pair.key()));
 
           responseObserver.onNext(
               QueryContainerUtil.queryResult(

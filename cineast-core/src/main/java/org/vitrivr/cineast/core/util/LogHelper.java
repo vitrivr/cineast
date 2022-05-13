@@ -10,8 +10,6 @@ public class LogHelper {
   private LogHelper() {
   }
 
-  public static final Marker SQL_MARKER = MarkerManager.getMarker("SQL");
-
   public static String getStackTrace(Throwable e) {
     StringWriter sWriter = new StringWriter();
     PrintWriter pWriter = new PrintWriter(sWriter);

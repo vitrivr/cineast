@@ -8,12 +8,11 @@ import org.apache.logging.log4j.Logger;
 
 public class TimeHelper {
 
-  private TimeHelper() {
-  }
-
+  private static final Logger LOGGER = LogManager.getLogger();
   private static TDoubleArrayStack tic = new TDoubleArrayStack();
 
-  private static final Logger LOGGER = LogManager.getLogger();
+  private TimeHelper() {
+  }
 
   public static synchronized void tic() {
     tic.push(System.nanoTime() / 1000000d);

@@ -3,31 +3,29 @@ package org.vitrivr.cineast.api.rest.handlers.actions.tag;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.TagsQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
-import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
 public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, TagsQueryResult> {
 
-
   public static final String ROUTE = "tags/by/id"; // TODO only route not prefixed by find?
-
-  private static final TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public TagsQueryResult performPost(IdList context, Context ctx) {
-    List<Tag> list = Collections.emptyList();
-    if (context == null || context.getIds().length == 0) {
-      // nothing
-    } else {
-      list = tagReader.getTagsById(context.getIds());
+    if (context == null || context.ids().isEmpty()) {
+      LOGGER.warn("no ids provided, returning empty list");
+      return new TagsQueryResult("", new ArrayList<>(0));
     }
-    return new TagsQueryResult("", list);
+    try (var tr = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
+      return new TagsQueryResult("", tr.getTagsById(context.ids()));
+    }
   }
 
   @Override
@@ -47,13 +45,10 @@ public class FindTagsByIdsPostHandler implements ParsingPostRestHandler<IdList, 
 
   @Override
   public OpenApiDocumentation docs() {
-    return OpenApiBuilder.document()
-        .operation(op -> {
-          op.summary("Find all tags by ids");
-          op.addTagsItem("Tag");
-          op.operationId("findTagsById");
-        })
-        .body(inClass())
-        .json("200", outClass());
+    return OpenApiBuilder.document().operation(op -> {
+      op.summary("Find all tags by ids");
+      op.addTagsItem("Tag");
+      op.operationId("findTagsById");
+    }).body(inClass()).json("200", outClass());
   }
 }

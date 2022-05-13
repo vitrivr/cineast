@@ -8,6 +8,11 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 /* for equations see http://www.easyrgb.com/ */
 public final class ColorConverter {
 
+  private static TIntObjectMap<ReadableLabContainer> rgbToLabCache = TCollections
+      .synchronizedMap(new TIntObjectHashMap<ReadableLabContainer>(100000));
+  private static TIntObjectMap<ReadableHSVContainer> rgbToHSVCache = TCollections
+      .synchronizedMap(new TIntObjectHashMap<ReadableHSVContainer>(100000));
+
   private ColorConverter() {
   }
 
@@ -290,9 +295,6 @@ public final class ColorConverter {
     return cachedRGBtoLab(rgb.toIntColor());
   }
 
-  private static TIntObjectMap<ReadableLabContainer> rgbToLabCache = TCollections
-      .synchronizedMap(new TIntObjectHashMap<ReadableLabContainer>(100000));
-
   public static ReadableLabContainer cachedRGBtoLab(int rgb) {
 
     ReadableLabContainer _return = rgbToLabCache.get(rgb);
@@ -302,9 +304,6 @@ public final class ColorConverter {
     }
     return _return;
   }
-
-  private static TIntObjectMap<ReadableHSVContainer> rgbToHSVCache = TCollections
-      .synchronizedMap(new TIntObjectHashMap<ReadableHSVContainer>(100000));
 
   public static ReadableHSVContainer cachedRGBtoHSV(int rgb) {
     ReadableHSVContainer _return = rgbToHSVCache.get(rgb);

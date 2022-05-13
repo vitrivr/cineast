@@ -130,6 +130,16 @@ public class AudioFrame {
   }
 
   /**
+   * Internal method to update the buffer holding the actual audio data.
+   *
+   * @param data Byte array with the samples.
+   */
+  private void setData(byte[] data) {
+    this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
+    this.numberOfSamples = data.length / (2 * this.descriptor.getChannels());
+  }
+
+  /**
    * Getter for sample-rate.
    *
    * @return Sample rate of this AudioFrame.
@@ -280,15 +290,5 @@ public class AudioFrame {
     setData(remaining);
 
     return new AudioFrame(idx, timestamp, cutBytes, new AudioDescriptor(descriptor.getSamplingrate(), descriptor.getChannels(), (long) (numberOfSamples / descriptor.getSamplingrate())));
-  }
-
-  /**
-   * Internal method to update the buffer holding the actual audio data.
-   *
-   * @param data Byte array with the samples.
-   */
-  private void setData(byte[] data) {
-    this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
-    this.numberOfSamples = data.length / (2 * this.descriptor.getChannels());
   }
 }

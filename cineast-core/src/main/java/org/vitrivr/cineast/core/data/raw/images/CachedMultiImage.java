@@ -36,16 +36,14 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
    * The height of the cached {@link MultiImage}.
    */
   private final int type;
-
-  /**
-   * Soft reference to the thumbnail image. May be garbage collected under memory pressure.
-   */
-  private SoftReference<BufferedImage> thumb;
-
   /**
    * Reference to the {@link CachedDataFactory} that created this {@link CachedMultiImage}.
    */
   private final CachedDataFactory factory;
+  /**
+   * Soft reference to the thumbnail image. May be garbage collected under memory pressure.
+   */
+  private SoftReference<BufferedImage> thumb;
 
   /**
    * Constructor for {@link CachedMultiImage}.
@@ -98,6 +96,33 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
     final BufferedImage bimg = new BufferedImage(this.width, this.height, this.type);
     bimg.setRGB(0, 0, this.width, this.height, colors, 0, this.width);
     this.thumb = new SoftReference<>(MultiImage.generateThumb(bimg));
+  }
+
+  /**
+   * Converts the {@link BufferedImage} to a byte array representation.
+   *
+   * @param img The {@link BufferedImage} that should be converted.
+   * @return The byte array representing the {@link BufferedImage}
+   */
+  private static byte[] toBytes(BufferedImage img) {
+    int[] colors = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
+    return toBytes(colors, img.getWidth(), img.getHeight());
+  }
+
+  /**
+   * Converts the int array holding the colors of a {@link BufferedImage} to a byte array representation.
+   *
+   * @param colors The int array holding the color values.
+   * @param width  Width of the image.
+   * @param height Height of the image.
+   * @return The byte array representing the {@link BufferedImage}
+   */
+  private static byte[] toBytes(int[] colors, int width, int height) {
+    final ByteBuffer data = ByteBuffer.allocate(width * height * 4).order(ByteOrder.LITTLE_ENDIAN);
+    for (int c : colors) {
+      data.putInt(c);
+    }
+    return data.array();
   }
 
   /**
@@ -193,32 +218,5 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
   public void clear() {
     this.data.clear();
     this.thumb.clear();
-  }
-
-  /**
-   * Converts the {@link BufferedImage} to a byte array representation.
-   *
-   * @param img The {@link BufferedImage} that should be converted.
-   * @return The byte array representing the {@link BufferedImage}
-   */
-  private static byte[] toBytes(BufferedImage img) {
-    int[] colors = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-    return toBytes(colors, img.getWidth(), img.getHeight());
-  }
-
-  /**
-   * Converts the int array holding the colors of a {@link BufferedImage} to a byte array representation.
-   *
-   * @param colors The int array holding the color values.
-   * @param width  Width of the image.
-   * @param height Height of the image.
-   * @return The byte array representing the {@link BufferedImage}
-   */
-  private static byte[] toBytes(int[] colors, int width, int height) {
-    final ByteBuffer data = ByteBuffer.allocate(width * height * 4).order(ByteOrder.LITTLE_ENDIAN);
-    for (int c : colors) {
-      data.putInt(c);
-    }
-    return data.array();
   }
 }

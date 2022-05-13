@@ -13,6 +13,29 @@ public class CorrespondenceFunction implements DoubleUnaryOperator {
     this.function = function;
   }
 
+  public static CorrespondenceFunction fromFunction(DoubleUnaryOperator function) {
+    return new CorrespondenceFunction(function);
+  }
+
+  public static CorrespondenceFunction identity() {
+    return IDENTITY;
+  }
+
+  public static CorrespondenceFunction identityMultiple(double multiplier) {
+    Preconditions.checkArgument(multiplier > 0, "Multiplier must be larger than 0, but found: " + multiplier);
+    return new CorrespondenceFunction(distance -> distance * multiplier);
+  }
+
+  public static CorrespondenceFunction linear(double maximumDistance) {
+    Preconditions.checkArgument(maximumDistance > 0, "Maximum distance cannot be zero or smaller than zero, but found: " + maximumDistance);
+    return new CorrespondenceFunction(distance -> 1d - (distance / maximumDistance));
+  }
+
+  public static CorrespondenceFunction hyperbolic(double divisor) {
+    Preconditions.checkArgument(divisor > 0, "Hyperbolic divisor cannot be zero or smaller than zero, but found: " + divisor);
+    return new CorrespondenceFunction(distance -> 1d / (1d + distance / divisor));
+  }
+
   @Override
   public final double applyAsDouble(double distance) {
     double score = function.applyAsDouble(distance);
@@ -26,23 +49,5 @@ public class CorrespondenceFunction implements DoubleUnaryOperator {
       return 0d;
     }
     return score;
-  }
-
-  public static CorrespondenceFunction fromFunction(DoubleUnaryOperator function) {
-    return new CorrespondenceFunction(function);
-  }
-
-  public static CorrespondenceFunction identity() {
-    return IDENTITY;
-  }
-
-  public static CorrespondenceFunction linear(double maximumDistance) {
-    Preconditions.checkArgument(maximumDistance > 0, "Maximum distance cannot be zero or smaller than zero, but found: " + maximumDistance);
-    return new CorrespondenceFunction(distance -> 1d - (distance / maximumDistance));
-  }
-
-  public static CorrespondenceFunction hyperbolic(double divisor) {
-    Preconditions.checkArgument(divisor > 0, "Hyperbolic divisor cannot be zero or smaller than zero, but found: " + divisor);
-    return new CorrespondenceFunction(distance -> 1d / (1d + distance / divisor));
   }
 }

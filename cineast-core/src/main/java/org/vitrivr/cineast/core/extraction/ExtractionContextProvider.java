@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;

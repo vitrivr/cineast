@@ -28,13 +28,12 @@ import org.vitrivr.cineast.core.util.distance.PrimitiveTypeMapDistanceComparator
 
 public abstract class ImporterSelector<T extends Importer<?>> implements DBSelector {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  private final File baseDirectory;
+  private File file;
   protected ImporterSelector(File baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
-
-  private File file;
-  private final File baseDirectory;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public boolean open(String name) {

@@ -25,6 +25,36 @@ import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 public abstract class DataImportHandler {
 
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  /**
+   * ExecutorService used for execution of the {@link DataImportRunner}.
+   */
+  protected final ExecutorService service;
+  /**
+   * Size of data batches (i.e. number if tuples) that are sent to the persistence layer.
+   */
+  protected final int batchSize;
+  /**
+   *
+   */
+  protected final ArrayList<Future<?>> futures = new ArrayList<>();
+  /**
+   * Number of threads to use for data import.
+   */
+  protected int numberOfThreads;
+
+  /**
+   * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
+   *
+   * @param threads   Number of threads to use for data import.
+   * @param batchSize Size of data batches that are sent to the persistence layer.
+   */
+  public DataImportHandler(int threads, int batchSize) {
+    this.service = Executors.newFixedThreadPool(threads);
+    this.batchSize = batchSize;
+    this.numberOfThreads = threads;
+  }
+
   /**
    * Drops the entity if called. This is in order to have clean imports.
    *
@@ -52,7 +82,7 @@ public abstract class DataImportHandler {
       setupCmd.doSetup();
     } else {
       cottontail.client.create(createEntity);
-      LOGGER.info("Re-created entity: {}", createEntity.getBuilder().getDefinition().getEntity().getName());
+      LOGGER.info("Re-created entity: {}", entityName);
     }
   }
 
@@ -70,6 +100,39 @@ public abstract class DataImportHandler {
     }
   }
 
+  public abstract void doImport(Path path);
+
+  /**
+   * Awaits completion of the individual Futures. This method blocks until all Futures have been completed.
+   */
+  public void waitForCompletion() {
+    this.futures.removeIf(f -> {
+      try {
+        Object o = f.get();
+        if (o == null) {
+          return true;
+        }
+        LOGGER.warn("Future returned {}, still returning true", o);
+        return true;
+      } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+        LOGGER.error("Execution of one of the tasks could not be completed!");
+        return true;
+      }
+    });
+    try {
+      this.futures.forEach(future -> {
+        LOGGER.warn("A future is still present, this should not be happening.");
+      });
+      LOGGER.info("Shutting down threadpool for {}", this.getClass().getSimpleName());
+      this.service.shutdown();
+      LOGGER.info("Awaiting termination {}", this.getClass().getSimpleName());
+      this.service.awaitTermination(30, TimeUnit.SECONDS);
+      LOGGER.info("Service terminated {}", this.getClass().getSimpleName());
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * This inner class implements the runnable that actually executes the copy operation.
@@ -152,74 +215,6 @@ public abstract class DataImportHandler {
       } catch (Exception e) {
         LOGGER.error("Error for task {} while copying data for '{}': {}", taskName, this.entityName, LogHelper.getStackTrace(e));
       }
-    }
-  }
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
-   * ExecutorService used for execution of the {@link DataImportRunner}.
-   */
-  protected final ExecutorService service;
-
-  /**
-   * Size of data batches (i.e. number if tuples) that are sent to the persistence layer.
-   */
-  protected final int batchSize;
-
-  /**
-   * Number of threads to use for data import.
-   */
-  protected int numberOfThreads;
-
-  /**
-   *
-   */
-  protected final ArrayList<Future<?>> futures = new ArrayList<>();
-
-  /**
-   * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
-   *
-   * @param threads   Number of threads to use for data import.
-   * @param batchSize Size of data batches that are sent to the persistence layer.
-   */
-  public DataImportHandler(int threads, int batchSize) {
-    this.service = Executors.newFixedThreadPool(threads);
-    this.batchSize = batchSize;
-    this.numberOfThreads = threads;
-  }
-
-  public abstract void doImport(Path path);
-
-  /**
-   * Awaits completion of the individual Futures. This method blocks until all Futures have been completed.
-   */
-  public void waitForCompletion() {
-    this.futures.removeIf(f -> {
-      try {
-        Object o = f.get();
-        if (o == null) {
-          return true;
-        }
-        LOGGER.warn("Future returned {}, still returning true", o);
-        return true;
-      } catch (InterruptedException | ExecutionException e) {
-        e.printStackTrace();
-        LOGGER.error("Execution of one of the tasks could not be completed!");
-        return true;
-      }
-    });
-    try {
-      this.futures.forEach(future -> {
-        LOGGER.warn("A future is still present, this should not be happening.");
-      });
-      LOGGER.info("Shutting down threadpool for {}", this.getClass().getSimpleName());
-      this.service.shutdown();
-      LOGGER.info("Awaiting termination {}", this.getClass().getSimpleName());
-      this.service.awaitTermination(30, TimeUnit.SECONDS);
-      LOGGER.info("Service terminated {}", this.getClass().getSimpleName());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 }

@@ -37,39 +37,22 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
  */
 public class CachedDataFactory {
 
-  private static CachedDataFactory defaultInstance = new CachedDataFactory(new CacheConfig());
-
-  /**
-   * Default instance of {@link CachedDataFactory}.
-   */
-  public static CachedDataFactory getDefault() {
-    return defaultInstance;
-  }
-
-  public static void configureDefault(CacheConfig cacheConfig) {
-    defaultInstance = new CachedDataFactory(cacheConfig);
-  }
-
   /**
    * A {@link ReentrantLock} to mediate access to CACHED_REFS.
    */
   private static final ReentrantLock CACHED_REFS_LOCK = new ReentrantLock();
-
   /**
    * Internal set that keeps track of {@link CachedByteData} objects; prevents garbage collection of those references.
    */
   private static final HashSet<Reference<CachedByteData>> CACHED_REFS = new HashSet<>();
-
   /**
    * {@link ReferenceQueue} for {@link CachedByteData} objects.
    */
   private static final ReferenceQueue<CachedByteData> CACHED_REF_QUEUE = new ReferenceQueue<>();
-
   /**
    * Logger instance used to log errors.
    */
   private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * Thread that cleans the cached byte data files.
    */
@@ -97,6 +80,7 @@ public class CachedDataFactory {
       }
     }
   });
+  private static CachedDataFactory defaultInstance = new CachedDataFactory(new CacheConfig());
 
   static {
     CLEANER_THREAD.setName("Cache-File-Cleaner");
@@ -109,36 +93,14 @@ public class CachedDataFactory {
    * Reference to {@link CacheConfig} used to setup this {@link CachedDataFactory}.
    */
   private final CacheConfig config;
-
   /**
    * Location where this instance of {@link CachedDataFactory} will store its cached images.
    */
   private final Path cacheLocation;
-
   /**
    * Keeps track of whether the cache directory has been created yet
    */
   private boolean cacheDirectoryCreated = false;
-
-  /**
-   * Inner {@link PhantomReference} implementations that keeps track of the cache path for every {@link CachedByteData}.
-   */
-  private static class CachedByteDataReference extends PhantomReference<CachedByteData> {
-
-    private final Path path;
-
-    private CachedByteDataReference(CachedByteData data) {
-      super(data, CachedDataFactory.CACHED_REF_QUEUE);
-      CACHED_REFS_LOCK.lock();
-      CACHED_REFS.add(this);
-      CACHED_REFS_LOCK.unlock();
-      this.path = data.getPath();
-    }
-
-    public Path getPath() {
-      return path;
-    }
-  }
 
   /**
    * Default constructor.
@@ -148,6 +110,17 @@ public class CachedDataFactory {
   public CachedDataFactory(CacheConfig config) {
     this.config = config;
     this.cacheLocation = this.config.getCacheLocation().resolve("cineast_cache_" + config.getUUID());
+  }
+
+  /**
+   * Default instance of {@link CachedDataFactory}.
+   */
+  public static CachedDataFactory getDefault() {
+    return defaultInstance;
+  }
+
+  public static void configureDefault(CacheConfig cacheConfig) {
+    defaultInstance = new CachedDataFactory(cacheConfig);
   }
 
   /**
@@ -274,7 +247,6 @@ public class CachedDataFactory {
     }
   }
 
-
   /**
    * Creates a new {@link InMemoryMultiImage} from raw color data.
    *
@@ -336,6 +308,26 @@ public class CachedDataFactory {
     } catch (IOException e) {
       LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
       return new InMemoryMultiImage(image, thumb, this);
+    }
+  }
+
+  /**
+   * Inner {@link PhantomReference} implementations that keeps track of the cache path for every {@link CachedByteData}.
+   */
+  private static class CachedByteDataReference extends PhantomReference<CachedByteData> {
+
+    private final Path path;
+
+    private CachedByteDataReference(CachedByteData data) {
+      super(data, CachedDataFactory.CACHED_REF_QUEUE);
+      CACHED_REFS_LOCK.lock();
+      CACHED_REFS.add(this);
+      CACHED_REFS_LOCK.unlock();
+      this.path = data.getPath();
+    }
+
+    public Path getPath() {
+      return path;
     }
   }
 }
