@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.SplittableRandom;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
+import org.vitrivr.cineast.standalone.cli.AbstractCineastCommand;
 
 /**
  * Runs a Polypheny DB benchmark based on a feature category.
@@ -27,7 +28,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
  * @version 1.0.0
  */
 @Command(name = "polypheny-benchmark", description = "Drop a specific table")
-public class PolyphenyBenchmarkCommand implements Runnable {
+public class PolyphenyBenchmarkCommand extends AbstractCineastCommand {
 
 
   /**
@@ -127,7 +128,7 @@ public class PolyphenyBenchmarkCommand implements Runnable {
   }
 
   @Override
-  public void run() {
+  protected void execute() {
 
     try {
       /* Run preparation. */
