@@ -12,7 +12,7 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 
 @Command(name = "retrieve-mlt", description = "Retrieves objects from the database using an example segment. Equivalent to an MLT lookup.")
-public class RetrieveCommand implements Runnable {
+public class RetrieveCommand extends AbstractCineastCommand {
 
   @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
   private String segmentId;
@@ -23,7 +23,8 @@ public class RetrieveCommand implements Runnable {
   @Option(name = {"-r", "--relevantSegments"}, title = "Relevant segments", description = "Comma separated list of segment IDs to which the query is to be limited.")
   private String relevantSegments;
 
-  public void run() {
+  @Override
+  public void execute() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
 
     QueryConfig qc = QueryConfig.newQueryConfigFromOther(new ConstrainedQueryConfig("cli-query", new ArrayList<>()));

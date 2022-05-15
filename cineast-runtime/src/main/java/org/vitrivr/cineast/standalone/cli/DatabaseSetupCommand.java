@@ -19,7 +19,7 @@ import org.vitrivr.cineast.standalone.config.IngestConfig;
  * A CLI command that can be used to setup all the database entities required by Cineast.
  */
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities and inidices.")
-public class DatabaseSetupCommand implements Runnable {
+public class DatabaseSetupCommand extends AbstractCineastCommand {
 
   private static final Logger LOGGER = LogManager.getLogger(DatabaseSetupCommand.class);
   /**
@@ -72,7 +72,7 @@ public class DatabaseSetupCommand implements Runnable {
   }
 
   @Override
-  public void run() {
+  public void execute() {
     doSetup();
   }
 

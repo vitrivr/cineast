@@ -8,7 +8,7 @@ import org.vitrivr.cottontail.client.language.ddl.ListEntities;
 import org.vitrivr.cottontail.client.language.ddl.OptimizeEntity;
 
 @Command(name = "optimize", description = "Optimize all entities for the Cineast schema. This command is only compatible with the Cottontail DB database.")
-public class OptimizeEntitiesCommand implements Runnable {
+public class OptimizeEntitiesCommand extends AbstractCineastCommand {
 
   public static void optimizeAllCottontailEntities() {
     if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
@@ -27,7 +27,7 @@ public class OptimizeEntitiesCommand implements Runnable {
   }
 
   @Override
-  public void run() {
+  public void execute() {
     optimizeAllCottontailEntities();
   }
 }
