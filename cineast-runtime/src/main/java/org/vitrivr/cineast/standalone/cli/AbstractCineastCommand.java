@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * @author loris.sauter
  * @version 1.0
  */
-public abstract class AbstractCineastCommand implements Runnable{
+public abstract class AbstractCineastCommand implements Runnable {
 
   /**
    * The help option available to derived classes.
@@ -22,7 +22,7 @@ public abstract class AbstractCineastCommand implements Runnable{
    */
   @Override
   public void run() {
-    if(!help.showHelpIfRequested()){
+    if (!help.showHelpIfRequested()) {
       this.execute();
     }
   }

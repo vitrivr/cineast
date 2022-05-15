@@ -3,7 +3,6 @@ package org.vitrivr.cineast.standalone.util;
 import com.github.rvesse.airline.model.CommandMetadata;
 import com.github.rvesse.airline.parser.ParseResult;
 import com.github.rvesse.airline.parser.errors.ParseException;
-import com.github.rvesse.airline.parser.errors.ParseRestrictionViolatedException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -96,12 +95,12 @@ public class CLI {
           final String[] args = CLI.splitLine(line);
 
           ParseResult<Runnable> result = cli.parseWithResult(args);
-          if(result.wasSuccessful()){
+          if (result.wasSuccessful()) {
             result.getCommand().run();
-          }else{
+          } else {
             printlnRed(terminal.writer(), String.format("%d errors ecountered:", result.getErrors().size()));
             int i = 1;
-            for(ParseException e : result.getErrors()){
+            for (ParseException e : result.getErrors()) {
               printlnRed(terminal.writer(), String.format("%d. %s", i++, e.getMessage()));
             }
             terminal.writer().println();
@@ -118,12 +117,12 @@ public class CLI {
     }
   }
 
-  private static void printlnRed(PrintWriter pw, String... msg){
+  private static void printlnRed(PrintWriter pw, String... msg) {
 
     final AttributedStringBuilder asb = new AttributedStringBuilder();
     asb.style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 
-    for(String s : msg){
+    for (String s : msg) {
       asb.append(s);
     }
     pw.println(asb.toAnsi());

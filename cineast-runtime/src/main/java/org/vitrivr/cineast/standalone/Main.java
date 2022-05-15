@@ -19,8 +19,7 @@ public class Main {
   public static void main(String[] args) {
     /* (Force) load application config. */
     if (Config.loadConfig(args[0]) == null) {
-      System.err.println(
-          "Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
+      System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
       System.exit(1);
     }
 
@@ -38,8 +37,7 @@ public class Main {
     if (args.length == 2 && args[1].equals("interactive")) {
       CLI.start(CineastCli.class);
     } else {
-      com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(
-          CineastCli.class);
+      com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(CineastCli.class);
       final String[] theArgs = Arrays.copyOfRange(args, 1, args.length);
       // Adopted from https://rvesse.github.io/airline/guide/help/index.html
       // Parse with a result to allow us to inspect the results of parsing
@@ -60,8 +58,7 @@ public class Main {
         System.err.println();
 
         try {
-          com.github.rvesse.airline.help.Help.<Runnable>help(cli.getMetadata(),
-              Arrays.asList(theArgs), System.out); // Is it appropriate to use System.out here?
+          com.github.rvesse.airline.help.Help.<Runnable>help(cli.getMetadata(), Arrays.asList(theArgs), System.out); // Is it appropriate to use System.out here?
         } catch (IOException e) {
           // Something seriously went wrong, as we could not display the help message.
           e.printStackTrace();
