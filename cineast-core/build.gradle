@@ -96,11 +96,8 @@ dependencies {
     implementation 'org.mockito:mockito-inline:4.5.1'
 
     /** Tensorflow (Java). */
-    if (project.hasProperty("GPU")) {
-        api group: "org.tensorflow", name: "tensorflow-core-platform-gpu", version: version_tensorflow
-    } else {
-        api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
-    }
+    api group: "org.tensorflow", name: "tensorflow-core-platform-gpu", version: version_tensorflow
+
 
     /** Apache Commons Libraries */
     api group: "org.apache.commons", name: "commons-lang3", version: version_commonslang3
