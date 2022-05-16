@@ -346,7 +346,9 @@ public final class CottontailSelector implements DBSelector {
     final Query query = new Query(this.fqn)
         .select("*", null)
         .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER)
-        .queryId(generateQueryID("ft-rows", queryConfig));
+        .queryId(generateQueryID("ft-rows", queryConfig))
+        .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.ASC)
+        .limit(rows);
 
 
     /* Process predicates. */
