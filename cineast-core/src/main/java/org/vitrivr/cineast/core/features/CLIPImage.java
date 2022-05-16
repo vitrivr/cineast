@@ -42,11 +42,10 @@ public class CLIPImage extends AbstractFeatureModule {
   private static final float[] MEAN = new float[]{0.48145466f, 0.4578275f, 0.40821073f};
   private static final float[] STD = new float[]{0.26862954f, 0.26130258f, 0.27577711f};
 
-  private SavedModelBundle model;
+  private static SavedModelBundle model;
 
   public CLIPImage() {
     super(TABLE_NAME, 1f, EMBEDDING_SIZE);
-    model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
     this.correspondence = CorrespondenceFunction.linear(0.5);
   }
 
@@ -88,7 +87,14 @@ public class CLIPImage extends AbstractFeatureModule {
     return getSimilar(embeddingArray, queryConfig);
   }
 
+  private void initializeModel() {
+    if (model == null) {
+      model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+    }
+  }
+
   private float[] embedImage(BufferedImage img) {
+    initializeModel();
 
     float[] rgb = prepareImage(img);
 
