@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.standalone.runtime;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -13,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -52,6 +55,18 @@ public class ContinuousQueryDispatcher {
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
+  private static final Cache<Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig>, List<SegmentScoreElement>> queryCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(100) //TODO make configurable
+          .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
+          .build();
+
+  private static final Cache<Triple<String, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig>, List<SegmentScoreElement>> segmentIdCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(100) //TODO make configurable
+          .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
+          .build();
+
   private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
       TObjectDoubleMap<Retriever> retrieverWeights,
       RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
@@ -75,8 +90,18 @@ public class ContinuousQueryDispatcher {
       RetrieverInitializer initializer,
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
-    return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
-        initializer, mediaSegmentReader).doRetrieve();
+
+    Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig> cacheKey = Triple.of(query, retrievers, config);
+
+    List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
+
+    if (result == null) {
+      result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
+          initializer, mediaSegmentReader).doRetrieve();
+      queryCache.put(cacheKey, result);
+    }
+
+    return result;
   }
 
   public static List<SegmentScoreElement> retrieve(String segmentId,
@@ -84,8 +109,18 @@ public class ContinuousQueryDispatcher {
       RetrieverInitializer initializer,
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
-    return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
-        initializer, mediaSegmentReader).doRetrieve();
+
+    Triple<String, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, config);
+
+    List<SegmentScoreElement> result = segmentIdCache.getIfPresent(cacheKey);
+
+    if (result == null) {
+      result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
+          initializer, mediaSegmentReader).doRetrieve();
+      segmentIdCache.put(cacheKey, result);
+    }
+
+    return result;
   }
 
   public static void shutdown() {
