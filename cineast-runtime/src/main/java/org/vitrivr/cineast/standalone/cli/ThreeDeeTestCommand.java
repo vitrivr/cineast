@@ -11,10 +11,10 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 
 @Command(name = "3dtest", description = "Starts a 3D rendering test to check availability of an OpenGL renderer.")
-public class ThreeDeeTestCommand implements Runnable {
+public class ThreeDeeTestCommand extends AbstractCineastCommand {
 
   @Override
-  public void run() {
+  public void execute() {
     System.out.println("Performing 3D test...");
 
     Mesh mesh = new Mesh(2, 6);

@@ -10,7 +10,7 @@ Cineast is a multi-feature content-based multimedia retrieval engine. It is capa
 Cineast is written in Java and uses [CottontailDB](https://github.com/vitrivr/cottontaildb) as a storage backend.
 
 ## Building Cineast
-Cineast can be built using [Gradle](https://gradle.org/). Building and running it is as easy as
+Cineast can be built using [Gradle](https://gradle.org/). It needs Java 17+. Building and running it is as easy as
 ```
 $> git clone https://github.com/vitrivr/cineast.git
 $> cd cineast
@@ -53,7 +53,7 @@ As a result, the OAS is stored at `docs/openapi.json`
 ## Prerequisites
 ### System dependencies
 * git
-* JDK 11 or higher
+* JDK 17 or higher
 
 ### 3D rendering
 For 3D rendering (required in order to support 3D models) you either need a video card or Mesa 3D. The JOGL library supports both. Rendering on Headless devices has been successfully tested with Xvfb. The following steps are required to enable

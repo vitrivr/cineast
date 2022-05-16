@@ -15,7 +15,7 @@ import org.vitrivr.cineast.standalone.importer.handlers.LIREImportHandler;
  * A CLI command that can be used to start import of pre-extracted data.
  */
 @Command(name = "import", description = "Starts import of pre-extracted data.")
-public class ImportCommand implements Runnable {
+public class ImportCommand extends AbstractCineastCommand {
 
   @Required
   @Option(name = {"-t", "--type"}, description = "Type of data import that should be started.")
@@ -41,7 +41,7 @@ public class ImportCommand implements Runnable {
   private boolean noTransactions = false;
 
   @Override
-  public void run() {
+  public void execute() {
     System.out.printf("Starting import of type %s for '%s'. Batchsize %d, %d threads. Clean %b, no-finalize %b .%n", this.type, this.input, this.batchsize, this.threads, this.clean, this.doNotFinalize);
     final Path path = Paths.get(this.input);
     if (noTransactions) {
