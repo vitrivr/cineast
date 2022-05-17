@@ -18,8 +18,17 @@ public final class CacheConfig {
   private Policy cachingPolicy = Policy.AUTOMATIC;
   private Path cacheLocation = Paths.get(".");
   private CachedDataFactory factory;
+
+  private boolean enableQueryCaching = false;
+  /** maximum number of queries / ids to cache results for */
+  private int queryCacheSize = 100;
+  /** maximum duration in seconds for which to cache a result */
+  private long queryCacheDuration = 600;
+
   public CacheConfig() {
   }
+
+
 
   /**
    * @param cachePolicy   Caching Policy
@@ -127,6 +136,46 @@ public final class CacheConfig {
       this.factory = new CachedDataFactory(this);
     }
     return this.factory;
+  }
+
+  public boolean isEnableQueryCaching() {
+    return enableQueryCaching;
+  }
+
+  public void setEnableQueryCaching(boolean enableQueryCaching) {
+    this.enableQueryCaching = enableQueryCaching;
+  }
+
+  public int getQueryCacheSize() {
+    return queryCacheSize;
+  }
+
+  /**
+   * negative value will disable cache
+   */
+  public void setQueryCacheSize(int queryCacheSize) {
+    if (queryCacheSize < 0) {
+      this.queryCacheSize = 0;
+      this.enableQueryCaching = false;
+    } else {
+      this.queryCacheSize = queryCacheSize;
+    }
+  }
+
+  public long getQueryCacheDuration() {
+    return queryCacheDuration;
+  }
+
+  /**
+   * negative value will disable cache
+   */
+  public void setQueryCacheDuration(long queryCacheDuration) {
+    if (queryCacheDuration < 0) {
+      this.queryCacheDuration = 0;
+      this.enableQueryCaching = false;
+    } else {
+      this.queryCacheDuration = queryCacheDuration;
+    }
   }
 
   @Override

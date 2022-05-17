@@ -39,7 +39,6 @@ public class ContinuousQueryDispatcher {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private static final String LISTENER_NULL_MESSAGE = "Retrieval result listener cannot be null.";
   private static final int TASK_QUEUE_SIZE = Config.sharedConfig().getRetriever()
       .getTaskQueueSize();
   private static final int THREAD_COUNT = Config.sharedConfig().getRetriever().getThreadPoolSize();
@@ -56,17 +55,21 @@ public class ContinuousQueryDispatcher {
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
+  private static final boolean QUERY_CACHE_ENABLED = Config.sharedConfig().getCache().isEnableQueryCaching();
+  private static final int QUERY_CACHE_SIZE = QUERY_CACHE_ENABLED ? Config.sharedConfig().getCache().getQueryCacheSize() : 0;
+  private static final long QUERY_CACHE_LIFE = QUERY_CACHE_ENABLED ? Config.sharedConfig().getCache().getQueryCacheDuration() : 0L;
+
   private static final Cache<Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> queryCache =
-      CacheBuilder.newBuilder()
-          .maximumSize(100) //TODO make configurable
-          .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
-          .build();
+      QUERY_CACHE_ENABLED ? CacheBuilder.newBuilder()
+          .maximumSize(QUERY_CACHE_SIZE)
+          .expireAfterWrite(QUERY_CACHE_LIFE, TimeUnit.SECONDS)
+          .build() : null;
 
   private static final Cache<Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> segmentIdCache =
-      CacheBuilder.newBuilder()
-          .maximumSize(100) //TODO make configurable
-          .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
-          .build();
+      QUERY_CACHE_ENABLED ? CacheBuilder.newBuilder()
+          .maximumSize(QUERY_CACHE_SIZE)
+          .expireAfterWrite(QUERY_CACHE_LIFE, TimeUnit.SECONDS)
+          .build() : null;
 
   private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
       TObjectDoubleMap<Retriever> retrieverWeights,
@@ -92,17 +95,24 @@ public class ContinuousQueryDispatcher {
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
 
-    Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(query, retrievers, new CacheableQueryConfig(config));
+    if (QUERY_CACHE_ENABLED) {
 
-    List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
+      Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(query, retrievers, new CacheableQueryConfig(config));
 
-    if (result == null) {
-      result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
+      List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
+
+      if (result == null) {
+        result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
+            initializer, mediaSegmentReader).doRetrieve();
+        queryCache.put(cacheKey, result);
+      }
+
+      return result;
+
+    } else {
+      return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
           initializer, mediaSegmentReader).doRetrieve();
-      queryCache.put(cacheKey, result);
     }
-
-    return result;
   }
 
   public static List<SegmentScoreElement> retrieve(String segmentId,
@@ -111,17 +121,23 @@ public class ContinuousQueryDispatcher {
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
 
-    Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, new CacheableQueryConfig(config));
+    if (QUERY_CACHE_ENABLED) {
 
-    List<SegmentScoreElement> result = segmentIdCache.getIfPresent(cacheKey);
+      Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, new CacheableQueryConfig(config));
 
-    if (result == null) {
-      result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
+      List<SegmentScoreElement> result = segmentIdCache.getIfPresent(cacheKey);
+
+      if (result == null) {
+        result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
+            initializer, mediaSegmentReader).doRetrieve();
+        segmentIdCache.put(cacheKey, result);
+      }
+
+      return result;
+    } else {
+      return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
           initializer, mediaSegmentReader).doRetrieve();
-      segmentIdCache.put(cacheKey, result);
     }
-
-    return result;
   }
 
   public static void shutdown() {
