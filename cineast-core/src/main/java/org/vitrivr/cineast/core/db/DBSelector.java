@@ -237,20 +237,20 @@ public interface DBSelector extends Closeable {
           }
         }
         // at this point, if there is an id list, the element is within that list
-        if (!el.domain.equals("*")) {
+        if (!el.domain().equals("*")) {
           if (!tuple.containsKey(DOMAIN_COL_NAME)) {
             return false;
           }
-          if (!tuple.get(DOMAIN_COL_NAME).getString().equals(el.domain)) {
+          if (!tuple.get(DOMAIN_COL_NAME).getString().equals(el.domain())) {
             return false;
           }
         }
         // at this point, if a domain is specified, the element matches that domain
-        if (!el.key.equals("*")) {
+        if (!el.key().equals("*")) {
           if (!tuple.containsKey(KEY_COL_NAME)) {
             return false;
           }
-          if (!tuple.get(KEY_COL_NAME).getString().equals(el.key)) {
+          if (!tuple.get(KEY_COL_NAME).getString().equals(el.key())) {
             return false;
           }
         }
