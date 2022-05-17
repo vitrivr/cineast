@@ -18,6 +18,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.CacheableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
@@ -55,13 +56,13 @@ public class ContinuousQueryDispatcher {
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
-  private static final Cache<Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig>, List<SegmentScoreElement>> queryCache =
+  private static final Cache<Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> queryCache =
       CacheBuilder.newBuilder()
           .maximumSize(100) //TODO make configurable
           .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
           .build();
 
-  private static final Cache<Triple<String, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig>, List<SegmentScoreElement>> segmentIdCache =
+  private static final Cache<Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> segmentIdCache =
       CacheBuilder.newBuilder()
           .maximumSize(100) //TODO make configurable
           .expireAfterWrite(10, TimeUnit.MINUTES) //TODO make configurable
@@ -91,7 +92,7 @@ public class ContinuousQueryDispatcher {
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
 
-    Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig> cacheKey = Triple.of(query, retrievers, config);
+    Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(query, retrievers, new CacheableQueryConfig(config));
 
     List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
 
@@ -110,7 +111,7 @@ public class ContinuousQueryDispatcher {
       ReadableQueryConfig config,
       MediaSegmentReader mediaSegmentReader) {
 
-    Triple<String, TObjectDoubleHashMap<Retriever>, ReadableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, config);
+    Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, new CacheableQueryConfig(config));
 
     List<SegmentScoreElement> result = segmentIdCache.getIfPresent(cacheKey);
 
