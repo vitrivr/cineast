@@ -416,6 +416,10 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID) {
+    if (ids.isEmpty()) {
+      LOGGER.trace("No ids specified, not fetching any metadata for query id {}", dbQueryID);
+      return new ArrayList<>();
+    }
     final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID == null ? "md-id-spec" : dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     final Expression segmentIds = new Expression(idColName, "IN", ids.toArray());
@@ -430,11 +434,11 @@ public final class CottontailSelector implements DBSelector {
   public Optional<Predicate> generateQueryFromMetadataSpec(List<MetadataAccessSpecification> spec) {
     final List<Optional<Predicate>> atomics = spec.stream().map(s -> {
       List<Predicate> singleSpecPredicates = new ArrayList<>();
-      if (!s.domain.isEmpty() && !s.domain.equals("*")) {
-        singleSpecPredicates.add(new Expression(DOMAIN_COL_NAME, "=", s.domain));
+      if (!s.domain().isEmpty() && !s.domain().equals("*")) {
+        singleSpecPredicates.add(new Expression(DOMAIN_COL_NAME, "=", s.domain()));
       }
-      if (!s.key.isEmpty() && !s.key.equals("*")) {
-        singleSpecPredicates.add(new Expression(KEY_COL_NAME, "=", s.key));
+      if (!s.key().isEmpty() && !s.key().equals("*")) {
+        singleSpecPredicates.add(new Expression(KEY_COL_NAME, "=", s.key()));
       }
       return singleSpecPredicates.stream().reduce(And::new);
     }).collect(Collectors.toList());

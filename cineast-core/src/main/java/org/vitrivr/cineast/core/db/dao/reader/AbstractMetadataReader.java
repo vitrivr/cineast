@@ -144,14 +144,14 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       spec = spec.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
     // filter non-object specs if this is an object reader
-    if (Objects.equals(this.tableName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type != MetadataType.OBJECT)) {
+    if (Objects.equals(this.tableName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.OBJECT)) {
       LOGGER.trace("provided spec-list includes non-object tuples, but this is an object reader. These will be ignored.");
-      spec = spec.stream().filter(el -> el.type == MetadataType.OBJECT).collect(Collectors.toList());
+      spec = spec.stream().filter(el -> el.type() == MetadataType.OBJECT).collect(Collectors.toList());
     }
     // filter non-segment specs if this is a segment reader
-    if (Objects.equals(this.tableName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type != MetadataType.SEGMENT)) {
+    if (Objects.equals(this.tableName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.SEGMENT)) {
       LOGGER.trace("provided spec-list includes non-segment tuples, but this is a segment reader. These will be ignored.");
-      spec = spec.stream().filter(el -> el.type == MetadataType.SEGMENT).collect(Collectors.toList());
+      spec = spec.stream().filter(el -> el.type() == MetadataType.SEGMENT).collect(Collectors.toList());
     }
     return spec;
   }
