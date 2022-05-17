@@ -57,7 +57,7 @@ public class SkeletonPose extends AbstractFeatureModule {
   private static final String PERSON_ID_COL = "person";
   private static final String FEATURE_COL = "skeleton";
   private static final String WEIGHT_COL = "weights";
-  private final PoseDetector detector = new MergingPoseDetector();
+  private static PoseDetector detector;
 
   public SkeletonPose() {
     super("features_skeletonpose", (float) (16 * Math.PI), 12);
@@ -129,7 +129,14 @@ public class SkeletonPose extends AbstractFeatureModule {
     this.phandler.persist(tuples);
   }
 
+  private synchronized static void initializeDetector() {
+    if (detector == null) {
+      detector = new MergingPoseDetector();
+    }
+  }
+
   private synchronized List<Skeleton> detectSkeletons(MultiImage img) {
+    initializeDetector();
     return detector.detectPoses(img.getBufferedImage());
   }
 

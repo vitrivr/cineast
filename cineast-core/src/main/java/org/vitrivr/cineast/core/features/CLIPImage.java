@@ -87,7 +87,7 @@ public class CLIPImage extends AbstractFeatureModule {
     return getSimilar(embeddingArray, queryConfig);
   }
 
-  private void initializeModel() {
+  private synchronized static void initializeModel() {
     if (model == null) {
       model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
     }

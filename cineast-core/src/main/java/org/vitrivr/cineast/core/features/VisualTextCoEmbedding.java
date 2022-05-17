@@ -130,7 +130,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return super.getSimilar(segmentId, queryConfig);
   }
 
-  private void initializeTextEmbedding() {
+  private synchronized static void initializeTextEmbedding() {
     if (textEmbedding == null) {
       textEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_EMBEDDING_MODEL);
     }
@@ -139,7 +139,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private void initializeVisualEmbedding() {
+  private synchronized static void initializeVisualEmbedding() {
     if (visualEmbedding == null) {
       visualEmbedding = InceptionResnetV2.getModel();
     }
