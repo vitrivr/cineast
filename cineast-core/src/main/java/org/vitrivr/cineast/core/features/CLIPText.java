@@ -60,7 +60,7 @@ public class CLIPText implements Retriever {
     loadModel();
   }
 
-  private static void loadModel() {
+  private synchronized static void loadModel() {
     if (model == null) {
       model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
     }

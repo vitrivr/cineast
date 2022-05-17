@@ -343,10 +343,14 @@ public final class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
     /* Prepare plain query. */
     final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" OR "));
+
+    /* TODO Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
     final Query query = new Query(this.fqn)
         .select("*", null)
         .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER)
-        .queryId(generateQueryID("ft-rows", queryConfig));
+        .queryId(generateQueryID("ft-rows", queryConfig))
+        .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.DESC)
+        .limit(rows);
 
 
     /* Process predicates. */
@@ -416,6 +420,10 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID) {
+    if (ids.isEmpty()) {
+      LOGGER.trace("No ids specified, not fetching any metadata for query id {}", dbQueryID);
+      return new ArrayList<>();
+    }
     final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID == null ? "md-id-spec" : dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     final Expression segmentIds = new Expression(idColName, "IN", ids.toArray());
@@ -430,11 +438,11 @@ public final class CottontailSelector implements DBSelector {
   public Optional<Predicate> generateQueryFromMetadataSpec(List<MetadataAccessSpecification> spec) {
     final List<Optional<Predicate>> atomics = spec.stream().map(s -> {
       List<Predicate> singleSpecPredicates = new ArrayList<>();
-      if (!s.domain.isEmpty() && !s.domain.equals("*")) {
-        singleSpecPredicates.add(new Expression(DOMAIN_COL_NAME, "=", s.domain));
+      if (!s.domain().isEmpty() && !s.domain().equals("*")) {
+        singleSpecPredicates.add(new Expression(DOMAIN_COL_NAME, "=", s.domain()));
       }
-      if (!s.key.isEmpty() && !s.key.equals("*")) {
-        singleSpecPredicates.add(new Expression(KEY_COL_NAME, "=", s.key));
+      if (!s.key().isEmpty() && !s.key().equals("*")) {
+        singleSpecPredicates.add(new Expression(KEY_COL_NAME, "=", s.key()));
       }
       return singleSpecPredicates.stream().reduce(And::new);
     }).collect(Collectors.toList());
