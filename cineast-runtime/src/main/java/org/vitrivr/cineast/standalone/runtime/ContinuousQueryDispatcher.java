@@ -15,13 +15,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.CacheableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.QueryResultCacheKey;
 import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
@@ -59,17 +58,12 @@ public class ContinuousQueryDispatcher {
   private static final int QUERY_CACHE_SIZE = QUERY_CACHE_ENABLED ? Config.sharedConfig().getCache().getQueryCacheSize() : 0;
   private static final long QUERY_CACHE_LIFE = QUERY_CACHE_ENABLED ? Config.sharedConfig().getCache().getQueryCacheDuration() : 0L;
 
-  private static final Cache<Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> queryCache =
+  private static final Cache<QueryResultCacheKey, List<SegmentScoreElement>> queryCache =
       QUERY_CACHE_ENABLED ? CacheBuilder.newBuilder()
           .maximumSize(QUERY_CACHE_SIZE)
           .expireAfterWrite(QUERY_CACHE_LIFE, TimeUnit.SECONDS)
           .build() : null;
 
-  private static final Cache<Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig>, List<SegmentScoreElement>> segmentIdCache =
-      QUERY_CACHE_ENABLED ? CacheBuilder.newBuilder()
-          .maximumSize(QUERY_CACHE_SIZE)
-          .expireAfterWrite(QUERY_CACHE_LIFE, TimeUnit.SECONDS)
-          .build() : null;
 
   private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
       TObjectDoubleMap<Retriever> retrieverWeights,
@@ -97,7 +91,7 @@ public class ContinuousQueryDispatcher {
 
     if (QUERY_CACHE_ENABLED) {
 
-      Triple<AbstractQueryTermContainer, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(query, retrievers, new CacheableQueryConfig(config));
+      QueryResultCacheKey cacheKey = new QueryResultCacheKey(query, retrievers, config);
 
       List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
 
@@ -123,14 +117,14 @@ public class ContinuousQueryDispatcher {
 
     if (QUERY_CACHE_ENABLED) {
 
-      Triple<String, TObjectDoubleHashMap<Retriever>, CacheableQueryConfig> cacheKey = Triple.of(segmentId, retrievers, new CacheableQueryConfig(config));
+      QueryResultCacheKey cacheKey = new QueryResultCacheKey(segmentId, retrievers, config);
 
-      List<SegmentScoreElement> result = segmentIdCache.getIfPresent(cacheKey);
+      List<SegmentScoreElement> result = queryCache.getIfPresent(cacheKey);
 
       if (result == null) {
         result = new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
             initializer, mediaSegmentReader).doRetrieve();
-        segmentIdCache.put(cacheKey, result);
+        queryCache.put(cacheKey, result);
       }
 
       return result;
