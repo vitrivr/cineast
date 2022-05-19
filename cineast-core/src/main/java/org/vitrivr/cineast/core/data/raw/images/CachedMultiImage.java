@@ -6,6 +6,7 @@ import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.raw.CacheableData;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.bytes.CachedByteData;
@@ -218,5 +219,25 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
   public void clear() {
     this.data.clear();
     this.thumb.clear();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    CachedMultiImage that = (CachedMultiImage) o;
+    return width == that.width && height == that.height && type == that.type && Objects.equals(factory, that.factory) && Objects.equals(thumb, that.thumb);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), width, height, type);
   }
 }

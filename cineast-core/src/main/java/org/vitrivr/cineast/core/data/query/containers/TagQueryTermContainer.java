@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
@@ -47,5 +48,25 @@ public class TagQueryTermContainer extends AbstractQueryTermContainer { // vitri
   @Override
   public List<Tag> getTags() {
     return this.tags;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    TagQueryTermContainer that = (TagQueryTermContainer) o;
+    return Objects.equals(tags, that.tags);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), tags);
   }
 }

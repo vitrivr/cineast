@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Map;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
@@ -49,4 +50,20 @@ public class SemanticMap {
     return this.labels;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SemanticMap that = (SemanticMap) o;
+    return Arrays.deepEquals(labels, that.labels);
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.deepHashCode(labels);
+  }
 }

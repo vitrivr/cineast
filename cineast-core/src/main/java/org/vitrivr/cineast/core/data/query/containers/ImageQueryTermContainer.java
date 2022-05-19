@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -126,4 +127,23 @@ public class ImageQueryTermContainer extends AbstractQueryTermContainer {
     this.bgPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    ImageQueryTermContainer that = (ImageQueryTermContainer) o;
+    return Float.compare(that.relativeStart, relativeStart) == 0 && Float.compare(that.relativeEnd, relativeEnd) == 0 && Objects.equals(img, that.img) && Objects.equals(videoFrame, that.videoFrame) && Objects.equals(subitem, that.subitem) && Objects.equals(paths, that.paths) && Objects.equals(bgPaths, that.bgPaths);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), img, videoFrame, subitem, paths, bgPaths, relativeStart, relativeEnd);
+  }
 }

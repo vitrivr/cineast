@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.frames;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Objects;
 import javax.sound.sampled.AudioFormat;
 
 /**
@@ -290,5 +291,22 @@ public class AudioFrame {
     setData(remaining);
 
     return new AudioFrame(idx, timestamp, cutBytes, new AudioDescriptor(descriptor.getSamplingrate(), descriptor.getChannels(), (long) (numberOfSamples / descriptor.getSamplingrate())));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AudioFrame that = (AudioFrame) o;
+    return idx == that.idx && timestamp == that.timestamp && numberOfSamples == that.numberOfSamples && Objects.equals(descriptor, that.descriptor) && Objects.equals(data, that.data);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(idx, timestamp, descriptor, numberOfSamples, data);
   }
 }

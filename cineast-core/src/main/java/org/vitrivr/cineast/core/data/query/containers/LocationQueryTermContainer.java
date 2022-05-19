@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.query.containers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
+import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.GpsData;
 import org.vitrivr.cineast.core.data.Location;
@@ -50,5 +51,25 @@ public class LocationQueryTermContainer extends AbstractQueryTermContainer {
   @Override
   public Optional<Location> getLocation() {
     return Optional.of(location);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    LocationQueryTermContainer that = (LocationQueryTermContainer) o;
+    return Objects.equals(location, that.location);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), location);
   }
 }

@@ -96,4 +96,7 @@ public interface MultiImage extends CacheableData {
   CachedDataFactory factory();
 
   void clear();
+
+
+
 }

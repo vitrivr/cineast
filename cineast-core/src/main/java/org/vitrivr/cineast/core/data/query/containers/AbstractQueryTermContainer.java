@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import java.util.Objects;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
@@ -74,6 +75,23 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AbstractQueryTermContainer that = (AbstractQueryTermContainer) o;
+    return Float.compare(that.weight, weight) == 0 && containerId == that.containerId && Objects.equals(id, that.id) && Objects.equals(superId, that.superId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(weight, id, superId, containerId);
   }
 
 }

@@ -1,6 +1,15 @@
 package org.vitrivr.cineast.core.data;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.CacheableQueryConfig;
@@ -13,21 +22,22 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
  */
 public class QueryResultCacheKey {
 
-  private final AbstractQueryTermContainer queryTermContainer;
+  private final int queryTermContainerHash;
   private final String querySegmentId;
   private final String retrieverSpecification;
   private final CacheableQueryConfig queryConfig;
 
+
   private QueryResultCacheKey(AbstractQueryTermContainer queryTermContainer, String querySegmentId, TObjectDoubleHashMap<Retriever> retrievers, ReadableQueryConfig queryConfig) {
 
-    this.queryTermContainer = queryTermContainer;
+
     this.querySegmentId = querySegmentId;
     this.queryConfig = new CacheableQueryConfig(queryConfig);
+    this.queryTermContainerHash = queryTermContainer == null ? 0 : queryTermContainer.hashCode();
 
     this.retrieverSpecification = retrievers.keySet().stream().map(retriever -> {
       double weight = retrievers.get(retriever);
-
-      return retriever.getClass().getName() + "-" + System.identityHashCode(retriever) + "-" + weight + "|";
+      return retriever.getClass().getName() + "-" + weight + "|"; //TODO disambiguate between differently configured instances of same retriever
     }).sorted().collect(Collectors.joining());
 
   }
@@ -49,11 +59,14 @@ public class QueryResultCacheKey {
       return false;
     }
     QueryResultCacheKey that = (QueryResultCacheKey) o;
-    return Objects.equals(queryTermContainer, that.queryTermContainer) && Objects.equals(querySegmentId, that.querySegmentId) && retrieverSpecification.equals(that.retrieverSpecification) && queryConfig.equals(that.queryConfig);
+    return queryTermContainerHash == that.queryTermContainerHash
+        && Objects.equals(querySegmentId, that.querySegmentId)
+        && retrieverSpecification.equals(that.retrieverSpecification)
+        && queryConfig.equals(that.queryConfig);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(queryTermContainer, querySegmentId, retrieverSpecification, queryConfig);
+    return Objects.hash(queryTermContainerHash, querySegmentId, retrieverSpecification, queryConfig);
   }
 }

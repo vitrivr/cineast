@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import georegression.struct.point.Point2D_F32;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Skeleton {
@@ -105,5 +106,22 @@ public class Skeleton {
     RIGHT_ANKLE
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Skeleton skeleton = (Skeleton) o;
+    return Arrays.equals(points, skeleton.points) && Arrays.equals(weights, skeleton.weights);
+  }
 
+  @Override
+  public int hashCode() {
+    int result = Arrays.hashCode(points);
+    result = 31 * result + Arrays.hashCode(weights);
+    return result;
+  }
 }
