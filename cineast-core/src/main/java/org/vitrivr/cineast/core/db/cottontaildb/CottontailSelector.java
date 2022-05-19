@@ -618,7 +618,7 @@ public final class CottontailSelector implements DBSelector {
         .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
         .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
         .limit(k)
-        .queryId(generateQueryID("kfn", config));
+        .queryId(generateQueryID(direction == Direction.ASC ? "knn" : "kfn", config));
 
     for (String s : select) {
       query.select(s, null);
