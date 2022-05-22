@@ -143,6 +143,10 @@ public class SkeletonPose extends AbstractFeatureModule {
   @Override
   public void processSegment(SegmentContainer segmentContainer) {
 
+    if (phandler.idExists(segmentContainer.getId())) {
+      return;
+    }
+
     VideoFrame representativeFrame = segmentContainer.getMostRepresentativeFrame();
 
     if (representativeFrame == VideoFrame.EMPTY_VIDEO_FRAME) {

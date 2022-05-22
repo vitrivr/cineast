@@ -278,6 +278,11 @@ public class OCRSearch extends AbstractTextRetriever {
    */
   @Override
   public void processSegment(SegmentContainer shot) {
+
+    if (writer.idExists(shot.getId())) {
+      return;
+    }
+
     TextDetector_EAST detector = detectorCache.get();
     TextRecognizer_CTC recognizer = recognizerCache.get();
 
