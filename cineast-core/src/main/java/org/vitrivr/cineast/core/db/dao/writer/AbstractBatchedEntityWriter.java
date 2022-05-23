@@ -91,5 +91,8 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
     }
   }
 
+  public boolean idExists(String id) {
+    return this.writer.idExists(id);
+  }
 
 }

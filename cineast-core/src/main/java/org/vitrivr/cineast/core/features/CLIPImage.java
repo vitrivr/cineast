@@ -62,6 +62,10 @@ public class CLIPImage extends AbstractFeatureModule {
       return;
     }
 
+    if (phandler.idExists(shot.getId())) {
+      return;
+    }
+
     float[] embeddingArray = embedImage(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
     this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
 
