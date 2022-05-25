@@ -93,11 +93,14 @@ public class MediaSegmentReader extends AbstractEntityReader {
       }
     });
 
-    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], notCached, queryID);
+    if (!notCached.isEmpty()) {
+      Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], notCached, queryID);
 
-    descriptors.forEach(msd -> {
-      _return.put(msd.getSegmentId(), msd);
-    });
+      descriptors.forEach(msd -> {
+        _return.put(msd.getSegmentId(), msd);
+      });
+    }
+
     return _return;
   }
 
