@@ -28,23 +28,4 @@ public record QueryResultCacheKey(int queryTermContainerHash, String querySegmen
     this(null, querySegmentId, retrievers, queryConfig);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    QueryResultCacheKey that = (QueryResultCacheKey) o;
-    return queryTermContainerHash == that.queryTermContainerHash
-        && Objects.equals(querySegmentId, that.querySegmentId)
-        && retrieverSpecification.equals(that.retrieverSpecification)
-        && queryConfig.equals(that.queryConfig);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(queryTermContainerHash, querySegmentId, retrieverSpecification, queryConfig);
-  }
 }
