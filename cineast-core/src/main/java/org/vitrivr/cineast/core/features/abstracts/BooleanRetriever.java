@@ -79,7 +79,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   }
 
   protected boolean canProcess(BooleanExpression be) {
-    return getSupportedOperators().contains(be.getOperator()) && getAttributes().contains(be.getAttribute());
+    return getSupportedOperators().contains(be.operator()) && getAttributes().contains(be.attribute());
   }
 
   @Override
@@ -100,9 +100,9 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
     List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(
         expressions.stream().map(be -> Triple.of(
             // strip entity if it was given via config
-            be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(),
-            be.getOperator(),
-            be.getValues()
+            be.attribute().contains(this.entity) ? be.attribute().substring(this.entity.length() + 1) : be.attribute(),
+            be.operator(),
+            be.values()
         )).collect(Collectors.toList()),
         GENERIC_ID_COLUMN_QUALIFIER, // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
         Collections.singletonList(idCol),  // we're only interested in the ids

@@ -20,14 +20,17 @@ public final class CacheConfig {
   private CachedDataFactory factory;
 
   private boolean enableQueryCaching = false;
-  /** maximum number of queries / ids to cache results for */
+  /**
+   * maximum number of queries / ids to cache results for
+   */
   private int queryCacheSize = 100;
-  /** maximum duration in seconds for which to cache a result */
+  /**
+   * maximum duration in seconds for which to cache a result
+   */
   private long queryCacheDuration = 600;
 
   public CacheConfig() {
   }
-
 
 
   /**

@@ -7,12 +7,14 @@ import java.util.Map;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
 
-public class SemanticMap {
+public record SemanticMap(DeepLabLabel[][] labels) {
 
-  private final DeepLabLabel[][] labels;
 
   public SemanticMap(BufferedImage image, Map<String, String> classes) {
+    this(toLabels(image, classes));
+  }
 
+  private static DeepLabLabel[][] toLabels(BufferedImage image, Map<String, String> classes) {
     TIntObjectHashMap<DeepLabLabel> intToLabelMap = new TIntObjectHashMap<>(classes.size());
     for (String className : classes.keySet()) {
 
@@ -30,7 +32,7 @@ public class SemanticMap {
 
     }
 
-    labels = new DeepLabLabel[image.getHeight()][image.getWidth()];
+    var labels = new DeepLabLabel[image.getHeight()][image.getWidth()];
 
     for (int x = 0; x < image.getWidth(); ++x) {
       for (int y = 0; y < image.getHeight(); ++y) {
@@ -40,14 +42,9 @@ public class SemanticMap {
           label = DeepLabLabel.NOTHING;
         }
         labels[y][x] = label;
-
       }
     }
-
-  }
-
-  public DeepLabLabel[][] getLabels() {
-    return this.labels;
+    return labels;
   }
 
   @Override

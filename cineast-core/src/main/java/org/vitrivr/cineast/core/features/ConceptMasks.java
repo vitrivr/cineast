@@ -101,7 +101,7 @@ public class ConceptMasks extends AbstractFeatureModule {
       return Collections.emptyList();
     }
 
-    DeepLabLabel[][] labels = optional.get().getLabels();
+    DeepLabLabel[][] labels = optional.get().labels();
 
     List<DeepLabLabel> list = linearize(labels);
 

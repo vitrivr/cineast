@@ -3,6 +3,11 @@ package org.vitrivr.cineast.core.db.dao.reader;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
@@ -13,20 +18,14 @@ import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 public class MediaObjectReader extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   private static final Cache<String, MediaObjectDescriptor> objectCache = CacheBuilder.newBuilder()
-          .maximumSize(100_000)
-          .expireAfterWrite(10, TimeUnit.MINUTES)
-          .build(); //TODO make configurable
+      .maximumSize(100_000)
+      .expireAfterWrite(10, TimeUnit.MINUTES)
+      .build(); //TODO make configurable
 
   /**
    * Constructor for MediaObjectReader
