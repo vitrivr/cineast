@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
@@ -159,5 +160,22 @@ public class VideoFrame {
     this.img.clear();
     this.img = null;
     this.audioFrame = null;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    VideoFrame that = (VideoFrame) o;
+    return id == that.id && timestamp == that.timestamp && Objects.equals(descriptor, that.descriptor) && Objects.equals(img, that.img) && Objects.equals(audioFrame, that.audioFrame) && Objects.equals(subtitleItems, that.subtitleItems);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, timestamp, descriptor, img, audioFrame, subtitleItems);
   }
 }

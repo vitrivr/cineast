@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -79,5 +80,25 @@ public class BooleanQueryTermContainer extends AbstractQueryTermContainer {
   @Override
   public List<BooleanExpression> getBooleanExpressions() {
     return this.expressions;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    BooleanQueryTermContainer that = (BooleanQueryTermContainer) o;
+    return Objects.equals(expressions, that.expressions);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), expressions);
   }
 }

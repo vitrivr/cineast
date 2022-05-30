@@ -2,9 +2,12 @@ package org.vitrivr.cineast.core.db.dao.reader;
 
 import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -21,6 +25,12 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
 public class MediaSegmentReader extends AbstractEntityReader {
+
+  private static final Cache<String, MediaSegmentDescriptor> segmentCache = CacheBuilder.newBuilder()
+      .maximumSize(100_000)
+      .expireAfterWrite(10, TimeUnit.MINUTES)
+      .build(); //TODO make configurable
+
 
   /**
    * Constructor for MediaSegmentReader
@@ -59,6 +69,13 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public Optional<MediaSegmentDescriptor> lookUpSegment(String segmentId) {
+
+    MediaSegmentDescriptor cached = segmentCache.getIfPresent(segmentId);
+
+    if (cached != null) {
+      return Optional.of(cached);
+    }
+
     Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentId);
     return descriptors.findFirst();
   }
@@ -68,10 +85,28 @@ public class MediaSegmentReader extends AbstractEntityReader {
   }
 
   public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds, String queryID) {
-    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds, queryID);
+
+    ArrayList<String> notCached = new ArrayList<>();
     //this implicitly deduplicates the stream
     Map<String, MediaSegmentDescriptor> _return = new HashMap<>();
-    descriptors.forEach(msd -> _return.put(msd.getSegmentId(), msd));
+
+    segmentIds.forEach(id -> {
+      MediaSegmentDescriptor cached = segmentCache.getIfPresent(id);
+      if (cached != null) {
+        _return.put(id, cached);
+      } else {
+        notCached.add(id);
+      }
+    });
+
+    if (!notCached.isEmpty()) {
+      Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], notCached, queryID);
+
+      descriptors.forEach(msd -> {
+        _return.put(msd.getSegmentId(), msd);
+      });
+    }
+
     return _return;
   }
 
@@ -113,6 +148,10 @@ public class MediaSegmentReader extends AbstractEntityReader {
         .stream()
         .map(MediaSegmentReader::propertiesToDescriptor)
         .filter(Optional::isPresent)
+        .peek(optional -> { //tap of and add to cache
+          MediaSegmentDescriptor descriptor = optional.get();
+          segmentCache.put(descriptor.getSegmentId(), descriptor);
+        })
         .map(Optional::get);
   }
 }

@@ -2,9 +2,11 @@ package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class ReadableQueryConfig {
   protected CorrespondenceFunction correspondence = null;
   protected int resultsPerModule = -1;
   protected Optional<Integer> maxResults = Optional.empty();
+
   /**
    * Constructor used to parse a {@link ReadableQueryConfig} from JSON.
    *
@@ -41,6 +44,7 @@ public class ReadableQueryConfig {
       this.hints = new HashSet<>();
     }
   }
+
   /**
    * Constructor used to create a {@link ReadableQueryConfig} from another {@link ReadableQueryConfig}.
    *
@@ -156,6 +160,28 @@ public class ReadableQueryConfig {
 
     return _return;
 
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ReadableQueryConfig that = (ReadableQueryConfig) o;
+    return Float.compare(that.norm, norm) == 0 && resultsPerModule == that.resultsPerModule
+        && Objects.equals(hints, that.hints) && Objects.equals(relevantSegmentIds, that.relevantSegmentIds)
+        && Objects.equals(queryId, that.queryId) && distance == that.distance && Arrays.equals(distanceWeights, that.distanceWeights)
+        && Objects.equals(correspondence, that.correspondence) && Objects.equals(maxResults, that.maxResults);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(hints, relevantSegmentIds, queryId, distance, norm, correspondence, resultsPerModule, maxResults);
+    result = 31 * result + Arrays.hashCode(distanceWeights);
+    return result;
   }
 
   @Override

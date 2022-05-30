@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.query.containers;
 
 import com.google.common.base.MoreObjects;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.GpsData;
 
@@ -42,5 +43,25 @@ public class InstantQueryTermContainer extends AbstractQueryTermContainer {
   @Override
   public Optional<Instant> getInstant() {
     return Optional.of(this.instant);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    InstantQueryTermContainer that = (InstantQueryTermContainer) o;
+    return Objects.equals(instant, that.instant);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), instant);
   }
 }

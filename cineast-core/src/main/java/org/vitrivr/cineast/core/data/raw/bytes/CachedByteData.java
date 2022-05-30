@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.raw.CacheableData;
@@ -153,5 +154,22 @@ public class CachedByteData implements ByteData {
       LOGGER.error(e);
       return ByteBuffer.wrap(new byte[0]).order(ByteOrder.LITTLE_ENDIAN);
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CachedByteData that = (CachedByteData) o;
+    return size == that.size && Objects.equals(path, that.path) && Objects.equals(factory, that.factory) && Objects.equals(data, that.data);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(path, size, data);
   }
 }

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.data.raw.images;
 
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.raw.CacheableData;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 
@@ -148,5 +150,24 @@ public class InMemoryMultiImage implements MultiImage {
 
   @Override
   public void clear() {
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InMemoryMultiImage that = (InMemoryMultiImage) o;
+    return width == that.width && height == that.height && type == that.type && Objects.equals(factory, that.factory) && Objects.equals(thumb, that.thumb) && Arrays.equals(colors, that.colors);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(width, height, type);
+    result = 31 * result + Arrays.hashCode(colors);
+    return result;
   }
 }

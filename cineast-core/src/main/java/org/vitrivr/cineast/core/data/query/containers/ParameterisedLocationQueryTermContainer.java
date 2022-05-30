@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import com.google.common.base.MoreObjects;
+import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -83,5 +84,25 @@ public class ParameterisedLocationQueryTermContainer extends AbstractQueryTermCo
     public GeoPoint() {
       // Empty constructor for de-/seralisation purposes
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    ParameterisedLocationQueryTermContainer that = (ParameterisedLocationQueryTermContainer) o;
+    return Objects.equals(location, that.location) && Objects.equals(parameter, that.parameter);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), location, parameter);
   }
 }

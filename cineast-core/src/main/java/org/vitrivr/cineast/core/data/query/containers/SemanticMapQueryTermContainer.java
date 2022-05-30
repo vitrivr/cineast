@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.awt.image.BufferedImage;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
@@ -80,5 +81,25 @@ public class SemanticMapQueryTermContainer extends AbstractQueryTermContainer {
   @Override
   public Optional<SemanticMap> getSemanticMap() {
     return Optional.of(this.map);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    SemanticMapQueryTermContainer that = (SemanticMapQueryTermContainer) o;
+    return Objects.equals(map, that.map);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), map);
   }
 }

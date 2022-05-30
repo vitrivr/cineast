@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import java.util.List;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
@@ -96,5 +97,25 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
     STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
     stft.forward(this.getMeanSamplesAsDouble());
     return stft;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    AudioQueryTermContainer that = (AudioQueryTermContainer) o;
+    return totalSamples == that.totalSamples && Float.compare(that.totalDuration, totalDuration) == 0 && Objects.equals(frames, that.frames) && Objects.equals(descriptor, that.descriptor);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), frames, totalSamples, totalDuration, descriptor);
   }
 }

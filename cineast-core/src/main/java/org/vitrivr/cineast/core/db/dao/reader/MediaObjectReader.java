@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
@@ -18,6 +21,11 @@ import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 public class MediaObjectReader extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
+
+  private static final Cache<String, MediaObjectDescriptor> objectCache = CacheBuilder.newBuilder()
+      .maximumSize(100_000)
+      .expireAfterWrite(10, TimeUnit.MINUTES)
+      .build(); //TODO make configurable
 
   /**
    * Constructor for MediaObjectReader
@@ -61,7 +69,11 @@ public class MediaObjectReader extends AbstractEntityReader {
       return new MediaObjectDescriptor();
     }
 
-    return new MediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
+    MediaObjectDescriptor descriptor = new MediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
+
+    objectCache.put(descriptor.getObjectId(), descriptor);
+
+    return descriptor;
 
   }
 
@@ -81,6 +93,7 @@ public class MediaObjectReader extends AbstractEntityReader {
   }
 
   public MediaObjectDescriptor lookUpObjectByName(String name) {
+
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[2], new StringTypeProvider(name));
 
     if (result.isEmpty()) {
@@ -104,15 +117,30 @@ public class MediaObjectReader extends AbstractEntityReader {
     if (videoIds == null) {
       return new HashMap<>();
     }
-    String dbQueryID = DBQueryIDGenerator.generateQueryID("load-obj", queryID);
 
+    ArrayList<String> notCached = new ArrayList<>();
     HashMap<String, MediaObjectDescriptor> _return = new HashMap<>();
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Lists.newArrayList(videoIds), dbQueryID);
-    results.forEach(el -> {
-      MediaObjectDescriptor d = mapToDescriptor(el);
-      _return.put(d.getObjectId(), d);
+
+    videoIds.forEach(id -> {
+      MediaObjectDescriptor cached = objectCache.getIfPresent(id);
+      if (cached != null) {
+        _return.put(cached.getObjectId(), cached);
+      } else {
+        notCached.add(id);
+      }
     });
 
+    if (!notCached.isEmpty()) {
+
+      String dbQueryID = DBQueryIDGenerator.generateQueryID("load-obj", queryID);
+
+      List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Lists.newArrayList(videoIds), dbQueryID);
+      results.forEach(el -> {
+        MediaObjectDescriptor d = mapToDescriptor(el);
+        _return.put(d.getObjectId(), d);
+      });
+
+    }
     return _return;
   }
 

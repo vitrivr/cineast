@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.math3.util.FastMath;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -585,5 +586,24 @@ public class Mesh implements WritableMesh {
 
       return centroid;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Mesh mesh = (Mesh) o;
+    return Objects.equals(vertices, mesh.vertices) && Objects.equals(faces, mesh.faces) && Objects.equals(barycenter, mesh.barycenter) && Objects.equals(surfaceArea, mesh.surfaceArea) && Arrays.equals(boundingbox, mesh.boundingbox);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(vertices, faces, barycenter, surfaceArea);
+    result = 31 * result + Arrays.hashCode(boundingbox);
+    return result;
   }
 }
