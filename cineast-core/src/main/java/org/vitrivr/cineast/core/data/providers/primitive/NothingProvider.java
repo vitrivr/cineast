@@ -4,6 +4,8 @@ public class NothingProvider implements PrimitiveTypeProvider {
 
   public static final NothingProvider INSTANCE = new NothingProvider();
 
+  public NothingProvider() {}
+
   @Override
   public ProviderDataType getType() {
     return ProviderDataType.UNKNOWN;

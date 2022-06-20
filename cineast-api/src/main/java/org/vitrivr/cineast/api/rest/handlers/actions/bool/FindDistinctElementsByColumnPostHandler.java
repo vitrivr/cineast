@@ -16,6 +16,7 @@ import org.vitrivr.cineast.api.messages.lookup.ColumnSpecification;
 import org.vitrivr.cineast.api.messages.result.DistinctElementsResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
@@ -48,7 +49,7 @@ public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestH
     }
     StopWatch watch = StopWatch.createStarted();
     selector.open(specification.table());
-    distinct = selector.getUniqueValues(specification.column()).stream().map(PrimitiveTypeProvider::getString).collect(Collectors.toList());
+    distinct = selector.getUniqueValues(specification.column()).stream().filter(p -> p.getType() != ProviderDataType.UNKNOWN).map(PrimitiveTypeProvider::getString).collect(Collectors.toList());
     cache.put(specification.table() + specification.column(), distinct);
     LOGGER.trace("Retrieved unique values for {} in {} ms", specification.table() + "." + specification.column(), watch.getTime(TimeUnit.MILLISECONDS));
     return new DistinctElementsResult("", distinct);
