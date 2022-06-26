@@ -89,6 +89,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
 
     if (relevantExpressions.isEmpty()) {
       LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
+      LOGGER.debug("In this class: {}, {}", this.getSupportedOperators(), this.getAttributes());
       return Collections.emptyList();
     }
 
