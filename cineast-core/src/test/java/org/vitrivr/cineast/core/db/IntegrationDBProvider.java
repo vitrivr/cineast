@@ -1,8 +1,9 @@
 package org.vitrivr.cineast.core.db;
 
+import java.io.Closeable;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 
-public interface IntegrationDBProvider<R> {
+public interface IntegrationDBProvider<R> extends Closeable {
 
 
   /**

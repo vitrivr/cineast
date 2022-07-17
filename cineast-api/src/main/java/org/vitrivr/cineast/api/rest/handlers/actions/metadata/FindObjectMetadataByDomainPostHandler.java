@@ -1,12 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.DOMAIN_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.DOMAIN_NAME;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.ArrayList;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
@@ -24,17 +26,18 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 public class FindObjectMetadataByDomainPostHandler implements ParsingPostRestHandler<IdList, MediaObjectMetadataQueryResult> {
 
   public static final String ROUTE = "find/metadata/in/{" + DOMAIN_NAME + "}";
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
-    if (ids == null || ids.getIds().length == 0) {
+    if (ids == null || ids.ids().isEmpty()) {
+      LOGGER.warn("no ids provided, returning empty list");
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
     final String domain = parameters.get(DOMAIN_NAME);
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    return new MediaObjectMetadataQueryResult("",
-        service.findByDomain(ids.getIdList(), domain));
+    return new MediaObjectMetadataQueryResult("", service.findByDomain(ids.ids(), domain));
   }
 
   @Override

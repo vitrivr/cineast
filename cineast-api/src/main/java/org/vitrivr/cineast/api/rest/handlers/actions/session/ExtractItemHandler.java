@@ -20,8 +20,8 @@ public class ExtractItemHandler implements ParsingPostRestHandler<ExtractionCont
   public SessionState performPost(ExtractionContainerMessage context, Context ctx) {
     SessionState state = ValidateSessionHandler.validateSession(ctx.pathParamMap()); //TODO Use State
 
-    LOGGER.debug("Received items {}", Arrays.toString(context.getItemsAsArray()));
-    SessionExtractionContainer.addPaths(context.getItemsAsArray());
+    LOGGER.debug("Received items {}", context.items());
+    SessionExtractionContainer.addPaths(context.items());
     return state;
   }
 

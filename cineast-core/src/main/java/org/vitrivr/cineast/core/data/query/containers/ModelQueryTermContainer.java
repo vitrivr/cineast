@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
@@ -103,5 +104,25 @@ public class ModelQueryTermContainer extends AbstractQueryTermContainer {
   @Override
   public MultiImage getMedianImg() {
     return this.image;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    ModelQueryTermContainer that = (ModelQueryTermContainer) o;
+    return Objects.equals(mesh, that.mesh) && Objects.equals(normalizedMesh, that.normalizedMesh) && Objects.equals(image, that.image);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), mesh, normalizedMesh, image);
   }
 }

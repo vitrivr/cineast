@@ -9,12 +9,12 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class DatabaseHealthMonitor {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final long PING_INTERVAL = 2_000;
   private static boolean initalized = false;
   private static Summary executionTime;
-  private static final Logger LOGGER = LogManager.getLogger();
   private static volatile boolean running = false;
   private static DBSelector selector;
-  private static final long PING_INTERVAL = 2_000;
   private static Thread monitorThread;
 
   public static void init() {

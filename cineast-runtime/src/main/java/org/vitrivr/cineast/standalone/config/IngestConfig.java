@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.config.SegmenterConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
@@ -139,6 +140,9 @@ public class IngestConfig implements ExtractionContextProvider {
     }
     if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) {
       this.database.setPlaintext(globalDb.getPlaintext());
+    }
+    if (this.database.getUseTransactions()) {
+      this.database.setUseTransactions(globalDb.getUseTransactions());
     }
 
     /* Merge with global settings if not set. */
@@ -316,9 +320,9 @@ public class IngestConfig implements ExtractionContextProvider {
   }
 
   /**
-   * Returns the PersistencyWriterSupplier that can be used during the extraction run to obtain PersistencyWriter instance.
+   * Returns the {@link PersistencyWriterSupplier} that can be used during the extraction run to obtain {@link PersistencyWriter} instance.
    *
-   * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
+   * @return {@link PersistencyWriterSupplier instance used obtain a {@link PersistencyWriter}.
    */
   @Override
   public PersistencyWriterSupplier persistencyWriter() {
@@ -334,7 +338,6 @@ public class IngestConfig implements ExtractionContextProvider {
   public Integer batchSize() {
     return this.database.getBatchsize();
   }
-
 
   /**
    * Returns the DBSelectorSupplier that can be used during the extraction run to obtain a DBSelector instance.

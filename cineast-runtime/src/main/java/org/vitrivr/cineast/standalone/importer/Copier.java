@@ -17,10 +17,10 @@ import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
  */
 public class Copier implements AutoCloseable {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final String entityName;
   private final Importer<?> importer;
   private final PersistencyWriter<?> writer;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public Copier(String entityName, Importer<?> importer) {
     this(entityName, importer, Config.sharedConfig().getDatabase().getWriterSupplier().get());

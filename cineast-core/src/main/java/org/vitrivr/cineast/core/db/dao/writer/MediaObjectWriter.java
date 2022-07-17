@@ -8,7 +8,9 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDescriptor> {
 
   public MediaObjectWriter(PersistencyWriter<?> writer) {
-    super(writer, 1, true);
+    super(writer);
+    this.writer.setFieldNames(MediaObjectDescriptor.FIELDNAMES);
+    this.writer.open(MediaObjectDescriptor.ENTITY);
   }
 
   /**
@@ -16,8 +18,6 @@ public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDe
    */
   @Override
   protected void init() {
-    this.writer.setFieldNames(MediaObjectDescriptor.FIELDNAMES);
-    this.writer.open(MediaObjectDescriptor.ENTITY);
   }
 
   @Override

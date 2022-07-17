@@ -1,20 +1,22 @@
 package org.vitrivr.cineast.core.extraction.metadata;
 
-import static org.bytedeco.javacpp.avcodec.AVCodec;
-import static org.bytedeco.javacpp.avformat.AVFormatContext;
-import static org.bytedeco.javacpp.avformat.AVStream;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.ffmpeg.avcodec.AVCodec;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avformat.AVStream;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -83,14 +85,14 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
     final AVCodec codec = avcodec.av_codec_iterate(new Pointer());
     final int videoStreamIdx = avformat.av_find_best_stream(pFormatContext, avutil.AVMEDIA_TYPE_VIDEO, -1, -1, codec, 0);
     final AVStream videoStream = pFormatContext.streams(videoStreamIdx);
-    final avutil.AVRational timebase = videoStream.time_base();
+    final AVRational timebase = videoStream.time_base();
 
     /* Allocate new codec-context for codec returned by av_find_best_stream(). */
-    final avcodec.AVCodecContext videoCodecContext = avcodec.avcodec_alloc_context3(codec);
+    final AVCodecContext videoCodecContext = avcodec.avcodec_alloc_context3(codec);
     avcodec.avcodec_parameters_to_context(videoCodecContext, videoStream.codecpar());
 
     /* Open the code context. */
-    if (avcodec.avcodec_open2(videoCodecContext, codec, (avutil.AVDictionary) null) < 0) {
+    if (avcodec.avcodec_open2(videoCodecContext, codec, (AVDictionary) null) < 0) {
       LOGGER.error("Error, Could not open video codec.  Failed to obtain technical video metadata.");
       return metadata;
     }

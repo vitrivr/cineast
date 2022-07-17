@@ -28,5 +28,7 @@ public abstract class AbstractEntityReader implements Closeable {
     this.selector.close();
   }
 
-
+  public int rowCount() {
+    return this.selector.rowCount();
+  }
 }

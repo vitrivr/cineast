@@ -12,12 +12,12 @@ public interface IdProvider {
    */
   String getId();
 
+  void setId(String id);
+
   /**
    * @return the identifier of the larger group this object belongs to
    */
   String getSuperId();
-
-  void setId(String id);
 
   void setSuperId(String id);
 }

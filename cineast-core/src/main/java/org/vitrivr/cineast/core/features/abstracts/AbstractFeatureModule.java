@@ -36,12 +36,12 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  protected SimpleFeatureDescriptorWriter writer;
-  protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
-  protected DBSelector selector;
   protected final float maxDist;
   protected final int vectorLength;
   protected final String tableName;
+  protected SimpleFeatureDescriptorWriter writer;
+  protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
+  protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
   protected CorrespondenceFunction correspondence;
 
@@ -61,10 +61,10 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
-    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
+    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName);
+    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName);
   }
 
   @Override
@@ -94,7 +94,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER);
+    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
     if (list.isEmpty()) {
       LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
       return new ArrayList<>(0);

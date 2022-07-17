@@ -370,9 +370,49 @@
         }, {
           "name" : "value",
           "in" : "path",
+          "description" : "The actual value that you want to filter for",
           "required" : true,
           "schema" : {
             "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MediaObjectQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/all/{skip}/{limit}" : {
+      "get" : {
+        "tags" : [ "Object" ],
+        "summary" : "Get a fixed amount of objects from the sorted list",
+        "description" : "Equivalent to calling SELECT * FROM multimediaobject ORDER BY objectid ASC LIMIT limit SKIP skip. Mostly used for pagination when wanting to retrieve all objects",
+        "operationId" : "findObjectsPagination",
+        "parameters" : [ {
+          "name" : "skip",
+          "in" : "path",
+          "description" : "How many objects should be skipped",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "path",
+          "description" : "How many object at most should be fetched",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         } ],
         "responses" : {
@@ -498,6 +538,64 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/SimilarityQueryResultBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/similar/staged" : {
+      "post" : {
+        "tags" : [ "Segments" ],
+        "summary" : "Find similar segments based on the given staged query",
+        "description" : "Performs a similarity search based on the formulated query stages, executing each subsequent stage on the results of the previous stage",
+        "operationId" : "findSegmentSimilarStaged",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StagedSimilarityQuery"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimilarityQueryResultBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/similar/temporal" : {
+      "post" : {
+        "tags" : [ "Segments" ],
+        "summary" : "Find similar segments based on the given temporal query",
+        "description" : "Performs a similarity search based on the formulated query stages in the given temporal order, scoring final results by their similarity to the specified temporal context",
+        "operationId" : "findSegmentSimilarTemporal",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TemporalQuery"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TemporalQueryResult"
                 }
               }
             }
@@ -972,6 +1070,34 @@
         }
       }
     },
+    "/api/v1/count/table/{table}" : {
+      "get" : {
+        "tags" : [ "Misc" ],
+        "summary" : "Count objects",
+        "description" : "Equivalent to calling SELECT count(*) FROM table. Used to determined #pages for pagination in a frontend or statistical purposes",
+        "operationId" : "countRows",
+        "parameters" : [ {
+          "name" : "table",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntegerMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/status" : {
       "get" : {
         "tags" : [ "Status" ],
@@ -1035,7 +1161,7 @@
       "MediaObjectMetadataDescriptor" : {
         "type" : "object",
         "properties" : {
-          "objectId" : {
+          "objectid" : {
             "type" : "string"
           },
           "domain" : {
@@ -1056,18 +1182,18 @@
       "MediaObjectMetadataQueryResult" : {
         "type" : "object",
         "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
           "content" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MediaObjectMetadataDescriptor"
             }
           },
-          "queryId" : {
-            "type" : "string"
-          },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1102,6 +1228,7 @@
         } ]
       },
       "OptionallyFilteredIdList" : {
+        "required" : [ "filters", "ids" ],
         "type" : "object",
         "properties" : {
           "filters" : {
@@ -1115,20 +1242,11 @@
             "items" : {
               "type" : "string"
             }
-          },
-          "idList" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
       "IdList" : {
+        "required" : [ "ids" ],
         "type" : "object",
         "properties" : {
           "ids" : {
@@ -1142,8 +1260,9 @@
       "MediaSegmentMetadataDescriptor" : {
         "type" : "object",
         "properties" : {
-          "segmentId" : {
-            "type" : "string"
+          "segmentid" : {
+            "type" : "string",
+            "writeOnly" : true
           },
           "domain" : {
             "type" : "string"
@@ -1157,31 +1276,34 @@
           "exists" : {
             "type" : "boolean",
             "writeOnly" : true
+          },
+          "segmentId" : {
+            "type" : "string"
           }
         }
       },
       "MediaSegmentMetadataQueryResult" : {
         "type" : "object",
         "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
           "content" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MediaSegmentMetadataDescriptor"
             }
           },
-          "queryId" : {
-            "type" : "string"
-          },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
       "MediaObjectDescriptor" : {
         "type" : "object",
         "properties" : {
-          "objectId" : {
+          "objectid" : {
             "type" : "string"
           },
           "name" : {
@@ -1206,18 +1328,18 @@
       "MediaObjectQueryResult" : {
         "type" : "object",
         "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
           "content" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MediaObjectDescriptor"
             }
           },
-          "queryId" : {
-            "type" : "string"
-          },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1259,36 +1381,36 @@
       "MediaSegmentQueryResult" : {
         "type" : "object",
         "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
           "content" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MediaSegmentDescriptor"
             }
           },
-          "queryId" : {
-            "type" : "string"
-          },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
       "CorrespondenceFunction" : {
         "type" : "object"
       },
-      "QueryComponent" : {
+      "MetadataAccessSpecification" : {
         "type" : "object",
         "properties" : {
-          "terms" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/QueryTerm"
-            }
+          "type" : {
+            "type" : "string",
+            "enum" : [ "OBJECT", "SEGMENT" ]
           },
-          "containerId" : {
-            "type" : "integer",
-            "format" : "int32"
+          "domain" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
           }
         }
       },
@@ -1296,8 +1418,7 @@
         "type" : "object",
         "properties" : {
           "queryId" : {
-            "type" : "string",
-            "format" : "uuid"
+            "type" : "string"
           },
           "hints" : {
             "uniqueItems" : true,
@@ -1305,6 +1426,13 @@
             "items" : {
               "type" : "string",
               "enum" : [ "exact", "inexact", "lsh", "ecp", "mi", "pq", "sh", "va", "vaf", "vav", "sequential", "empirical" ]
+            }
+          },
+          "relevantSegmentIds" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
             }
           },
           "distance" : {
@@ -1330,19 +1458,6 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "relevantSegmentIds" : {
-            "uniqueItems" : true,
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "distanceIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "correspondenceFunctionIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "correspondenceFunction" : {
             "$ref" : "#/components/schemas/CorrespondenceFunction"
           },
@@ -1352,6 +1467,12 @@
           "distanceWeightsIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
           "rawResultsPerModule" : {
             "type" : "integer",
             "format" : "int32"
@@ -1359,60 +1480,60 @@
         }
       },
       "QueryTerm" : {
+        "required" : [ "categories", "data", "type" ],
         "type" : "object",
         "properties" : {
-          "type" : {
-            "type" : "string",
-            "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
-          },
-          "data" : {
-            "type" : "string",
-            "writeOnly" : true
-          },
           "categories" : {
             "type" : "array",
             "items" : {
               "type" : "string"
             }
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "IMAGE", "AUDIO", "MODEL3D", "LOCATION", "PARAMETERISED_LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "SKELETON", "ID", "BOOLEAN" ]
+          },
+          "data" : {
+            "type" : "string"
           }
         }
       },
       "SimilarityQuery" : {
+        "required" : [ "metadataAccessSpec", "terms" ],
         "type" : "object",
         "properties" : {
-          "containers" : {
+          "terms" : {
             "type" : "array",
-            "writeOnly" : true,
             "items" : {
-              "$ref" : "#/components/schemas/QueryComponent"
+              "$ref" : "#/components/schemas/QueryTerm"
+            }
+          },
+          "metadataAccessSpec" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataAccessSpecification"
             }
           },
           "config" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
-          "components" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/QueryComponent"
-            }
-          },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
       "SimilarityQueryResult" : {
         "type" : "object",
         "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
           "content" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/StringDoublePair"
             }
-          },
-          "queryId" : {
-            "type" : "string"
           },
           "category" : {
             "type" : "string"
@@ -1423,7 +1544,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1453,6 +1574,172 @@
           "value" : {
             "type" : "number",
             "format" : "double"
+          }
+        }
+      },
+      "QueryStage" : {
+        "required" : [ "terms" ],
+        "type" : "object",
+        "properties" : {
+          "terms" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/QueryTerm"
+            }
+          }
+        }
+      },
+      "StagedSimilarityQuery" : {
+        "type" : "object",
+        "properties" : {
+          "stages" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/QueryStage"
+            }
+          },
+          "config" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          }
+        }
+      },
+      "TemporalQuery" : {
+        "required" : [ "messageType", "metadataAccessSpec", "queries" ],
+        "type" : "object",
+        "properties" : {
+          "queries" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/StagedSimilarityQuery"
+            }
+          },
+          "metadataAccessSpec" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataAccessSpecification"
+            }
+          },
+          "config" : {
+            "$ref" : "#/components/schemas/TemporalQueryConfig"
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+          }
+        }
+      },
+      "TemporalQueryConfig" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "hints" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "exact", "inexact", "lsh", "ecp", "mi", "pq", "sh", "va", "vaf", "vav", "sequential", "empirical" ]
+            }
+          },
+          "timeDistances" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "float"
+            }
+          },
+          "maxLength" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "computeTemporalObjects" : {
+            "type" : "boolean"
+          },
+          "relevantSegmentIds" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "distance" : {
+            "type" : "string",
+            "enum" : [ "chisquared", "correlation", "cosine", "hamming", "jaccard", "kullbackleibler", "chebyshev", "euclidean", "squaredeuclidean", "manhattan", "minkowski", "spannorm", "haversine" ]
+          },
+          "distanceWeights" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "float"
+            }
+          },
+          "norm" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "resultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxResults" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "normIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "distanceIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "rawResultsPerModule" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "TemporalObject" : {
+        "type" : "object",
+        "properties" : {
+          "segments" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "objectId" : {
+            "type" : "string"
+          },
+          "score" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "TemporalQueryResult" : {
+        "type" : "object",
+        "properties" : {
+          "queryId" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/TemporalObject"
+            }
+          },
+          "messageType" : {
+            "type" : "string",
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1542,9 +1829,6 @@
       "Tag" : {
         "type" : "object",
         "properties" : {
-          "description" : {
-            "type" : "string"
-          },
           "name" : {
             "type" : "string"
           },
@@ -1553,6 +1837,9 @@
             "enum" : [ "REQUEST", "REQUIRE", "EXCLUDE" ]
           },
           "id" : {
+            "type" : "string"
+          },
+          "description" : {
             "type" : "string"
           }
         }
@@ -1577,7 +1864,7 @@
           "queryId" : {
             "type" : "string"
           },
-          "tagIDs" : {
+          "tags" : {
             "type" : "array",
             "items" : {
               "type" : "string"
@@ -1589,6 +1876,7 @@
         }
       },
       "Credentials" : {
+        "required" : [ "password", "username" ],
         "type" : "object",
         "properties" : {
           "username" : {
@@ -1607,7 +1895,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1615,8 +1903,7 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "string",
-            "writeOnly" : true
+            "type" : "string"
           },
           "validUntil" : {
             "type" : "integer",
@@ -1625,9 +1912,6 @@
           "type" : {
             "type" : "string",
             "enum" : [ "UNAUTHENTICATED", "USER", "ADMIN" ]
-          },
-          "sessionId" : {
-            "type" : "string"
           }
         }
       },
@@ -1639,10 +1923,6 @@
             "items" : {
               "$ref" : "#/components/schemas/ExtractionItemContainer"
             }
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1664,6 +1944,7 @@
         }
       },
       "ColumnSpecification" : {
+        "required" : [ "column", "table" ],
         "type" : "object",
         "properties" : {
           "column" : {
@@ -1671,10 +1952,6 @@
           },
           "table" : {
             "type" : "string"
-          },
-          "messageType" : {
-            "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1693,6 +1970,7 @@
         }
       },
       "SelectSpecification" : {
+        "required" : [ "columns", "limit", "table" ],
         "type" : "object",
         "properties" : {
           "table" : {
@@ -1724,7 +2002,18 @@
           }
         }
       },
+      "IntegerMessage" : {
+        "required" : [ "value" ],
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
       "Ping" : {
+        "required" : [ "messageType" ],
         "type" : "object",
         "properties" : {
           "status" : {
@@ -1733,7 +2022,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       }

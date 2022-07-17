@@ -28,8 +28,8 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.BoundingB
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.BoxPosition;
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.Recognition;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.MathHelper;
-import org.vitrivr.cineast.core.util.MathHelper.ArgMaxResult;
+import org.vitrivr.cineast.core.util.math.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper.ArgMaxResult;
 
 
 /**

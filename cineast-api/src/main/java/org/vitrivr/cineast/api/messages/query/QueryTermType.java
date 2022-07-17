@@ -13,9 +13,9 @@ import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.InstantQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.LocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryTermContainer;
-import org.vitrivr.cineast.core.data.query.containers.MotionQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.ParameterisedLocationQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.SemanticMapQueryTermContainer;
+import org.vitrivr.cineast.core.data.query.containers.SkeletonQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TagQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 
@@ -26,7 +26,6 @@ public enum QueryTermType {
 
   IMAGE(ImageQueryTermContainer.class),
   AUDIO(AudioQueryTermContainer.class),
-  MOTION(MotionQueryTermContainer.class),
   MODEL3D(ModelQueryTermContainer.class),
   LOCATION(LocationQueryTermContainer.class),
   PARAMETERISED_LOCATION(ParameterisedLocationQueryTermContainer.class),
@@ -34,10 +33,7 @@ public enum QueryTermType {
   TEXT(TextQueryTermContainer.class),
   TAG(TagQueryTermContainer.class),
   SEMANTIC(SemanticMapQueryTermContainer.class),
-
-  /**
-   * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query. This is used over the @link {@link MoreLikeThisQuery} in REST calls.
-   */
+  SKELETON(SkeletonQueryTermContainer.class),
   ID(IdQueryTermContainer.class),
   BOOLEAN(BooleanQueryTermContainer.class);
 
@@ -62,6 +58,10 @@ public enum QueryTermType {
    * @param data Data from which to construct a {@link AbstractQueryTermContainer}
    */
   public Optional<AbstractQueryTermContainer> getQueryContainer(String data) {
+    if (data == null) {
+      LOGGER.warn("No data provided for query term");
+      return Optional.empty();
+    }
     try {
       Constructor<? extends AbstractQueryTermContainer> constructor = this.c.getConstructor(String.class);
       return Optional.of(constructor.newInstance(data));
@@ -69,5 +69,10 @@ public enum QueryTermType {
       LOGGER.error("Error while constructing query container", e);
       return Optional.empty();
     }
+  }
+
+
+  public static AbstractQueryTermContainer createFromQueryTerm(QueryTerm qt) {
+    return qt.type().getQueryContainer(qt.data()).orElse(null);
   }
 }

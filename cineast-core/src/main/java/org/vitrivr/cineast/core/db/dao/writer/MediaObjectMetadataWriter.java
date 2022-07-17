@@ -10,20 +10,19 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
 
   private final String tableName;
 
-  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
-    this(writer, batchsize, MediaObjectMetadataDescriptor.ENTITY);
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer) {
+    this(writer, MediaObjectMetadataDescriptor.ENTITY);
   }
 
-  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, int batchsize, String tableName) {
-    super(writer, batchsize, false);
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, String tableName) {
+    super(writer);
     this.tableName = tableName;
-    this.init();
+    this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
+    this.writer.open(tableName);
   }
 
   @Override
   protected void init() {
-    this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
-    this.writer.open(tableName);
   }
 
   @Override
@@ -31,7 +30,7 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
     if (entity.getValueProvider() instanceof NothingProvider) {
       return null;
     }
-    return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(),
+    return this.writer.generateTuple(entity.getObjectid(), entity.getDomain(), entity.getKey(),
         entity.getValue());
   }
 }

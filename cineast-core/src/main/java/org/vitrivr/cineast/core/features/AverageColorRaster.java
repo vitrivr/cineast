@@ -42,12 +42,6 @@ public class AverageColorRaster extends AbstractFeatureModule {
     super("features_AverageColorRaster", 1, 1);
   }
 
-  @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
-    super.init(supply, batchSize);
-    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "hist", "raster");
-  }
-
   protected static int get(Color c) {
     switch (c) {
       case Black:
@@ -124,49 +118,6 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   protected static Color get(float f) {
     return get(Math.round(f));
-  }
-
-  MultiImage getMultiImage(SegmentContainer shot) {
-    return shot.getAvgImg();
-  }
-
-  Pair<float[], float[]> computeRaster(SegmentContainer shot) {
-    MultiImage avg = getMultiImage(shot);
-    int[] colors = avg.getColors();
-    ArrayList<Integer> ints = new ArrayList<>(colors.length);
-    for (int i : colors) {
-      ints.add(i);
-    }
-    ArrayList<LinkedList<Integer>> partitions = GridPartitioner.partition(ints, avg.getWidth(),
-        avg.getHeight(), 8, 8);
-
-    float[] raster = new float[64];
-    float[] hist = new float[15];
-
-    for (int i = 0; i < 64; ++i) {
-      LinkedList<Integer> list = partitions.get(i);
-      int col = ColorUtils.getAvg(list);
-      ReadableLabContainer lab = ColorConverter.cachedRGBtoLab(col);
-      raster[i] = get(FuzzyColorHistogramQuantizer.quantize(lab));
-      hist[(int) raster[i]]++;
-    }
-    return new Pair<float[], float[]>(hist, raster);
-  }
-
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      Pair<float[], float[]> pair = computeRaster(shot);
-      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
-    }
-  }
-
-  protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
-    PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
-    this.phandler.persist(tuple);
   }
 
   protected static double register(float[] query, float[] db) {
@@ -255,6 +206,55 @@ public class AverageColorRaster extends AbstractFeatureModule {
         return 0;
     }
     return 0;
+  }
+
+  @Override
+  public void init(PersistencyWriterSupplier supply) {
+    super.init(supply);
+    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "hist", "raster");
+  }
+
+  MultiImage getMultiImage(SegmentContainer shot) {
+    return shot.getAvgImg();
+  }
+
+  Pair<float[], float[]> computeRaster(SegmentContainer shot) {
+    MultiImage avg = getMultiImage(shot);
+    int[] colors = avg.getColors();
+    ArrayList<Integer> ints = new ArrayList<>(colors.length);
+    for (int i : colors) {
+      ints.add(i);
+    }
+    ArrayList<LinkedList<Integer>> partitions = GridPartitioner.partition(ints, avg.getWidth(),
+        avg.getHeight(), 8, 8);
+
+    float[] raster = new float[64];
+    float[] hist = new float[15];
+
+    for (int i = 0; i < 64; ++i) {
+      LinkedList<Integer> list = partitions.get(i);
+      int col = ColorUtils.getAvg(list);
+      ReadableLabContainer lab = ColorConverter.cachedRGBtoLab(col);
+      raster[i] = get(FuzzyColorHistogramQuantizer.quantize(lab));
+      hist[(int) raster[i]]++;
+    }
+    return new Pair<float[], float[]>(hist, raster);
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      Pair<float[], float[]> pair = computeRaster(shot);
+      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
+    }
+  }
+
+  protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
+    PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
+    this.phandler.persist(tuple);
   }
 
   private List<ScoreElement> getSimilar(float[] raster, float[] hist, ReadableQueryConfig rqc) {

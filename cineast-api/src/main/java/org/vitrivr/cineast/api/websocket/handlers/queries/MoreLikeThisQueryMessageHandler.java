@@ -34,26 +34,26 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
   @Override
   public void execute(Session session, QueryConfig qconf, MoreLikeThisQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Extract categories from MoreLikeThisQuery. */
-    final String queryId = qconf.getQueryId().toString();
-    final HashSet<String> categoryMap = new HashSet<>(message.getCategories());
+    final String queryId = qconf.getQueryId();
+    final HashSet<String> categoryMap = new HashSet<>(message.categories());
 
     List<Thread> threads = new ArrayList<>();
     List<CompletableFuture<Void>> futures = new ArrayList<>();
     /* Retrieve per-category results and return them. */
     for (String category : categoryMap) {
-      final List<StringDoublePair> results = continuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
+      final List<StringDoublePair> results = continuousRetrievalLogic.retrieve(message.segmentId(), category, qconf).stream()
           .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
           .sorted(StringDoublePair.COMPARATOR)
           .limit(Config.sharedConfig().getRetriever().getMaxResults())
           .collect(Collectors.toList());
-      List<String> segmentIds = results.stream().map(el -> el.key).collect(Collectors.toList());
+      List<String> segmentIds = results.stream().map(StringDoublePair::key).collect(Collectors.toList());
       List<String> objectIds = this.submitSegmentAndObjectInformation(session, queryId, segmentIds);
 
       /* Finalize and submit per-category results. */
       futures.addAll(this.finalizeAndSubmitResults(session, queryId, category, -1, results));
 
       // TODO Possibly add metadata specification to mlt-handler
-      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec());
+      List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
       threads.addAll(_threads);
     }
     futures.forEach(CompletableFuture::join);

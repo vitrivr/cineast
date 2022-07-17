@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import java.util.Objects;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * An {@link AbstractQueryTermContainer} is the implementation of a {@link SegmentContainer} which is used in the online-phase (during retrieval).
@@ -56,12 +57,6 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
     return this.id != null;
   }
 
-
-  @Override
-  public void setSuperId(String id) {
-    this.superId = id;
-  }
-
   /**
    * Online: If this is set, it is assumed to be the id of a {@link MediaObjectDescriptor}
    * <p>
@@ -73,7 +68,30 @@ public abstract class AbstractQueryTermContainer implements SegmentContainer {
   }
 
   @Override
+  public void setSuperId(String id) {
+    this.superId = id;
+  }
+
+  @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AbstractQueryTermContainer that = (AbstractQueryTermContainer) o;
+    return Float.compare(that.weight, weight) == 0 && containerId == that.containerId && Objects.equals(id, that.id) && Objects.equals(superId, that.superId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(weight, id, superId, containerId);
+  }
+
 }

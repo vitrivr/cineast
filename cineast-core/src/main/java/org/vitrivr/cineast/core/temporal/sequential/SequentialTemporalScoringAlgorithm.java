@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.temporal.sequential;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -41,14 +42,15 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
   @Override
   public List<TemporalObject> score() {
     /* Calculate the best path for every segment in the result set given to the class. */
-    for (Map<Integer, ScoredSegment> segments : scoredSegmentStorage.values()) {
-      for (ScoredSegment scoredSegment : segments.values()) {
+    for (TIntObjectHashMap<ScoredSegment> segments : scoredSegmentStorage.values()) {
+      segments.forEachValue(scoredSegment -> {
         MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.getSegmentId());
-        SequentialPath sequentialPath = this.getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
+        SequentialPath sequentialPath = getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
 
         objectPaths.putIfAbsent(mediaSegmentDescriptor.getObjectId(), new ArrayList<>());
-        this.objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
-      }
+        objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
+        return true;
+      });
     }
 
     List<TemporalObject> results = new ArrayList<>();

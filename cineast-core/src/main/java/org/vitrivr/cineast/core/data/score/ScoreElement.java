@@ -13,16 +13,6 @@ import org.vitrivr.cineast.core.util.GroupingUtil;
  */
 public interface ScoreElement {
 
-  String getId();
-
-  double getScore();
-
-  /**
-   * @param newScore Score value for the duplicated {@link ScoreElement}
-   * @return a new instance of the same type of {@link ScoreElement} based of {@code this} with the given {@code newScore}. Note: withScore returning the same type is not enforced through generics for sake of brevity and readability
-   */
-  ScoreElement withScore(double newScore);
-
   Comparator<ScoreElement> SCORE_COMPARATOR =
       Comparator.comparingDouble(ScoreElement::getScore);
 
@@ -59,4 +49,14 @@ public interface ScoreElement {
     });
     return builder.build();
   }
+
+  String getId();
+
+  double getScore();
+
+  /**
+   * @param newScore Score value for the duplicated {@link ScoreElement}
+   * @return a new instance of the same type of {@link ScoreElement} based of {@code this} with the given {@code newScore}. Note: withScore returning the same type is not enforced through generics for sake of brevity and readability
+   */
+  ScoreElement withScore(double newScore);
 }

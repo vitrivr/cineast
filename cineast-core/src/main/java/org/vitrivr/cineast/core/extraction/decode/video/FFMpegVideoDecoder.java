@@ -5,27 +5,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.ffmpeg.avcodec.AVCodec;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avcodec.AVPacket;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.global.swresample;
+import org.bytedeco.ffmpeg.global.swscale;
+import org.bytedeco.ffmpeg.swresample.SwrContext;
+import org.bytedeco.ffmpeg.swscale.SwsContext;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avcodec.AVCodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.avutil.AVDictionary;
-import org.bytedeco.javacpp.avutil.AVRational;
-import org.bytedeco.javacpp.swresample;
-import org.bytedeco.javacpp.swscale;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
@@ -46,135 +49,97 @@ import org.vitrivr.cineast.core.util.LogHelper;
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
   /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video.
-   */
-  private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video.
-   */
-  private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded.
-   */
-  private static final String CONFIG_CHANNELS_PROPERTY = "channels";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio.
-   */
-  private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
-
-  /**
-   * Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well.
-   */
-  private static final String CONFIG_SUBTITLE_PROPERTY = "subtitles";
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: max width of the converted video.
-   */
-  private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: max height of the converted video.
-   */
-  private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio.
-   */
-  private static final int CONFIG_CHANNELS_DEFAULT = 1;
-
-  /**
-   * Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio
-   */
-  private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
-
-  private static final int TARGET_FORMAT = avutil.AV_SAMPLE_FMT_S16;
-  private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
    * Lists the mime types supported by the FFMpegVideoDecoder.
    * <p>
    * TODO: List may not be complete yet.
    */
-  public static final Set<String> supportedFiles;
-
-  static {
-    HashSet<String> tmp = new HashSet<>();
-    tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */
-    tmp.add("video/mp4");
-    tmp.add("video/avi");
-    tmp.add("video/mpeg");
-    tmp.add("video/quicktime");
-    tmp.add("video/webm");
-    supportedFiles = Collections.unmodifiableSet(tmp);
-  }
-
-  private byte[] bytes;
-  private int[] pixels;
-
+  public static final Set<String> supportedFiles = Set.of("multimedia/mp4", "video/mp4", "video/avi", "video/mpeg", "video/quicktime", "video/webm");
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video.
+   */
+  private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video.
+   */
+  private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded.
+   */
+  private static final String CONFIG_CHANNELS_PROPERTY = "channels";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio.
+   */
+  private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
+  /**
+   * Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well.
+   */
+  private static final String CONFIG_SUBTITLE_PROPERTY = "subtitles";
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: max width of the converted video.
+   */
+  private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: max height of the converted video.
+   */
+  private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio.
+   */
+  private static final int CONFIG_CHANNELS_DEFAULT = 1;
+  /**
+   * Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio
+   */
+  private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
+  private static final int TARGET_FORMAT = avutil.AV_SAMPLE_FMT_S16;
+  private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Internal data structure used to hold decoded VideoFrames and the associated timestamp.
    */
-  private ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
-
+  private final ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
   /**
    * Internal data structure used to hold decoded AudioFrames and the associated timestamp.
    */
-  private ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
-
-  private AVFormatContext pFormatCtx;
-
-  private int videoStream = -1;
-  private int audioStream = -1;
-  private avcodec.AVCodecContext pCodecCtxVideo = null;
-  private avcodec.AVCodecContext pCodecCtxAudio = null;
-
-  /**
-   * Field for raw frame as returned by decoder (regardless of being audio or video).
-   */
-  private avutil.AVFrame pFrame = null;
-
-  /**
-   * Field for RGB frame (decoded video frame).
-   */
-  private avutil.AVFrame pFrameRGB = null;
-
-  /**
-   * Field for re-sampled audio-sample.
-   */
-  private avutil.AVFrame resampledFrame = null;
-
-  private avcodec.AVPacket packet;
-  private BytePointer buffer = null;
-
-  private IntPointer out_linesize = new IntPointer();
-
-  private swscale.SwsContext sws_ctx = null;
-  private swresample.SwrContext swr_ctx = null;
-
-  private VideoDescriptor videoDescriptor = null;
-  private AudioDescriptor audioDescriptor = null;
-  private SubTitleDecoder subtitles = null;
-
+  private final ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
+  private final IntPointer out_linesize = new IntPointer();
   /**
    * Indicates that decoding of video-data is complete.
    */
   private final AtomicBoolean videoComplete = new AtomicBoolean(false);
-
   /**
    * Indicates that decoding of video-data is complete.
    */
   private final AtomicBoolean audioComplete = new AtomicBoolean(false);
-
   /**
    * Indicates the EOF has been reached during decoding.
    */
   private final AtomicBoolean eof = new AtomicBoolean(false);
-
+  private byte[] bytes;
+  private int[] pixels;
+  private AVFormatContext pFormatCtx;
+  private int videoStream = -1;
+  private int audioStream = -1;
+  private AVCodecContext pCodecCtxVideo = null;
+  private AVCodecContext pCodecCtxAudio = null;
+  /**
+   * Field for raw frame as returned by decoder (regardless of being audio or video).
+   */
+  private AVFrame pFrame = null;
+  /**
+   * Field for RGB frame (decoded video frame).
+   */
+  private AVFrame pFrameRGB = null;
+  /**
+   * Field for re-sampled audio-sample.
+   */
+  private AVFrame resampledFrame = null;
+  private AVPacket packet;
+  private BytePointer buffer = null;
+  private SwsContext sws_ctx = null;
+  private SwrContext swr_ctx = null;
+  private VideoDescriptor videoDescriptor = null;
+  private AudioDescriptor audioDescriptor = null;
+  private SubTitleDecoder subtitles = null;
   /**
    * The {@link CachedDataFactory} reference used to create {@link MultiImage} objects.
    */
@@ -273,7 +238,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
   private void enqueueResampledAudio() {
     /* Convert decoded frame. Break if resampling fails.*/
     if (swresample.swr_convert(this.swr_ctx, null, 0, this.pFrame.data(), this.pFrame.nb_samples()) < 0) {
-      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
+      LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).");
       return;
     }
 

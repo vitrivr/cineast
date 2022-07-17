@@ -34,10 +34,11 @@ import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriev
 public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  protected DBSelector selector;
   protected final String entity;
   protected final HashSet<String> attributes = new HashSet<>();
   protected final HashMap<String, ProviderDataType> columnTypes = new HashMap<>();
+  protected DBSelector selector;
+  private String idCol = GENERIC_ID_COLUMN_QUALIFIER;
 
   protected BooleanRetriever(String entity, Collection<String> attributes) {
     this.entity = entity;
@@ -57,6 +58,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
       this.attributes.addAll(attrs);
     }
 
+    this.idCol = properties.getOrDefault("idCol", GENERIC_ID_COLUMN_QUALIFIER);
   }
 
   @Override
@@ -77,7 +79,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   }
 
   protected boolean canProcess(BooleanExpression be) {
-    return getSupportedOperators().contains(be.getOperator()) && getAttributes().contains(be.getAttribute());
+    return getSupportedOperators().contains(be.operator()) && getAttributes().contains(be.attribute());
   }
 
   @Override
@@ -87,6 +89,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
 
     if (relevantExpressions.isEmpty()) {
       LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
+      LOGGER.debug("In this class: {}, {}", this.getSupportedOperators(), this.getAttributes());
       return Collections.emptyList();
     }
 
@@ -98,15 +101,15 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
     List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(
         expressions.stream().map(be -> Triple.of(
             // strip entity if it was given via config
-            be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(),
-            be.getOperator(),
-            be.getValues()
+            be.attribute().contains(this.entity) ? be.attribute().substring(this.entity.length() + 1) : be.attribute(),
+            be.operator(),
+            be.values()
         )).collect(Collectors.toList()),
         GENERIC_ID_COLUMN_QUALIFIER, // for compound ops, we want to join via id. Cottontail (the official storage layer) does not use this identifier
-        Collections.singletonList(GENERIC_ID_COLUMN_QUALIFIER),  // we're only interested in the ids
+        Collections.singletonList(idCol),  // we're only interested in the ids
         qc);
     // we're returning a boolean score element since the score is always 1 if a query matches here
-    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(GENERIC_ID_COLUMN_QUALIFIER).getString())).collect(Collectors.toList());
+    return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get(idCol).getString())).collect(Collectors.toList());
   }
 
   @Override

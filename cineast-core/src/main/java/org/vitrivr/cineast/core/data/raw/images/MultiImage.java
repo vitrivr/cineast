@@ -55,22 +55,6 @@ public interface MultiImage extends CacheableData {
 
   static final double MAX_THUMB_SIZE = 200;
 
-  BufferedImage getBufferedImage();
-
-  BufferedImage getThumbnailImage();
-
-  int[] getColors();
-
-  int[] getThumbnailColors();
-
-  int getWidth();
-
-  int getHeight();
-
-  CachedDataFactory factory();
-
-  void clear();
-
   static int checkHeight(int width, int height, int[] colors) {
     if (colors.length / width != height) {
       height = colors.length / width;
@@ -96,4 +80,23 @@ public interface MultiImage extends CacheableData {
       }
     }
   }
+
+  BufferedImage getBufferedImage();
+
+  BufferedImage getThumbnailImage();
+
+  int[] getColors();
+
+  int[] getThumbnailColors();
+
+  int getWidth();
+
+  int getHeight();
+
+  CachedDataFactory factory();
+
+  void clear();
+
+
+
 }

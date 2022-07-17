@@ -9,76 +9,12 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
-public strictfp class KMeansPP {
+public class KMeansPP {
+
+  private static final Random random = new Random(1);
 
   private KMeansPP() {
   }
-
-  public static class KMenasResult<T extends ReadableFloatVector> {
-
-    private final int k;
-    private final double[] distances;
-    private double distance;
-    private ArrayList<FloatVector> centers;
-    private ArrayList<ArrayList<T>> points;
-
-    private static final Comparator<ArrayList<?>> comp = new Comparator<ArrayList<?>>() {
-
-      @Override
-      public int compare(ArrayList<?> o1, ArrayList<?> o2) {
-        return Integer.compare(o2.size(), o1.size());
-      }
-
-    };
-
-    private KMenasResult(int k) {
-      this.k = k;
-      this.distances = new double[this.k];
-    }
-
-    public int getK() {
-      return this.k;
-    }
-
-    private void setCenters(ArrayList<FloatVector> c) {
-      this.centers = c;
-    }
-
-    private void setPoints(ArrayList<ArrayList<T>> p) {
-      this.points = p;
-    }
-
-    public void sort() {
-      Collections.sort(points, comp);
-      for (int i = 0; i < points.size(); ++i) {
-        double dist = 0;
-        for (T point : points.get(i)) {
-          dist += ReadableFloatVector.getEuclideanDistance(centers.get(i), point);
-        }
-        distances[i] = dist;
-        distance += dist;
-      }
-    }
-
-    public ArrayList<FloatVector> getCenters() {
-      return this.centers;
-    }
-
-    public ArrayList<ArrayList<T>> getPoints() {
-      return this.points;
-    }
-
-    public double getDistance() {
-      return this.distance;
-    }
-
-    public double getDistance(int i) {
-      return this.distances[i];
-    }
-
-  }
-
-  private static final Random random = new Random(1);
 
   /**
    * performs {@link KMeansPP} runs times and returns the result with the minimal overall distance
@@ -198,6 +134,69 @@ public strictfp class KMeansPP {
       _return.add(v.getElement(i));
     }
     return _return;
+  }
+
+  public static class KMenasResult<T extends ReadableFloatVector> {
+
+    private static final Comparator<ArrayList<?>> comp = new Comparator<ArrayList<?>>() {
+
+      @Override
+      public int compare(ArrayList<?> o1, ArrayList<?> o2) {
+        return Integer.compare(o2.size(), o1.size());
+      }
+
+    };
+    private final int k;
+    private final double[] distances;
+    private double distance;
+    private ArrayList<FloatVector> centers;
+    private ArrayList<ArrayList<T>> points;
+
+    private KMenasResult(int k) {
+      this.k = k;
+      this.distances = new double[this.k];
+    }
+
+    public int getK() {
+      return this.k;
+    }
+
+    public void sort() {
+      Collections.sort(points, comp);
+      for (int i = 0; i < points.size(); ++i) {
+        double dist = 0;
+        for (T point : points.get(i)) {
+          dist += ReadableFloatVector.getEuclideanDistance(centers.get(i), point);
+        }
+        distances[i] = dist;
+        distance += dist;
+      }
+    }
+
+    public ArrayList<FloatVector> getCenters() {
+      return this.centers;
+    }
+
+    private void setCenters(ArrayList<FloatVector> c) {
+      this.centers = c;
+    }
+
+    public ArrayList<ArrayList<T>> getPoints() {
+      return this.points;
+    }
+
+    private void setPoints(ArrayList<ArrayList<T>> p) {
+      this.points = p;
+    }
+
+    public double getDistance() {
+      return this.distance;
+    }
+
+    public double getDistance(int i) {
+      return this.distances[i];
+    }
+
   }
 
 }

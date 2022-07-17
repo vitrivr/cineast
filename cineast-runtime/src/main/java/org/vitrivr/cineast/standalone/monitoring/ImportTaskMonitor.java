@@ -9,11 +9,11 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 public class ImportTaskMonitor {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private static boolean initalized = false;
   private static Summary executionTime;
   private static Summary batchImportTime;
   private static Gauge importProgress;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   public static void init() {
     if (initalized) {
@@ -49,7 +49,7 @@ public class ImportTaskMonitor {
    * You can call this method without worrying if prometheus support is enabled
    */
   public static void reportImportProgress(int insertedTuples, String entityName, long executiontime) {
-    LOGGER.trace("Completed import of {} tuples on {} in {} ms", insertedTuples, entityName, executiontime);
+    LOGGER.trace("import progress: {} tuples on {} in {} ms", insertedTuples, entityName, executiontime);
     if (importProgress != null && batchImportTime != null) {
       importProgress.labels(entityName).inc(insertedTuples);
       batchImportTime.labels(entityName, String.valueOf(insertedTuples)).observe(executiontime);

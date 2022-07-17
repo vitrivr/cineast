@@ -48,51 +48,6 @@ public class JOGLOffscreenRenderer implements Renderer {
    */
   private static final GLCapabilities GL_CAPABILITIES = new GLCapabilities(GL_PROFILE);
 
-  /**
-   * OpenGL Utility Library reference
-   */
-  private final GLU glu;
-
-  /**
-   * OpenGL drawable reference.
-   */
-  private final GLOffscreenAutoDrawable drawable;
-
-  /**
-   * OpenGL context reference used for drawing.
-   */
-  private final GL2 gl;
-
-  /**
-   * Width of the JOGLOffscreenRenderer in pixels.
-   */
-  private final int width;
-
-  /**
-   * Height of the JOGLOffscreenRenderer in pixels.
-   */
-  private final int height;
-
-  /**
-   * Aspect-ratio of the JOGLOffscreenRenderer.
-   */
-  private final float aspect;
-
-  /**
-   * Polygon-mode used during rendering.
-   */
-  private int polygonmode = GL2GL3.GL_FILL;
-
-  /**
-   * Lock that makes sure that only a single Thread is using the classes rendering facility at a time.
-   */
-  private ReentrantLock lock = new ReentrantLock(true);
-
-  /**
-   * List of object handles that should be rendered.
-   */
-  private final List<Integer> objects = new ArrayList<>();
-
   /*
    * This code-block can be used to configure the off-screen renderer's GL_CAPABILITIES.
    */
@@ -100,6 +55,43 @@ public class JOGLOffscreenRenderer implements Renderer {
     GL_CAPABILITIES.setOnscreen(false);
     GL_CAPABILITIES.setHardwareAccelerated(true);
   }
+
+  /**
+   * OpenGL Utility Library reference
+   */
+  private final GLU glu;
+  /**
+   * OpenGL drawable reference.
+   */
+  private final GLOffscreenAutoDrawable drawable;
+  /**
+   * OpenGL context reference used for drawing.
+   */
+  private final GL2 gl;
+  /**
+   * Width of the JOGLOffscreenRenderer in pixels.
+   */
+  private final int width;
+  /**
+   * Height of the JOGLOffscreenRenderer in pixels.
+   */
+  private final int height;
+  /**
+   * Aspect-ratio of the JOGLOffscreenRenderer.
+   */
+  private final float aspect;
+  /**
+   * List of object handles that should be rendered.
+   */
+  private final List<Integer> objects = new ArrayList<>();
+  /**
+   * Polygon-mode used during rendering.
+   */
+  private int polygonmode = GL2GL3.GL_FILL;
+  /**
+   * Lock that makes sure that only a single Thread is using the classes rendering facility at a time.
+   */
+  private ReentrantLock lock = new ReentrantLock(true);
 
   /**
    * Default constructor. Defines the width and the height of this JOGLOffscreenRenderer and initializes all the required OpenGL bindings.

@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 public class Location implements ReadableFloatVector {
 

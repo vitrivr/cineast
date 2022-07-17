@@ -18,16 +18,19 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvocationHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.CountRowsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.SelectFromTablePostHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByCategoryGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByEntityGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByCategoryPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByEntityPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.CountRowsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectPaginationGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByDomainPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataByKeyGetHandler;
@@ -38,6 +41,8 @@ import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadata
 import org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindSegmentMetadataGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarStagedPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarTemporalPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
@@ -93,8 +98,7 @@ public class APIEndpoint {
   /**
    * The retrieval logic used to retrieve
    */
-  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(
-      Config.sharedConfig().getDatabase());
+  public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
 
   /**
    * The single instance of this class
@@ -278,34 +282,27 @@ public class APIEndpoint {
       }
       /* Serve the UI if requested statically*/
       if (config.getServeUI()) {
+        LOGGER.info("UI serving is enabled");
         /* Add css, js and other static files */
         serviceConfig.addStaticFiles(config.getUiLocation(), Location.EXTERNAL);
-        /* Add index.html - the ui's front page as default route. Anything reroutes to thre */
-        serviceConfig
-            .addSinglePageRoot("/", config.getUiLocation() + "/index.html", Location.EXTERNAL);
+        /* Add index.html - the ui's front page as default route. Anything reroutes to there */
+        serviceConfig.addSinglePageRoot("/", config.getUiLocation() + "/index.html", Location.EXTERNAL);
       }
     });
 
     /* Enable WebSocket (if configured). */
     if (config.getEnableWebsocket()) {
+      LOGGER.info("Starting WS API");
       this.webSocketApi = new WebsocketAPI();
 
       service.ws(String.format("%s/websocket", namespace()), handler -> {
-        handler.onConnect(ctx -> {
-          webSocketApi.connected(ctx.session);
-        });
+        handler.onConnect(ctx -> webSocketApi.connected(ctx.session));
 
-        handler.onClose(ctx -> {
-          webSocketApi.closed(ctx.session, ctx.status(), ctx.reason());
-        });
+        handler.onClose(ctx -> webSocketApi.closed(ctx.session, ctx.status(), ctx.reason()));
 
-        handler.onError(ctx -> {
-          webSocketApi.onWebSocketException(ctx.session, ctx.error());
-        });
+        handler.onError(ctx -> webSocketApi.onWebSocketException(ctx.session, ctx.error()));
 
-        handler.onMessage(ctx -> {
-          webSocketApi.message(ctx.session, ctx.message());
-        });
+        handler.onMessage(ctx -> webSocketApi.message(ctx.session, ctx.message()));
       });
     }
 
@@ -313,6 +310,7 @@ public class APIEndpoint {
 
     /* Setup HTTP/RESTful connection (if configured). */
     if (config.getEnableRest() || config.getEnableRestSecure()) {
+      LOGGER.info("Starting REST API");
       this.restHandlers.forEach(handler -> registerRestHandler(service, handler));
       this.registerServingRoutes(service, config);
     }
@@ -331,8 +329,7 @@ public class APIEndpoint {
         service.start();
       }
     } catch (Exception ex) {
-      LOGGER.log(Level.FATAL,
-          "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
+      LOGGER.log(Level.FATAL, "Failed to start HTTP endpoint due to an exception. Cineast will shut down now!", ex);
       System.exit(100);
     }
 
@@ -408,14 +405,17 @@ public class APIEndpoint {
         new FindObjectAllGetHandler(),
         new FindObjectByIdPostHandler(),
         new FindObjectGetHandler(),
+        new FindObjectPaginationGetHandler(),
         /* Segments */
         new FindSegmentByIdPostHandler(),
         new FindSegmentsByIdGetHandler(),
         new FindSegmentsByObjectIdGetHandler(),
         new FindSegmentSimilarPostHandler(retrievalLogic),
+        new FindSegmentSimilarStagedPostHandler(retrievalLogic),
+        new FindSegmentSimilarTemporalPostHandler(retrievalLogic),
         new FindSegmentFeaturesGetHandler(),
-        new FindFeaturesByCategoryGetHandler(),
-        new FindFeaturesByEntityGetHandler(),
+        new FindFeaturesByCategoryPostHandler(),
+        new FindFeaturesByEntityPostHandler(),
         new FindSegmentTextGetHandler(),
         /* Tags */
         new FindTagsAllGetHandler(),
@@ -432,6 +432,7 @@ public class APIEndpoint {
         /* Boolean */
         new FindDistinctElementsByColumnPostHandler(),
         new SelectFromTablePostHandler(),
+        new CountRowsGetHandler(),
         /* Status */
         new StatusInvocationHandler()
     ));
@@ -442,6 +443,7 @@ public class APIEndpoint {
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {
+      LOGGER.info("Serving content is enabled");
       service.get("/thumbnails/{id}", new ResolvedContentRoute(
           new FileSystemThumbnailResolver(
               new File(Config.sharedConfig().getApi().getThumbnailLocation()))));

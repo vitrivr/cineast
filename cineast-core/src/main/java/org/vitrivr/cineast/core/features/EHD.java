@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 /**
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02 see http://stackoverflow.com/questions/909542/opencv-edge-extraction
@@ -24,15 +24,6 @@ import org.vitrivr.cineast.core.util.MathHelper;
 public class EHD extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
-  public EHD() {
-    this(80);
-  }
-
-  protected EHD(int vectorLength) {
-    super("features_EHD", 16f / 4f, vectorLength);
-  }
-
   private static final float[]
       mv = new float[]{1f, -1f, 1f, -1f},
       mh = new float[]{1f, 1f, -1f, -1f},
@@ -40,25 +31,12 @@ public class EHD extends AbstractFeatureModule {
       m135 = new float[]{0, MathHelper.SQRT2_f, -MathHelper.SQRT2_f, 0},
       mn = new float[]{2f, -2f, -2f, 2};
 
+  public EHD() {
+    this(80);
+  }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
-      return;
-    }
-    if (!phandler.idExists(shot.getId())) {
-      List<VideoFrame> videoFrames = shot.getVideoFrames();
-      float[] hist = new float[80];
-      for (VideoFrame f : videoFrames) {
-        MultiImage img = f.getImage();
-        hist = process(img, hist);
-      }
-      float count = videoFrames.size();
-      for (int i = 0; i < 80; ++i) {
-        hist[i] /= count;
-      }
-      persist(shot.getId(), new FloatVectorImpl(hist));
-    }
+  protected EHD(int vectorLength) {
+    super("features_EHD", 16f / 4f, vectorLength);
   }
 
   protected static float[] process(MultiImage img, float[] hist) {
@@ -115,6 +93,26 @@ public class EHD extends AbstractFeatureModule {
     }
 
     return -1;
+  }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
+    if (!phandler.idExists(shot.getId())) {
+      List<VideoFrame> videoFrames = shot.getVideoFrames();
+      float[] hist = new float[80];
+      for (VideoFrame f : videoFrames) {
+        MultiImage img = f.getImage();
+        hist = process(img, hist);
+      }
+      float count = videoFrames.size();
+      for (int i = 0; i < 80; ++i) {
+        hist[i] /= count;
+      }
+      persist(shot.getId(), new FloatVectorImpl(hist));
+    }
   }
 
   @Override

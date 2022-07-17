@@ -45,12 +45,11 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   private static final String ID_COLUMN_NAME = GENERIC_ID_COLUMN_QUALIFIER;
   private static final String FEATURE_COLUMN_NAME = FEATURE_COLUMN_QUALIFIER;
-
+  private final int vectorLength;
+  private final boolean segmentRetrievalScope;
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;
   private MediaSegmentReader mediaSegmentReader;
-  private final int vectorLength;
-  private final boolean segmentRetrievalScope;
 
   protected MetadataFeatureModule(int vectorLength) {
     this.vectorLength = vectorLength;
@@ -97,10 +96,10 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     supply.get().dropEntity(this.featureEntityName());
   }
 
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     init(); //from MetadataFeatureExtractor
     PersistencyWriter<?> writer = supply.get();
-    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(), batchSize);
+    this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName());
     this.featureWriter.init();
   }
 
@@ -170,7 +169,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     return this.mediaSegmentReader.lookUpSegment(segmentId)
         .map(MediaSegmentDescriptor::getObjectId)
-        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, new StringTypeProvider(objId), FEATURE_COLUMN_NAME))
+        .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, new StringTypeProvider(objId), FEATURE_COLUMN_NAME, rqc))
         .flatMap(features -> features.stream().findFirst()) // Feature vectors are unique per id
         .map(feature -> this.getSimilar(feature, rqc))
         .orElse(Collections.emptyList());

@@ -16,7 +16,6 @@ import org.vitrivr.cineast.api.messages.lookup.SelectSpecification;
 import org.vitrivr.cineast.api.messages.result.SelectResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 
 public class SelectFromTablePostHandler implements ParsingPostRestHandler<SelectSpecification, SelectResult> {
@@ -25,26 +24,27 @@ public class SelectFromTablePostHandler implements ParsingPostRestHandler<Select
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private static final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-
-
   @Override
   public SelectResult performPost(SelectSpecification input, Context ctx) {
-    if (input == null || input.getTable().isEmpty() || input.getColumns().isEmpty()) {
+    if (input == null || input.table().isEmpty() || input.columns().isEmpty()) {
       LOGGER.warn("returning empty list, invalid input {}", input);
       return new SelectResult(new ArrayList<>());
     }
     StopWatch watch = StopWatch.createStarted();
-    selector.open(input.getTable());
-    List<Map<String, PrimitiveTypeProvider>> _result = selector.getAll(input.getColumns(), input.getLimit());
-    List<Map<String, String>> stringified = _result.stream().map(el -> {
-      Map<String, String> m = new HashMap<>();
-      el.forEach((k, v) -> m.put(k, v.getString()));
-      return m;
-    }).collect(Collectors.toList());
-    watch.stop();
-    LOGGER.trace("Performed select on {}.{} in {} ms", input.getTable(), input.getColumns(), watch.getTime(TimeUnit.MILLISECONDS));
-    return new SelectResult(stringified);
+    try (var selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get()) {
+
+      selector.open(input.table());
+      var _result = selector.getAll(input.columns(), input.limit());
+      var stringified = _result.stream().map(el -> {
+        Map<String, String> m = new HashMap<>();
+        el.forEach((k, v) -> m.put(k, v.getString()));
+        return m;
+      }).collect(Collectors.toList());
+
+      watch.stop();
+      LOGGER.trace("Performed select on {}.{} in {} ms", input.table(), input.columns(), watch.getTime(TimeUnit.MILLISECONDS));
+      return new SelectResult(stringified);
+    }
   }
 
   @Override

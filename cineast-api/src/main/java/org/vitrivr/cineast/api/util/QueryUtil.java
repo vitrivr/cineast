@@ -5,28 +5,37 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.vitrivr.cineast.api.messages.query.QueryComponent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.messages.query.QueryStage;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
+import org.vitrivr.cineast.api.messages.query.QueryTermType;
+import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.FeaturesAllCategoriesQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByCategoryQueryResult;
 import org.vitrivr.cineast.api.messages.result.FeaturesByEntityQueryResult;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.SegmentTags;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.temporal.TemporalScoring;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
@@ -34,46 +43,134 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 //TODO maybe this should be moved to core?
 public class QueryUtil {
 
-  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupComponentsByCategory(
-      List<QueryComponent> queryComponents) {
-    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
-    for (QueryComponent component : queryComponents) {
-      for (QueryTerm term : component.getTerms()) {
-        if (term.getCategories() == null) {
-          continue;
-        }
-        term.getCategories().forEach((String category) -> {
-          if (!categoryMap.containsKey(category)) {
-            categoryMap.put(category, new ArrayList<>());
-          }
-          categoryMap.get(category).add(term.toContainer());
-        });
-      }
+  private static final Logger LOGGER = LogManager.getLogger();
+
+  /**
+   * Executes a similarity query specified by the list of {@link QueryTerm}s.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param terms                    The terms specifying the query.
+   * @param config                   The config to use for this query.
+   * @return The query results as a map of query term categories to scored segment lists.
+   */
+  public static HashMap<String, List<StringDoublePair>> findSegmentsSimilar(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryTerm> terms, QueryConfig config) {
+    HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
+
+    // Group terms by categories
+    var categoryMap = QueryUtil.groupQueryTermsByCategory(terms);
+
+    for (var category : categoryMap.keySet()) {
+      var containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, (ReadableQueryConfig) config)).collect(Collectors.toList());
+      var categoryResults = QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category);
+      returnMap.put(category, categoryResults);
     }
-    return categoryMap;
+
+    return returnMap;
   }
 
-  public static HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> groupTermsByCategory(
-      List<org.vitrivr.cineast.api.grpc.data.QueryTerm> terms) {
-    HashMap<String, ArrayList<Pair<AbstractQueryTermContainer, ReadableQueryConfig>>> categoryMap = new HashMap<>();
-    for (org.vitrivr.cineast.api.grpc.data.QueryTerm term : terms) {
-      if (term.getCategories().isEmpty()) {
+  /**
+   * Executes a staged similarity query specified by the list of {@link QueryStage}s.
+   * <p>
+   * Each {@link QueryTerm} category is expected to appear no more than once in the entire query.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param stages                   The stages specifying the query.
+   * @param config                   The config to use for this query.
+   * @return The query results as a map of query term categories to scored segment lists.
+   */
+  public static HashMap<String, List<StringDoublePair>> findSegmentsSimilarStaged(ContinuousRetrievalLogic continuousRetrievalLogic, List<QueryStage> stages, QueryConfig config) {
+    var stageConfig = config.clone();
+
+    var stagedQueryResults = new ArrayList<HashMap<String, List<StringDoublePair>>>();
+
+    for (QueryStage stage : stages) {
+      var stageResults = findSegmentsSimilar(continuousRetrievalLogic, stage.terms(), stageConfig);
+      stagedQueryResults.add(stageResults);
+
+      var relevantSegments = new HashSet<String>();
+      for (var result : stageResults.values()) {
+        relevantSegments.addAll(result.stream().map(StringDoublePair::key).toList());
+      }
+
+      // Return empty results if there are no more results in stage
+      if (relevantSegments.isEmpty()) {
+        return stageResults;
+      }
+
+      stageConfig.setRelevantSegmentIds(relevantSegments);
+    }
+
+    return mergeStagedQueryResults(stagedQueryResults);
+  }
+
+  /**
+   * Executes a temporal similarity query.
+   *
+   * @param continuousRetrievalLogic The continuous retrieval logic to execute the query.
+   * @param query                    The temporal query to execute.
+   * @param config                   The config to use for the execution of the query
+   * @return The query results as a list of temporal objects.
+   */
+  public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
+    var stagedResults = query.queries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).toList();
+
+    // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?
+    try (var segmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get())) {
+      var segmentIds = stagedResults.stream().flatMap(resultsMap -> resultsMap.values().stream().flatMap(pairs -> pairs.stream().map(StringDoublePair::key))).distinct().collect(Collectors.toList());
+
+      var segmentDescriptors = segmentReader.lookUpSegments(segmentIds, config.getQueryId());
+      var stagedQueryResults = stagedResults.stream().map(resultsMap -> resultsMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList())).collect(Collectors.toList());
+
+      return TemporalScoring.score(segmentDescriptors, stagedQueryResults, query.getTimeDistances(), query.getMaxLength());
+    }
+  }
+
+  /**
+   * Merges staged query results into a single result map.
+   *
+   * @param stagedQueryResults List of staged query results by stage. The results are expected to be in order of the stages.
+   * @return Map of merged results mapping categories to their results filtered to the final set of segments.
+   */
+  public static HashMap<String, List<StringDoublePair>> mergeStagedQueryResults(ArrayList<HashMap<String, List<StringDoublePair>>> stagedQueryResults) {
+    var results = new HashMap<String, List<StringDoublePair>>();
+
+    var relevantSegments = new HashSet<String>();
+    for (var result : stagedQueryResults.get(stagedQueryResults.size() - 1).values()) {
+      relevantSegments.addAll(result.stream().map(StringDoublePair::key).toList());
+    }
+
+    for (var stageResults : stagedQueryResults) {
+      for (var category : stageResults.keySet()) {
+        if (results.containsKey(category)) {
+          LOGGER.warn("Staged query contained the category \"{}\" multiple times.", category);
+        }
+        var filteredResults = stageResults.get(category).stream().filter(pair -> relevantSegments.contains(pair.key())).collect(Collectors.toList());
+        results.put(category, filteredResults);
+      }
+    }
+
+    return results;
+  }
+
+  public static HashMap<String, ArrayList<AbstractQueryTermContainer>> groupQueryTermsByCategory(List<QueryTerm> queryTerms) {
+    HashMap<String, ArrayList<AbstractQueryTermContainer>> categoryMap = new HashMap<>();
+    for (QueryTerm term : queryTerms) {
+      if (term.categories() == null) {
+        LOGGER.warn("Encountered query term without categories. Ignoring: {}", term.toString());
         continue;
       }
-      term.getCategories().forEach((String category) -> {
+      var qt = QueryTermType.createFromQueryTerm(term);
+      term.categories().forEach((String category) -> {
         if (!categoryMap.containsKey(category)) {
           categoryMap.put(category, new ArrayList<>());
         }
-        categoryMap.get(category).add(new Pair<>(term.getContainer(), term.getQueryConfig()));
+        categoryMap.get(category).add(qt);
       });
-
     }
     return categoryMap;
   }
 
-  public static List<StringDoublePair> retrieveCategory(
-      ContinuousRetrievalLogic continuousRetrievalLogic,
-      List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
+  public static List<StringDoublePair> retrieveCategory(ContinuousRetrievalLogic continuousRetrievalLogic, List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
     for (Pair<AbstractQueryTermContainer, ReadableQueryConfig> pair : queryContainers) {
 
@@ -86,22 +183,7 @@ public class QueryUtil {
 
       float weight = MathHelper.limit(qc.getWeight(), -1f, 1f);
 
-      List<SegmentScoreElement> scoreResults;
-      if (qc.hasId()) {
-        scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
-      } else {
-        scoreResults = continuousRetrievalLogic.retrieve(qc, category, qconf);
-      }
-
-      for (SegmentScoreElement element : scoreResults) {
-        String segmentId = element.getSegmentId();
-        double score = element.getScore();
-        if (Double.isInfinite(score) || Double.isNaN(score)) {
-          continue;
-        }
-        double weightedScore = score * weight;
-        scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
-      }
+      retrieveAndWeight(continuousRetrievalLogic, category, scoreBySegmentId, qc, qconf, weight);
 
     }
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
@@ -112,10 +194,10 @@ public class QueryUtil {
       return true;
     });
 
-    Collections.sort(list, StringDoublePair.COMPARATOR);
+    list.sort(StringDoublePair.COMPARATOR);
 
-    final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults()
-        .orElse(Config.sharedConfig().getRetriever().getMaxResults());
+    // FIXME: Using an arbitrary query config to limit results is prone to errors
+    final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
     List<StringDoublePair> resultList = list;
     if (list.size() > MAX_RESULTS) {
       resultList = resultList.subList(0, MAX_RESULTS);
@@ -123,27 +205,11 @@ public class QueryUtil {
     return resultList;
   }
 
-  public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic,
-      AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
+  public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic, AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
     float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
     TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
 
-    List<SegmentScoreElement> scoreResults;
-    if (queryTermContainer.hasId()) {
-      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer.getId(), category, config);
-    } else {
-      scoreResults = continuousRetrievalLogic.retrieve(queryTermContainer, category, config);
-    }
-
-    for (SegmentScoreElement element : scoreResults) {
-      String segmentId = element.getSegmentId();
-      double score = element.getScore();
-      if (Double.isInfinite(score) || Double.isNaN(score)) {
-        continue;
-      }
-      double weightedScore = score * weight;
-      scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
-    }
+    retrieveAndWeight(continuousRetrievalLogic, category, scoreBySegmentId, queryTermContainer, config, weight);
 
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
     scoreBySegmentId.forEachEntry((segmentId, score) -> {
@@ -156,6 +222,25 @@ public class QueryUtil {
     return list;
   }
 
+  private static void retrieveAndWeight(ContinuousRetrievalLogic continuousRetrievalLogic, String category, TObjectDoubleHashMap<String> scoreBySegmentId, AbstractQueryTermContainer qc, ReadableQueryConfig qconf, float weight) {
+    List<SegmentScoreElement> scoreResults;
+    if (qc.hasId()) {
+      scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+    } else {
+      scoreResults = continuousRetrievalLogic.retrieve(qc, category, qconf);
+    }
+
+    for (SegmentScoreElement element : scoreResults) {
+      String segmentId = element.getSegmentId();
+      double score = element.getScore();
+      if (Double.isInfinite(score) || Double.isNaN(score)) {
+        continue;
+      }
+      double weightedScore = score * weight;
+      scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
+    }
+  }
+
   /**
    * Retrieves all tag ids belong to certain elements. duplicates are a feature
    *
@@ -166,10 +251,14 @@ public class QueryUtil {
     List<String> _return = new ArrayList<>();
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(SegmentTags.SEGMENT_TAGS_TABLE_NAME);
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
-
-    rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
-    return _return;
+    try {
+      List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, ids);
+      rows.forEach(row -> _return.add(row.get(SegmentTags.TAG_ID_QUALIFIER).getString()));
+      return _return;
+    } catch (Exception e) {
+      LOGGER.error("Exception while looking up tags", e);
+      return _return;
+    }
   }
 
   /**
@@ -190,9 +279,7 @@ public class QueryUtil {
       retriever.getTableNames().forEach(tableName -> {
         selector.open(tableName);
         List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(id));
-        rows.stream().map(row ->
-            row.get(FEATURE_COLUMN_QUALIFIER).toObject()
-        ).forEach(_return::add);
+        rows.stream().map(row -> row.get(FEATURE_COLUMN_QUALIFIER).toObject()).forEach(_return::add);
       });
       return true; // Return value false would break the foreEachKey
     });
@@ -202,11 +289,10 @@ public class QueryUtil {
   /**
    * Returns all tags for a given list of tagsids
    */
-  public static List<Tag> resolveTagsById(
-      List<String> tagIds) {
+  public static List<Tag> resolveTagsById(List<String> tagIds) {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     TagReader tagReader = new TagReader(selector);
-    return tagReader.getTagsById(tagIds.toArray(new String[0]));
+    return tagReader.getTagsById(tagIds);
   }
 
   public static FeaturesAllCategoriesQueryResult retrieveFeaturesForAllCategories(String id) {

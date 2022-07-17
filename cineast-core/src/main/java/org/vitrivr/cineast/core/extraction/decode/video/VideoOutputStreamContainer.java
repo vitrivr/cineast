@@ -1,34 +1,36 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import static org.bytedeco.javacpp.avcodec.avcodec_free_context;
-import static org.bytedeco.javacpp.avcodec.avcodec_open2;
-import static org.bytedeco.javacpp.avcodec.avcodec_parameters_from_context;
-import static org.bytedeco.javacpp.avutil.AVDictionary;
-import static org.bytedeco.javacpp.avutil.AVFrame;
-import static org.bytedeco.javacpp.avutil.AVRational;
-import static org.bytedeco.javacpp.avutil.av_dict_copy;
-import static org.bytedeco.javacpp.avutil.av_dict_free;
-import static org.bytedeco.javacpp.avutil.av_frame_free;
-import static org.bytedeco.javacpp.swscale.sws_freeContext;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_free_context;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_open2;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_parameters_from_context;
+import static org.bytedeco.ffmpeg.global.avutil.av_dict_copy;
+import static org.bytedeco.ffmpeg.global.avutil.av_dict_free;
+import static org.bytedeco.ffmpeg.global.avutil.av_frame_free;
+import static org.bytedeco.ffmpeg.global.swscale.sws_freeContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
+import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avformat;
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.ffmpeg.global.swscale;
+import org.bytedeco.ffmpeg.swscale.SwsContext;
 import org.bytedeco.javacpp.DoublePointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.swscale;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 
 class VideoOutputStreamContainer extends AbstractAVStreamContainer {
 
   private static final Logger LOGGER = LogManager.getLogger();
   int frameCounter = 0;
   private AVFrame rgbFrame, outFrame;
-  private swscale.SwsContext sws_ctx;
+  private SwsContext sws_ctx;
 
-  VideoOutputStreamContainer(int width, int height, int bitRate, float frameRate, avformat.AVFormatContext oc, int codec_id, AVDictionary opt) {
+  VideoOutputStreamContainer(int width, int height, int bitRate, float frameRate, AVFormatContext oc, int codec_id, AVDictionary opt) {
     super(oc, codec_id);
 
     if (codec.type() != avutil.AVMEDIA_TYPE_VIDEO) {

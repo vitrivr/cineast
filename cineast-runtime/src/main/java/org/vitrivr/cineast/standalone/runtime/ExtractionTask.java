@@ -8,10 +8,10 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 class ExtractionTask implements Runnable {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final Extractor feature;
   private final SegmentContainer shot;
   private final ExecutionTimeCounter etc;
-  private static final Logger LOGGER = LogManager.getLogger();
 
   ExtractionTask(Extractor feature, SegmentContainer shot, ExecutionTimeCounter etc) {
     this.feature = feature;

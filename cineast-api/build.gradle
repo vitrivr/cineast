@@ -4,9 +4,11 @@ plugins {
 
 
 application {
-    mainClassName = 'org.vitrivr.cineast.api.Main'
+    getMainClass().set('org.vitrivr.cineast.api.Main')
     applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
 }
+// Required for shadow
+mainClassName = application.mainClass.get()
 
 distributions {
     main {
@@ -109,6 +111,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: version_jackson
     implementation group: 'de.svenkubiak', name: 'jBCrypt', version: version_jbcrypt
     implementation group: 'org.vitrivr', name: 'cineast-proto', version: version_cineast_proto
+
 }
 
 

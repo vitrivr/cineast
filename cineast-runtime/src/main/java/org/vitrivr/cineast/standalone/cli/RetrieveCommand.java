@@ -8,12 +8,11 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
-import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 
 @Command(name = "retrieve-mlt", description = "Retrieves objects from the database using an example segment. Equivalent to an MLT lookup.")
-public class RetrieveCommand implements Runnable {
+public class RetrieveCommand extends AbstractCineastCommand {
 
   @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
   private String segmentId;
@@ -21,17 +20,12 @@ public class RetrieveCommand implements Runnable {
   @Option(name = {"-c", "--category"}, title = "Category", description = "Name of the feature category to retrieve. By default, all categories are searched")
   private String category;
 
-  @Option(name = {"-e", "--export"}, title = "Export", description = "Indicates whether the results should be exported. Defaults to false.")
-  private boolean export = false;
-
   @Option(name = {"-r", "--relevantSegments"}, title = "Relevant segments", description = "Comma separated list of segment IDs to which the query is to be limited.")
   private String relevantSegments;
 
-  public void run() {
+  @Override
+  public void execute() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
-    if (export) {
-      retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));
-    }
 
     QueryConfig qc = QueryConfig.newQueryConfigFromOther(new ConstrainedQueryConfig("cli-query", new ArrayList<>()));
 

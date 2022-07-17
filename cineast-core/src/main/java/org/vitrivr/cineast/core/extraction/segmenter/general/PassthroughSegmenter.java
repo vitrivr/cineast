@@ -21,17 +21,14 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
    *
    */
   private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
-   * Decoder<T> used for file decoding.
-   */
-  private Decoder<T> decoder;
-
   /**
    * A SynchronousQueue used to pass the element to the orchestrating thread.
    */
   private final SynchronousQueue<T> queue = new SynchronousQueue<T>();
-
+  /**
+   * Decoder<T> used for file decoding.
+   */
+  private Decoder<T> decoder;
   /**
    * Internal flag that indicates whether the {@link PassthroughSegmenter} is still running (= true).
    */

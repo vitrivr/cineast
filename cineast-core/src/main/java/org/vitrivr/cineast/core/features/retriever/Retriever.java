@@ -24,7 +24,5 @@ public interface Retriever extends PersistentOperator {
     return _return;
   }
 
-  ;
-
   void finish();
 }

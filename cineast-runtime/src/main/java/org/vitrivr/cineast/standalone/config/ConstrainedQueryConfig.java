@@ -19,6 +19,18 @@ public class ConstrainedQueryConfig extends QueryConfig {
     super(null);
   }
 
+  public static ConstrainedQueryConfig getApplyingConfig(QueryConfig config) {
+    ConstrainedQueryConfig queryConfig = new ConstrainedQueryConfig(config);
+    if (config == null) {
+      final int max = Math.min(queryConfig.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults()), Config.sharedConfig().getRetriever().getMaxResults());
+      queryConfig.setMaxResults(max);
+      final int resultsPerModule = Math.min(queryConfig.getRawResultsPerModule() == -1 ? Config.sharedConfig().getRetriever().getMaxResultsPerModule() : queryConfig.getResultsPerModule(), Config.sharedConfig().getRetriever().getMaxResultsPerModule());
+      queryConfig.setResultsPerModule(resultsPerModule);
+    }
+
+    return queryConfig;
+  }
+
   @Override
   public int getResultsPerModule() {
     return Math.min(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), super.getResultsPerModule());
@@ -31,6 +43,4 @@ public class ConstrainedQueryConfig extends QueryConfig {
     }
     return Optional.of(Config.sharedConfig().getRetriever().getMaxResults());
   }
-
-
 }

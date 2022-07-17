@@ -22,6 +22,29 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     this.baseFolder = baseFolder;
   }
 
+  private static JsonArray toArray(boolean[] arr) {
+    JsonArray jarr = new JsonArray();
+    for (int i = 0; i < arr.length; ++i) {
+      jarr.add(arr[i]);
+    }
+    return jarr;
+  }
+
+  private static JsonArray toArray(float[] arr) {
+    JsonArray jarr = new JsonArray();
+    for (int i = 0; i < arr.length; ++i) {
+      jarr.add(arr[i]);
+    }
+    return jarr;
+  }
+
+  private static JsonArray toArray(int[] arr) {
+    JsonArray jarr = new JsonArray();
+    for (int i = 0; i < arr.length; ++i) {
+      jarr.add(arr[i]);
+    }
+    return jarr;
+  }
 
   @Override
   public boolean open(String name) {
@@ -86,7 +109,6 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     return false;
   }
 
-
   @Override
   public JsonObject getPersistentRepresentation(PersistentTuple tuple) {
 
@@ -122,27 +144,8 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     return _return;
   }
 
-  private static JsonArray toArray(boolean[] arr) {
-    JsonArray jarr = new JsonArray();
-    for (int i = 0; i < arr.length; ++i) {
-      jarr.add(arr[i]);
-    }
-    return jarr;
-  }
-
-  private static JsonArray toArray(float[] arr) {
-    JsonArray jarr = new JsonArray();
-    for (int i = 0; i < arr.length; ++i) {
-      jarr.add(arr[i]);
-    }
-    return jarr;
-  }
-
-  private static JsonArray toArray(int[] arr) {
-    JsonArray jarr = new JsonArray();
-    for (int i = 0; i < arr.length; ++i) {
-      jarr.add(arr[i]);
-    }
-    return jarr;
+  @Override
+  public int supportedBatchSize() {
+    return 1;
   }
 }

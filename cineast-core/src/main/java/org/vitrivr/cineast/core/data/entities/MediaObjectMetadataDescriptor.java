@@ -30,25 +30,22 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 public class MediaObjectMetadataDescriptor implements ExistenceCheck {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * Name of the entity in the persistence layer.
    */
   public static final String ENTITY = "cineast_metadata";
-
   /**
    * Field names in the persistence layer.
    */
   public static final String[] FIELDNAMES = {OBJECT_ID_COLUMN_QUALIFIER, DOMAIN_COL_NAME, KEY_COL_NAME, VAL_COL_NAME};
-
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final List<Class<?>> SUPPORTED_TYPES = ImmutableList
       .of(Integer.class, Long.class, Float.class, Double.class, Short.class, Byte.class, String.class);
 
   /**
    * ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
    */
-  private final String objectId;
+  private final String objectid;
 
   /**
    * String value that identifies the metadata domain (e.g. EXIF, IPTC, DC...)
@@ -68,19 +65,6 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
   private final boolean exists;
 
   /**
-   * Convenience method to create a MediaObjectMetadataDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor.
-   *
-   * @param objectId ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
-   * @param domain   domain that the metadata entry belongs to
-   * @param key      Key (name) of the metadata entry.
-   * @param value    Value of the metadata entry. Can be any type of object, but only Double, Float, Int, Long and String are supported officially.
-   * @return A new MediaObjectMetadataDescriptor
-   */
-  public static MediaObjectMetadataDescriptor of(String objectId, String domain, String key, @Nullable Object value) {
-    return new MediaObjectMetadataDescriptor(objectId, domain, key, value, false);
-  }
-
-  /**
    * Constructor for MediaObjectMetadataDescriptor. Tries to infer the type of the provided value by means of instance of. If the value is not compatible with the default primitive types, the object's toString() method is used to get a String representation.
    *
    * @param objectId ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
@@ -95,7 +79,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
       @JsonProperty(KEY_COL_NAME) String key,
       @JsonProperty(VAL_COL_NAME) @Nullable Object value,
       @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
-    this.objectId = objectId;
+    this.objectid = objectId;
     this.key = key;
     this.domain = domain;
     this.exists = exists;
@@ -121,10 +105,6 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
     }
   }
 
-  static boolean isSupportedValue(Object value) {
-    return SUPPORTED_TYPES.stream().anyMatch(clazz -> clazz.isInstance(value));
-  }
-
   /**
    * Constructor for MediaObjectMetadataDescriptor which can be used to create a MediaObjectMetadataDescriptor from a Map containing the fieldnames as keys and the PrimitiveTypeProviders as value. Maps like this are usually returned by DB lookup classes.
    *
@@ -135,7 +115,7 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
    */
   public MediaObjectMetadataDescriptor(Map<String, PrimitiveTypeProvider> data) throws DatabaseLookupException {
     if (data.get(FIELDNAMES[0]) != null && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
-      this.objectId = data.get(FIELDNAMES[0]).getString();
+      this.objectid = data.get(FIELDNAMES[0]).getString();
     } else {
       throw new DatabaseLookupException("Could not read column '" + FIELDNAMES[0] + "' for MediaObjectDescriptor.");
     }
@@ -156,9 +136,33 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
     this.exists = true;
   }
 
-  @JsonProperty
-  public String getObjectId() {
-    return objectId;
+  /**
+   * Convenience method to create a MediaObjectMetadataDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor.
+   *
+   * @param objectId ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
+   * @param domain   domain that the metadata entry belongs to
+   * @param key      Key (name) of the metadata entry.
+   * @param value    Value of the metadata entry. Can be any type of object, but only Double, Float, Int, Long and String are supported officially.
+   * @return A new MediaObjectMetadataDescriptor
+   */
+  public static MediaObjectMetadataDescriptor of(String objectId, String domain, String key, @Nullable Object value) {
+    return new MediaObjectMetadataDescriptor(objectId, domain, key, value, false);
+  }
+
+  static boolean isSupportedValue(Object value) {
+    return SUPPORTED_TYPES.stream().anyMatch(clazz -> clazz.isInstance(value));
+  }
+
+  public static MediaObjectMetadataDescriptor fromExisting(MediaObjectMetadataDescriptor el, String objectId) {
+    if (objectId == null) {
+      LOGGER.error("No objectID provided for this metadatadescriptor");
+    }
+    return new MediaObjectMetadataDescriptor(objectId, el.domain, el.key, el.value, el.exists);
+  }
+
+  @JsonProperty(OBJECT_ID_COLUMN_QUALIFIER)
+  public String getObjectid() {
+    return objectid;
   }
 
   @JsonProperty
@@ -195,14 +199,6 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
-
-  public static MediaObjectMetadataDescriptor fromExisting(MediaObjectMetadataDescriptor el, String objectId) {
-    if (objectId == null) {
-      LOGGER.error("No objectID provided for this metadatadescriptor");
-    }
-    return new MediaObjectMetadataDescriptor(objectId, el.domain, el.key, el.value, el.exists);
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -212,12 +208,12 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
       return false;
     }
     MediaObjectMetadataDescriptor that = (MediaObjectMetadataDescriptor) o;
-    return exists == that.exists && Objects.equals(objectId, that.objectId) && Objects.equals(domain, that.domain) && Objects.equals(key, that.key) && Objects.equals(value, that.value);
+    return exists == that.exists && Objects.equals(objectid, that.objectid) && Objects.equals(domain, that.domain) && Objects.equals(key, that.key) && Objects.equals(value, that.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(objectId, domain, key, value, exists);
+    return Objects.hash(objectid, domain, key, value, exists);
   }
 }
 

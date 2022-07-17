@@ -25,14 +25,13 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule {
 
   /**
-   * The Assignment used for the codebook.
-   */
-  private AssignCluster<double[]> assignment;
-
-  /**
    * The folder that contains the Codebook(s).
    */
   private static String CODEBOOK_FOLDER = "resources/codebooks/";
+  /**
+   * The Assignment used for the codebook.
+   */
+  private AssignCluster<double[]> assignment;
 
   protected AbstractCodebookFeatureModule(String tableName, float maxDist, int vectorLength) {
     super(tableName, maxDist, vectorLength);
@@ -42,15 +41,15 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    * Initializer for Extraction - must load the codebook.
    */
   @Override
-  public final void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
-    super.init(phandlerSupply, batchSize);
+  public final void init(PersistencyWriterSupplier phandlerSupply) {
+    super.init(phandlerSupply);
 
     /* Load the Codebook. */
     this.assignment = UtilIO.load(CODEBOOK_FOLDER + this.codebook());
   }
 
   /**
-   * Initializer for Retrieval - must load the codebook.selectorSupply
+   * Initializer for Retrieval - must load the codebook.
    */
   @Override
   public final void init(DBSelectorSupplier selectorSupply) {

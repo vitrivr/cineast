@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.util.json;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,7 +44,28 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     MAPPER.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     MAPPER.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
     MAPPER.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-    MAPPER.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
+    MAPPER.enable(JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS.mappedFeature());
+  }
+
+  private static void logIOExceptionOfRead(IOException e, String jsonString) {
+    logIOExceptionOfReadWithMessage(e, "string '" + jsonString + "'");
+  }
+
+  private static void logIOExceptionOfRead(IOException e, File jsonFile) {
+    logIOExceptionOfReadWithMessage(e, "file '" + jsonFile + "'");
+  }
+
+  private static void logIOExceptionOfReadWithMessage(IOException e, String jsonTypeMessage) {
+    if (e instanceof JsonParseException) {
+      LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof JsonMappingException) {
+      LOGGER.error("Could not map JSON {} to POJO. Please check your object definitions.\n{}",
+          jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof FileNotFoundException) {
+      LOGGER.warn("Could not find JSON {}", jsonTypeMessage);
+    } else {
+      LOGGER.error("Could not read JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
+    }
   }
 
   @Override
@@ -85,27 +107,6 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     } catch (IOException e) {
       logIOExceptionOfRead(e, json.toFile());
       return null;
-    }
-  }
-
-  private static void logIOExceptionOfRead(IOException e, String jsonString) {
-    logIOExceptionOfReadWithMessage(e, "string '" + jsonString + "'");
-  }
-
-  private static void logIOExceptionOfRead(IOException e, File jsonFile) {
-    logIOExceptionOfReadWithMessage(e, "file '" + jsonFile + "'");
-  }
-
-  private static void logIOExceptionOfReadWithMessage(IOException e, String jsonTypeMessage) {
-    if (e instanceof JsonParseException) {
-      LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
-    } else if (e instanceof JsonMappingException) {
-      LOGGER.error("Could not map JSON {} to POJO. Please check your object definitions.\n{}",
-          jsonTypeMessage, LogHelper.getStackTrace(e));
-    } else if (e instanceof FileNotFoundException) {
-      LOGGER.warn("Could not find JSON {}", jsonTypeMessage);
-    } else {
-      LOGGER.error("Could not read JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
     }
   }
 

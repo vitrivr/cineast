@@ -22,10 +22,9 @@ public class RepresentativeFrameExporter implements Extractor {
 
   private static final String PROPERTY_NAME_DESTINATION = "destination";
   private static final Logger LOGGER = LogManager.getLogger();
-
+  private final File folder;
   @SuppressWarnings("rawtypes")
   private PersistencyWriter phandler;
-  private final File folder;
 
 
   /**
@@ -51,7 +50,7 @@ public class RepresentativeFrameExporter implements Extractor {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
+  public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();
     this.phandler.open("cineast_representativeframes");
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame");

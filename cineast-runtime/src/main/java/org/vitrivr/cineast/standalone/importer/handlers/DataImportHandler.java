@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWrapper;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition;
@@ -25,6 +25,36 @@ import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 public abstract class DataImportHandler {
 
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  /**
+   * ExecutorService used for execution of the {@link DataImportRunner}.
+   */
+  protected final ExecutorService service;
+  /**
+   * Size of data batches (i.e. number if tuples) that are sent to the persistence layer.
+   */
+  protected final int batchSize;
+  /**
+   *
+   */
+  protected final ArrayList<Future<?>> futures = new ArrayList<>();
+  /**
+   * Number of threads to use for data import.
+   */
+  protected int numberOfThreads;
+
+  /**
+   * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
+   *
+   * @param threads   Number of threads to use for data import.
+   * @param batchSize Size of data batches that are sent to the persistence layer.
+   */
+  public DataImportHandler(int threads, int batchSize) {
+    this.service = Executors.newFixedThreadPool(threads);
+    this.batchSize = batchSize;
+    this.numberOfThreads = threads;
+  }
+
   /**
    * Drops the entity if called. This is in order to have clean imports.
    *
@@ -36,11 +66,11 @@ public abstract class DataImportHandler {
     /* Beware, this drops the table */
     CreateEntity createEntity = null;
     CottontailWrapper cottontail = null;
-    if (Config.sharedConfig().getDatabase().getSelector() != DatabaseConfig.Selector.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DatabaseConfig.Writer.COTTONTAIL) {
+    if (Config.sharedConfig().getDatabase().getSelector() != DataSource.COTTONTAIL || Config.sharedConfig().getDatabase().getWriter() != DataSource.COTTONTAIL) {
       LOGGER.warn("Other database than Cottontail DB in use. Using inconvenient database restore");
     } else {
       LOGGER.info("Storing entity ({}) details for re-setup", entityName);
-      cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase(), false);
+      cottontail = new CottontailWrapper(Config.sharedConfig().getDatabase().getHost(), Config.sharedConfig().getDatabase().getPort());
       //entityDefinition = cottontail.entityDetailsBlocking(CottontailMessageBuilder.entity(entityName));
     }
     LOGGER.info("{} - Dropping table for entity {}...", taskName, entityName);
@@ -51,8 +81,8 @@ public abstract class DataImportHandler {
       DatabaseSetupCommand setupCmd = new DatabaseSetupCommand();
       setupCmd.doSetup();
     } else {
-      cottontail.client.create(createEntity, null);
-      LOGGER.info("Re-created entity: {}", createEntity.getBuilder().getDefinition().getEntity().getName());
+      cottontail.client.create(createEntity);
+      LOGGER.info("Re-created entity: {}", entityName);
     }
   }
 
@@ -70,6 +100,39 @@ public abstract class DataImportHandler {
     }
   }
 
+  public abstract void doImport(Path path);
+
+  /**
+   * Awaits completion of the individual Futures. This method blocks until all Futures have been completed.
+   */
+  public void waitForCompletion() {
+    this.futures.removeIf(f -> {
+      try {
+        Object o = f.get();
+        if (o == null) {
+          return true;
+        }
+        LOGGER.warn("Future returned {}, still returning true", o);
+        return true;
+      } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+        LOGGER.error("Execution of one of the tasks could not be completed!");
+        return true;
+      }
+    });
+    try {
+      this.futures.forEach(future -> {
+        LOGGER.warn("A future is still present, this should not be happening.");
+      });
+      LOGGER.info("Shutting down threadpool for {}", this.getClass().getSimpleName());
+      this.service.shutdown();
+      LOGGER.info("Awaiting termination {}", this.getClass().getSimpleName());
+      this.service.awaitTermination(30, TimeUnit.SECONDS);
+      LOGGER.info("Service terminated {}", this.getClass().getSimpleName());
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * This inner class implements the runnable that actually executes the copy operation.
@@ -86,14 +149,9 @@ public abstract class DataImportHandler {
      */
     private final Importer<?> importer;
     /**
-     * A -possibly- human readable name for the import task
+     * A -possibly- human-readable name for the import task
      */
     private final String taskName;
-
-    /**
-     * Whether or not the table of the entity to import should be dropped beforehand. Basically, if this is true: its a TRUNCATE_EXISTING write, otherwise it's an APPEND write
-     */
-    private final boolean clean;
 
     /**
      * Creates a new {@link DataImportRunner} to run the import of the specified {@link Importer}. If specified, drops the entity's table beforehand.
@@ -107,7 +165,6 @@ public abstract class DataImportHandler {
       this.entityName = entityName;
       this.importer = importer;
       this.taskName = taskName;
-      this.clean = clean;
       if (clean) {
         cleanOnDemand(this.entityName, this.taskName);
       }
@@ -149,7 +206,7 @@ public abstract class DataImportHandler {
         long start = System.currentTimeMillis();
         final Copier copier = new Copier(this.entityName, this.importer);
         LOGGER.info("Starting import on entity: {} with importer {}, task {}...", this.entityName, this.importer.getClass().getSimpleName(), taskName);
-        copier.copyBatched(DataImportHandler.this.batchsize);
+        copier.copyBatched(DataImportHandler.this.batchSize);
         copier.close();
         LOGGER.info("Completed import of entity: {}, task {}", this.entityName, taskName);
         long stop = System.currentTimeMillis();
@@ -158,71 +215,6 @@ public abstract class DataImportHandler {
       } catch (Exception e) {
         LOGGER.error("Error for task {} while copying data for '{}': {}", taskName, this.entityName, LogHelper.getStackTrace(e));
       }
-    }
-  }
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  /**
-   * ExecutorService used for execution of the {@link DataImportRunner}.
-   */
-  protected final ExecutorService service;
-
-  /**
-   * Size of data batches (i.e. number if tuples) that are sent to the persistence layer.
-   */
-  protected final int batchsize;
-
-  protected int numberOfThreads;
-
-  /**
-   *
-   */
-  protected final ArrayList<Future<?>> futures = new ArrayList<>();
-
-  /**
-   * Constructor; creates a new DataImportHandler with specified number of threads and batchsize.
-   *
-   * @param threads   Number of threads to use for data import.
-   * @param batchsize Size of data batches that are sent to the persistence layer.
-   */
-  public DataImportHandler(int threads, int batchsize) {
-    this.service = Executors.newFixedThreadPool(threads);
-    this.batchsize = batchsize;
-    this.numberOfThreads = threads;
-  }
-
-  public abstract void doImport(Path path);
-
-  /**
-   * Awaits completion of the individual Futures. This method blocks until all Futures have been completed.
-   */
-  public void waitForCompletion() {
-    this.futures.removeIf(f -> {
-      try {
-        Object o = f.get();
-        if (o == null) {
-          return true;
-        }
-        LOGGER.warn("Future returned {}, still returning true", o);
-        return true;
-      } catch (InterruptedException | ExecutionException e) {
-        e.printStackTrace();
-        LOGGER.error("Execution of one of the tasks could not be completed!");
-        return true;
-      }
-    });
-    try {
-      this.futures.forEach(future -> {
-        LOGGER.warn("A future is still present, this should not be happening.");
-      });
-      LOGGER.info("Shutting down threadpool for {}", this.getClass().getSimpleName());
-      this.service.shutdown();
-      LOGGER.info("Awaiting termination {}", this.getClass().getSimpleName());
-      this.service.awaitTermination(30, TimeUnit.SECONDS);
-      LOGGER.info("Service terminated {}", this.getClass().getSimpleName());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 }

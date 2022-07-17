@@ -11,9 +11,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,50 +44,66 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class DBIntegrationTest<R> {
 
-  private DBSelector selector;
-  private String testTextTableName;
-  private String testVectorTableName;
-  private PersistencyWriter<R> writer;
-  private EntityCreator ec;
-  private QueryConfig queryConfig;
-  private static final String ID_COL_NAME = "id";
-  private static final int VECTOR_ELEMENT_COUNT = 11;
-  private static final int MAX_VECTOR_ID = 10;
-  private static final int TEXT_ELEMENT_COUNT = 8;
-  private static final int MAX_TEXT_ID = 7;
+  protected static final String ID_COL_NAME = "id";
+  protected static final int VECTOR_ELEMENT_COUNT = 110;
+  protected static final int MAX_VECTOR_ID = VECTOR_ELEMENT_COUNT - 1;
+  protected static final int TEXT_ELEMENT_COUNT = 8;
+  protected static final int MAX_TEXT_ID = TEXT_ELEMENT_COUNT - 1;
+  private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
+  private static final int HELLA_WORLD_ID = MAX_TEXT_ID - 6;
+  private static final int SINGLE_ID = MAX_TEXT_ID - 5;
+  private static final int DOUBLE_ID = MAX_TEXT_ID - 4;
+  private static final int DUPLICATE_ID = MAX_TEXT_ID - 4;
+  private static final int HELLO_ID = MAX_TEXT_ID - 3;
+  private static final int WORLD_ID = MAX_TEXT_ID - 2;
+  private static final int HELLO_WORLD_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
   /**
    * This is not called "feature" by design as it avoid the storage-layers doing optimization by col name
    */
-  private static final String FEATURE_VECTOR_COL_NAME = "vector";
-  private static final String TEXT_COL_NAME = "text";
-  private static final Logger LOGGER = LogManager.getLogger();
-
+  protected static final String FEATURE_VECTOR_COL_NAME = "vector";
+  protected static final String TEXT_COL_NAME = "text";
+  protected static final Logger LOGGER = LogManager.getLogger();
+  protected DBSelector selector;
+  protected String testTextTableName;
+  protected String testVectorTableName;
+  protected PersistencyWriter<R> writer;
+  protected EntityCreator ec;
+  protected QueryConfig queryConfig;
   private IntegrationDBProvider<R> provider;
 
   @BeforeAll
   void checkConnection() {
     provider = provider();
+    assumeTrue(provider != null);
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
-    LOGGER.info("Connection to Database established");
-  }
-
-  @BeforeEach
-  void setupTest() {
-    provider = provider();
-    selector = provider.getSelector();
-    assumeTrue(selector.ping(), "Connection to database could not be established");
+    LOGGER.info("Connection to database established");
     writer = provider.getPersistencyWriter();
     ec = provider.getEntityCreator();
     testTextTableName = getTestTextTableName();
     testVectorTableName = getTestVectorTableName();
     queryConfig = getQueryConfig();
+  }
+
+  @BeforeEach
+  void setupTest() {
+    assumeTrue(provider != null);
     dropTables();
     createTables();
     fillVectorData();
     fillTextData();
     finishSetup();
+  }
+
+  @AfterEach
+  void tearDownTest() {
+    dropTables();
+  }
+
+  @AfterAll
+  void tearDownAll() {
+    CineastIOUtils.closeQuietly(this.provider);
   }
 
   protected abstract void finishSetup();
@@ -98,34 +116,18 @@ public abstract class DBIntegrationTest<R> {
 
   protected abstract IntegrationDBProvider<R> provider();
 
-  @AfterEach
-  void tearDownTest() {
-    CineastIOUtils.closeQuietly(writer, selector);
-    dropTables();
-    CineastIOUtils.closeQuietly(ec);
-  }
-
-  private static final int HELLO_WORLD_ID = MAX_TEXT_ID - 7;
-  private static final int HELLA_WORLD_ID = MAX_TEXT_ID - 6;
-  private static final int SINGLE_ID = MAX_TEXT_ID - 5;
-  private static final int DOUBLE_ID = MAX_TEXT_ID - 4;
-  private static final int DUPLICATE_ID = MAX_TEXT_ID - 4;
-  private static final int HELLO_ID = MAX_TEXT_ID - 3;
-  private static final int WORLD_ID = MAX_TEXT_ID - 2;
-  private static final int HELLO_WORLD_MY_NAME_IS_CINEAST_ID = MAX_TEXT_ID - 1;
-
   protected void fillTextData() {
     writer.open(testTextTableName);
     writer.setFieldNames("id", "text");
     List<PersistentTuple> vectors = new ArrayList<>();
-    vectors.add(writer.generateTuple(HELLO_WORLD_ID, "hello world"));
-    vectors.add(writer.generateTuple(HELLA_WORLD_ID, "hella world"));
-    vectors.add(writer.generateTuple(SINGLE_ID, "single"));
-    vectors.add(writer.generateTuple(DOUBLE_ID, "double"));
-    vectors.add(writer.generateTuple(HELLO_ID, "hello"));
-    vectors.add(writer.generateTuple(DUPLICATE_ID, "duplicate"));
-    vectors.add(writer.generateTuple(WORLD_ID, "world"));
-    vectors.add(writer.generateTuple(HELLO_WORLD_MY_NAME_IS_CINEAST_ID, "hello world my name is cineast"));
+    vectors.add(writer.generateTuple(String.valueOf(HELLO_WORLD_ID), "hello world"));
+    vectors.add(writer.generateTuple(String.valueOf(HELLA_WORLD_ID), "hella world"));
+    vectors.add(writer.generateTuple(String.valueOf(SINGLE_ID), "single"));
+    vectors.add(writer.generateTuple(String.valueOf(DOUBLE_ID), "double"));
+    vectors.add(writer.generateTuple(String.valueOf(HELLO_ID), "hello"));
+    vectors.add(writer.generateTuple(String.valueOf(DUPLICATE_ID), "duplicate"));
+    vectors.add(writer.generateTuple(String.valueOf(WORLD_ID), "world"));
+    vectors.add(writer.generateTuple(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID), "hello world my name is cineast"));
     writer.persist(vectors);
   }
 
@@ -142,19 +144,23 @@ public abstract class DBIntegrationTest<R> {
       vector[0] = i;
       vector[1] = 1;
       vector[2] = 0;
-      vectors.add(writer.generateTuple(i, vector));
+      vectors.add(writer.generateTuple(toId(i), vector));
     }
-    /** We write a second vector with the same id in the db */
-    vectors.add(writer.generateTuple(0, new float[]{0, 0, 0}));
+    /* We write a second vector with the same id in the db */
+    vectors.add(writer.generateTuple(toId(0), new float[]{0, 0, 0}));
     writer.persist(vectors);
+  }
+
+  private String toId(int id) {
+    return String.format("%05d", id);
   }
 
   /**
    * Create both a table for vector retrieval & text retrieval
    */
   protected void createTables() {
-    ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.INT), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
-    ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.LONG), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));
+    this.ec.createEntity(testTextTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(TEXT_COL_NAME, AttributeType.TEXT));
+    this.ec.createEntity(testVectorTableName, new AttributeDefinition(ID_COL_NAME, AttributeType.STRING), new AttributeDefinition(FEATURE_VECTOR_COL_NAME, AttributeType.VECTOR, 3));
   }
 
   protected void dropTables() {
@@ -194,8 +200,8 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
-  @DisplayName("Verify element count")
-  void count() {
+  @DisplayName("Verify element count using getAll()")
+  void countGetAll() {
     selector.open(testVectorTableName);
     Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.getAll().size());
     selector.open(testTextTableName);
@@ -203,13 +209,22 @@ public abstract class DBIntegrationTest<R> {
   }
 
   @Test
+  @DisplayName("Verify element count using rowCount()")
+  void countRowCount() {
+    selector.open(testVectorTableName);
+    Assertions.assertEquals(VECTOR_ELEMENT_COUNT, selector.rowCount());
+    selector.open(testTextTableName);
+    Assertions.assertEquals(TEXT_ELEMENT_COUNT, selector.rowCount());
+  }
+
+  @Test
   @DisplayName("Verify elements exist by id")
   void entriesExistById() {
-    writer.open(testVectorTableName);
+    this.writer.open(testVectorTableName);
     for (int i = 0; i < MAX_VECTOR_ID; i++) {
-      Assertions.assertTrue(writer.idExists(String.valueOf(i)));
+      Assertions.assertTrue(writer.idExists(toId(i)));
     }
-    writer.open(testTextTableName);
+    this.writer.open(testTextTableName);
     for (int i = 0; i < MAX_TEXT_ID; i++) {
       Assertions.assertTrue(writer.idExists(String.valueOf(i)));
     }
@@ -219,8 +234,8 @@ public abstract class DBIntegrationTest<R> {
   @Test
   @DisplayName("get multiple feature vectors")
   void getFeatureVectors() {
-    selector.open(testVectorTableName);
-    List<PrimitiveTypeProvider> vectors = selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider("0"), FEATURE_VECTOR_COL_NAME);
+    this.selector.open(testVectorTableName);
+    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider(toId(0)), FEATURE_VECTOR_COL_NAME, queryConfig);
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }
@@ -231,13 +246,36 @@ public abstract class DBIntegrationTest<R> {
     selector.open(testVectorTableName);
     List<SegmentDistanceElement> result = selector.getNearestNeighboursGeneric(3, new float[]{1, 1, 0}, FEATURE_VECTOR_COL_NAME, SegmentDistanceElement.class, queryConfig);
     Assertions.assertEquals(3, result.size());
-    Assertions.assertEquals("1", result.get(0).getSegmentId());
-    Assertions.assertTrue(result.get(1).getSegmentId().equals("2") || result.get(2).getSegmentId().equals("2"));
-    Assertions.assertTrue(result.get(1).getSegmentId().equals("0") || result.get(2).getSegmentId().equals("0"));
+    Assertions.assertEquals(toId(1), result.get(0).getSegmentId());
+    Assertions.assertTrue(result.get(1).getSegmentId().equals(toId(2)) || result.get(2).getSegmentId().equals(toId(2)));
+    Assertions.assertTrue(result.get(1).getSegmentId().equals(toId(0)) || result.get(2).getSegmentId().equals(toId(0)));
   }
 
   @Test
-  @Disabled /* TODO: Currently not supported in Cottontail DB v0.12.0. Re-activate, once support is back. */
+  @DisplayName("Get all skip limit")
+  void getAllSkip() {
+    selector.open(testVectorTableName);
+    int limit = 10;
+    IntStream.range(0, 3).forEach(i -> {
+      List<Map<String, PrimitiveTypeProvider>> all = selector.getAll(ID_COL_NAME, i, limit);
+      Assertions.assertEquals(all.size(), limit);
+      all.forEach(el -> {
+        Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) >= i - 1, "id " + el.get(ID_COL_NAME).getString() + " was smaller than " + i);
+        // we use <= for 0 because there are two elements with id 0 in the table
+        if (i == 0 || i == 1) {
+          Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) <= i + limit, "id " + el.get(ID_COL_NAME).getString() + " was larger than " + (i + limit));
+        } else {
+          Assertions.assertTrue(Integer.parseInt(el.get(ID_COL_NAME).getString()) < i + limit, "id " + el.get(ID_COL_NAME).getString() + " was larger than " + (i + limit));
+        }
+      });
+    });
+  }
+
+  /**
+   * TODO: Currently not supported in Cottontail DB v0.12.0. Re-activate, once support is back.
+   */
+  @Test
+  @Disabled
   @DisplayName("Batched KNN search")
   void batchedKnnSearch() {
     selector.open(testVectorTableName);
@@ -285,13 +323,13 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el, no quotes")
-  void textRetrievalSingleLike() {
+  public void textRetrievalSingleLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello");
     Assertions.assertEquals(3, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID)));
   }
 
   /**
@@ -299,11 +337,11 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: two words, inverted, no quotes")
-  void textRetrievalSingleTwoWordsLike() {
+  public void textRetrievalSingleTwoWordsLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "name my");
     Assertions.assertEquals(1, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID)));
   }
 
 
@@ -312,12 +350,12 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el (two words), quotes")
-  void textRetrievalSingleTwoWordsQuotedLike() {
+  public void textRetrievalSingleTwoWordsQuotedLike() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "\"hello world\"");
     Assertions.assertEquals(2, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID)));
   }
 
   /**
@@ -325,50 +363,50 @@ public abstract class DBIntegrationTest<R> {
    */
   @Test
   @DisplayName("Text: One el, one word, Fuzzy")
-  void testRetrievalSingleFuzzy() {
+  public void testRetrievalSingleFuzzy() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "hello~1");
     Assertions.assertEquals(4, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLA_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID)));
   }
 
+  /**
+   * TODO: Fuzzy search on whole phrases is currently not supported.
+   * <p>
+   * Something like "hello world"~1 would need to be implemented as either hello~1 AND world~1, but that is not implemented in the DBSelector / cottontail.
+   * The cottontail implementation in december 19 parses hello world~1 as hello .. world~1, which is not what we're looking for
+   * Therefore, this test serves as a note that this functionality is lacking.
+   */
   @Test
   @DisplayName("Text: One el (Two words), Fuzzy")
+  @Disabled
   void testRetrievalSingleTwoWordsFuzzy() {
-    /*
-     * Fuzzy search on whole phrases is currently not supported.
-     * Something like "hello world"~1 would need to be implemented as either hello~1 AND world~1, but that is not implemented in the DBSelector / cottontail.
-     * The cottontail implementation in december 19 parses hello world~1 as hello .. world~1, which is not what we're looking for
-     * Therefore, this test serves as a note that this functionality is lacking.
-     */
-    return;
+    Assertions.fail();
   }
-
 
   /**
    * Verify that searching for two terms retrieves both individual results
    */
   @Test
   @DisplayName("Text: Two elements w/ single word")
-  void testRetrievalTwo() {
+  public void testRetrievalTwo() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "single", "double");
     Assertions.assertEquals(2, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(SINGLE_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(DOUBLE_ID)));
   }
 
   @Test
   @DisplayName("Text: Three elements, two are a match for the same id")
-  void testRetrievalThreeDouble() {
+  public void testRetrievalThreeDouble() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "double", "single", "duplicate");
     Assertions.assertEquals(3, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(DOUBLE_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(SINGLE_ID)));
     float score = results.get(0).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat();
     Assertions.assertEquals(score, results.get(1).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
     Assertions.assertEquals(score, results.get(2).get(DB_DISTANCE_VALUE_QUALIFIER).getFloat(), 0.01);
@@ -376,14 +414,14 @@ public abstract class DBIntegrationTest<R> {
 
   @Test
   @DisplayName("Text: Three els, one of those with quotes")
-  void testRetrievalThree() {
+  public void testRetrievalThree() {
     selector.open(testTextTableName);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getFulltextRows(10, TEXT_COL_NAME, queryConfig, "single", "double", "\"hello world\"");
     Assertions.assertEquals(4, results.size());
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == SINGLE_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == DOUBLE_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_ID);
-    checkContains(results, ID_COL_NAME, val -> val.getInt() == HELLO_WORLD_MY_NAME_IS_CINEAST_ID);
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(SINGLE_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(DOUBLE_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_ID)));
+    checkContains(results, ID_COL_NAME, val -> val.getString().equals(String.valueOf(HELLO_WORLD_MY_NAME_IS_CINEAST_ID)));
   }
 
 }

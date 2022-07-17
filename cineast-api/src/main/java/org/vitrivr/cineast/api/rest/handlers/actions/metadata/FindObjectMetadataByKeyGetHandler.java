@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.KEY_NAME;
 import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.OBJECT_ID_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.KEY_NAME;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;

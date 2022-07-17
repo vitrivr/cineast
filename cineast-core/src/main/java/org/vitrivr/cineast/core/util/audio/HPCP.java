@@ -22,54 +22,25 @@ import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 public class HPCP {
 
   /**
-   * Defines the resolution of the HPCP (full semitones, 1/2 semitones or 1/3 semitones).
-   */
-  public enum Resolution {
-    FULLSEMITONE(12),
-    HALFSEMITONE(24),
-    THIRDSEMITON(36);
-
-    public final int bins;
-
-    Resolution(int bins) {
-      this.bins = bins;
-    }
-  }
-
-  /**
    * Window-size parameter, which defaults to 4/3 semitones as per [1].
    */
   private static final float WINDOW = 4f / 3f;
-
   /**
    * Float array holding the HPCP data.
    */
   private final List<float[]> hpcp = new ArrayList<>();
-
   /**
    * Minimum frequency to consider. Defaults to 100Hz as per [1].
    */
   private final float minFrequency;
-
   /**
    * Maximum frequency to consider. Defaults to 5000Hz as per [1].
    */
   private final float maxFrequency;
-
   /**
    * Resolution of the HPCP.
    */
   private final Resolution resolution;
-
-  /**
-   * Calculates the center-frequency of a bin defined by its bin number. The bin numbers are defined such that bin 0 corresponds to F_REF (440 Hz). An increase of the bin number is equivalent to moving 1, 1/2 or 1/3 of a semitone up on the scale.
-   *
-   * @param n Desired bin number
-   * @return r Resolution to use (1, 1/2, or 1/3)
-   */
-  public static double binToCenterFrequency(int n, Resolution r) {
-    return MidiUtil.F_REF * Math.pow(2, ((float) n / (float) r.bins));
-  }
 
   /**
    * Default constructor. Creates an HPCP container for a full semitone, 12 entries HPCP that consider frequencies between 100Hz and 5000Hz.
@@ -89,6 +60,16 @@ public class HPCP {
     this.resolution = resolution;
     this.maxFrequency = maxFrequency;
     this.minFrequency = minFrequency;
+  }
+
+  /**
+   * Calculates the center-frequency of a bin defined by its bin number. The bin numbers are defined such that bin 0 corresponds to F_REF (440 Hz). An increase of the bin number is equivalent to moving 1, 1/2 or 1/3 of a semitone up on the scale.
+   *
+   * @param n Desired bin number
+   * @return r Resolution to use (1, 1/2, or 1/3)
+   */
+  public static double binToCenterFrequency(int n, Resolution r) {
+    return MidiUtil.F_REF * Math.pow(2, ((float) n / (float) r.bins));
   }
 
   /**
@@ -230,6 +211,21 @@ public class HPCP {
       return 0;
     } else {
       return Math.pow(Math.cos((Math.PI / 2) * (distance / (0.5 * WINDOW))), 2);
+    }
+  }
+
+  /**
+   * Defines the resolution of the HPCP (full semitones, 1/2 semitones or 1/3 semitones).
+   */
+  public enum Resolution {
+    FULLSEMITONE(12),
+    HALFSEMITONE(24),
+    THIRDSEMITON(36);
+
+    public final int bins;
+
+    Resolution(int bins) {
+      this.bins = bins;
     }
   }
 }

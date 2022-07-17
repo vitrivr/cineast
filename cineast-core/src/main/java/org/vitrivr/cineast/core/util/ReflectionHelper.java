@@ -19,13 +19,11 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 public class ReflectionHelper {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
   /**
    * Name of the package where {@link Extractor} and {@link Retriever} classes are located by default.
    */
   public static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
-
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Name of the package where {@link CodebookGenerator} classes are located by default.
    */
@@ -306,6 +304,8 @@ public class ReflectionHelper {
       targetClass = (Class<T>) c;
     } catch (UnsupportedOperationException e) {
       LOGGER.warn("'name' was not a string during class instantiation in instantiateFromJson");
+    } catch (ClassNotFoundException e) {
+      LOGGER.warn("Class {} was not found", className);
     }
     return targetClass;
   }

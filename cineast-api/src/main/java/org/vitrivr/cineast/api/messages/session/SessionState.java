@@ -9,37 +9,12 @@ import org.vitrivr.cineast.api.session.SessionType;
 
 /**
  * This object stores the session state of a session with a requester.
+ *
+ * @param id         Unique session id.
+ * @param validUntil Time until session becomes invalid.
+ * @param type       Type of the session used to determine access rights.
  */
-public class SessionState {
-
-  /**
-   * Unique ID of the session.
-   */
-  private final String id;
-
-  /**
-   * Unix time until this session becomes expired.
-   */
-  private final long validUntil;
-
-  /**
-   * Type of the session to identify the access rights of the session user. Restricted to the {@link SessionType} enum types.
-   */
-  private final SessionType type;
-
-  /**
-   * Constructor for the SessionState object.
-   *
-   * @param id         Unique session id.
-   * @param validUntil Time until session becomes invalid.
-   * @param type       Type of the session used to determine access rights.
-   */
-  @JsonCreator
-  public SessionState(@JsonProperty("id") String id, @JsonProperty("validUntil") long validUntil, @JsonProperty("type") SessionType type) {
-    this.id = id;
-    this.validUntil = validUntil;
-    this.type = type;
-  }
+public record SessionState(String id, long validUntil, SessionType type) {
 
   /**
    * Copy constructor for the SessionState object from a previously created Session.
@@ -50,20 +25,4 @@ public class SessionState {
     this(session.getSessionId(), session.getEndTimeStamp(), session.getSessionType());
   }
 
-  public String getSessionId() {
-    return this.id;
-  }
-
-  public long getValidUntil() {
-    return this.validUntil;
-  }
-
-  public SessionType getType() {
-    return this.type;
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
 }

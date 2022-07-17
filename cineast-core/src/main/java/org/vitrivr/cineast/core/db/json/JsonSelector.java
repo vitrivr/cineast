@@ -9,11 +9,11 @@ import org.vitrivr.cineast.core.importer.JsonObjectImporter;
 
 public class JsonSelector extends ImporterSelector<JsonObjectImporter> {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   public JsonSelector(File baseDirectory) {
     super(baseDirectory);
   }
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   protected JsonObjectImporter newImporter(File f) {

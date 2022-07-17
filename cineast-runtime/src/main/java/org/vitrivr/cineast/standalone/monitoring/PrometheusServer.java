@@ -16,10 +16,13 @@ import org.vitrivr.cineast.standalone.config.Config;
  */
 public class PrometheusServer {
 
-  private static boolean initalized = false;
   private static final Logger LOGGER = LogManager.getLogger();
-  private static Optional<Server> server = Optional.empty();
   private static final Semaphore lock = new Semaphore(1);
+  private static boolean initalized = false;
+  private static Optional<Server> server = Optional.empty();
+
+  private PrometheusServer() {
+  }
 
   public static synchronized void initialize() {
     if (!lock.tryAcquire()) {
@@ -32,7 +35,7 @@ public class PrometheusServer {
       return;
     }
     if (!Config.sharedConfig().getMonitoring().enablePrometheus) {
-      LOGGER.info("Prometheus monitoring not enabled");
+      LOGGER.trace("Prometheus monitoring not enabled");
       lock.release();
       return;
     }
@@ -70,9 +73,6 @@ public class PrometheusServer {
 
   public static Optional<Server> getServer() {
     return server;
-  }
-
-  private PrometheusServer() {
   }
 
 }

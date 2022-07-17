@@ -27,12 +27,29 @@ public class Main {
       }
     }
 
-    /* Start Cineast API endpoint. */
-    APIEndpoint.getInstance().start();
-    GRPCEndpoint.start();
+    /* Start API endpoint. */
+    try {
+      APIEndpoint.getInstance().start();
+    } catch (Throwable e) {
+      e.printStackTrace();
+      System.err.println("Failed to initialize API endpoint due to an exception: " + e.getMessage());
+    }
 
-    /* Initalize Monitoring */
-    PrometheusServer.initialize();
+    /* Start gRPC endpoint. */
+    try {
+      GRPCEndpoint.start();
+    } catch (Throwable e) {
+      e.printStackTrace();
+      System.err.println("Failed to initialize gRPC endpoint due to an exception: " + e.getMessage());
+    }
+
+    /* Initialize Monitoring */
+    try {
+      PrometheusServer.initialize();
+    } catch (Throwable e) {
+      e.printStackTrace();
+      System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
+    }
 
     /* Start Cineast CLI in interactive mode (blocking). */
     CLI.start(CineastCli.class);

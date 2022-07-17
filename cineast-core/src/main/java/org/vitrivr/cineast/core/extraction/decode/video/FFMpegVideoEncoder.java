@@ -1,24 +1,25 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import static org.bytedeco.javacpp.avcodec.AV_CODEC_ID_NONE;
-import static org.bytedeco.javacpp.avformat.AVFMT_NOFILE;
-import static org.bytedeco.javacpp.avformat.AVIOContext;
-import static org.bytedeco.javacpp.avformat.AVIO_FLAG_WRITE;
-import static org.bytedeco.javacpp.avformat.av_dump_format;
-import static org.bytedeco.javacpp.avformat.av_write_trailer;
-import static org.bytedeco.javacpp.avformat.avformat_alloc_output_context2;
-import static org.bytedeco.javacpp.avformat.avformat_free_context;
-import static org.bytedeco.javacpp.avformat.avformat_write_header;
-import static org.bytedeco.javacpp.avformat.avio_closep;
-import static org.bytedeco.javacpp.avformat.avio_open;
-import static org.bytedeco.javacpp.avutil.AVDictionary;
-import static org.bytedeco.javacpp.avutil.av_compare_ts;
+import static org.bytedeco.ffmpeg.global.avcodec.AV_CODEC_ID_NONE;
+import static org.bytedeco.ffmpeg.global.avformat.AVFMT_NOFILE;
+import static org.bytedeco.ffmpeg.global.avformat.AVIO_FLAG_WRITE;
+import static org.bytedeco.ffmpeg.global.avformat.av_dump_format;
+import static org.bytedeco.ffmpeg.global.avformat.av_write_trailer;
+import static org.bytedeco.ffmpeg.global.avformat.avformat_alloc_output_context2;
+import static org.bytedeco.ffmpeg.global.avformat.avformat_free_context;
+import static org.bytedeco.ffmpeg.global.avformat.avformat_write_header;
+import static org.bytedeco.ffmpeg.global.avformat.avio_closep;
+import static org.bytedeco.ffmpeg.global.avformat.avio_open;
+import static org.bytedeco.ffmpeg.global.avutil.av_compare_ts;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.avformat;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avformat.AVIOContext;
+import org.bytedeco.ffmpeg.avformat.AVOutputFormat;
+import org.bytedeco.ffmpeg.avutil.AVDictionary;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
@@ -29,18 +30,14 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 public class FFMpegVideoEncoder {
 
   private static final Logger LOGGER = LogManager.getLogger();
-
+  private final AVFormatContext oc = new AVFormatContext();
+  private final Queue<MultiImage> imageQueue = new LinkedList<>();
+  private final Queue<AudioFrame> audioQueue = new LinkedList<>();
+  private final boolean useAudio;
   private AudioFrame tmpFrame = null;
-
   private VideoOutputStreamContainer video_st = null;
   private AudioOutputStreamContainer audio_st = null;
-  private avformat.AVOutputFormat fmt;
-  private avformat.AVFormatContext oc = new avformat.AVFormatContext();
-
-  private Queue<MultiImage> imageQueue = new LinkedList<>();
-  private Queue<AudioFrame> audioQueue = new LinkedList<>();
-
-  private boolean useAudio = false;
+  private AVOutputFormat fmt;
 
   public FFMpegVideoEncoder(int width, int height, float frameRate, int sampleRate, String filename, boolean useAudio) {
 

@@ -30,19 +30,19 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
   @Override
   public void execute(Session session, QueryConfig qconf, SegmentQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
     /* Prepare QueryConfig (so as to obtain a QueryId). */
-    final String uuid = qconf.getQueryId().toString();
+    final String uuid = qconf.getQueryId();
 
     /* Retrieve segments; if empty, abort query. */
     final List<String> segmentId = new ArrayList<>(0);
-    segmentId.add(message.getSegmentId());
-    final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentId);
+    segmentId.add(message.segmentId());
+    final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentId, uuid);
     if (segment.isEmpty()) {
       return;
     }
 
     /* Retrieve media objects; if empty, abort query. */
     final List<String> objectId = segment.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-    final List<MediaObjectDescriptor> object = this.loadObjects(objectId);
+    final List<MediaObjectDescriptor> object = this.loadObjects(objectId, uuid);
     if (object.isEmpty()) {
       return;
     }
@@ -55,8 +55,8 @@ public class SegmentQueryMessageHandler extends AbstractQueryMessageHandler<Segm
     futures.add(this.write(session, new MediaObjectQueryResult(uuid, object)));
 
     /* Load and transmit segment & object metadata. */
-    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
-    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched, message.getMetadataAccessSpec()));
+    threads.addAll(this.loadAndWriteSegmentMetadata(session, uuid, segmentId, segmentIdsForWhichMetadataIsFetched, message.metadataAccessSpec()));
+    threads.addAll(this.loadAndWriteObjectMetadata(session, uuid, objectId, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec()));
     for (Thread thread : threads) {
       thread.join();
     }

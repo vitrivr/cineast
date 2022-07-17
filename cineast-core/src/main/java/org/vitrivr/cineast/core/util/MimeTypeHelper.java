@@ -6,9 +6,6 @@ import java.util.HashMap;
 
 public final class MimeTypeHelper {
 
-  private MimeTypeHelper() {
-  }
-
   private static final HashMap<String, String> FILETYPES;
 
   static {
@@ -38,6 +35,7 @@ public final class MimeTypeHelper {
     FILETYPES.put("jpg", "image/jpeg");
     FILETYPES.put("jpeg", "image/jpeg");
     FILETYPES.put("jpe", "image/jpeg");
+    FILETYPES.put("jp2", "image/jp2");
     FILETYPES.put("png", "image/png");
     FILETYPES.put("tif", "image/tiff");
     FILETYPES.put("tiff", "image/tiff");
@@ -59,6 +57,9 @@ public final class MimeTypeHelper {
     FILETYPES.put("stl", "application/3d-stl");
     FILETYPES.put("obj", "application/3d-obj");
     FILETYPES.put("off", "application/3d-off");
+  }
+
+  private MimeTypeHelper() {
   }
 
   public static String getContentType(File file) {

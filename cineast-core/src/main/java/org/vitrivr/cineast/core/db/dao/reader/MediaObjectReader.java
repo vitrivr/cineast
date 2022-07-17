@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
@@ -13,10 +16,16 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
 public class MediaObjectReader extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
+
+  private static final Cache<String, MediaObjectDescriptor> objectCache = CacheBuilder.newBuilder()
+      .maximumSize(100_000)
+      .expireAfterWrite(10, TimeUnit.MINUTES)
+      .build(); //TODO make configurable
 
   /**
    * Constructor for MediaObjectReader
@@ -60,7 +69,11 @@ public class MediaObjectReader extends AbstractEntityReader {
       return new MediaObjectDescriptor();
     }
 
-    return new MediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
+    MediaObjectDescriptor descriptor = new MediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
+
+    objectCache.put(descriptor.getObjectId(), descriptor);
+
+    return descriptor;
 
   }
 
@@ -80,6 +93,7 @@ public class MediaObjectReader extends AbstractEntityReader {
   }
 
   public MediaObjectDescriptor lookUpObjectByName(String name) {
+
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MediaObjectDescriptor.FIELDNAMES[2], new StringTypeProvider(name));
 
     if (result.isEmpty()) {
@@ -99,24 +113,59 @@ public class MediaObjectReader extends AbstractEntityReader {
     return mapToDescriptor(result.get(0));
   }
 
-  public Map<String, MediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds) {
+  public Map<String, MediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds, String queryID) {
     if (videoIds == null) {
       return new HashMap<>();
     }
 
+    ArrayList<String> notCached = new ArrayList<>();
     HashMap<String, MediaObjectDescriptor> _return = new HashMap<>();
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Lists.newArrayList(videoIds));
-    results.forEach(el -> {
-      MediaObjectDescriptor d = mapToDescriptor(el);
-      _return.put(d.getObjectId(), d);
+
+    videoIds.forEach(id -> {
+      MediaObjectDescriptor cached = objectCache.getIfPresent(id);
+      if (cached != null) {
+        _return.put(cached.getObjectId(), cached);
+      } else {
+        notCached.add(id);
+      }
     });
 
-    return _return;
+    if (!notCached.isEmpty()) {
 
+      String dbQueryID = DBQueryIDGenerator.generateQueryID("load-obj", queryID);
+
+      List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Lists.newArrayList(videoIds), dbQueryID);
+      results.forEach(el -> {
+        MediaObjectDescriptor d = mapToDescriptor(el);
+        _return.put(d.getObjectId(), d);
+      });
+
+    }
+    return _return;
+  }
+
+  public Map<String, MediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds) {
+    return lookUpObjects(videoIds, null);
   }
 
   public List<MediaObjectDescriptor> getAllObjects() {
     List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
+    List<MediaObjectDescriptor> _return = new ArrayList<>(all.size());
+    for (Map<String, PrimitiveTypeProvider> map : all) {
+      _return.add(mapToDescriptor(map));
+    }
+    return _return;
+  }
+
+  /**
+   * SELECT * from mediaobjects ORDER BY id ASC LIMIT limit SKIP skip
+   *
+   * @param skip  how many objects should be skipped
+   * @param limit how many objects should be fetched
+   * @return descriptors
+   */
+  public List<MediaObjectDescriptor> getAllObjects(int skip, int limit) {
+    List<Map<String, PrimitiveTypeProvider>> all = selector.getAll(MediaObjectDescriptor.FIELDNAMES[0], skip, limit);
     List<MediaObjectDescriptor> _return = new ArrayList<>(all.size());
     for (Map<String, PrimitiveTypeProvider> map : all) {
       _return.add(mapToDescriptor(map));

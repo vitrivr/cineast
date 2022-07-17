@@ -1,12 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.metadata;
 
-import static org.vitrivr.cineast.api.rest.handlers.actions.metadata.FindObjectMetadataFullyQualifiedGetHandler.KEY_NAME;
+import static org.vitrivr.cineast.api.util.APIConstants.KEY_NAME;
 
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import java.util.ArrayList;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
@@ -16,16 +18,18 @@ import org.vitrivr.cineast.api.rest.services.MetadataRetrievalService;
 public class FindObjectMetadataByKeyPostHandler implements ParsingPostRestHandler<IdList, MediaObjectMetadataQueryResult> {
 
   public static final String ROUTE = "find/metadata/with/{" + KEY_NAME + "}";
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
-  public MediaObjectMetadataQueryResult performPost(IdList ids, Context ctx) {
+  public MediaObjectMetadataQueryResult performPost(IdList idList, Context ctx) {
     final Map<String, String> parameters = ctx.pathParamMap();
-    if (ids == null || ids.getIds().length == 0) {
+    if (idList == null || idList.ids().isEmpty()) {
+      LOGGER.warn("no ids provided, returning empty list");
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
     final String key = parameters.get(KEY_NAME);
     final MetadataRetrievalService service = new MetadataRetrievalService();
-    return new MediaObjectMetadataQueryResult("", service.findByKey(ids.getIdList(), key));
+    return new MediaObjectMetadataQueryResult("", service.findByKey(idList.ids(), key));
   }
 
   @Override

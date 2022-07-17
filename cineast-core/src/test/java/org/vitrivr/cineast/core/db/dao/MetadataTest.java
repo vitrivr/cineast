@@ -35,6 +35,9 @@ import org.vitrivr.cineast.core.util.CineastIOUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class MetadataTest<R> {
 
+  protected static final Logger LOGGER = LogManager.getLogger();
+  private static final int ELEMENT_COUNT = 8;
+  private static final int METADATA_PER_ELEMENT_COUNT = 7;
   private DBSelector objSelector;
   private DBSelector segSelector;
   private String testObjMetaTableName;
@@ -42,16 +45,10 @@ public abstract class MetadataTest<R> {
   private PersistencyWriter<R> objPersWriter;
   private PersistencyWriter<R> segPersWriter;
   private EntityCreator ec;
-  private QueryConfig queryConfig;
   private MediaObjectMetadataWriter objWriter;
   private MediaSegmentMetadataWriter segWriter;
   private MediaObjectMetadataReader objReader;
   private MediaSegmentMetadataReader segReader;
-  private static final int ELEMENT_COUNT = 8;
-  private static final int METADATA_PER_ELEMENT_COUNT = 7;
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
   private IntegrationDBProvider<R> provider;
 
   @BeforeAll
@@ -59,43 +56,56 @@ public abstract class MetadataTest<R> {
     if (ELEMENT_COUNT % 2 != 0) {
       Assertions.fail("ELEMENT_COUNT must be an even number");
     }
-    provider = provider();
-    objSelector = provider.getSelector();
-    segSelector = provider.getSelector();
-    LOGGER.info("Trying to establish connection to Database");
-    assumeTrue(objSelector.ping(), "Connection to database could not be established");
-    assumeTrue(segSelector.ping(), "Connection to database could not be established");
-    LOGGER.info("Connection to Database established");
-    // write data
-    testObjMetaTableName = getTestObjMetaTableName();
-    testSegMetaTableName = getTestSegMetaTableName();
-    objPersWriter = provider.getPersistencyWriter();
-    segPersWriter = provider.getPersistencyWriter();
-    objWriter = new MediaObjectMetadataWriter(objPersWriter, 1000, testObjMetaTableName);
-    segWriter = new MediaSegmentMetadataWriter(segPersWriter, 1000, testSegMetaTableName);
-    ec = provider.getEntityCreator();
-    dropTables();
-    createTables();
-    fillMetadata();
-    finishInitialSetup();
-    CineastIOUtils.closeQuietly(objPersWriter, segPersWriter, objWriter, segWriter);
+    this.provider = provider();
+    assumeTrue(provider != null);
+    this.testObjMetaTableName = getTestObjMetaTableName();
+    this.testSegMetaTableName = getTestSegMetaTableName();
   }
 
   @BeforeEach
   void setupTest() {
-    provider = provider();
-    objSelector = provider.getSelector();
-    segSelector = provider.getSelector();
+    assumeTrue(provider != null);
+    /* Open all readers. */
+    this.objSelector = this.provider.getSelector();
+    this.segSelector = this.provider.getSelector();
+    this.objReader = new MediaObjectMetadataReader(this.objSelector, this.testObjMetaTableName);
+    this.segReader = new MediaSegmentMetadataReader(this.segSelector, this.testSegMetaTableName);
+
+    /* Test database connection. */
+    LOGGER.info("Trying to establish connection to Database");
+    if (!objSelector.ping()) {
+      LOGGER.error("Connection to DB could not be established, failing test using assumeTrue()");
+    }
     assumeTrue(objSelector.ping(), "Connection to database could not be established");
-    assumeTrue(segSelector.ping(), "Connection to database could not be established");
-    testObjMetaTableName = getTestObjMetaTableName();
-    testSegMetaTableName = getTestSegMetaTableName();
-    objReader = new MediaObjectMetadataReader(objSelector, testObjMetaTableName);
-    segReader = new MediaSegmentMetadataReader(segSelector, testSegMetaTableName);
-    queryConfig = getQueryConfig();
+    LOGGER.info("Connection to Database established");
+
+    /* Open all writers. */
+    this.ec = provider.getEntityCreator();
+    this.objPersWriter = provider.getPersistencyWriter();
+    this.segPersWriter = provider.getPersistencyWriter();
+    this.objWriter = new MediaObjectMetadataWriter(objPersWriter, testObjMetaTableName);
+    this.segWriter = new MediaSegmentMetadataWriter(segPersWriter, testSegMetaTableName);
+
+    /* Prepare databases. */
+    dropTables();
+    createTables();
+    fillMetadata();
+    finishSetup();
   }
 
-  protected abstract void finishInitialSetup();
+  @AfterEach
+  void tearDownTest() {
+    dropTables();
+  }
+
+  @AfterAll
+  void finalTearDownTest() {
+    dropTables();
+    CineastIOUtils.closeQuietly(this.objWriter, this.segWriter, this.objReader, this.segReader);
+    CineastIOUtils.closeQuietly(this.provider);
+  }
+
+  protected abstract void finishSetup();
 
   protected QueryConfig getQueryConfig() {
     QueryConfig qc = new QueryConfig("test-" + RandomStringUtils.randomNumeric(4), new ArrayList<>());
@@ -104,17 +114,6 @@ public abstract class MetadataTest<R> {
   }
 
   protected abstract IntegrationDBProvider<R> provider();
-
-  @AfterEach
-  void tearDownTest() {
-    CineastIOUtils.closeQuietly(objSelector, segSelector, objReader, segReader);
-  }
-
-  @AfterAll
-  void finalTearDownTest() {
-    dropTables();
-    CineastIOUtils.closeQuietly(ec);
-  }
 
   protected void fillMetadata() {
     for (int i = 0; i < ELEMENT_COUNT; i++) {
@@ -209,22 +208,22 @@ public abstract class MetadataTest<R> {
       objDescriptors.addAll(objDescriptor);
       List<MediaSegmentMetadataDescriptor> segDescriptor = segMetadataForID(i);
       segDescriptors.addAll(segDescriptor);
-      Assertions.assertEquals(objDescriptor, objReader.lookupMultimediaMetadata(id));
-      Assertions.assertEquals(segDescriptor, segReader.lookupMultimediaMetadata(id));
+      Assertions.assertEquals(objDescriptor, this.objReader.lookupMultimediaMetadata(id));
+      Assertions.assertEquals(segDescriptor, this.segReader.lookupMultimediaMetadata(id));
     }
-    Assertions.assertEquals(objDescriptors, objReader.lookupMultimediaMetadata(ids));
-    Assertions.assertEquals(segDescriptors, segReader.lookupMultimediaMetadata(ids));
+    Assertions.assertEquals(objDescriptors, this.objReader.lookupMultimediaMetadata(ids));
+    Assertions.assertEquals(segDescriptors, this.segReader.lookupMultimediaMetadata(ids));
   }
 
   @Test
   @DisplayName("Find by domain")
   void findByDomain() {
-    MetadataAccessSpecification objSpec = new MetadataAccessSpecification(MetadataType.OBJECT, "one", "*");
-    MetadataAccessSpecification segSpec = new MetadataAccessSpecification(MetadataType.SEGMENT, "one", "*");
-    List<MediaObjectMetadataDescriptor> oneDomainObject = objReader.findBySpec(objSpec);
-    List<MediaSegmentMetadataDescriptor> oneDomainSegment = segReader.findBySpec(segSpec);
-    List<MediaObjectMetadataDescriptor> objDescriptors = new ArrayList<>();
-    List<MediaSegmentMetadataDescriptor> segDescriptors = new ArrayList<>();
+    final MetadataAccessSpecification objSpec = new MetadataAccessSpecification(MetadataType.OBJECT, "one", "*");
+    final MetadataAccessSpecification segSpec = new MetadataAccessSpecification(MetadataType.SEGMENT, "one", "*");
+    final List<MediaObjectMetadataDescriptor> oneDomainObject = this.objReader.findBySpec(objSpec);
+    final List<MediaSegmentMetadataDescriptor> oneDomainSegment = this.segReader.findBySpec(segSpec);
+    final List<MediaObjectMetadataDescriptor> objDescriptors = new ArrayList<>();
+    final List<MediaSegmentMetadataDescriptor> segDescriptors = new ArrayList<>();
     for (int i = 0; i < ELEMENT_COUNT / 2; i++) {
       objDescriptors.addAll(objMetadataForID(i));
       segDescriptors.addAll(segMetadataForID(i));

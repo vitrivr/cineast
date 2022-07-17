@@ -13,10 +13,10 @@ import org.vitrivr.cineast.standalone.monitoring.RetrievalTaskMonitor;
 
 public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private final Retriever retriever;
   private final AbstractQueryTermContainer query;
   private final String segmentId;
-  private static final Logger LOGGER = LogManager.getLogger();
   private final ReadableQueryConfig config;
 
 
@@ -59,7 +59,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     long stop = System.currentTimeMillis();
     RetrievalTaskMonitor.reportExecutionTime(retriever.getClass().getSimpleName(), stop - start);
     LOGGER.debug("{}.getSimilar() done in {} ms, {} results", retriever.getClass().getSimpleName(), stop - start, result.size());
-    return LOGGER.traceExit(new Pair<RetrievalTask, List<ScoreElement>>(this, result));
+    return new Pair<>(this, result);
   }
 
   private void nameThread() {

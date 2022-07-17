@@ -33,34 +33,6 @@ public class MediaObjectDescriptor implements ExistenceCheck {
   private final int mediatypeId;
   private final String contentURL;
 
-  /**
-   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
-   *
-   * @param generator ObjectIdGenerator used for ID generation.
-   * @param path      The Path that points to the file for which a new MediaObjectDescriptor should be created.
-   * @param type      MediaType of the new MediaObjectDescriptor
-   * @param lookup    MediaObjectReader to prevent the assignment of already used ids
-   * @return A new MediaObjectDescriptor
-   */
-  public static MediaObjectDescriptor newMultimediaObjectDescriptor(
-      ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
-    String objectId;
-    do {
-      objectId = generator.next(path, type);
-    } while (lookup != null && lookup.lookUpObjectById(objectId).exists());
-
-    return new MediaObjectDescriptor(objectId,
-        getFileName(path), path.toString(), type, false);
-  }
-
-  public static String cleanPath(Path path) {
-    return path.toString().replace('\\', '/');
-  }
-
-  private static String getFileName(Path path) {
-    return cleanPath(path);
-  }
-
   public MediaObjectDescriptor(Path path) {
     this(null, path.getFileName().toString().replace('\\', '/'), getFileName(path), null, false);
   }
@@ -94,7 +66,35 @@ public class MediaObjectDescriptor implements ExistenceCheck {
     // Config.sharedConfig().getApi().getObjectLocation() + path;
   }
 
-  @JsonProperty
+  /**
+   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
+   *
+   * @param generator ObjectIdGenerator used for ID generation.
+   * @param path      The Path that points to the file for which a new MediaObjectDescriptor should be created.
+   * @param type      MediaType of the new MediaObjectDescriptor
+   * @param lookup    MediaObjectReader to prevent the assignment of already used ids
+   * @return A new MediaObjectDescriptor
+   */
+  public static MediaObjectDescriptor newMultimediaObjectDescriptor(
+      ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
+    String objectId;
+    do {
+      objectId = generator.next(path, type);
+    } while (lookup != null && lookup.lookUpObjectById(objectId).exists());
+
+    return new MediaObjectDescriptor(objectId,
+        getFileName(path), path.toString(), type, false);
+  }
+
+  public static String cleanPath(Path path) {
+    return path.toString().replace('\\', '/');
+  }
+
+  private static String getFileName(Path path) {
+    return cleanPath(path);
+  }
+
+  @JsonProperty(OBJECT_ID_COLUMN_QUALIFIER)
   public final String getObjectId() {
     return objectId;
   }

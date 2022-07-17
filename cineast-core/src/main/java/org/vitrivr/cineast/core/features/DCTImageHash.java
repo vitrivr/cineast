@@ -42,8 +42,6 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   private static final DMatrixRMaj DCT_MATRIX;
   private static final DMatrixRMaj DCT_MATRIX_TRANSPOSED;
-  private SimpleBitSetWriter writer;
-
   /**
    * DCT Matrix size
    */
@@ -69,6 +67,7 @@ public class DCTImageHash extends AbstractFeatureModule {
   private final DMatrixRMaj resizedMat = new DMatrixRMaj(N, N);
   private final DMatrixRMaj intermediateMat = new DMatrixRMaj(N, N);
   private final DMatrixRMaj outputMat = new DMatrixRMaj(N, N);
+  private SimpleBitSetWriter writer;
 
   /**
    * No-args constructor for reflection
@@ -124,9 +123,9 @@ public class DCTImageHash extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
+  public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleBitSetWriter(this.phandler, batchSize, this.tableName);
+    this.writer = new SimpleBitSetWriter(this.phandler, this.tableName);
   }
 
   @Override

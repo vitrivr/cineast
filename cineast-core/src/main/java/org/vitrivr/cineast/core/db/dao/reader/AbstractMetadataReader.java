@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
 import org.vitrivr.cineast.core.db.dao.MetadataType;
+import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
 
 /**
  * Abstraction layer for segment and object metadata retrieval.
@@ -33,6 +34,14 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     this.tableName = tableName;
     this.idColName = idColName;
     this.selector.open(tableName);
+  }
+
+  public static List<String> sanitizeIds(List<String> ids) {
+    if (ids.stream().anyMatch(el -> el == null || el.isEmpty())) {
+      LOGGER.warn("provided id-list contains null or empty elements which will be ignored");
+      ids = ids.stream().filter(el -> el != null && !el.isEmpty()).collect(Collectors.toList());
+    }
+    return ids;
   }
 
   abstract R resultToDescriptor(Map<String, PrimitiveTypeProvider> result) throws DatabaseLookupException;
@@ -56,22 +65,44 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
   }
 
   public List<R> findBySpec(List<String> ids, List<MetadataAccessSpecification> spec) {
+    return findBySpec(ids, spec, null);
+  }
+
+  public List<R> findBySpec(List<String> ids, List<MetadataAccessSpecification> spec, String queryID) {
     if (ids == null || spec == null) {
       LOGGER.warn("provided id-list {} or spec {} is null, returning empty list", ids, spec);
+      return new ArrayList<>();
+    }
+    if (spec.size() == 0) {
+      LOGGER.trace("Not returning any metadata since spec was an empty list.");
       return new ArrayList<>();
     }
     StopWatch watch = StopWatch.createStarted();
     ids = sanitizeIds(ids);
     spec = sanitizeSpec(spec);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName);
+    String dbQueryID = DBQueryIDGenerator.generateQueryID("find-md-spec-" + tableName, queryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName, dbQueryID);
     LOGGER.debug("Performed metadata lookup for {} ids in {} ms. {} results.", ids.size(), watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }
 
   public List<R> findBySpec(List<MetadataAccessSpecification> spec) {
+    return findBySpec(spec, null);
+  }
+
+  public List<R> findBySpec(List<MetadataAccessSpecification> spec, String queryID) {
+    if (spec == null) {
+      LOGGER.warn("Provided spec is null, returning empty list");
+      return new ArrayList<>();
+    }
+    if (spec.size() == 0) {
+      LOGGER.trace("Not returning any metadata since spec was an empty list.");
+      return new ArrayList<>();
+    }
     StopWatch watch = StopWatch.createStarted();
     spec = sanitizeSpec(spec);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec);
+    String dbQueryID = DBQueryIDGenerator.generateQueryID("find-my-spec-" + tableName, queryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec, dbQueryID);
     LOGGER.debug("Performed metadata lookup in {} ms. {} results.", watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }
@@ -93,11 +124,17 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
   }
 
   public List<R> findBySpec(MetadataAccessSpecification... spec) {
-    return this.findBySpec(Lists.newArrayList(spec));
+    return this.findBySpec(Lists.newArrayList(spec), null);
   }
 
-  public List<R> findBySpec(MetadataAccessSpecification spec) {
-    return this.findBySpec(Lists.newArrayList(spec));
+  /**
+   * Returns metadata according to spec
+   *
+   * @param spec    access specification
+   * @param queryID can be null
+   */
+  public List<R> findBySpec(MetadataAccessSpecification spec, String queryID) {
+    return this.findBySpec(Lists.newArrayList(spec), queryID);
   }
 
   public List<MetadataAccessSpecification> sanitizeSpec(List<MetadataAccessSpecification> spec) {
@@ -107,14 +144,14 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       spec = spec.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
     // filter non-object specs if this is an object reader
-    if (Objects.equals(this.tableName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type != MetadataType.OBJECT)) {
+    if (Objects.equals(this.tableName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.OBJECT)) {
       LOGGER.trace("provided spec-list includes non-object tuples, but this is an object reader. These will be ignored.");
-      spec = spec.stream().filter(el -> el.type == MetadataType.OBJECT).collect(Collectors.toList());
+      spec = spec.stream().filter(el -> el.type() == MetadataType.OBJECT).collect(Collectors.toList());
     }
     // filter non-segment specs if this is a segment reader
-    if (Objects.equals(this.tableName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type != MetadataType.SEGMENT)) {
+    if (Objects.equals(this.tableName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.SEGMENT)) {
       LOGGER.trace("provided spec-list includes non-segment tuples, but this is a segment reader. These will be ignored.");
-      spec = spec.stream().filter(el -> el.type == MetadataType.SEGMENT).collect(Collectors.toList());
+      spec = spec.stream().filter(el -> el.type() == MetadataType.SEGMENT).collect(Collectors.toList());
     }
     return spec;
   }
@@ -129,14 +166,6 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       }
     });
     return list;
-  }
-
-  public static List<String> sanitizeIds(List<String> ids) {
-    if (ids.stream().anyMatch(el -> el == null || el.isEmpty())) {
-      LOGGER.warn("provided id-list contains null or empty elements which will be ignored");
-      ids = ids.stream().filter(el -> el != null && !el.isEmpty()).collect(Collectors.toList());
-    }
-    return ids;
   }
 
 }

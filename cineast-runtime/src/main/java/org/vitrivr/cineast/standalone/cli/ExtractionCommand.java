@@ -14,7 +14,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
@@ -31,7 +31,7 @@ import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactor
  * A CLI command that can be used to start a media extraction based on an extraction definition file.
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
-public class ExtractionCommand implements Runnable {
+public class ExtractionCommand extends AbstractCineastCommand {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -48,7 +48,7 @@ public class ExtractionCommand implements Runnable {
   private Runnable postExtractionIIIFCleanup;
 
   @Override
-  public void run() {
+  public void execute() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     final File file = new File(this.extractionConfig);
     if (file.exists()) {
@@ -76,7 +76,7 @@ public class ExtractionCommand implements Runnable {
         final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
         if (dispatcher.initialize(provider, context)) {
           /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
-          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DatabaseConfig.Selector.COTTONTAIL && context.getDatabase().getWriter() == DatabaseConfig.Writer.COTTONTAIL) {
+          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DataSource.COTTONTAIL && context.getDatabase().getWriter() == DataSource.COTTONTAIL) {
             dispatcher.registerListener(new ExtractionCompleteListener() {
               @Override
               public void extractionComplete() {

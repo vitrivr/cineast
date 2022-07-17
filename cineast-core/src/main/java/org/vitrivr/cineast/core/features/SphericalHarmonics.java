@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.data.m3d.Voxelizer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.SphericalHarmonicsFunction;
 
 /**

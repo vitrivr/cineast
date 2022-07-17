@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
@@ -31,15 +29,8 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   private static final int EMBEDDING_SIZE = 256;
-  private static final int ENCODING_SIZE = 1536;
   private static final String TABLE_NAME = "features_visualtextcoembedding";
   private static final Distance DISTANCE = ReadableQueryConfig.Distance.euclidean;
-
-  /**
-   * Required dimensions of visual embedding model.
-   */
-  private static final int IMAGE_WIDTH = 299;
-  private static final int IMAGE_HEIGHT = 299;
 
   /**
    * Resource paths.
@@ -47,7 +38,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private static final String RESOURCE_PATH = "resources/VisualTextCoEmbedding/";
   private static final String TEXT_EMBEDDING_MODEL = "universal-sentence-encoder_4";
   private static final String TEXT_CO_EMBEDDING_MODEL = "text-co-embedding";
-  private static final String VISUAL_EMBEDDING_MODEL = "inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop";
   private static final String VISUAL_CO_EMBEDDING_MODEL = "visual-co-embedding";
 
   /**
@@ -57,8 +47,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private static final String TEXT_EMBEDDING_OUTPUT = "outputs";
   private static final String TEXT_CO_EMBEDDING_INPUT = "textual_features";
   private static final String TEXT_CO_EMBEDDING_OUTPUT = "l2_norm";
-  private static final String VISUAL_EMBEDDING_INPUT = "input_1";
-  private static final String VISUAL_EMBEDDING_OUTPUT = "global_average_pooling2d";
   private static final String VISUAL_CO_EMBEDDING_INPUT = "visual_features";
   private static final String VISUAL_CO_EMBEDDING_OUTPUT = "l2_norm";
 
@@ -89,31 +77,31 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   }
 
   @Override
-  public void processSegment(SegmentContainer shot) {
+  public void processSegment(SegmentContainer sc) {
     // Return if already processed
-    if (phandler.idExists(shot.getId())) {
+    if (phandler.idExists(sc.getId())) {
       return;
     }
 
     // Case: segment contains video frames
-    if (!(shot.getVideoFrames().size() > 0 && shot.getVideoFrames().get(0) == VideoFrame.EMPTY_VIDEO_FRAME)) {
-      List<MultiImage> frames = shot.getVideoFrames().stream()
+    if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
+      List<MultiImage> frames = sc.getVideoFrames().stream()
           .map(VideoFrame::getImage)
           .collect(Collectors.toList());
 
       float[] embeddingArray = embedVideo(frames);
-      this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+      this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
 
       return;
     }
 
     // Case: segment contains image
-    if (shot.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
-      BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
+    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 
       if (image != null) {
         float[] embeddingArray = embedImage(image);
-        this.persist(shot.getId(), new FloatVectorImpl(embeddingArray));
+        this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
       }
 
       // Insert return here if additional cases are added!
@@ -142,7 +130,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return super.getSimilar(segmentId, queryConfig);
   }
 
-  private void initializeTextEmbedding() {
+  private synchronized static void initializeTextEmbedding() {
     if (textEmbedding == null) {
       textEmbedding = SavedModelBundle.load(RESOURCE_PATH + TEXT_EMBEDDING_MODEL);
     }
@@ -151,9 +139,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private void initializeVisualEmbedding() {
+  private synchronized static void initializeVisualEmbedding() {
     if (visualEmbedding == null) {
-      visualEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_EMBEDDING_MODEL);
+      visualEmbedding = InceptionResnetV2.getModel();
     }
     if (visualCoEmbedding == null) {
       visualCoEmbedding = SavedModelBundle.load(RESOURCE_PATH + VISUAL_CO_EMBEDDING_MODEL);
@@ -192,20 +180,15 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedImage(BufferedImage image) {
     initializeVisualEmbedding();
 
-    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
-      image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
-    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
-    int[] rgb = colorsToRGB(colors);
-    float[] processedColors = preprocessInput(rgb);
+    float[] processedColors = InceptionResnetV2.preprocessImage(image);
 
-    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, IMAGE_WIDTH, IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
+    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, InceptionResnetV2.IMAGE_WIDTH, InceptionResnetV2.IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
-      inputMap.put(VISUAL_EMBEDDING_INPUT, imageTensor);
+      inputMap.put(InceptionResnetV2.INPUT, imageTensor);
 
       Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
 
-      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(VISUAL_EMBEDDING_OUTPUT)) {
+      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(InceptionResnetV2.OUTPUT)) {
 
         inputMap.clear();
         inputMap.put(VISUAL_CO_EMBEDDING_INPUT, intermediaryEmbedding);
@@ -227,25 +210,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedVideo(List<MultiImage> frames) {
     initializeVisualEmbedding();
 
-    List<float[]> encodings = frames.stream().map(image -> encodeImage(image.getBufferedImage())).collect(Collectors.toList());
+    float[] meanEncoding = InceptionResnetV2.encodeVideo(frames);
 
-    // Sum
-    float[] meanEncoding = encodings.stream().reduce(new float[ENCODING_SIZE], (encoding0, encoding1) -> {
-      float[] tempSum = new float[ENCODING_SIZE];
-
-      for (int i = 0; i < ENCODING_SIZE; i++) {
-        tempSum[i] = encoding0[i] + encoding1[i];
-      }
-
-      return tempSum;
-    });
-
-    // Calculate mean
-    for (int i = 0; i < ENCODING_SIZE; i++) {
-      meanEncoding[i] /= encodings.size();
-    }
-
-    try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
+    try (TFloat32 encoding = TFloat32.tensorOf(Shape.of(1, InceptionResnetV2.ENCODING_SIZE), DataBuffers.of(meanEncoding))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
 
       inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);
@@ -261,84 +228,5 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         return embeddingArray;
       }
     }
-  }
-
-  /**
-   * Encodes the given image using the encoding network.
-   * <p>
-   * Visual embedding must already be initialized.
-   *
-   * @return Intermediary encoding, not yet embedded.
-   */
-  private float[] encodeImage(BufferedImage image) {
-    if (image.getWidth() != IMAGE_WIDTH || image.getHeight() != IMAGE_HEIGHT) {
-      image = rescale(image, IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
-    int[] colors = image.getRGB(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null, 0, IMAGE_WIDTH);
-    int[] rgb = colorsToRGB(colors);
-    float[] processedColors = preprocessInput(rgb);
-
-    try (TFloat32 imageTensor = TFloat32.tensorOf(Shape.of(1, IMAGE_WIDTH, IMAGE_HEIGHT, 3), DataBuffers.of(processedColors))) {
-      HashMap<String, Tensor> inputMap = new HashMap<>();
-      inputMap.put(VISUAL_EMBEDDING_INPUT, imageTensor);
-
-      Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
-
-      try (TFloat32 encoding = (TFloat32) resultMap.get(VISUAL_EMBEDDING_OUTPUT)) {
-
-        float[] embeddingArray = new float[ENCODING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
-        encoding.read(floatBuffer);
-
-        return embeddingArray;
-      }
-    }
-  }
-
-  /**
-   * Preprocesses input in a way equivalent to that performed in the Python TensorFlow library.
-   * <p>
-   * Maps all values from [0,255] to [-1, 1].
-   */
-  private static float[] preprocessInput(int[] colors) {
-    // x /= 127.5
-    // x -= 1.
-    float[] processedColors = new float[colors.length];
-    for (int i = 0; i < colors.length; i++) {
-      processedColors[i] = (colors[i] / 127.5f) - 1;
-    }
-
-    return processedColors;
-  }
-
-  /**
-   * Converts an integer colors array storing ARGB values in each integer into an integer array where each integer stores R, G or B value.
-   */
-  private static int[] colorsToRGB(int[] colors) {
-    int[] rgb = new int[colors.length * 3];
-
-    for (int i = 0; i < colors.length; i++) {
-      // Start index for rgb array
-      int j = i * 3;
-      rgb[j] = (colors[i] >> 16) & 0xFF; // r
-      rgb[j + 1] = (colors[i] >> 8) & 0xFF; // g
-      rgb[j + 2] = colors[i] & 0xFF; // b
-    }
-
-    return rgb;
-  }
-
-  /**
-   * Rescales a buffered image using bilinear interpolation.
-   */
-  private static BufferedImage rescale(BufferedImage image, int width, int height) {
-    BufferedImage scaledImage = new BufferedImage(width, height, image.getType());
-
-    AffineTransform affineTransform = AffineTransform.getScaleInstance((double) width / image.getWidth(), (double) height / image.getHeight());
-    // The OpenCV resize with which the training data was scaled defaults to bilinear interpolation
-    AffineTransformOp transformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-    scaledImage = transformOp.filter(image, scaledImage);
-
-    return scaledImage;
   }
 }

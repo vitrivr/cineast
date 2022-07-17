@@ -33,6 +33,10 @@ public class MetadataRetrievalService {
     this.segmentMetadataReader = new MediaSegmentMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
   }
 
+  private static Predicate<MediaObjectMetadataDescriptor> createDomainAndKeyFilter(final String domain, final String key) {
+    return (m) -> m.getKey().equalsIgnoreCase(key) && m.getDomain().equalsIgnoreCase(domain);
+  }
+
   public List<MediaObjectMetadataDescriptor> find(final String objectId, final String domain, final String key) {
     return lookupMultimediaMetadata(objectId).stream().filter(createDomainAndKeyFilter(domain, key)).collect(Collectors.toList());
   }
@@ -57,7 +61,6 @@ public class MetadataRetrievalService {
     return lookupMultimediaMetadata(objectIds).stream().filter(predicate).collect(Collectors.toList());
   }
 
-
   public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(String objectId) {
     final List<MediaObjectMetadataDescriptor> descriptors = objectMetadataReader.lookupMultimediaMetadata(objectId);
     if (autoclose) {
@@ -72,11 +75,6 @@ public class MetadataRetrievalService {
       objectMetadataReader.close();
     }
     return descriptors;
-  }
-
-
-  private static Predicate<MediaObjectMetadataDescriptor> createDomainAndKeyFilter(final String domain, final String key) {
-    return (m) -> m.getKey().equalsIgnoreCase(key) && m.getDomain().equalsIgnoreCase(domain);
   }
 
   public List<MediaSegmentMetadataDescriptor> lookupSegmentMetadata(String segmentId) {

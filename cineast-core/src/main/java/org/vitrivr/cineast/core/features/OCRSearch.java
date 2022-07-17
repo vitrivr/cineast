@@ -21,12 +21,12 @@ import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 import org.vitrivr.cineast.core.util.HungarianAlgorithm;
-import org.vitrivr.cineast.core.util.MultiTracker;
-import org.vitrivr.cineast.core.util.NeedlemanWunschMerge;
-import org.vitrivr.cineast.core.util.TextDetector_EAST;
-import org.vitrivr.cineast.core.util.TextRecognizer_CTC;
-import org.vitrivr.cineast.core.util.TextStream;
 import org.vitrivr.cineast.core.util.ThreadLocalObjectCache;
+import org.vitrivr.cineast.core.util.ocr.MultiTracker;
+import org.vitrivr.cineast.core.util.ocr.NeedlemanWunschMerge;
+import org.vitrivr.cineast.core.util.text.TextDetector_EAST;
+import org.vitrivr.cineast.core.util.text.TextRecognizer_CTC;
+import org.vitrivr.cineast.core.util.text.TextStream;
 
 /**
  * OCR is handled by adding fuzziness / levenshtein-distance support to the query if there are no quotes present (as quotes indicate precision) This makes sense here since we expect small errors from OCR sources
@@ -278,6 +278,11 @@ public class OCRSearch extends AbstractTextRetriever {
    */
   @Override
   public void processSegment(SegmentContainer shot) {
+
+    if (writer.idExists(shot.getId())) {
+      return;
+    }
+
     TextDetector_EAST detector = detectorCache.get();
     TextRecognizer_CTC recognizer = recognizerCache.get();
 

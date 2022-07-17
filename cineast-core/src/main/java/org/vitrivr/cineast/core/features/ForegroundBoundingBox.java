@@ -25,11 +25,12 @@ import org.vitrivr.cineast.core.util.MaskGenerator;
 
 public class ForegroundBoundingBox extends AbstractFeatureModule {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+  private float[] arrayCache = null;
+
   public ForegroundBoundingBox() {
     super("features_ForegroundBoundingBox", 0.5f, 4);
   }
-
-  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public void processSegment(SegmentContainer shot) {
@@ -54,8 +55,6 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
     return getSimilar(ReadableFloatVector.toArray(fv), qc);
   }
 
-  private float[] arrayCache = null;
-
   protected void persist(String shotId, long frameIdx, FloatVector fs) {
     PersistentTuple tuple = this.phandler.generateTuple(shotId, frameIdx, arrayCache = ReadableFloatVector.toArray(fs, arrayCache));
     this.phandler.persist(tuple);
@@ -67,8 +66,8 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
   }
 
   @Override
-  public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
-    super.init(phandlerSupply, batchSize);
+  public void init(PersistencyWriterSupplier phandlerSupply) {
+    super.init(phandlerSupply);
     this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "frame", "bbox");
   }
 }
