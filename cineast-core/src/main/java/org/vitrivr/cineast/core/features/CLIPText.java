@@ -54,7 +54,9 @@ public class CLIPText implements Retriever {
   private static SavedModelBundle model;
 
   private DBSelector selector;
-  private ClipTokenizer ct = new ClipTokenizer();
+  private final ClipTokenizer ct = new ClipTokenizer();
+
+  private static final int MINIMUM_WORD_COUNT = 3;
 
   public CLIPText() {
     loadModel();
@@ -89,6 +91,19 @@ public class CLIPText implements Retriever {
 
     if (text == null || text.isBlank()) {
       return Collections.emptyList();
+    }
+
+    //ensure minimum query text length
+    final float wordCount = text.split("\\s+").length;
+
+    if (wordCount < MINIMUM_WORD_COUNT) {
+      StringBuilder sb = new StringBuilder(text);
+
+      for (int i = 1; i < MINIMUM_WORD_COUNT / wordCount; i++) {
+        sb.append(" ").append(text);
+      }
+
+      text = sb.toString();
     }
 
     return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
