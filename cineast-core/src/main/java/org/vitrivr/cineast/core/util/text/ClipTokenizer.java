@@ -215,8 +215,8 @@ public class ClipTokenizer {
     for (int i = 0; i < tokenCount; ++i) {
       arr[i + 1] = (long) tokens.get(i);
     }
-    if (tokenCount < arr.length) {
-      arr[tokenCount] = end;
+    if (tokenCount + 1 < arr.length) {
+      arr[tokenCount + 1] = end;
     }
     return arr;
   }
