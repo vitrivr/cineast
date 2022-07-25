@@ -208,7 +208,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         results.add(new SegmentScoreElement(segment, this.correspondence.applyAsDouble(minDist)));
       }
       results.sort(SegmentScoreElement.SCORE_COMPARATOR.reversed());
-      return results.subList(0, Math.min(results.size(), qc.getRawResultsPerModule()) - 1);
+      return results.subList(0, Math.min(results.size(), qc.getResultsPerModule()) - 1);
     }
 
     //more than query skeleton
