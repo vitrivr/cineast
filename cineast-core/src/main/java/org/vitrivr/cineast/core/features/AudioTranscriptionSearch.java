@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
@@ -16,7 +16,7 @@ public class AudioTranscriptionSearch extends AbstractTextRetriever {
     super(AudioTranscriptionSearch.AUDIO_TRANSCRIPTION_TABLE_NAME);
   }
 
-  public AudioTranscriptionSearch(LinkedHashMap<String, String> properties) {
+  public AudioTranscriptionSearch(Map<String, String> properties) {
     super(AUDIO_TRANSCRIPTION_TABLE_NAME, properties);
   }
 

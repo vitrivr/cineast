@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.features;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
 
@@ -22,7 +22,7 @@ public class CollectionBooleanRetriever extends BooleanRetriever {
     super(entity, attributes);
   }
 
-  public CollectionBooleanRetriever(LinkedHashMap<String, String> properties) {
+  public CollectionBooleanRetriever(Map<String, String> properties) {
     super(properties);
   }
 

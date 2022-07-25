@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -69,10 +68,10 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * @param tableName Name of the table/entity used to store the data
    */
   public AbstractTextRetriever(String tableName) {
-    this(tableName, new LinkedHashMap<>());
+    this(tableName, new HashMap<>());
   }
 
-  public AbstractTextRetriever(String defaultTableName, LinkedHashMap<String, String> properties) {
+  public AbstractTextRetriever(String defaultTableName, Map<String, String> properties) {
     if (defaultTableName == null) {
       throw new IllegalStateException("If no entity is provided by the underlying feature, it needs to be specified in properties");
     }
@@ -80,7 +79,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
     this.decorator = properties.getOrDefault("decorator", "");
   }
 
-  public AbstractTextRetriever(LinkedHashMap<String, String> properties) {
+  public AbstractTextRetriever(Map<String, String> properties) {
     this(properties.get("entity"), properties);
   }
 

@@ -1,16 +1,23 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.Map;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
 public class SubtitleFulltextSearch extends AbstractTextRetriever {
 
+  private static final String SUBTITLE_TABLE_NAME = "features_subtitles";
+
   /**
    * Default constructor for {@link SubtitleFulltextSearch}.
    */
   public SubtitleFulltextSearch() {
-    super("features_asr");
+    super(SUBTITLE_TABLE_NAME);
+  }
+
+  public SubtitleFulltextSearch(Map<String, String> properties) {
+    super(SUBTITLE_TABLE_NAME, properties);
   }
 
   /**
