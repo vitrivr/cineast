@@ -118,6 +118,5 @@ public class CliUtils {
       }
       System.out.println();
     });
-    retrieval.shutdown();
   }
 }

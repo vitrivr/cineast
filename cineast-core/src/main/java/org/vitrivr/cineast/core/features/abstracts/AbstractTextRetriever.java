@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -47,6 +48,12 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * Name of the table/entity used to store the data.
    */
   private final String tableName;
+
+  /**
+   * decorator for lucene queries
+   */
+  private final String decorator;
+
   /**
    * The {@link DBSelector} used for database lookup.
    */
@@ -62,7 +69,19 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * @param tableName Name of the table/entity used to store the data
    */
   public AbstractTextRetriever(String tableName) {
-    this.tableName = tableName;
+    this(tableName, new LinkedHashMap<>());
+  }
+
+  public AbstractTextRetriever(String defaultTableName, LinkedHashMap<String, String> properties) {
+    if (defaultTableName == null) {
+      throw new IllegalStateException("If no entity is provided by the underlying feature, it needs to be specified in properties");
+    }
+    this.tableName = properties.getOrDefault("entity", defaultTableName);
+    this.decorator = properties.getOrDefault("decorator", "");
+  }
+
+  public AbstractTextRetriever(LinkedHashMap<String, String> properties) {
+    this(properties.get("entity"), properties);
   }
 
   @Override
@@ -171,7 +190,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * Implementing features can transform individual query terms. By default, nothing happens
    */
   protected String enrichQueryTerm(String queryTerm) {
-    return queryTerm;
+    return queryTerm + this.decorator;
   }
 
   /**

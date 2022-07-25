@@ -29,6 +29,7 @@ public class TagRetrievalCommand extends AbstractCineastCommand {
     retrievers.add(new SegmentTags());
 
     CliUtils.retrieveAndLog(retrievers, retrieval, limit, printDetail, qc);
+    retrieval.shutdown();
     System.out.println("Done");
   }
 }

@@ -2,11 +2,11 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import org.vitrivr.cineast.core.data.query.containers.TextQueryTermContainer;
 import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
-import org.vitrivr.cineast.core.features.OCRSearch;
 import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -30,10 +30,14 @@ public class TextRetrievalCommand extends AbstractCineastCommand {
     System.out.println("Querying for text " + text);
     TextQueryTermContainer qc = new TextQueryTermContainer(text);
     List<Retriever> retrievers = new ArrayList<>();
+    Config.sharedConfig().getRetriever().getRetrieversByCategory("ocr").forEach(retriever -> {
+      CliUtils.retrieveAndLog(Lists.newArrayList(retriever), retrieval, limit, printDetail, qc);
+      return true;
+    });
     retrievers.add(new SubtitleFulltextSearch());
-    retrievers.add(new OCRSearch());
     retrievers.add(new AudioTranscriptionSearch());
     CliUtils.retrieveAndLog(retrievers, retrieval, limit, printDetail, qc);
+    retrieval.shutdown();
     System.out.println("Done");
   }
 }
