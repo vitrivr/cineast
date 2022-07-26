@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveProviderComparator;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.RelationalOperator;
@@ -32,7 +32,7 @@ public class RangeBooleanRetriever extends BooleanRetriever {
     super(entity, attributes);
   }
 
-  public RangeBooleanRetriever(LinkedHashMap<String, String> properties) {
+  public RangeBooleanRetriever(Map<String, String> properties) {
     super(properties);
   }
 

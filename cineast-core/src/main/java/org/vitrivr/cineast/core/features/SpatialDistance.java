@@ -4,8 +4,8 @@ import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +50,7 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
     correspondenceFunction = CorrespondenceFunction.hyperbolic(halfSimilarityDistance);
   }
 
-  public SpatialDistance(LinkedHashMap<String, String> properties) {
+  public SpatialDistance(Map<String, String> properties) {
     super(2, properties);
     String halfSimDistFromConfig = properties.getOrDefault("halfSimilarityDistance", "1000.0/3.0");
     halfSimilarityDistance = parseAndEvaluateHalfSimilarityDistance(halfSimDistFromConfig);

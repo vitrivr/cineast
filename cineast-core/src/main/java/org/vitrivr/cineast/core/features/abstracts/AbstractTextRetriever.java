@@ -47,6 +47,12 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * Name of the table/entity used to store the data.
    */
   private final String tableName;
+
+  /**
+   * decorator for lucene queries
+   */
+  private final String decorator;
+
   /**
    * The {@link DBSelector} used for database lookup.
    */
@@ -62,7 +68,19 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * @param tableName Name of the table/entity used to store the data
    */
   public AbstractTextRetriever(String tableName) {
-    this.tableName = tableName;
+    this(tableName, new HashMap<>());
+  }
+
+  public AbstractTextRetriever(String defaultTableName, Map<String, String> properties) {
+    if (defaultTableName == null) {
+      throw new IllegalStateException("If no entity is provided by the underlying feature, it needs to be specified in properties");
+    }
+    this.tableName = properties.getOrDefault("entity", defaultTableName);
+    this.decorator = properties.getOrDefault("decorator", "");
+  }
+
+  public AbstractTextRetriever(Map<String, String> properties) {
+    this(properties.get("entity"), properties);
   }
 
   @Override
@@ -171,7 +189,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * Implementing features can transform individual query terms. By default, nothing happens
    */
   protected String enrichQueryTerm(String queryTerm) {
-    return queryTerm;
+    return queryTerm + this.decorator;
   }
 
   /**

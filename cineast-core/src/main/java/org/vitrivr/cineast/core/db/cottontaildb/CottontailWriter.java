@@ -81,27 +81,32 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
             return o;
           }
         }).toArray();
-        insert.append(values);
-        if (insert.serializedSize() >= Constants.MAX_PAGE_SIZE_BYTES) {
-          LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
+        if (insert.serializedSize() >= Constants.MAX_PAGE_SIZE_BYTES - 10_000) { // cottontail sometimes acts up which is why we don't fully trust the max size
+          LOGGER.trace("Inserting msg of size {} with {} elements into {}", insert.serializedSize(), insert.count(), this.fqn);
           this.cottontail.client.insert(insert);
           insert = new BatchInsert().into(this.fqn).columns(this.names);
           if (useTransactions) {
             insert.txId(txId);
           }
         }
+        boolean append = insert.append(values);
+        if (!append) {
+          LOGGER.error("Value could not be appended to batch-insert");
+        }
       }
       if (insert.count() > 0) {
-        LOGGER.trace("Inserting msg of size {} into {}", insert.serializedSize(), this.fqn);
+        LOGGER.trace("Finalizing: Inserting msg of size {} with {} elements into {}", insert.serializedSize(), insert.count(), this.fqn);
         this.cottontail.client.insert(insert);
       }
       if (useTransactions) {
+        LOGGER.trace("Committing");
         this.cottontail.client.commit(txId);
       }
       long stop = System.currentTimeMillis();
       LOGGER.trace("Completed insert of {} elements in {} ms", size, stop - start);
       return true;
     } catch (StatusRuntimeException e) {
+      LOGGER.error(e);
       if (useTransactions) {
         this.cottontail.client.rollback(txId);
       }
