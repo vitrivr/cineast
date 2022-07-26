@@ -91,10 +91,10 @@ public class CLIPText implements Retriever {
       return Collections.emptyList();
     }
 
-    return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
+    return getSimilar(new FloatArrayTypeProvider(embedText(ct, text)), qc);
   }
 
-  public float[] embedText(String text) {
+  public static synchronized float[] embedText(ClipTokenizer ct, String text) {
 
     long[] tokens = ct.clipTokenize(text);
 
