@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -282,6 +283,13 @@ public class ReflectionHelper {
    */
   public static <T> T instantiate(Class<? extends T> cl, Class[] types, Object... args) {
     try {
+      // for constructors expecting maps.
+      for (int i = 0, typesLength = types.length; i < typesLength; i++) {
+        if (Arrays.stream(types[0].getInterfaces()).anyMatch(c -> c == Map.class)) {
+          types[i] = Map.class;
+        }
+      }
+
       Constructor<? extends T> con = cl.getConstructor(types);
       return con.newInstance(args);
     } catch (InvocationTargetException e) {
