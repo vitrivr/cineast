@@ -180,15 +180,12 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(TEXT_EMBEDDING_INPUT, textTensor);
 
-      Map<String, Tensor> resultMap = textEmbedding.call(inputMap);
-
-      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT)) {
+      try (TFloat32 intermediaryEmbedding = (TFloat32) textEmbedding.call(inputMap).get(TEXT_EMBEDDING_OUTPUT).get()) {
 
         inputMap.clear();
         inputMap.put(TEXT_CO_EMBEDDING_INPUT, intermediaryEmbedding);
 
-        resultMap = textCoEmbedding.call(inputMap);
-        try (TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT)) {
+        try (TFloat32 embedding = (TFloat32) textCoEmbedding.call(inputMap).get(TEXT_CO_EMBEDDING_OUTPUT).get()) {
 
           float[] embeddingArray = new float[EMBEDDING_SIZE];
           FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
@@ -210,15 +207,12 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(InceptionResnetV2.INPUT, imageTensor);
 
-      Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
-
-      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(InceptionResnetV2.OUTPUT)) {
+      try (TFloat32 intermediaryEmbedding = (TFloat32) visualEmbedding.call(inputMap).get(InceptionResnetV2.OUTPUT).get()) {
 
         inputMap.clear();
         inputMap.put(VISUAL_CO_EMBEDDING_INPUT, intermediaryEmbedding);
 
-        resultMap = visualCoEmbedding.call(inputMap);
-        try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
+        try (TFloat32 embedding = (TFloat32) visualCoEmbedding.call(inputMap).get(VISUAL_CO_EMBEDDING_OUTPUT).get()) {
 
           float[] embeddingArray = new float[EMBEDDING_SIZE];
           FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
@@ -241,8 +235,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
       inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);
 
-      Map<String, Tensor> resultMap = visualCoEmbedding.call(inputMap);
-      try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
+      try (TFloat32 embedding = (TFloat32) visualCoEmbedding.call(inputMap).get(VISUAL_CO_EMBEDDING_OUTPUT).get()) {
 
         float[] embeddingArray = new float[EMBEDDING_SIZE];
         FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);

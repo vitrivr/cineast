@@ -79,9 +79,7 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(INPUT, imageTensor);
 
-      Map<String, Tensor> resultMap = model.call(inputMap);
-
-      try (TFloat32 encoding = (TFloat32) resultMap.get(OUTPUT)) {
+      try (TFloat32 encoding = (TFloat32) model.call(inputMap).get(OUTPUT).get()) {
 
         float[] embeddingArray = new float[ENCODING_SIZE];
         FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
