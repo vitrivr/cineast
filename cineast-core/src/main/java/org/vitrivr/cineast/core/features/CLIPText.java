@@ -7,9 +7,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.LongNdArray;
@@ -108,9 +110,9 @@ public class CLIPText implements Retriever {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, textTensor);
 
-      Map<String, Tensor> resultMap = model.call(inputMap);
+      Result resultMap = model.call(inputMap);
 
-      try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+      try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
 
         float[] embeddingArray = new float[EMBEDDING_SIZE];
         FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
