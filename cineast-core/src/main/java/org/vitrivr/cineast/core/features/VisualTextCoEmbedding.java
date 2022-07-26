@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -32,6 +35,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private static final String TABLE_NAME = "features_visualtextcoembedding";
   private static final Distance DISTANCE = ReadableQueryConfig.Distance.euclidean;
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   /**
    * Resource paths.
    */
@@ -53,7 +58,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   /**
    * Embedding network from text to intermediary embedding.
    * <p>
-   * Currently using UniversalSentenceEncoderV4: https://tfhub.dev/google/universal-sentence-encoder/4
+   * Currently using <a href="https://tfhub.dev/google/universal-sentence-encoder/4">UniversalSentenceEncoderV4</a>.
    */
   private static SavedModelBundle textEmbedding;
   /**
@@ -64,7 +69,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   /**
    * Embedding network from image to intermediary embedding.
    * <p>
-   * Currently using InceptionResNetV2 pretrained on ImageNet: https://storage.googleapis.com/tensorflow/keras-applications/inception_resnet_v2/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop.h5
+   * Currently using InceptionResNetV2 pretrained on <a href="https://storage.googleapis.com/tensorflow/keras-applications/inception_resnet_v2/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels_notop.h5">ImageNet</a>.
    */
   private static SavedModelBundle visualEmbedding;
   /**
@@ -110,15 +115,34 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    String text = sc.getText();
-
     // Ensure the correct distance function is used
     QueryConfig queryConfig = QueryConfig.clone(qc);
     queryConfig.setDistance(DISTANCE);
 
-    float[] embeddingArray = embedText(text);
+    // Case: segment contains text
+    if (!sc.getText().isEmpty()) {
+      String text = sc.getText();
+      LOGGER.debug("Retrieving with TEXT: " + text);
+      float[] embeddingArray = embedText(text);
 
-    return getSimilar(embeddingArray, queryConfig);
+      return getSimilar(embeddingArray, queryConfig);
+    }
+
+    // Case: segment contains image
+    if (sc.getMostRepresentativeFrame() != VideoFrame.EMPTY_VIDEO_FRAME) {
+      LOGGER.debug("Retrieving with IMAGE.");
+      BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
+
+      if (image != null) {
+        float[] embeddingArray = embedImage(image);
+        return getSimilar(embeddingArray, queryConfig);
+      }
+
+      LOGGER.error("Image was provided, but could not be decoded!");
+    }
+
+    LOGGER.error("Could not get similar because no acceptable modality was provided.");
+    return new ArrayList<>();
   }
 
   @Override
