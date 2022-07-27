@@ -93,6 +93,7 @@ dependencies {
     api group: "net.sf.trove4j", name: "trove4j", version: version_trove4j
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
+    api group: 'org.apache.commons', name: 'commons-pool2', version: '2.11.1'
 
     /** Mockito for unit testing */
     implementation 'org.mockito:mockito-inline:4.5.1'

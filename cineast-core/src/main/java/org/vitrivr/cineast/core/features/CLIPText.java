@@ -3,12 +3,16 @@ package org.vitrivr.cineast.core.features;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.Result;
@@ -53,19 +57,31 @@ public class CLIPText implements Retriever {
 
   private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(1);
 
-  private static SavedModelBundle model;
-
   private DBSelector selector;
-  private ClipTokenizer ct = new ClipTokenizer();
+  private final ClipTokenizer ct = new ClipTokenizer();
 
-  public CLIPText() {
-    loadModel();
+  GenericObjectPool<SavedModelBundle> pool = new GenericObjectPool<>(new BasePooledObjectFactory<>() {
+    @Override
+    public SavedModelBundle create() {
+      return SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+    }
+
+    @Override
+    public PooledObject<SavedModelBundle> wrap(SavedModelBundle obj) {
+      return new DefaultPooledObject<>(obj);
+    }
+  });
+
+  public CLIPText() throws Exception {
+    this(new HashMap<>());
   }
 
-  private synchronized static void loadModel() {
-    if (model == null) {
-      model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+  public CLIPText(Map<String, String> properties) throws Exception {
+    var parallelism = 1;
+    if (properties.containsKey("parallelism")) {
+      parallelism = Integer.parseInt(properties.get("parallelism"));
     }
+    pool.addObjects(parallelism);
   }
 
   @Override
@@ -93,10 +109,15 @@ public class CLIPText implements Retriever {
       return Collections.emptyList();
     }
 
-    return getSimilar(new FloatArrayTypeProvider(embedText(ct, text)), qc);
+    try {
+      return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
+    } catch (Exception e) {
+      LOGGER.error(e);
+      return new ArrayList<>();
+    }
   }
 
-  public static float[] embedText(ClipTokenizer ct, String text) {
+  public float[] embedText(String text) throws Exception {
 
     long[] tokens = ct.clipTokenize(text);
 
@@ -109,7 +130,7 @@ public class CLIPText implements Retriever {
 
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, textTensor);
-
+      var model = pool.borrowObject();
       Result resultMap = model.call(inputMap);
 
       try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
@@ -117,6 +138,7 @@ public class CLIPText implements Retriever {
         float[] embeddingArray = new float[EMBEDDING_SIZE];
         FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
         embedding.read(floatBuffer);
+        pool.returnObject(model);
         return embeddingArray;
 
       }
