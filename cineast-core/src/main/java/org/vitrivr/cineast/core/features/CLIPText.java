@@ -81,6 +81,9 @@ public class CLIPText implements Retriever {
   }
 
   public static synchronized void initPool(Map<String, String> properties) throws Exception {
+    if (pool.getCreatedCount() > 0) {
+      return;
+    }
     var parallelism = 1;
     if (properties.containsKey("parallelism")) {
       parallelism = Integer.parseInt(properties.get("parallelism"));
