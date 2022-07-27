@@ -60,7 +60,7 @@ public class CLIPText implements Retriever {
   private DBSelector selector;
   private final ClipTokenizer ct = new ClipTokenizer();
 
-  GenericObjectPool<SavedModelBundle> pool = new GenericObjectPool<>(new BasePooledObjectFactory<>() {
+  private static GenericObjectPool<SavedModelBundle> pool = new GenericObjectPool<>(new BasePooledObjectFactory<>() {
     @Override
     public SavedModelBundle create() {
       return SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
@@ -77,11 +77,17 @@ public class CLIPText implements Retriever {
   }
 
   public CLIPText(Map<String, String> properties) throws Exception {
+    initPool(properties);
+  }
+
+  public static synchronized void initPool(Map<String, String> properties) throws Exception {
     var parallelism = 1;
     if (properties.containsKey("parallelism")) {
       parallelism = Integer.parseInt(properties.get("parallelism"));
     }
+    LOGGER.debug("Initializing pool with {} models", parallelism);
     pool.addObjects(parallelism);
+    LOGGER.debug("Pool initialized");
   }
 
   @Override
