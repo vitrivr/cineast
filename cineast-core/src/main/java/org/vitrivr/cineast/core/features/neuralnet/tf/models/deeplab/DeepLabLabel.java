@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.ObjectIntHashMap;
+import com.carrotsearch.hppc.cursors.ObjectCursor;
 import java.util.Collection;
+import java.util.Iterator;
 
 public enum DeepLabLabel {
 
@@ -164,9 +167,9 @@ public enum DeepLabLabel {
 
   NOTHING(-1, -1, -1, -1000, -1000);
 
-  private static final TIntObjectHashMap<DeepLabLabel> ade20kMap = new TIntObjectHashMap<>();
-  private static final TIntObjectHashMap<DeepLabLabel> pascalvocMap = new TIntObjectHashMap<>();
-  private static final TIntObjectHashMap<DeepLabLabel> cityscapesMap = new TIntObjectHashMap<>();
+  private static final IntObjectHashMap<DeepLabLabel> ade20kMap = new IntObjectHashMap<>();
+  private static final IntObjectHashMap<DeepLabLabel> pascalvocMap = new IntObjectHashMap<>();
+  private static final IntObjectHashMap<DeepLabLabel> cityscapesMap = new IntObjectHashMap<>();
 
   static {
     for (DeepLabLabel label : DeepLabLabel.values()) {
@@ -262,15 +265,17 @@ public enum DeepLabLabel {
 
   public static DeepLabLabel getDominantLabel(Collection<DeepLabLabel> labels) {
 
-    TObjectIntHashMap<DeepLabLabel> hist = new TObjectIntHashMap<>();
+    ObjectIntHashMap<DeepLabLabel> hist = new ObjectIntHashMap<>();
 
     for (DeepLabLabel label : labels) {
-      hist.adjustOrPutValue(label, 1, 1);
+      hist.putOrAdd(label, 1, 1);
     }
 
     int max = 0;
     DeepLabLabel dominant = NOTHING;
-    for (DeepLabLabel label : hist.keySet()) {
+
+    for (ObjectCursor<DeepLabLabel> deepLabLabelObjectCursor : hist.keys()) {
+      DeepLabLabel label = deepLabLabelObjectCursor.value;
       if (hist.get(label) > max) {
         max = hist.get(label);
         dominant = label;

@@ -3,18 +3,21 @@ package org.vitrivr.cineast.core.features;
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import com.carrotsearch.hppc.IntIntHashMap;
+import com.carrotsearch.hppc.ObjectDoubleHashMap;
+import com.carrotsearch.hppc.cursors.ObjectCursor;
 import georegression.struct.point.Point2D_F32;
-import gnu.trove.map.hash.TIntIntHashMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.Pair;
@@ -171,7 +174,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
     SimpleClient client = ((CottontailSelector) this.selector).getWrapper().client;
 
-    HashMap<String, TObjectDoubleHashMap<Pair<Integer, Integer>>> segmentDistancesMap = new HashMap<>(qc.getRawResultsPerModule() * skeletons.size());
+    HashMap<String, ObjectDoubleHashMap<Pair<Integer, Integer>>> segmentDistancesMap = new HashMap<>(qc.getRawResultsPerModule() * skeletons.size());
 
     int queryPersonId = 0;
 
@@ -187,7 +190,7 @@ public class SkeletonPose extends AbstractFeatureModule {
         String segment = tuple.asString(GENERIC_ID_COLUMN_QUALIFIER);
 
         if (!segmentDistancesMap.containsKey(segment)) {
-          segmentDistancesMap.put(segment, new TObjectDoubleHashMap<>());
+          segmentDistancesMap.put(segment, new ObjectDoubleHashMap<>());
         }
 
         segmentDistancesMap.get(segment).put(new Pair<>(queryPersonId, tuple.asInt(PERSON_ID_COL)), tuple.asFloat(DB_DISTANCE_VALUE_QUALIFIER));
@@ -203,8 +206,8 @@ public class SkeletonPose extends AbstractFeatureModule {
     //compute assignment
     if (queryPersonId == 1) { //only one query skeleton
       for (String segment : segmentDistancesMap.keySet()) {
-        TObjectDoubleHashMap<Pair<Integer, Integer>> distances = segmentDistancesMap.get(segment);
-        double minDist = Arrays.stream(distances.values()).min().orElse(Double.MAX_VALUE);
+        ObjectDoubleHashMap<Pair<Integer, Integer>> distances = segmentDistancesMap.get(segment);
+        double minDist = StreamSupport.stream(distances.values().spliterator(), false).mapToDouble(x -> x.value).min().orElse(Double.MAX_VALUE);
         results.add(new SegmentScoreElement(segment, this.correspondence.applyAsDouble(minDist)));
       }
       results.sort(SegmentScoreElement.SCORE_COMPARATOR.reversed());
@@ -214,16 +217,16 @@ public class SkeletonPose extends AbstractFeatureModule {
     //more than query skeleton
     for (String segment : segmentDistancesMap.keySet()) {
 
-      TObjectDoubleHashMap<Pair<Integer, Integer>> distances = segmentDistancesMap.get(segment);
+      ObjectDoubleHashMap<Pair<Integer, Integer>> distances = segmentDistancesMap.get(segment);
 
       if (distances.isEmpty()) {
         continue; //should never happen
       }
 
-      Set<Integer> personIds = distances.keySet().stream().map(p -> p.second).collect(Collectors.toSet());
+      Set<Integer> personIds = StreamSupport.stream(distances.keys().spliterator(), false).map(p -> p.value.second).collect(Collectors.toSet());
 
       if (personIds.size() == 1) { //only one retrieved skeleton
-        double minDist = Arrays.stream(distances.values()).min().orElse(Double.MAX_VALUE);
+        double minDist = StreamSupport.stream(distances.values().spliterator(), false).mapToDouble(x -> x.value).min().orElse(Double.MAX_VALUE);
         results.add(new SegmentScoreElement(segment, this.correspondence.applyAsDouble(minDist) / skeletons.size()));
         continue;
       }
@@ -231,13 +234,14 @@ public class SkeletonPose extends AbstractFeatureModule {
       //more than one retrieved skeletons
 
       double[][] costs = new double[skeletons.size()][personIds.size()];
-      TIntIntHashMap inversePersonIdMapping = new TIntIntHashMap(personIds.size());
+      IntIntHashMap inversePersonIdMapping = new IntIntHashMap(personIds.size());
       int i = 0;
       for (int personId : personIds) {
         inversePersonIdMapping.put(personId, i++);
       }
 
-      for (Pair<Integer, Integer> p : distances.keySet()) {
+      for (ObjectCursor<Pair<Integer, Integer>> pairObjectCursor : distances.keys()) {
+        Pair<Integer, Integer> p = pairObjectCursor.value;
         costs[p.first][inversePersonIdMapping.get(p.second)] = -distances.get(p);
       }
 

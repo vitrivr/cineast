@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+
+import com.carrotsearch.hppc.IntObjectHashMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -16,7 +17,7 @@ public enum MediaType {
   UNKNOWN(99, "u", "unknown");
 
   public static final char DELIMITER = '_';
-  private static final TIntObjectHashMap<MediaType> idToType = new TIntObjectHashMap<>();
+  private static final IntObjectHashMap<MediaType> idToType = new IntObjectHashMap<>();
   private static final HashMap<String, MediaType> prefixToType = new HashMap<>();
   private static final HashMap<String, MediaType> nameToType = new HashMap<>();
 

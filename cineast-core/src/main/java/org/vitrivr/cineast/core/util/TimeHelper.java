@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.util;
 
-import gnu.trove.stack.array.TDoubleArrayStack;
+import com.carrotsearch.hppc.DoubleArrayDeque;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -9,17 +9,17 @@ import org.apache.logging.log4j.Logger;
 public class TimeHelper {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static TDoubleArrayStack tic = new TDoubleArrayStack();
+  private static final DoubleArrayDeque tic = new DoubleArrayDeque();
 
   private TimeHelper() {
   }
 
   public static synchronized void tic() {
-    tic.push(System.nanoTime() / 1000000d);
+    tic.addFirst(System.nanoTime() / 1000000d);
   }
 
   public static synchronized double toc() {
-    double d = tic.pop();
+    double d = tic.removeFirst();
     return (System.nanoTime() / 1000000d) - d;
   }
 

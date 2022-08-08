@@ -1,7 +1,9 @@
 package org.vitrivr.cineast.standalone.util;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+
+import com.carrotsearch.hppc.ObjectDoubleHashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +33,7 @@ public class ContinuousRetrievalLogic {
 
   public List<SegmentScoreElement> retrieve(AbstractQueryTermContainer qc, String category,
       ReadableQueryConfig config) {
-    TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
+    ObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
       LOGGER.warn("Empty retriever list: \n query {} \n category {} \n config {}\n returning no results", qc, category, config);
@@ -41,7 +43,7 @@ public class ContinuousRetrievalLogic {
   }
 
   public List<SegmentScoreElement> retrieve(String segmentId, String category, ReadableQueryConfig config) {
-    TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
+    ObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
       LOGGER.warn("Empty retriever list for segmentID {}, category {} and config {}, returning no results", segmentId, category, config);
@@ -59,7 +61,7 @@ public class ContinuousRetrievalLogic {
       ReadableQueryConfig config) {
     Optional<Retriever> retriever = Config.sharedConfig().getRetriever()
         .getRetrieverByName(retrieverName);
-    if (!retriever.isPresent()) {
+    if (retriever.isEmpty()) {
       return new ArrayList<>(0);
     }
     return retrieveByRetriever(segmentId, retriever.get(), config);
@@ -67,7 +69,7 @@ public class ContinuousRetrievalLogic {
 
   public List<SegmentScoreElement> retrieveByRetriever(String segmentId, Retriever retriever,
       ReadableQueryConfig config) {
-    TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
+    ObjectDoubleHashMap<Retriever> map = new ObjectDoubleHashMap<>();
     map.put(retriever, 1d);
     return ContinuousQueryDispatcher.retrieve(segmentId, map, initializer, config, this.segmentReader);
   }
@@ -75,7 +77,7 @@ public class ContinuousRetrievalLogic {
   public List<SegmentScoreElement> retrieveByRetriever(AbstractQueryTermContainer qc,
       Retriever retriever,
       ReadableQueryConfig config) {
-    TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
+    ObjectDoubleHashMap<Retriever> map = new ObjectDoubleHashMap<>();
     map.put(retriever, 1d);
     return ContinuousQueryDispatcher.retrieve(qc, map, initializer, config, this.segmentReader);
   }
@@ -85,7 +87,7 @@ public class ContinuousRetrievalLogic {
       ReadableQueryConfig config) {
     Optional<Retriever> retriever = Config.sharedConfig().getRetriever()
         .getRetrieverByName(retrieverName);
-    if (!retriever.isPresent()) {
+    if (retriever.isEmpty()) {
       return new ArrayList<>(0);
     }
     return retrieveByRetriever(qc, retriever.get(), config);

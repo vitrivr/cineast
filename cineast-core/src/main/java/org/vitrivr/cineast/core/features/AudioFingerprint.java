@@ -2,7 +2,8 @@ package org.vitrivr.cineast.core.features;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 
-import gnu.trove.list.array.TIntArrayList;
+
+import com.carrotsearch.hppc.IntArrayList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class AudioFingerprint extends StagedFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer segment) {
-    TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
+    IntArrayList filteredSpectrum = this.filterSpectrum(segment);
     int vectors = filteredSpectrum.size() / FINGERPRINT;
     List<PersistentTuple> tuples = new ArrayList<>();
     for (int i = 0; i < vectors; i++) {
@@ -76,7 +77,7 @@ public class AudioFingerprint extends StagedFeatureModule {
     List<float[]> features = new ArrayList<>();
 
     /* Extract filtered spectrum and create query-vectors. */
-    final TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
+    final IntArrayList filteredSpectrum = this.filterSpectrum(sc);
     final int shift = RANGES.length - 1;
     final int lookups = Math.max(1, Math.min(30, filteredSpectrum.size() - FINGERPRINT));
 
@@ -166,9 +167,9 @@ public class AudioFingerprint extends StagedFeatureModule {
     return configs;
   }
 
-  private TIntArrayList filterSpectrum(SegmentContainer segment) {
+  private IntArrayList filterSpectrum(SegmentContainer segment) {
     /* Prepare empty list of candidates for filtered spectrum. */
-    TIntArrayList candidates = new TIntArrayList();
+    IntArrayList candidates = new IntArrayList();
 
     /* Perform STFT and extract the Spectra. If this fails, return empty list. */
     Pair<Integer, Integer> properties = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);

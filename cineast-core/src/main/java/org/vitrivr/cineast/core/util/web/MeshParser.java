@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.util.web;
 
+import com.carrotsearch.hppc.ObjectIntHashMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gnu.trove.map.hash.TObjectIntHashMap;
 import java.io.IOException;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -44,7 +44,7 @@ public class MeshParser extends DataURLParser {
       Mesh mesh = new Mesh(vertices.size() / 9, vertices.size() / 3);
 
       /* Prepare helper structures. */
-      TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+      ObjectIntHashMap<Vector3f> vertexBuffer = new ObjectIntHashMap<>();
       int index = 0;
       int[] vertexindices = new int[3];
 
