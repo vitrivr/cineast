@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 repositories {
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -90,13 +92,16 @@ dependencies {
     /** Some basic stuff (collections etc). */
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
-    api group: 'com.carrotsearch', name: 'hppc', version: '0.9.1'
+    api group: 'com.carrotsearch', name: 'hppc', version: vershion_hppc
 
     /** Mockito for unit testing */
     implementation 'org.mockito:mockito-inline:4.6.1'
 
     /** Tensorflow (Java). */
-    api group: "org.tensorflow", name: "tensorflow-core-platform-gpu", version: version_tensorflow
+    if (DefaultNativePlatform.currentOperatingSystem.isMacOsX())
+        api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
+    else
+        api group: "org.tensorflow", name: "tensorflow-core-platform-gpu", version: version_tensorflow
 
 
     /** Apache Commons Libraries */
