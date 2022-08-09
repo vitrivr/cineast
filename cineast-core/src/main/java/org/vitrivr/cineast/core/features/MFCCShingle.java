@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import com.carrotsearch.hppc.ObjectIntHashMap;
+import com.carrotsearch.hppc.predicates.ObjectIntPredicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,19 +74,19 @@ public class MFCCShingle extends StagedFeatureModule {
   protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
     /* Prepare helper data-structures. */
     final List<ScoreElement> results = new ArrayList<>();
-    final TObjectIntHashMap<String> scoreMap = new TObjectIntHashMap<>();
+    final ObjectIntHashMap<String> scoreMap = new ObjectIntHashMap<>();
 
     /* Set QueryConfig and extract correspondence function. */
     qc = this.setQueryConfig(qc);
     final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
     for (DistanceElement hit : partialResults) {
       if (hit.getDistance() < this.distanceThreshold) {
-        scoreMap.adjustOrPutValue(hit.getId(), 1, scoreMap.get(hit.getId()) / 2);
+        scoreMap.putOrAdd(hit.getId(), 1, scoreMap.get(hit.getId()) / 2);
       }
     }
 
     /* Prepare final result-set. */
-    scoreMap.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1.0 - 1.0 / value)));
+    scoreMap.forEach((ObjectIntPredicate<? super String>) (key, value) -> results.add(new SegmentScoreElement(key, 1.0 - 1.0 / value)));
     ScoreElement.filterMaximumScores(results.stream());
     return results;
   }

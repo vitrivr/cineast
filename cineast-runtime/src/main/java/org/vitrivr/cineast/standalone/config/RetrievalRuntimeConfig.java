@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.standalone.config;
 
+import com.carrotsearch.hppc.ObjectDoubleHashMap;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,13 +150,13 @@ public final class RetrievalRuntimeConfig {
   }
 
 
-  public TObjectDoubleHashMap<Retriever> getRetrieversByCategory(String category) {
+  public ObjectDoubleHashMap<Retriever> getRetrieversByCategory(String category) {
     List<RetrieverConfig> list = this.retrieverCategories.get(category);
     if (list == null) {
-      return new TObjectDoubleHashMap<>(1);
+      return new ObjectDoubleHashMap<>();
     }
 
-    TObjectDoubleHashMap<Retriever> _return = new TObjectDoubleHashMap<>(list.size());
+    ObjectDoubleHashMap<Retriever> _return = new ObjectDoubleHashMap<Retriever>(list.size());
     for (RetrieverConfig config : list) {
 
       Retriever rev;

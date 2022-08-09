@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.temporal.sequential;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectHashMap;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -42,14 +43,13 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
   @Override
   public List<TemporalObject> score() {
     /* Calculate the best path for every segment in the result set given to the class. */
-    for (TIntObjectHashMap<ScoredSegment> segments : scoredSegmentStorage.values()) {
-      segments.forEachValue(scoredSegment -> {
-        MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.getSegmentId());
-        SequentialPath sequentialPath = getBestPathForSegment(mediaSegmentDescriptor, scoredSegment);
+    for (IntObjectHashMap<ScoredSegment> segments : scoredSegmentStorage.values()) {
+      StreamSupport.stream(segments.values().spliterator(), false).forEach(scoredSegment -> {
+        MediaSegmentDescriptor mediaSegmentDescriptor = segmentMap.get(scoredSegment.value.getSegmentId());
+        SequentialPath sequentialPath = getBestPathForSegment(mediaSegmentDescriptor, scoredSegment.value);
 
         objectPaths.putIfAbsent(mediaSegmentDescriptor.getObjectId(), new ArrayList<>());
         objectPaths.get(mediaSegmentDescriptor.getObjectId()).add(sequentialPath);
-        return true;
       });
     }
 

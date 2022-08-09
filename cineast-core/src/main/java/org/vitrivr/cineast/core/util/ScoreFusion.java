@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.core.util;
 
+import com.carrotsearch.hppc.ObjectDoubleMap;
 import com.google.common.collect.ListMultimap;
-import gnu.trove.map.TObjectDoubleMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -22,10 +24,10 @@ public class ScoreFusion {
    * @param scoreBySegmentId segment ids with their respective score
    * @param scoreByObjectId  object ids with their respective score
    */
-  public static void fuseObjectsIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
-      TObjectDoubleMap<String> scoreByObjectId, MediaSegmentReader mediaSegmentReader) {
+  public static void fuseObjectsIntoSegments(ObjectDoubleMap<String> scoreBySegmentId,
+      ObjectDoubleMap<String> scoreByObjectId, MediaSegmentReader mediaSegmentReader) {
 
-    Set<String> objectIds = scoreByObjectId.keySet();
+    Set<String> objectIds = StreamSupport.stream(scoreByObjectId.keys().spliterator(), false).map(x -> x.value).collect(Collectors.toSet());
     if (objectIds.isEmpty()) {
       return;
     }
@@ -42,12 +44,12 @@ public class ScoreFusion {
     }
   }
 
-  private static void fuseObjectScoreIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
+  private static void fuseObjectScoreIntoSegments(ObjectDoubleMap<String> scoreBySegmentId,
       double objectScore, List<MediaSegmentDescriptor> segments) {
     boolean objectSegmentsFoundInResults = false;
     for (MediaSegmentDescriptor segment : segments) {
-      boolean foundElement = scoreBySegmentId.adjustValue(segment.getSegmentId(), objectScore);
-      if (foundElement) {
+      if (scoreBySegmentId.containsKey(segment.getSegmentId())) {
+        scoreBySegmentId.addTo(segment.getSegmentId(), objectScore);
         objectSegmentsFoundInResults = true;
       }
     }

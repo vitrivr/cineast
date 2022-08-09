@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.core.temporal;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -23,7 +24,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
   /* Map an object id to a TreeSet of the corresponding ScoredSegments. We utilize a Tree set instead of a Hashset because we are interested in the natural order of the ScoredSegments. We later want to retrieve all segments larger to a current segment and that is only possible in a data structure that provides ordering. */
   protected final Map<String, TreeSet<ScoredSegment>> scoredSegmentSets;
   /* Map segment Ids to a Map that maps container Ids of the corresponding temporal result container to ScoredSegments. This is due to the fact that a segment may be present in multiple result containers. */
-  protected final Map<String, TIntObjectHashMap<ScoredSegment>> scoredSegmentStorage;
+  protected final Map<String, IntObjectHashMap<ScoredSegment>> scoredSegmentStorage;
   protected final float maxLength;
   protected final int maxContainerId;
 
@@ -56,7 +57,7 @@ public abstract class AbstractTemporalScoringAlgorithm {
         /*
         Else assign the scored segment to the ScoredSegment and if there is already a scored Segment present att this score to the one present.
          */
-        scoredSegmentStorage.putIfAbsent(segmentDescriptor.getSegmentId(), new TIntObjectHashMap<ScoredSegment>());
+        scoredSegmentStorage.putIfAbsent(segmentDescriptor.getSegmentId(), new IntObjectHashMap<>());
         if (scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).containsKey(currentContainerId)) {
           scoredSegmentStorage.get(segmentDescriptor.getSegmentId()).get(currentContainerId).addScore(stringDoublePair);
         } else {
@@ -67,17 +68,16 @@ public abstract class AbstractTemporalScoringAlgorithm {
     }
 
     /* Assign the scored segments to the tree sets corresponding to their objectId. */
-    for (Entry<String, TIntObjectHashMap<ScoredSegment>> entry : scoredSegmentStorage.entrySet()) {
+    for (Entry<String, IntObjectHashMap<ScoredSegment>> entry : scoredSegmentStorage.entrySet()) {
       String objectId = segmentMap.get(entry.getKey()).getObjectId();
-      entry.getValue().forEachValue(scoredSegment -> {
+      StreamSupport.stream(entry.getValue().values().spliterator(), false).forEach(scoredSegment -> {
         if (this.scoredSegmentSets.containsKey(objectId)) {
-          this.scoredSegmentSets.get(objectId).add(scoredSegment);
+          this.scoredSegmentSets.get(objectId).add(scoredSegment.value);
         } else {
           TreeSet<ScoredSegment> tmpSet = new TreeSet<>();
-          tmpSet.add(scoredSegment);
+          tmpSet.add(scoredSegment.value);
           this.scoredSegmentSets.put(objectId, tmpSet);
         }
-        return true;
       });
     }
   }

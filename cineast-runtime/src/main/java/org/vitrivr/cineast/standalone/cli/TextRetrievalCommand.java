@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.standalone.cli;
 
+import com.carrotsearch.hppc.procedures.ObjectDoubleProcedure;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import com.google.common.collect.Lists;
@@ -30,9 +31,8 @@ public class TextRetrievalCommand extends AbstractCineastCommand {
     System.out.println("Querying for text " + text);
     TextQueryTermContainer qc = new TextQueryTermContainer(text);
     List<Retriever> retrievers = new ArrayList<>();
-    Config.sharedConfig().getRetriever().getRetrieversByCategory("ocr").forEach(retriever -> {
+    Config.sharedConfig().getRetriever().getRetrieversByCategory("ocr").forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
       CliUtils.retrieveAndLog(Lists.newArrayList(retriever), retrieval, limit, printDetail, qc);
-      return true;
     });
     retrievers.add(new SubtitleFulltextSearch());
     retrievers.add(new AudioTranscriptionSearch());

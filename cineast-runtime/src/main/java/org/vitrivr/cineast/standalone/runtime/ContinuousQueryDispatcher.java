@@ -1,10 +1,12 @@
 package org.vitrivr.cineast.standalone.runtime;
 
+import com.carrotsearch.hppc.ObjectDoubleHashMap;
+import com.carrotsearch.hppc.ObjectDoubleMap;
+import com.carrotsearch.hppc.cursors.DoubleCursor;
+import com.carrotsearch.hppc.cursors.ObjectDoubleCursor;
+import com.carrotsearch.hppc.predicates.ObjectDoublePredicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import gnu.trove.iterator.TDoubleIterator;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,7 +50,7 @@ public class ContinuousQueryDispatcher {
 
   private final Function<Retriever, RetrievalTask> taskFactory;
   private final RetrieverInitializer initializer;
-  private final TObjectDoubleMap<Retriever> retrieverWeights;
+  private final ObjectDoubleMap<Retriever> retrieverWeights;
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
@@ -63,23 +65,22 @@ public class ContinuousQueryDispatcher {
           .build() : null;
 
 
-  private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory, TObjectDoubleMap<Retriever> retrieverWeights, RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
+  private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory, ObjectDoubleMap<Retriever> retrieverWeights, RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
     this.taskFactory = taskFactory;
     this.initializer = initializer;
     this.retrieverWeights = retrieverWeights;
     this.mediaSegmentReader = mediaSegmentReader;
 
     double weightSum = 0d;
-    TDoubleIterator i = retrieverWeights.valueCollection().iterator();
-    while (i.hasNext()) {
-      weightSum += i.next();
+    for (DoubleCursor doubleCursor : retrieverWeights.values()) {
+      weightSum += doubleCursor.value;
     }
     this.retrieverWeightSum = weightSum;
     LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
 
   }
 
-  public static List<SegmentScoreElement> retrieve(AbstractQueryTermContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig config, MediaSegmentReader mediaSegmentReader) {
+  public static List<SegmentScoreElement> retrieve(AbstractQueryTermContainer query, ObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig config, MediaSegmentReader mediaSegmentReader) {
 
     if (QUERY_CACHE_ENABLED) {
 
@@ -99,7 +100,7 @@ public class ContinuousQueryDispatcher {
     }
   }
 
-  public static List<SegmentScoreElement> retrieve(String segmentId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig config, MediaSegmentReader mediaSegmentReader) {
+  public static List<SegmentScoreElement> retrieve(String segmentId, ObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig config, MediaSegmentReader mediaSegmentReader) {
 
     if (QUERY_CACHE_ENABLED) {
 
@@ -162,7 +163,7 @@ public class ContinuousQueryDispatcher {
 
   private List<Future<Pair<RetrievalTask, List<ScoreElement>>>> startTasks() {
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = new LinkedList<>();
-    this.retrieverWeights.forEachEntry((r, weight) -> {
+    this.retrieverWeights.forEach((ObjectDoublePredicate<? super Retriever>) (r, weight) -> {
       if (weight > 0) {
         this.initializer.initialize(r);
         RetrievalTask task = taskFactory.apply(r);
@@ -174,8 +175,8 @@ public class ContinuousQueryDispatcher {
   }
 
   private List<SegmentScoreElement> extractResults(List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures, MediaSegmentReader mediaSegmentReader) {
-    TObjectDoubleMap<String> scoreByObjectId = new TObjectDoubleHashMap<>();
-    TObjectDoubleMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
+    ObjectDoubleMap<String> scoreByObjectId = new ObjectDoubleHashMap<>();
+    ObjectDoubleMap<String> scoreBySegmentId = new ObjectDoubleHashMap<>();
     while (!futures.isEmpty()) {
       Iterator<Future<Pair<RetrievalTask, List<ScoreElement>>>> iterator = futures.iterator();
       while (iterator.hasNext()) {
@@ -203,7 +204,7 @@ public class ContinuousQueryDispatcher {
     return this.normalizeSortTruncate(scoreBySegmentId);
   }
 
-  private void addRetrievalResult(TObjectDoubleMap<String> scoreByObjectId, TObjectDoubleMap<String> scoreBySegmentId, RetrievalTask task, List<ScoreElement> scoreElements) {
+  private void addRetrievalResult(ObjectDoubleMap<String> scoreByObjectId, ObjectDoubleMap<String> scoreBySegmentId, RetrievalTask task, List<ScoreElement> scoreElements) {
     if (scoreElements == null) {
       LOGGER.warn("Retrieval task {} returned 'null' results.", task);
       return;
@@ -211,7 +212,7 @@ public class ContinuousQueryDispatcher {
 
     double retrieverWeight = this.retrieverWeights.get(task.getRetriever());
     for (ScoreElement element : scoreElements) {
-      TObjectDoubleMap<String> scoreById;
+      ObjectDoubleMap<String> scoreById;
       if (element instanceof ObjectScoreElement) {
         scoreById = scoreByObjectId;
       } else if (element instanceof SegmentScoreElement) {
@@ -226,7 +227,7 @@ public class ContinuousQueryDispatcher {
     }
   }
 
-  private void addScoreElement(TObjectDoubleMap<String> scoreById, ScoreElement next, double weight) {
+  private void addScoreElement(ObjectDoubleMap<String> scoreById, ScoreElement next, double weight) {
     String id = next.getId();
     double score = next.getScore();
     if (score < 0 || score > 1) {
@@ -235,12 +236,12 @@ public class ContinuousQueryDispatcher {
     }
 
     double weightedScore = score * weight;
-    scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
+    scoreById.putOrAdd(id, weightedScore, weightedScore);
   }
 
-  private List<SegmentScoreElement> normalizeSortTruncate(TObjectDoubleMap<String> scoreBySegmentId) {
+  private List<SegmentScoreElement> normalizeSortTruncate(ObjectDoubleMap<String> scoreBySegmentId) {
     List<SegmentScoreElement> results = new ArrayList<>(scoreBySegmentId.size());
-    scoreBySegmentId.forEachEntry((segmentId, score) -> {
+    scoreBySegmentId.forEach((ObjectDoublePredicate<? super String>) (segmentId, score) -> {
       results.add(new SegmentScoreElement(segmentId, MathHelper.limit(score / this.retrieverWeightSum, 0d, 1d)));
       return true;
     });
@@ -254,8 +255,10 @@ public class ContinuousQueryDispatcher {
   }
 
   private void finish() {
-    for (Retriever r : this.retrieverWeights.keySet()) {
-      r.finish();
+
+    for (ObjectDoubleCursor<Retriever> retrieverWeight : this.retrieverWeights) {
+      retrieverWeight.key.finish();
     }
+
   }
 }

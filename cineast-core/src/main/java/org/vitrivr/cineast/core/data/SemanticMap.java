@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectHashMap;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Map;
@@ -15,7 +15,7 @@ public record SemanticMap(DeepLabLabel[][] labels) {
   }
 
   private static DeepLabLabel[][] toLabels(BufferedImage image, Map<String, String> classes) {
-    TIntObjectHashMap<DeepLabLabel> intToLabelMap = new TIntObjectHashMap<>(classes.size());
+    IntObjectHashMap<DeepLabLabel> intToLabelMap = new IntObjectHashMap<>(classes.size());
     for (String className : classes.keySet()) {
 
       DeepLabLabel label;

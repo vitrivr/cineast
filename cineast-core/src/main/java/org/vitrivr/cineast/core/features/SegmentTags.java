@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.impl.Constants;
-import gnu.trove.map.hash.TObjectFloatHashMap;
+import com.carrotsearch.hppc.ObjectFloatHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,7 +75,7 @@ public class SegmentTags implements Extractor, Retriever {
   private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags, ReadableQueryConfig qc) {
 
     ArrayList<String> tagids = new ArrayList<>();
-    TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
+    ObjectFloatHashMap<String> tagWeights = new ObjectFloatHashMap<>();
     float weightSum = 0f;
 
     /* Sum weights for normalization at a later point*/
@@ -96,7 +95,7 @@ public class SegmentTags implements Extractor, Retriever {
     /* Retrieve all elements matching the provided ids */
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids.stream().map(StringTypeProvider::new).collect(Collectors.toList()));
 
-    Map<String, TObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
+    Map<String, ObjectFloatHashMap<String>> maxScoreByTag = new HashMap<>();
 
     /* Prepare the set of relevant ids (if this entity is used for filtering at a later stage) */
     Set<String> relevant = null;
@@ -124,9 +123,9 @@ public class SegmentTags implements Extractor, Retriever {
       }
 
       /* Update maximum score by tag*/
-      maxScoreByTag.putIfAbsent(segmentId, new TObjectFloatHashMap<>());
+      maxScoreByTag.putIfAbsent(segmentId, new ObjectFloatHashMap<>());
       float prev = maxScoreByTag.get(segmentId).get(tagid);
-      if (prev == Constants.DEFAULT_FLOAT_NO_ENTRY_VALUE) {
+      if (prev == 0) {
         maxScoreByTag.get(segmentId).put(tagid, score);
       } else {
         maxScoreByTag.get(segmentId).put(tagid, Math.max(score, prev));
@@ -138,7 +137,7 @@ public class SegmentTags implements Extractor, Retriever {
     final float normalizer = weightSum;
 
     /* per segment, the max score for all tags is summed and divided by the normalizer */
-    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values()) / normalizer)));
+    maxScoreByTag.forEach((segmentId, tagScores) -> _return.add(new SegmentScoreElement(segmentId, MathHelper.sum(tagScores.values().toArray()) / normalizer)));
 
     return _return;
   }

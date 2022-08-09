@@ -3,7 +3,9 @@ package org.vitrivr.cineast.api.util;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import com.carrotsearch.hppc.ObjectDoubleHashMap;
+import com.carrotsearch.hppc.predicates.ObjectDoublePredicate;
+import com.carrotsearch.hppc.procedures.ObjectDoubleProcedure;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.features.SegmentTags;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.temporal.TemporalScoring;
 import org.vitrivr.cineast.core.util.math.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -171,7 +174,7 @@ public class QueryUtil {
   }
 
   public static List<StringDoublePair> retrieveCategory(ContinuousRetrievalLogic continuousRetrievalLogic, List<Pair<AbstractQueryTermContainer, ReadableQueryConfig>> queryContainers, String category) {
-    TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
+    ObjectDoubleHashMap<String> scoreBySegmentId = new ObjectDoubleHashMap<>();
     for (Pair<AbstractQueryTermContainer, ReadableQueryConfig> pair : queryContainers) {
 
       if (pair == null) {
@@ -187,7 +190,7 @@ public class QueryUtil {
 
     }
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
-    scoreBySegmentId.forEachEntry((segmentId, score) -> {
+    scoreBySegmentId.forEach((ObjectDoublePredicate<? super String>) (segmentId, score) -> {
       if (score > 0) {
         list.add(new StringDoublePair(segmentId, score));
       }
@@ -207,12 +210,12 @@ public class QueryUtil {
 
   public static List<StringDoublePair> retrieve(ContinuousRetrievalLogic continuousRetrievalLogic, AbstractQueryTermContainer queryTermContainer, ReadableQueryConfig config, String category) {
     float weight = MathHelper.limit(queryTermContainer.getWeight(), -1f, 1f);
-    TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
+    ObjectDoubleHashMap<String> scoreBySegmentId = new ObjectDoubleHashMap<>();
 
     retrieveAndWeight(continuousRetrievalLogic, category, scoreBySegmentId, queryTermContainer, config, weight);
 
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
-    scoreBySegmentId.forEachEntry((segmentId, score) -> {
+    scoreBySegmentId.forEach((ObjectDoublePredicate<? super String>) (segmentId, score) -> {
       if (score > 0) {
         list.add(new StringDoublePair(segmentId, score));
       }
@@ -222,7 +225,7 @@ public class QueryUtil {
     return list;
   }
 
-  private static void retrieveAndWeight(ContinuousRetrievalLogic continuousRetrievalLogic, String category, TObjectDoubleHashMap<String> scoreBySegmentId, AbstractQueryTermContainer qc, ReadableQueryConfig qconf, float weight) {
+  private static void retrieveAndWeight(ContinuousRetrievalLogic continuousRetrievalLogic, String category, ObjectDoubleHashMap<String> scoreBySegmentId, AbstractQueryTermContainer qc, ReadableQueryConfig qconf, float weight) {
     List<SegmentScoreElement> scoreResults;
     if (qc.hasId()) {
       scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
@@ -237,7 +240,7 @@ public class QueryUtil {
         continue;
       }
       double weightedScore = score * weight;
-      scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
+      scoreBySegmentId.putOrAdd(segmentId, weightedScore, weightedScore);
     }
   }
 
@@ -275,13 +278,12 @@ public class QueryUtil {
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
     final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     List<Object> _return = new ArrayList<>();
-    retrievalRuntimeConfig.getRetrieversByCategory(category).forEachKey(retriever -> {
+    retrievalRuntimeConfig.getRetrieversByCategory(category).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
       retriever.getTableNames().forEach(tableName -> {
         selector.open(tableName);
         List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(id));
         rows.stream().map(row -> row.get(FEATURE_COLUMN_QUALIFIER).toObject()).forEach(_return::add);
       });
-      return true; // Return value false would break the foreEachKey
     });
     return _return;
   }
@@ -343,9 +345,8 @@ public class QueryUtil {
     final RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
     Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
 
-    retrievalRuntimeConfig.getRetrieversByCategory(category).forEach(retriever -> {
+    retrievalRuntimeConfig.getRetrieversByCategory(category).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
       retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
-      return true;
     });
 
     return _return;
