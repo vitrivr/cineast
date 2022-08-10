@@ -55,20 +55,28 @@ public class CLIPText implements Retriever {
   private final ClipTokenizer ct = new ClipTokenizer();
 
   private static SavedModelBundle bundle;
+  private static volatile boolean loaded = false;
 
   public CLIPText() throws Exception {
     this(new HashMap<>());
   }
 
   public CLIPText(Map<String, String> properties) throws Exception {
-    init(properties);
+    ensureModelLoaded(properties);
   }
 
-  public static synchronized void init(Map<String, String> properties) {
-    if (bundle != null) {
+  public static synchronized void ensureModelLoaded(Map<String, String> properties) throws InterruptedException {
+    if (loaded && bundle != null) {
+      return;
+    }
+    if (!loaded && bundle != null) {
+      while (!loaded) {
+        Thread.sleep(2);
+      }
       return;
     }
     bundle = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+    loaded = true;
   }
 
   @Override
@@ -89,9 +97,7 @@ public class CLIPText implements Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
     String text = sc.getText();
-
     if (text == null || text.isBlank()) {
       return Collections.emptyList();
     }
@@ -99,22 +105,18 @@ public class CLIPText implements Retriever {
     try {
       return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
     } catch (Exception e) {
-      LOGGER.error("error during CLIPText exeuction", e);
+      LOGGER.error("error during CLIPText execution", e);
       return new ArrayList<>();
     }
   }
 
   public float[] embedText(String text) throws Exception {
-
     long[] tokens = ct.clipTokenize(text);
-
     LongNdArray arr = NdArrays.ofLongs(Shape.of(1, tokens.length));
     for (int i = 0; i < tokens.length; i++) {
       arr.setLong(tokens[i], 0, i);
     }
-
     try (TInt64 textTensor = TInt64.tensorOf(arr)) {
-
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, textTensor);
       return exec(inputMap);
