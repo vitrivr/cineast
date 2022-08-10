@@ -99,7 +99,7 @@ public class CLIPText implements Retriever {
     try {
       return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
     } catch (Exception e) {
-      LOGGER.error(e);
+      LOGGER.error("error during CLIPText exeuction", e);
       return new ArrayList<>();
     }
   }
