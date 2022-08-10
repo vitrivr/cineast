@@ -98,7 +98,7 @@ public class CLIPText implements Retriever {
     }
   }
 
-  public float[] embedText(String text) throws Exception {
+  public float[] embedText(String text) {
     long[] tokens = ct.clipTokenize(text);
     LongNdArray arr = NdArrays.ofLongs(Shape.of(1, tokens.length));
     for (int i = 0; i < tokens.length; i++) {
@@ -112,11 +112,13 @@ public class CLIPText implements Retriever {
   }
 
   private static synchronized float[] exec(HashMap<String, Tensor> inputMap) {
+    LOGGER.trace("calling model");
     var resultMap = bundle.call(inputMap);
     try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
       float[] embeddingArray = new float[EMBEDDING_SIZE];
       var floatBuffer = DataBuffers.of(embeddingArray);
       embedding.read(floatBuffer);
+      LOGGER.trace("returning array");
       return embeddingArray;
     }
   }
