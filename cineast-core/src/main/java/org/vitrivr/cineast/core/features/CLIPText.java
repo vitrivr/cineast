@@ -55,28 +55,16 @@ public class CLIPText implements Retriever {
   private final ClipTokenizer ct = new ClipTokenizer();
 
   private static SavedModelBundle bundle;
-  private static volatile boolean loaded = false;
 
-  public CLIPText() throws Exception {
-    this(new HashMap<>());
+  public CLIPText() {
+    ensureModelLoaded();
   }
 
-  public CLIPText(Map<String, String> properties) throws Exception {
-    ensureModelLoaded(properties);
-  }
-
-  public static synchronized void ensureModelLoaded(Map<String, String> properties) throws InterruptedException {
-    if (loaded && bundle != null) {
-      return;
-    }
-    if (!loaded && bundle != null) {
-      while (!loaded) {
-        Thread.sleep(2);
-      }
+  public static synchronized void ensureModelLoaded() {
+    if (bundle != null) {
       return;
     }
     bundle = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
-    loaded = true;
   }
 
   @Override
