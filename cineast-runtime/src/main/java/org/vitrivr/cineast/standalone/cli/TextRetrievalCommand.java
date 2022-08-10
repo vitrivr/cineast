@@ -25,12 +25,21 @@ public class TextRetrievalCommand extends AbstractCineastCommand {
   @Option(name = {"--detail"}, title = "detailed results", description = "also list detailed results for retrieved segments.")
   private Boolean printDetail = false;
 
+  @Option(name = {"--category"}, title = "category", description = "specific category of retrievers")
+  private String category;
+
   @Override
   public void execute() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
     System.out.println("Querying for text " + text);
     TextQueryTermContainer qc = new TextQueryTermContainer(text);
     List<Retriever> retrievers = new ArrayList<>();
+    if (category != null) {
+      Config.sharedConfig().getRetriever().getRetrieversByCategory(category).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
+        CliUtils.retrieveAndLog(Lists.newArrayList(retriever), retrieval, limit, printDetail, qc);
+      });
+      return;
+    }
     Config.sharedConfig().getRetriever().getRetrieversByCategory("ocr").forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
       CliUtils.retrieveAndLog(Lists.newArrayList(retriever), retrieval, limit, printDetail, qc);
     });
