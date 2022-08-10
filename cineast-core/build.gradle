@@ -92,7 +92,6 @@ dependencies {
     /** Some basic stuff (collections etc). */
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
-    api group: 'org.apache.commons', name: 'commons-pool2', version: '2.11.1'
     api group: 'com.carrotsearch', name: 'hppc', version: vershion_hppc
 
     /** Mockito for unit testing */

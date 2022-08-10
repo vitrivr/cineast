@@ -9,20 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.apache.commons.pool2.BasePooledObjectFactory;
-import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TInt64;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -60,37 +54,21 @@ public class CLIPText implements Retriever {
   private DBSelector selector;
   private final ClipTokenizer ct = new ClipTokenizer();
 
-  private static GenericObjectPool<SavedModelBundle> pool = new GenericObjectPool<>(new BasePooledObjectFactory<>() {
-    @Override
-    public SavedModelBundle create() {
-      return SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
-    }
-
-    @Override
-    public PooledObject<SavedModelBundle> wrap(SavedModelBundle obj) {
-      return new DefaultPooledObject<>(obj);
-    }
-  });
+  private static SavedModelBundle bundle;
 
   public CLIPText() throws Exception {
     this(new HashMap<>());
   }
 
   public CLIPText(Map<String, String> properties) throws Exception {
-    initPool(properties);
+    init(properties);
   }
 
-  public static synchronized void initPool(Map<String, String> properties) throws Exception {
-    if (pool.getCreatedCount() > 0) {
+  public static synchronized void init(Map<String, String> properties) {
+    if (bundle != null) {
       return;
     }
-    var parallelism = 1;
-    if (properties.containsKey("parallelism")) {
-      parallelism = Integer.parseInt(properties.get("parallelism"));
-    }
-    LOGGER.debug("Initializing pool with {} models", parallelism);
-    pool.addObjects(parallelism);
-    LOGGER.debug("Pool initialized");
+    bundle = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
   }
 
   @Override
@@ -139,18 +117,17 @@ public class CLIPText implements Retriever {
 
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, textTensor);
-      var model = pool.borrowObject();
-      Result resultMap = model.call(inputMap);
+      return exec(inputMap);
+    }
+  }
 
-      try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
-
-        float[] embeddingArray = new float[EMBEDDING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
-        embedding.read(floatBuffer);
-        pool.returnObject(model);
-        return embeddingArray;
-
-      }
+  private static synchronized float[] exec(HashMap<String, Tensor> inputMap) {
+    var resultMap = bundle.call(inputMap);
+    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
+      float[] embeddingArray = new float[EMBEDDING_SIZE];
+      var floatBuffer = DataBuffers.of(embeddingArray);
+      embedding.read(floatBuffer);
+      return embeddingArray;
     }
   }
 
