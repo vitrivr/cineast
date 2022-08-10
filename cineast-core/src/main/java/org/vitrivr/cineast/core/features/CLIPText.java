@@ -88,7 +88,7 @@ public class CLIPText implements Retriever {
     if (text == null || text.isBlank()) {
       return Collections.emptyList();
     }
-    LOGGER.debug("Querying for {}", text);
+    LOGGER.debug("Querying for: \"{}\"", text);
 
     try {
       return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
