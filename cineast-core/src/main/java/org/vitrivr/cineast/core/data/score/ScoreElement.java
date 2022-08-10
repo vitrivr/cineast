@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.core.data.score;
 
+import com.carrotsearch.hppc.ObjectDoubleMap;
+import com.carrotsearch.hppc.predicates.ObjectDoublePredicate;
 import com.google.common.collect.ImmutableList;
-import gnu.trove.map.TObjectDoubleMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -27,12 +28,12 @@ public interface ScoreElement {
   }
 
   static List<SegmentScoreElement> segmentsFromSegmentsMap(
-      TObjectDoubleMap<String> scoreBySegmentId) {
+      ObjectDoubleMap<String> scoreBySegmentId) {
     return segmentsFromSegmentsDistanceMap(scoreBySegmentId, CorrespondenceFunction.identity());
   }
 
   static List<ScoreElement> scoresFromSegmentsDistanceMap(
-      TObjectDoubleMap<String> distanceBySegmentId, CorrespondenceFunction correspondence) {
+      ObjectDoubleMap<String> distanceBySegmentId, CorrespondenceFunction correspondence) {
     List<SegmentScoreElement> segments = segmentsFromSegmentsDistanceMap(distanceBySegmentId,
         correspondence);
 
@@ -41,9 +42,9 @@ public interface ScoreElement {
   }
 
   static List<SegmentScoreElement> segmentsFromSegmentsDistanceMap(
-      TObjectDoubleMap<String> distanceBySegmentId, CorrespondenceFunction correspondence) {
+      ObjectDoubleMap<String> distanceBySegmentId, CorrespondenceFunction correspondence) {
     ImmutableList.Builder<SegmentScoreElement> builder = ImmutableList.builder();
-    distanceBySegmentId.forEachEntry((id, score) -> {
+    distanceBySegmentId.forEach((ObjectDoublePredicate<? super String>) (id, score) -> {
       builder.add(new SegmentScoreElement(id, correspondence.applyAsDouble(score)));
       return true;
     });

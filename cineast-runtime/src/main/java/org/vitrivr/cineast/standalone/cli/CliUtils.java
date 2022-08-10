@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.standalone.cli;
 
+import com.carrotsearch.hppc.procedures.ObjectDoubleProcedure;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,7 +67,7 @@ public class CliUtils {
           return;
         }
       }
-      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
+      retrievalRuntimeConfig.getRetrieversByCategory(cat).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
         System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
         retriever.getTableNames().forEach(tableName -> {
           selector.open(tableName);
@@ -79,7 +80,6 @@ public class CliUtils {
             row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
           });
         });
-        return true;
       });
     });
 

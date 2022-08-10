@@ -26,7 +26,7 @@ public class ImportCommand extends AbstractCineastCommand {
   private String input;
 
   @Option(name = {"--threads"}, description = "Level of parallelization for import")
-  private int threads = 2;
+  private int threads = 1;
 
   @Option(name = {"-b", "--batchsize"}, description = "The batch size used for the import. Imported data will be persisted in batches of the specified size.")
   private int batchsize = 500;

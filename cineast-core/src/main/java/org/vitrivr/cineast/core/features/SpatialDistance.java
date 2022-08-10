@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -138,7 +137,7 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
   }
 
   private double parseAndEvaluateHalfSimilarityDistance(String dist) {
-    return new DoubleEvaluator().evaluate(dist);
+    return Double.parseDouble(dist.trim());
   }
 }
 

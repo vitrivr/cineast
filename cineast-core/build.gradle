@@ -90,13 +90,13 @@ dependencies {
     api group: 'com.google.code.gson', name: 'gson', version: version_gson
 
     /** Some basic stuff (collections etc). */
-    api group: "net.sf.trove4j", name: "trove4j", version: version_trove4j
     api group: "com.google.guava", name: "guava", version: version_guava
     api group: "com.googlecode.javaewah", name: "JavaEWAH", version: version_javaewah
     api group: 'org.apache.commons', name: 'commons-pool2', version: '2.11.1'
+    api group: 'com.carrotsearch', name: 'hppc', version: vershion_hppc
 
     /** Mockito for unit testing */
-    implementation 'org.mockito:mockito-inline:4.5.1'
+    implementation 'org.mockito:mockito-inline:4.6.1'
 
     /** Tensorflow (Java). */
     if (DefaultNativePlatform.currentOperatingSystem.isMacOsX())
@@ -144,9 +144,6 @@ dependencies {
 
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
-
-    /** Evaluator of math expressions (e.g. to _evaluate_ config entries in the form of 1000/3 */
-    implementation 'com.fathzer:javaluator:3.0.3'
 
     /** Java 9+ compatibility. */
     api group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import com.carrotsearch.hppc.ObjectIntHashMap;
 import java.util.NoSuchElementException;
 
 public abstract class Histogram implements ReadableFloatVector {
 
   protected double[] bins;
-  protected TObjectIntHashMap<String> binNames = new TObjectIntHashMap<>();
+  protected ObjectIntHashMap<String> binNames = new ObjectIntHashMap<>();
 
   protected Histogram(int numberOfBins) {
     this.bins = new double[numberOfBins];
@@ -54,7 +54,7 @@ public abstract class Histogram implements ReadableFloatVector {
 
 
   public String toFeatureString() {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append('<');
     for (int i = 0; i < bins.length; ++i) {
       buf.append(bins[i]);

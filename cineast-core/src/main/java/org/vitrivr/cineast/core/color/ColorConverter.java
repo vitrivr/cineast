@@ -1,17 +1,13 @@
 package org.vitrivr.cineast.core.color;
 
-import gnu.trove.TCollections;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
 
 /* for equations see http://www.easyrgb.com/ */
 public final class ColorConverter {
 
-  private static TIntObjectMap<ReadableLabContainer> rgbToLabCache = TCollections
-      .synchronizedMap(new TIntObjectHashMap<ReadableLabContainer>(100000));
-  private static TIntObjectMap<ReadableHSVContainer> rgbToHSVCache = TCollections
-      .synchronizedMap(new TIntObjectHashMap<ReadableHSVContainer>(100000));
+  private static IntObjectHashMap<ReadableLabContainer> rgbToLabCache = new IntObjectHashMap<>(100000);
+  private static IntObjectHashMap<ReadableHSVContainer> rgbToHSVCache = new IntObjectHashMap<>(100000);
 
   private ColorConverter() {
   }

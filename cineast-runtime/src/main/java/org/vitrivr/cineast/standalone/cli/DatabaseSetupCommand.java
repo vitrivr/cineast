@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.standalone.cli;
 
 
+import com.carrotsearch.hppc.procedures.ObjectProcedure;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.io.File;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistentOperator;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.ExtractorConfig;
@@ -51,7 +53,7 @@ public class DatabaseSetupCommand extends AbstractCineastCommand {
     /* Collects all the relevant retriever classes based on the application config. */
     final HashSet<PersistentOperator> persistentOperators = new HashSet<>();
     for (String category : Config.sharedConfig().getRetriever().getRetrieverCategories()) {
-      persistentOperators.addAll(Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet());
+      Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keys().forEach((ObjectProcedure<? super Retriever>) persistentOperators::add);
     }
     return persistentOperators;
   }
@@ -66,7 +68,7 @@ public class DatabaseSetupCommand extends AbstractCineastCommand {
         persistentOperators.add(extractor.getExtractor());
       }
     } else {
-      System.err.println(String.format("Could not setup database based upon extraction config '%s'; the file does not exist!", file.toString()));
+      System.err.printf("Could not setup database based upon extraction config '%s'; the file does not exist!%n", file.getAbsolutePath());
     }
     return persistentOperators;
   }

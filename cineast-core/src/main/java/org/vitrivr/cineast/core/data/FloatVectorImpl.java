@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.list.array.TFloatArrayList;
+import com.carrotsearch.hppc.FloatArrayList;
 import java.util.List;
 
 public class FloatVectorImpl implements FloatVector {
 
-  private TFloatArrayList list;
+  private final FloatArrayList list;
 
-  public FloatVectorImpl(TFloatArrayList list) {
+  public FloatVectorImpl(FloatArrayList list) {
     this.list = list;
   }
 
@@ -26,7 +26,7 @@ public class FloatVectorImpl implements FloatVector {
   }
 
   public FloatVectorImpl() {
-    this(new TFloatArrayList());
+    this(new FloatArrayList());
   }
 
   public FloatVectorImpl(List<Double> list) {
@@ -70,7 +70,7 @@ public class FloatVectorImpl implements FloatVector {
   }
 
   public String toFeatureString() {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append('<');
     for (int i = 0; i < this.list.size(); ++i) {
       buf.append(list.get(i));

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.extraction.decode.m3d;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+
+import com.carrotsearch.hppc.ObjectIntHashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,7 +121,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
     Mesh mesh = new Mesh(100, 100);
 
     /* Prepare helper structures. */
-    TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+    ObjectIntHashMap<Vector3f> vertexBuffer = new ObjectIntHashMap<>();
     int index = 0;
     int[] vertexindices = new int[3];
 
@@ -212,7 +213,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
     Mesh mesh = new Mesh((int) triangles, (int) triangles);
 
     /* Prepare helper structures. */
-    TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+    ObjectIntHashMap<Vector3f> vertexBuffer = new ObjectIntHashMap<>();
     int index = 0;
     int[] vertexindices = new int[3];
 
