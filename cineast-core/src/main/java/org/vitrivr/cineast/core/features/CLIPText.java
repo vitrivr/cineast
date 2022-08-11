@@ -112,14 +112,12 @@ public class CLIPText implements Retriever {
     }
   }
 
-  private static synchronized float[] exec(HashMap<String, Tensor> inputMap) {
-    LOGGER.trace("calling model with vec {}", inputMap.get(EMBEDDING_INPUT));
+  private static float[] exec(HashMap<String, Tensor> inputMap) {
     var resultMap = bundle.call(inputMap);
     try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
       float[] embeddingArray = new float[EMBEDDING_SIZE];
       var floatBuffer = DataBuffers.of(embeddingArray);
       embedding.read(floatBuffer);
-      LOGGER.trace("returning array");
       return embeddingArray;
     }
   }
