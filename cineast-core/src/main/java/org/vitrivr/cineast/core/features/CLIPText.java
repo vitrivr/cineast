@@ -63,6 +63,7 @@ public class CLIPText implements Retriever {
     if (bundle != null) {
       return;
     }
+    LOGGER.debug("Loading CLIP Model");
     bundle = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
   }
 
@@ -112,7 +113,7 @@ public class CLIPText implements Retriever {
   }
 
   private static synchronized float[] exec(HashMap<String, Tensor> inputMap) {
-    LOGGER.trace("calling model");
+    LOGGER.trace("calling model with vec {}", inputMap.get(EMBEDDING_INPUT));
     var resultMap = bundle.call(inputMap);
     try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
       float[] embeddingArray = new float[EMBEDDING_SIZE];
