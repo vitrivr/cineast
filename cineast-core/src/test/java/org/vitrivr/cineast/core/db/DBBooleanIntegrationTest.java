@@ -63,7 +63,7 @@ public abstract class DBBooleanIntegrationTest<R> {
   @BeforeAll
   void checkConnection() {
     provider = provider();
-    assumeTrue(provider!=null);
+    assumeTrue(provider != null);
     selector = provider.getSelector();
     LOGGER.info("Trying to establish connection to Database");
     assumeTrue(selector.ping(), "Connection to database could not be established");
@@ -76,7 +76,7 @@ public abstract class DBBooleanIntegrationTest<R> {
 
   @BeforeEach
   void setupTest() {
-    assumeTrue(provider!=null);
+    assumeTrue(provider != null);
     dropTables();
     createTables();
     fillData();
@@ -168,9 +168,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     this.selector.open(testTableName);
     int idToCheck = TABLE_CARD - 1;
     final List<Map<String, PrimitiveTypeProvider>> result = selector.getFulltextRows(1, DATA_COL_NAME_1, queryConfig, "string-data-" + idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_1).getString(), "string-data-" + idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_2).getInt(), -idToCheck);
-    Assertions.assertEquals(result.get(0).get(DATA_COL_NAME_3).getInt(), (idToCheck + TABLE_CARD));
+    Assertions.assertEquals(result.get(0).get(ID_COL_NAME).getInt(), idToCheck);
   }
 
   @Test
