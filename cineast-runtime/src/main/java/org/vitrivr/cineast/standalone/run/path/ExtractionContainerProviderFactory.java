@@ -19,11 +19,11 @@ public class ExtractionContainerProviderFactory {
    */
   public static ExtractionContainerProvider tryCreatingTreeWalkPathProvider(File jobFile, ExtractionContextProvider context) {
     /* Check if context could be read and an input path was specified. */
-    if (context == null || !context.inputPath().isPresent()) {
+    if (context == null || context.inputPath().isEmpty()) {
       return new NoContainerProvider();
     }
     Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
-    if (!context.inputPath().isPresent()) {
+    if (context.inputPath().isEmpty()) {
       return new NoContainerProvider();
     }
     Path inputPath = context.inputPath().get();

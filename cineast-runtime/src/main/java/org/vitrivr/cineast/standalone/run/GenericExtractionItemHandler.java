@@ -137,7 +137,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     //TODO Config should allow for multiple segmenters
 
     this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
-
   }
 
   /**

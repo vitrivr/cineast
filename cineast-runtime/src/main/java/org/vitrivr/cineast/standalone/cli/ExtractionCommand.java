@@ -51,57 +51,58 @@ public class ExtractionCommand extends AbstractCineastCommand {
   public void execute() {
     final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     final File file = new File(this.extractionConfig);
-    if (file.exists()) {
-      try {
-        final JacksonJsonProvider reader = new JacksonJsonProvider();
-        final IngestConfig context = reader.toObject(file, IngestConfig.class);
-        // Check if the config specifies an IIIF job
-        if (context != null) {
-          InputConfig inputConfig = context.getInput();
-          IIIFConfig iiifConfig = inputConfig.getIiif();
-          if (iiifConfig != null) {
-            String directoryPath;
-            String iiifConfigPath = inputConfig.getPath();
+    if (!file.exists()) {
+      System.err.printf("Could not start handleExtraction with configuration file '%s'; the file does not exist!%n", file);
+      return;
+    }
+
+    try {
+      final JacksonJsonProvider reader = new JacksonJsonProvider();
+      final IngestConfig context = reader.toObject(file, IngestConfig.class);
+      // Check if the config specifies a IIIF job
+      if (context != null) {
+        InputConfig inputConfig = context.getInput();
+        IIIFConfig iiifConfig = inputConfig.getIiif();
+        if (iiifConfig != null) {
+          String directoryPath;
+          String iiifConfigPath = inputConfig.getPath();
             /* If the user hasn't asked to save the images once extraction is complete or if the user has not specified a download directory for the IIIF images, then save the images in a new "iiif-media-{@link System#currentTimeMillis}" subfolder.
             This folder can act as the temp directory during extraction and can either be deleted or retained post extraction based on the value set in {@link IIIFConfig#keepImagesPostExtraction} */
-            if (!iiifConfig.isKeepImagesPostExtraction() || iiifConfigPath == null || iiifConfigPath.isEmpty()) {
-              directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media-" + System.currentTimeMillis();
-              inputConfig.setPath(directoryPath);
-            } else {
-              directoryPath = iiifConfigPath;
-            }
-            prepareIIIFExtractionJob(iiifConfig, directoryPath);
+          if (!iiifConfig.isKeepImagesPostExtraction() || iiifConfigPath == null || iiifConfigPath.isEmpty()) {
+            directoryPath = file.getAbsoluteFile().toPath().getParent() + "/iiif-media-" + System.currentTimeMillis();
+            inputConfig.setPath(directoryPath);
+          } else {
+            directoryPath = iiifConfigPath;
           }
-        }
-        final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
-        if (dispatcher.initialize(provider, context)) {
-          /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
-          if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DataSource.COTTONTAIL && context.getDatabase().getWriter() == DataSource.COTTONTAIL) {
-            dispatcher.registerListener(new ExtractionCompleteListener() {
-              @Override
-              public void extractionComplete() {
-                OptimizeEntitiesCommand.optimizeAllCottontailEntities();
-              }
-            });
-          }
-          dispatcher.registerListener((ExtractionCompleteListener) provider);
-          dispatcher.start();
-          dispatcher.block();
-        } else {
-          System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file);
-        }
-      } catch (IOException e) {
-        System.err.printf("Could not start handleExtraction with configuration file '%s' due to a IO error.%n", file);
-        e.printStackTrace();
-      } catch (ClassCastException e) {
-        System.err.println("Could not register completion listener for extraction.");
-      } finally {
-        if (postExtractionIIIFCleanup != null) {
-          postExtractionIIIFCleanup.run();
+          prepareIIIFExtractionJob(iiifConfig, directoryPath);
         }
       }
-    } else {
-      System.err.printf("Could not start handleExtraction with configuration file '%s'; the file does not exist!%n", file);
+      final ExtractionContainerProvider provider = ExtractionContainerProviderFactory.tryCreatingTreeWalkPathProvider(file, context);
+      if (dispatcher.initialize(provider, context)) {
+        /* Only attempt to optimize Cottontail entities if we were extracting into Cottontail, otherwise an unavoidable error message would be displayed when extracting elsewhere. */
+        if (!doNotFinalize && context != null && context.getDatabase().getSelector() == DataSource.COTTONTAIL && context.getDatabase().getWriter() == DataSource.COTTONTAIL) {
+          dispatcher.registerListener(new ExtractionCompleteListener() {
+            @Override
+            public void extractionComplete() {
+              OptimizeEntitiesCommand.optimizeAllCottontailEntities();
+            }
+          });
+        }
+        dispatcher.registerListener((ExtractionCompleteListener) provider);
+        dispatcher.start();
+        dispatcher.block();
+      } else {
+        System.err.printf("Could not start handleExtraction with configuration file '%s'. Does the file exist?%n", file);
+      }
+    } catch (IOException e) {
+      System.err.printf("Could not start handleExtraction with configuration file '%s' due to a IO error.%n", file);
+      e.printStackTrace();
+    } catch (ClassCastException e) {
+      System.err.println("Could not register completion listener for extraction.");
+    } finally {
+      if (postExtractionIIIFCleanup != null) {
+        postExtractionIIIFCleanup.run();
+      }
     }
   }
 
@@ -110,7 +111,7 @@ public class ExtractionCommand extends AbstractCineastCommand {
    *
    * @param iiifConfig    The IIIF config parsed as an {@link IIIFConfig}
    * @param directoryPath The path where the downloaded IIIF content should be stored
-   * @throws IOException Thrown if downloading or writing an image or it's associated information encounters an IOException
+   * @throws IOException Thrown if downloading or writing an image, or its associated information encounters an IOException
    */
   private void prepareIIIFExtractionJob(IIIFConfig iiifConfig, String directoryPath) throws IOException {
     LOGGER.info("Starting IIIF resource download and extraction job");
@@ -120,35 +121,37 @@ public class ExtractionCommand extends AbstractCineastCommand {
     }
     final String jobDirectoryString = jobDirectory.toString();
     // Process Image API job
-    String itemPrefixString = "iiif_image_";
-    String imageApiBaseUrl = iiifConfig.getBaseUrl();
-    if (imageApiBaseUrl != null && !imageApiBaseUrl.isEmpty()) {
-      ImageFactory imageFactory = new ImageFactory(iiifConfig);
-      imageFactory.fetchImages(jobDirectoryString, itemPrefixString);
-    }
+    processIIIFImageAPIJob(iiifConfig, jobDirectoryString);
     // Process Presentation API job
-    String manifestUrl = iiifConfig.getManifestUrl();
-    if (manifestUrl != null && !manifestUrl.isEmpty()) {
-      ManifestFactory manifestFactory = null;
-      try {
-        manifestFactory = new ManifestFactory(manifestUrl);
-      } catch (Exception e) {
-        LOGGER.error(e.getMessage());
-        e.printStackTrace();
-      }
-      if (manifestFactory != null) {
-        String jobIdentifier = UUID.randomUUID().toString();
-        String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
-        Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
-        if (!Files.exists(manifestJobDirectory)) {
-          Files.createDirectories(manifestJobDirectory);
-        }
-        manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
-        manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
-      }
-    }
+    processIIIFPresentationAPIJob(iiifConfig, jobDirectoryString);
     // Process Change Discovery API job
-    String orderedCollectionUrl = iiifConfig.getOrderedCollectionUrl();
+    processIIIFChangeDiscoveryAPIJob(iiifConfig.getOrderedCollectionUrl(), jobDirectoryString);
+    if (!iiifConfig.isKeepImagesPostExtraction()) {
+      postExtractionIIIFCleanup = () -> {
+        try {
+          Files.walkFileTree(jobDirectory, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+              Files.delete(file);
+              return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+              Files.delete(dir);
+              return FileVisitResult.CONTINUE;
+            }
+          });
+          LOGGER.debug("All temporarily downloaded IIIF resources deleted from the filesystem along with their parent directory " + jobDirectoryString);
+        } catch (IOException e) {
+          LOGGER.error("Could not delete temp IIIF resource directory post extraction.\t" + e.getMessage());
+          e.printStackTrace();
+        }
+      };
+    }
+  }
+
+  private static void processIIIFChangeDiscoveryAPIJob(String orderedCollectionUrl, String jobDirectoryString) throws IOException {
     if (orderedCollectionUrl != null && !orderedCollectionUrl.isEmpty()) {
       OrderedCollectionFactory collectionFactory = null;
       try {
@@ -173,28 +176,37 @@ public class ExtractionCommand extends AbstractCineastCommand {
         }
       }
     }
-    if (!iiifConfig.isKeepImagesPostExtraction()) {
-      postExtractionIIIFCleanup = () -> {
-        try {
-          Files.walkFileTree(jobDirectory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-              Files.delete(file);
-              return FileVisitResult.CONTINUE;
-            }
+  }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-              Files.delete(dir);
-              return FileVisitResult.CONTINUE;
-            }
-          });
-          LOGGER.debug("All temporarily downloaded IIIF resources deleted from the filesystem along with their parent directory " + jobDirectoryString);
-        } catch (IOException e) {
-          LOGGER.error("Could not delete temp IIIF resource directory post extraction.\t" + e.getMessage());
-          e.printStackTrace();
+  private static void processIIIFPresentationAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) throws IOException {
+    String manifestUrl = iiifConfig.getManifestUrl();
+    if (manifestUrl != null && !manifestUrl.isEmpty()) {
+      ManifestFactory manifestFactory = null;
+      try {
+        manifestFactory = new ManifestFactory(manifestUrl);
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+      }
+      if (manifestFactory != null) {
+        String jobIdentifier = UUID.randomUUID().toString();
+        String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
+        Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
+        if (!Files.exists(manifestJobDirectory)) {
+          Files.createDirectories(manifestJobDirectory);
         }
-      };
+        manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
+        manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+      }
+    }
+  }
+
+  private static void processIIIFImageAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) {
+    String itemPrefixString = "iiif_image_";
+    String imageApiBaseUrl = iiifConfig.getBaseUrl();
+    if (imageApiBaseUrl != null && !imageApiBaseUrl.isEmpty()) {
+      ImageFactory imageFactory = new ImageFactory(iiifConfig);
+      imageFactory.fetchImages(jobDirectoryString, itemPrefixString);
     }
   }
 }
