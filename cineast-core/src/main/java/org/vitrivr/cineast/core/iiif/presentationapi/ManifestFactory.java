@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2;
+package org.vitrivr.cineast.core.iiif.presentationapi;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,9 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Canvas;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 
 /**
  * Takes a URL String to a manifest in the constructor and downloads all the images, image information and simplified metadata to the filesystem.
@@ -16,7 +15,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 public class ManifestFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private final Manifest_v2 manifest;
+  private final Manifest manifest;
 
   public ManifestFactory(String manifestUrl) throws Exception {
     ManifestRequest manifestRequest = new ManifestRequest(manifestUrl);
@@ -27,7 +26,7 @@ public class ManifestFactory {
   }
 
   /**
-   * Writes the {@link MetadataJson} generated from this {@link Manifest_v2} to the filesystem
+   * Writes the {@link MetadataJson} generated from this {@link Manifest} to the filesystem
    *
    * @param jobDirectoryString The directory where the file has to be written to
    * @param filename           The name of the file with extension
@@ -50,9 +49,9 @@ public class ManifestFactory {
     if (sequences != null && sequences.size() != 0) {
       // Setting global metadata values that are common for every image in this sequence
       ImageMetadata globalMetadata = new ImageMetadata()
-          .setDescription(manifest.getDescription())
-          .setLinkingUrl(manifest.getAtId())
-          .setAttribution(manifest.getAttribution());
+          .setDescription(manifest.getSummary())
+          .setLinkingUrl(manifest.getId())
+          .setAttribution(manifest.getRequiredStatement());
       for (Sequence sequence : sequences) {
         List<Canvas> canvases = sequence.getCanvases();
         if (canvases != null && canvases.size() != 0) {

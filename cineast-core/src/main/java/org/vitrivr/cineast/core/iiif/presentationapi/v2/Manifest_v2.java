@@ -1,16 +1,18 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
 
 /**
  * The overall description of the structure and properties of the digital representation of an object. It carries information needed for the viewer to present the digitized content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each manifest describes how to present a single object such as a book, a photograph, or a statue.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Manifest_v2 {
+public class Manifest_v2 extends Manifest {
 
   @JsonProperty("@context")
   private String atContext;
@@ -40,8 +42,6 @@ public class Manifest_v2 {
   private Logo logo;
   @JsonProperty
   private Related related;
-  @JsonProperty
-  private Service service;
   @JsonProperty
   private SeeAlso seeAlso;
   @JsonProperty
@@ -97,16 +97,30 @@ public class Manifest_v2 {
     this.label = label;
   }
 
-  public List<Metadata_v2> getMetadata() {
+  public List<Metadata_v2> getMetadataV2() {
     return metadata;
+  }
+
+  public List<Object> getMetadata() {
+    return Collections.singletonList(getMetadataV2());
   }
 
   public void setMetadata(List<Metadata_v2> metadata) {
     this.metadata = metadata;
   }
 
-  public String getDescription() {
+  public String getSummary() {
     return description;
+  }
+
+  @Override
+  public String getId() {
+    return getAtId();
+  }
+
+  @Override
+  public String getRequiredStatement() {
+    return getLicense();
   }
 
   public void setDescription(String description) {
@@ -177,14 +191,6 @@ public class Manifest_v2 {
     this.related = related;
   }
 
-  public Service getService() {
-    return service;
-  }
-
-  public void setService(Service service) {
-    this.service = service;
-  }
-
   public SeeAlso getSeeAlso() {
     return seeAlso;
   }
@@ -251,7 +257,6 @@ public class Manifest_v2 {
         ", attribution='" + attribution + '\'' +
         ", logo=" + logo +
         ", related=" + related +
-        ", service=" + service +
         ", seeAlso=" + seeAlso +
         ", rendering=" + rendering +
         ", within='" + within + '\'' +

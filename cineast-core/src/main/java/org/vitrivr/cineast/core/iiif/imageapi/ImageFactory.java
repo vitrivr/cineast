@@ -25,8 +25,8 @@ import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageRequestBuilder_v2;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformationRequest_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3;
 import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageRequestBuilder_v3;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Image;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Canvas;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Image;
 
 /**
  * Accepts an {@link IIIFConfig} and downloads the image file, its information JSON and write the metadata .iiif file of all {@link IIIFItem} specified in the config file or images in a {@link Canvas}

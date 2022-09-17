@@ -1,39 +1,25 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Rendering {
+public class Related {
 
   @JsonProperty("@id")
   private String atId;
   @JsonProperty
-  private String label;
-  @JsonProperty
   private String format;
-  @JsonProperty("@type")
-  private String type;
 
-  public Rendering() {
+  public Related() {
   }
 
   @Override
   public String toString() {
-    return "Rendering{" +
+    return "Related{" +
         "atId='" + atId + '\'' +
-        ", label='" + label + '\'' +
         ", format='" + format + '\'' +
-        ", type='" + type + '\'' +
         '}';
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   public String getAtId() {
@@ -42,14 +28,6 @@ class Rendering {
 
   public void setAtId(String atId) {
     this.atId = atId;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public void setLabel(String label) {
-    this.label = label;
   }
 
   public String getFormat() {

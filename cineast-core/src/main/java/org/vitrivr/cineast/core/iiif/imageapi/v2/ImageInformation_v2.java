@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Service;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Service;
 
 /**
  * ImageInformation object used to parse Image API 2.1.1 image information request's JSON response

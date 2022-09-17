@@ -12,8 +12,8 @@ import org.vitrivr.cineast.core.iiif.discoveryapi.v1.models.IdTypeObject;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.models.OrderedCollection;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.models.OrderedCollectionPage;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.models.OrderedItem;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.MetadataJson;
+import org.vitrivr.cineast.core.iiif.presentationapi.ManifestFactory;
+import org.vitrivr.cineast.core.iiif.presentationapi.MetadataJson;
 
 public class OrderedCollectionFactory {
 

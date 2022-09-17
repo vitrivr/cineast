@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.vitrivr.cineast.core.iiif.presentationapi.v3.models.Manifest_v3;
 
 class ManifestV3Test {
 

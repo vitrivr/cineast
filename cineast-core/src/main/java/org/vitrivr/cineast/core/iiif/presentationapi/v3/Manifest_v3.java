@@ -1,21 +1,22 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v3.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v3;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Related;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.SeeAlso;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Service;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Structure;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Thumbnail;
+import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Related;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.SeeAlso;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Service;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Structure;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Thumbnail;
 
 /**
  * IIIF Presentation API 3.0 manifest class.
  * <p>
  * WARNING: Does not currently parse all properties provided by Presentation API 3.0 manifests.
  */
-public class Manifest_v3 {
+public class Manifest_v3 extends Manifest {
 
   @JsonProperty("@context")
   public String atContext;
@@ -61,4 +62,29 @@ public class Manifest_v3 {
   public List<Structure> structures;
   @JsonProperty
   public List<Sequence> sequences;
+
+  @Override
+  public List<Sequence> getSequences() {
+    return sequences;
+  }
+
+  @Override
+  public String getSummary() {
+    return summary;
+  }
+
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public String getRequiredStatement() {
+    return requiredStatement.toString();
+  }
+
+  @Override
+  public List<Object> getMetadata() {
+    return Collections.singletonList(metadata);
+  }
 }

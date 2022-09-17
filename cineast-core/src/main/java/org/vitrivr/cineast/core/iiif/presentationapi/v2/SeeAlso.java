@@ -1,25 +1,20 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Related {
+public
+class SeeAlso {
 
   @JsonProperty("@id")
   private String atId;
   @JsonProperty
   private String format;
+  @JsonProperty
+  private String profile;
 
-  public Related() {
-  }
-
-  @Override
-  public String toString() {
-    return "Related{" +
-        "atId='" + atId + '\'' +
-        ", format='" + format + '\'' +
-        '}';
+  public SeeAlso() {
   }
 
   public String getAtId() {
@@ -36,5 +31,22 @@ public class Related {
 
   public void setFormat(String format) {
     this.format = format;
+  }
+
+  public String getProfile() {
+    return profile;
+  }
+
+  public void setProfile(String profile) {
+    this.profile = profile;
+  }
+
+  @Override
+  public String toString() {
+    return "SeeAlso{" +
+        "atId='" + atId + '\'' +
+        ", format='" + format + '\'' +
+        ", profile='" + profile + '\'' +
+        '}';
   }
 }

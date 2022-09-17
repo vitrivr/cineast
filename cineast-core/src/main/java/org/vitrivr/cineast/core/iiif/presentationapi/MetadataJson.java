@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2;
+package org.vitrivr.cineast.core.iiif.presentationapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Metadata_v2;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Canvas;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Metadata_v2;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 
 public class MetadataJson {
 
@@ -21,12 +20,12 @@ public class MetadataJson {
 
   public final String description;
   public final String attribution;
-  public final List<Metadata_v2> metadata;
+  public final List<Object> metadata;
   public final List<ImagePair> images = new LinkedList<>();
 
-  public MetadataJson(Manifest_v2 manifest) {
-    this.description = manifest.getDescription();
-    this.attribution = manifest.getAttribution();
+  public MetadataJson(Manifest manifest) {
+    this.description = manifest.getSummary();
+    this.attribution = manifest.getRequiredStatement();
     this.metadata = manifest.getMetadata();
     List<Sequence> sequences = manifest.getSequences();
     if (sequences != null && sequences.size() != 0) {
@@ -57,19 +56,8 @@ public class MetadataJson {
     LOGGER.debug("Metadata associated with this manifest written to file successfully");
   }
 
-  public static class ImagePair {
+  public record ImagePair(String label, String url, long height, long width) {
 
-    public final String label;
-    public final String url;
-    public final long height;
-    public final long width;
-
-    public ImagePair(String label, String url, long height, long width) {
-      this.label = label;
-      this.url = url;
-      this.height = height;
-      this.width = width;
-    }
   }
 
 }

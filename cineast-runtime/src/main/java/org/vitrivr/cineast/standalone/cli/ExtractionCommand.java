@@ -19,7 +19,7 @@ import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
+import org.vitrivr.cineast.core.iiif.presentationapi.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.config.InputConfig;
@@ -192,7 +192,7 @@ public class ExtractionCommand extends AbstractCineastCommand {
             Files.createDirectories(manifestJobDirectory);
           }
           manifestFactory.saveMetadataJson(manifestJobDirectory.toString(), "metadata_" + jobIdentifier);
-          manifestFactory.saveAllCanvasImages(manifestJobDirectory.toString(), "image_" + jobIdentifier + "_");
+          manifestFactory.saveAllCanvasImages(manifestJobDirectory.toString(), "image_" + jobIdentifier);
         } catch (Exception e) {
           LOGGER.error(e.getMessage());
           e.printStackTrace();

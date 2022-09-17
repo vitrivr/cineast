@@ -1,5 +1,6 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2;
+package org.vitrivr.cineast.core.iiif.presentationapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,7 +14,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
+import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
+import org.vitrivr.cineast.core.iiif.presentationapi.PresentationApiVersion.PRESENTATION_API_VERSION;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.Manifest_v2;
+import org.vitrivr.cineast.core.iiif.presentationapi.v3.Manifest_v3;
 
 public class ManifestRequest {
 
@@ -38,33 +42,37 @@ public class ManifestRequest {
   }
 
   /**
-   * Parses the manifest into a {@link Manifest_v2} object
+   * Parses the manifest into a {@link Manifest} object
    *
-   * @return {@link Manifest_v2}
+   * @return {@link Manifest}
    */
   @Nullable
-  public Manifest_v2 parseManifest() {
+  public Manifest parseManifest() throws UnsupportedIIIFAPIException, JsonProcessingException {
     return parseManifest(this.manifestJSON);
   }
 
   /**
    * This has been created as a separate function to help with unit testing.
    *
-   * @param response The JSON response received from the server
-   * @return {@link Manifest_v2}
+   * @param manifestJSON The JSON response received from the server
+   * @return {@link Manifest}
    */
   @Nullable
-  public Manifest_v2 parseManifest(String response) {
-    Manifest_v2 manifest = null;
-    if (response == null || response.isEmpty()) {
-      response = this.manifestJSON;
-    }
-    try {
-      manifest = new ObjectMapper().readValue(response, Manifest_v2.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return manifest;
+  public Manifest parseManifest(String manifestJSON) throws UnsupportedIIIFAPIException, JsonProcessingException {
+    var apiVersion = parsePresentationAPIVersion(manifestJSON);
+    return switch (apiVersion) {
+      case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(manifestJSON, Manifest_v2.class);
+      case THREE_POINT_ZERO -> new ObjectMapper().readValue(manifestJSON, Manifest_v3.class);
+    };
+  }
+
+  private PRESENTATION_API_VERSION parsePresentationAPIVersion(String manifestJSON) throws JsonProcessingException, UnsupportedIIIFAPIException {
+    var mapper = new ObjectMapper();
+    var jsonNode = mapper.readTree(manifestJSON);
+    var statusNode = jsonNode.get("@context");
+    var complianceLevel = statusNode.textValue();
+
+    return PresentationApiVersion.parse(complianceLevel);
   }
 
   /**

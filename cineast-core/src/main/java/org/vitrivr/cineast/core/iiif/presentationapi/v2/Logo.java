@@ -1,22 +1,18 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public
-class Thumbnail {
+class Logo {
 
   @JsonProperty("@id")
   private String atId;
-  @JsonProperty("@type")
-  private String atType;
-  @JsonProperty
-  private String format;
+
   @JsonProperty
   private Service service;
 
-  public Thumbnail() {
+  public Logo() {
   }
 
   public String getAtId() {
@@ -25,22 +21,6 @@ class Thumbnail {
 
   public void setAtId(String atId) {
     this.atId = atId;
-  }
-
-  public String getAtType() {
-    return atType;
-  }
-
-  public void setAtType(String atType) {
-    this.atType = atType;
-  }
-
-  public String getFormat() {
-    return format;
-  }
-
-  public void setFormat(String format) {
-    this.format = format;
   }
 
   public Service getService() {
@@ -53,10 +33,8 @@ class Thumbnail {
 
   @Override
   public String toString() {
-    return "Thumbnail{" +
+    return "Logo{" +
         "atId='" + atId + '\'' +
-        ", atType='" + atType + '\'' +
-        ", format='" + format + '\'' +
         ", service=" + service +
         '}';
   }

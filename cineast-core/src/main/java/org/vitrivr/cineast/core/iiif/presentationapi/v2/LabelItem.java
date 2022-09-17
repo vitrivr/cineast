@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.iiif.presentationapi.v2.models;
+package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
