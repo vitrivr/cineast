@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 
 /**
@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 public class ManifestFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private final Manifest manifest;
+  private final Manifest_v2 manifest;
 
   public ManifestFactory(String manifestUrl) throws Exception {
     ManifestRequest manifestRequest = new ManifestRequest(manifestUrl);
@@ -27,7 +27,7 @@ public class ManifestFactory {
   }
 
   /**
-   * Writes the {@link MetadataJson} generated from this {@link Manifest} to the filesystem
+   * Writes the {@link MetadataJson} generated from this {@link Manifest_v2} to the filesystem
    *
    * @param jobDirectoryString The directory where the file has to be written to
    * @param filename           The name of the file with extension

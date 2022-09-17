@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.Pair;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+public
 class Structure {
 
   @JsonProperty("@type")

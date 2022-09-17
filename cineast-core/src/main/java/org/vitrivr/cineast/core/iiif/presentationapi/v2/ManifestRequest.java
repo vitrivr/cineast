@@ -13,7 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
 
 public class ManifestRequest {
 
@@ -38,12 +38,12 @@ public class ManifestRequest {
   }
 
   /**
-   * Parses the manifest into a {@link Manifest} object
+   * Parses the manifest into a {@link Manifest_v2} object
    *
-   * @return {@link Manifest}
+   * @return {@link Manifest_v2}
    */
   @Nullable
-  public Manifest parseManifest() {
+  public Manifest_v2 parseManifest() {
     return parseManifest(this.manifestJSON);
   }
 
@@ -51,16 +51,16 @@ public class ManifestRequest {
    * This has been created as a separate function to help with unit testing.
    *
    * @param response The JSON response received from the server
-   * @return {@link Manifest}
+   * @return {@link Manifest_v2}
    */
   @Nullable
-  public Manifest parseManifest(String response) {
-    Manifest manifest = null;
+  public Manifest_v2 parseManifest(String response) {
+    Manifest_v2 manifest = null;
     if (response == null || response.isEmpty()) {
       response = this.manifestJSON;
     }
     try {
-      manifest = new ObjectMapper().readValue(response, Manifest.class);
+      manifest = new ObjectMapper().readValue(response, Manifest_v2.class);
     } catch (IOException e) {
       e.printStackTrace();
     }

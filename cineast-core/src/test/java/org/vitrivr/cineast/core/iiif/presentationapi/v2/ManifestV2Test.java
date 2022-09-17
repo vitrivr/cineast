@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
 
-public class ManifestTest {
+public class ManifestV2Test {
 
   private static final String JSON_RESPONSE = "{\n"
       + "  \"@context\": \"http://iiif.io/api/presentation/2/context.json\",\n"
@@ -193,7 +193,7 @@ public class ManifestTest {
 
   @Test
   public void parsingTest() throws JsonProcessingException {
-    Manifest manifest = new ObjectMapper().readValue(JSON_RESPONSE, Manifest.class);
+    Manifest_v2 manifest = new ObjectMapper().readValue(JSON_RESPONSE, Manifest_v2.class);
     assertNotNull(manifest);
   }
 

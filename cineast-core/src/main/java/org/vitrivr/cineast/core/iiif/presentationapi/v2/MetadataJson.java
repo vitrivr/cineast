@@ -11,8 +11,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Metadata;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Manifest_v2;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Metadata_v2;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.models.Sequence;
 
 public class MetadataJson {
@@ -21,10 +21,10 @@ public class MetadataJson {
 
   public final String description;
   public final String attribution;
-  public final List<Metadata> metadata;
+  public final List<Metadata_v2> metadata;
   public final List<ImagePair> images = new LinkedList<>();
 
-  public MetadataJson(Manifest manifest) {
+  public MetadataJson(Manifest_v2 manifest) {
     this.description = manifest.getDescription();
     this.attribution = manifest.getAttribution();
     this.metadata = manifest.getMetadata();

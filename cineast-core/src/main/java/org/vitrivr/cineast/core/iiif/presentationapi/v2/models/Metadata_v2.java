@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.Pair;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Metadata {
+public class Metadata_v2 {
 
   @JsonProperty
   private Object label;
   @JsonProperty
   private String value;
 
-  public Metadata() {
+  public Metadata_v2() {
   }
 
   @Override

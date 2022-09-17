@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -179,24 +180,23 @@ public class ExtractionCommand extends AbstractCineastCommand {
   }
 
   private static void processIIIFPresentationAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) throws IOException {
-    String manifestUrl = iiifConfig.getManifestUrl();
-    if (manifestUrl != null && !manifestUrl.isEmpty()) {
-      ManifestFactory manifestFactory = null;
-      try {
-        manifestFactory = new ManifestFactory(manifestUrl);
-      } catch (Exception e) {
-        LOGGER.error(e.getMessage());
-        e.printStackTrace();
-      }
-      if (manifestFactory != null) {
-        String jobIdentifier = UUID.randomUUID().toString();
-        String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
-        Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
-        if (!Files.exists(manifestJobDirectory)) {
-          Files.createDirectories(manifestJobDirectory);
+    List<String> manifestUrls = iiifConfig.getManifestUrls();
+    for (var manifestUrl : manifestUrls) {
+      if (manifestUrl != null && !manifestUrl.isEmpty()) {
+        try {
+          var manifestFactory = new ManifestFactory(manifestUrl);
+          var pathSafeManifestUrl = manifestUrl.replaceAll("[^a-zA-Z0-9.\\-]", "_");
+          String jobIdentifier = UUID.randomUUID().toString();
+          Path manifestJobDirectory = Paths.get(jobDirectoryString, pathSafeManifestUrl + "_" + jobIdentifier);
+          if (!Files.exists(manifestJobDirectory)) {
+            Files.createDirectories(manifestJobDirectory);
+          }
+          manifestFactory.saveMetadataJson(manifestJobDirectory.toString(), "metadata_" + jobIdentifier);
+          manifestFactory.saveAllCanvasImages(manifestJobDirectory.toString(), "image_" + jobIdentifier + "_");
+        } catch (Exception e) {
+          LOGGER.error(e.getMessage());
+          e.printStackTrace();
         }
-        manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
-        manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
       }
     }
   }

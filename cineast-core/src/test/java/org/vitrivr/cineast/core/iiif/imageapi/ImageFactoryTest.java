@@ -55,7 +55,7 @@ public class ImageFactoryTest {
     informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(url)).thenReturn(JSON_RESPONSE_v2);
     ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion(url);
     assertNotNull(imageApiVersion);
-    assertEquals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageApiVersion.getVersion());
+    assertEquals(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE, imageApiVersion.version());
   }
 
   /**
@@ -69,7 +69,7 @@ public class ImageFactoryTest {
     informationRequestMockedStatic.when(() -> ImageInformationRequest.fetchImageInformation(url)).thenReturn(JSON_RESPONSE_v3);
     ImageApiVersion imageApiVersion = factory.determineHighestSupportedApiVersion(url);
     assertNotNull(imageApiVersion);
-    assertEquals(IMAGE_API_VERSION.THREE_POINT_ZERO, imageApiVersion.getVersion());
+    assertEquals(IMAGE_API_VERSION.THREE_POINT_ZERO, imageApiVersion.version());
   }
 
 }

@@ -30,16 +30,16 @@ public class IIIFConfig {
   @JsonProperty("items")
   private List<IIIFItem> iiifItems;
   @JsonProperty
-  private String manifestUrl;
+  private List<String> manifestUrls;
   @JsonProperty
   private String orderedCollectionUrl;
 
-  public String getManifestUrl() {
-    return manifestUrl;
+  public List<String> getManifestUrls() {
+    return manifestUrls;
   }
 
-  public void setManifestUrl(String manifestUrl) {
-    this.manifestUrl = manifestUrl;
+  public void setManifestUrls(List<String> manifestUrls) {
+    this.manifestUrls = manifestUrls;
   }
 
 
