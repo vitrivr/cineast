@@ -32,22 +32,13 @@ public class ImageApiCompliance_v2 {
     if (level == null || level.isEmpty()) {
       return false;
     }
-    switch (feature) {
+    return switch (feature) {
       // Features supported by both level 1 and 2
-      case SUPPORTS_REGION_BY_PX:
-      case SUPPORTS_SIZE_BY_W:
-      case SUPPORTS_SIZE_BY_H:
-      case SUPPORTS_SIZE_BY_PCT:
-        return level.equals(LEVEL_1) || level.equals(LEVEL_2);
+      case SUPPORTS_REGION_BY_PX, SUPPORTS_SIZE_BY_W, SUPPORTS_SIZE_BY_H, SUPPORTS_SIZE_BY_PCT -> level.equals(LEVEL_1) || level.equals(LEVEL_2);
       // Features only supported by level 2
-      case SUPPORTS_REGION_BY_PCT:
-      case SUPPORTS_SIZE_BY_CONFINED_WH:
-      case SUPPORTS_SIZE_BY_DISTORTED_WH:
-      case SUPPORTS_SIZE_BY_WH:
-      case SUPPORTS_ROTATION_BY_90s:
-        return level.equals(LEVEL_2);
-    }
-    return false;
+      case SUPPORTS_REGION_BY_PCT, SUPPORTS_SIZE_BY_CONFINED_WH, SUPPORTS_SIZE_BY_DISTORTED_WH, SUPPORTS_SIZE_BY_WH, SUPPORTS_ROTATION_BY_90s -> level.equals(LEVEL_2);
+      default -> false;
+    };
   }
 
   public static boolean isQualitySupported(String quality, String level) {
@@ -62,14 +53,13 @@ public class ImageApiCompliance_v2 {
   }
 
   public static boolean isFormatSupported(String format, String level) {
-    switch (format) {
-      case EXTENSION_JPG:
+    return switch (format) {
+      case EXTENSION_JPG ->
         // All levels support the jpg format
-        return true;
-      case EXTENSION_PNG:
-        return level.equals(LEVEL_2);
-    }
-    return false;
+          true;
+      case EXTENSION_PNG -> level.equals(LEVEL_2);
+      default -> false;
+    };
   }
 
   public static boolean isHttpFeatureSupported(String httpFeature, String level) {

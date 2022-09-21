@@ -40,13 +40,8 @@ public class OrderedCollectionFactory {
       for (OrderedItem orderedItem : orderedItems) {
         /* Only download images whose type is Create **/
         if (orderedItem.getType().equals(OrderedCollection.TYPE_CREATE)) {
-          ManifestFactory manifestFactory = null;
           try {
-            manifestFactory = new ManifestFactory(orderedItem.getObject().getId());
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-          if (manifestFactory != null) {
+            ManifestFactory manifestFactory = new ManifestFactory(orderedItem.getObject().getId());
             String jobIdentifier = UUID.randomUUID().toString();
             String manifestJobDirectoryString = jobDirectoryString + "/manifest_job_" + jobIdentifier;
             Path manifestJobDirectory = Paths.get(manifestJobDirectoryString);
@@ -59,6 +54,8 @@ public class OrderedCollectionFactory {
             }
             manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
             manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+          } catch (Exception e) {
+            e.printStackTrace();
           }
         }
       }

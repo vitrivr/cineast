@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.Thumbnail;
  * <p>
  * WARNING: Does not currently parse all properties provided by Presentation API 3.0 manifests.
  */
-public class Manifest_v3 extends Manifest {
+public class Manifest_v3 implements Manifest {
 
   @JsonProperty("@context")
   public String atContext;

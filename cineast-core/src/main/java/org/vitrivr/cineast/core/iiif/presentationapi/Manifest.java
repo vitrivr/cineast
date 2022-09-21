@@ -3,15 +3,15 @@ package org.vitrivr.cineast.core.iiif.presentationapi;
 import java.util.List;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 
-public abstract class Manifest {
+public interface Manifest {
 
-  public abstract List<Sequence> getSequences();
+  List<Sequence> getSequences();
 
-  public abstract String getSummary();
+  String getSummary();
 
-  public abstract String getId();
+  String getId();
 
-  public abstract String getRequiredStatement();
+  String getRequiredStatement();
 
-  public abstract List<Object> getMetadata();
+  List<Object> getMetadata();
 }

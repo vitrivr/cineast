@@ -69,10 +69,10 @@ public class ManifestRequest {
   private PRESENTATION_API_VERSION parsePresentationAPIVersion(String manifestJSON) throws JsonProcessingException, UnsupportedIIIFAPIException {
     var mapper = new ObjectMapper();
     var jsonNode = mapper.readTree(manifestJSON);
-    var statusNode = jsonNode.get("@context");
-    var complianceLevel = statusNode.textValue();
+    var context = jsonNode.get("@context");
+    var versionString = context.textValue();
 
-    return PresentationApiVersion.parse(complianceLevel);
+    return PresentationApiVersion.parse(versionString);
   }
 
   /**

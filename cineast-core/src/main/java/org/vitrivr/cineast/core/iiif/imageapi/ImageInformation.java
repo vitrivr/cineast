@@ -40,11 +40,6 @@ public interface ImageInformation {
   long getHeight();
 
   /**
-   * Get the {@link ImageApiVersion} of the ImageInformation
-   */
-  ImageApiVersion getImageApiVersion();
-
-  /**
    * Get the max width supported by server
    */
   Long getMaxWidth();
@@ -58,6 +53,21 @@ public interface ImageInformation {
    * Get the max area supported by server
    */
   Long getMaxArea();
+
+  /**
+   * Get the image ID
+   */
+  String getId();
+
+  /**
+   * @return the string identifier for maximum / full region
+   */
+  String getMaxRegion();
+
+  /**
+   * @return the string identifier for maximum / full size
+   */
+  String getMaxSize();
 
 
   /**
@@ -89,10 +99,9 @@ public interface ImageInformation {
       if (o == this) {
         return true;
       }
-      if (!(o instanceof ImageInformation.SizesItem)) {
+      if (!(o instanceof final SizesItem other)) {
         return false;
       }
-      final ImageInformation.SizesItem other = (ImageInformation.SizesItem) o;
       if (!other.canEqual(this)) {
         return false;
       }
@@ -153,29 +162,6 @@ public interface ImageInformation {
     @Override
     public String toString() {
       return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-      if (o == this) {
-        return true;
-      }
-      if (!(o instanceof ImageInformation.TilesItem)) {
-        return false;
-      }
-      final ImageInformation.TilesItem other = (ImageInformation.TilesItem) o;
-      if (!other.canEqual(this)) {
-        return false;
-      }
-      if (this.getWidth() != other.getWidth()) {
-        return false;
-      }
-      if (this.getHeight() != other.getHeight()) {
-        return false;
-      }
-      final Object this$scaleFactors = this.getScaleFactors();
-      final Object other$scaleFactors = other.getScaleFactors();
-      return Objects.equals(this$scaleFactors, other$scaleFactors);
     }
 
     @Override

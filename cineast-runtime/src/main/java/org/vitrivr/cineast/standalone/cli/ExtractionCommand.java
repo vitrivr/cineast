@@ -17,8 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.DataSource;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
+import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageFetcher;
 import org.vitrivr.cineast.core.iiif.presentationapi.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
@@ -179,8 +180,11 @@ public class ExtractionCommand extends AbstractCineastCommand {
     }
   }
 
-  private static void processIIIFPresentationAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) throws IOException {
+  private static void processIIIFPresentationAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) {
     List<String> manifestUrls = iiifConfig.getManifestUrls();
+    if (manifestUrls == null) {
+      return;
+    }
     for (var manifestUrl : manifestUrls) {
       if (manifestUrl != null && !manifestUrl.isEmpty()) {
         try {
@@ -202,11 +206,17 @@ public class ExtractionCommand extends AbstractCineastCommand {
   }
 
   private static void processIIIFImageAPIJob(IIIFConfig iiifConfig, String jobDirectoryString) {
-    String itemPrefixString = "iiif_image_";
-    String imageApiBaseUrl = iiifConfig.getBaseUrl();
-    if (imageApiBaseUrl != null && !imageApiBaseUrl.isEmpty()) {
-      ImageFactory imageFactory = new ImageFactory(iiifConfig);
-      imageFactory.fetchImages(jobDirectoryString, itemPrefixString);
+    var items = iiifConfig.getIiifItems();
+    if (items == null) {
+      return;
+    }
+    for (var item : items) {
+      try {
+        ImageFetcher.fetch(item, jobDirectoryString);
+      } catch (IOException | UnsupportedIIIFAPIException e) {
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+      }
     }
   }
 }

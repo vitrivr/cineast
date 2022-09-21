@@ -2,8 +2,6 @@ package org.vitrivr.cineast.core.iiif.imageapi.v3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 
 /**
@@ -61,9 +59,6 @@ public class ImageInformation_v3 implements ImageInformation {
    */
   @JsonProperty(value = "type", required = true)
   private String type;
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   @JsonProperty(required = true)
   private String protocol;
   /**
@@ -132,10 +127,13 @@ public class ImageInformation_v3 implements ImageInformation {
   @JsonProperty
   private List<String> extraFeatures;
 
+  @JsonProperty(value = "@id")
+  public String atID;
+
   public Long getMaxHeight() {
     // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
     if (maxHeight == 0 && maxWidth != 0) {
-      maxHeight = maxWidth;
+      return maxWidth;
     }
     return maxHeight;
   }
@@ -184,11 +182,6 @@ public class ImageInformation_v3 implements ImageInformation {
     return isSupported;
   }
 
-  @Override
-  public ImageApiVersion getImageApiVersion() {
-    return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
-  }
-
   /**
    * The @context tells Linked Data processors how to interpret the image information. If extensions are used then their context definitions should be included in this top-level @context property.
    */
@@ -209,6 +202,16 @@ public class ImageInformation_v3 implements ImageInformation {
    */
   public String getId() {
     return this.id;
+  }
+
+  @Override
+  public String getMaxRegion() {
+    return "full";
+  }
+
+  @Override
+  public String getMaxSize() {
+    return "max";
   }
 
   /**
@@ -234,16 +237,10 @@ public class ImageInformation_v3 implements ImageInformation {
     this.type = type;
   }
 
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   public String getProtocol() {
     return this.protocol;
   }
 
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   @JsonProperty(required = true)
   public void setProtocol(final String protocol) {
     this.protocol = protocol;

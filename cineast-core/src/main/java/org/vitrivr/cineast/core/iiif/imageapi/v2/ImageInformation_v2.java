@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Service;
 
@@ -26,7 +24,7 @@ public class ImageInformation_v2 implements ImageInformation {
   @JsonProperty(required = true)
   private Object profile;
   /**
-   * The context document that describes the semantics of the terms used in the document. This must be the URI: http://iiif.io/api/image/2/context.json for version 2.1 of the IIIF Image API. This document allows the response to be interpreted as RDF, using the JSON-LD serialization.
+   * The context document that describes the semantics of the terms used in the document.
    */
   @JsonProperty(value = "@context", required = true)
   private String atContext;
@@ -40,9 +38,6 @@ public class ImageInformation_v2 implements ImageInformation {
    */
   @JsonProperty("@type")
   private String atType;
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   @JsonProperty(required = true)
   private String protocol;
   /**
@@ -96,7 +91,7 @@ public class ImageInformation_v2 implements ImageInformation {
   public Long getMaxHeight() {
     // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
     if (maxHeight == 0 && maxWidth != 0) {
-      maxHeight = maxWidth;
+      return maxWidth;
     }
     return maxHeight;
   }
@@ -113,11 +108,10 @@ public class ImageInformation_v2 implements ImageInformation {
    * Custom getter for getProfile that converts List<Object> into a Pair<String, List<ProfileItem>>
    */
   public Pair<String, List<ProfileItem>> getProfile() {
-    if (this.profile instanceof List<?>) {
-      var profile = (List<?>) this.profile;
-      final String apiLevelString = profile.size() < 1 ? null : ((String) profile.get(0));
+    if (this.profile instanceof List<?> profileList) {
+      final String apiLevelString = profileList.size() < 1 ? null : ((String) profileList.get(0));
       final List<ProfileItem> profileItemList = new LinkedList<>();
-      for (var item : profile.stream().skip(1).collect(Collectors.toList())) {
+      for (var item : profileList.stream().skip(1).toList()) {
         final LinkedHashMap<String, ArrayList<String>> map = parseProfileSpec(item);
         final ProfileItem profileItem = new ProfileItem();
         profileItem.setSupports(map.getOrDefault("supports", new ArrayList<>()));
@@ -141,12 +135,10 @@ public class ImageInformation_v2 implements ImageInformation {
   }
 
   private LinkedHashMap<String, ArrayList<String>> parseProfileSpec(Object profileSpec) {
-    if (profileSpec instanceof LinkedHashMap<?, ?>) {
+    if (profileSpec instanceof LinkedHashMap<?, ?> spec) {
       var parsed = new LinkedHashMap<String, ArrayList<String>>();
-      var spec = (LinkedHashMap<?, ?>) profileSpec;
       for (var key : spec.keySet()) {
-        if (key instanceof String && spec.get(key) instanceof ArrayList<?>) {
-          var list = (ArrayList<?>) spec.get(key);
+        if (key instanceof String && spec.get(key) instanceof ArrayList<?> list) {
           var parsedList = list.stream().filter(item -> item instanceof String).map(item -> (String) item).collect(Collectors.toCollection(ArrayList::new));
           parsed.put((String) key, parsedList);
         }
@@ -156,11 +148,6 @@ public class ImageInformation_v2 implements ImageInformation {
     }
 
     return null;
-  }
-
-  @Override
-  public ImageApiVersion getImageApiVersion() {
-    return new ImageApiVersion(IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE);
   }
 
   @Override
@@ -230,16 +217,10 @@ public class ImageInformation_v2 implements ImageInformation {
         '}';
   }
 
-  /**
-   * The context document that describes the semantics of the terms used in the document. This must be the URI: http://iiif.io/api/image/2/context.json for version 2.1 of the IIIF Image API. This document allows the response to be interpreted as RDF, using the JSON-LD serialization.
-   */
   public String getAtContext() {
     return this.atContext;
   }
 
-  /**
-   * The context document that describes the semantics of the terms used in the document. This must be the URI: http://iiif.io/api/image/2/context.json for version 2.1 of the IIIF Image API. This document allows the response to be interpreted as RDF, using the JSON-LD serialization.
-   */
   @JsonProperty(value = "@context", required = true)
   public void setAtContext(final String atContext) {
     this.atContext = atContext;
@@ -275,16 +256,10 @@ public class ImageInformation_v2 implements ImageInformation {
     this.atType = atType;
   }
 
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   public String getProtocol() {
     return this.protocol;
   }
 
-  /**
-   * The URI http://iiif.io/api/image which can be used to determine that the document describes an image service which is a version of the IIIF Image API.
-   */
   @JsonProperty(required = true)
   public void setProtocol(final String protocol) {
     this.protocol = protocol;
@@ -370,6 +345,21 @@ public class ImageInformation_v2 implements ImageInformation {
    */
   public Long getMaxArea() {
     return this.maxArea;
+  }
+
+  @Override
+  public String getId() {
+    return getAtId();
+  }
+
+  @Override
+  public String getMaxRegion() {
+    return "full";
+  }
+
+  @Override
+  public String getMaxSize() {
+    return "full";
   }
 
   /**

@@ -12,21 +12,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion;
 public class IIIFConfig {
 
   @JsonProperty
-  private String imageApiVersion;
-  @JsonProperty
   private boolean keepImagesPostExtraction;
-  @JsonProperty(value = "imageApiUrl")
-  private String baseUrl;
-  @JsonProperty
-  private String region;
-  @JsonProperty
-  private String size;
-  @JsonProperty
-  private Float rotation;
-  @JsonProperty
-  private String quality;
-  @JsonProperty
-  private String format;
   @JsonProperty("items")
   private List<IIIFItem> iiifItems;
   @JsonProperty
@@ -42,76 +28,9 @@ public class IIIFConfig {
     this.manifestUrls = manifestUrls;
   }
 
-
-  public ImageApiVersion getImageApiVersion() {
-    if (imageApiVersion == null) {
-      throw new IllegalArgumentException("Image API Version is not defined!");
-    }
-    return ImageApiVersion.fromNumericString(imageApiVersion);
-  }
-
-  @JsonProperty
-  public void setImageApiVersion(final String imageApiVersion) {
-    this.imageApiVersion = imageApiVersion;
-  }
-
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
-
-  public String getBaseUrl() {
-    return this.baseUrl;
-  }
-
-  @JsonProperty(value = "imageApiUrl", required = true)
-  public void setBaseUrl(final String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
-  public String getRegion() {
-    return this.region;
-  }
-
-  @JsonProperty
-  public void setRegion(final String region) {
-    this.region = region;
-  }
-
-  public String getSize() {
-    return this.size;
-  }
-
-  @JsonProperty
-  public void setSize(final String size) {
-    this.size = size;
-  }
-
-  public Float getRotation() {
-    return this.rotation;
-  }
-
-  @JsonProperty
-  public void setRotation(final Float rotation) {
-    this.rotation = rotation;
-  }
-
-  public String getQuality() {
-    return this.quality;
-  }
-
-  @JsonProperty
-  public void setQuality(final String quality) {
-    this.quality = quality;
-  }
-
-  public String getFormat() {
-    return this.format;
-  }
-
-  @JsonProperty
-  public void setFormat(final String format) {
-    this.format = format;
   }
 
   public List<IIIFItem> getIiifItems() {

@@ -10,77 +10,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class IIIFItem {
 
   @JsonProperty
-  private String identifier;
+  public String identifier;
   @JsonProperty
-  private String region;
+  public String region;
   @JsonProperty
-  private String size;
+  public String size;
   @JsonProperty
-  private Float rotation;
+  public Float rotation;
   @JsonProperty
-  private String quality;
+  public String quality;
   @JsonProperty
-  private String format;
-
-  public IIIFItem() {
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-  }
-
-  public String getIdentifier() {
-    return this.identifier;
-  }
-
-  @JsonProperty
-  public void setIdentifier(final String identifier) {
-    this.identifier = identifier;
-  }
-
-  public String getRegion() {
-    return this.region;
-  }
-
-  @JsonProperty
-  public void setRegion(final String region) {
-    this.region = region;
-  }
-
-  public String getSize() {
-    return this.size;
-  }
-
-  @JsonProperty
-  public void setSize(final String size) {
-    this.size = size;
-  }
-
-  public Float getRotation() {
-    return this.rotation;
-  }
-
-  @JsonProperty
-  public void setRotation(final Float rotation) {
-    this.rotation = rotation;
-  }
-
-  public String getQuality() {
-    return this.quality;
-  }
-
-  @JsonProperty
-  public void setQuality(final String quality) {
-    this.quality = quality;
-  }
-
-  public String getFormat() {
-    return this.format;
-  }
-
-  @JsonProperty
-  public void setFormat(final String format) {
-    this.format = format;
-  }
+  public String format;
 }

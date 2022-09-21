@@ -25,9 +25,6 @@ public class ImageRequest {
   private String quality = null;
   private String extension = null;
 
-  public ImageRequest() {
-  }
-
   public static ImageRequest fromUrl(String url) {
     ImageRequest imageRequest = new ImageRequest();
     url = URLDecoder.decode(url, StandardCharsets.UTF_8);
@@ -131,7 +128,7 @@ public class ImageRequest {
    * @param filePath   The path of the directory where the image should be saved
    * @param fileName   The name that should be given to the saved image
    * @param requestUrl The complete IIIF Image API compliant URL of the image resource. Useful when URL doesn't need to be generated or has to be overridden.
-   * @throws IOException If the image could not downloaded or written to the filesystem
+   * @throws IOException If the image could not be downloaded or written to the filesystem
    */
   public void downloadImage(String filePath, String fileName, String requestUrl) throws IOException {
     URL url = new URL(requestUrl);
