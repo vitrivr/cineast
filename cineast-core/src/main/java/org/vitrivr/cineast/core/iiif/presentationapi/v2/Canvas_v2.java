@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Canvas {
+public class Canvas_v2 {
 
   @JsonProperty("@id")
   private String atId;
@@ -20,7 +20,7 @@ public class Canvas {
   @JsonProperty
   private List<Image> images;
 
-  public Canvas() {
+  public Canvas_v2() {
   }
 
   public String getAtId() {

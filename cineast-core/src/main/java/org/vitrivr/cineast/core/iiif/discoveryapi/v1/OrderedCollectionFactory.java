@@ -53,7 +53,7 @@ public class OrderedCollectionFactory {
               }
             }
             manifestFactory.saveMetadataJson(manifestJobDirectoryString, "metadata_" + jobIdentifier);
-            manifestFactory.saveAllCanvasImages(manifestJobDirectoryString, "image_" + jobIdentifier + "_");
+            manifestFactory.saveAllCanvasImages(manifestJobDirectoryString);
           } catch (Exception e) {
             e.printStackTrace();
           }

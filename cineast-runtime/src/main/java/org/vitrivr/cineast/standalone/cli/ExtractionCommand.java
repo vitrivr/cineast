@@ -196,7 +196,7 @@ public class ExtractionCommand extends AbstractCineastCommand {
             Files.createDirectories(manifestJobDirectory);
           }
           manifestFactory.saveMetadataJson(manifestJobDirectory.toString(), "metadata_" + jobIdentifier);
-          manifestFactory.saveAllCanvasImages(manifestJobDirectory.toString(), "image_" + jobIdentifier);
+          manifestFactory.saveAllCanvasImages(manifestJobDirectory.toString());
         } catch (Exception e) {
           LOGGER.error(e.getMessage());
           e.printStackTrace();

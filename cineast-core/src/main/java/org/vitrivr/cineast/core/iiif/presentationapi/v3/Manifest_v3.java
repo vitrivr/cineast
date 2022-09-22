@@ -27,7 +27,7 @@ public class Manifest_v3 implements Manifest {
   @JsonProperty
   public LanguageValues label;
   @JsonProperty
-  public Object items; // TODO: Parse
+  public List<Canvas_v3> items;
   @JsonProperty
   public List<Metadata_v3> metadata;
   @JsonProperty
@@ -60,12 +60,18 @@ public class Manifest_v3 implements Manifest {
   public List<partOfItem> partOf;
   @JsonProperty
   public List<Structure> structures;
-  @JsonProperty
-  public List<Sequence> sequences;
 
   @Override
-  public List<Sequence> getSequences() {
-    return sequences;
+  public List<String> getImageUrls() {
+    return items.stream().flatMap(
+        canvas -> canvas.items.stream().flatMap(
+            annotationPage -> annotationPage.items.stream().filter(
+                annotation -> annotation.body.type.equals("Image")
+            ).map(
+                annotation -> annotation.body.id
+            )
+        )
+    ).toList();
   }
 
   @Override

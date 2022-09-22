@@ -10,9 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Metadata_v2;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 
 public class MetadataJson {
 
@@ -27,17 +24,7 @@ public class MetadataJson {
     this.description = manifest.getSummary();
     this.attribution = manifest.getRequiredStatement();
     this.metadata = manifest.getMetadata();
-    List<Sequence> sequences = manifest.getSequences();
-    if (sequences != null && sequences.size() != 0) {
-      for (Sequence sequence : sequences) {
-        List<Canvas> canvases = sequence.getCanvases();
-        if (canvases != null && canvases.size() != 0) {
-          for (Canvas canvas : canvases) {
-            canvas.getImages().stream().map(image -> new ImagePair(canvas.getLabel(), image.getAtId(), canvas.getHeight(), canvas.getWidth())).forEach(images::add);
-          }
-        }
-      }
-    }
+    // TODO
   }
 
   public String toJsonString() throws JsonProcessingException {

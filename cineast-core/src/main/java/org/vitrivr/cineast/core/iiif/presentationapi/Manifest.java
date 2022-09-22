@@ -1,11 +1,13 @@
 package org.vitrivr.cineast.core.iiif.presentationapi;
 
 import java.util.List;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 
 public interface Manifest {
 
-  List<Sequence> getSequences();
+  /**
+   * @return a list containing the Image API URL IDs of the image resources contained within this manifest.
+   */
+  List<String> getImageUrls();
 
   String getSummary();
 

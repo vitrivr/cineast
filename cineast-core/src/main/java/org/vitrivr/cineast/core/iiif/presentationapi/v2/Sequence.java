@@ -14,7 +14,7 @@ public class Sequence {
   @JsonProperty
   private String label;
   @JsonProperty
-  private List<Canvas> canvases;
+  private List<Canvas_v2> canvases;
 
   public Sequence() {
   }
@@ -43,11 +43,11 @@ public class Sequence {
     this.label = label;
   }
 
-  public List<Canvas> getCanvases() {
+  public List<Canvas_v2> getCanvases() {
     return canvases;
   }
 
-  public void setCanvases(List<Canvas> canvases) {
+  public void setCanvases(List<Canvas_v2> canvases) {
     this.canvases = canvases;
   }
 

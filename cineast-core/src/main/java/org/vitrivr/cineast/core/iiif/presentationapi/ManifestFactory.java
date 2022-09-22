@@ -1,12 +1,10 @@
 package org.vitrivr.cineast.core.iiif.presentationapi;
 
 import java.io.IOException;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Canvas;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageFetcher;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
  * Takes a URL String to a manifest in the constructor and downloads all the images, image information and simplified metadata to the filesystem.
@@ -43,23 +41,10 @@ public class ManifestFactory {
   /**
    * Save all images in the canvasses along with their respective {@link MetadataJson} metadata.iiif files
    */
-  public void saveAllCanvasImages(String jobDirectoryString, String filenamePrefix) {
-    List<Sequence> sequences = manifest.getSequences();
-    if (sequences != null && sequences.size() != 0) {
-      // Setting global metadata values that are common for every image in this sequence
-      ImageMetadata globalMetadata = new ImageMetadata()
-          .setDescription(manifest.getSummary())
-          .setLinkingUrl(manifest.getId())
-          .setAttribution(manifest.getRequiredStatement());
-      for (Sequence sequence : sequences) {
-        List<Canvas> canvases = sequence.getCanvases();
-        if (canvases != null && canvases.size() != 0) {
-          for (final Canvas canvas : canvases) {
-            // FIXME
-            LOGGER.error("Reached not implemented Presentation API image download.");
-          }
-        }
-      }
+  public void saveAllCanvasImages(String jobDirectoryString) throws IOException {
+    for (var imageUrl : manifest.getImageUrls()) {
+      var imageRequest = ImageRequest.fromUrl(imageUrl);
+      ImageFetcher.fetch(imageRequest, jobDirectoryString);
     }
   }
 }

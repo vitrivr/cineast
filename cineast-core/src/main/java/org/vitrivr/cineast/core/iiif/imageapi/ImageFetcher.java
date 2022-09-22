@@ -18,23 +18,43 @@ import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3;
 public class ImageFetcher {
 
   public static void fetch(IIIFItem item, String directory) throws IOException, UnsupportedIIIFAPIException {
-    var imageInfoString = getImageInfo(item.identifier);
+    var imageRequest = prepareImageRequest(item);
+    fetch(imageRequest, directory);
+  }
+
+  public static void fetch(ImageRequest imageRequest, String directory) throws IOException {
+    imageRequest.downloadImage(directory, FilenameUtils.getBaseName(imageRequest.getBaseUrl()));
+  }
+
+
+
+  public static ImageRequest prepareImageRequest(IIIFItem item) throws IOException, UnsupportedIIIFAPIException {
+    var imageInfoString = getImageInfoJson(item.identifier);
     var apiVersion = parseImageAPIVersion(imageInfoString);
     var imageInformation = switch (apiVersion) {
       case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(imageInfoString, ImageInformation_v2.class);
       case THREE_POINT_ZERO -> new ObjectMapper().readValue(imageInfoString, ImageInformation_v3.class);
     };
-    var imageRequest = new ImageRequest()
-        .setBaseUrl(item.identifier.substring(0, item.identifier.length() - "/info.json".length()))
-        .setRegion(imageInformation.getMaxRegion())
-        .setSize(imageInformation.getMaxSize())
-        .setRotation("0")
-        .setQuality("default")
-        .setExtension("jpg");
-    imageRequest.downloadImage(directory, FilenameUtils.getBaseName(imageInformation.getId()));
+    var info = "/info.json";
+    var identifier = item.identifier.endsWith(info)
+        ? item.identifier.substring(0, item.identifier.length() - info.length())
+        : item.identifier;
+    return new ImageRequest()
+        .setBaseUrl(identifier)
+        .setRegion(item.region == null ? imageInformation.getMaxRegion() : item.region)
+        .setSize(item.size == null ? imageInformation.getMaxSize() : item.size)
+        .setRotation(item.rotation == null ? "0" : item.rotation.toString())
+        .setQuality(item.quality == null ? "default" : item.quality)
+        .setExtension(item.format == null ? "jpg" : item.format);
   }
 
-  private static String getImageInfo(String infoURL) throws IOException {
+  /**
+   * Downloads the IIIF image information JSON as string.
+   *
+   * @param infoURL IIIF image information URL
+   * @return the IIIF image information JSON as string
+   */
+  private static String getImageInfoJson(String infoURL) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(infoURL).openConnection();
     connection.setRequestProperty("accept", "application/json");
     InputStream responseStream = connection.getInputStream();

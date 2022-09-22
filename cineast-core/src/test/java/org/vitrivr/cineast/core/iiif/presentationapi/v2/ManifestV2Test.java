@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -196,6 +197,7 @@ public class ManifestV2Test {
   public void parsingTest() throws JsonProcessingException {
     Manifest_v2 manifest = new ObjectMapper().readValue(JSON_RESPONSE, Manifest_v2.class);
     assertNotNull(manifest);
+    assertEquals(2, manifest.getImageUrls().size());
   }
 
 }

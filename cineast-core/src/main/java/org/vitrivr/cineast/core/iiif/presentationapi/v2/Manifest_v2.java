@@ -109,6 +109,17 @@ public class Manifest_v2 implements Manifest {
     this.metadata = metadata;
   }
 
+  @Override
+  public List<String> getImageUrls() {
+    return sequences.stream().flatMap(
+        sequence -> sequence.getCanvases().stream().flatMap(
+            canvas -> canvas.getImages().stream().map(
+                image -> image.getResource().getAtId()
+            )
+        )
+    ).toList();
+  }
+
   public String getSummary() {
     return description;
   }

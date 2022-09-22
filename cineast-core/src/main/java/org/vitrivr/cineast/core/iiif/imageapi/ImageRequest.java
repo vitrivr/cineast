@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,11 +36,7 @@ public class ImageRequest {
     String[] qualityDotFormat = split[split.length - 1].split("\\.");
     imageRequest.setQuality(qualityDotFormat[0]);
     imageRequest.setExtension(qualityDotFormat[1]);
-    StringBuilder baseUrl = new StringBuilder();
-    for (int i = 0; i < split.length - 4; i++) {
-      baseUrl.append(split[i]).append("/");
-    }
-    imageRequest.setBaseUrl(baseUrl.toString());
+    imageRequest.setBaseUrl(String.join("/", Arrays.stream(split).limit(split.length - 4).toList()));
     LOGGER.info("ImageRequest parsed from url: " + imageRequest);
     return imageRequest;
   }
@@ -102,17 +99,9 @@ public class ImageRequest {
    * Generates an IIIF Image Request URL of the ordering {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format} where each parameter is percent escaped
    */
   public String generateIIIFRequestUrl() {
-    String FORWARD_SLASH_DELIMITER = "/";
-    return baseUrl + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(region, StandardCharsets.UTF_8)
-        + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(size, StandardCharsets.UTF_8)
-        + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(rotation, StandardCharsets.UTF_8)
-        + FORWARD_SLASH_DELIMITER
-        + URLEncoder.encode(quality, StandardCharsets.UTF_8)
-        + "."
-        + URLEncoder.encode(extension, StandardCharsets.UTF_8);
+    var FORWARD_SLASH_DELIMITER = "/";
+    var parts = new String[]{baseUrl, region, size, rotation, quality + "." + extension};
+    return String.join(FORWARD_SLASH_DELIMITER, parts);
   }
 
   /**
