@@ -6,7 +6,6 @@ import java.util.List;
 import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Related;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.SeeAlso;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Sequence;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Service;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Structure;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.Thumbnail;
@@ -16,7 +15,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.Thumbnail;
  * <p>
  * WARNING: Does not currently parse all properties provided by Presentation API 3.0 manifests.
  */
-public class Manifest_v3 implements Manifest {
+public class ManifestV3 implements Manifest {
 
   @JsonProperty("@context")
   public String atContext;
@@ -27,9 +26,9 @@ public class Manifest_v3 implements Manifest {
   @JsonProperty
   public LanguageValues label;
   @JsonProperty
-  public List<Canvas_v3> items;
+  public List<CanvasV3> items;
   @JsonProperty
-  public List<Metadata_v3> metadata;
+  public List<MetadataV3> metadata;
   @JsonProperty
   public String summary;
   @JsonProperty
@@ -45,7 +44,7 @@ public class Manifest_v3 implements Manifest {
   @JsonProperty
   public String rights;
   @JsonProperty
-  public Metadata_v3 requiredStatement;
+  public MetadataV3 requiredStatement;
   @JsonProperty
   public String provider;
   @JsonProperty

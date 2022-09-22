@@ -6,23 +6,23 @@ import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUA
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_COLOR;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_DEFAULT;
 import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_GRAY;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_BASE_URI_REDIRECT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_CORS;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_JSONLD_MEDIA_TYPE;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_REGION_BY_PX;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_ROTATION_BY_90s;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_H;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_PCT;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_W;
-import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2.ProfileItem.SUPPORTS_SIZE_BY_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_BASE_URI_REDIRECT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_CORS;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_JSONLD_MEDIA_TYPE;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_REGION_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_REGION_BY_PX;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_ROTATION_BY_90s;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_CONFINED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_DISTORTED_WH;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_H;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_PCT;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_W;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2.ProfileItem.SUPPORTS_SIZE_BY_WH;
 
 /**
  * Class to check for IIIF Image API Compliance Level specific support for features, quality and image formats
  */
-public class ImageApiCompliance_v2 {
+public class ImageApiComplianceV2 {
 
   public static String LEVEL_0 = "http://iiif.io/api/image/2/level0.json";
   public static String LEVEL_1 = "http://iiif.io/api/image/2/level1.json";

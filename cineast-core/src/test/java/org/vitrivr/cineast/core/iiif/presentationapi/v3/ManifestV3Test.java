@@ -252,7 +252,7 @@ class ManifestV3Test {
 
   @Test
   public void parsingTest() throws JsonProcessingException {
-    Manifest_v3 manifest = new ObjectMapper().readValue(JSON_RESPONSE, Manifest_v3.class);
+    ManifestV3 manifest = new ObjectMapper().readValue(JSON_RESPONSE, ManifestV3.class);
     assertNotNull(manifest);
     assertEquals(1, manifest.getImageUrls().size());
   }

@@ -12,8 +12,8 @@ import org.apache.commons.io.IOUtils;
 import org.vitrivr.cineast.core.iiif.IIIFItem;
 import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageApiVersion.IMAGE_API_VERSION;
-import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformation_v2;
-import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformation_v3;
+import org.vitrivr.cineast.core.iiif.imageapi.v2.ImageInformationV2;
+import org.vitrivr.cineast.core.iiif.imageapi.v3.ImageInformationV3;
 
 public class ImageFetcher {
 
@@ -32,8 +32,8 @@ public class ImageFetcher {
     var imageInfoString = getImageInfoJson(item.identifier);
     var apiVersion = parseImageAPIVersion(imageInfoString);
     var imageInformation = switch (apiVersion) {
-      case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(imageInfoString, ImageInformation_v2.class);
-      case THREE_POINT_ZERO -> new ObjectMapper().readValue(imageInfoString, ImageInformation_v3.class);
+      case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(imageInfoString, ImageInformationV2.class);
+      case THREE_POINT_ZERO -> new ObjectMapper().readValue(imageInfoString, ImageInformationV3.class);
     };
     var info = "/info.json";
     var identifier = item.identifier.endsWith(info)

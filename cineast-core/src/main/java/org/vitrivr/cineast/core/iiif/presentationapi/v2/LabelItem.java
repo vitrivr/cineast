@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v2;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class used to serialize and deserialize the metadata -> label field of a {@link Manifest_v2}
+ * Class used to serialize and deserialize the metadata -> label field of a {@link ManifestV2}
  */
 public class LabelItem {
 

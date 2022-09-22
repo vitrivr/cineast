@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.iiif.presentationapi.v3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class Canvas_v3 {
+public class CanvasV3 {
 
   @JsonProperty
   public String id;

@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation;
 /**
  * ImageInformation object used to parse Image API 3.0 image information request's JSON response
  */
-public class ImageInformation_v3 implements ImageInformation {
+public class ImageInformationV3 implements ImageInformation {
 
   // The base URI of the service will redirect to the image information document.
   public static final String SUPPORTS_BASE_URI_REDIRECT = "baseUriRedirect";
@@ -148,7 +148,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isFeatureSupported(String feature) {
-    if (ImageApiCompliance_v3.isFeatureSupported(feature, profile)) {
+    if (ImageApiComplianceV3.isFeatureSupported(feature, profile)) {
       return true;
     }
     boolean isSupported = true;
@@ -160,7 +160,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isQualitySupported(String quality) {
-    if (ImageApiCompliance_v3.isQualitySupported(quality, profile)) {
+    if (ImageApiComplianceV3.isQualitySupported(quality, profile)) {
       return true;
     }
     boolean isSupported = true;
@@ -172,7 +172,7 @@ public class ImageInformation_v3 implements ImageInformation {
 
   @Override
   public boolean isFormatSupported(String format) {
-    if (ImageApiCompliance_v3.isFormatSupported(format, profile)) {
+    if (ImageApiComplianceV3.isFormatSupported(format, profile)) {
       return true;
     }
     boolean isSupported = true;

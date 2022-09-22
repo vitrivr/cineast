@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.v2.Service;
 /**
  * ImageInformation object used to parse Image API 2.1.1 image information request's JSON response
  */
-public class ImageInformation_v2 implements ImageInformation {
+public class ImageInformationV2 implements ImageInformation {
 
   private static final Logger LOGGER = LogManager.getLogger();
   /**
@@ -153,7 +153,7 @@ public class ImageInformation_v2 implements ImageInformation {
   @Override
   public boolean isQualitySupported(String quality) {
     Pair<String, List<ProfileItem>> profile = getProfile();
-    if (ImageApiCompliance_v2.isQualitySupported(quality, profile.first)) {
+    if (ImageApiComplianceV2.isQualitySupported(quality, profile.first)) {
       return true;
     }
     boolean isSupported = true;
@@ -169,7 +169,7 @@ public class ImageInformation_v2 implements ImageInformation {
   @Override
   public boolean isFormatSupported(String format) {
     Pair<String, List<ProfileItem>> profile = getProfile();
-    if (ImageApiCompliance_v2.isFormatSupported(format, profile.first)) {
+    if (ImageApiComplianceV2.isFormatSupported(format, profile.first)) {
       return true;
     }
     boolean isSupported = true;
@@ -185,7 +185,7 @@ public class ImageInformation_v2 implements ImageInformation {
   @Override
   public boolean isFeatureSupported(String feature) {
     Pair<String, List<ProfileItem>> profile = getProfile();
-    if (ImageApiCompliance_v2.isFeatureSupported(feature, profile.first)) {
+    if (ImageApiComplianceV2.isFeatureSupported(feature, profile.first)) {
       return true;
     }
     List<ProfileItem> profiles = profile.second;

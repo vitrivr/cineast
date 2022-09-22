@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
  * The overall description of the structure and properties of the digital representation of an object. It carries information needed for the viewer to present the digitized content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each manifest describes how to present a single object such as a book, a photograph, or a statue.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Manifest_v2 implements Manifest {
+public class ManifestV2 implements Manifest {
 
   @JsonProperty("@context")
   private String atContext;
@@ -23,7 +23,7 @@ public class Manifest_v2 implements Manifest {
   @JsonProperty
   private Object label;
   @JsonProperty
-  private List<Metadata_v2> metadata;
+  private List<MetadataV2> metadata;
   @JsonProperty
   private String description;
   @JsonProperty
@@ -53,7 +53,7 @@ public class Manifest_v2 implements Manifest {
   @JsonProperty
   private List<Sequence> sequences;
 
-  public Manifest_v2() {
+  public ManifestV2() {
   }
 
   public String getAtContext() {
@@ -97,7 +97,7 @@ public class Manifest_v2 implements Manifest {
     this.label = label;
   }
 
-  public List<Metadata_v2> getMetadataV2() {
+  public List<MetadataV2> getMetadataV2() {
     return metadata;
   }
 
@@ -105,7 +105,7 @@ public class Manifest_v2 implements Manifest {
     return Collections.singletonList(getMetadataV2());
   }
 
-  public void setMetadata(List<Metadata_v2> metadata) {
+  public void setMetadata(List<MetadataV2> metadata) {
     this.metadata = metadata;
   }
 

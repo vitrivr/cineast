@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.presentationapi.PresentationApiVersion.PRESENTATION_API_VERSION;
-import org.vitrivr.cineast.core.iiif.presentationapi.v2.Manifest_v2;
-import org.vitrivr.cineast.core.iiif.presentationapi.v3.Manifest_v3;
+import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestV2;
+import org.vitrivr.cineast.core.iiif.presentationapi.v3.ManifestV3;
 
 public class ManifestRequest {
 
@@ -61,8 +61,8 @@ public class ManifestRequest {
   public Manifest parseManifest(String manifestJSON) throws UnsupportedIIIFAPIException, JsonProcessingException {
     var apiVersion = parsePresentationAPIVersion(manifestJSON);
     return switch (apiVersion) {
-      case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(manifestJSON, Manifest_v2.class);
-      case THREE_POINT_ZERO -> new ObjectMapper().readValue(manifestJSON, Manifest_v3.class);
+      case TWO_POINT_ONE_POINT_ONE -> new ObjectMapper().readValue(manifestJSON, ManifestV2.class);
+      case THREE_POINT_ZERO -> new ObjectMapper().readValue(manifestJSON, ManifestV3.class);
     };
   }
 
