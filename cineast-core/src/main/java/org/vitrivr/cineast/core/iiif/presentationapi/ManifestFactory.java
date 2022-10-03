@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.iiif.presentationapi;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFetcher;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
@@ -41,7 +42,7 @@ public class ManifestFactory {
   /**
    * Save all images in the canvasses along with their respective {@link MetadataJson} metadata.iiif files
    */
-  public void saveAllCanvasImages(String jobDirectoryString) throws IOException {
+  public void saveAllCanvasImages(String jobDirectoryString) throws IOException, UnsupportedIIIFAPIException {
     for (var imageUrl : manifest.getImageUrls()) {
       var imageRequest = ImageRequest.fromUrl(imageUrl);
       ImageFetcher.fetch(imageRequest, jobDirectoryString);

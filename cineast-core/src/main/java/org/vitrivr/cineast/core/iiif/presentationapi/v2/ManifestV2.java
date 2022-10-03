@@ -114,7 +114,7 @@ public class ManifestV2 implements Manifest {
     return sequences.stream().flatMap(
         sequence -> sequence.getCanvases().stream().flatMap(
             canvas -> canvas.getImages().stream().map(
-                image -> image.getResource().getAtId()
+                image -> image.getResource().getService().getAtId()
             )
         )
     ).toList();
