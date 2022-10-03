@@ -45,7 +45,7 @@ public class ManifestFactory {
    */
   public void saveAllCanvasImages(String jobDirectoryString) throws IOException, UnsupportedIIIFAPIException {
     for (var imageUrl : manifest.getImageUrls()) {
-      var imageRequest = ImageRequest.fromUrl(imageUrl);
+      var imageRequest = ImageRequest.fromUrlIgnoreParams(imageUrl);
       ImageFetcher.fetch(imageRequest, jobDirectoryString);
       var imageMetadata = new ImageMetadata();
       imageMetadata.setIIIFParameters(imageRequest);

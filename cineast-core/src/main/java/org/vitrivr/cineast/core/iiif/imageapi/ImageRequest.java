@@ -53,6 +53,17 @@ public class ImageRequest {
     return imageRequest;
   }
 
+  public static ImageRequest fromUrlIgnoreParams(String url) throws IOException, UnsupportedIIIFAPIException {
+    url = URLDecoder.decode(url, StandardCharsets.UTF_8);
+    String[] split = url.split("/");
+    String[] qualityDotFormat = split[split.length - 1].split("\\.");
+    // Check if this is a fully qualified IIIF image request or only the base URL\
+    var baseUrl = qualityDotFormat.length == 1 || qualityDotFormat[1].equals("json")
+        ? url
+        : String.join("/", Arrays.stream(split).limit(split.length - 4).toList());
+    return fromBaseUrl(baseUrl);
+  }
+
   public static ImageRequest fromBaseUrl(String baseUrl) throws IOException, UnsupportedIIIFAPIException {
     var info = "/info.json";
     var infoUrl = baseUrl;
