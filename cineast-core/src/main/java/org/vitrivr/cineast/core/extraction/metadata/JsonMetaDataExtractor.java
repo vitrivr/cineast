@@ -17,10 +17,11 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
   public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
     File file = path.toFile();
     File parent = file.getParentFile();
-    File jsonFile = new File(parent, file.getName() + ".json");
+    var extension = extension();
+    File jsonFile = new File(parent, file.getName() + extension);
 
     if (!jsonFile.exists()) {
-      jsonFile = new File(parent, com.google.common.io.Files.getNameWithoutExtension(file.getName()) + ".json");
+      jsonFile = new File(parent, com.google.common.io.Files.getNameWithoutExtension(file.getName()) + extension);
     }
 
     if (!jsonFile.exists()) {
@@ -50,6 +51,10 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
   @Override
   public String domain() {
     return "JSON";
+  }
+
+  protected String extension() {
+    return ".json";
   }
 
 }
