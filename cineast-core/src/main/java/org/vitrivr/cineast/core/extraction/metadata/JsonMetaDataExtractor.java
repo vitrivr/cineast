@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
@@ -15,10 +14,10 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
 
   @Override
   public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
-    File file = path.toFile();
-    File parent = file.getParentFile();
+    var file = path.toFile();
+    var parent = file.getParentFile();
     var extension = extension();
-    File jsonFile = new File(parent, file.getName() + extension);
+    var jsonFile = new File(parent, file.getName() + extension);
 
     if (!jsonFile.exists()) {
       jsonFile = new File(parent, com.google.common.io.Files.getNameWithoutExtension(file.getName()) + extension);
@@ -35,11 +34,11 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
       return new ArrayList<>(0);
     }
 
-    ArrayList<MediaObjectMetadataDescriptor> _return = new ArrayList<>(json.size());
+    var _return = new ArrayList<MediaObjectMetadataDescriptor>(json.size());
 
-    Set<String> keys = json.keySet();
+    var keys = json.keySet();
 
-    for (String key : keys) {
+    for (var key : keys) {
       _return.add(
           MediaObjectMetadataDescriptor.of(objectId, domain(), key, json.get(key))
       );
