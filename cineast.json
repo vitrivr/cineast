@@ -98,6 +98,7 @@
     "threadPoolSize": 12,
     "serveContent": true,
     "serveUI": false,
+    "sessionExtractionConfigLocation": "extraction_config.json",
     "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "./thumbnails",
     "objectLocation": "./data/",

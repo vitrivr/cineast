@@ -35,7 +35,6 @@ public final class APIConfig {
 
   private boolean allowExtraction = true;
   private boolean enableCLI = false;
-
   private int threadPoolSize = 8;
 
   private boolean serveContent = false;
@@ -49,6 +48,7 @@ public final class APIConfig {
    */
   private String videoExtension = "mp4";
   private boolean serveUI = false;
+  private String sessionExtractionConfigLocation = "extraction_config.json";
   private String thumbnailLocation = "";
   private String objectLocation = "";
   private String uiLocation = "";
@@ -241,6 +241,15 @@ public final class APIConfig {
 
   public void setServeUI(boolean serveUI) {
     this.serveUI = serveUI;
+  }
+
+  @JsonProperty
+  public String getSessionExtractionConfigLocation() {
+    return this.sessionExtractionConfigLocation;
+  }
+
+  public void setSessionExtractionConfigLocation(String sessionExtractionConfigLocation) {
+    this.sessionExtractionConfigLocation = sessionExtractionConfigLocation;
   }
 
   @JsonProperty

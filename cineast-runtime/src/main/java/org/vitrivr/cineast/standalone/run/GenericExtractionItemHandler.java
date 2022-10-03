@@ -101,7 +101,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * @param context      context for this extraction run
    * @param mediaType    can be null. if provided, will be used for all given items
    */
-  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, IngestConfig context, MediaType mediaType) {
+  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, ExtractionContextProvider context, MediaType mediaType) {
     this.context = context;
 
     this.pathProvider = pathProvider;
