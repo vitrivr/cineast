@@ -20,6 +20,7 @@ import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFetcher;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.presentationapi.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
@@ -212,7 +213,10 @@ public class ExtractionCommand extends AbstractCineastCommand {
     }
     for (var item : items) {
       try {
-        ImageFetcher.fetch(item, jobDirectoryString);
+        var imageRequest = ImageFetcher.fetch(item, jobDirectoryString);
+        var imageMetadata = new ImageMetadata();
+        imageMetadata.setIIIFParameters(imageRequest);
+        imageMetadata.saveToFile(jobDirectoryString);
       } catch (IOException | UnsupportedIIIFAPIException e) {
         LOGGER.error(e.getMessage());
         e.printStackTrace();

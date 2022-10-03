@@ -7,9 +7,10 @@ import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 
 public class ImageFetcher {
 
-  public static void fetch(IIIFItem item, String directory) throws IOException, UnsupportedIIIFAPIException {
+  public static ImageRequest fetch(IIIFItem item, String directory) throws IOException, UnsupportedIIIFAPIException {
     var imageRequest = prepareImageRequest(item);
     fetch(imageRequest, directory);
+    return imageRequest;
   }
 
   public static void fetch(ImageRequest imageRequest, String directory) throws IOException {

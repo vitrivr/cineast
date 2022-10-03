@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.iiif.presentationapi.v3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
 import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
@@ -85,7 +87,12 @@ public class ManifestV3 implements Manifest {
 
   @Override
   public String getRequiredStatement() {
-    return requiredStatement.toString();
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.writeValueAsString(requiredStatement);
+    } catch (JsonProcessingException e) {
+      return requiredStatement.toString();
+    }
   }
 
   @Override

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.iiif.UnsupportedIIIFAPIException;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFetcher;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageMetadata;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
@@ -46,6 +47,10 @@ public class ManifestFactory {
     for (var imageUrl : manifest.getImageUrls()) {
       var imageRequest = ImageRequest.fromUrl(imageUrl);
       ImageFetcher.fetch(imageRequest, jobDirectoryString);
+      var imageMetadata = new ImageMetadata();
+      imageMetadata.setIIIFParameters(imageRequest);
+      imageMetadata.setManifestParameters(manifest);
+      imageMetadata.saveToFile(jobDirectoryString);
     }
   }
 }

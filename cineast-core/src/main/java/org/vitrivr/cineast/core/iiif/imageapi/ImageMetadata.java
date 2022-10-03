@@ -8,8 +8,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.iiif.presentationapi.Manifest;
 
 /**
  * Image Metadata file containing technical and non-technical information about the image. This file must be convertible to a flat JSON and can only contain key-value pairs.
@@ -37,7 +39,7 @@ public class ImageMetadata {
   @JsonInclude(Include.NON_NULL)
   private String attribution;
   /**
-   * Link to the original IIIF resource from where this image was downloaded. This URL should not contain any configuration parameters such as region, size, rotation etc and show end at the identifier without the trailing '/'
+   * Link to the original IIIF resource from where this image was downloaded. This URL should not contain any configuration parameters such as region, size, rotation etc. and show end at the identifier without the trailing '/'
    */
   @JsonInclude(Include.NON_NULL)
   private String resourceUrl;
@@ -79,11 +81,17 @@ public class ImageMetadata {
    * Sets the region, size, rotation, quality and extension parameters from the IIIF request
    */
   public void setIIIFParameters(ImageRequest imageRequest) {
-    this.setRegion(imageRequest.getRegion());
-    this.setSize(imageRequest.getSize());
-    this.setRotation(imageRequest.getRotation());
-    this.setQuality(imageRequest.getQuality());
-    this.setExtension(imageRequest.getExtension());
+    setResourceUrl(imageRequest.getBaseUrl());
+    setRegion(imageRequest.getRegion());
+    setSize(imageRequest.getSize());
+    setRotation(imageRequest.getRotation());
+    setQuality(imageRequest.getQuality());
+    setExtension(imageRequest.getExtension());
+  }
+
+  public void setManifestParameters(Manifest manifest) {
+    setAttribution(manifest.getRequiredStatement());
+    setDescription(manifest.getSummary());
   }
 
   /**
@@ -92,6 +100,10 @@ public class ImageMetadata {
   public String toJsonString() throws JsonProcessingException {
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.writeValueAsString(this);
+  }
+
+  public void saveToFile(String filePath) throws IOException {
+    saveToFile(filePath, FilenameUtils.getBaseName(resourceUrl));
   }
 
   /**

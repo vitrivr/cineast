@@ -6,7 +6,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,13 +17,13 @@ public class MetadataJson {
   public final String description;
   public final String attribution;
   public final List<Object> metadata;
-  public final List<ImagePair> images = new LinkedList<>();
+  public final List<String> images;
 
   public MetadataJson(Manifest manifest) {
-    this.description = manifest.getSummary();
-    this.attribution = manifest.getRequiredStatement();
-    this.metadata = manifest.getMetadata();
-    // TODO
+    description = manifest.getSummary();
+    attribution = manifest.getRequiredStatement();
+    metadata = manifest.getMetadata();
+    images = manifest.getImageUrls();
   }
 
   public String toJsonString() throws JsonProcessingException {
@@ -42,9 +41,4 @@ public class MetadataJson {
     fileOutputStream.close();
     LOGGER.debug("Metadata associated with this manifest written to file successfully");
   }
-
-  public record ImagePair(String label, String url, long height, long width) {
-
-  }
-
 }
