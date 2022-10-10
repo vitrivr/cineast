@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +52,7 @@ public class ShotThumbnailsExporter implements Extractor {
    *
    * @param properties HashMap containing named properties
    */
-  public ShotThumbnailsExporter(HashMap<String, String> properties) {
+  public ShotThumbnailsExporter(Map<String, String> properties) {
     this.folder = new File(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "./thumbnails"));
     this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
   }
