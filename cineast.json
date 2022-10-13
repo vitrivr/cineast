@@ -85,7 +85,7 @@
   },
 
   "api": {
-    "enableCLI": true,
+    "enableCLI": false,
     "enableWebsocket": true,
     "enableWebsocketSecure": false,
     "enableRest": true,
