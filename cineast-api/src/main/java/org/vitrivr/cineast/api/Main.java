@@ -50,6 +50,13 @@ public class Main {
       e.printStackTrace();
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println("Shutting down endpoints...");
+      APIEndpoint.stop();
+      GRPCEndpoint.stop();
+      PrometheusServer.stopServer();
+      System.out.println("Goodbye!");
+    }));
     try {
       /* Start Cineast CLI in interactive mode (blocking). */
       if (Config.sharedConfig().getApi().getEnableCli()) {
@@ -62,12 +69,5 @@ public class Main {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      System.out.println("Shutting down endpoints...");
-      APIEndpoint.stop();
-      GRPCEndpoint.stop();
-      PrometheusServer.stopServer();
-      System.out.println("Goodbye!");
-    }));
   }
 }
