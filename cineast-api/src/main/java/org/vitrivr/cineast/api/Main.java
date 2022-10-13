@@ -62,6 +62,7 @@ public class Main {
     } catch (InterruptedException e) {
       e.printStackTrace();
     } finally {
+      System.out.println("Goodbye!");
       APIEndpoint.stop();
       GRPCEndpoint.stop();
       PrometheusServer.stopServer();
