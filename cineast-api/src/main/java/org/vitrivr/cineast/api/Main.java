@@ -61,11 +61,13 @@ public class Main {
       }
     } catch (InterruptedException e) {
       e.printStackTrace();
-    } finally {
-      System.out.println("Goodbye!");
+    }
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println("Shutting down endpoints...");
       APIEndpoint.stop();
       GRPCEndpoint.stop();
       PrometheusServer.stopServer();
-    }
+      System.out.println("Goodbye!");
+    }));
   }
 }
