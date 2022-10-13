@@ -50,13 +50,21 @@ public class Main {
       e.printStackTrace();
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
-
-    /* Start Cineast CLI in interactive mode (blocking). */
-    CLI.start(CineastCli.class);
-
-    /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
-    APIEndpoint.stop();
-    GRPCEndpoint.stop();
-    PrometheusServer.stopServer();
+    try {
+      /* Start Cineast CLI in interactive mode (blocking). */
+      if (Config.sharedConfig().getApi().getEnableCli()) {
+        CLI.start(CineastCli.class);
+      } else {
+        while (true) {
+          Thread.sleep(100);
+        }
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } finally {
+      APIEndpoint.stop();
+      GRPCEndpoint.stop();
+      PrometheusServer.stopServer();
+    }
   }
 }
