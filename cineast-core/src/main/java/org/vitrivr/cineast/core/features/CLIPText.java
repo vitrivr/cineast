@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,7 @@ import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TInt64;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -113,9 +115,10 @@ public class CLIPText implements Retriever {
   }
 
   private static float[] exec(HashMap<String, Tensor> inputMap) {
-    var resultMap = bundle.call(inputMap);
-    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
-      float[] embeddingArray = new float[EMBEDDING_SIZE];
+   var resultMap = bundle.call(inputMap);
+
+    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+      var embeddingArray = new float[EMBEDDING_SIZE];
       var floatBuffer = DataBuffers.of(embeddingArray);
       embedding.read(floatBuffer);
       return embeddingArray;

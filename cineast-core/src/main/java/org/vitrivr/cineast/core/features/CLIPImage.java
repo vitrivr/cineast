@@ -11,7 +11,6 @@ import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat16;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -50,9 +49,7 @@ public class CLIPImage extends AbstractFeatureModule {
   }
 
   private static float[] prepareImage(BufferedImage img) {
-    return ImagePreprocessingHelper.imageToCHWArray(
-        ImagePreprocessingHelper.squaredScaleCenterCrop(img, IMAGE_SIZE),
-        MEAN, STD);
+    return ImagePreprocessingHelper.imageToCHWArray(ImagePreprocessingHelper.squaredScaleCenterCrop(img, IMAGE_SIZE), MEAN, STD);
   }
 
   @Override
@@ -105,11 +102,10 @@ public class CLIPImage extends AbstractFeatureModule {
     try (TFloat16 imageTensor = TFloat16.tensorOf(Shape.of(1, 3, IMAGE_SIZE, IMAGE_SIZE), DataBuffers.of(rgb))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, imageTensor);
-
-      try (TFloat16 encoding = (TFloat16) model.call(inputMap).get(EMBEDDING_OUTPUT).get()) {
-
-        float[] embeddingArray = new float[EMBEDDING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+      Map<String, Tensor> resultMap = model.call(inputMap);
+      try (TFloat16 encoding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+        var embeddingArray = new float[EMBEDDING_SIZE];
+        var floatBuffer = DataBuffers.of(embeddingArray);
         encoding.read(floatBuffer);
 
         return embeddingArray;
