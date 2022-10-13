@@ -38,13 +38,10 @@ public class ExtractItemPostHandler implements ParsingPostRestHandler<Extraction
 
   @Override
   public OpenApiDocumentation docs() {
-    return OpenApiBuilder.document()
-        .operation(op -> {
-          op.summary("Extract new item");
-          op.addTagsItem("Session");
-          op.operationId("extractItem");
-        })
-        .body(inClass())
-        .json("200", outClass());
+    return OpenApiBuilder.document().operation(op -> {
+      op.summary("Extract new item");
+      op.addTagsItem("Session");
+      op.operationId("extractItem");
+    }).body(inClass()).json("200", outClass());
   }
 }

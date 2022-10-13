@@ -32,12 +32,10 @@ public class StopExtractionPostHandler implements PostRestHandler<SessionMessage
 
   @Override
   public OpenApiDocumentation docs() {
-    return OpenApiBuilder.document()
-        .operation(op -> {
-          op.summary("Stop the active extraction session");
-          op.addTagsItem("Session");
-          op.operationId("stopExtraction");
-        })
-        .json("200", outClass());
+    return OpenApiBuilder.document().operation(op -> {
+      op.summary("Stop the active extraction session");
+      op.addTagsItem("Session");
+      op.operationId("stopExtraction");
+    }).json("200", outClass());
   }
 }

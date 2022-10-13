@@ -52,6 +52,7 @@ public final class APIConfig {
   private String thumbnailLocation = "";
   private String objectLocation = "";
   private String uiLocation = "";
+
   @JsonCreator
   public APIConfig() {
   }

@@ -30,6 +30,9 @@ public class SessionExtractionContainer {
       // Already running.
       return false;
     }
+    if (!Config.sharedConfig().getApi().getAllowExtraction()) {
+      LOGGER.info("Extraction disallowed in config, not starting extraction provider");
+    }
 
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
 

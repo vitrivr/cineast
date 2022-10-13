@@ -54,7 +54,6 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 import org.vitrivr.cineast.standalone.config.Config;
-import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
 
 /**

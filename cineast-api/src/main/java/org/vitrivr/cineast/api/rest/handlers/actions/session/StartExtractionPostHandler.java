@@ -32,12 +32,10 @@ public class StartExtractionPostHandler implements PostRestHandler<SessionMessag
 
   @Override
   public OpenApiDocumentation docs() {
-    return OpenApiBuilder.document()
-        .operation(op -> {
-          op.summary("Start a new extraction session");
-          op.addTagsItem("Session");
-          op.operationId("startExtraction");
-        })
-        .json("200", outClass());
+    return OpenApiBuilder.document().operation(op -> {
+      op.summary("Start a new extraction session");
+      op.addTagsItem("Session");
+      op.operationId("startExtraction");
+    }).json("200", outClass());
   }
 }
