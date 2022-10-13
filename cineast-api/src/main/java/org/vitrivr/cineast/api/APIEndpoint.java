@@ -26,7 +26,6 @@ import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByEntit
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentFeaturesGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindSegmentTextGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindTagsForElementGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.bool.CountRowsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectByIdPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.mediaobject.FindObjectGetHandler;
@@ -45,12 +44,9 @@ import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarS
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentSimilarTemporalPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByIdGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.segment.FindSegmentsByObjectIdGetHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StopExtractionPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
@@ -423,12 +419,9 @@ public class APIEndpoint {
         new FindTagsForElementGetHandler(),
         new FindTagsGetHandler(),
         /* Session */
-        new StartSessionHandler(),
-        new StartExtractionHandler(),
-        new ExtractItemHandler(),
-        new ValidateSessionHandler(),
-        new EndExtractionHandler(),
-        new EndSessionHandler(),
+        new StartExtractionPostHandler(),
+        new ExtractItemPostHandler(),
+        new StopExtractionPostHandler(),
         /* Boolean */
         new FindDistinctElementsByColumnPostHandler(),
         new SelectFromTablePostHandler(),

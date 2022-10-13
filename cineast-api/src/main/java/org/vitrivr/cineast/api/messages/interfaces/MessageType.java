@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.messages.result.QueryError;
 import org.vitrivr.cineast.api.messages.result.QueryStart;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
-import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
+import org.vitrivr.cineast.api.messages.session.SessionMessage;
 
 /**
  * Defines the different MessageTypes used by the WebSocket API.
@@ -32,7 +32,7 @@ public enum MessageType {
 
 
   /* Session */
-  SESSION_START(StartSessionMessage.class),
+  SESSION_INFO(SessionMessage.class),
 
   /* Query results. */
   QR_START(QueryStart.class),
