@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.api;
 
-import io.prometheus.client.Counter;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,108 +12,58 @@ import org.vitrivr.cineast.standalone.run.ExtractionDispatcher;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
 import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
 
-
-/**
- * Singleton Structure. Intended to be an access points across multiple sessions. Can be closed and opened if you care about memory leaks
- */
 public class SessionExtractionContainer {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private static SessionContainerProvider provider;
-  private static boolean open = false;
-  private static Counter submittedPaths;
-  private static File configFile;
+  private static IngestConfig context;
 
-  /**
-   * @param configFile where the config is located
-   */
-  public static synchronized void open(File configFile) {
-    if (open) {
-      LOGGER.error("Already initialized...");
-      return;
-    }
-    SessionExtractionContainer.configFile = configFile;
-    initalizeExtraction();
-    if (Config.sharedConfig().getMonitoring().enablePrometheus) {
-      LOGGER.debug("Initalizing Prometheus monitoring for submitted paths");
-      submittedPaths = Counter.build().name("cineast_submitted_paths")
-          .help("Submitted Paths for this instance").register();
-    }
-    open = true;
+  private static void loadConfig() {
+    String path = Config.sharedConfig().getApi().getSessionExtractionConfigLocation();
+    File configFile = new File(path);
+    JacksonJsonProvider reader = new JacksonJsonProvider();
+    context = reader.toObject(configFile, IngestConfig.class);
   }
 
-  private static void initalizeExtraction() {
+  public static boolean startExtraction() {
+    if (provider != null && provider.isOpen()) {
+      // Already running.
+      return false;
+    }
+    if (!Config.sharedConfig().getApi().getAllowExtraction()) {
+      LOGGER.info("Extraction disallowed in config, not starting extraction provider");
+    }
+
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
+
     try {
-      JacksonJsonProvider reader = new JacksonJsonProvider();
-      IngestConfig context = reader.toObject(configFile, IngestConfig.class);
+      loadConfig();
+
+      // Create new provider and go.
       provider = new SessionContainerProvider();
-      if (dispatcher.initialize(provider, context)) {
-        dispatcher.registerListener(provider);
-        dispatcher.start();
-      } else {
-        System.err.println(String.format(
-            "Could not start session with configuration file '%s'. Does the file exist?",
-            configFile.toString()));
-      }
-      dispatcher.start();
+      dispatcher.initialize(provider, context);
+      dispatcher.registerListener(provider);
+      dispatcher.start(); // Runs as long as the provider is open.
     } catch (IOException e) {
-      System.err.println(String.format(
-          "Could not start session with configuration file '%s' due to a IO error.",
-          configFile.toString()));
-      e.printStackTrace();
+      LOGGER.error("Failed to start new ExtractionDispatcher for session!");
+      return false;
     }
+
+    return true;
   }
 
-  /**
-   * Re-initalizes extraction. Counter for submitted paths remains
-   */
-  public static void restartExceptCounter() {
-    getProviderOrExit().close();
-    LOGGER.debug("Restarting SessionPathProvider");
-    initalizeExtraction();
+  public static void stopExtraction() {
+    provider.endSession();
+    provider = null;
+    context = null;
   }
 
-  public static void close() {
-    LOGGER.debug("Closing session");
-    getProviderOrExit().close();
-    open = false;
-  }
-
-  public static void endSession() {
-    getProviderOrExit().endSession();
+  public static Boolean isOpen() {
+    return provider != null && provider.isOpen();
   }
 
   public static void addPaths(List<ExtractionItemContainer> items) {
-    getOpenProviderOrExit().addPaths(items);
-    if (submittedPaths != null) {
-      submittedPaths.inc(items.size());
-    }
+    provider.addPaths(items);
   }
 
-  /**
-   * Marks as not closing anymore. Provides a best-effort to synchronize.
-   *
-   * @return if the underlying provider is closed
-   */
-  public static boolean keepAliveCheckIfClosed() {
-    return getOpenProviderOrExit().keepAliveCheckIfClosed();
-  }
-
-  private static SessionContainerProvider getProviderOrExit() {
-    if (provider == null) {
-      LOGGER
-          .fatal("Provider not initalized yet. Please use the --server option in the API. Exiting");
-      throw new RuntimeException();
-    }
-    return provider;
-  }
-
-  private static SessionContainerProvider getOpenProviderOrExit() {
-    if (!getProviderOrExit().isOpen()) {
-      LOGGER.error("Provider is closed. URL will not be submitted, exiting.");
-      throw new RuntimeException();
-    }
-    return provider;
-  }
 }
