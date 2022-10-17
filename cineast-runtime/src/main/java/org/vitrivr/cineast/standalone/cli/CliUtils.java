@@ -90,7 +90,6 @@ public class CliUtils {
     System.out.println("Only printing the first " + limit + " results, change with --limit parameter");
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     retrievers.forEach(retriever -> {
-
       AtomicBoolean entityExists = new AtomicBoolean(true);
       retriever.getTableNames().forEach(table -> {
         if (!selector.existsEntity(table)) {
@@ -104,7 +103,7 @@ public class CliUtils {
       }
       System.out.println("Retrieving for " + retriever.getClass().getSimpleName());
       long start = System.currentTimeMillis();
-      List<SegmentScoreElement> results = retrieval.retrieveByRetriever(qc, retriever, new ConstrainedQueryConfig().setMaxResults(limit));
+      List<SegmentScoreElement> results = retrieval.retrieveByRetriever(qc, retriever, new ConstrainedQueryConfig().setMaxResults(limit).setResultsPerModule(limit));
       long stop = System.currentTimeMillis();
       System.out.println("Results for " + retriever.getClass().getSimpleName() + ":, retrieved in " + (stop - start) + "ms");
 

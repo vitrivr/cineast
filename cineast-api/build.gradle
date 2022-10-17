@@ -2,7 +2,6 @@ plugins {
     id 'application'
 }
 
-
 application {
     getMainClass().set('org.vitrivr.cineast.api.Main')
     applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
@@ -86,11 +85,6 @@ signing {
     sign publishing.publications.mavenJava
 }
 
-configurations.all {
-    // Check for updates every build
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
 jar {
     manifest {
         attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
@@ -103,8 +97,14 @@ shadowJar {
     mergeServiceFiles()
 }
 
+configurations.all {
+    // Check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 dependencies {
-    implementation project(':cineast-runtime')
+    api project(':cineast-runtime')
+
     implementation("io.javalin:javalin-bundle:$version_javalin") {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }

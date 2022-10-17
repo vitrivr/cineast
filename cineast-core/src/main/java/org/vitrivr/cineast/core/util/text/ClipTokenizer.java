@@ -34,12 +34,12 @@ public class ClipTokenizer {
     for (int i : byte_encoder.keySet()) {
       byte_decoder.put(byte_encoder.get(i), i);
     }
+    init();
   }
 
   private HashMap<String, String> cache = new HashMap<>();
   private Pattern pat = Pattern.compile("<\\|startoftext\\|>|<\\|endoftext\\|>|'s|'t|'re|'ve|'m|'ll|'d|[\\p{L}]+|[\\p{N}]|[^\\s\\p{L}\\p{N}]+", Pattern.CASE_INSENSITIVE);
   public ClipTokenizer() {
-    init();
     cache.put("<|startoftext|>", "<|startoftext|>");
     cache.put("<|endoftext|>", "<|endoftext|>");
   }

@@ -13,7 +13,6 @@ import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -90,9 +89,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
     // Case: segment contains video frames
     if (!sc.getVideoFrames().isEmpty() && sc.getVideoFrames().get(0) != VideoFrame.EMPTY_VIDEO_FRAME) {
-      List<MultiImage> frames = sc.getVideoFrames().stream()
-          .map(VideoFrame::getImage)
-          .collect(Collectors.toList());
+      List<MultiImage> frames = sc.getVideoFrames().stream().map(VideoFrame::getImage).collect(Collectors.toList());
 
       float[] embeddingArray = embedVideo(frames);
       this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
@@ -179,19 +176,15 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(TEXT_EMBEDDING_INPUT, textTensor);
-
       Map<String, Tensor> resultMap = textEmbedding.call(inputMap);
-
       try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT)) {
 
         inputMap.clear();
         inputMap.put(TEXT_CO_EMBEDDING_INPUT, intermediaryEmbedding);
-
         resultMap = textCoEmbedding.call(inputMap);
         try (TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT)) {
-
-          float[] embeddingArray = new float[EMBEDDING_SIZE];
-          FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+          var embeddingArray = new float[EMBEDDING_SIZE];
+          var floatBuffer = DataBuffers.of(embeddingArray);
           // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
           embedding.read(floatBuffer);
 
@@ -211,17 +204,13 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       inputMap.put(InceptionResnetV2.INPUT, imageTensor);
 
       Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
-
       try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(InceptionResnetV2.OUTPUT)) {
-
         inputMap.clear();
         inputMap.put(VISUAL_CO_EMBEDDING_INPUT, intermediaryEmbedding);
-
         resultMap = visualCoEmbedding.call(inputMap);
         try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
-
-          float[] embeddingArray = new float[EMBEDDING_SIZE];
-          FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+          var embeddingArray = new float[EMBEDDING_SIZE];
+          var floatBuffer = DataBuffers.of(embeddingArray);
           // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
           embedding.read(floatBuffer);
 
@@ -240,12 +229,10 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
 
       inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);
-
       Map<String, Tensor> resultMap = visualCoEmbedding.call(inputMap);
       try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
-
-        float[] embeddingArray = new float[EMBEDDING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+        var embeddingArray = new float[EMBEDDING_SIZE];
+        var floatBuffer = DataBuffers.of(embeddingArray);
         // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
         embedding.read(floatBuffer);
 

@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -51,19 +52,21 @@ public class CLIPText implements Retriever {
 
   private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(1);
 
-  private static SavedModelBundle model;
-
   private DBSelector selector;
-  private ClipTokenizer ct = new ClipTokenizer();
+  private final ClipTokenizer ct = new ClipTokenizer();
+
+  private static SavedModelBundle bundle;
 
   public CLIPText() {
-    loadModel();
+    ensureModelLoaded();
   }
 
-  private synchronized static void loadModel() {
-    if (model == null) {
-      model = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
+  public static synchronized void ensureModelLoaded() {
+    if (bundle != null) {
+      return;
     }
+    LOGGER.debug("Loading CLIP Model");
+    bundle = SavedModelBundle.load(RESOURCE_PATH + EMBEDDING_MODEL);
   }
 
   @Override
@@ -84,40 +87,41 @@ public class CLIPText implements Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
     String text = sc.getText();
-
     if (text == null || text.isBlank()) {
       return Collections.emptyList();
     }
+    LOGGER.debug("Querying for: \"{}\"", text);
 
-    return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
+    try {
+      return getSimilar(new FloatArrayTypeProvider(embedText(text)), qc);
+    } catch (Exception e) {
+      LOGGER.error("error during CLIPText execution", e);
+      return new ArrayList<>();
+    }
   }
 
   public float[] embedText(String text) {
-
     long[] tokens = ct.clipTokenize(text);
-
     LongNdArray arr = NdArrays.ofLongs(Shape.of(1, tokens.length));
     for (int i = 0; i < tokens.length; i++) {
       arr.setLong(tokens[i], 0, i);
     }
-
     try (TInt64 textTensor = TInt64.tensorOf(arr)) {
-
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, textTensor);
+      return exec(inputMap);
+    }
+  }
 
-      Map<String, Tensor> resultMap = model.call(inputMap);
+  private static float[] exec(HashMap<String, Tensor> inputMap) {
+   var resultMap = bundle.call(inputMap);
 
-      try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
-
-        float[] embeddingArray = new float[EMBEDDING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
-        embedding.read(floatBuffer);
-        return embeddingArray;
-
-      }
+    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+      var embeddingArray = new float[EMBEDDING_SIZE];
+      var floatBuffer = DataBuffers.of(embeddingArray);
+      embedding.read(floatBuffer);
+      return embeddingArray;
     }
   }
 

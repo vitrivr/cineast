@@ -85,7 +85,7 @@
   },
 
   "api": {
-    "enableCLI": true,
+    "enableCLI": false,
     "enableWebsocket": true,
     "enableWebsocketSecure": false,
     "enableRest": true,
@@ -98,6 +98,7 @@
     "threadPoolSize": 12,
     "serveContent": true,
     "serveUI": false,
+    "sessionExtractionConfigLocation": "extraction_config.json",
     "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "./thumbnails",
     "objectLocation": "./data/",
