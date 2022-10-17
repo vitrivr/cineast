@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +11,6 @@ import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.types.TFloat32;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -79,14 +77,11 @@ public class InceptionResnetV2 extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(INPUT, imageTensor);
 
-      Map<String, Tensor> resultMap = model.call(inputMap);
-
+      var resultMap = model.call(inputMap);
       try (TFloat32 encoding = (TFloat32) resultMap.get(OUTPUT)) {
-
-        float[] embeddingArray = new float[ENCODING_SIZE];
-        FloatDataBuffer floatBuffer = DataBuffers.of(embeddingArray);
+        var embeddingArray = new float[ENCODING_SIZE];
+        var floatBuffer = DataBuffers.of(embeddingArray);
         encoding.read(floatBuffer);
-
         return embeddingArray;
       }
     }

@@ -31,9 +31,6 @@ shadowJar {
     mergeServiceFiles()
 }
 
-/**
- * See build.gradle in cineast-core on why we cannot use implementation
- */
 dependencies {
 
     api project(':cineast-core')

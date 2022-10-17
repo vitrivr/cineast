@@ -126,10 +126,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .collect(Collectors.toList());
 
               if (results.isEmpty()) {
-                LOGGER.warn("No results found for category {} and qt {} in stage with id {}. Full component: {}", category, qt.type(), lambdaFinalContainerIdx, stage);
+                LOGGER.info("No results found for category {} and qt {} in stage {} for query {}. Full component: {}", category, qt.type(), lambdaFinalContainerIdx, uuid, stage);
               }
               if (cache.get(stageIndex).containsKey(category)) {
-                LOGGER.error("Category {} was used twice in stage {}. This erases the results of the previous category... ", category, stageIndex);
+                LOGGER.error("Category {} was used twice in stage {} for query {}. This erases the results of the previous category... ", category, stageIndex, uuid);
               }
 
               cache.get(stageIndex).put(category, results);
