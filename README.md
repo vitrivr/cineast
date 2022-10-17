@@ -33,9 +33,7 @@ $> docker run vitrivr/cineast cli cineast.json help
 To change the configuration you can use a bind mount, e.g. to run the API
 server with custom configuration file cineast.json in the current directory:
 ```
-$> docker run \
-  --mount type=bind,source="$(pwd)"/cineast.json,target=/opt/cineast/cineast.json \
-  cineast.json vitrivr/cineast api cineast.json
+$> docker run -v "$PWD"/cineast.json:/opt/cineast/cineast.json:ro,Z vitrivr/cineast api cineast.json
 ```
 
 ## Generate OpenApi Specification
