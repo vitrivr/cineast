@@ -10,20 +10,6 @@
 		}
 	},
 	"extractors":[
-		{"name": "AverageColor"},
-		{"name": "AverageColorARP44"},
-		{"name": "AverageColorGrid8"},
-		{"name": "AverageColorRaster"},
-		{"name": "AverageFuzzyHist"},
-		{"name": "CLD"},
-		{"name": "DominantEdgeGrid16"},
-		{"name": "EHD"},
-		{"name": "HPCP12Shingle"},
-		{"name": "MedianColor"},
-		{"name": "MedianColorGrid8"},
-		{"name": "OCRSearch"},
-		{"name": "HOGMirflickr25K512"},
-		{"name": "SURFMirflickr25K512"},
 		{"name": "VisualTextCoEmbedding"},
 		{"name": "LightfieldFourier"},
 		{"name": "LightfieldZernike"}
