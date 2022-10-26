@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import com.jogamp.opengl.awt.GLCanvas;
 import com.twelvemonkeys.image.ImageUtil;
 import java.awt.Image;
 import java.awt.image.BufferedImage;

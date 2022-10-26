@@ -9,6 +9,7 @@ import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLDrawableFactory;
 import com.jogamp.opengl.GLOffscreenAutoDrawable;
 import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
@@ -39,7 +40,7 @@ public class JOGLOffscreenRenderer implements Renderer {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Default GLProfile to be used. Should be GL2.
+   * Default GLProfile to be used. Should be GL2. "The desktop OpenGL profile 1.x up to 3.0"
    */
   private static final GLProfile GL_PROFILE = GLProfile.get(GLProfile.GL2);
 
@@ -52,7 +53,8 @@ public class JOGLOffscreenRenderer implements Renderer {
    * This code-block can be used to configure the off-screen renderer's GL_CAPABILITIES.
    */
   static {
-    GL_CAPABILITIES.setOnscreen(false);
+    GL_CAPABILITIES.setOnscreen(true);
+    //GL_CAPABILITIES.setOnscreen(false);
     GL_CAPABILITIES.setHardwareAccelerated(true);
   }
 
@@ -108,7 +110,9 @@ public class JOGLOffscreenRenderer implements Renderer {
     /* Initialize GLOffscreenAutoDrawable. */
     GLDrawableFactory factory = GLDrawableFactory.getFactory(GL_PROFILE);
     this.drawable = factory.createOffscreenAutoDrawable(null, GL_CAPABILITIES, null, width, height);
+
     this.drawable.display();
+
 
     /* Initialize GLU and GL2. */
     this.glu = new GLU();
@@ -116,7 +120,10 @@ public class JOGLOffscreenRenderer implements Renderer {
 
     /* Set default color. */
     gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+
   }
+
 
   /**
    * Getter for width.
