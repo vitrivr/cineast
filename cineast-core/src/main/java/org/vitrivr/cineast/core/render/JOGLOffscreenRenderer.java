@@ -18,6 +18,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -407,7 +410,9 @@ public class JOGLOffscreenRenderer implements Renderer {
       return null;
     }
     AWTGLReadBufferUtil glReadBufferUtil = new AWTGLReadBufferUtil(gl.getGL2().getGLProfile(), false);
-    return glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
+    var image = glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
+    this.showImage(image);
+    return image;
   }
 
   /**
@@ -456,5 +461,26 @@ public class JOGLOffscreenRenderer implements Renderer {
     } else {
       return true;
     }
+  }
+
+
+  JFrame jFrame;
+  /**
+   * Shows Image in a JFrame for Debug purpose
+   * @param im BufferedImage to show
+   */
+  private void showImage(BufferedImage im) {
+    if(this.jFrame == null){
+      this.jFrame = new JFrame();
+      this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    this.jFrame.setVisible(false);
+    this.jFrame.getContentPane().removeAll();
+    this.jFrame.getContentPane().add(new JLabel(new ImageIcon(im)));
+    this.jFrame.getContentPane().setBackground(Color.black);
+    ;
+    this.jFrame.pack();
+    this.jFrame.toFront();
+    this.jFrame.setVisible(true);
   }
 }
