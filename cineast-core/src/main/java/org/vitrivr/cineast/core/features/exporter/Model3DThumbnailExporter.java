@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +77,7 @@ public class Model3DThumbnailExporter implements Extractor {
    *
    * @param properties HashMap containing named properties
    */
-  public Model3DThumbnailExporter(HashMap<String, String> properties) {
+  public Model3DThumbnailExporter(Map<String, String> properties) {
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
     this.renderer = new JOGLOffscreenRenderer(this.size / 2, this.size / 2);
