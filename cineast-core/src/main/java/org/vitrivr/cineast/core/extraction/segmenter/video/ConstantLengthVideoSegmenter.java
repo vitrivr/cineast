@@ -77,7 +77,11 @@ public class ConstantLengthVideoSegmenter implements Segmenter<VideoFrame> {
 
   @Override
   public void close() {
-
+    if (this.complete.get()) {
+      if (this.decoder != null) {
+        this.decoder.close();
+      }
+    }
   }
 
   @Override
