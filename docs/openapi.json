@@ -856,39 +856,10 @@
         }
       }
     },
-    "/api/v1/session/start" : {
+    "/api/v1/extract/start" : {
       "post" : {
         "tags" : [ "Session" ],
-        "summary" : "Start new session for given credentials",
-        "operationId" : "startSession",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/StartSessionMessage"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/session/extract/start" : {
-      "post" : {
-        "tags" : [ "Session" ],
-        "summary" : "Start extraction session",
-        "description" : "Changes the session's state to extraction",
+        "summary" : "Start a new extraction session",
         "operationId" : "startExtraction",
         "responses" : {
           "200" : {
@@ -896,20 +867,18 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
+                  "$ref" : "#/components/schemas/SessionMessage"
                 }
               }
             }
           }
-        },
-        "deprecated" : true
+        }
       }
     },
-    "/api/v1/session/extract/new" : {
+    "/api/v1/extract/new" : {
       "post" : {
         "tags" : [ "Session" ],
         "summary" : "Extract new item",
-        "description" : "TODO",
         "operationId" : "extractItem",
         "requestBody" : {
           "content" : {
@@ -926,7 +895,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
+                  "$ref" : "#/components/schemas/SessionMessage"
                 }
               }
             }
@@ -934,77 +903,18 @@
         }
       }
     },
-    "/api/v1/session/validate/{id}" : {
-      "get" : {
-        "tags" : [ "Session" ],
-        "summary" : "Validates the session with given id",
-        "operationId" : "validateSession",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "The id to validate the session of",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/session/extract/end" : {
+    "/api/v1/extract/stop" : {
       "post" : {
         "tags" : [ "Session" ],
-        "summary" : "End the active extraction session",
-        "description" : "CAUTION. Untested",
-        "operationId" : "endExtraction",
+        "summary" : "Stop the active extraction session",
+        "operationId" : "stopExtraction",
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true
-      }
-    },
-    "/api/v1/session/end/{id}" : {
-      "get" : {
-        "tags" : [ "Session" ],
-        "summary" : "End the session for given id",
-        "description" : "Ends the session for the given id",
-        "operationId" : "endSession",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "The id of the session to end",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SessionState"
+                  "$ref" : "#/components/schemas/SessionMessage"
                 }
               }
             }
@@ -1193,7 +1103,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1296,7 +1206,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1339,7 +1249,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1392,7 +1302,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1458,19 +1368,19 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "normIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "distanceWeightsIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1499,7 +1409,7 @@
         }
       },
       "SimilarityQuery" : {
-        "required" : [ "metadataAccessSpec", "terms" ],
+        "required" : [ "terms" ],
         "type" : "object",
         "properties" : {
           "terms" : {
@@ -1519,7 +1429,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1544,7 +1454,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1604,7 +1514,7 @@
         }
       },
       "TemporalQuery" : {
-        "required" : [ "messageType", "metadataAccessSpec", "queries" ],
+        "required" : [ "queries" ],
         "type" : "object",
         "properties" : {
           "queries" : {
@@ -1624,7 +1534,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1686,19 +1596,19 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "correspondenceFunction" : {
-            "$ref" : "#/components/schemas/CorrespondenceFunction"
-          },
-          "normIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
-          "distanceWeightsIfEmpty" : {
-            "$ref" : "#/components/schemas/QueryConfig"
-          },
           "distanceIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "correspondenceFunctionIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "correspondenceFunction" : {
+            "$ref" : "#/components/schemas/CorrespondenceFunction"
+          },
+          "distanceWeightsIfEmpty" : {
+            "$ref" : "#/components/schemas/QueryConfig"
+          },
+          "normIfEmpty" : {
             "$ref" : "#/components/schemas/QueryConfig"
           },
           "rawResultsPerModule" : {
@@ -1739,7 +1649,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -1875,43 +1785,15 @@
           }
         }
       },
-      "Credentials" : {
-        "required" : [ "password", "username" ],
+      "SessionMessage" : {
         "type" : "object",
         "properties" : {
-          "username" : {
+          "message" : {
             "type" : "string"
-          },
-          "password" : {
-            "type" : "string"
-          }
-        }
-      },
-      "StartSessionMessage" : {
-        "type" : "object",
-        "properties" : {
-          "credentials" : {
-            "$ref" : "#/components/schemas/Credentials"
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
-          }
-        }
-      },
-      "SessionState" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string"
-          },
-          "validUntil" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "type" : {
-            "type" : "string",
-            "enum" : [ "UNAUTHENTICATED", "USER", "ADMIN" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       },
@@ -2022,7 +1904,7 @@
           },
           "messageType" : {
             "type" : "string",
-            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
+            "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "Q_TEMPORAL", "SESSION_INFO", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY", "QR_TEMPORAL" ]
           }
         }
       }

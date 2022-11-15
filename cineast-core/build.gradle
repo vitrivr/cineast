@@ -3,6 +3,9 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 repositories {
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
+        mavenContent {
+            snapshotsOnly()
+        }
     }
 }
 
