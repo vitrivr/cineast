@@ -11,6 +11,9 @@ public interface IEngineLogic {
 
   void init(Window window, Scene scene, Render render);
 
+  void beforeRender(Window window, Scene scene, Render render);
+  void afterRender(Window window, Scene scene, Render render);
+
   void input(Window window, Scene scene, long diffTimeMillis);
 
   void update(Window window, Scene scene, long diffTimeMillis);

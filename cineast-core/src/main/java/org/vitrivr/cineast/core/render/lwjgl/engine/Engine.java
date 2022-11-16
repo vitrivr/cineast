@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.render.lwjgl.engine;
 
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
+import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
@@ -51,13 +52,13 @@ public class Engine {
   }
 
   public void runOnce() {
-    var initialTime = System.currentTimeMillis();
+
     this.window.pollEvents();
-    var now = System.currentTimeMillis();
-    this.appLogic.input(this.window, this.scene, -1);
-    this.appLogic.update(this.window, this.scene, -1);
+    this.appLogic.beforeRender(this.window, this.scene, this.render);
     this.render.render(this.window, this.scene);
+    this.appLogic.afterRender(this.window, this.scene, this.render);
     this.window.update();
+
   }
 
 
@@ -103,9 +104,11 @@ public class Engine {
       }
 
       if (this.targetFps <= 0 || deltaFps >= 1) {
+        this.appLogic.beforeRender(this.window, this.scene, this.render);
         this.render.render(this.window, this.scene);
         deltaFps--;
         this.window.update();
+        this.appLogic.afterRender(this.window, this.scene, this.render);
       }
     }
     this.cleanup();

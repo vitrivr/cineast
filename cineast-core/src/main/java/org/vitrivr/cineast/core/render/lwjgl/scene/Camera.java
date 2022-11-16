@@ -101,6 +101,10 @@ public class Camera {
     this.recalculate();
     return this;
   }
+  public Camera setPosition(Vector3f position) {
+    this.setPosition(position.x, position.y, position.z);
+    return this;
+  }
 
   public Camera setRotation(float x, float y) {
     this.rotation.set(x, y);
@@ -122,6 +126,16 @@ public class Camera {
     this.recalculate();
     return this;
   }
+
+  public Camera setPositionAndOrientation(Vector3f cameraPosition, Vector3f objectPosition, Vector3f cameraUp) {
+    //this.orbitRotation.fromAxisAngleRad(x, y, z, angle);
+    this.setPosition(cameraPosition);
+    this.orbitRotation.lookAlong(objectPosition, cameraUp);
+    //this.viewMatrix.rotate(this.orbitRotation);
+    this.recalculate();
+    return this;
+  }
+
 
   public float degreHandler(float degre) {
     if (degre > 360) {

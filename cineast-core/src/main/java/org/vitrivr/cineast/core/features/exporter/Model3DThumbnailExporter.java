@@ -117,8 +117,9 @@ public class Model3DThumbnailExporter implements Extractor {
           this.renderer.assemble(model);
 
           for (int i = 0; i < 4; i++) {
+
             this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
-            //this.renderer.render();
+            this.renderer.render();
             buffer = this.renderer.obtain();
 
             int idx = i % 2;

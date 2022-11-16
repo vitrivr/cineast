@@ -16,18 +16,17 @@ public class LightfieldCamera {
   private final WindowOptions opts;
   private final BufferedImage lightfieldImage;
   private final FloatBuffer imageData;
-  private static String name;
+
   private static int count;
 
   private final Path imagePath;
 
-  public LightfieldCamera(WindowOptions opts, String name) {
-    this.name = name;
+  public LightfieldCamera(WindowOptions opts) {
+
     this.opts = opts;
     this.imagePath = Path.of(
         "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSet3D\\cineast_out\\lightfieldImages");
     this.lightfieldImage = new BufferedImage(opts.width, opts.height, BufferedImage.TYPE_INT_RGB);
-
     this.imageData = BufferUtils.createFloatBuffer(opts.width * opts.height * 3);
     GL30.glReadPixels(0, 0, opts.width, opts.height, GL30.GL_RGB, GL30.GL_FLOAT, this.imageData);
     this.imageData.rewind();
@@ -35,28 +34,19 @@ public class LightfieldCamera {
   }
 
   public BufferedImage takeLightfieldImage() {
-    this.takePicture().storePicture();
+    this.takePicture();
     return this.lightfieldImage;
   }
 
   private LightfieldCamera takePicture() {
-
     this.lightfieldImage.setRGB(0, 0, opts.width, opts.height, this.getRgbData(), 0, opts.width);
     return this;
-
   }
 
-  public LightfieldCamera setName(String name) {
-    if (LightfieldCamera.name == null || !LightfieldCamera.name.equals(name)) {
-      LightfieldCamera.name = name;
-      LightfieldCamera.count = 0;
-    }
-    return this;
-  }
 
   private LightfieldCamera storePicture() {
     this.count++;
-    var outputfile = new File(this.imagePath.toString() + "\\" + this.name + "_" + this.count + ".png");
+    var outputfile = new File(this.imagePath.toString() + "\\" + Math.random() + "_" + this.count + ".png");
     try {
       ImageIO.write(this.lightfieldImage, "png", outputfile);
     } catch (IOException e) {
