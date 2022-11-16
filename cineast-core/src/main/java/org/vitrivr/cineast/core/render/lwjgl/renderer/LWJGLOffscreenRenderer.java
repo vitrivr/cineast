@@ -47,9 +47,10 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
   }
 
   public LWJGLOffscreenRenderer(int width, int height) {
-    this(new WindowOptions(width,height) {{
-      this.hideWindow = true;
-    }});
+    this(
+        new WindowOptions(width, height) {{
+          hideWindow = true;
+        }});
   }
 
   @Override
@@ -61,6 +62,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
   public void cleanup() {
     LOGGER.info("LWJGLOffscreenRenderer cleanup");
   }
+
   /**
    * Is called once at the initialization of the engine.
    *
@@ -80,6 +82,9 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
 
   @Override
   public void afterRender(Window window, Scene scene, Render render) {
+    var cam = new LightfieldCamera(this.windowOptions);
+    var img = cam.takeLightfieldImage();
+    this.imageQueue.add(img);
   }
 
   /**
@@ -128,7 +133,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
   @Override
   public void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz, double upx, double upy,
       double upz) {
-    this.engine.getCamera().setOrbit((float)ex,(float) ey,(float) ez);
+    this.engine.getCamera().setOrbit((float) ex, (float) ey, (float) ez);
     //this.engine.getCamera().setPositionAndOrientation(new Vector3f((float) ex, (float) ey, (float) ez), new Vector3f((float) cx, (float) cy, (float) cz), new Vector3f((float) upx, (float) upy, (float) upz));
   }
 
@@ -145,9 +150,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
 
   @Override
   public BufferedImage obtain() {
-    var cam = new LightfieldCamera(this.windowOptions);
-    var img = cam.takeLightfieldImage();
-    return img;
+    return this.imageQueue.poll();
   }
 
   @Override

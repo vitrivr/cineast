@@ -84,7 +84,7 @@
       }
     },
     "MODEL3D": {
-      "decoder": "ModularMeshDecoder",
+      "decoder": "ModularTextureModelDecoder",
       "properties": {
       }
     }

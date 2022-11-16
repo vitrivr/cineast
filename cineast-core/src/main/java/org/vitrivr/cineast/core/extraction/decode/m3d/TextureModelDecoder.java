@@ -39,8 +39,8 @@ public class TextureModelDecoder implements Decoder<Model> {
 
   static {
     HashSet<String> tmp = new HashSet<>();
-    tmp.add("application/3d-gltf");
-    tmp.add("application/3d-obj");
+    tmp.add("application/3dt-gltf");
+    tmp.add("application/3dt-obj");
     supportedFiles = Collections.unmodifiableSet(tmp);
   }
 

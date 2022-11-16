@@ -55,8 +55,11 @@ public final class MimeTypeHelper {
 
     //3D Mime types (self-defimed)
     FILETYPES.put("stl", "application/3d-stl");
-    FILETYPES.put("obj", "application/3d-obj");
     FILETYPES.put("off", "application/3d-off");
+
+    //3D TExture Mime types (self-defimed)
+    FILETYPES.put("obj", "application/3dt-obj");
+    FILETYPES.put("gltf", "application/3dt-gltf");
   }
 
   private MimeTypeHelper() {

@@ -36,8 +36,8 @@ public class ModularTextureModelDecoder implements ITextureModelDecoder, Convert
 
   static {
     HashSet<String> tmp = new HashSet<>();
-    tmp.add("application/3d-obj");
-    tmp.add("application/3d-gltf");
+    tmp.add("application/3dt-obj");
+    tmp.add("application/3dt-gltf");
     supportedFiles = Collections.unmodifiableSet(tmp);
   }
 
@@ -187,10 +187,10 @@ public class ModularTextureModelDecoder implements ITextureModelDecoder, Convert
    */
   private Decoder<Model> decoderForContenttype(String contenttype) {
     switch (contenttype) {
-      case "application/3d-gltf":
-        return new ModularTextureModelDecoder();
-      case "application/3d-obj":
-        return new ModularTextureModelDecoder();
+      case "application/3dt-gltf":
+        return new TextureModelDecoder();
+      case "application/3dt-obj":
+        return new TextureModelDecoder();
       default:
         return null;
     }

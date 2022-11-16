@@ -41,6 +41,7 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.image.DefaultImageDecoder;
 import org.vitrivr.cineast.core.extraction.decode.image.ImageSequenceDecoder;
 import org.vitrivr.cineast.core.extraction.decode.m3d.ModularMeshDecoder;
+import org.vitrivr.cineast.core.extraction.decode.m3d.ModularTextureModelDecoder;
 import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
@@ -125,7 +126,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.TEXTUREMODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Model>() {
+    handlers.put(MediaType.TEXTUREMODEL3D, new ImmutablePair<>(ModularTextureModelDecoder::new, () -> new PassthroughSegmenter<Model>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Model content) {
         return new TextureModel3DSegment(content);
