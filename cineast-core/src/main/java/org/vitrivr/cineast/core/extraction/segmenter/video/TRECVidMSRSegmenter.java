@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -274,5 +275,13 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
     synchronized (this) {
       this.running = false;
     }
+  }
+
+  /**
+   * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
+   */
+  @Override
+  public MediaType getMediaType() {
+    return MediaType.VIDEO;
   }
 }

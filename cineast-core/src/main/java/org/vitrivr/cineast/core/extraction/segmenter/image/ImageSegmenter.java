@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.extraction.segmenter.image;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.segments.ImageSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -53,5 +54,14 @@ public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
   @Override
   protected SegmentContainer getSegmentFromContent(BufferedImage content) {
     return new ImageSegment(content, this.factory);
+  }
+
+  /**
+   * Returns {@link MediaType#IMAGE}, as this {@link Segmenter} is for images
+   * @return
+   */
+  @Override
+  public MediaType getMediaType() {
+    return MediaType.IMAGE;
   }
 }

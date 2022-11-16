@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.extraction.segmenter.general;
 
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
@@ -39,4 +40,10 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
    */
   @Override
   void close();
+
+  /**
+   * Specifies for which media type this segmenter is
+   * @return The {@link MediaType} this {@link Segmenter} is for.
+   */
+  MediaType getMediaType();
 }

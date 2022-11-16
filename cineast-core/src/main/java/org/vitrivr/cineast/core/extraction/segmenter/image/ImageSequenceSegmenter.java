@@ -127,4 +127,13 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
       this.running = false;
     }
   }
+
+  /**
+   * Returns {@link MediaType#IMAGE}, as this {@link Segmenter} is for images
+   * @return
+   */
+  @Override
+  public MediaType getMediaType() {
+    return MediaType.IMAGE;
+  }
 }

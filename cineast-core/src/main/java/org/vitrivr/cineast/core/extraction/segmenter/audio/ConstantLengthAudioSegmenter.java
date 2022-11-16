@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
@@ -160,6 +161,14 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
         this.decoder.close();
       }
     }
+  }
+
+  /**
+   * Returns {@link MediaType#AUDIO}, as this {@link Segmenter} is for audio.
+   */
+  @Override
+  public MediaType getMediaType() {
+    return MediaType.AUDIO;
   }
 
   /**

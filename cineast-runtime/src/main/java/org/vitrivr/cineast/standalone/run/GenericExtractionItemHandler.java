@@ -119,14 +119,23 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.metadataExtractors = context.metadataExtractors();
 
     //Reasonable Defaults
-    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
-    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
+    // #353: Respect the given segmenter
+    final Segmenter segmenter = context.newSegmenter();
+    final MediaType segmenterType = segmenter.getMediaType();
+
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> segmenterType == MediaType.IMAGE ? segmenter : new ImageSegmenter(context)));
+    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> segmenterType == MediaType.IMAGE_SEQUENCE ? segmenter : new ImageSequenceSegmenter(context)));
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> segmenterType == MediaType.AUDIO ? segmenter : new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> segmenterType == MediaType.VIDEO ? segmenter : new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> segmenterType == MediaType.MODEL3D ? segmenter : new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
+      }
+
+      @Override
+      public MediaType getMediaType() {
+        return MediaType.MODEL3D;
       }
     }));
     //Config overwrite

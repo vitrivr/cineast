@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -268,5 +269,13 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
       }
     }
     return true;
+  }
+
+  /**
+   * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
+   */
+  @Override
+  public MediaType getMediaType() {
+    return MediaType.VIDEO;
   }
 }
