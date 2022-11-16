@@ -27,6 +27,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.TextureModel3DSegment;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
@@ -50,6 +51,7 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
+import org.vitrivr.cineast.core.render.lwjgl.model.Model;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -123,6 +125,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.TEXTUREMODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Model>() {
+      @Override
+      protected SegmentContainer getSegmentFromContent(Model content) {
+        return new TextureModel3DSegment(content);
+      }
+    }));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {

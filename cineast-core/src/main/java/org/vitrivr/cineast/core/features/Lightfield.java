@@ -17,6 +17,7 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -47,7 +48,7 @@ public abstract class Lightfield extends StagedFeatureModule {
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
-  private final Renderer renderer;
+  private final MeshOnlyRenderer renderer;
 
   protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
     super(tableName, maxDist, vectorLength);

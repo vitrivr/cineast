@@ -18,6 +18,9 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
+import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
 
@@ -60,7 +63,8 @@ public class Model3DThumbnailExporter implements Extractor {
   /**
    * Offscreen rendering context.
    */
-  private final JOGLOffscreenRenderer renderer;
+  //private final JOGLOffscreenRenderer renderer;
+  private final LWJGLOffscreenRenderer renderer;
 
   /**
    * Background color of the resulting image.
@@ -80,7 +84,7 @@ public class Model3DThumbnailExporter implements Extractor {
   public Model3DThumbnailExporter(Map<String, String> properties) {
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
-    this.renderer = new JOGLOffscreenRenderer(this.size / 2, this.size / 2);
+    this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
   }
 
   /**
@@ -93,23 +97,24 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
-      WritableMesh mesh = shot.copyNormalizedMesh();
+      IModel model = shot.getModel();
 
-      if (!mesh.isEmpty()) {
+      if (model.getMaterials().size() > 0) {
         /* Colors the mesh. */
-        MeshColoringUtil.normalColoring(mesh);
+        //TODO Coloring if no textures
+        // MeshColoringUtil.normalColoring(mesh);
 
         BufferedImage buffer = null;
         BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
 
         if (this.renderer.retain()) {
-          this.renderer.clear(this.backgroundColor);
-          this.renderer.assemble(mesh);
+          this.renderer.clear();
+          this.renderer.assemble(model);
 
           for (int i = 0; i < 4; i++) {
             this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
-            this.renderer.render();
+            //this.renderer.render();
             buffer = this.renderer.obtain();
 
             int idx = i % 2;

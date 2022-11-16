@@ -23,6 +23,7 @@ import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
+import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
 
 /**
  * This class can be used to render 3D models (Meshes or Voxel-models) using the JOGL rendering environment. It currently has the following features:
@@ -34,7 +35,7 @@ import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
  * @see Mesh
  * @see VoxelGrid
  */
-public class JOGLOffscreenRenderer implements Renderer {
+public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -186,6 +187,12 @@ public class JOGLOffscreenRenderer implements Renderer {
     }
   }
 
+  @Override
+  public void assemble(IModel model) {
+    this.assemble(Mesh.EMPTY);
+  }
+
+
   /**
    * Renders a new Mesh object and thereby removes any previously rendered object
    *
@@ -229,6 +236,7 @@ public class JOGLOffscreenRenderer implements Renderer {
    */
   @Override
   public void assemble(VoxelGrid grid) {
+
     int meshList = gl.glGenLists(1);
     this.objects.add(meshList);
     gl.glNewList(meshList, GL2.GL_COMPILE);
