@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.system.Configuration;
 import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -20,6 +21,7 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
 import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.render.lwjgl.model.ModelLoader;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
@@ -64,7 +66,7 @@ public class Model3DThumbnailExporter implements Extractor {
    * Offscreen rendering context.
    */
   //private final JOGLOffscreenRenderer renderer;
-  private final LWJGLOffscreenRenderer renderer;
+  private  LWJGLOffscreenRenderer renderer;
 
   /**
    * Background color of the resulting image.
@@ -84,7 +86,6 @@ public class Model3DThumbnailExporter implements Extractor {
   public Model3DThumbnailExporter(Map<String, String> properties) {
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
-    this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
   }
 
   /**
@@ -97,6 +98,9 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
+      Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 13));
+      // TODO this is a hack to get the renderer to work, it should be initialized in the mainthread as a singleton
+      this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
       IModel model = shot.getModel();
 
       if (model.getMaterials().size() > 0) {

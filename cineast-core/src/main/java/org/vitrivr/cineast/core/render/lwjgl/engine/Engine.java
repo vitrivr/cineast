@@ -54,12 +54,22 @@ public class Engine {
     var initialTime = System.currentTimeMillis();
     this.window.pollEvents();
     var now = System.currentTimeMillis();
-    this.appLogic.input(this.window, this.scene, now - initialTime);
-    this.appLogic.update(this.window, this.scene, now - initialTime);
+    this.appLogic.input(this.window, this.scene, -1);
+    this.appLogic.update(this.window, this.scene, -1);
     this.render.render(this.window, this.scene);
     this.window.update();
   }
 
+
+
+  /**
+   * Run mode runs permanently until the engine is stopped.
+   * 1. Poll events
+   * 2. Input
+   * 3. Update
+   * 4. Render
+   * 5. Update window
+   */
   public void run() {
     var initialTime = System.currentTimeMillis();
     //  maximum elapsed time between updates

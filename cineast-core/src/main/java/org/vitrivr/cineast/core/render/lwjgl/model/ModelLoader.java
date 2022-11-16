@@ -114,8 +114,8 @@ public class ModelLoader {
       int numElements = (vertices.length / 3) * 2;
       textCoords = new float[numElements];
     }
-
-    return new Mesh(vertices, textCoords, indices);
+    var mesh = new Mesh(vertices, textCoords, indices);
+    return mesh;
   }
 
   private static float[] processTextCoords(AIMesh aiMesh) {

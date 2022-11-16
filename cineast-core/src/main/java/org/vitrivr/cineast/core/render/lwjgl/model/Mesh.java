@@ -14,9 +14,6 @@ public class Mesh {
   private final List<Integer> vboIdList;
   private final int vaoId;
 
-  public static final Mesh EMPTY = new Mesh(new float[0], new float[0], new int[0]);
-
-
   // TODO: remove from model GL30 dependency
   public Mesh(float[] positions, float[] textureCoordinates,  int[] idx) {
     this.numVertices = idx.length;

@@ -12,7 +12,7 @@ public interface ModelProvider {
    * @return Model
    */
   default IModel getModel() {
-    return Model.EMPTY;
+    return lazyCreateModel();
   }
   // TODO Remove when Segment loader is implemented
   default  IModel lazyCreateModel() {

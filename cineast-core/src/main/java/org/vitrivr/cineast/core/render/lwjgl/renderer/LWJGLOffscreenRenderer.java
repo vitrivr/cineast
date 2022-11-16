@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.render.lwjgl.renderer;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.render.Renderer;
@@ -21,6 +22,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private ReentrantLock lock = new ReentrantLock(true);
 
   public final WindowOptions windowOptions;
   private static LWJGLOffscreenRenderer instance;
@@ -41,18 +43,10 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
   }
 
   public LWJGLOffscreenRenderer(int width, int height) {
-    if (LWJGLOffscreenRenderer.instance != null) {
-      throw new IllegalStateException("Engine is already running.");
-    }
-    /* Assign width and height. */
-    this.windowOptions = new WindowOptions();
-    this.windowOptions.width = width;
-    this.windowOptions.height = height;
-    this.modelQueue = new LinkedTransferQueue<IModel>();
-    LWJGLOffscreenRenderer.instance = this;
-    var name = "LWJGLOffscreenRenderer";
-    this.engine = new Engine(name, this.windowOptions, LWJGLOffscreenRenderer.instance);
-    LOGGER.info("LWJGLOffscreenRenderer created");
+    this(new WindowOptions() {{
+      this.width = width;
+      this.height = height;
+    }});
   }
 
   @Override
@@ -65,26 +59,31 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
     LOGGER.info("LWJGLOffscreenRenderer cleanup");
   }
 
+  //
   public void init(Window window, Scene scene, Render render) {
-    //var model = new ModelFactory().lazyCreateModel(scene.getTextureCache());
-/*    var model = new ModelFactory().lazyCreateModel(scene.getTextureCache());
-    var entity = new Entity("cube", model.getId());
-    entity.setPosition(0, 0, 0);
-    entity.setScale(1f);
-    model.getEntities().add(entity);
-    scene.addModel((Model) model);*/
-
     scene.getCamera().setPosition(0, 0, 1);
   }
 
-  // Take Picture
-  // Rotate
+  /**
+   * This method is called every frame.
+   *
+   * @param window
+   * @param scene
+   * @param diffTimeMillis
+   */
   public void input(Window window, Scene scene, long diffTimeMillis) {
     var cam = scene.getCamera();
     cam.moveOrbit(0.1f, 0.0f, 0.0f);
     scene.getModels().forEach((k, v) -> v.getEntities().forEach(Entity::updateModelMatrix));
   }
 
+  /**
+   * After Engine run This method is called every frame.
+   *
+   * @param window
+   * @param scene
+   * @param diffTimeMillis
+   */
   public void update(Window window, Scene scene, long diffTimeMillis) {
 
     if (!this.modelQueue.isEmpty()) {
@@ -124,7 +123,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
   @Override
   public BufferedImage obtain() {
     this.engine.runOnce();
-    var cam = new LightfieldCamera(this.windowOptions, "Test" );
+    var cam = new LightfieldCamera(this.windowOptions, "Test");
     return cam.takeLightfieldImage();
   }
 
@@ -140,12 +139,12 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
 
   @Override
   public boolean retain() {
-    return false;
+    return this.lock.tryLock();
   }
 
   @Override
   public void release() {
-
+    this.lock.unlock();
   }
 
   @Override
