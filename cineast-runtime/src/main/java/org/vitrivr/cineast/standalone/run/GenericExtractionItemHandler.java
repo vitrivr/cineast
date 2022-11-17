@@ -131,7 +131,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
       @Override
       public Set<MediaType> getMediaTypes() {
-        return Sets.newHashSet(MediaType.MODEL3D);
+        return Sets.newHashSet(MediaType.values());
       }
     }));
     // #353: Respect the given segmenter

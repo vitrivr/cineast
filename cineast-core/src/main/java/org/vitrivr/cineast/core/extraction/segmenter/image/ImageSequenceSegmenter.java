@@ -137,6 +137,6 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
    */
   @Override
   public Set<MediaType> getMediaTypes() {
-    return Sets.newHashSet(MediaType.IMAGE);
+    return Sets.newHashSet(MediaType.IMAGE_SEQUENCE);
   }
 }
