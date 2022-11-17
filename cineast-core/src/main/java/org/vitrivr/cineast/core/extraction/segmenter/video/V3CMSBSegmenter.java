@@ -6,13 +6,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -288,7 +286,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
    * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
    */
   @Override
-  public MediaType getMediaType() {
-    return MediaType.VIDEO;
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.VIDEO);
   }
 }

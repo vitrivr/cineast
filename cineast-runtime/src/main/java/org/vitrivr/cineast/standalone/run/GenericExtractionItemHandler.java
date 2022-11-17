@@ -3,16 +3,14 @@ package org.vitrivr.cineast.standalone.run;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -118,30 +116,38 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context);
     this.metadataExtractors = context.metadataExtractors();
 
-    //Reasonable Defaults
-    // #353: Respect the given segmenter
-    final Segmenter segmenter = context.newSegmenter();
-    final MediaType segmenterType = segmenter.getMediaType();
 
-    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> segmenterType == MediaType.IMAGE ? segmenter : new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> segmenterType == MediaType.IMAGE_SEQUENCE ? segmenter : new ImageSequenceSegmenter(context)));
-    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> segmenterType == MediaType.AUDIO ? segmenter : new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> segmenterType == MediaType.VIDEO ? segmenter : new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> segmenterType == MediaType.MODEL3D ? segmenter : new PassthroughSegmenter<Mesh>() {
+
+    //Reasonable Defaults
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () ->  new ImageSegmenter(context)));
+    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () ->  new ImageSequenceSegmenter(context)));
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () ->  new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () ->  new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () ->  new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
       }
 
       @Override
-      public MediaType getMediaType() {
-        return MediaType.MODEL3D;
+      public Set<MediaType> getMediaTypes() {
+        return Sets.newHashSet(MediaType.MODEL3D);
       }
     }));
+    // #353: Respect the given segmenter
+    final Set<MediaType> segmenterTypes;
+    try (Segmenter<Object> segmenter = context.newSegmenter()) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+    }
+
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
       handlers.put(type, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), type), handlers.getOrDefault(type, null)).getRight());
     });
+
     //TODO Config should allow for multiple segmenters
 
     this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
