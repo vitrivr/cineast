@@ -132,7 +132,7 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
   }
 
   /**
-   * Returns {@link MediaType#IMAGE}, as this {@link Segmenter} is for images
+   * Returns {@link MediaType#IMAGE_SEQUENCE}, as this {@link Segmenter} is for image sequences
    * @return
    */
   @Override
