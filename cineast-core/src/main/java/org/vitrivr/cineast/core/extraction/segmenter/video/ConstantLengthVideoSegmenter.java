@@ -1,9 +1,13 @@
 package org.vitrivr.cineast.core.extraction.segmenter.video;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.google.common.collect.Sets;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -82,6 +86,14 @@ public class ConstantLengthVideoSegmenter implements Segmenter<VideoFrame> {
         this.decoder.close();
       }
     }
+  }
+
+  /**
+   * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
+   */
+  @Override
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.VIDEO);
   }
 
   @Override
