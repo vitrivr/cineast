@@ -101,6 +101,7 @@ public class Camera {
     this.recalculate();
     return this;
   }
+
   public Camera setPosition(Vector3f position) {
     this.setPosition(position.x, position.y, position.z);
     return this;
@@ -113,13 +114,19 @@ public class Camera {
   }
 
   public Camera moveOrbit(float x, float y, float z) {
-    //this.orbitRotation.fromAxisAngleRad(x, y, z, angle);
+    y = (float) ((double) y * 2.0 * Math.PI);
+    x = (float) ((double) x * 2.0 * Math.PI);
+    z = (float) ((double) z * 2.0 * Math.PI);
     this.orbitRotation.rotateYXZ(y, x, z);
     //this.viewMatrix.rotate(this.orbitRotation);
     this.recalculate();
     return this;
   }
+
   public Camera setOrbit(float x, float y, float z) {
+    x = (float) ((double) x * 2.0 * Math.PI);
+    y = (float) ((double) y * 2.0 * Math.PI);
+    z = (float) ((double) z * 2.0 * Math.PI);
     //this.orbitRotation.fromAxisAngleRad(x, y, z, angle);
     this.orbitRotation.rotationXYZ(x, y, z);
     //this.viewMatrix.rotate(this.orbitRotation);

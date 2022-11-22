@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.joml.Vector4f;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Material;
+import org.joml.Vector4f;
 
 public class GlMaterial {
 

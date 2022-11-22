@@ -6,16 +6,16 @@ import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 
 
-public interface IEngineLogic {
+public abstract class IEngineLogic {
 
-  void cleanup();
+  protected abstract void cleanup();
 
-  void init(Window window, GlScene scene, Render render);
+  protected abstract void init(Window window, GlScene scene, Render render);
 
-  void beforeRender(Window window, GlScene scene, Render render);
-  void afterRender(Window window, GlScene scene, Render render);
+  protected abstract void beforeRender(Window window, GlScene scene, Render render);
+  protected abstract void afterRender(Window window, GlScene scene, Render render);
 
-  void input(Window window, GlScene scene, long diffTimeMillis);
+  protected abstract void input(Window window, GlScene scene, long diffTimeMillis);
 
-  void update(Window window, GlScene scene, long diffTimeMillis);
+  protected abstract void update(Window window, GlScene scene, long diffTimeMillis);
 }

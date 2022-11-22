@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.render.lwjgl.window;
 
+
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 
 public class WindowOptions {

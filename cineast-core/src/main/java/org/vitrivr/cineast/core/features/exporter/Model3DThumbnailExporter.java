@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.scene.renderer.LWJGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 

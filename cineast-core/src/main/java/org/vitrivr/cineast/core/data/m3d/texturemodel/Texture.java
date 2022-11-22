@@ -1,61 +1,47 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import java.nio.ByteBuffer;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 public class Texture {
 
-  private int textureId;
-  private String texturePath;
+  private final String texturePath;
+  public ByteBuffer imageBuffer;
 
-  public Texture(int width, int height, ByteBuffer buffer) {
-    this.texturePath = "";
-    this.generateTexture(width, height, buffer);
+  public static final String DEFAULT_TEXTURE = "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSketchfab\\76a3f7bf75d049458dfaa48aa342e0b8\\baluster_vase_from_a_five-piece_garniture\\default_baseColor.jpeg";
+  private  int width;
+  private  int height;
+
+  public Texture() {
+    var defaultText = ModelLoader.loadTexture(DEFAULT_TEXTURE);
+    this.imageBuffer = defaultText.imageBuffer;
+    this.width = defaultText.getWidth();
+    this.height = defaultText.height;
+    this.texturePath =defaultText.getTexturePath();
   }
 
-  public Texture(String texturePath) {
+  public Texture(String texturePath, ByteBuffer imageBuffer, int w, int h) {
     this.texturePath = texturePath;
-    try (var memoryStack = MemoryStack.stackPush()) {
-      var w = memoryStack.mallocInt(1);
-      var h = memoryStack.mallocInt(1);
-      var channels = memoryStack.mallocInt(1);
-
-      var buffer = STBImage.stbi_load(texturePath, w, h, channels, 4);
-      if (buffer == null) {
-        throw new RuntimeException("Could not load texture file: " + texturePath);
-      }
-
-      var width = w.get();
-      var height = h.get();
-
-      this.generateTexture(width, height, buffer);
-      STBImage.stbi_image_free(buffer);
-
-    }
+    this.imageBuffer = imageBuffer;
+    this.width = w;
+    this.height = h;
   }
 
-  public void bind() {
-    GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
-  }
-
-  public void cleanup() {
-    GL30.glDeleteTextures(this.textureId);
-  }
-
-  private void generateTexture(int width, int height, ByteBuffer buffer) {
-    this.textureId = GL30.glGenTextures();
-    GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
-    GL30.glPixelStorei(GL30.GL_UNPACK_ALIGNMENT, 1);
-    GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST);
-    GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_NEAREST);
-    GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, width, height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE,
-        buffer);
-    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
-  }
 
   public String getTexturePath() {
     return this.texturePath;
+  }
+
+  public int getWidth() {
+    return this.height;
+  }
+
+  public int getHeight(){
+    return this.height;
+  }
+
+  public ByteBuffer getImageBuffer(){
+    return this.imageBuffer;
   }
 }

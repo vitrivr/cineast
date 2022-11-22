@@ -1,15 +1,17 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
-import static org.lwjgl.assimp.Assimp.*;
-
-import java.io.File;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.ByteBuffer;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+
+import java.io.File;
+import java.nio.IntBuffer;
+import java.util.*;
+
+import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
 
@@ -40,7 +42,7 @@ public class ModelLoader {
     List<Material> materialList = new ArrayList<>();
     for (int i = 0; i < numMaterials; i++) {
       AIMaterial aiMaterial = AIMaterial.create(aiScene.mMaterials().get(i));
-      materialList.add(processMaterial(aiMaterial, modelDir));
+      materialList.add(ModelLoader.processMaterial(aiMaterial, modelDir));
     }
 
     int numMeshes = aiScene.mNumMeshes();
@@ -56,7 +58,7 @@ public class ModelLoader {
       } else {
         material = defaultMaterial;
       }
-      material.getMeshes().add(mesh);
+      material.addMesh(mesh);
     }
 
     if (!defaultMaterial.getMeshes().isEmpty()) {
@@ -96,7 +98,8 @@ public class ModelLoader {
           null, null, null, null, null);
       String texturePath = aiTexturePath.dataString();
       if (texturePath != null && texturePath.length() > 0) {
-        material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
+        material.setTexture(ModelLoader.loadTexture(modelDir+File.separator+new File(texturePath).getName())
+        );
         material.setDiffuseColor(Material.DEFAULT_COLOR);
       }
 
@@ -114,8 +117,8 @@ public class ModelLoader {
       int numElements = (vertices.length / 3) * 2;
       textCoords = new float[numElements];
     }
-    var mesh = new Mesh(vertices, textCoords, indices);
-    return mesh;
+
+    return new Mesh(vertices, textCoords, indices);
   }
 
   private static float[] processTextCoords(AIMesh aiMesh) {
@@ -144,5 +147,21 @@ public class ModelLoader {
       data[pos++] = textCoord.z();
     }
     return data;
+  }
+
+
+  public static Texture loadTexture(String texturePath) {
+    try (var memoryStack = MemoryStack.stackPush()) {
+      var w = memoryStack.mallocInt(1);
+      var h = memoryStack.mallocInt(1);
+      var channels = memoryStack.mallocInt(1);
+
+      var imageBuffer = STBImage.stbi_load(texturePath, w, h, channels, 4);
+      if (imageBuffer == null) {
+        throw new RuntimeException("Could not load texture file: " + texturePath);
+      }
+
+      return new Texture(texturePath, imageBuffer, w.get(), h.get());
+    }
   }
 }

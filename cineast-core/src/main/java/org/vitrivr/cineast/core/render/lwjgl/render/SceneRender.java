@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL30;
 import org.vitrivr.cineast.core.render.lwjgl.render.ShaderProgram.ShaderModuleData;
-import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
+import org.lwjgl.opengl.GL30;
 
 public class SceneRender {
 
@@ -13,8 +12,8 @@ public class SceneRender {
 
   public SceneRender() {
     var shaderModuleDataList = new ArrayList<ShaderProgram.ShaderModuleData>();
-    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.vert", GL30.GL_VERTEX_SHADER));
-    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.frag", GL30.GL_FRAGMENT_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData("./src/main/resources/shaders/scene.vert", GL30.GL_VERTEX_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData("./src/main/resources/shaders/scene.frag", GL30.GL_FRAGMENT_SHADER));
     this.shaderProgram = new ShaderProgram(shaderModuleDataList);
     this.createUniforms();
   }
@@ -32,7 +31,7 @@ public class SceneRender {
     this.shaderProgram.cleanup();
   }
 
-  public void render(Scene scene) {
+  public void render(GlScene scene) {
     this.shaderProgram.bind();
 
     this.uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
@@ -46,7 +45,8 @@ public class SceneRender {
       var enteties = model.getEntities();
       for (var material : model.getMaterials()) {
         this.uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());
-        var texture = textures.getTexture(material.getTexturePath());
+        var texture = textures.getTexture(material.getTexture().getTexturePath());
+        GL30.glActiveTexture(GL30.GL_TEXTURE0);
         texture.bind();
         for (var mesh : material.getMeshes()) {
           GL30.glBindVertexArray(mesh.getVaoId());

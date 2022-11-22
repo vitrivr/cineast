@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
-import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+
 
 
 public class LightfieldCamera {

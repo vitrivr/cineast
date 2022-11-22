@@ -1,15 +1,17 @@
 package org.vitrivr.cineast.core.render.lwjgl.window;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
+import java.util.concurrent.Callable;
+
+
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
@@ -134,9 +136,6 @@ public class Window {
     return GLFW.glfwWindowShouldClose(this.windowHandle);
   }
 
-  public long getWindowHandle() {
-    return  this.windowHandle;
-  }
   public MouseInput getMouseInput() {
     return this.mouseInput;
   }

@@ -2,10 +2,10 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 
 public class GlMesh {
 
@@ -48,7 +48,7 @@ public class GlMesh {
       // Index VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
       var idxBuffer = memoryStack.callocInt(this.mesh.getIdx().length);
-      idxBuffer.put(0, this.mesh.getIdx().length);
+      idxBuffer.put(0, this.mesh.getIdx());
       GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, vboId);
       GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, idxBuffer, GL30.GL_STATIC_DRAW);
 

@@ -1,24 +1,26 @@
-package org.vitrivr.cineast.core.render.lwjgl.scene.renderer;
+package org.vitrivr.cineast.core.render.lwjgl.renderer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.locks.ReentrantLock;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.render.Renderer;
+import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
+import org.vitrivr.cineast.core.render.lwjgl.window.Window;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
-import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
-import org.vitrivr.cineast.core.render.lwjgl.window.Window;
-import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
+import org.vitrivr.cineast.core.render.Renderer;
+
+public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -36,6 +38,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
       throw new IllegalStateException("Engine is already running.");
     }*/
     this.windowOptions = opts;
+    this.windowOptions.hideWindow = false;
     this.modelQueue = new LinkedTransferQueue<IModel>();
     this.imageQueue = new LinkedTransferQueue<BufferedImage>();
     //LWJGLOffscreenRenderer.instance = this;
@@ -57,7 +60,8 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
     LOGGER.info("LWJGLOffscreenRenderer started");
   }
 
-  public void cleanup() {
+
+  protected void cleanup() {
     LOGGER.info("LWJGLOffscreenRenderer cleanup");
   }
 
@@ -69,17 +73,17 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
    * @param render
    */
   @Override
-  public void init(Window window, Scene scene, Render render) {
+  protected void init(Window window, GlScene scene, Render render) {
     scene.getCamera().setPosition(0, 0, 1);
   }
 
   @Override
-  public void beforeRender(Window window, Scene scene, Render render) {
+  protected void beforeRender(Window window, GlScene scene, Render render) {
     this.loadNextModelFromQueueToScene(window, scene);
   }
 
   @Override
-  public void afterRender(Window window, Scene scene, Render render) {
+  protected void afterRender(Window window, GlScene scene, Render render) {
     var cam = new LightfieldCamera(this.windowOptions);
     var img = cam.takeLightfieldImage();
     this.imageQueue.add(img);
@@ -93,9 +97,7 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
    * @param diffTimeMillis
    */
   @Override
-  public void input(Window window, Scene scene, long diffTimeMillis) {
-    var cam = scene.getCamera();
-    cam.moveOrbit(0.1f, 0.0f, 0.0f);
+  protected void input(Window window, GlScene scene, long diffTimeMillis) {
     scene.getModels().forEach((k, v) -> v.getEntities().forEach(Entity::updateModelMatrix));
   }
 
@@ -107,18 +109,17 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
    * @param diffTimeMillis
    */
   @Override
-  public void update(Window window, Scene scene, long diffTimeMillis) {
-
+  protected void update(Window window, GlScene scene, long diffTimeMillis) {
   }
 
-  private void loadNextModelFromQueueToScene(Window window, Scene scene) {
+  private void loadNextModelFromQueueToScene(Window window, GlScene scene) {
     if (!this.modelQueue.isEmpty()) {
       var model = (Model) this.modelQueue.poll();
       if (model.getEntities().size() == 0) {
         var entity = new Entity("cube", model.getId());
         entity.setPosition(0, 0, 0);
         entity.setScale(1f);
-        model.getEntities().add(entity);
+        model.addEntity(entity);
       }
 
       scene.clearModels();
@@ -127,14 +128,28 @@ public class LWJGLOffscreenRenderer implements Renderer, IEngineLogic {
     scene.getModels().forEach((k, v) -> v.getEntities().forEach(Entity::updateModelMatrix));
   }
 
-
-  @Override
-  public void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz, double upx, double upy,
-      double upz) {
-    this.engine.getCamera().setOrbit((float) ex, (float) ey, (float) ez);
-    //this.engine.getCamera().setPositionAndOrientation(new Vector3f((float) ex, (float) ey, (float) ez), new Vector3f((float) cx, (float) cy, (float) cz), new Vector3f((float) upx, (float) upy, (float) upz));
+  public void moveCameraOrbit(float x, float y, float z) {
+    this.engine.getCamera().moveOrbit(x, y, z);
   }
 
+  public void setCameraOrbit(float x, float y, float z) {
+    this.engine.getCamera().setOrbit(x, y, z);
+  }
+
+  public void setCameraPosition(float x, float y, float z) {
+    this.engine.getCamera().setPosition(x, y, z);
+  }
+
+
+  @Override
+  public void positionCamera(double ex, double ey, double ez,
+      double cx, double cy, double cz,
+      double upx, double upy, double upz) {
+    this.engine.getCamera().setPositionAndOrientation(
+        new Vector3f((float) ex, (float) ey, (float) ez),
+        new Vector3f((float) cx, (float) cy, (float) cz),
+        new Vector3f((float) upx, (float) upy, (float) upz));
+  }
 
   public float getAspect() {
     return (float) this.windowOptions.width / (float) this.windowOptions.height;
