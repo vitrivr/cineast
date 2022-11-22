@@ -36,7 +36,7 @@ public class Engine {
     this.running = true;
   }
 
-  private void cleanup() {
+  public void cleanup() {
     this.appLogic.cleanup();
     this.render.cleanup();
     this.scene.cleanup();

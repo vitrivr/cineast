@@ -38,7 +38,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
       throw new IllegalStateException("Engine is already running.");
     }*/
     this.windowOptions = opts;
-    this.windowOptions.hideWindow = false;
+    this.windowOptions.hideWindow = true;
     this.modelQueue = new LinkedTransferQueue<IModel>();
     this.imageQueue = new LinkedTransferQueue<BufferedImage>();
     //LWJGLOffscreenRenderer.instance = this;
@@ -61,8 +61,9 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   }
 
 
+  @Override
   protected void cleanup() {
-    LOGGER.info("LWJGLOffscreenRenderer cleanup");
+    LOGGER.info("LWJGLOffscreenRenderer cleaned");
   }
 
   /**
@@ -182,6 +183,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   public void release() {
+    this.engine.cleanup();
     this.lock.unlock();
   }
 
