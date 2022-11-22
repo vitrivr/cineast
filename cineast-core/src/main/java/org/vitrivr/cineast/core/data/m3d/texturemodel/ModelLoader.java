@@ -5,6 +5,7 @@ import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.File;
@@ -15,6 +16,9 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
 
+  static {
+    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
+  }
   private ModelLoader() {
     // Utility class
   }

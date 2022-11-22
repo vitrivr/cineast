@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.system.Configuration;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -18,7 +19,7 @@ public class GlMesh {
   public GlMesh(Mesh mesh) {
     this.mesh = mesh;
     this.vboIdList = new ArrayList<>();
-
+    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
 
     try (var memoryStack = MemoryStack.stackPush()) {
 
