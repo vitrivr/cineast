@@ -84,9 +84,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   protected void afterRender(Window window, GlScene scene, Render render) {
-    var cam = new LightfieldCamera(this.windowOptions);
-    var img = cam.takeLightfieldImage();
-    this.imageQueue.add(img);
+
   }
 
   /**

@@ -12,8 +12,8 @@ public class SceneRender {
 
   public SceneRender() {
     var shaderModuleDataList = new ArrayList<ShaderProgram.ShaderModuleData>();
-    shaderModuleDataList.add(new ShaderModuleData("./src/main/resources/shaders/scene.vert", GL30.GL_VERTEX_SHADER));
-    shaderModuleDataList.add(new ShaderModuleData("./src/main/resources/shaders/scene.frag", GL30.GL_FRAGMENT_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.vert", GL30.GL_VERTEX_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.frag", GL30.GL_FRAGMENT_SHADER));
     this.shaderProgram = new ShaderProgram(shaderModuleDataList);
     this.createUniforms();
   }

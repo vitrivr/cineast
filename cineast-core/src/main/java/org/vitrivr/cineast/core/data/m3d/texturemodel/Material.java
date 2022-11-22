@@ -12,6 +12,7 @@ public class Material {
   public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
   private Vector4f diffuseColor;
 
+  public static final Material EMPTY = new Material();
 
   public Material() {
     this.meshes = new ArrayList<>();

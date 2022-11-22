@@ -20,13 +20,12 @@ public class LightfieldCamera {
 
   private static int count;
 
-  private final Path imagePath;
+
 
   public LightfieldCamera(WindowOptions opts) {
 
     this.opts = opts;
-    this.imagePath = Path.of(
-        "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSet3D\\cineast_out\\lightfieldImages");
+
     this.lightfieldImage = new BufferedImage(opts.width, opts.height, BufferedImage.TYPE_INT_RGB);
     this.imageData = BufferUtils.createFloatBuffer(opts.width * opts.height * 3);
     GL30.glReadPixels(0, 0, opts.width, opts.height, GL30.GL_RGB, GL30.GL_FLOAT, this.imageData);
@@ -44,17 +43,6 @@ public class LightfieldCamera {
     return this;
   }
 
-
-  private LightfieldCamera storePicture() {
-    this.count++;
-    var outputfile = new File(this.imagePath.toString() + "\\" + Math.random() + "_" + this.count + ".png");
-    try {
-      ImageIO.write(this.lightfieldImage, "png", outputfile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return this;
-  }
 
   private int[] getRgbData() {
     int[] rgbArray = new int[this.opts.height * this.opts.width];

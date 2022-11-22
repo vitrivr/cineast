@@ -11,7 +11,7 @@ public class Model implements IModel {
   private List<Entity> entities;
   private List<Material> materials;
 
-  public 
+  public static final Model EMPTY = new Model("EmptyModel", new ArrayList<>() {{add(Material.EMPTY);}});
 
 
   public Model(String id, List<Material> materials) {
