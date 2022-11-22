@@ -1,23 +1,22 @@
-package org.vitrivr.cineast.core.render.lwjgl.model;
+package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 
-public class Mesh {
+public class GlMesh {
 
-  private Vector3f color;
-  private final int numVertices;
+
+  private final Mesh mesh;
   private final List<Integer> vboIdList;
   private final int vaoId;
 
-  // TODO: remove from model GL30 dependency
-  public Mesh(float[] positions, float[] textureCoordinates,  int[] idx) {
-    this.numVertices = idx.length;
 
+  public GlMesh(Mesh mesh) {
+    this.mesh = mesh;
     this.vboIdList = new ArrayList<>();
 
 
@@ -29,8 +28,8 @@ public class Mesh {
       // Positions VBO
       int vboId = GL30.glGenBuffers();
       this.vboIdList.add(vboId);
-      var positionsBuffer = memoryStack.callocFloat(positions.length);
-      positionsBuffer.put(0, positions);
+      var positionsBuffer = memoryStack.callocFloat(this.mesh.getPositions().length);
+      positionsBuffer.put(0, this.mesh.getPositions());
       GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
       GL30.glBufferData(GL30.GL_ARRAY_BUFFER, positionsBuffer, GL30.GL_STATIC_DRAW);
       GL30.glEnableVertexAttribArray(0);
@@ -39,8 +38,8 @@ public class Mesh {
       // Textures VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
       this.vboIdList.add(vboId);
-      var textureCoordinatesBuffer = MemoryUtil.memAllocFloat(textureCoordinates.length);
-      textureCoordinatesBuffer.put(0, textureCoordinates);
+      var textureCoordinatesBuffer = MemoryUtil.memAllocFloat(this.mesh.getTextureCoords().length);
+      textureCoordinatesBuffer.put(0, this.mesh.getTextureCoords());
       GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
       GL30.glBufferData(GL30.GL_ARRAY_BUFFER, textureCoordinatesBuffer, GL30.GL_STATIC_DRAW);
       GL30.glEnableVertexAttribArray(1);
@@ -48,8 +47,8 @@ public class Mesh {
 
       // Index VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
-      var idxBuffer = memoryStack.callocInt(idx.length);
-      idxBuffer.put(0, idx);
+      var idxBuffer = memoryStack.callocInt(this.mesh.getIdx().length);
+      idxBuffer.put(0, this.mesh.getIdx().length);
       GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, vboId);
       GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, idxBuffer, GL30.GL_STATIC_DRAW);
 
@@ -63,12 +62,16 @@ public class Mesh {
     GL30.glBindVertexArray(this.vaoId);
   }
 
+
   public int getNumVertices() {
-    return this.numVertices;
+    return this.mesh.getNumVertices();
   }
 
   public final int getVaoId() {
     return this.vaoId;
   }
 
+  public String getId() {
+    return this.mesh.getId();
+  }
 }

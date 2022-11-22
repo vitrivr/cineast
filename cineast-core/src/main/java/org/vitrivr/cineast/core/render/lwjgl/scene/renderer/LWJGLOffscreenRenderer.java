@@ -1,19 +1,17 @@
-package org.vitrivr.cineast.core.render.lwjgl.renderer;
+package org.vitrivr.cineast.core.render.lwjgl.scene.renderer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
-import org.vitrivr.cineast.core.render.lwjgl.model.Entity;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
 import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;

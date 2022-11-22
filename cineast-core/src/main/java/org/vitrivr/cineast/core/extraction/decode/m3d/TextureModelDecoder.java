@@ -1,11 +1,5 @@
 package org.vitrivr.cineast.core.extraction.decode.m3d;
 
-import com.jogamp.opengl.Threading.Mode;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,17 +7,11 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
-import org.joml.Vector4i;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.render.lwjgl.model.ModelLoader;
-import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 
 public class TextureModelDecoder implements Decoder<Model> {
 

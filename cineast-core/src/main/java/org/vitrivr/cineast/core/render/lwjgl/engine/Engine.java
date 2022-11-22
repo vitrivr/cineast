@@ -3,10 +3,11 @@ package org.vitrivr.cineast.core.render.lwjgl.engine;
 
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
-import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+
 
 public class Engine {
 
@@ -15,7 +16,7 @@ public class Engine {
   private final Window window;
   private boolean running;
   private final Render render;
-  private final Scene scene;
+  private final GlScene scene;
   private final IEngineLogic appLogic;
   private final int targetFps;
   private final int targetUps;
@@ -30,7 +31,7 @@ public class Engine {
     this.targetUps = opts.ups;
     this.appLogic = appLogic;
     this.render = new Render();
-    this.scene = new Scene(this.window.getWidth(), this.window.getHeight());
+    this.scene = new GlScene( new Scene(this.window.getWidth(), this.window.getHeight()));
     this.appLogic.init(this.window, this.scene, this.render);
     this.running = true;
   }
@@ -130,7 +131,7 @@ public class Engine {
     return this.window;
   }
 
-  public Scene getScene() {
+  public GlScene getScene() {
     return this.scene;
   }
 }

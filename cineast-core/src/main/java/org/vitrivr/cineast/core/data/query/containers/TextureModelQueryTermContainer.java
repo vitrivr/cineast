@@ -2,11 +2,9 @@ package org.vitrivr.cineast.core.data.query.containers;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.util.web.ImageParser;
 import org.vitrivr.cineast.core.util.web.MeshParser;
 import org.vitrivr.cineast.core.util.web.ModelParser;

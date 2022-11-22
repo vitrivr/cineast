@@ -1,15 +1,8 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import com.jogamp.opengl.Threading.Mode;
-import org.jcodec.codecs.common.biari.MDecoder;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
-import org.vitrivr.cineast.core.data.m3d.Voxelizer;
-import org.vitrivr.cineast.core.data.m3d.WritableMesh;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 
 
 public class TextureModel3DSegment implements SegmentContainer {

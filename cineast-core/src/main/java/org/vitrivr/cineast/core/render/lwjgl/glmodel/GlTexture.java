@@ -1,39 +1,21 @@
-package org.vitrivr.cineast.core.render.lwjgl.model;
+package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.nio.ByteBuffer;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
 
-public class Texture {
+public class GlTexture {
 
   private int textureId;
-  private String texturePath;
+  private final Texture texture;
 
-  public Texture(int width, int height, ByteBuffer buffer) {
-    this.texturePath = "";
-    this.generateTexture(width, height, buffer);
-  }
 
-  public Texture(String texturePath) {
-    this.texturePath = texturePath;
-    try (var memoryStack = MemoryStack.stackPush()) {
-      var w = memoryStack.mallocInt(1);
-      var h = memoryStack.mallocInt(1);
-      var channels = memoryStack.mallocInt(1);
 
-      var buffer = STBImage.stbi_load(texturePath, w, h, channels, 4);
-      if (buffer == null) {
-        throw new RuntimeException("Could not load texture file: " + texturePath);
-      }
-
-      var width = w.get();
-      var height = h.get();
-
-      this.generateTexture(width, height, buffer);
-      STBImage.stbi_image_free(buffer);
-
-    }
+  public GlTexture(Texture texture) {
+    this.texture = texture;
+    this.loadTexture(this.texture.getTexturePath());
   }
 
   public void bind() {
@@ -42,6 +24,24 @@ public class Texture {
 
   public void cleanup() {
     GL30.glDeleteTextures(this.textureId);
+  }
+
+  public void loadTexture(String texturePath) {
+    try (var memoryStack = MemoryStack.stackPush()) {
+      var w = memoryStack.mallocInt(1);
+      var h = memoryStack.mallocInt(1);
+      var channels = memoryStack.mallocInt(1);
+
+      var imageBuffer = STBImage.stbi_load(texturePath, w, h, channels, 4);
+      if (imageBuffer == null) {
+        throw new RuntimeException("Could not load texture file: " + texturePath);
+      }
+      var width = w.get();
+      var height = h.get();
+      this.generateTexture(width, height, imageBuffer);
+      STBImage.stbi_image_free(imageBuffer);
+    }
+
   }
 
   private void generateTexture(int width, int height, ByteBuffer buffer) {
@@ -56,6 +56,6 @@ public class Texture {
   }
 
   public String getTexturePath() {
-    return this.texturePath;
+    return this.texture.getTexturePath();
   }
 }

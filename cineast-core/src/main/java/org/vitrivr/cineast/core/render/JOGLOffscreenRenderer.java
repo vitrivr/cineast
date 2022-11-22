@@ -23,7 +23,7 @@ import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 /**
  * This class can be used to render 3D models (Meshes or Voxel-models) using the JOGL rendering environment. It currently has the following features:

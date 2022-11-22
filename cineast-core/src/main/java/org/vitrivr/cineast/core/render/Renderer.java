@@ -2,9 +2,7 @@ package org.vitrivr.cineast.core.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 /**
  * This interface defines methods that a renderer for 3D models (e.g. Meshes or Voxels must implement). It currently provides the following features:

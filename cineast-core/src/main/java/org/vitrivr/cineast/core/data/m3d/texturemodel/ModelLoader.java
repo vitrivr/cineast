@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.render.lwjgl.model;
+package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import static org.lwjgl.assimp.Assimp.*;
 

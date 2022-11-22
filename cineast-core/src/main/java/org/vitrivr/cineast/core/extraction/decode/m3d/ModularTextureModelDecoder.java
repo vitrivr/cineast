@@ -10,12 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.query.containers.TextureModelQueryTermContainer;
 import org.vitrivr.cineast.core.extraction.decode.general.Converter;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 public class ModularTextureModelDecoder implements ITextureModelDecoder, Converter {

@@ -1,8 +1,7 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.render.lwjgl.model.ModelLoader;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 
 public interface ModelProvider {
 

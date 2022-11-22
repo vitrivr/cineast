@@ -2,9 +2,9 @@ package org.vitrivr.cineast.core.render.lwjgl.scene;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.vitrivr.cineast.core.render.lwjgl.model.Entity;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.render.lwjgl.model.TextureCache;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.TextureCache;
 
 /**
  * The Scene class will hold 3D scene elements (models, etc.).

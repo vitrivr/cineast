@@ -52,7 +52,7 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;

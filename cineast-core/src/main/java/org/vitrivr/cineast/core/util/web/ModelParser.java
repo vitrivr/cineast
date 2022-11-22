@@ -1,13 +1,9 @@
 package org.vitrivr.cineast.core.util.web;
 
-import com.carrotsearch.hppc.ObjectIntHashMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 

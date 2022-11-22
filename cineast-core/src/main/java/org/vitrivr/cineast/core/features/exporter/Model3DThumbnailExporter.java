@@ -13,18 +13,13 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.Configuration;
-import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
-import org.vitrivr.cineast.core.render.lwjgl.model.IModel;
-import org.vitrivr.cineast.core.render.lwjgl.model.Model;
-import org.vitrivr.cineast.core.render.lwjgl.model.ModelLoader;
-import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.render.lwjgl.scene.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
 
 
 public class Model3DThumbnailExporter implements Extractor {

@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.render.lwjgl.model;
+package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
