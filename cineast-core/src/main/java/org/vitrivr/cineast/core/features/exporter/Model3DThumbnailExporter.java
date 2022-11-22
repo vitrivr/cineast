@@ -97,12 +97,12 @@ public class Model3DThumbnailExporter implements Extractor {
       Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
       // TODO this is a hack to get the renderer to work, it should be initialized in the mainthread as a singleton
       this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
-      IModel model = ModelLoader.loadModel("test", "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSketchfab\\76a3f7bf75d049458dfaa48aa342e0b8\\baluster_vase_from_a_five-piece_garniture\\scene.gltf");
+      IModel model = shot.getModel();
 
       if (model.getMaterials().size() > 0) {
         /* Colors the mesh. */
         //TODO Coloring if no textures
-        // MeshColoringUtil.normalColoring(mesh);
+        //MeshColoringUtil.normalColoring(mesh);
 
         BufferedImage buffer = null;
         BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
@@ -117,6 +117,8 @@ public class Model3DThumbnailExporter implements Extractor {
             //this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
             this.renderer.render();
             buffer = this.renderer.obtain();
+
+            this.renderer.moveCameraOrbit(0.5f,0.25f,0.125f);
 
             int idx = i % 2;
             int idy = i < 2 ? 0 : 1;

@@ -25,7 +25,6 @@ public class LightfieldCamera {
   public LightfieldCamera(WindowOptions opts) {
 
     this.opts = opts;
-
     this.lightfieldImage = new BufferedImage(opts.width, opts.height, BufferedImage.TYPE_INT_RGB);
     this.imageData = BufferUtils.createFloatBuffer(opts.width * opts.height * 3);
     GL30.glReadPixels(0, 0, opts.width, opts.height, GL30.GL_RGB, GL30.GL_FLOAT, this.imageData);

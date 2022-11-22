@@ -57,6 +57,6 @@ public class TextureModel3DSegment implements SegmentContainer {
 
   @Override
   public IModel getModel() {
-    return Model.EMPTY;
+    return this.model;
   }
 }

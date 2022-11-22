@@ -9,7 +9,7 @@ public class Texture {
   private final String texturePath;
   public ByteBuffer imageBuffer;
 
-  public static final String DEFAULT_TEXTURE = "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSketchfab\\76a3f7bf75d049458dfaa48aa342e0b8\\baluster_vase_from_a_five-piece_garniture\\default_baseColor.jpeg";
+  public static final String DEFAULT_TEXTURE = "./resources/renderer/lwjgl/models/default/default.png";
   private  int width;
   private  int height;
 

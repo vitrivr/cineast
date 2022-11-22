@@ -74,7 +74,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    */
   @Override
   protected void init(Window window, GlScene scene, Render render) {
-    scene.getCamera().setPosition(0, 0, 1);
+    scene.getCamera().setPosition(0, 0, 5);
   }
 
   @Override
@@ -84,7 +84,8 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   protected void afterRender(Window window, GlScene scene, Render render) {
-
+    var lfc = new LightfieldCamera(this.windowOptions);
+    this.imageQueue.add(lfc.takeLightfieldImage());
   }
 
   /**
@@ -117,7 +118,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
         var entity = new Entity("cube", model.getId());
         entity.setPosition(0, 0, 0);
         entity.setScale(1f);
-        model.addEntity(entity);
+        model.addEntityNorm(entity);
       }
 
       scene.clearModels();

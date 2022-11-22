@@ -19,6 +19,13 @@ public class Material {
     this.texture = new Texture();
     this.diffuseColor = DEFAULT_COLOR;
   }
+  public float getMaxNormalizedScalingFactor(){
+    var min = Float.MAX_VALUE;
+    for (var mesh:this.meshes) {
+      min = Math.min(min,mesh.getNormalizesScalingFactor());
+    }
+    return min;
+  }
 
   public List<Mesh> getMeshes() {
     return Collections.unmodifiableList(this.meshes);

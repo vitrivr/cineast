@@ -19,15 +19,20 @@ public class ModelLoader {
   static {
     Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
   }
+
   private ModelLoader() {
     // Utility class
   }
 
   public static Model loadModel(String modelId, String modelPath) {
-    return loadModel(modelId, modelPath, aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
-        aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights |
-        aiProcess_PreTransformVertices);
-
+    return loadModel(modelId, modelPath,
+        aiProcess_GenSmoothNormals |
+            aiProcess_JoinIdenticalVertices |
+            aiProcess_Triangulate |
+            aiProcess_FixInfacingNormals |
+            aiProcess_CalcTangentSpace |
+            aiProcess_LimitBoneWeights |
+            aiProcess_PreTransformVertices);
   }
 
   public static Model loadModel(String modelId, String modelPath, int flags) {
@@ -102,7 +107,7 @@ public class ModelLoader {
           null, null, null, null, null);
       String texturePath = aiTexturePath.dataString();
       if (texturePath != null && texturePath.length() > 0) {
-        material.setTexture(ModelLoader.loadTexture(modelDir+File.separator+new File(texturePath).getName())
+        material.setTexture(ModelLoader.loadTexture(modelDir + File.separator + new File(texturePath).toPath())
         );
         material.setDiffuseColor(Material.DEFAULT_COLOR);
       }
@@ -150,6 +155,7 @@ public class ModelLoader {
       data[pos++] = textCoord.y();
       data[pos++] = textCoord.z();
     }
+
     return data;
   }
 

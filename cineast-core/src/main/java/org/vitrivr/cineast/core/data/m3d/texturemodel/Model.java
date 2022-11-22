@@ -28,6 +28,14 @@ public class Model implements IModel {
   public void addEntity(Entity entity) {
     this.entities.add(entity);
   }
+  public void addEntityNorm(Entity entity) {
+      var min = Float.MAX_VALUE;
+      for (var mesh:this.materials) {
+        min = Math.min(min,mesh.getMaxNormalizedScalingFactor());
+      }
+    entity.setScale(min);
+    this.entities.add(entity);
+  }
 
   public String getId() {
     return this.id;
