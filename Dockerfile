@@ -1,13 +1,11 @@
-FROM openjdk:17-buster AS build
+FROM gradle:jdk17 AS build
 
-RUN apt-get update && \
-  apt-get install -y maven
 COPY . /cineast-src
 RUN cd /cineast-src && \
-  ./gradlew getExternalFiles && \
-  ./gradlew shadowJar
+  gradle getExternalFiles && \
+  gradle shadowJar
 
-FROM openjdk:17-slim-buster
+FROM eclipse-temurin:17-jre
 
 RUN mkdir -p /opt/cineast
 

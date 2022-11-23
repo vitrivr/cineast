@@ -12,14 +12,15 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.m3d.WritableMesh;
+import org.lwjgl.system.Configuration;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
 
 
 public class Model3DThumbnailExporter implements Extractor {
@@ -60,7 +61,8 @@ public class Model3DThumbnailExporter implements Extractor {
   /**
    * Offscreen rendering context.
    */
-  private final JOGLOffscreenRenderer renderer;
+  //private final JOGLOffscreenRenderer renderer;
+  private  LWJGLOffscreenRenderer renderer;
 
   /**
    * Background color of the resulting image.
@@ -80,7 +82,6 @@ public class Model3DThumbnailExporter implements Extractor {
   public Model3DThumbnailExporter(Map<String, String> properties) {
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
-    this.renderer = new JOGLOffscreenRenderer(this.size / 2, this.size / 2);
   }
 
   /**
@@ -93,24 +94,31 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
-      WritableMesh mesh = shot.copyNormalizedMesh();
+      Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
+      // TODO this is a hack to get the renderer to work, it should be initialized in the mainthread as a singleton
+      this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
+      IModel model = shot.getModel();
 
-      if (!mesh.isEmpty()) {
+      if (model.getMaterials().size() > 0) {
         /* Colors the mesh. */
-        MeshColoringUtil.normalColoring(mesh);
+        //TODO Coloring if no textures
+        //MeshColoringUtil.normalColoring(mesh);
 
         BufferedImage buffer = null;
         BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
 
         if (this.renderer.retain()) {
-          this.renderer.clear(this.backgroundColor);
-          this.renderer.assemble(mesh);
+          this.renderer.clear();
+          this.renderer.assemble(model);
 
           for (int i = 0; i < 4; i++) {
-            this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
+
+            //this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
             this.renderer.render();
             buffer = this.renderer.obtain();
+
+            this.renderer.moveCameraOrbit(0.5f,0.25f,0.125f);
 
             int idx = i % 2;
             int idy = i < 2 ? 0 : 1;
