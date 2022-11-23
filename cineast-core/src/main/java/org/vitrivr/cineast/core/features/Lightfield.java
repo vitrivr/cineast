@@ -14,12 +14,14 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -46,10 +48,12 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   private final double[][] camerapositions;
 
+  LWJGLOffscreenRenderer renderer;
+
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
-  private final MeshOnlyRenderer renderer;
+  //private final Renderer renderer;
 
   protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
     super(tableName, maxDist, vectorLength);
@@ -67,13 +71,12 @@ public abstract class Lightfield extends StagedFeatureModule {
      * Instantiate JOGLOffscreenRenderer.
      * Handle the case where it cannot be created due to missing OpenGL support.
      */
-    JOGLOffscreenRenderer renderer = null;
     try {
-      renderer = new JOGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
+      //renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
     } catch (Exception exception) {
       LOGGER.error("Could not instantiate JOGLOffscreenRenderer! This instance of {} will not create any results or features!", this.getClass().getSimpleName());
     } finally {
-      this.renderer = renderer;
+      //this.renderer = renderer;
     }
   }
 
@@ -90,19 +93,19 @@ public abstract class Lightfield extends StagedFeatureModule {
   @Override
   protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
     /* Check if renderer could be initialised. */
-    if (this.renderer == null) {
-      LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
-      return new ArrayList<>(0);
-    }
+//    if (this.renderer == null) {
+//      LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
+//      return new ArrayList<>(0);
+//    }
 
     /* Extract features from either the provided Mesh (1) or image (2). */
-    ReadableMesh mesh = sc.getNormalizedMesh();
+    IModel model = sc.getModel();
     List<float[]> features;
-    if (mesh.isEmpty()) {
+    if (model == null) {
       BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), RENDERING_SIZE, RENDERING_SIZE, Image.SCALE_SMOOTH);
       features = this.featureVectorsFromImage(image, POSEIDX_UNKNOWN);
     } else {
-      features = this.featureVectorsFromMesh(mesh);
+      features = this.featureVectorsFromMesh(model);
     }
 
     return features;
@@ -152,20 +155,20 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   @Override
   public void processSegment(SegmentContainer sc) {
-    /* Check for renderer. */
-    if (this.renderer == null) {
-      LOGGER.error("No renderer found! {} does not create any features.", this.getClass().getSimpleName());
-      return;
-    }
+//    /* Check for renderer. */
+//    if (this.renderer == null) {
+//      LOGGER.error("No renderer found! {} does not create any features.", this.getClass().getSimpleName());
+//      return;
+//    }
 
     /* If Mesh is empty, no feature is persisted. */
-    ReadableMesh mesh = sc.getNormalizedMesh();
-    if (mesh == null || mesh.isEmpty()) {
+    IModel model = sc.getModel();
+    if (model == null) {
       return;
     }
 
     /* Extract and persist all features. */
-    List<float[]> features = this.featureVectorsFromMesh(mesh);
+    List<float[]> features = this.featureVectorsFromMesh(model);
     for (float[] feature : features) {
       this.persist(sc.getId(), new FloatVectorImpl(feature));
     }
@@ -174,44 +177,50 @@ public abstract class Lightfield extends StagedFeatureModule {
   /**
    * Extracts the Lightfield Fourier descriptors from a provided Mesh. The returned list contains elements of which each holds a pose-index (relative to the camera-positions used by the feature module) and the associated feature-vector (s).
    *
-   * @param mesh Mesh for which to extract the Lightfield Fourier descriptors.
+   * @param model Model for which to extract the Lightfield Fourier descriptors.
    * @return List of descriptors for mesh.
    */
-  protected List<float[]> featureVectorsFromMesh(ReadableMesh mesh) {
+  protected List<float[]> featureVectorsFromMesh(IModel model) {
     /* Prepare empty list of features. */
     List<float[]> features = new ArrayList<>(20);
 
-    /* Retains the renderer and returns if retention fails. */
-    if (!this.renderer.retain()) {
-      return features;
+
+    if (this.renderer==null) {
+      this.renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
     }
 
-    /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
-     * the renderer is released again.
-     */
-    try {
-      /* Clears the renderer and assembles a new Mesh. */
-      this.renderer.clear();
-      this.renderer.assemble(mesh);
+    /* Retains the renderer and returns if retention fails. */
+    if (renderer.retain()) {
+      this.renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
 
-      /* Obtains rendered image from configured perspective. */
-      for (int i = 0; i < this.camerapositions.length; i++) {
-        /* Adjust the camera and render the image. */
-        this.renderer.positionCamera((float) this.camerapositions[i][0], (float) this.camerapositions[i][1], (float) this.camerapositions[i][2]);
-        this.renderer.render();
-        BufferedImage image = this.renderer.obtain();
-        if (image == null) {
-          LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
-          return features;
+      /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
+       * the renderer is released again.
+       */
+      try {
+        /* Clears the renderer and assembles a new Mesh. */
+        renderer.clear();
+        renderer.assemble(model);
+
+        /* Obtains rendered image from configured perspective. */
+        for (int i = 0; i < this.camerapositions.length; i++) {
+          /* Adjust the camera and render the image. */
+          //this.renderer.positionCamera((float) this.camerapositions[i][0], (float) this.camerapositions[i][1], (float) this.camerapositions[i][2]);
+          renderer.render();
+          BufferedImage image = renderer.obtain();
+          if (image == null) {
+            LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
+            return features;
+          }
+          features.addAll(this.featureVectorsFromImage(image, i));
         }
-        features.addAll(this.featureVectorsFromImage(image, i));
-      }
 
-    } catch (Exception exception) {
-      LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
-    } finally {
-      /* Release the rendering context. */
-      this.renderer.release();
+      } catch (Exception exception) {
+        LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
+      } finally {
+        /* Release the rendering context. */
+        renderer.release();
+        this.renderer = null;
+      }
     }
 
     /* Extract and persist the feature descriptors. */

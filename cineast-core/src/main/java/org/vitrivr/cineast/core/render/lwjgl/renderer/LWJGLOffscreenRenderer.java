@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.locks.ReentrantLock;
 import org.joml.Vector3f;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
+import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
@@ -44,6 +47,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
     //LWJGLOffscreenRenderer.instance = this;
     var name = "LWJGLOffscreenRenderer";
     this.engine = new Engine(name, this.windowOptions, this);
+    this.lock.lock();
     LOGGER.info("LWJGLOffscreenRenderer created");
   }
 
@@ -57,7 +61,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   @Override
   public void render() {
     this.engine.runOnce();
-    LOGGER.info("LWJGLOffscreenRenderer started");
+    LOGGER.info("LWJGLOffscreenRenderer rendered");
   }
 
 
@@ -178,7 +182,8 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   public boolean retain() {
-    return this.lock.tryLock();
+    this.lock.lock();
+    return true;
   }
 
   @Override
@@ -194,4 +199,5 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   public int getHeight() {
     return this.windowOptions.height;
   }
+
 }
