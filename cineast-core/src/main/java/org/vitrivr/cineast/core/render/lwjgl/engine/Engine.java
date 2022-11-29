@@ -36,12 +36,20 @@ public class Engine {
     this.running = true;
   }
 
+
   public void cleanup() {
     this.appLogic.cleanup();
     this.render.cleanup();
     this.scene.cleanup();
-    this.window.cleanup();
   }
+
+  public void clear() {
+    this.appLogic.cleanup();
+    this.render.cleanup();
+    this.scene.cleanup();
+    this.window.clear();
+  }
+
 
   public void start() {
     this.running = true;
@@ -119,9 +127,6 @@ public class Engine {
     this.scene.resize(this.window.getWidth(), this.window.getHeight());
   }
 
-  public void clear() {
-    this.scene.clearModels();
-  }
 
   public Camera getCamera() {
     return this.scene.getCamera();

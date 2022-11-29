@@ -185,13 +185,9 @@ public abstract class Lightfield extends StagedFeatureModule {
     List<float[]> features = new ArrayList<>(20);
 
 
-    if (this.renderer==null) {
-      this.renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
-    }
 
     /* Retains the renderer and returns if retention fails. */
     if (renderer.retain()) {
-      this.renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
 
       /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
        * the renderer is released again.

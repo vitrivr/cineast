@@ -19,7 +19,8 @@ public class GlMesh {
   public GlMesh(Mesh mesh) {
     this.mesh = mesh;
     this.vboIdList = new ArrayList<>();
-    
+
+
 
     try (var memoryStack = MemoryStack.stackPush()) {
 

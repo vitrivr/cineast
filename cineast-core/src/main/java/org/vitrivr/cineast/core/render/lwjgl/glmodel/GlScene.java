@@ -62,6 +62,7 @@ public class GlScene {
   }
 
   public void clearModels() {
+    this.cleanup();
     this.models.clear();
   }
 

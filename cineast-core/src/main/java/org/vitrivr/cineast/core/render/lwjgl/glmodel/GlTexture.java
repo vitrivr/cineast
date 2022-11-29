@@ -26,18 +26,16 @@ public class GlTexture {
     GL30.glDeleteTextures(this.textureId);
   }
 
-
-
-  private void generateTexture(int width, int height, ByteBuffer buffer) {
+  private void generateTexture(int width, int height, ByteBuffer texture) {
     this.textureId = GL30.glGenTextures();
     GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
     GL30.glPixelStorei(GL30.GL_UNPACK_ALIGNMENT, 1);
     GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST);
     GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_NEAREST);
     GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, width, height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE,
-        buffer);
+        texture);
     GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
-    STBImage.stbi_image_free(buffer);
+    STBImage.stbi_image_free(texture);
   }
 
   public String getTexturePath() {
