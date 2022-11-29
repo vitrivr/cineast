@@ -210,13 +210,13 @@ public abstract class Lightfield extends StagedFeatureModule {
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.RENDER));
 
+    var vectors =   new Stack<Vector3f>();
     for (var position : this.camerapositions) {
-      jobData.set(RenderData.VECTORS, new Stack<Vector3f>() {{
-        push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
-        actions.add(new Action(RenderActions.LOOKAT));
-        actions.add(new Action(RenderActions.RENDER));
-      }});
+      vectors.push(new Vector3f(1f/4f, 0, 0));
+      actions.add(new Action(RenderActions.LOOKAT));
+      actions.add(new Action(RenderActions.RENDER));
     }
+    jobData.set(RenderData.VECTORS, vectors);
     actions.add(new Action(RenderActions.SETUP));
 
     var job = new RenderJob(actions, jobData);
@@ -239,9 +239,6 @@ public abstract class Lightfield extends StagedFeatureModule {
           }
         }
       }
-      var terminateJob = new RenderJob(JobControlCommand.SHUTDOWN_WORKER);
-      RenderWorker.getRenderJobQueue().add(terminateJob);
-
     } catch (InterruptedException ex) {
       LOGGER.error("Could not generate feature for {} because the JOGOffscreenRenderer was interrupted.", this.getClass().getSimpleName());
     } catch (Exception exception) {

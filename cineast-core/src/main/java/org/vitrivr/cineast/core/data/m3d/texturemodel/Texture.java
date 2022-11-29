@@ -18,7 +18,7 @@ public class Texture {
     this.imageBuffer = defaultText.imageBuffer;
     this.width = defaultText.getWidth();
     this.height = defaultText.height;
-    this.texturePath =defaultText.getTexturePath();
+    this.texturePath = defaultText.getTexturePath();
   }
 
   public Texture(String texturePath, ByteBuffer imageBuffer, int w, int h) {

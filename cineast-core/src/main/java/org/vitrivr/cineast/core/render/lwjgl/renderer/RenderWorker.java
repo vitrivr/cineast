@@ -105,7 +105,7 @@ public class RenderWorker extends Worker<RenderJob> {
 
   @StateEnter(state = RenderStates.LOOKAT, data = RenderData.VECTORS)
   public void lookAt(Stack<Vector3f> vectors){
-    LOGGER.info("Look at  RenderWorker");
+    LOGGER.info("Look at RenderWorker");
     var vec = vectors.pop();
     this.renderer.setCameraOrbit(vec.x, vec.y, vec.z);
   }
