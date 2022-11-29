@@ -3,15 +3,19 @@ package org.vitrivr.cineast.core.features.exporter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
 import org.lwjgl.system.Configuration;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -20,6 +24,15 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 
@@ -58,11 +71,7 @@ public class Model3DThumbnailExporter implements Extractor {
    */
   private final int size;
 
-  /**
-   * Offscreen rendering context.
-   */
-  //private final JOGLOffscreenRenderer renderer;
-  private  LWJGLOffscreenRenderer renderer;
+
 
   /**
    * Background color of the resulting image.
@@ -94,49 +103,68 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
-      Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
-      // TODO this is a hack to get the renderer to work, it should be initialized in the mainthread as a singleton
-      this.renderer = new LWJGLOffscreenRenderer(this.size / 2, this.size / 2);
       IModel model = shot.getModel();
-
       if (model.getMaterials().size() > 0) {
-        /* Colors the mesh. */
-        //TODO Coloring if no textures
-        //MeshColoringUtil.normalColoring(mesh);
+        var jobData = new Variant();
+        var opt = new WindowOptions(400, 400) {{
+          this.hideWindow = false;
+        }};
+        jobData.set(RenderData.WINDOWS_OPTIONS, opt);
+        jobData.set(RenderData.MODEL, model);
+        jobData.set(RenderData.VECTORS, new Stack<Vector3f>() {{
+          push(new Vector3f(1f / 8f, 0f, 0f));
+          push(new Vector3f(1f / 4f, 0f, 0f));
+          push(new Vector3f(1f / 8f, 1f / 8f, 0f));
+        }});
 
-        BufferedImage buffer = null;
+        var actions = new LinkedBlockingDeque<Action>();
+        actions.add(new Action(RenderActions.SETUP));
+        actions.add(new Action(RenderActions.SETUP));
+        actions.add(new Action(RenderActions.RENDER));
+        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.RENDER));
+        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.RENDER));
+        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.RENDER));
+        actions.add(new Action(RenderActions.SETUP));
+
+        var job = new RenderJob(actions, jobData);
+        RenderWorker.getRenderJobQueue().add(job);
+
+        var finishedJob = false;
+        var ic = 0;
+
         BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
 
-        if (this.renderer.retain()) {
-          this.renderer.clear();
-          this.renderer.assemble(model);
+        try {
+          while (!finishedJob) {
+            var result = job.getResults();
+            if (result.getType() == JobType.RESPONSE) {
+              var partialImage = result.getData().get(BufferedImage.class, RenderData.IMAGE);
+              int idx = ic % 2;
+              int idy = ic < 2 ? 0 : 1;
+              int sz = this.size / 2;
+              graphics.drawImage(partialImage, idx * sz, idy * sz, null);
+              ic++;
 
-          for (int i = 0; i < 4; i++) {
-
-            //this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
-            this.renderer.render();
-            buffer = this.renderer.obtain();
-
-            this.renderer.moveCameraOrbit(0.5f,0.25f,0.125f);
-
-            int idx = i % 2;
-            int idy = i < 2 ? 0 : 1;
-            int sz = this.size / 2;
-
-            graphics.drawImage(buffer, idx * sz, idy * sz, null);
+            } else if (result.getType() == JobType.CONTROL) {
+              if (result.getCommand() == JobControlCommand.JOB_DONE) {
+                finishedJob = true;
+              }
+            }
           }
-        } else {
-          LOGGER.error("Could not export thumbnail image for model {} because renderer could not be retained by current thread.", shot.getId());
+          ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+        } catch (InterruptedException | IOException e) {
+          throw new RuntimeException(e);
         }
-        ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
       }
     } catch (IOException exception) {
       LOGGER.fatal("Could not export thumbnail image for model {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
     } catch (Exception exception) {
       LOGGER.error("Could not export thumbnail image for model {} because an unknown exception occurred ({}).", shot.getId(), LogHelper.getStackTrace(exception));
     } finally {
-      this.renderer.release();
     }
   }
 

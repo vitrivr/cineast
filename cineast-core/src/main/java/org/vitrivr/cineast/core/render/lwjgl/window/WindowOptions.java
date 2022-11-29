@@ -7,10 +7,10 @@ public class WindowOptions {
 
   public boolean compatibleProfile;
   public int fps = -1;
-  public int height = 1440;
+  public int height = 400;
   public int ups = Engine.TARGET_UPS;
-  public int width = 2560;
-  public boolean hideWindow = true;
+  public int width = 400;
+  public boolean hideWindow = false;
   public WindowOptions(){}
 
   public WindowOptions(int width, int height) {

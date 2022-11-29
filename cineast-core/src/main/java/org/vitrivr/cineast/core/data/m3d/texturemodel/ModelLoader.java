@@ -16,10 +16,6 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
 
-  static {
-    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
-  }
-
   private ModelLoader() {
     // Utility class
   }

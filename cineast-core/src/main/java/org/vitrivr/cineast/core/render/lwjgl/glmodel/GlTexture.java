@@ -15,7 +15,7 @@ public class GlTexture {
 
   public GlTexture(Texture texture) {
     this.texture = texture;
-    this.generateTexture(this.texture.getWidth(), this.texture.getHeight(), this.texture.getImageBuffer());
+    this.generateTexture(this.texture.getWidth(), this.texture.getHeight(), this.texture.getTexturePath());
   }
 
   public void bind() {
@@ -26,9 +26,7 @@ public class GlTexture {
     GL30.glDeleteTextures(this.textureId);
   }
 
-
-
-  private void generateTexture(int width, int height, ByteBuffer buffer) {
+  private void generateTexture(int width, int height, String texturePath) {
     this.textureId = GL30.glGenTextures();
     GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
     GL30.glPixelStorei(GL30.GL_UNPACK_ALIGNMENT, 1);

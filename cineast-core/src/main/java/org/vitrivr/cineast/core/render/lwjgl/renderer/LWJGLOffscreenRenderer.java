@@ -3,11 +3,7 @@ package org.vitrivr.cineast.core.render.lwjgl.renderer;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.locks.ReentrantLock;
 import org.joml.Vector3f;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
-import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
@@ -27,35 +23,29 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private ReentrantLock lock = new ReentrantLock(true);
 
-  public final WindowOptions windowOptions;
-  private static LWJGLOffscreenRenderer instance;
+  public WindowOptions windowOptions;
   Engine engine;
 
   private LinkedTransferQueue<IModel> modelQueue;
   private LinkedTransferQueue<BufferedImage> imageQueue;
 
-  public LWJGLOffscreenRenderer(WindowOptions opts) {
-/*    if (LWJGLOffscreenRenderer.instance != null) {
-      throw new IllegalStateException("Engine is already running.");
-    }*/
-    this.windowOptions = opts;
-    this.windowOptions.hideWindow = true;
+
+
+  public LWJGLOffscreenRenderer() {
     this.modelQueue = new LinkedTransferQueue<IModel>();
     this.imageQueue = new LinkedTransferQueue<BufferedImage>();
-    //LWJGLOffscreenRenderer.instance = this;
-    var name = "LWJGLOffscreenRenderer";
-    this.engine = new Engine(name, this.windowOptions, this);
-    this.lock.lock();
     LOGGER.info("LWJGLOffscreenRenderer created");
   }
 
-  public LWJGLOffscreenRenderer(int width, int height) {
-    this(
-        new WindowOptions(width, height) {{
-          hideWindow = true;
-        }});
+
+  public void setWindowOptions(WindowOptions opts){
+    this.windowOptions = opts;
+  }
+
+  public void startEngine(){
+    var name = "LWJGLOffscreenRenderer";
+    this.engine = new Engine(name, this.windowOptions, this);
   }
 
   @Override
@@ -65,7 +55,6 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   }
 
 
-  @Override
   protected void cleanup() {
     LOGGER.info("LWJGLOffscreenRenderer cleaned");
   }
@@ -177,19 +166,17 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   public void clear() {
-
+    this.engine.getScene().clearModels();
   }
 
   @Override
   public boolean retain() {
-    this.lock.lock();
     return true;
   }
 
   @Override
   public void release() {
     this.engine.cleanup();
-    this.lock.unlock();
   }
 
   public int getWidth() {
