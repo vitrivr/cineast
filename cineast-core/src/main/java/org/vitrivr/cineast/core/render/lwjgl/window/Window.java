@@ -91,7 +91,7 @@ public class Window {
     this.mouseInput = new MouseInput(this.windowHandle);
   }
 
-  public void cleanup() {
+  public void clear() {
     glfwFreeCallbacks(this.windowHandle);
     GLFW.glfwDestroyWindow(this.windowHandle);
     GLFW.glfwTerminate();

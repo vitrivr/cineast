@@ -71,7 +71,10 @@ public class RenderWorker extends Worker<RenderJob> {
   @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)
   public void setWindowOptions(WindowOptions opt){
     LOGGER.info("INIT_WINDOW RenderWorker");
-    this.renderer.setWindowOptions(opt);
+    this.renderer = new LWJGLOffscreenRenderer();
+
+    renderer.setWindowOptions(opt);
+    renderer.startEngine();
   }
   @StateEnter(state = RenderStates.IDLE)
   public void idle(){
@@ -111,6 +114,7 @@ public class RenderWorker extends Worker<RenderJob> {
   public void unload(){
     LOGGER.info("UNLOAD_MODEL RenderWorker");
     this.renderer.clear();
+    this.renderer = null;
     var responseJob = new RenderJob(JobControlCommand.JOB_DONE);
     this.currentJob.resultQueue.add(responseJob);
   }

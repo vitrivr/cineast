@@ -22,6 +22,7 @@ public class GlMaterial {
 
   public void cleanup() {
     this.meshes.stream().forEach(GlMesh::cleanup);
+    this.texture.cleanup();
   }
 
 

@@ -17,9 +17,9 @@ import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.vitrivr.cineast.core.render.Renderer;
 
-public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
+
+public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -164,9 +164,13 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   }
 
+  /**
+   * This method disposes the engine.
+   * Window is destroyed and all resources are freed.
+   */
   @Override
   public void clear() {
-    this.engine.getScene().clearModels();
+    this.engine.clear();
   }
 
   @Override
@@ -176,7 +180,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   public void release() {
-    this.engine.cleanup();
+    this.engine.clear();
   }
 
   public int getWidth() {
