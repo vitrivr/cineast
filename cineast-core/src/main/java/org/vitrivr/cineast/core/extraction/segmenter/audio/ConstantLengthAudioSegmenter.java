@@ -1,10 +1,16 @@
 package org.vitrivr.cineast.core.extraction.segmenter.audio;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Sets;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
@@ -160,6 +166,14 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
         this.decoder.close();
       }
     }
+  }
+
+  /**
+   * Returns {@link MediaType#AUDIO}, as this {@link Segmenter} is for audio.
+   */
+  @Override
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.AUDIO);
   }
 
   /**

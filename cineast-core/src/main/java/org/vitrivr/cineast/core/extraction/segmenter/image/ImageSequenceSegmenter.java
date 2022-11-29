@@ -4,7 +4,10 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.google.common.collect.Sets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
@@ -126,5 +129,14 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
     synchronized (this) {
       this.running = false;
     }
+  }
+
+  /**
+   * Returns {@link MediaType#IMAGE_SEQUENCE}, as this {@link Segmenter} is for image sequences
+   * @return
+   */
+  @Override
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.IMAGE_SEQUENCE);
   }
 }
