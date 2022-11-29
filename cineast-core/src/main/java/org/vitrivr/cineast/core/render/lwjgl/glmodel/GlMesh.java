@@ -19,7 +19,7 @@ public class GlMesh {
   public GlMesh(Mesh mesh) {
     this.mesh = mesh;
     this.vboIdList = new ArrayList<>();
-    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 15));
+    
 
     try (var memoryStack = MemoryStack.stackPush()) {
 
