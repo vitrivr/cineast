@@ -43,12 +43,6 @@
       "visualtextcoembedding": [
         {"feature": "VisualTextCoEmbedding", "weight": 1.0}
       ],
-      "lightfieldfourier": [
-        {"feature": "LightfieldFourier", "weight": 1.0}
-      ],
-      "lightfieldzernike": [
-        {"feature": "LightfieldZernike", "weight": 1.0}
-      ],
       "boolean": [
         {
           "feature": "CollectionBooleanRetriever", "weight": 1.0,
@@ -82,11 +76,6 @@
         "samplerate": 44100,
         "channels": 2
       }
-    },
-    "MODEL3D": {
-      "decoder": "ModularMeshDecoder",
-      "properties": {
-      }
     }
   },
 
@@ -96,7 +85,7 @@
   },
 
   "api": {
-    "enableCLI": false,
+    "enableCLI": true,
     "enableWebsocket": true,
     "enableWebsocketSecure": false,
     "enableRest": true,
@@ -109,7 +98,6 @@
     "threadPoolSize": 12,
     "serveContent": true,
     "serveUI": false,
-    "sessionExtractionConfigLocation": "extraction_config.json",
     "uiLocation": "../vitrivr-ng/dist",
     "thumbnailLocation": "./thumbnails",
     "objectLocation": "./data/",
@@ -120,4 +108,5 @@
     "enablePrometheus": false,
     "prometheusPort": 4569
   }
+
 }
