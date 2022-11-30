@@ -62,6 +62,7 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         LOGGER.error(ex.getMessage());
         this.shutdown = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
+        //TODO Check Stack Space Error
         LOGGER.error(ex.getMessage());
       } finally {
         LOGGER.info("Job Secuence ended");
