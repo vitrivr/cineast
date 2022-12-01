@@ -1,13 +1,12 @@
 package org.vitrivr.cineast.core.extraction.segmenter.image;
 
+import com.google.common.collect.Sets;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import com.google.common.collect.Sets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
@@ -69,7 +68,7 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
     if (context.objectIdGenerator() instanceof FileNameObjectIdGenerator) {
       this.idgenerator = (FileNameObjectIdGenerator) context.objectIdGenerator();
     } else {
-      this.idgenerator = null;
+      throw new IllegalStateException("This segmenter is only intended to be used with id generation based on filenames");
     }
   }
 
@@ -118,7 +117,11 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
         if (next.second.isPresent()) {
           final ImageSegment segment = new ImageSegment(next.second.get(), this.factory);
           if (this.idgenerator != null) {
-            segment.setId(this.idgenerator.next(next.first, MediaType.IMAGE_SEQUENCE));
+            Optional<String> segId = this.idgenerator.next(next.first, MediaType.IMAGE_SEQUENCE);
+            if (segId.isEmpty()) {
+              throw new IllegalStateException("ObjectId generation based on path " + next.first + " returned empty");
+            }
+            segment.setId(segId.get());
           }
           this.segments.offer(segment);
         }
@@ -133,6 +136,7 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
 
   /**
    * Returns {@link MediaType#IMAGE_SEQUENCE}, as this {@link Segmenter} is for image sequences
+   *
    * @return
    */
   @Override

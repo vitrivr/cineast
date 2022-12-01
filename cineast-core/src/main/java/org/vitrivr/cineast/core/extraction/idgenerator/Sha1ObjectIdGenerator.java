@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,7 @@ public class Sha1ObjectIdGenerator implements ObjectIdGenerator {
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
-  public String next(Path path, MediaType type) {
+  public Optional<String> next(Path path, MediaType type) {
 
     String sha1 = "0000000000000000000000000000000000000000";
 
@@ -27,7 +28,7 @@ public class Sha1ObjectIdGenerator implements ObjectIdGenerator {
       LOGGER.error("Error while creating SHA1 id for object at '{}': {}", path, LogHelper.getStackTrace(e));
     }
 
-    return MediaType.generateId(type, sha1);
+    return Optional.of(MediaType.generateId(type, sha1));
 
   }
 }
