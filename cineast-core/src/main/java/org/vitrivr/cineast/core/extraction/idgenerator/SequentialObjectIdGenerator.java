@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.extraction.idgenerator;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.vitrivr.cineast.core.data.MediaType;
 
@@ -57,12 +58,12 @@ public class SequentialObjectIdGenerator implements ObjectIdGenerator {
 
   /**
    * Generates the next ID in the sequence.
-   *
-   * @param path Path to the file for which an ID should be generated.
+   *  @param path Path to the file for which an ID should be generated.
    * @param type MediaType of the file for which an ID should be generated.
+   * @return
    */
   @Override
-  public String next(Path path, MediaType type) {
-    return MediaType.generateId(type, String.format(this.format, this.counter.getAndIncrement()));
+  public Optional<String> next(Path path, MediaType type) {
+    return Optional.of(MediaType.generateId(type, String.format(this.format, this.counter.getAndIncrement())));
   }
 }
