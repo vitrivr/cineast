@@ -17,9 +17,9 @@ import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.render.Renderer;
 
-
-public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
+public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -68,7 +68,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
    */
   @Override
   protected void init(Window window, GlScene scene, Render render) {
-    scene.getCamera().setPosition(0, 0, 5);
+    scene.getCamera().setPosition(0, 0, 1);
   }
 
   @Override
@@ -110,11 +110,8 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
       var model = (Model) this.modelQueue.poll();
       if (model.getEntities().size() == 0) {
         var entity = new Entity("cube", model.getId());
-        entity.setPosition(0, 0, 0);
-        entity.setScale(1f);
         model.addEntityNorm(entity);
       }
-
       scene.clearModels();
       scene.addModel(model);
     }

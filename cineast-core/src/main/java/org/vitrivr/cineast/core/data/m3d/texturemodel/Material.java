@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.m3d.texturemodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Material {
@@ -19,10 +20,19 @@ public class Material {
     this.texture = new Texture();
     this.diffuseColor = DEFAULT_COLOR;
   }
-  public float getMaxNormalizedScalingFactor(){
+
+  public float getMaxNormalizedScalingFactor() {
     var min = Float.MAX_VALUE;
-    for (var mesh:this.meshes) {
-      min = Math.min(min,mesh.getNormalizesScalingFactor());
+    for (var mesh : this.meshes) {
+      min = Math.min(min, mesh.getNormalizedScalingFactor());
+    }
+    return min;
+  }
+
+  public Vector3f getMaxNormalizedPosition() {
+    var min = new Vector3f(0, 0, 0);
+    for (var mesh : this.meshes) {
+      min = min.length() > mesh.getNormalizedPosition().length() ? min : mesh.getNormalizedPosition();
     }
     return min;
   }

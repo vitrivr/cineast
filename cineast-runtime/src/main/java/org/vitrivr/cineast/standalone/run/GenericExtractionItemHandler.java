@@ -345,6 +345,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         LOGGER.debug("Closing metadata extractor {}", extractor.getClass().getSimpleName());
         extractor.finish();
       }
+      //TODO: shutdown renderers
       LOGGER.debug("Closing & flushing all writers");
       if (pathProvider != null) {
         pathProvider.close();

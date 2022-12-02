@@ -13,6 +13,7 @@ import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.imageio.ImageIO;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
