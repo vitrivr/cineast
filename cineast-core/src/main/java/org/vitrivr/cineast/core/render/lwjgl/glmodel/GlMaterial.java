@@ -11,12 +11,12 @@ public class GlMaterial {
   private final List<GlMesh> meshes;
   private final GlTexture texture;
   private final Material material;
-  static int counter = 0;
+
   public GlMaterial(Material material) {
     this.meshes = new ArrayList<>();
     this.material = material;
     this.material.getMeshes().stream().forEach(mesh -> this.meshes.add(new GlMesh(mesh)));
-    counter++;
+
     this.texture = new GlTexture(this.material.getTexture());
   }
 
