@@ -12,6 +12,7 @@ public class GlTextureCache {
     this.textures = new HashMap<>();
     var texture = new Texture();
     this.textures.put(texture.getTexturePath(), new GlTexture(texture));
+    this.textures.put("default", new GlTexture(texture));
   }
 
   public void cleanup() {

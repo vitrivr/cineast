@@ -68,6 +68,7 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         LOGGER.info("Job Secuence ended");
       }
     }
+    LOGGER.info("Job ended");
   }
 
   protected void putActionfirst(Action action) {

@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.render.lwjgl.engine;
 
 
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
 import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
@@ -36,6 +37,9 @@ public class Engine {
     this.running = true;
   }
 
+  public void setRenderOptions(RenderOptions options){
+    this.render.setOptions(options);
+  }
 
   public void cleanup() {
     this.appLogic.cleanup();

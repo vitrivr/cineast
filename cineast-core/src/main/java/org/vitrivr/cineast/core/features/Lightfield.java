@@ -28,6 +28,7 @@ import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
@@ -199,22 +200,27 @@ public abstract class Lightfield extends StagedFeatureModule {
     List<float[]> features = new ArrayList<>(20);
 
     var jobData = new Variant();
-    var opt = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
+    var windowOpt = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
       this.hideWindow = false;
     }};
-    jobData.set(RenderData.WINDOWS_OPTIONS, opt);
+    jobData.set(RenderData.WINDOWS_OPTIONS, windowOpt);
+
+    var renderOpt = new RenderOptions() {{
+      this.showTextures = false;
+    }};
+    jobData.set(RenderData.RENDER_OPTIONS, renderOpt);
 
     jobData.set(RenderData.MODEL, model);
 
     var actions = new LinkedBlockingDeque<Action>();
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.SETUP));
-    actions.add(new Action(RenderActions.RENDER));
+    actions.add(new Action(RenderActions.SETUP));
 
-    var vectors =   new Stack<Vector3f>();
+    var vectors = new Stack<Vector3f>();
     for (var position : this.camerapositions) {
-      vectors.push(new Vector3f(1f/4f, 0, 0));
-      actions.add(new Action(RenderActions.LOOKAT));
+      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      actions.add(new Action(RenderActions.LOOKAT_FROM));
       actions.add(new Action(RenderActions.RENDER));
     }
     jobData.set(RenderData.VECTORS, vectors);

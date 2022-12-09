@@ -6,6 +6,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
@@ -42,6 +43,11 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   public void setWindowOptions(WindowOptions opts){
     this.windowOptions = opts;
   }
+
+  public void setRenderOptions(RenderOptions opts){
+    this.engine.setRenderOptions(opts);
+  }
+
 
   public void startEngine(){
     var name = "LWJGLOffscreenRenderer";
@@ -130,6 +136,13 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
     this.engine.getCamera().setPosition(x, y, z);
   }
 
+  public void lookFromAtO(float x, float y, float z) {
+    var lookFrom = new Vector3f(x, y, z);
+    var lookAt = new Vector3f(0, 0, 0);
+
+    this.engine.getCamera().setPositionAndOrientation(lookFrom, lookAt);
+
+  }
 
   @Override
   public void positionCamera(double ex, double ey, double ez,
