@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
+import org.lwjgl.system.MathUtil;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -40,6 +41,7 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlC
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+import org.vitrivr.cineast.core.util.math.MathConstants;
 
 /**
  * A visual-text co-embedding mapping images and text descriptions to the same embedding space.
@@ -127,22 +129,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     // Case: segment contains model
     var model = sc.getModel();
     if (model != null) {
-        float[] embeddingArray = embedModel(model);
-        this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
-
-        return;
-    }
-
-    // Case: segment contains text
-
-    var metadata = sc.getMetadata();
-    if (metadata != null) {
-      String text = metadata.get("description");
-      if (text != null) {
-        float[] embeddingArray = embedText(text);
-        this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
-      }
-      // Insert return here if additional cases are added!
+      float[] embeddingArray = embedModel(model);
+      this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
+      return;
     }
   }
 
@@ -263,53 +252,58 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
+
   private float[] embedModel(IModel model) {
-      var jobData = new Variant();
-      var w = 600;
-      var h = 600;
-      var opt = new WindowOptions(w, h) {{
-        this.hideWindow = false;
-      }};
-      jobData.set(RenderData.WINDOWS_OPTIONS, opt);
+    var jobData = new Variant();
+    var w = 600;
+    var h = 600;
+    var opt = new WindowOptions(w, h) {{
+      this.hideWindow = false;
+    }};
+    jobData.set(RenderData.WINDOWS_OPTIONS, opt);
 
-      var renderOptions = new RenderOptions() {{
-        this.showTextures = true;
-      }};
-      jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
-      jobData.set(RenderData.MODEL, model);
-      jobData.set(RenderData.VECTORS, new Stack<Vector3f>() {{
-        push(new Vector3f(0f, 0f, 1f));
-      }});
+    var renderOptions = new RenderOptions() {{
+      this.showTextures = true;
+    }};
+    jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
+    jobData.set(RenderData.MODEL, model);
 
-      var actions = new LinkedBlockingDeque<Action>();
-      actions.add(new Action(RenderActions.SETUP));
-      actions.add(new Action(RenderActions.SETUP));
-      actions.add(new Action(RenderActions.SETUP));
+    var camerapositions = MathConstants.VERTICES_3D_DODECAHEDRON;
+    var actions = new LinkedBlockingDeque<Action>();
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
+    var vectors = new Stack<Vector3f>();
+    for (var position : camerapositions) {
+      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
       actions.add(new Action(RenderActions.LOOKAT_FROM));
       actions.add(new Action(RenderActions.RENDER));
-      actions.add(new Action(RenderActions.SETUP));
+    }
+    actions.add(new Action(RenderActions.SETUP));
 
-      var job = new RenderJob(actions, jobData);
-      RenderWorker.getRenderJobQueue().add(job);
+    jobData.set(RenderData.VECTORS, vectors);
 
-      var finishedJob = false;
+    var job = new RenderJob(actions, jobData);
+    RenderWorker.getRenderJobQueue().add(job);
 
-      BufferedImage image = null;
+    var finishedJob = false;
 
-      try {
-        while (!finishedJob) {
-          var result = job.getResults();
-          if (result.getType() == JobType.RESPONSE) {
-            image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
-          } else if (result.getType() == JobType.CONTROL) {
-            if (result.getCommand() == JobControlCommand.JOB_DONE) {
-              finishedJob = true;
-            }
+    BufferedImage image = null;
+
+    try {
+      while (!finishedJob) {
+        var result = job.getResults();
+        if (result.getType() == JobType.RESPONSE) {
+          image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
+        } else if (result.getType() == JobType.CONTROL) {
+          if (result.getCommand() == JobControlCommand.JOB_DONE) {
+            finishedJob = true;
           }
         }
-      } catch (InterruptedException ex) {
-        LOGGER.error("Could not render model", ex);
       }
+    } catch (InterruptedException ex) {
+      LOGGER.error("Could not render model", ex);
+    }
     return embedImage(image);
   }
 
