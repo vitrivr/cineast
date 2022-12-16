@@ -43,12 +43,6 @@
       "visualtextcoembedding": [
         {"feature": "VisualTextCoEmbedding", "weight": 1.0}
       ],
-      "lightfieldfourier": [
-        {"feature": "LightfieldFourier", "weight": 1.0}
-      ],
-      "lightfieldzernike": [
-        {"feature": "LightfieldZernike", "weight": 1.0}
-      ],
       "boolean": [
         {
           "feature": "CollectionBooleanRetriever", "weight": 1.0,
@@ -81,11 +75,6 @@
       "properties": {
         "samplerate": 44100,
         "channels": 2
-      }
-    },
-    "MODEL3D": {
-      "decoder": "ModularTextureModelDecoder",
-      "properties": {
       }
     }
   },
@@ -120,4 +109,5 @@
     "enablePrometheus": false,
     "prometheusPort": 4569
   }
+
 }

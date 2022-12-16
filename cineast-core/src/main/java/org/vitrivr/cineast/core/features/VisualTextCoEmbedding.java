@@ -258,7 +258,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var w = 600;
     var h = 600;
     var opt = new WindowOptions(w, h) {{
-      this.hideWindow = false;
+      this.hideWindow = true;
     }};
     jobData.set(RenderData.WINDOWS_OPTIONS, opt);
 

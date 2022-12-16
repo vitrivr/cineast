@@ -108,7 +108,7 @@ public class Model3DThumbnailExporter implements Extractor {
       if (model.getMaterials().size() > 0) {
         var jobData = new Variant();
         var opt = new WindowOptions(400, 400) {{
-          this.hideWindow = false;
+          this.hideWindow = true;
         }};
         jobData.set(RenderData.WINDOWS_OPTIONS, opt);
 

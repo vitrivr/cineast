@@ -201,7 +201,7 @@ public abstract class Lightfield extends StagedFeatureModule {
 
     var jobData = new Variant();
     var windowOpt = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
-      this.hideWindow = false;
+      this.hideWindow = true;
     }};
     jobData.set(RenderData.WINDOWS_OPTIONS, windowOpt);
 
