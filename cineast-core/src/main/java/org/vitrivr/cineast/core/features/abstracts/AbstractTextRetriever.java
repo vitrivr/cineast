@@ -166,13 +166,13 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    */
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    final String[] terms = generateQuery(sc, qc);
+    final String[] terms = generateQuery(sc.getText());
     return this.getSimilar(qc, terms);
   }
 
-  protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
+  protected String[] generateQuery(String text) {
 
-    Matcher m = regex.matcher(sc.getText());
+    Matcher m = regex.matcher(text);
     ArrayList<String> matches = new ArrayList<>();
 
     while (m.find()) {
@@ -182,7 +182,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
       }
     }
 
-    return matches.toArray(new String[matches.size()]);
+    return matches.toArray(new String[0]);
   }
 
   /**

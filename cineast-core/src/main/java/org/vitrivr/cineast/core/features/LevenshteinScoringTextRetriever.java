@@ -31,7 +31,7 @@ public class LevenshteinScoringTextRetriever extends AbstractTextRetriever {
 
   private static final LevenshteinDistance distance = new LevenshteinDistance();
 
-  private static float similarity(String query, String candidate) {
+  public static float similarity(String query, String candidate) {
 
     if (query.isBlank() || candidate.isBlank()) {
       return 0f;
@@ -44,21 +44,6 @@ public class LevenshteinScoringTextRetriever extends AbstractTextRetriever {
     }
 
     return 1f - ((float)levDist / (float)query.length());
-
-  }
-
-  private static String encodeQueryString(String query) {
-    Matcher m = regex.matcher(query);
-    StringBuilder sb = new StringBuilder();
-
-    while (m.find()) {
-      final String match = m.group(1).trim();
-      if (!match.isEmpty()) {
-        sb.append(match.trim()).append("~ ");
-      }
-    }
-
-    return sb.toString().trim();
 
   }
 
@@ -87,7 +72,7 @@ public class LevenshteinScoringTextRetriever extends AbstractTextRetriever {
 
       String stripped = term.strip();
 
-      final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], qc, encodeQueryString(stripped));
+      final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], qc, generateQuery(stripped));
       LOGGER.trace("Retrieved {} results for term '{}'", resultList.size(), term);
 
       for (Map<String, PrimitiveTypeProvider> result : resultList) {
