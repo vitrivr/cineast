@@ -3,10 +3,12 @@ package org.vitrivr.cineast.core.features;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +47,21 @@ public class LevenshteinScoringTextRetriever extends AbstractTextRetriever {
 
   }
 
+  private static String encodeQueryString(String query) {
+    Matcher m = regex.matcher(query);
+    StringBuilder sb = new StringBuilder();
+
+    while (m.find()) {
+      final String match = m.group(1).trim();
+      if (!match.isEmpty()) {
+        sb.append(match.trim()).append("~ ");
+      }
+    }
+
+    return sb.toString().trim();
+
+  }
+
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 
     String text = sc.getText();
@@ -70,7 +87,7 @@ public class LevenshteinScoringTextRetriever extends AbstractTextRetriever {
 
       String stripped = term.strip();
 
-      final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], qc, "\"" + stripped + "\"~");
+      final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(qc.getResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], qc, encodeQueryString(stripped));
       LOGGER.trace("Retrieved {} results for term '{}'", resultList.size(), term);
 
       for (Map<String, PrimitiveTypeProvider> result : resultList) {

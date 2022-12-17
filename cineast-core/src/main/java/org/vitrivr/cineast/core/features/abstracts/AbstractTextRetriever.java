@@ -42,7 +42,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Generate a query term which will then be used for retrieval.
    */
-  private static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+  protected static final Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
   /**
    * Name of the table/entity used to store the data.
    */
