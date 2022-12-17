@@ -346,7 +346,7 @@ public final class CottontailSelector implements DBSelector {
 
     /* TODO Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
     final Query query = new Query(this.fqn)
-        .select("id", null)
+        .select("*", null)
         .fulltext(fieldname, predicate, DB_DISTANCE_VALUE_QUALIFIER)
         .queryId(generateQueryID("ft-rows", queryConfig))
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.DESC)
