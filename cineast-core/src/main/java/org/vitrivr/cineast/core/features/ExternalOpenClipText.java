@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.features;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +14,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -45,7 +43,11 @@ public class ExternalOpenClipText implements Retriever {
   private static final ReadableQueryConfig.Distance DISTANCE = ReadableQueryConfig.Distance.cosine;
   private static final CorrespondenceFunction CORRESPONDENCE = CorrespondenceFunction.linear(1);
 
-  private static final String API_ENDPOINT = "http://localhost:8888";
+  private static final String DEFAULT_API_ENDPOINT = "http://localhost:8888";
+
+  private static final String API_ENDPOINT_KEY = "api";
+
+  private final String externalApi;
 
   private final HttpClient httpClient = HttpClient.newBuilder()
       .version(Version.HTTP_1_1)
@@ -56,7 +58,11 @@ public class ExternalOpenClipText implements Retriever {
 
 
   public ExternalOpenClipText() {
+    this.externalApi = DEFAULT_API_ENDPOINT;
+  }
 
+  public ExternalOpenClipText(Map<String,String> properties){
+    this.externalApi = properties.getOrDefault(API_ENDPOINT_KEY, DEFAULT_API_ENDPOINT);
   }
 
   @Override
@@ -83,7 +89,7 @@ public class ExternalOpenClipText implements Retriever {
 
     HttpRequest request = HttpRequest.newBuilder()
         .POST(HttpRequest.BodyPublishers.ofString(builder))
-        .uri(URI.create(API_ENDPOINT))
+        .uri(URI.create(externalApi))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .build();
 
