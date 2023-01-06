@@ -1,20 +1,6 @@
 package org.vitrivr.cineast.standalone.run;
 
 import com.google.common.collect.Sets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,7 +28,7 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.image.DefaultImageDecoder;
 import org.vitrivr.cineast.core.extraction.decode.image.ImageSequenceDecoder;
 import org.vitrivr.cineast.core.extraction.decode.m3d.ModularMeshDecoder;
-import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
+import org.vitrivr.cineast.core.extraction.decode.video.FFMpegProcessVideoDecoder;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.extraction.segmenter.audio.ConstantLengthAudioSegmenter;
@@ -50,13 +36,23 @@ import org.vitrivr.cineast.core.extraction.segmenter.general.PassthroughSegmente
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
-import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
+import org.vitrivr.cineast.core.extraction.segmenter.video.ConstantLengthVideoSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to extract a continuous list of {@link ExtractionItemContainer}s.
@@ -124,7 +120,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
     handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    //handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegProcessVideoDecoder::new, () -> new ConstantLengthVideoSegmenter(1f))); //FIXME make properly configurable
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
@@ -139,10 +136,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     // #353: Respect the given segmenter
     final Set<MediaType> segmenterTypes;
     final Segmenter<Object> segmenter = context.newSegmenter();
-    segmenterTypes = segmenter.getMediaTypes();
-    segmenterTypes.forEach(t -> {
-      handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
-    });
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+    }
 
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
@@ -151,7 +150,13 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     //TODO Config should allow for multiple segmenters
 
-    this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
+    this.handlers.forEach((key, value) -> {
+      try {
+        handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get()));
+      } catch (Exception e) {
+        //TODO
+      }
+    });
 
   }
 

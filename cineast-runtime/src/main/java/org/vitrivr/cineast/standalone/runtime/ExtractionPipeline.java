@@ -1,13 +1,5 @@
 package org.vitrivr.cineast.standalone.runtime;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +10,10 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusExtractionTaskMonitor;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.*;
 
 
 public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
@@ -46,12 +42,12 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
   private final ExecutorService executorService;
 
   /**
-   * ExtractionContextProvider used to setup the Pipeline. It contains information about the Extractors.
+   * ExtractionContextProvider used to set up the Pipeline. It contains information about the Extractors.
    */
   private final ExtractionContextProvider context;
 
   /**
-   * Flag indicating whether or not the ExtractionPipeline is running.
+   * Flag indicating whether the ExtractionPipeline is running.
    */
   private volatile boolean running = false;
 
@@ -98,7 +94,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
   }
 
   /**
-   * Indicates whether or not the ExtractionPipeline is still running i.e. the while loop in the run() method is still being executed. Even if this flag is set to false, there might still be ExtractionTasks in the executor that have not finished yet!
+   * Indicates whether the ExtractionPipeline is still running i.e. the while loop in the run() method is still being executed. Even if this flag is set to false, there might still be ExtractionTasks in the executor that have not finished yet!
    *
    * @return True if the ExtractionPipeline is running, false otherwise.
    */

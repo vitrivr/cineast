@@ -2,54 +2,13 @@ package org.vitrivr.cineast.core.data.frames;
 
 /**
  * The class encapsulates descriptive information concerning a video-stream (visual only) that does not change between frames. The intention behind this class is that {@link VideoFrame}s that belong together share the same instance of the AudioDescriptor.
+ *
+ * @param fps      Frame rate of the video associated with this descriptor.
+ * @param duration Duration of the video associated with this descriptor in milliseconds.
+ * @param width    Width of the video associated with this descriptor.
+ * @param height   Height of the video associated with this descriptor.
  */
-public class VideoDescriptor {
-
-  /**
-   * Frame rate of the video associated with this descriptor.
-   */
-  private final float fps;
-
-  /**
-   * Duration of the video associated with this descriptor in milliseconds.
-   */
-  private final long duration;
-
-  /**
-   * Width of the video associated with this descriptor.
-   */
-  private final int width;
-
-  /**
-   * Height of the video associated with this descriptor.
-   */
-  private final int height;
-
-  /**
-   * Constructor for VideoDescriptor
-   */
-  public VideoDescriptor(float fps, long duration, int width, int height) {
-    this.fps = fps;
-    this.duration = duration;
-    this.width = width;
-    this.height = height;
-  }
-
-  public float getFps() {
-    return fps;
-  }
-
-  public long getDuration() {
-    return duration;
-  }
-
-  public int getWidth() {
-    return width;
-  }
-
-  public int getHeight() {
-    return height;
-  }
+public record VideoDescriptor(float fps, long duration, int width, int height) {
 
   @Override
   public boolean equals(Object o) {
