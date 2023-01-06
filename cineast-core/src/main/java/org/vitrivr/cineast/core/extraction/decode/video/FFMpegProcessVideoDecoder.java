@@ -4,11 +4,13 @@ import com.github.kokorin.jaffree.StreamType;
 import com.github.kokorin.jaffree.ffmpeg.*;
 import com.github.kokorin.jaffree.ffprobe.FFprobe;
 import com.github.kokorin.jaffree.ffprobe.FFprobeResult;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
@@ -16,12 +18,16 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
 
@@ -39,34 +45,12 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
      * Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video.
      */
     private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
-    /**
-     * Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded.
-     */
-    private static final String CONFIG_CHANNELS_PROPERTY = "channels";
-    /**
-     * Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio.
-     */
-    private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
-    /**
-     * Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well.
-     */
-    private static final String CONFIG_SUBTITLE_PROPERTY = "subtitles";
-    /**
-     * Configuration property default for the FFMpegVideoDecoder: max width of the converted video.
-     */
+
     private final static int CONFIG_MAXWIDTH_DEFAULT = 1920;
     /**
      * Configuration property default for the FFMpegVideoDecoder: max height of the converted video.
      */
     private final static int CONFIG_MAXHEIGHT_DEFAULT = 1080;
-    /**
-     * Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio.
-     */
-    private static final int CONFIG_CHANNELS_DEFAULT = 1;
-    /**
-     * Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio
-     */
-    private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
 
     private final Path ffmpegPath = Path.of("ffmpeg");
 
@@ -77,6 +61,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
     private CachedDataFactory factory;
 
     private final LinkedBlockingQueue<VideoFrame> videoFrameQueue = new LinkedBlockingQueue<>(10);
+    private final ConcurrentLinkedQueue<AudioFrame> audioFrameQueue = new ConcurrentLinkedQueue<>();
 
     @Override
     public boolean init(Path path, DecoderConfig decoderConfig, CacheConfig cacheConfig) {
@@ -100,7 +85,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
         VideoDescriptor videoDescriptor = null;
         final HashMap<Integer, AudioDescriptor> audioDescriptors = new HashMap<>();
 
-        for (com.github.kokorin.jaffree.ffprobe.Stream stream: ffprobeResult.getStreams()) {
+        for (com.github.kokorin.jaffree.ffprobe.Stream stream : ffprobeResult.getStreams()) {
             if (stream.getCodecType() == StreamType.VIDEO) {
                 videoDescriptor = new VideoDescriptor(stream.getAvgFrameRate().floatValue(), Math.round(stream.getDuration() * 1000d), stream.getWidth(), stream.getHeight());
                 if (stream.getNbFrames() != null) {
@@ -119,8 +104,8 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
             return false;
         }
 
-        final int maxWidth = decoderConfig.namedAsInt(CONFIG_MAXWIDTH_PROPERTY, CONFIG_MAXWIDTH_DEFAULT);
-        final int maxHeight = decoderConfig.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
+        final float maxWidth = decoderConfig.namedAsInt(CONFIG_MAXWIDTH_PROPERTY, CONFIG_MAXWIDTH_DEFAULT);
+        final float maxHeight = decoderConfig.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         VideoDescriptor finalVideoDescriptor = videoDescriptor;
         future = FFmpeg.atPath(ffmpegPath)
@@ -131,10 +116,15 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                             final HashMap<Integer, Stream> streamHashMap = new HashMap<>();
                             int frameCounter = 0;
 
+                            final HashMap<Integer, AtomicInteger> audioFrameIdCounter = new HashMap<>();
+
                             @Override
                             public void consumeStreams(List<Stream> streams) {
                                 for (Stream stream : streams) {
                                     streamHashMap.put(stream.getId(), stream);
+                                    if (stream.getType() == Stream.Type.AUDIO) {
+                                        audioFrameIdCounter.put(stream.getId(), new AtomicInteger());
+                                    }
                                 }
                             }
 
@@ -156,7 +146,12 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                                         BufferedImage bimg = frame.getImage();
 
                                         if (bimg.getWidth() > maxWidth || bimg.getHeight() > maxHeight) {
-                                            //TODO rescale
+                                            double scale = Math.min(bimg.getWidth() / maxWidth, bimg.getHeight() / maxHeight);
+                                            try {
+                                                bimg = Thumbnails.of(bimg).scale(scale).asBufferedImage();
+                                            } catch (IOException e) {
+                                                LOGGER.error("Could not scale frame", e);
+                                            }
                                         }
 
                                         MultiImage image = factory.newMultiImage(bimg);
@@ -168,22 +163,54 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                                             LOGGER.error("Could not enqueue frame", e);
                                         }
 
-                                        break;
                                     }
                                     case AUDIO -> {
 
-                                        //TODO audio data conversion
+                                        AudioDescriptor descriptor = audioDescriptors.get(stream.getId());
+
+                                        if (descriptor == null) {
+                                            LOGGER.debug("received audio frame from unknown stream {}, ignoring", frame.getStreamId());
+                                            return;
+                                        }
+
+                                        int[] samples = frame.getSamples();
+
+                                        if (samples == null) {
+                                            return;
+                                        }
+
+                                        AtomicInteger idCounter = audioFrameIdCounter.get(stream.getId());
+
+                                        if (idCounter == null) {
+                                            return;
+                                        }
+
+                                        byte[] reEncoded = new byte[samples.length * 2];
+
+                                        for (int i = 0; i < samples.length; ++i) {
+
+                                            short s = (short) (samples[i] / 65536);
+                                            reEncoded[2*i] = ((byte) ((s) & 0xff));
+                                            reEncoded[2*i + 1] = ((byte) ((s >> 8) & 0xff));
+
+                                        }
+
+                                        AudioFrame audioFrame = new AudioFrame(
+                                                idCounter.getAndIncrement(),
+                                                (1000 * frame.getPts()) / stream.getTimebase(),
+                                                reEncoded,
+                                                descriptor
+                                        );
+
+                                        audioFrameQueue.add(audioFrame);
 
                                         break;
                                     }
                                 }
-
-
                             }
                         }
                 ))
                 .executeAsync();
-
 
         return true;
     }
@@ -204,7 +231,22 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
             return null;
         }
         try {
-            return videoFrameQueue.take();
+            VideoFrame frame = videoFrameQueue.take();
+
+            while (!decoderComplete()) {
+                AudioFrame audioFrame = this.audioFrameQueue.peek();
+                if (audioFrame == null) {
+                    break;
+                }
+                if (audioFrame.getTimestamp() <= frame.getTimestamp()) {
+                    frame.addAudioFrame(this.audioFrameQueue.poll());
+                } else {
+                    break;
+                }
+            }
+
+
+            return frame;
         } catch (InterruptedException e) {
             return null;
         }
@@ -216,9 +258,13 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
         return estimatedFrameCount;
     }
 
+    private boolean decoderComplete() {
+        return this.future == null || this.future.isDone() || this.future.isCancelled();
+    }
+
     @Override
     public boolean complete() {
-        return (this.future == null || this.future.isDone() || this.future.isCancelled()) && this.videoFrameQueue.isEmpty();
+        return this.videoFrameQueue.isEmpty() && decoderComplete();
     }
 
     @Override
