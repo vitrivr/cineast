@@ -31,7 +31,9 @@ public abstract class  Worker <T extends Job>  implements Runnable {
     this.shutdown = false;
     while (!this.shutdown) {
       try {
+        LOGGER.info("Waiting for job. In Queue:" + this.jobs.size());
         this.currentJob = this.jobs.take();
+        LOGGER.info("Perform Job. In Queue:" + this.jobs.size());
         switch (this.currentJob.getType()) {
           case ORDER -> this.performJob(this.currentJob);
           case CONTROL -> this.shutdown = true;
@@ -59,13 +61,14 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.error(ex.getMessage());
+        LOGGER.fatal(ex.getMessage());
         this.shutdown = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
         //TODO Check Stack Space Error
-        LOGGER.error(ex.getMessage());
+        LOGGER.fatal(ex.getMessage());
+        this.shutdown = true;
       } finally {
-        LOGGER.info("Job Secuence ended");
+        //LOGGER.info("Job Secuence ended");
       }
     }
     LOGGER.info("Job ended");

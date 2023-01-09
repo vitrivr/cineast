@@ -3,12 +3,14 @@ package org.vitrivr.cineast.core.features;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +27,10 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -41,6 +45,7 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlC
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+import org.vitrivr.cineast.core.util.KMeansPP;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 
 /**
@@ -126,6 +131,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
       return;
     }
+
     // Case: segment contains model
     var model = sc.getModel();
     if (model != null) {
@@ -226,6 +232,32 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
+  private float[] embedMostRepresentativeImages(List<BufferedImage> images) {
+    var vectors = new ArrayList<FloatVectorImpl>();
+
+    for (BufferedImage image : images) {
+      float[] embeddingArray = embedImage(image);
+      vectors.add(new FloatVectorImpl(embeddingArray));
+    }
+
+    var kmeans = KMeansPP.bestOfkMeansPP(vectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, 0.01f, 10);
+    // Find the index of thr cluster with the most elements
+    int maxIndex = 0;
+    for (var ic = 0 ;ic < kmeans.getPoints().size(); ++ic) {
+      if (kmeans.getPoints().get(ic).size() > kmeans.getPoints().get(maxIndex).size()) {
+        maxIndex = ic;
+      }
+      if (kmeans.getPoints().get(ic).size() == kmeans.getPoints().get(maxIndex).size()) {
+        if (kmeans.getDistance(ic) < kmeans.getDistance(maxIndex)) {
+          maxIndex = ic;
+        }
+      }
+    }
+    var retVal = new float[EMBEDDING_SIZE];
+    ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex),retVal);
+    return retVal;
+  }
+
   private float[] embedImage(BufferedImage image) {
     initializeVisualEmbedding();
 
@@ -252,6 +284,14 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
+  List<MultiImage> frameFromImages(List<BufferedImage> images) {
+    var frames = new ArrayList<MultiImage>();
+    for (BufferedImage image : images) {
+      var factory = CachedDataFactory.getDefault();
+      frames.add(factory.newInMemoryMultiImage(image));
+    }
+    return frames;
+  }
 
   private float[] embedModel(IModel model) {
     var jobData = new Variant();
@@ -288,13 +328,13 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
     var finishedJob = false;
 
-    BufferedImage image = null;
+    var image = new ArrayList<BufferedImage>();
 
     try {
       while (!finishedJob) {
         var result = job.getResults();
         if (result.getType() == JobType.RESPONSE) {
-          image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
+          image.add(result.getData().get(BufferedImage.class, RenderData.IMAGE));
         } else if (result.getType() == JobType.CONTROL) {
           if (result.getCommand() == JobControlCommand.JOB_DONE) {
             finishedJob = true;
@@ -304,7 +344,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     } catch (InterruptedException ex) {
       LOGGER.error("Could not render model", ex);
     }
-    return embedImage(image);
+    return embedMostRepresentativeImages(image);
   }
 
   private float[] embedVideo(List<MultiImage> frames) {

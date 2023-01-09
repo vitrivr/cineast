@@ -25,9 +25,11 @@ public class Window {
   public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
 
     this.resizeFunc = resizeFunc;
+    LOGGER.info("Try creating window '{}'...", title);
     if (!GLFW.glfwInit()) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
+    LOGGER.info("GLFW initialized");
 
     GLFW.glfwDefaultWindowHints();
     GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL30.GL_FALSE);
