@@ -32,7 +32,6 @@ public class RenderWorker extends Worker<RenderJob> {
     super(jobs);
     RenderWorker.renderJobQueue = jobs;
     LOGGER.info("Initialized RenderWorker");
-    LOGGER.info("START ENGINE RenderWorker");
   }
 
   public static BlockingDeque<RenderJob> getRenderJobQueue() {

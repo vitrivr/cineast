@@ -36,7 +36,7 @@ public class Window {
     GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL30.GL_FALSE);
     // Setting for headless rendering with MESA and Xvfb
     // See: https://github.com/vitrivr/cineast/blob/e5587fce1b5675ca9f6dbbfd5c17eb1880a98ce3/README.md
-    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_CREATION_API, GLFW.GLFW_OSMESA_CONTEXT_API);
+    //GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_CREATION_API, GLFW.GLFW_OSMESA_CONTEXT_API);
     // Switch off resize callback
     GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL30.GL_FALSE);
 
