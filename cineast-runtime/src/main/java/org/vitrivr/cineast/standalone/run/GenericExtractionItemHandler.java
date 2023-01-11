@@ -1,16 +1,20 @@
 package org.vitrivr.cineast.standalone.run;
 
+import com.google.common.collect.Sets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -116,14 +120,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context);
     this.metadataExtractors = context.metadataExtractors();
 
-
-
     //Reasonable Defaults
-    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () ->  new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () ->  new ImageSequenceSegmenter(context)));
-    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () ->  new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () ->  new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () ->  new PassthroughSegmenter<Mesh>() {
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
+    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
@@ -170,11 +172,20 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             : item.getObject().getName();
     boolean exists = descriptor.exists();
     MediaType _type = type == null ? descriptor.getMediatype() : type;
-    String _id =
-        StringUtils.isEmpty(item.getObject().getObjectId()) ?
-            StringUtils.isEmpty(descriptor.getObjectId())
-                ? generator.next(_path, _type) : descriptor.getObjectId()
-            : item.getObject().getObjectId();
+    String _id;
+    if (StringUtils.isEmpty(item.getObject().getObjectId())) {
+      if (StringUtils.isEmpty(descriptor.getObjectId())) {
+        var generatedId = generator.next(_path, _type);
+        if (generatedId.isEmpty()) {
+          throw new IllegalStateException("Unable to generate id for " + _path);
+        }
+        _id = generatedId.get();
+      } else {
+        _id = descriptor.getObjectId();
+      }
+    } else {
+      _id = item.getObject().getObjectId();
+    }
     String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
         : item.getObject().getPath();
     return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
@@ -190,7 +201,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     final ObjectIdGenerator generator = this.context.objectIdGenerator();
     Pair<ExtractionItemContainer, MediaType> pair = null;
 
-    /* Initalize all Metadata Extractors */
+    /* Initialize all Metadata Extractors */
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
