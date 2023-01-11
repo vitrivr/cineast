@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -217,9 +218,9 @@ public abstract class Lightfield extends StagedFeatureModule {
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.SETUP));
 
-    var vectors = new Stack<Vector3f>();
+    var vectors = new LinkedList<Vector3f>();
     for (var position : this.camerapositions) {
-      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      vectors.add(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
       actions.add(new Action(RenderActions.LOOKAT_FROM));
       actions.add(new Action(RenderActions.RENDER));
     }

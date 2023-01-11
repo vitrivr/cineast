@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -117,11 +118,11 @@ public class Model3DThumbnailExporter implements Extractor {
         }};
         jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
         jobData.set(RenderData.MODEL, model);
-        jobData.set(RenderData.VECTORS, new Stack<Vector3f>() {{
-          push(new Vector3f(1f, 1f, 1f));
-          push(new Vector3f(0f, 1f, 0f));
-          push(new Vector3f(1f, 0f, 0f));
-          push(new Vector3f(0f,0f,1f));
+        jobData.set(RenderData.VECTORS, new LinkedList<Vector3f>() {{
+          add(new Vector3f(1f, 1f, 1f));
+          add(new Vector3f(0f, 1f, 0f));
+          add(new Vector3f(1f, 0f, 0f));
+          add(new Vector3f(0f,0f,1f));
         }});
 
         var actions = new LinkedBlockingDeque<Action>();
