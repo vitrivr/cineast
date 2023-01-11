@@ -240,10 +240,10 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       vectors.add(new FloatVectorImpl(embeddingArray));
     }
 
-    var kmeans = KMeansPP.bestOfkMeansPP(vectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, 0.01f, 10);
+    var kmeans = KMeansPP.bestOfkMeansPP(vectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, -1f, 5);
     // Find the index of thr cluster with the most elements
     int maxIndex = 0;
-    for (var ic = 0 ;ic < kmeans.getPoints().size(); ++ic) {
+    for (var ic = 0; ic < kmeans.getPoints().size(); ++ic) {
       if (kmeans.getPoints().get(ic).size() > kmeans.getPoints().get(maxIndex).size()) {
         maxIndex = ic;
       }
@@ -254,7 +254,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       }
     }
     var retVal = new float[EMBEDDING_SIZE];
-    ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex),retVal);
+    ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
     return retVal;
   }
 
@@ -294,57 +294,23 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   }
 
   private float[] embedModel(IModel model) {
-    var jobData = new Variant();
-    var w = 600;
-    var h = 600;
-    var opt = new WindowOptions(w, h) {{
+
+    var windowOptions = new WindowOptions() {{
       this.hideWindow = true;
+      this.width = 600;
+      this.height = 600;
     }};
-    jobData.set(RenderData.WINDOWS_OPTIONS, opt);
 
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-    jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
-    jobData.set(RenderData.MODEL, model);
 
-    var camerapositions = MathConstants.VERTICES_3D_DODECAHEDRON;
-    var actions = new LinkedBlockingDeque<Action>();
-    actions.add(new Action(RenderActions.SETUP));
-    actions.add(new Action(RenderActions.SETUP));
-    actions.add(new Action(RenderActions.SETUP));
-    var vectors = new Stack<Vector3f>();
-    for (var position : camerapositions) {
-      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
-      actions.add(new Action(RenderActions.LOOKAT_FROM));
-      actions.add(new Action(RenderActions.RENDER));
-    }
-    actions.add(new Action(RenderActions.SETUP));
+    var camerapositions = MathConstants.VERTICES_3D_3TRIANGLES;
 
-    jobData.set(RenderData.VECTORS, vectors);
+    var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
+        model, camerapositions, windowOptions, renderOptions);
 
-    var job = new RenderJob(actions, jobData);
-    RenderWorker.getRenderJobQueue().add(job);
-
-    var finishedJob = false;
-
-    var image = new ArrayList<BufferedImage>();
-
-    try {
-      while (!finishedJob) {
-        var result = job.getResults();
-        if (result.getType() == JobType.RESPONSE) {
-          image.add(result.getData().get(BufferedImage.class, RenderData.IMAGE));
-        } else if (result.getType() == JobType.CONTROL) {
-          if (result.getCommand() == JobControlCommand.JOB_DONE) {
-            finishedJob = true;
-          }
-        }
-      }
-    } catch (InterruptedException ex) {
-      LOGGER.error("Could not render model", ex);
-    }
-    return embedMostRepresentativeImages(image);
+    return embedMostRepresentativeImages(images);
   }
 
   private float[] embedVideo(List<MultiImage> frames) {
