@@ -20,21 +20,34 @@ public class Window {
   private int height;
   private final Callable<Void> resizeFunc;
   private int width;
-  private MouseInput mouseInput;
+  private final MouseInput mouseInput;
 
   public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
 
     this.resizeFunc = resizeFunc;
+    LOGGER.info("Try creating window '{}'...", title);
     if (!GLFW.glfwInit()) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
+    LOGGER.info("GLFW initialized");
 
     GLFW.glfwDefaultWindowHints();
+    // Window should be invisible for basic rendering
     GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL30.GL_FALSE);
-    GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL30.GL_TRUE);
+    // Setting for headless rendering with MESA and Xvfb
+    // See: https://github.com/vitrivr/cineast/blob/e5587fce1b5675ca9f6dbbfd5c17eb1880a98ce3/README.md
+    //GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_CREATION_API, GLFW.GLFW_OSMESA_CONTEXT_API);
+    // Switch off resize callback
+    GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL30.GL_FALSE);
 
+    // Sets the OpenGL version number to MAJOR.MINOR e.g. 3.2
     GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
     GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+
+    // Depending on the Options, the OpenGL profile can be set to either CORE or COMPAT (or ANY)
+    // GLFW_OPENGL_COMPAT_PROFILE keeps the outdated functionality
+    // GLFW_OPENGL_CORE_PROFILE removes the deprecated functionality
+    // GLFW_OPENGL_ANY_PROFILE is used for version 3.2 and below
     if (opts.compatibleProfile) {
       GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_COMPAT_PROFILE);
     } else {
@@ -42,33 +55,39 @@ public class Window {
       GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL30.GL_TRUE);
     }
 
+    // Set window size if set in options, otherwise use maximum size of primary monitor
     if (opts.width > 0 && opts.height > 0) {
       this.width = opts.width;
       this.height = opts.height;
     } else {
       GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
-      GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+      var vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+      assert vidMode != null;
       this.width = vidMode.width();
       this.height = vidMode.height();
-
     }
 
+    LOGGER.info("Try creating window '{}' with size {}x{}...", title, this.width, this.height);
     this.windowHandle = GLFW.glfwCreateWindow(this.width, this.height, title, NULL, NULL);
     if (this.windowHandle == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
     }
 
-    GLFW.glfwSetFramebufferSizeCallback(this.windowHandle, (window, w, h) -> this.resized(w, h));
+    // Setup the callbacks for the glfw window.
+    // Resize and key Callback are not used for headless rendering.
+    //
+    var resizeCallback = GLFW.glfwSetFramebufferSizeCallback(this.windowHandle, (window, w, h) -> this.resized(w, h));
 
-    GLFW.glfwSetErrorCallback((int errorCode, long msgPtr) ->
-        LOGGER.error("Error code [{}], msg [{]]", errorCode, MemoryUtil.memUTF8(msgPtr))
+    var errorCallback = GLFW.glfwSetErrorCallback((int errorCode, long msgPtr) ->
+        LOGGER.error("Error code [{}], msg [{}]", errorCode, MemoryUtil.memUTF8(msgPtr))
     );
 
-    GLFW.glfwSetKeyCallback(this.windowHandle, (window, key, scancode, action, mods) -> {
+    var keyCallback = GLFW.glfwSetKeyCallback(this.windowHandle, (window, key, scancode, action, mods) -> {
       if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
         GLFW.glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
       }
     });
+
 
     GLFW.glfwMakeContextCurrent(this.windowHandle);
 

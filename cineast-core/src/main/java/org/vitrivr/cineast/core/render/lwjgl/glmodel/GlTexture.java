@@ -12,10 +12,20 @@ public class GlTexture {
   private final Texture texture;
 
 
-
   public GlTexture(Texture texture) {
     this.texture = texture;
-    this.generateTexture(this.texture.getWidth(), this.texture.getHeight(), this.texture.getImageBuffer());
+    try (var memoryStack = MemoryStack.stackPush()) {
+      var w = memoryStack.mallocInt(1);
+      var h = memoryStack.mallocInt(1);
+      var channels = memoryStack.mallocInt(1);
+
+      var imageBuffer = STBImage.stbi_load(this.texture.getTexturePath(), w, h, channels, 4);
+      if (imageBuffer == null) {
+        throw new RuntimeException("Could not load texture file: " + this.texture.getTexturePath());
+      }
+      this.generateTexture(w.get(), h.get(), imageBuffer);
+      STBImage.stbi_image_free(imageBuffer);
+    }
   }
 
   public void bind() {
@@ -35,10 +45,10 @@ public class GlTexture {
     GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, width, height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE,
         texture);
     GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
-    STBImage.stbi_image_free(texture);
   }
 
   public String getTexturePath() {
     return this.texture.getTexturePath();
   }
 }
+

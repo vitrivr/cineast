@@ -23,6 +23,7 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
@@ -107,25 +108,33 @@ public class Model3DThumbnailExporter implements Extractor {
       if (model.getMaterials().size() > 0) {
         var jobData = new Variant();
         var opt = new WindowOptions(400, 400) {{
-          this.hideWindow = false;
+          this.hideWindow = true;
         }};
         jobData.set(RenderData.WINDOWS_OPTIONS, opt);
+
+        var renderOptions = new RenderOptions() {{
+          this.showTextures = true;
+        }};
+        jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
         jobData.set(RenderData.MODEL, model);
         jobData.set(RenderData.VECTORS, new Stack<Vector3f>() {{
-          push(new Vector3f(1f / 8f, 0f, 0f));
-          push(new Vector3f(1f / 4f, 0f, 0f));
-          push(new Vector3f(1f / 8f, 1f / 8f, 0f));
+          push(new Vector3f(1f, 1f, 1f));
+          push(new Vector3f(0f, 1f, 0f));
+          push(new Vector3f(1f, 0f, 0f));
+          push(new Vector3f(0f,0f,1f));
         }});
 
         var actions = new LinkedBlockingDeque<Action>();
         actions.add(new Action(RenderActions.SETUP));
         actions.add(new Action(RenderActions.SETUP));
+        actions.add(new Action(RenderActions.SETUP));
+        actions.add(new Action(RenderActions.LOOKAT_FROM));
         actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.LOOKAT_FROM));
         actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.LOOKAT_FROM));
         actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT));
+        actions.add(new Action(RenderActions.LOOKAT_FROM));
         actions.add(new Action(RenderActions.RENDER));
         actions.add(new Action(RenderActions.SETUP));
 

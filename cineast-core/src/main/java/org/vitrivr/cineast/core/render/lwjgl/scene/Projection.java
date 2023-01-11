@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 public class Projection {
 
   private static final float FOV = (float) Math.toRadians(60.0f);
-  private static final float Z_FAR = 10000.f;
+  private static final float Z_FAR = 100.f;
   private static final float Z_NEAR = 0.01f;
 
   private final Matrix4f projMatrix;

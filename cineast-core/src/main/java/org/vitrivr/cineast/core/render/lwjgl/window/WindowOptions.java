@@ -10,7 +10,7 @@ public class WindowOptions {
   public int height = 400;
   public int ups = Engine.TARGET_UPS;
   public int width = 400;
-  public boolean hideWindow = false;
+  public boolean hideWindow = true;
   public WindowOptions(){}
 
   public WindowOptions(int width, int height) {

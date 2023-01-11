@@ -44,4 +44,11 @@ public class Transition {
         && this.currentState.equals(other.currentState)
         && this.command.equals(other.command);
   }
+
+  public State getState() {
+    return this.currentState;
+  }
+  public Action getCommand() {
+    return this.command;
+  }
 }

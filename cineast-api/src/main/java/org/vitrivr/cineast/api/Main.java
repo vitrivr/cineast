@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api;
 
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Logger;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
@@ -61,7 +62,8 @@ public class Main {
       System.out.println("Goodbye!");
     }));
 
-    new Thread(new RenderWorker(new LinkedBlockingDeque<>())).start();
+    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()));
+    renderThread.start();
 
     try {
       /* Start Cineast CLI in interactive mode (blocking). */

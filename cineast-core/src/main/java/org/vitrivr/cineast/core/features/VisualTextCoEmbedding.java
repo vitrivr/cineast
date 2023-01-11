@@ -1,13 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
+import org.lwjgl.system.MathUtil;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -19,11 +27,26 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
+import org.vitrivr.cineast.core.util.KMeansPP;
+import org.vitrivr.cineast.core.util.math.MathConstants;
 
 /**
  * A visual-text co-embedding mapping images and text descriptions to the same embedding space.
@@ -106,7 +129,15 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
       }
 
-      // Insert return here if additional cases are added!
+      return;
+    }
+
+    // Case: segment contains model
+    var model = sc.getModel();
+    if (model != null) {
+      float[] embeddingArray = embedModel(model);
+      this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
+      return;
     }
   }
 
@@ -136,6 +167,13 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       }
 
       LOGGER.error("Image was provided, but could not be decoded!");
+    }
+
+    var model = sc.getModel();
+    if (model != null) {
+      LOGGER.debug("Retrieving with MODEL.");
+      float[] embeddingArray = embedModel(model);
+      return getSimilar(embeddingArray, queryConfig);
     }
 
     LOGGER.error("Could not get similar because no acceptable modality was provided.");
@@ -194,6 +232,32 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
+  private float[] embedMostRepresentativeImages(List<BufferedImage> images) {
+    var vectors = new ArrayList<FloatVectorImpl>();
+
+    for (BufferedImage image : images) {
+      float[] embeddingArray = embedImage(image);
+      vectors.add(new FloatVectorImpl(embeddingArray));
+    }
+
+    var kmeans = KMeansPP.bestOfkMeansPP(vectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, 0.01f, 10);
+    // Find the index of thr cluster with the most elements
+    int maxIndex = 0;
+    for (var ic = 0 ;ic < kmeans.getPoints().size(); ++ic) {
+      if (kmeans.getPoints().get(ic).size() > kmeans.getPoints().get(maxIndex).size()) {
+        maxIndex = ic;
+      }
+      if (kmeans.getPoints().get(ic).size() == kmeans.getPoints().get(maxIndex).size()) {
+        if (kmeans.getDistance(ic) < kmeans.getDistance(maxIndex)) {
+          maxIndex = ic;
+        }
+      }
+    }
+    var retVal = new float[EMBEDDING_SIZE];
+    ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex),retVal);
+    return retVal;
+  }
+
   private float[] embedImage(BufferedImage image) {
     initializeVisualEmbedding();
 
@@ -218,6 +282,69 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         }
       }
     }
+  }
+
+  List<MultiImage> frameFromImages(List<BufferedImage> images) {
+    var frames = new ArrayList<MultiImage>();
+    for (BufferedImage image : images) {
+      var factory = CachedDataFactory.getDefault();
+      frames.add(factory.newInMemoryMultiImage(image));
+    }
+    return frames;
+  }
+
+  private float[] embedModel(IModel model) {
+    var jobData = new Variant();
+    var w = 600;
+    var h = 600;
+    var opt = new WindowOptions(w, h) {{
+      this.hideWindow = true;
+    }};
+    jobData.set(RenderData.WINDOWS_OPTIONS, opt);
+
+    var renderOptions = new RenderOptions() {{
+      this.showTextures = true;
+    }};
+    jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
+    jobData.set(RenderData.MODEL, model);
+
+    var camerapositions = MathConstants.VERTICES_3D_DODECAHEDRON;
+    var actions = new LinkedBlockingDeque<Action>();
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
+    var vectors = new Stack<Vector3f>();
+    for (var position : camerapositions) {
+      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      actions.add(new Action(RenderActions.LOOKAT_FROM));
+      actions.add(new Action(RenderActions.RENDER));
+    }
+    actions.add(new Action(RenderActions.SETUP));
+
+    jobData.set(RenderData.VECTORS, vectors);
+
+    var job = new RenderJob(actions, jobData);
+    RenderWorker.getRenderJobQueue().add(job);
+
+    var finishedJob = false;
+
+    var image = new ArrayList<BufferedImage>();
+
+    try {
+      while (!finishedJob) {
+        var result = job.getResults();
+        if (result.getType() == JobType.RESPONSE) {
+          image.add(result.getData().get(BufferedImage.class, RenderData.IMAGE));
+        } else if (result.getType() == JobType.CONTROL) {
+          if (result.getCommand() == JobControlCommand.JOB_DONE) {
+            finishedJob = true;
+          }
+        }
+      }
+    } catch (InterruptedException ex) {
+      LOGGER.error("Could not render model", ex);
+    }
+    return embedMostRepresentativeImages(image);
   }
 
   private float[] embedVideo(List<MultiImage> frames) {

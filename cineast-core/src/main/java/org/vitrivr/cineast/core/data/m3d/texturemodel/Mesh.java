@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.joml.Vector3f;
 
 public class Mesh {
@@ -9,31 +11,61 @@ public class Mesh {
   private String id;
 
   float[] positions;
+  List<Vector3f> vertices;
   float[] textureCoords;
   int[] idx;
 
   float scalingfactorNorm = 1;
+  Vector3f positionsNorm;
 
 
   public Mesh(float[] positions, float[] textureCoordinates, int[] idx) {
     this.positions = positions;
-    var minX = 0f;
-    var maxX = 0f;
-    var minY = 0f;
-    var maxY = 0f;
-    var minZ = 0f;
-    var maxZ = 0f;
-    for (var ic = 0; ic < this.positions.length; ic += 3
-    ) {
-      minX = Math.min(minX, positions[ic]);
-      maxX = Math.max(maxX, positions[ic]);
-      minY = Math.min(minY, positions[ic]);
-      maxY = Math.max(maxY, positions[ic]);
-      minZ = Math.min(minZ, positions[ic]);
-      maxZ = Math.max(maxZ, positions[ic]);
+
+    this.vertices = new ArrayList<>();
+    var MAX = Float.MAX_VALUE;
+    var MIN = -1f * Float.MAX_VALUE;
+    var vPosX = new Vector3f(MIN, MIN, MIN);
+    var vNegX = new Vector3f(MAX, MAX, MAX);
+    var vPosY = new Vector3f(MIN, MIN, MIN);
+    var vNegY = new Vector3f(MAX, MAX, MAX);
+    var vPosZ = new Vector3f(MIN, MIN, MIN);
+    var vNegZ = new Vector3f(MAX, MAX, MAX);
+    for (var ic = 0; ic < this.positions.length; ic += 3) {
+      var vec = new Vector3f(this.positions[ic], this.positions[ic + 1], this.positions[ic + 2]);
+      this.vertices.add(vec);
+      if (vec.x > vPosX.x) {
+        vPosX = new Vector3f(vec);
+      }
+      if (vec.x < vNegX.x) {
+        vNegX = new Vector3f(vec);
+      }
+      if (vec.y > vPosY.y) {
+        vPosY = new Vector3f(vec);
+      }
+      if (vec.y < vNegY.y) {
+        vNegY = new Vector3f(vec);
+      }
+      if (vec.z > vPosZ.z) {
+        vPosZ = new Vector3f(vec);
+      }
+      if (vec.z < vNegZ.z) {
+        vNegZ = new Vector3f(vec);
+      }
     }
-    var dmax = Math.max(maxX - minX, Math.max(maxY - minY, maxZ - minZ));
-    this.scalingfactorNorm = 1f/ dmax;
+
+    var absPosition = new Vector3f((vPosX.x + vNegX.x) / 2f, (vPosY.y + vNegY.y) / 2f, (vPosZ.z + vNegZ.z) / 2f);
+    var longest = new Vector3f(0, 0, 0);
+    for (var vec : this.vertices) {
+      var vector = new Vector3f(vec).sub(absPosition);
+      if (vector.length() > longest.length()) {
+        longest = vector;
+      }
+    }
+
+    var dmax = longest.length()*2;
+    this.scalingfactorNorm = 1f / dmax;
+    this.positionsNorm = new Vector3f(absPosition.mul(this.scalingfactorNorm));
 
     this.textureCoords = textureCoordinates;
     this.idx = idx;
@@ -60,8 +92,12 @@ public class Mesh {
     this.id = Integer.toString(id);
   }
 
-  public float getNormalizesScalingFactor(){
-    return  this.scalingfactorNorm;
+  public float getNormalizedScalingFactor() {
+    return this.scalingfactorNorm;
+  }
+
+  public Vector3f getNormalizedPosition() {
+    return this.positionsNorm;
   }
 
   public String getId() {

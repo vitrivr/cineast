@@ -3,6 +3,9 @@ package org.vitrivr.cineast.core.data.m3d.texturemodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Model implements IModel {
 
@@ -29,13 +32,16 @@ public class Model implements IModel {
     this.entities.add(entity);
   }
   public void addEntityNorm(Entity entity) {
-      var min = Float.MAX_VALUE;
+      var minScale = Float.MAX_VALUE;
+      var maxPosition = new Vector3f(0, 0, 0);
       for (var mesh:this.materials) {
-        min = Math.min(min,mesh.getMaxNormalizedScalingFactor());
+        minScale = Math.min(minScale,mesh.getMaxNormalizedScalingFactor());
+        maxPosition = maxPosition.length() > mesh.getMaxNormalizedPosition().length() ? maxPosition : mesh.getMaxNormalizedPosition();
       }
-    entity.setScale(min);
+    entity.setPosition(maxPosition.mul(-1));
+    entity.setScale(minScale);
     this.entities.add(entity);
-  }
+    }
 
   public String getId() {
     return this.id;
@@ -45,4 +51,10 @@ public class Model implements IModel {
     return Collections.unmodifiableList(this.materials);
   }
 
+  public void replaceTextureWithColor(Vector4f color){
+    for (var material:this.materials) {
+      material.setTexture(new Texture());
+      material.setDiffuseColor(color);
+    }
+  }
 }

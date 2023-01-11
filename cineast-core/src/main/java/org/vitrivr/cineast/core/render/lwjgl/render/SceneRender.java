@@ -1,6 +1,10 @@
 package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import java.util.ArrayList;
+import java.util.Vector;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlTexture;
 import org.vitrivr.cineast.core.render.lwjgl.render.ShaderProgram.ShaderModuleData;
 import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.lwjgl.opengl.GL30;
@@ -32,6 +36,10 @@ public class SceneRender {
   }
 
   public void render(GlScene scene) {
+    this.render(scene, new RenderOptions());
+  }
+
+  public void render(GlScene scene, RenderOptions opt) {
     this.shaderProgram.bind();
 
     this.uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
@@ -44,8 +52,14 @@ public class SceneRender {
     for (var model : models) {
       var enteties = model.getEntities();
       for (var material : model.getMaterials()) {
-        this.uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());
-        var texture = textures.getTexture(material.getTexture().getTexturePath());
+        GlTexture texture = null;
+        if (opt.showTextures){
+          this.uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());
+          texture = textures.getTexture(material.getTexture().getTexturePath());
+        }else {
+          this.uniformsMap.setUniform("material.diffuse", opt.colorfunction.apply(1f));
+          texture = textures.getTexture("default");
+        }
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         texture.bind();
         for (var mesh : material.getMeshes()) {

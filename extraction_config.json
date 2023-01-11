@@ -1,7 +1,6 @@
 {
-	"type": "MODEL3D",
 	"input":{
-		"path": "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSet3D\\",
+		"path": "data/",
 		"depth": 3,
 		"skip": 0,
 		"id": {
@@ -24,9 +23,7 @@
 		{"name": "OCRSearch"},
 		{"name": "HOGMirflickr25K512"},
 		{"name": "SURFMirflickr25K512"},
-		{"name": "VisualTextCoEmbedding"},
-		{"name": "LightfieldFourier"},
-		{"name": "LightfieldZernike"}
+		{"name": "VisualTextCoEmbedding"}
 	],
 	"metadata": [
 		{"name": "TechnicalVideoMetadataExtractor"},
@@ -36,14 +33,12 @@
 		{
 			"name": "ShotThumbnailsExporter",
 			"properties": {
-				"destination":"C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSet3D\\cineast_out\\thumbnails\\",
-				"format":"JPG"
+				"destination":"thumbnails/"
 			}
 		}
 	],
 	"database": {
-		"writer": "JSON",
-		"selector": "NONE",
-		"host": "C:\\Users\\rapha\\Documents\\myRepo\\ch.unibas\\Class\\vitrivr\\bsc-raphael-waltenspuel\\datasets_git\\TestSet3D\\cineast_out\\"
+		"writer": "COTTONTAIL",
+		"selector": "COTTONTAIL"
 	}
 }

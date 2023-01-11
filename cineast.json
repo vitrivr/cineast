@@ -43,12 +43,6 @@
       "visualtextcoembedding": [
         {"feature": "VisualTextCoEmbedding", "weight": 1.0}
       ],
-      "lightfieldfourier": [
-        {"feature": "LightfieldFourier", "weight": 1.0}
-      ],
-      "lightfieldzernike": [
-        {"feature": "LightfieldZernike", "weight": 1.0}
-      ],
       "boolean": [
         {
           "feature": "CollectionBooleanRetriever", "weight": 1.0,
@@ -82,11 +76,6 @@
         "samplerate": 44100,
         "channels": 2
       }
-    },
-    "MODEL3D": {
-      "decoder": "ModularTextureModelDecoder",
-      "properties": {
-      }
     }
   },
 
@@ -96,7 +85,7 @@
   },
 
   "api": {
-    "enableCLI": false,
+    "enableCLI": true,
     "enableWebsocket": true,
     "enableWebsocketSecure": false,
     "enableRest": true,
@@ -120,4 +109,5 @@
     "enablePrometheus": false,
     "prometheusPort": 4569
   }
+
 }

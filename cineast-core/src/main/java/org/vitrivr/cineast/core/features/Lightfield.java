@@ -4,9 +4,16 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.twelvemonkeys.image.ImageUtil;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.LinkedBlockingDeque;
+import javax.imageio.ImageIO;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -21,7 +28,17 @@ import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -48,13 +65,11 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   private final double[][] camerapositions;
 
-  LWJGLOffscreenRenderer renderer;
 
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
   //private final Renderer renderer;
-
   protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
     super(tableName, maxDist, vectorLength);
     if (camerapositions.length == 0) {
@@ -184,44 +199,63 @@ public abstract class Lightfield extends StagedFeatureModule {
     /* Prepare empty list of features. */
     List<float[]> features = new ArrayList<>(20);
 
+    var jobData = new Variant();
+    var windowOpt = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
+      this.hideWindow = true;
+    }};
+    jobData.set(RenderData.WINDOWS_OPTIONS, windowOpt);
 
+    var renderOpt = new RenderOptions() {{
+      this.showTextures = false;
+    }};
+    jobData.set(RenderData.RENDER_OPTIONS, renderOpt);
 
-    /* Retains the renderer and returns if retention fails. */
-    if (renderer.retain()) {
+    jobData.set(RenderData.MODEL, model);
 
-      /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
-       * the renderer is released again.
-       */
-      try {
-        /* Clears the renderer and assembles a new Mesh. */
-        renderer.clear();
-        renderer.assemble(model);
+    var actions = new LinkedBlockingDeque<Action>();
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
+    actions.add(new Action(RenderActions.SETUP));
 
-        /* Obtains rendered image from configured perspective. */
-        for (int i = 0; i < this.camerapositions.length; i++) {
-          /* Adjust the camera and render the image. */
-          //this.renderer.positionCamera((float) this.camerapositions[i][0], (float) this.camerapositions[i][1], (float) this.camerapositions[i][2]);
-          renderer.render();
-          BufferedImage image = renderer.obtain();
+    var vectors = new Stack<Vector3f>();
+    for (var position : this.camerapositions) {
+      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      actions.add(new Action(RenderActions.LOOKAT_FROM));
+      actions.add(new Action(RenderActions.RENDER));
+    }
+    jobData.set(RenderData.VECTORS, vectors);
+    actions.add(new Action(RenderActions.SETUP));
+
+    var job = new RenderJob(actions, jobData);
+    RenderWorker.getRenderJobQueue().add(job);
+
+    var finisedJob = false;
+    try {
+      while (!finisedJob) {
+        var result = job.getResults();
+        if (result.getType() == JobType.RESPONSE) {
+          var image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
           if (image == null) {
-            LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
+            LOGGER.error("Could not generate feature for {} because no image could be obtained from Renderer.", this.getClass().getSimpleName());
             return features;
           }
-          features.addAll(this.featureVectorsFromImage(image, i));
+          features.addAll(this.featureVectorsFromImage(image, -1));
+        } else if (result.getType() == JobType.CONTROL) {
+          if (result.getCommand() == JobControlCommand.JOB_DONE) {
+            finisedJob = true;
+          }
         }
-
-      } catch (Exception exception) {
-        LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
-      } finally {
-        /* Release the rendering context. */
-        renderer.release();
-        this.renderer = null;
       }
+    } catch (InterruptedException ex) {
+      LOGGER.error("Could not generate feature for {} because the JOGOffscreenRenderer was interrupted.", this.getClass().getSimpleName());
+    } catch (Exception exception) {
+      LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
+    } finally {
+      /* Release the rendering context. */
     }
-
-    /* Extract and persist the feature descriptors. */
     return features;
   }
+
 
   protected abstract List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx);
 

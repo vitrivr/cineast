@@ -90,10 +90,9 @@ public class Camera {
 
   private void recalculate() {
     this.viewMatrix.identity()
-        .translate(-this.position.x, -this.position.y, -this.position.z)
         .rotate(this.orbitRotation)
-        .rotateX(this.rotation.x)
-        .rotateY(this.rotation.y);
+        .translate(-this.position.x, -this.position.y, -this.position.z);
+
   }
 
   public Camera setPosition(float x, float y, float z) {
@@ -134,11 +133,26 @@ public class Camera {
     return this;
   }
 
-  public Camera setPositionAndOrientation(Vector3f cameraPosition, Vector3f objectPosition, Vector3f cameraUp) {
-    //this.orbitRotation.fromAxisAngleRad(x, y, z, angle);
+  public Camera setPositionAndOrientation(Vector3f cameraPosition, Vector3f objectPosition) {
+    var lookDir = new Vector3f(objectPosition).sub(cameraPosition).normalize();
+    var yNorm = new Vector3f(0, 1, 0).normalize();
+    var right = new Vector3f(lookDir).cross(yNorm).normalize();
+    if ( Float.isNaN(right.x()) || Float.isNaN(right.y())|| Float.isNaN(right.y())) {
+      right = new Vector3f(1, 0, 0);
+    }
+    var up = new Vector3f(right).cross(lookDir).normalize();
+    this.position.set(cameraPosition);
+    this.orbitRotation = new Quaternionf();
+    this.orbitRotation.lookAlong(lookDir, up);
+    this.recalculate();
+    return this;
+  }
+
+  public Camera setPositionAndOrientation(Vector3f cameraPosition, Vector3f objectPosition, Vector3f up) {
+    var lookDir = new Vector3f(objectPosition).sub(cameraPosition).normalize();
+
     this.setPosition(cameraPosition);
-    this.orbitRotation.lookAlong(objectPosition, cameraUp);
-    //this.viewMatrix.rotate(this.orbitRotation);
+    this.orbitRotation.lookAlong(lookDir, up);
     this.recalculate();
     return this;
   }

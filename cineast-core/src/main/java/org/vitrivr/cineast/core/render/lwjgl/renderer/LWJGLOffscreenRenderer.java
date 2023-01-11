@@ -6,6 +6,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
@@ -17,9 +18,9 @@ import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.render.Renderer;
 
-
-public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
+public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -42,6 +43,11 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
   public void setWindowOptions(WindowOptions opts){
     this.windowOptions = opts;
   }
+
+  public void setRenderOptions(RenderOptions opts){
+    this.engine.setRenderOptions(opts);
+  }
+
 
   public void startEngine(){
     var name = "LWJGLOffscreenRenderer";
@@ -68,7 +74,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
    */
   @Override
   protected void init(Window window, GlScene scene, Render render) {
-    scene.getCamera().setPosition(0, 0, 5);
+    scene.getCamera().setPosition(0, 0, 1);
   }
 
   @Override
@@ -110,11 +116,8 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
       var model = (Model) this.modelQueue.poll();
       if (model.getEntities().size() == 0) {
         var entity = new Entity("cube", model.getId());
-        entity.setPosition(0, 0, 0);
-        entity.setScale(1f);
         model.addEntityNorm(entity);
       }
-
       scene.clearModels();
       scene.addModel(model);
     }
@@ -133,6 +136,13 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements IRenderer {
     this.engine.getCamera().setPosition(x, y, z);
   }
 
+  public void lookFromAtO(float x, float y, float z) {
+    var lookFrom = new Vector3f(x, y, z);
+    var lookAt = new Vector3f(0, 0, 0);
+
+    this.engine.getCamera().setPositionAndOrientation(lookFrom, lookAt);
+
+  }
 
   @Override
   public void positionCamera(double ex, double ey, double ez,

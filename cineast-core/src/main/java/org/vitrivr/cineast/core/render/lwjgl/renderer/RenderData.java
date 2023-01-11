@@ -7,5 +7,6 @@ public final class RenderData {
   public static final String VECTORS = "VECTORS";
   public static final String IMAGE = "IMAGE";
   public static final String WINDOWS_OPTIONS = "WINDOWS_OPTIONS";
+  public static final String RENDER_OPTIONS = "RENDER_OPTIONS";
 
 }
