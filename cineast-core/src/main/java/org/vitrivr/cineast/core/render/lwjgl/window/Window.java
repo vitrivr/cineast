@@ -25,11 +25,11 @@ public class Window {
   public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
 
     this.resizeFunc = resizeFunc;
-    LOGGER.info("Try creating window '{}'...", title);
+    LOGGER.trace("Try creating window '{}'...", title);
     if (!GLFW.glfwInit()) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
-    LOGGER.info("GLFW initialized");
+    LOGGER.trace("GLFW initialized");
 
     GLFW.glfwDefaultWindowHints();
     // Window should be invisible for basic rendering
@@ -67,7 +67,7 @@ public class Window {
       this.height = vidMode.height();
     }
 
-    LOGGER.info("Try creating window '{}' with size {}x{}...", title, this.width, this.height);
+    LOGGER.trace("Try creating window '{}' with size {}x{}...", title, this.width, this.height);
     this.windowHandle = GLFW.glfwCreateWindow(this.width, this.height, title, NULL, NULL);
     if (this.windowHandle == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");

@@ -13,5 +13,4 @@ public class ConcreteJob extends Job {
     super(actions, data);
   }
 
-
 }

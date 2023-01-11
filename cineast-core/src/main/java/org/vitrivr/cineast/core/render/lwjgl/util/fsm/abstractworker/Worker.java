@@ -28,29 +28,47 @@ public abstract class  Worker <T extends Job>  implements Runnable {
   protected abstract Graph createGraph();
 
   public void run() {
+    // Worker loop. Waiting on job or shutdown.
     this.shutdown = false;
     while (!this.shutdown) {
       try {
-        LOGGER.info("Waiting for job. In Queue:" + this.jobs.size());
+        LOGGER.debug("Waiting for job. In Queue:" + this.jobs.size());
         this.currentJob = this.jobs.take();
-        LOGGER.info("Perform Job. In Queue:" + this.jobs.size());
+        LOGGER.trace("Perform Job. In Queue:" + this.jobs.size());
         switch (this.currentJob.getType()) {
           case ORDER -> this.performJob(this.currentJob);
           case CONTROL -> this.shutdown = true;
         }
       } catch (InterruptedException ex) {
+        LOGGER.error("Interrupted while waiting for job", ex);
         this.shutdown = true;
       } finally {
-        LOGGER.info("Worker Task ended");
+        LOGGER.debug("Worker has performed Job. In Queue:" + this.jobs.size());
       }
     }
   }
 
+  /**
+   * Job loop. Perform a single Job
+   * 1. Setup the Statemachine with initialized graph
+   * 2. Gets the action sequence and the job data for this job
+   * 3. Do till final state in graph is reached
+   * - Take action
+   * - Move to next state
+   * - The StateProviderAnnotationParser will call all methods in the ConcreteWorker that were marked with a corresponding Annotation
+   * @see StateEnter,
+   * @see StateLeave,
+   * @see StateTransition
+   * @param job Job to be performed.
+   */
   private void performJob(Job job) {
+
     var performed = false;
     var fsm = new FiniteStateMachine(this.graph);
+
     var actions = job.getActions();
     var data = job.getData();
+
     while (!performed) {
       try {
         var action = actions.take();
@@ -61,17 +79,17 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.fatal(ex.getMessage());
+        LOGGER.error(ex.getMessage());
         this.shutdown = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
         //TODO Check Stack Space Error
-        LOGGER.fatal(ex.getMessage());
+        LOGGER.error(ex.getMessage());
         this.shutdown = true;
       } finally {
-        //LOGGER.info("Job Secuence ended");
+        LOGGER.trace("Job Secuence ended");
       }
     }
-    LOGGER.info("Job ended");
+    LOGGER.trace("Job ended");
   }
 
   protected void putActionfirst(Action action) {

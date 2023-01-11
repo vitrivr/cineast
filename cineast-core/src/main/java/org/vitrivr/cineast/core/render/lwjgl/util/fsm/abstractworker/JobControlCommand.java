@@ -1,6 +1,17 @@
 package org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker;
 
+
+/**
+ * JobControlCommand are used to control the worker thread.
+ */
 public enum JobControlCommand {
+  /**
+   * Is used to return the end of the job
+   */
   JOB_DONE,
+
+  /**
+   * Is used to shutdown the worker
+   */
   SHUTDOWN_WORKER,
 }

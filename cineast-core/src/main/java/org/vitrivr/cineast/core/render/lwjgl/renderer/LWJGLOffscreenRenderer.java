@@ -36,7 +36,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   public LWJGLOffscreenRenderer() {
     this.modelQueue = new LinkedTransferQueue<IModel>();
     this.imageQueue = new LinkedTransferQueue<BufferedImage>();
-    LOGGER.info("LWJGLOffscreenRenderer created");
+    LOGGER.debug("LWJGLOffscreenRenderer created");
   }
 
 
@@ -57,12 +57,12 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   @Override
   public void render() {
     this.engine.runOnce();
-    LOGGER.info("LWJGLOffscreenRenderer rendered");
+    LOGGER.trace("LWJGLOffscreenRenderer rendered");
   }
 
 
   protected void cleanup() {
-    LOGGER.info("LWJGLOffscreenRenderer cleaned");
+    LOGGER.trace("LWJGLOffscreenRenderer cleaned");
   }
 
   /**
