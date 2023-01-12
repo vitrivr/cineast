@@ -4,13 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.BlockingDeque;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachine;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachineException;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Graph;
 
 @StateProvider
-public abstract class  Worker <T extends Job>  implements Runnable {
+public abstract class Worker<T extends Job> implements Runnable {
 
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -79,11 +80,11 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.error(ex.getMessage());
+        LOGGER.error("Error in job. Abort: " + ex.getMessage());
         this.shutdown = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
-        //TODO Check Stack Space Error
-        LOGGER.error(ex.getMessage());
+        //TODO The result and control job should not be an concrete job
+        LOGGER.error("Error in job. Abort: " + ex.getMessage());
         this.shutdown = true;
       } finally {
         LOGGER.trace("Job Secuence ended");

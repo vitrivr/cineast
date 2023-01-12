@@ -13,6 +13,7 @@ public enum JobType {
    */
   ORDER,
 
+
   /**
    * Result jobs containing result data e.g. a rendered image
    */

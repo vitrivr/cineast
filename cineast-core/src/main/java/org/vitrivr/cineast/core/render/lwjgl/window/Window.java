@@ -65,6 +65,7 @@ public class Window {
       assert vidMode != null;
       this.width = vidMode.width();
       this.height = vidMode.height();
+
     }
 
     LOGGER.trace("Try creating window '{}' with size {}x{}...", title, this.width, this.height);

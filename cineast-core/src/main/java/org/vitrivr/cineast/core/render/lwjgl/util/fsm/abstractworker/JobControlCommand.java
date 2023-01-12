@@ -11,6 +11,12 @@ public enum JobControlCommand {
   JOB_DONE,
 
   /**
+   * Is used to return an error on the job
+   */
+  JOB_FAILURE,
+
+
+  /**
    * Is used to shutdown the worker
    */
   SHUTDOWN_WORKER,
