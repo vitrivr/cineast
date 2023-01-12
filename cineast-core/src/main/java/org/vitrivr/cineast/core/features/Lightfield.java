@@ -230,9 +230,9 @@ public abstract class Lightfield extends StagedFeatureModule {
     var job = new RenderJob(actions, jobData);
     RenderWorker.getRenderJobQueue().add(job);
 
-    var finisedJob = false;
+    var finishedJob = false;
     try {
-      while (!finisedJob) {
+      while (!finishedJob) {
         var result = job.getResults();
         if (result.getType() == JobType.RESPONSE) {
           var image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
@@ -243,7 +243,11 @@ public abstract class Lightfield extends StagedFeatureModule {
           features.addAll(this.featureVectorsFromImage(image, -1));
         } else if (result.getType() == JobType.CONTROL) {
           if (result.getCommand() == JobControlCommand.JOB_DONE) {
-            finisedJob = true;
+            finishedJob = true;
+          }
+          if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
+            LOGGER.error("Job failed");
+            finishedJob = true;
           }
         }
       }

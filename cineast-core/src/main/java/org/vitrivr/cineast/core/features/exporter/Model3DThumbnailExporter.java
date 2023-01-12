@@ -163,6 +163,10 @@ public class Model3DThumbnailExporter implements Extractor {
               if (result.getCommand() == JobControlCommand.JOB_DONE) {
                 finishedJob = true;
               }
+              if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
+                LOGGER.error("Job failed");
+                finishedJob = true;
+              }
             }
           }
           ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());

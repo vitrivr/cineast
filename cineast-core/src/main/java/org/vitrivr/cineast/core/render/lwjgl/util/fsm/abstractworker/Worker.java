@@ -41,7 +41,7 @@ public abstract class Worker<T extends Job> implements Runnable {
           case CONTROL -> this.shutdown = true;
         }
       } catch (InterruptedException ex) {
-        LOGGER.error("Interrupted while waiting for job", ex);
+        LOGGER.fatal("critical shutdown on renderer", ex);
         this.shutdown = true;
       } finally {
         LOGGER.debug("Worker has performed Job. In Queue:" + this.jobs.size());
@@ -81,11 +81,13 @@ public abstract class Worker<T extends Job> implements Runnable {
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
         LOGGER.error("Error in job. Abort: " + ex.getMessage());
-        this.shutdown = true;
+        job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
+        performed = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
         //TODO The result and control job should not be an concrete job
         LOGGER.error("Error in job. Abort: " + ex.getMessage());
-        this.shutdown = true;
+        job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
+        performed = true;
       } finally {
         LOGGER.trace("Job Secuence ended");
       }

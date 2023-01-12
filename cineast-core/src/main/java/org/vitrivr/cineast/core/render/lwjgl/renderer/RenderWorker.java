@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.system.Configuration;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.Job;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
@@ -114,7 +115,7 @@ public class RenderWorker extends Worker<RenderJob> {
     var pic = this.renderer.obtain();
     var data = new Variant().set(RenderData.IMAGE, pic);
     var responseJob = new RenderJob(data);
-    this.currentJob.resultQueue.add(responseJob);
+    this.currentJob.putResultQueue(responseJob);
   }
 
   @StateEnter(state = RenderStates.ROTATE, data = RenderData.VECTOR)
@@ -145,6 +146,6 @@ public class RenderWorker extends Worker<RenderJob> {
     this.renderer.clear();
     this.renderer = null;
     var responseJob = new RenderJob(JobControlCommand.JOB_DONE);
-    this.currentJob.resultQueue.add(responseJob);
+    this.currentJob.putResultQueue(responseJob);
   }
 }

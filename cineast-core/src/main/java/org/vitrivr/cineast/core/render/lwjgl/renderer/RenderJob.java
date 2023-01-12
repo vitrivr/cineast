@@ -24,28 +24,21 @@ import org.vitrivr.cineast.core.util.dsp.fft.Spectrum.Type;
 public class RenderJob extends Job {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  protected BlockingDeque<RenderJob> resultQueue;
+
 
   public RenderJob(BlockingDeque<Action> actions, Variant data) {
     super(actions, data);
-    this.resultQueue = new LinkedBlockingDeque<>();
+
   }
 
   public RenderJob(Variant data) {
     super(data);
-    this.resultQueue = null;
   }
 
   public RenderJob(JobControlCommand command) {
     super(command);
-    this.resultQueue = null;
   }
 
-  public RenderJob getResults() throws InterruptedException {
-    return this.resultQueue.take();
-  }
-
-  ;
 
   public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, double[][] cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
     // Create data bag for the job.
@@ -85,6 +78,10 @@ public class RenderJob extends Job {
           image.add(result.getData().get(BufferedImage.class, RenderData.IMAGE));
         } else if (result.getType() == JobType.CONTROL) {
           if (result.getCommand() == JobControlCommand.JOB_DONE) {
+            finishedJob = true;
+          }
+          if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
+            LOGGER.error("Job failed");
             finishedJob = true;
           }
         }
