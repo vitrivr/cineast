@@ -14,4 +14,6 @@ public interface IModel {
   List<Material> getMaterials();
   void replaceTextureWithColor(Vector4f color);
 
+
+
 }

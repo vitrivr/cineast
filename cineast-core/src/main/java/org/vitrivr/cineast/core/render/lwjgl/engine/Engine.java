@@ -41,17 +41,24 @@ public class Engine {
     this.render.setOptions(options);
   }
 
-  public void cleanup() {
+
+
+  public void refresh() {
     this.appLogic.cleanup();
     this.render.cleanup();
     this.scene.cleanup();
   }
 
+
+  /**
+   * Releases all resources and terminates the engine.
+   */
   public void clear() {
+    // Calls the regiterd app for cleanimg up
     this.appLogic.cleanup();
     this.render.cleanup();
     this.scene.cleanup();
-    this.window.clear();
+    this.window.cleanup();
   }
 
 
@@ -124,7 +131,7 @@ public class Engine {
         this.appLogic.afterRender(this.window, this.scene, this.render);
       }
     }
-    this.cleanup();
+    this.refresh();
   }
 
   public void resize() {

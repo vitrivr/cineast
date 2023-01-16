@@ -2,7 +2,10 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.Configuration;
+import org.tensorflow.op.math.Log;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -10,7 +13,7 @@ import org.lwjgl.system.MemoryUtil;
 
 public class GlMesh {
 
-
+  private static final Logger LOGGER = LogManager.getLogger();
   private final Mesh mesh;
   private final List<Integer> vboIdList;
   private final int vaoId;
@@ -59,9 +62,15 @@ public class GlMesh {
     }
   }
 
+  /**
+   * Cleans up the GLMesh and removes it from the GPU.
+   * Don't affect the Mesh object.
+   */
   public void cleanup() {
     this.vboIdList.stream().forEach(GL30::glDeleteBuffers);
-    GL30.glBindVertexArray(this.vaoId);
+    GL30.glDeleteVertexArrays(vaoId);
+    this.vboIdList.clear();
+    LOGGER.trace("Cleaned-up GlMesh");
   }
 
 

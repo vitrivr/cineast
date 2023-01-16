@@ -2,21 +2,24 @@ package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 
 public class Mesh {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private Vector3f color;
   private final int numVertices;
   private String id;
 
-  float[] positions;
-  List<Vector3f> vertices;
-  float[] textureCoords;
-  int[] idx;
+  private final float[] positions;
+  private final List<Vector3f> vertices;
+  private final float[] textureCoords;
+  private final int[] idx;
 
-  float scalingfactorNorm = 1;
-  Vector3f positionsNorm;
+  private float scalingfactorNorm = 1;
+  private Vector3f positionsNorm;
 
 
   public Mesh(float[] positions, float[] textureCoordinates, int[] idx) {
@@ -63,7 +66,7 @@ public class Mesh {
       }
     }
 
-    var dmax = longest.length()*2;
+    var dmax = longest.length() * 2;
     this.scalingfactorNorm = 1f / dmax;
     this.positionsNorm = new Vector3f(absPosition.mul(this.scalingfactorNorm));
 
@@ -102,5 +105,14 @@ public class Mesh {
 
   public String getId() {
     return this.id;
+  }
+
+
+  public void close() {
+    this.vertices.clear();
+    this.color = null;
+    this.positionsNorm = null;
+    this.id = null;
+    LOGGER.trace("Closing Mesh");
   }
 }

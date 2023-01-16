@@ -61,13 +61,16 @@ public class GlScene {
     return this.scene.getCamera();
   }
 
-  public void clearModels() {
-    this.cleanup();
-    this.models.clear();
-  }
 
+  /**
+   * Cleans up the scene.
+   * Removes only the references to models and textures.
+   * Hence, the model could be used by another extraction task this method does not close the models or textures.
+   */
   public void cleanup() {
     this.models.values().forEach(IGlModel::cleanup);
+    this.models.clear();
+    this.textureCache.cleanup();
   }
 
   public void resize(int width, int height) {

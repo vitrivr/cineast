@@ -3,14 +3,16 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 public class GLModel implements IGlModel {
+  private static final Logger LOGGER = LogManager.getLogger();
+  private final IModel model;
 
-  private IModel model;
-
-  private List<GlMaterial> materials;
+  private final List<GlMaterial> materials;
 
 
   public GLModel(IModel model) {
@@ -27,8 +29,14 @@ public class GLModel implements IGlModel {
     this.model.addEntity(entity);
   }
 
+  /**
+   * Cleans the GLModel
+   * Does not affect the underlying model
+   */
   public void cleanup() {
     this.materials.stream().forEach(GlMaterial::cleanup);
+    this.materials.clear();
+    LOGGER.debug("GLModel cleaned up");
   }
 
   public String getId() {

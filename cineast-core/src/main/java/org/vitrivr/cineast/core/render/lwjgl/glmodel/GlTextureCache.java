@@ -15,6 +15,10 @@ public class GlTextureCache {
     this.textures.put("default", new GlTexture(texture));
   }
 
+  /**
+   * Cleans all textures in the cache
+   * Does not affect the underlying textures
+   */
   public void cleanup() {
     this.textures.values().stream().forEach(GlTexture::cleanup);
   }

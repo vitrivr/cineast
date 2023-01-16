@@ -33,6 +33,8 @@ public class SceneRender {
 
   public void cleanup() {
     this.shaderProgram.cleanup();
+    this.uniformsMap.cleanup();
+    this.uniformsMap = null;
   }
 
   public void render(GlScene scene) {

@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.render.lwjgl.window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 import java.util.concurrent.Callable;
@@ -111,7 +110,10 @@ public class Window {
     this.mouseInput = new MouseInput(this.windowHandle);
   }
 
-  public void clear() {
+  /**
+   * Removes all callbacks and destroys the window.
+   */
+  public void cleanup() {
     glfwFreeCallbacks(this.windowHandle);
     GLFW.glfwDestroyWindow(this.windowHandle);
     GLFW.glfwTerminate();
