@@ -71,4 +71,11 @@ public class Model implements IModel {
     this.entities = null;
     LOGGER.trace("Closed model {}", this.id);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    LOGGER.warn("Model {} was not closed properly", this.id);
+    this.close();
+    super.finalize();
+  }
 }

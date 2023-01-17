@@ -314,7 +314,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         /*
          * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
          */
-        if (this.count_processed % 50 == 0) {
+        if (this.count_processed % 10 == 0) {
           System.gc();
         }
       } catch (Throwable t) {
