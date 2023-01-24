@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,7 +60,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
     private CachedDataFactory factory;
 
     private final LinkedBlockingQueue<VideoFrame> videoFrameQueue = new LinkedBlockingQueue<>(10);
-    private final ConcurrentLinkedQueue<AudioFrame> audioFrameQueue = new ConcurrentLinkedQueue<>();
+    private final LinkedBlockingQueue<AudioFrame> audioFrameQueue = new LinkedBlockingQueue<>(1000);
 
     @Override
     public boolean init(Path path, DecoderConfig decoderConfig, CacheConfig cacheConfig) {
@@ -73,7 +72,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
 
         /* Initialize MultiImageFactory using the ImageCacheConfig. */
         if (cacheConfig == null) {
-            LOGGER.error("You must provide a valid ImageCacheConfig when initializing the FFMpegVideoDecoder.");
+            LOGGER.error("You must provide a valid ImageCacheConfig when initializing the FFMpegProcessVideoDecoder.");
             return false;
         }
         this.factory = cacheConfig.sharedCachedDataFactory();
@@ -83,7 +82,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
         FFprobeResult ffprobeResult = FFprobe.atPath(ffmpegPath).setInput(path).setShowStreams(true).execute();
 
         VideoDescriptor videoDescriptor = null;
-        final HashMap<Integer, AudioDescriptor> audioDescriptors = new HashMap<>();
+        AudioDescriptor audioDescriptor = null;
 
         for (com.github.kokorin.jaffree.ffprobe.Stream stream : ffprobeResult.getStreams()) {
             if (stream.getCodecType() == StreamType.VIDEO) {
@@ -94,8 +93,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                 continue;
             }
             if (stream.getCodecType() == StreamType.AUDIO) {
-                AudioDescriptor descriptor = new AudioDescriptor(stream.getSampleRate().floatValue(), stream.getChannels(), Math.round(stream.getDuration() * 1000d));
-                audioDescriptors.put(stream.getIndex(), descriptor);
+                audioDescriptor = new AudioDescriptor(stream.getSampleRate().floatValue(), stream.getChannels(), Math.round(stream.getDuration() * 1000d)); //TODO stream id mismatch between ffprobe and ffmpeg, figure out how to deal with multiple streams
             }
         }
 
@@ -108,6 +106,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
         final float maxHeight = decoderConfig.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         VideoDescriptor finalVideoDescriptor = videoDescriptor;
+        AudioDescriptor finalAudioDescriptor = audioDescriptor;
         future = FFmpeg.atPath(ffmpegPath)
                 .addInput(UrlInput.fromPath(path))
                 .addOutput(FrameOutput.withConsumer(
@@ -166,9 +165,7 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                                     }
                                     case AUDIO -> {
 
-                                        AudioDescriptor descriptor = audioDescriptors.get(stream.getId());
-
-                                        if (descriptor == null) {
+                                        if (finalAudioDescriptor == null) {
                                             LOGGER.debug("received audio frame from unknown stream {}, ignoring", frame.getStreamId());
                                             return;
                                         }
@@ -199,12 +196,15 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                                                 idCounter.getAndIncrement(),
                                                 (1000 * frame.getPts()) / stream.getTimebase(),
                                                 reEncoded,
-                                                descriptor
+                                                finalAudioDescriptor
                                         );
 
-                                        audioFrameQueue.add(audioFrame);
+                                        try {
+                                            audioFrameQueue.put(audioFrame);
+                                        } catch (InterruptedException e) {
+                                            LOGGER.error("Could not enqueue audio frame", e);
+                                        }
 
-                                        break;
                                     }
                                 }
                             }

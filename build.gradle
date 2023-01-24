@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'de.undercouch.download' version "5.0.5"
@@ -127,4 +129,69 @@ task generateOAS(type: Download) {
     /* This requires a locally running Cineast */
     src 'http://localhost:4567/openapi-specs'
     dest "${project.projectDir}/docs/openapi.json"
+}
+
+task downloadFFmpeg(type: Download) {
+    def f = new File("$buildDir/cache/ffmpeg.zip")
+    outputs.upToDateWhen {
+        return f.exists()
+    }
+
+    def os = ""
+    if (DefaultNativePlatform.currentOperatingSystem.isWindows()) {
+        os = "win"
+    } else if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) {
+        os = "osx"
+    } else if (DefaultNativePlatform.currentOperatingSystem.isLinux()) {
+        os = "linux"
+    }
+
+    src "https://github.com/vot/ffbinaries-prebuilt/releases/download/v4.2.1/ffmpeg-4.2.1-$os-64.zip"
+    dest f
+}
+
+task downloadFFprobe(type: Download) {
+    def f = new File("$buildDir/cache/ffprobe.zip")
+    outputs.upToDateWhen {
+        return f.exists()
+    }
+
+    def os = ""
+    if (DefaultNativePlatform.currentOperatingSystem.isWindows()) {
+        os = "win"
+    } else if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) {
+        os = "osx"
+    } else if (DefaultNativePlatform.currentOperatingSystem.isLinux()) {
+        os = "linux"
+    }
+
+    src "https://github.com/vot/ffbinaries-prebuilt/releases/download/v4.2.1/ffprobe-4.2.1-$os-64.zip"
+    dest f
+}
+
+task copyFFmpeg(type: Copy) {
+    dependsOn downloadFFmpeg
+    outputs.upToDateWhen {
+        return !fileTree("$buildDir/ext/ffmpeg").filter { it.isFile() && it.name.startsWith('ffmpeg') }.isEmpty()
+    }
+    from zipTree(downloadFFmpeg.dest)
+    into "$buildDir/ext/ffmpeg"
+    include '*ffmpeg*'
+}
+
+task copyFFprobe(type: Copy) {
+    dependsOn downloadFFprobe
+    outputs.upToDateWhen {
+        return !fileTree("$buildDir/ext/ffmpeg").filter { it.isFile() && it.name.startsWith('ffprobe') }.isEmpty()
+    }
+    from zipTree(downloadFFprobe.dest)
+    into "$buildDir/ext/ffmpeg"
+    include '*ffprobe*'
+}
+
+task setupFFMpeg(type: Copy) {
+    dependsOn downloadFFmpeg
+    dependsOn downloadFFprobe
+    dependsOn copyFFmpeg
+    dependsOn copyFFprobe
 }
