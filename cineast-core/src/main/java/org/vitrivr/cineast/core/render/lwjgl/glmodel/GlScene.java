@@ -61,6 +61,10 @@ public class GlScene {
     return this.scene.getCamera();
   }
 
+  public void clearModels() {
+    this.cleanup();
+    this.models.clear();
+  }
 
   /**
    * Cleans up the scene.

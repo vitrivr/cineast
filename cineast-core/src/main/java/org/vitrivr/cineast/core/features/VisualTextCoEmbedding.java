@@ -137,6 +137,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     if (model != null) {
       float[] embeddingArray = embedModel(model);
       this.persist(sc.getId(), new FloatVectorImpl(embeddingArray));
+      System.gc();
       return;
     }
   }

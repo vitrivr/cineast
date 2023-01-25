@@ -55,6 +55,16 @@ public class Model implements IModel {
     return Collections.unmodifiableList(this.materials);
   }
 
+  /**
+   * Returns a list of all normals of all meshes in this model.
+   * @return
+   */
+  public List<Vector3f> getAllNormals() {
+    var normals = new ArrayList<Vector3f>();
+    this.materials.forEach(m -> m.getMeshes().forEach(mesh -> normals.addAll(mesh.getNormals())));
+    return normals;
+  }
+
   public void replaceTextureWithColor(Vector4f color){
     for (var material:this.materials) {
       material.setTexture(new Texture());

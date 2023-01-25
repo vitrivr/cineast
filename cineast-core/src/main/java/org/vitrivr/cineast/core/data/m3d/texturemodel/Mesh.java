@@ -13,19 +13,32 @@ public class Mesh {
   private final int numVertices;
   private String id;
 
-  private final float[] positions;
-  private final List<Vector3f> vertices;
-  private final float[] textureCoords;
-  private final int[] idx;
+  float[] positions;
+  List<Vector3f> vertices;
+  List<Vector3f> normals;
+  float[] textureCoords;
+  int[] idx;
+  float[] norms;
 
   private float scalingfactorNorm = 1;
   private Vector3f positionsNorm;
 
 
-  public Mesh(float[] positions, float[] textureCoordinates, int[] idx) {
+  public Mesh(float[] positions, float[] normals, float[] textureCoordinates, int[] idx) {
     this.positions = positions;
+    this.norms = normals;
 
-    this.vertices = new ArrayList<>();
+    this.vertices = new ArrayList<>(positions.length / 3);
+
+    this.normals = new ArrayList<>(positions.length / 3);
+    for (var ic = 0; ic < this.positions.length; ic += 3) {
+      if (normals == null) {
+        this.normals.add(new Vector3f(0f, 0f, 0f));
+      } else {
+        this.normals.add(new Vector3f(normals[ic], normals[ic + 1], normals[ic + 2]));
+      }
+    }
+
     var MAX = Float.MAX_VALUE;
     var MIN = -1f * Float.MAX_VALUE;
     var vPosX = new Vector3f(MIN, MIN, MIN);
@@ -89,6 +102,10 @@ public class Mesh {
 
   public int[] getIdx() {
     return this.idx;
+  }
+
+  public List<Vector3f> getNormals() {
+    return this.vertices;
   }
 
   public void setId(int id) {

@@ -21,7 +21,7 @@ public class Entity {
     this.modelId = modelId;
     this.position = new Vector3f();
     this.rotation = new Quaternionf();
-    this.scale = 1;
+    this.scale = 1f;
     this.modelMatrix = new Matrix4f();
     this.updateModelMatrix();
   }

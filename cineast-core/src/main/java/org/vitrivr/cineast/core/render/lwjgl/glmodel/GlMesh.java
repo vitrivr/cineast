@@ -52,6 +52,7 @@ public class GlMesh {
 
       // Index VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
+      this.vboIdList.add(vboId);
       var idxBuffer = memoryStack.callocInt(this.mesh.getIdx().length);
       idxBuffer.put(0, this.mesh.getIdx());
       GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, vboId);
