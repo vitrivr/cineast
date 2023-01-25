@@ -80,12 +80,12 @@ public abstract class Worker<T extends Job> implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.error("Error in job. Abort: " + ex.getMessage());
+        LOGGER.error("Error in job. Abort: {} ", ex);
         job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
         performed = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
         //TODO The result and control job should not be an concrete job
-        LOGGER.error("Error in job. Abort: " + ex.getMessage());
+        LOGGER.error("Error in job. Abort: {} ", ex);
         job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
         performed = true;
       } finally {
