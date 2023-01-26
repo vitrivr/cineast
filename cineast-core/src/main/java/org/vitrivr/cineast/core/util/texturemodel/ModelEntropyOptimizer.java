@@ -152,14 +152,14 @@ public final class ModelEntropyOptimizer {
   /**
    * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
    * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
-   * Scholar</a> see: <a
-   * href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
    *
    * @param normals    List of normals of the model.
    * @param viewVector View vector.
    * @return Entropy of the model for the given view vector.
    */
-  private static float calculateEntropyRelativeToTotalArea(List<Vector3f> normals, Vector3f viewVector) {
+  private static float calculateEntropyRelativeToTotalArea_old(List<Vector3f> normals, Vector3f viewVector) {
+
     var areas = new ArrayList<Float>(normals.size());
     var projected = new ArrayList<Float>(normals.size());
     normals.stream().map(normal -> viewVector.dot(normal) / 2f).forEach(areas::add);
@@ -174,6 +174,74 @@ public final class ModelEntropyOptimizer {
     var entropy = -result;
     return entropy;
   }
+  /**
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
+   * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
+   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   *
+   * @param normals    List of normals of the model.
+   * @param viewVector View vector.
+   * @return Entropy of the model for the given view vector.
+   */
+  private static float calculateEntropyRelativeToTotalArea2(List<Vector3f> normals, Vector3f viewVector) {
+
+    var areas = new float[normals.size()];
+    var projected = new float[normals.size()];
+    var totalArea = 0f;
+    for (var ic = 0; ic < normals.size(); ic++) {
+      areas[ic] = viewVector.dot(normals.get(ic)) / 2f;
+      projected[ic] = Math.max(areas[ic], 0f);
+      totalArea += Math.abs(areas[ic]);
+    }
+    areas = null;
+    var entropy = 0f;
+    for (var ic = 0; ic < normals.size(); ic++) {
+      projected[ic] /= totalArea;
+      entropy += projected[ic] * log2(projected[ic]);
+    }
+
+    return -entropy;
+  }
+
+  /**
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
+   * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
+   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   *
+   * @param normals    List of normals of the model.
+   * @param viewVector View vector.
+   * @return Entropy of the model for the given view vector.
+   */
+  private static float calculateEntropyRelativeToTotalArea(List<Vector3f> normals, Vector3f viewVector) {
+
+    var areas = new float[normals.size()];
+    var projected = new float[normals.size()];
+    var totalArea = 0f;
+    IntStream.range(0, normals.size()).parallel().forEach(ic -> {
+      areas[ic] = viewVector.dot(normals.get(ic)) / 2f;
+      projected[ic] = Math.max(areas[ic], 0f);
+      areas[ic] = Math.abs(areas[ic]);
+    });
+
+    for (var ic = 0; ic < normals.size(); ic++) {
+      totalArea += areas[ic];
+    }
+
+    var entropy = 0f;
+    var finalTotalArea = totalArea;
+    IntStream.range(0, normals.size()).parallel().forEach(ic -> {
+      projected[ic] /= finalTotalArea;
+      projected[ic] = projected[ic] * log2(projected[ic]);
+    });
+
+    for (var ic = 0; ic < normals.size(); ic++) {
+      entropy += projected[ic];
+    }
+
+    return -entropy;
+  }
+
+
 
   /**
    * Static values for log base 2, due to performance reasons.
