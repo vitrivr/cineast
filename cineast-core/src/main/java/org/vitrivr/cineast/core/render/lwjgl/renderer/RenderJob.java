@@ -19,7 +19,6 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlC
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
-import org.vitrivr.cineast.core.util.dsp.fft.Spectrum.Type;
 
 public class RenderJob extends Job {
 

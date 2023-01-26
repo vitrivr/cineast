@@ -54,31 +54,39 @@ public class RenderWorker extends Worker<RenderJob> {
   @Override
   protected Graph createGraph() {
     return new Graph(
+        // Setup the graph for the RenderWorker
         new Hashtable<>(){{
-          {put(new Transition(new State(RenderStates.IDLE), new Action(RenderActions.SETUP)),new State(RenderStates.INIT_WINDOW));}
-          {put(new Transition(new State(RenderStates.INIT_WINDOW), new Action(RenderActions.SETUP)),new State(RenderStates.LOAD_MODEL));}
-          {put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.SETUP)),new State(RenderStates.INIT_RENDERER));}
-          {put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
-          {put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
-          {put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
-          {put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
-          {put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
-          {put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
-          {put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.ROTATE)),new State(RenderStates.ROTATE));}
-          {put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
-          {put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
-          {put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.SETUP)),new State(RenderStates.UNLOAD_MODEL));}
-          {put(new Transition(new State(RenderStates.ROTATE), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
-          {put(new Transition(new State(RenderStates.LOOKAT), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
-          {put(new Transition(new State(RenderStates.LOOK_FROM_AT_O), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
+          {this.put(new Transition(new State(RenderStates.IDLE), new Action(RenderActions.SETUP)),new State(RenderStates.INIT_WINDOW));}
+          {this.put(new Transition(new State(RenderStates.INIT_WINDOW), new Action(RenderActions.SETUP)),new State(RenderStates.LOAD_MODEL));}
+          {this.put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.SETUP)),new State(RenderStates.INIT_RENDERER));}
+          {this.put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
+          {this.put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
+          {this.put(new Transition(new State(RenderStates.LOAD_MODEL), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
+          {this.put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
+          {this.put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
+          {this.put(new Transition(new State(RenderStates.INIT_RENDERER), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
+          {this.put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.ROTATE)),new State(RenderStates.ROTATE));}
+          {this.put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.LOOKAT)),new State(RenderStates.LOOKAT));}
+          {this.put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.LOOKAT_FROM)),new State(RenderStates.LOOK_FROM_AT_O));}
+          {this.put(new Transition(new State(RenderStates.RENDER), new Action(RenderActions.SETUP)),new State(RenderStates.UNLOAD_MODEL));}
+          {this.put(new Transition(new State(RenderStates.ROTATE), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
+          {this.put(new Transition(new State(RenderStates.LOOKAT), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
+          {this.put(new Transition(new State(RenderStates.LOOK_FROM_AT_O), new Action(RenderActions.RENDER)),new State(RenderStates.RENDER));}
         }},
         new State(RenderStates.IDLE),
         new HashSet<>(){{
-          {add(new State(RenderStates.UNLOAD_MODEL));}
+          {this.add(new State(RenderStates.UNLOAD_MODEL));}
         }}
     );
   }
   // @formatter:on
+
+  @Override
+  protected String onJobException(Exception ex){
+    this.unload();
+    this.currentJob.putResultQueue(new RenderJob(JobControlCommand.JOB_FAILURE));
+    return "Job failed";
+  }
 
 
   @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)

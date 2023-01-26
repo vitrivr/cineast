@@ -27,6 +27,7 @@ public abstract class Worker<T extends Job> implements Runnable {
   }
 
   protected abstract Graph createGraph();
+  protected abstract String onJobException(Exception ex);
 
   public void run() {
     // Worker loop. Waiting on job or shutdown.
@@ -80,15 +81,15 @@ public abstract class Worker<T extends Job> implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.error("Error in job. Abort: {} ", ex);
-        job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
+        LOGGER.error("Error in job. Abort: ", ex);
+        this.onJobException(ex);
         performed = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
-        //TODO The result and control job should not be an concrete job
-        LOGGER.error("Error in job. Abort: {} ", ex);
-        job.putResultQueue(new Job(JobControlCommand.JOB_FAILURE));
+        this.onJobException(ex);
+        LOGGER.error("Error in job. Abort: ", ex);
         performed = true;
-      } finally {
+      }
+      finally {
         LOGGER.trace("Job Secuence ended");
       }
     }

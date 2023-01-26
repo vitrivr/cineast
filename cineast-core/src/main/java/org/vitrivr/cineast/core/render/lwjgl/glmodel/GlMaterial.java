@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tensorflow.op.math.Log;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Material;
 import org.joml.Vector4f;
 

@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.Job;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.StateEnter;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.StateProvider;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.Worker;
@@ -37,6 +39,12 @@ public class ConcreteWorker extends Worker<ConcreteJob> {
         new HashSet<>() {{
         {add(new State("Result"));}
       }});
+  }
+
+  @Override
+  protected String onJobException(Exception ex) {
+    this.currentJob.putResultQueue(new ConcreteJob(JobControlCommand.JOB_FAILURE));
+    return "nothing cleaned";
   }
 
   @StateEnter(state = "Startup")

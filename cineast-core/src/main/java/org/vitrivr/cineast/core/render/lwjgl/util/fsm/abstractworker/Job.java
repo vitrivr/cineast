@@ -7,15 +7,15 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 
-public class Job {
+public abstract class Job {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final BlockingDeque<Action> actions;
 
-  private BlockingDeque<Job> resultQueue;
+  private final BlockingDeque<Job> resultQueue;
   private Variant data;
-  private JobType type;
-  private JobControlCommand command;
+  private final JobType type;
+  private final JobControlCommand command;
 
   /**
    * Creates a new Job to perform a task Creates a result Queue to provide results or commands
@@ -53,6 +53,7 @@ public class Job {
     this.actions = null;
     this.command = command;
     this.type = JobType.CONTROL;
+    this.resultQueue = null;
   }
 
   public Job getResults() throws InterruptedException {
@@ -85,5 +86,16 @@ public class Job {
 
   public JobControlCommand getCommand() {
     return this.command;
+  }
+
+  public void clean(){
+    this.data.clear();
+    this.data = null;
+    if (this.actions != null) {
+      this.actions.clear();
+    }
+    if (this.resultQueue != null) {
+      this.resultQueue.clear();
+    }
   }
 }

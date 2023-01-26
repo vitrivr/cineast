@@ -43,4 +43,8 @@ public class Variant {
     }
     return result;
   }
+
+  public void clear(){
+    this.variants.clear();
+  }
 }

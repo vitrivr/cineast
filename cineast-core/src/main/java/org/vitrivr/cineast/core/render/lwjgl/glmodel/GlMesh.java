@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.system.Configuration;
-import org.tensorflow.op.math.Log;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -69,7 +67,7 @@ public class GlMesh {
    */
   public void cleanup() {
     this.vboIdList.stream().forEach(GL30::glDeleteBuffers);
-    GL30.glDeleteVertexArrays(vaoId);
+    GL30.glDeleteVertexArrays(this.vaoId);
     this.vboIdList.clear();
     LOGGER.trace("Cleaned-up GlMesh");
   }

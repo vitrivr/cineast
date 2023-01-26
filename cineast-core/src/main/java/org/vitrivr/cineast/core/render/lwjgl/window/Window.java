@@ -89,7 +89,6 @@ public class Window {
       }
     });
 
-
     GLFW.glfwMakeContextCurrent(this.windowHandle);
 
     if (opts.fps > 0) {
@@ -98,7 +97,7 @@ public class Window {
       GLFW.glfwSwapInterval(1);
     }
 
-    if(!opts.hideWindow){
+    if (!opts.hideWindow) {
       GLFW.glfwShowWindow(this.windowHandle);
     }
 
