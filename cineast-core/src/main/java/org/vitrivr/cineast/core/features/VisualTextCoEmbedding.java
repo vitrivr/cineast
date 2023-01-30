@@ -233,7 +233,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private float[] embedMostRepresentativeImages(List<BufferedImage> images) {
+  private float[] embedMostRepresentativeImages(List<BufferedImage> images, ViewpointStrategy viewpointStrategy) {
     var vectors = new ArrayList<FloatVectorImpl>();
 
     for (BufferedImage image : images) {
@@ -294,24 +294,76 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return frames;
   }
 
-  private float[] embedModel(IModel model) {
+  /**
+   * For benchmark purposes Since the Extractor does not support options, strategy should be implemented in a static way
+   */
+  private enum ViewpointStrategy {
+    RANDOM,
+    FRONT,
+    UPPER_LEFT,
+    VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED,
+    MULTI_IMAGE_KMEANS,
+    MULTI_IMAGE_FRAME
+  }
 
+  private float[] embedModel(IModel model) {
+    //Options for window
     var windowOptions = new WindowOptions() {{
       this.hideWindow = true;
       this.width = 600;
       this.height = 600;
     }};
-
+    // Options for renderer
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
 
-    var camerapositions = MathConstants.VERTICES_3D_3TRIANGLES;
-
+    // Choose a viewpoint strategy
+    var viewpointStrategy = ViewpointStrategy.RANDOM;
+    // Get camera viewpoint for chhosen strategy
+    var camerapositions = getCameraPositions(viewpointStrategy);
+    // Render an image for each camera position
     var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
         model, camerapositions, windowOptions, renderOptions);
 
-    return embedMostRepresentativeImages(images);
+    // Embedding based on strategy return value. Null if an error occured
+    if (images.isEmpty()) {
+      return null;
+    }
+    if (images.size() == 1) {
+      return embedImage(images.get(0));
+    }
+    return embedMostRepresentativeImages(images, viewpointStrategy);
+  }
+
+  public double[][] getCameraPositions(ViewpointStrategy viewpointStrategy) {
+    switch (viewpointStrategy) {
+      case RANDOM -> {
+        var camerapositions = new double[1][3];
+        var randomViewVector = new Vector3f((float) (Math.random() - 0.5) * 2f, (float) (Math.random() - 0.5) * 2f,
+            (float) (Math.random() - 0.5) * 2f);
+        randomViewVector.normalize();
+        camerapositions[0][0] = randomViewVector.x;
+        camerapositions[0][1] = randomViewVector.y;
+        camerapositions[0][2] = randomViewVector.z;
+        return camerapositions;
+      }
+      case UPPER_LEFT -> {
+        var camerapositions = new double[1][3];
+        camerapositions[0][0] = -1;
+        camerapositions[0][1] = 1;
+        camerapositions[0][2] = 1;
+        return camerapositions;
+      }
+      // Front and default
+      default ->{
+        var camerapositions = new double[1][3];
+        camerapositions[0][0] = 0;
+        camerapositions[0][1] = 0;
+        camerapositions[0][2] = 1;
+        return camerapositions;
+      }
+    }
   }
 
   private float[] embedVideo(List<MultiImage> frames) {

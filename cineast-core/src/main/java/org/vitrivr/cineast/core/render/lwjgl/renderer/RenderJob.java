@@ -38,6 +38,15 @@ public class RenderJob extends Job {
 
 
   public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, double[][] cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
+    var cameraPositionVectors = new LinkedList<Vector3f>();
+    for (double[] cameraPosition : cameraPositions) {
+      assert cameraPosition.length == 3;
+      cameraPositionVectors.add(new Vector3f((float) cameraPosition[0], (float) cameraPosition[1], (float) cameraPosition[2]));
+    }
+    return performStandardRenderJob(renderJobQueue, model, cameraPositionVectors, windowOptions, renderOptions);
+  }
+
+  public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, LinkedList<Vector3f> cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
     // Create data bag for the job.
     var jobData = new Variant();
     jobData.set(RenderData.WINDOWS_OPTIONS, windowOptions)
@@ -52,7 +61,8 @@ public class RenderJob extends Job {
     actions.add(new Action(RenderActions.SETUP));
     var vectors = new LinkedList<Vector3f>();
     for (var position : cameraPositions) {
-      vectors.add(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      // Create a copy of the vector to avoid concurrent modification exceptions
+      vectors.add(new Vector3f(position));
       actions.add(new Action(RenderActions.LOOKAT_FROM));
       actions.add(new Action(RenderActions.RENDER));
     }

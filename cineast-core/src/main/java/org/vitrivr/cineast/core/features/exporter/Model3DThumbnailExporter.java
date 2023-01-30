@@ -74,7 +74,6 @@ public class Model3DThumbnailExporter implements Extractor {
   private final int size;
 
 
-
   /**
    * Background color of the resulting image.
    */
@@ -107,72 +106,34 @@ public class Model3DThumbnailExporter implements Extractor {
       Files.createDirectories(directory);
       IModel model = shot.getModel();
       if (model.getMaterials().size() > 0) {
-        var jobData = new Variant();
-        var opt = new WindowOptions(400, 400) {{
+
+        var windowOptions = new WindowOptions(400, 400) {{
           this.hideWindow = true;
         }};
-        jobData.set(RenderData.WINDOWS_OPTIONS, opt);
-
         var renderOptions = new RenderOptions() {{
           this.showTextures = true;
         }};
-        jobData.set(RenderData.RENDER_OPTIONS, renderOptions);
-        jobData.set(RenderData.MODEL, model);
-        jobData.set(RenderData.VECTORS, new LinkedList<Vector3f>() {{
-          add(new Vector3f(1f, 1f, 1f));
-          add(new Vector3f(0f, 1f, 0f));
-          add(new Vector3f(1f, 0f, 0f));
-          add(new Vector3f(0f,0f,1f));
-        }});
+        var cameraPositions = new LinkedList<Vector3f>() {{
+          add(new Vector3f(1f, 1f, 1f).normalize().mul(DISTANCE));
+          add(new Vector3f(0f, 1f, 0f).normalize().mul(DISTANCE));
+          add(new Vector3f(1f, 0f, 0f).normalize().mul(DISTANCE));
+          add(new Vector3f(0f, 0f, 1f).normalize().mul(DISTANCE));
+        }};
 
-        var actions = new LinkedBlockingDeque<Action>();
-        actions.add(new Action(RenderActions.SETUP));
-        actions.add(new Action(RenderActions.SETUP));
-        actions.add(new Action(RenderActions.SETUP));
-        actions.add(new Action(RenderActions.LOOKAT_FROM));
-        actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT_FROM));
-        actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT_FROM));
-        actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.LOOKAT_FROM));
-        actions.add(new Action(RenderActions.RENDER));
-        actions.add(new Action(RenderActions.SETUP));
-
-        var job = new RenderJob(actions, jobData);
-        RenderWorker.getRenderJobQueue().add(job);
-
-        var finishedJob = false;
+        var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(), model, cameraPositions, windowOptions, renderOptions);
+        assert images.size() == 4;
+        var canvas = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
+        var graphics = canvas.getGraphics();
+        graphics.setColor(this.backgroundColor);
+        int sz = this.size / 2;
         var ic = 0;
-
-        BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = image.getGraphics();
-
-        try {
-          while (!finishedJob) {
-            var result = job.getResults();
-            if (result.getType() == JobType.RESPONSE) {
-              var partialImage = result.getData().get(BufferedImage.class, RenderData.IMAGE);
-              int idx = ic % 2;
-              int idy = ic < 2 ? 0 : 1;
-              int sz = this.size / 2;
-              graphics.drawImage(partialImage, idx * sz, idy * sz, null);
-              ic++;
-
-            } else if (result.getType() == JobType.CONTROL) {
-              if (result.getCommand() == JobControlCommand.JOB_DONE) {
-                finishedJob = true;
-              }
-              if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
-                LOGGER.error("Job failed");
-                finishedJob = true;
-              }
-            }
-          }
-          ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
-        } catch (InterruptedException | IOException e) {
-          throw new RuntimeException(e);
+        for (var partialImage : images) {
+          int idx = ic % 2;
+          int idy = ic < 2 ? 0 : 1;
+          graphics.drawImage(partialImage, idx * sz, idy * sz, null);
+          ++ic;
         }
+        ImageIO.write(canvas, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
       }
     } catch (IOException exception) {
       LOGGER.fatal("Could not export thumbnail image for model {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
