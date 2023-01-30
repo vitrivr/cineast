@@ -4,10 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import javax.swing.JWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -87,6 +85,9 @@ public class RenderJob extends Job {
       }
     } catch (InterruptedException ex) {
       LOGGER.error("Could not render model", ex);
+    } finally {
+      job.clean();
+      job = null;
     }
     return image;
   }
