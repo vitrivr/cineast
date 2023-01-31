@@ -319,7 +319,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }};
 
     // Choose a viewpoint strategy
-    var viewpointStrategy = ViewpointStrategy.RANDOM;
+    var viewpointStrategy = ViewpointStrategy.UPPER_LEFT;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy);
     // Render an image for each camera position
