@@ -105,9 +105,12 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
         final float maxWidth = decoderConfig.namedAsInt(CONFIG_MAXWIDTH_PROPERTY, CONFIG_MAXWIDTH_DEFAULT);
         final float maxHeight = decoderConfig.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
+        final int TARGET_AUDIO_SAMPLE_RATE = 44100;
+        final int TARGET_AUDIO_CHANNELS = 1;
+
         VideoDescriptor finalVideoDescriptor = videoDescriptor;
-        AudioDescriptor finalAudioDescriptor = audioDescriptor;
-        future = FFmpeg.atPath(ffmpegPath)
+        AudioDescriptor finalAudioDescriptor = (audioDescriptor == null) ? null : new AudioDescriptor(TARGET_AUDIO_SAMPLE_RATE, TARGET_AUDIO_CHANNELS, audioDescriptor.duration());
+        FFmpeg ffmpeg = FFmpeg.atPath(ffmpegPath)
                 .addInput(UrlInput.fromPath(path))
                 .addOutput(FrameOutput.withConsumer(
                         new FrameConsumer() {
@@ -209,8 +212,20 @@ public class FFMpegProcessVideoDecoder implements Decoder<VideoFrame> {
                                 }
                             }
                         }
-                ))
-                .executeAsync();
+                ));
+
+        if ( videoDescriptor.height() > maxHeight || videoDescriptor.width() > maxWidth ) {
+            float scale = Math.min(videoDescriptor.width() / maxWidth, videoDescriptor.height() / maxHeight);
+            int w = Math.round(videoDescriptor.width() * scale);
+            int h = Math.round(videoDescriptor.height() * scale);
+            ffmpeg = ffmpeg.setFilter(StreamType.VIDEO, "scale=" + w + ":" + h);
+        }
+
+        if ( finalAudioDescriptor != null ) {
+            ffmpeg = ffmpeg.addArguments("-ac", audioDescriptor.channels() + "").addArguments("-ar", audioDescriptor.samplingrate() + "");
+        }
+
+        future = ffmpeg.executeAsync();
 
         return true;
     }
