@@ -144,6 +144,8 @@ dependencies {
     api group: "org.bytedeco", name: "javacpp", version: version_javacpp
     api group: "org.bytedeco", name: "ffmpeg-platform", version: version_ffmpeg
 
+    api group: 'com.github.kokorin.jaffree', name: 'jaffree', version: '2022.06.03'
+
     /** OpenCV. */
     api group: 'org.openpnp', name: 'opencv', version: version_opencv
 

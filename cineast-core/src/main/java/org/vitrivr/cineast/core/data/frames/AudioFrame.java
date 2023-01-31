@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.data.frames;
 
 
+import javax.sound.sampled.AudioFormat;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Objects;
-import javax.sound.sampled.AudioFormat;
 
 /**
  * Represents a single audio-frame containing a specific number of samples (the number depends on the decoder that created the AudioFrame). Sample data is stored in a byte array and internally represented as 16bit int PCM i.e. each sample is represented by a signed 16bit short between -32767 and 32767.
@@ -64,7 +64,7 @@ public class AudioFrame {
   }
 
   public AudioFrame(AudioFrame other) {
-    this(other.idx, other.timestamp, other.data.array(), new AudioDescriptor(other.descriptor.getSamplingrate(), other.descriptor.getChannels(), other.descriptor.getDuration()));
+    this(other.idx, other.timestamp, other.data.array(), new AudioDescriptor(other.descriptor.samplingrate(), other.descriptor.channels(), other.descriptor.duration()));
   }
 
   /**
@@ -73,7 +73,7 @@ public class AudioFrame {
    * @return AudioFormat
    */
   public final AudioFormat getFormat() {
-    return new AudioFormat(this.descriptor.getSamplingrate(), BITS_PER_SAMPLE, this.descriptor.getChannels(), true, false);
+    return new AudioFormat(this.descriptor.samplingrate(), BITS_PER_SAMPLE, this.descriptor.channels(), true, false);
   }
 
   /**
@@ -137,7 +137,7 @@ public class AudioFrame {
    */
   private void setData(byte[] data) {
     this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
-    this.numberOfSamples = data.length / (2 * this.descriptor.getChannels());
+    this.numberOfSamples = data.length / (2 * this.descriptor.channels());
   }
 
   /**
@@ -146,7 +146,7 @@ public class AudioFrame {
    * @return Sample rate of this AudioFrame.
    */
   public final float getSamplingrate() {
-    return this.descriptor.getSamplingrate();
+    return this.descriptor.samplingrate();
   }
 
   /**
@@ -155,7 +155,7 @@ public class AudioFrame {
    * @return Duration of the {@link AudioFrame}
    */
   public final float getDuration() {
-    return this.numberOfSamples / this.descriptor.getSamplingrate();
+    return this.numberOfSamples / this.descriptor.samplingrate();
   }
 
   /**
@@ -173,7 +173,7 @@ public class AudioFrame {
    * @return Relative end of the {@link AudioFrame}.
    */
   public final float getEnd() {
-    return this.getStart() + this.numberOfSamples / this.descriptor.getSamplingrate();
+    return this.getStart() + this.numberOfSamples / this.descriptor.samplingrate();
   }
 
   /**
@@ -182,7 +182,7 @@ public class AudioFrame {
    * @return Number of channels in this AudioFrame.
    */
   public final int getChannels() {
-    return this.descriptor.getChannels();
+    return this.descriptor.channels();
   }
 
   /**
@@ -193,8 +193,8 @@ public class AudioFrame {
    * @return Sample value for the specified channel at the specified index.
    */
   public final short getSampleAsShort(int idx, int channel) {
-    if (channel < this.descriptor.getChannels()) {
-      return this.data.getShort(2 * idx * this.descriptor.getChannels() + 2 * channel);
+    if (channel < this.descriptor.channels()) {
+      return this.data.getShort(2 * idx * this.descriptor.channels() + 2 * channel);
     } else {
       throw new IllegalArgumentException("The channel indexed must not exceed the number of channels!");
     }
@@ -219,10 +219,10 @@ public class AudioFrame {
    */
   public final short getMeanSampleAsShort(int idx) {
     int meanSample = 0;
-    for (int i = 0; i < this.descriptor.getChannels(); i++) {
+    for (int i = 0; i < this.descriptor.channels(); i++) {
       meanSample += this.getSampleAsShort(idx, i);
     }
-    return (short) (meanSample / this.descriptor.getChannels());
+    return (short) (meanSample / this.descriptor.channels());
   }
 
   /**
@@ -233,10 +233,10 @@ public class AudioFrame {
    */
   public final double getMeanSampleAsDouble(int idx) {
     float meanSample = 0;
-    for (int i = 0; i < this.descriptor.getChannels(); i++) {
+    for (int i = 0; i < this.descriptor.channels(); i++) {
       meanSample += this.getSampleAsShort(idx, i);
     }
-    return (meanSample / (this.descriptor.getChannels() * Short.MAX_VALUE));
+    return (meanSample / (this.descriptor.channels() * Short.MAX_VALUE));
   }
 
   /**
@@ -250,7 +250,7 @@ public class AudioFrame {
     if (!this.descriptor.equals(that.descriptor)) {
       return false;
     }
-    int bytes = that.descriptor.getChannels() * numberOfSamples * (BITS_PER_SAMPLE / 8);
+    int bytes = that.descriptor.channels() * numberOfSamples * (BITS_PER_SAMPLE / 8);
     if (bytes > that.data.capacity()) {
       return false;
     }
@@ -281,7 +281,7 @@ public class AudioFrame {
       return this;
     }
 
-    int bytesToCut = this.descriptor.getChannels() * numberOfSamples * (BITS_PER_SAMPLE / 8);
+    int bytesToCut = this.descriptor.channels() * numberOfSamples * (BITS_PER_SAMPLE / 8);
     byte[] cutBytes = new byte[bytesToCut];
     byte[] remaining = new byte[this.data.capacity() - bytesToCut];
 
@@ -290,7 +290,7 @@ public class AudioFrame {
 
     setData(remaining);
 
-    return new AudioFrame(idx, timestamp, cutBytes, new AudioDescriptor(descriptor.getSamplingrate(), descriptor.getChannels(), (long) (numberOfSamples / descriptor.getSamplingrate())));
+    return new AudioFrame(idx, timestamp, cutBytes, new AudioDescriptor(descriptor.samplingrate(), descriptor.channels(), (long) (numberOfSamples / descriptor.samplingrate())));
   }
 
   @Override

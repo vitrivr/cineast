@@ -2,10 +2,6 @@ package org.vitrivr.cineast.core.data.segments;
 
 import boofcv.struct.geo.AssociatedPair;
 import georegression.struct.point.Point2D_F32;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
@@ -22,6 +18,11 @@ import org.vitrivr.cineast.core.descriptor.PathList;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class VideoSegment implements SegmentContainer {
 
@@ -157,7 +158,7 @@ public class VideoSegment implements SegmentContainer {
   @Override
   public float getSamplingrate() {
     if (this.audioDescriptor != null) {
-      return this.audioDescriptor.getSamplingrate();
+      return this.audioDescriptor.samplingrate();
     } else {
       return 0;
     }
@@ -169,7 +170,7 @@ public class VideoSegment implements SegmentContainer {
   @Override
   public int getChannels() {
     if (this.audioDescriptor != null) {
-      return this.audioDescriptor.getChannels();
+      return this.audioDescriptor.channels();
     } else {
       return 0;
     }
@@ -192,7 +193,7 @@ public class VideoSegment implements SegmentContainer {
     if (2 * padding >= windowsize) {
       throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
     }
-    STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.getSamplingrate());
+    STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.samplingrate());
     stft.forward(this.getMeanSamplesAsDouble());
     return stft;
   }
@@ -334,7 +335,7 @@ public class VideoSegment implements SegmentContainer {
    */
   @Override
   public float getRelativeStart() {
-    return (1000.0f * this.getStart()) / this.videoDescriptor.getDuration();
+    return (1000.0f * this.getStart()) / this.videoDescriptor.duration();
   }
 
   /**
@@ -342,7 +343,7 @@ public class VideoSegment implements SegmentContainer {
    */
   @Override
   public float getRelativeEnd() {
-    return (1000.0f * this.getEnd()) / this.videoDescriptor.getDuration();
+    return (1000.0f * this.getEnd()) / this.videoDescriptor.duration();
   }
 
   /**

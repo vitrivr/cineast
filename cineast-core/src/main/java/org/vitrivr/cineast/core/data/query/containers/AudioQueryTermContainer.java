@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.util.List;
-import java.util.Objects;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 import org.vitrivr.cineast.core.util.web.AudioParser;
+
+import java.util.List;
+import java.util.Objects;
 
 
 public class AudioQueryTermContainer extends AbstractQueryTermContainer {
@@ -94,7 +95,7 @@ public class AudioQueryTermContainer extends AbstractQueryTermContainer {
     if (2 * padding >= windowsize) {
       throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
     }
-    STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
+    STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.samplingrate());
     stft.forward(this.getMeanSamplesAsDouble());
     return stft;
   }

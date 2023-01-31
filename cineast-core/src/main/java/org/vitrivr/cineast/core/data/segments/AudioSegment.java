@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This AudioSegment is part of the Cineast data model and can hold an arbitrary number of AudioFrames that somehow belong together. The class itself is agnostic to how segmenting is organized.
@@ -119,12 +120,12 @@ public class AudioSegment implements SegmentContainer {
 
   @Override
   public float getSamplingrate() {
-    return this.descriptor.getSamplingrate();
+    return this.descriptor.samplingrate();
   }
 
   @Override
   public int getChannels() {
-    return this.descriptor.getChannels();
+    return this.descriptor.channels();
   }
 
   /**
@@ -189,7 +190,7 @@ public class AudioSegment implements SegmentContainer {
     if (2 * padding >= windowsize) {
       throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
     }
-    STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
+    STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.samplingrate());
     stft.forward(this.getMeanSamplesAsDouble());
     return stft;
   }

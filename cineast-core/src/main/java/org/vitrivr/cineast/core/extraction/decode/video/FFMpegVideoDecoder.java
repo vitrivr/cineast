@@ -1,13 +1,5 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.ffmpeg.avcodec.AVCodec;
@@ -24,11 +16,7 @@ import org.bytedeco.ffmpeg.global.swresample;
 import org.bytedeco.ffmpeg.global.swscale;
 import org.bytedeco.ffmpeg.swresample.SwrContext;
 import org.bytedeco.ffmpeg.swscale.SwsContext;
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.DoublePointer;
-import org.bytedeco.javacpp.IntPointer;
-import org.bytedeco.javacpp.Pointer;
-import org.bytedeco.javacpp.PointerPointer;
+import org.bytedeco.javacpp.*;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
@@ -42,6 +30,15 @@ import org.vitrivr.cineast.core.extraction.decode.subtitle.SubTitleDecoder;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleDecoderFactory;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A {@link Decoder} implementation that decodes videos using the ffmpeg library + the corresponding Java bindings.
@@ -299,7 +296,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     }
 
     /* Prepare frame and associated timestamp and add it to output queue. */
-    VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), this.getFrameTimestamp(this.videoStream), this.factory.newMultiImage(this.videoDescriptor.getWidth(), this.videoDescriptor.getHeight(), pixels), this.videoDescriptor);
+    VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), this.getFrameTimestamp(this.videoStream), this.factory.newMultiImage(this.videoDescriptor.width(), this.videoDescriptor.height(), pixels), this.videoDescriptor);
     this.videoFrameQueue.add(videoFrame);
   }
 
@@ -656,7 +653,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
   }
 
   /**
-   * Indicates whether or not the current decoder has more content to return or not.
+   * Indicates whether the current decoder has more content to return or not.
    *
    * @return True if more content can be fetched, false otherwise.
    */
