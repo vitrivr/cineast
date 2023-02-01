@@ -313,7 +313,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     MULTI_IMAGE_KMEANS,
     MULTI_IMAGE_FRAME
   }
-  protected ViewpointStrategy viewpointStrategy;
 
   private float[] embedModel(IModel model) {
     //Options for window
@@ -326,7 +325,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-
+    var viewpointStrategy = ViewpointStrategy.VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
