@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -217,9 +218,9 @@ public abstract class Lightfield extends StagedFeatureModule {
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.SETUP));
 
-    var vectors = new Stack<Vector3f>();
+    var vectors = new LinkedList<Vector3f>();
     for (var position : this.camerapositions) {
-      vectors.push(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
+      vectors.add(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
       actions.add(new Action(RenderActions.LOOKAT_FROM));
       actions.add(new Action(RenderActions.RENDER));
     }
@@ -229,9 +230,9 @@ public abstract class Lightfield extends StagedFeatureModule {
     var job = new RenderJob(actions, jobData);
     RenderWorker.getRenderJobQueue().add(job);
 
-    var finisedJob = false;
+    var finishedJob = false;
     try {
-      while (!finisedJob) {
+      while (!finishedJob) {
         var result = job.getResults();
         if (result.getType() == JobType.RESPONSE) {
           var image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
@@ -242,7 +243,11 @@ public abstract class Lightfield extends StagedFeatureModule {
           features.addAll(this.featureVectorsFromImage(image, -1));
         } else if (result.getType() == JobType.CONTROL) {
           if (result.getCommand() == JobControlCommand.JOB_DONE) {
-            finisedJob = true;
+            finishedJob = true;
+          }
+          if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
+            LOGGER.error("Job failed");
+            finishedJob = true;
           }
         }
       }

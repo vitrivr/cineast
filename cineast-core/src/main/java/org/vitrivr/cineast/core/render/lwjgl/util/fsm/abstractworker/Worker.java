@@ -4,13 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.BlockingDeque;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachine;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachineException;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Graph;
 
 @StateProvider
-public abstract class  Worker <T extends Job>  implements Runnable {
+public abstract class Worker<T extends Job> implements Runnable {
 
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -26,31 +27,50 @@ public abstract class  Worker <T extends Job>  implements Runnable {
   }
 
   protected abstract Graph createGraph();
+  protected abstract String onJobException(Exception ex);
 
   public void run() {
+    // Worker loop. Waiting on job or shutdown.
     this.shutdown = false;
     while (!this.shutdown) {
       try {
-        LOGGER.info("Waiting for job. In Queue:" + this.jobs.size());
+        LOGGER.debug("Waiting for job. In Queue:" + this.jobs.size());
         this.currentJob = this.jobs.take();
-        LOGGER.info("Perform Job. In Queue:" + this.jobs.size());
+        LOGGER.trace("Perform Job. In Queue:" + this.jobs.size());
         switch (this.currentJob.getType()) {
           case ORDER -> this.performJob(this.currentJob);
           case CONTROL -> this.shutdown = true;
         }
       } catch (InterruptedException ex) {
+        LOGGER.fatal("critical shutdown on renderer", ex);
         this.shutdown = true;
       } finally {
-        LOGGER.info("Worker Task ended");
+        LOGGER.debug("Worker has performed Job. In Queue:" + this.jobs.size());
       }
     }
   }
 
+  /**
+   * Job loop. Perform a single Job
+   * 1. Setup the Statemachine with initialized graph
+   * 2. Gets the action sequence and the job data for this job
+   * 3. Do till final state in graph is reached
+   * - Take action
+   * - Move to next state
+   * - The StateProviderAnnotationParser will call all methods in the ConcreteWorker that were marked with a corresponding Annotation
+   * @see StateEnter,
+   * @see StateLeave,
+   * @see StateTransition
+   * @param job Job to be performed.
+   */
   private void performJob(Job job) {
+
     var performed = false;
     var fsm = new FiniteStateMachine(this.graph);
+
     var actions = job.getActions();
     var data = job.getData();
+
     while (!performed) {
       try {
         var action = actions.take();
@@ -61,17 +81,19 @@ public abstract class  Worker <T extends Job>  implements Runnable {
         sap.runTransitionMethods(this, leavedState, enteredState, currentTransition, data);
         performed = this.graph.isFinalState(enteredState);
       } catch (InterruptedException | FiniteStateMachineException ex) {
-        LOGGER.fatal(ex.getMessage());
-        this.shutdown = true;
+        LOGGER.error("Error in job. Abort: ", ex);
+        this.onJobException(ex);
+        performed = true;
       } catch (InvocationTargetException | IllegalAccessException ex) {
-        //TODO Check Stack Space Error
-        LOGGER.fatal(ex.getMessage());
-        this.shutdown = true;
-      } finally {
-        //LOGGER.info("Job Secuence ended");
+        this.onJobException(ex);
+        LOGGER.error("Error in job. Abort: ", ex);
+        performed = true;
+      }
+      finally {
+        LOGGER.trace("Job Secuence ended");
       }
     }
-    LOGGER.info("Job ended");
+    LOGGER.trace("Job ended");
   }
 
   protected void putActionfirst(Action action) {

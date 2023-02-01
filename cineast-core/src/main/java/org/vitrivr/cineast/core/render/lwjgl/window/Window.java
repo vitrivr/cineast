@@ -25,11 +25,11 @@ public class Window {
   public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
 
     this.resizeFunc = resizeFunc;
-    LOGGER.info("Try creating window '{}'...", title);
+    LOGGER.trace("Try creating window '{}'...", title);
     if (!GLFW.glfwInit()) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
-    LOGGER.info("GLFW initialized");
+    LOGGER.trace("GLFW initialized");
 
     GLFW.glfwDefaultWindowHints();
     // Window should be invisible for basic rendering
@@ -65,9 +65,10 @@ public class Window {
       assert vidMode != null;
       this.width = vidMode.width();
       this.height = vidMode.height();
+
     }
 
-    LOGGER.info("Try creating window '{}' with size {}x{}...", title, this.width, this.height);
+    LOGGER.trace("Try creating window '{}' with size {}x{}...", title, this.width, this.height);
     this.windowHandle = GLFW.glfwCreateWindow(this.width, this.height, title, NULL, NULL);
     if (this.windowHandle == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
@@ -88,7 +89,6 @@ public class Window {
       }
     });
 
-
     GLFW.glfwMakeContextCurrent(this.windowHandle);
 
     if (opts.fps > 0) {
@@ -97,7 +97,7 @@ public class Window {
       GLFW.glfwSwapInterval(1);
     }
 
-    if(!opts.hideWindow){
+    if (!opts.hideWindow) {
       GLFW.glfwShowWindow(this.windowHandle);
     }
 
@@ -110,7 +110,10 @@ public class Window {
     this.mouseInput = new MouseInput(this.windowHandle);
   }
 
-  public void clear() {
+  /**
+   * Removes all callbacks and destroys the window.
+   */
+  public void cleanup() {
     glfwFreeCallbacks(this.windowHandle);
     GLFW.glfwDestroyWindow(this.windowHandle);
     GLFW.glfwTerminate();

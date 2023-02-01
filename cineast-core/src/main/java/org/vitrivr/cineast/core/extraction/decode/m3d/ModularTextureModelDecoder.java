@@ -78,6 +78,7 @@ public class ModularTextureModelDecoder implements ITextureModelDecoder, Convert
    */
   @Override
   public void close() {
+
   }
 
   /**

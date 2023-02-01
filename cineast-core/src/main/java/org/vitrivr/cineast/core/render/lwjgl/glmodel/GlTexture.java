@@ -32,6 +32,11 @@ public class GlTexture {
     GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
   }
 
+  /**
+   * Cleans the GlTexture
+   * Does not affect the underlying texture
+   * Removes the texture from the GPU
+   */
   public void cleanup() {
     GL30.glDeleteTextures(this.textureId);
   }

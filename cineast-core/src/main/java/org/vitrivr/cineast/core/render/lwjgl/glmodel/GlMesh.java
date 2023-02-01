@@ -2,7 +2,8 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.lwjgl.system.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -10,7 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 
 public class GlMesh {
 
-
+  private static final Logger LOGGER = LogManager.getLogger();
   private final Mesh mesh;
   private final List<Integer> vboIdList;
   private final int vaoId;
@@ -49,6 +50,7 @@ public class GlMesh {
 
       // Index VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
+      this.vboIdList.add(vboId);
       var idxBuffer = memoryStack.callocInt(this.mesh.getIdx().length);
       idxBuffer.put(0, this.mesh.getIdx());
       GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, vboId);
@@ -59,9 +61,15 @@ public class GlMesh {
     }
   }
 
+  /**
+   * Cleans up the GLMesh and removes it from the GPU.
+   * Don't affect the Mesh object.
+   */
   public void cleanup() {
     this.vboIdList.stream().forEach(GL30::glDeleteBuffers);
-    GL30.glBindVertexArray(this.vaoId);
+    GL30.glDeleteVertexArrays(this.vaoId);
+    this.vboIdList.clear();
+    LOGGER.trace("Cleaned-up GlMesh");
   }
 
 

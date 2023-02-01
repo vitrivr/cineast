@@ -25,8 +25,8 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   private static final Logger LOGGER = LogManager.getLogger();
 
 
-  public WindowOptions windowOptions;
-  Engine engine;
+  private WindowOptions windowOptions;
+  private Engine engine;
 
   private LinkedTransferQueue<IModel> modelQueue;
   private LinkedTransferQueue<BufferedImage> imageQueue;
@@ -36,7 +36,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   public LWJGLOffscreenRenderer() {
     this.modelQueue = new LinkedTransferQueue<IModel>();
     this.imageQueue = new LinkedTransferQueue<BufferedImage>();
-    LOGGER.info("LWJGLOffscreenRenderer created");
+    LOGGER.debug("LWJGLOffscreenRenderer created");
   }
 
 
@@ -57,13 +57,9 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   @Override
   public void render() {
     this.engine.runOnce();
-    LOGGER.info("LWJGLOffscreenRenderer rendered");
+    LOGGER.trace("LWJGLOffscreenRenderer rendered");
   }
 
-
-  protected void cleanup() {
-    LOGGER.info("LWJGLOffscreenRenderer cleaned");
-  }
 
   /**
    * Is called once at the initialization of the engine.
@@ -87,6 +83,16 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
     var lfc = new LightfieldCamera(this.windowOptions);
     this.imageQueue.add(lfc.takeLightfieldImage());
   }
+
+  /**
+   *  Is called from the engine as first step during refresh and cleanup
+   *  Do not call Engine methods in this cleanup method
+   */
+  @Override
+  protected void cleanup() {
+    LOGGER.trace("LWJGLOffscreenRenderer cleaned");
+  }
+
 
   /**
    * This method is called every frame.
@@ -118,7 +124,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
         var entity = new Entity("cube", model.getId());
         model.addEntityNorm(entity);
       }
-      scene.clearModels();
+      scene.cleanup();
       scene.addModel(model);
     }
     scene.getModels().forEach((k, v) -> v.getEntities().forEach(Entity::updateModelMatrix));
@@ -171,7 +177,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
 
   @Override
   public void clear(Color color) {
-
+    this.clear();
   }
 
   /**
@@ -181,6 +187,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
   @Override
   public void clear() {
     this.engine.clear();
+    this.engine = null;
   }
 
   @Override

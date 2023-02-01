@@ -2,27 +2,43 @@ package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 
 public class Mesh {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   private Vector3f color;
   private final int numVertices;
   private String id;
 
   float[] positions;
   List<Vector3f> vertices;
+  List<Vector3f> normals;
   float[] textureCoords;
   int[] idx;
+  float[] norms;
 
-  float scalingfactorNorm = 1;
-  Vector3f positionsNorm;
+  private float scalingfactorNorm = 1;
+  private Vector3f positionsNorm;
 
 
-  public Mesh(float[] positions, float[] textureCoordinates, int[] idx) {
+  public Mesh(float[] positions, float[] normals, float[] textureCoordinates, int[] idx) {
     this.positions = positions;
+    this.norms = normals;
 
-    this.vertices = new ArrayList<>();
+    this.vertices = new ArrayList<>(positions.length / 3);
+
+    this.normals = new ArrayList<>(positions.length / 3);
+    for (var ic = 0; ic < this.positions.length; ic += 3) {
+      if (normals == null) {
+        this.normals.add(new Vector3f(0f, 0f, 0f));
+      } else {
+        this.normals.add(new Vector3f(normals[ic], normals[ic + 1], normals[ic + 2]));
+      }
+    }
+
     var MAX = Float.MAX_VALUE;
     var MIN = -1f * Float.MAX_VALUE;
     var vPosX = new Vector3f(MIN, MIN, MIN);
@@ -63,7 +79,7 @@ public class Mesh {
       }
     }
 
-    var dmax = longest.length()*2;
+    var dmax = longest.length() * 2;
     this.scalingfactorNorm = 1f / dmax;
     this.positionsNorm = new Vector3f(absPosition.mul(this.scalingfactorNorm));
 
@@ -88,6 +104,10 @@ public class Mesh {
     return this.idx;
   }
 
+  public List<Vector3f> getNormals() {
+    return this.vertices;
+  }
+
   public void setId(int id) {
     this.id = Integer.toString(id);
   }
@@ -102,5 +122,14 @@ public class Mesh {
 
   public String getId() {
     return this.id;
+  }
+
+
+  public void close() {
+    this.vertices.clear();
+    this.color = null;
+    this.positionsNorm = null;
+    this.id = null;
+    LOGGER.trace("Closing Mesh");
   }
 }

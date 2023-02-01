@@ -49,4 +49,7 @@ public class UniformsMap {
       GL30.glUniformMatrix4fv(location.intValue(), false, value.get(memoryStack.mallocFloat(16)));
     }
   }
+  public void cleanup() {
+    this.uniforms.clear();
+  }
 }

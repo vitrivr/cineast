@@ -24,8 +24,8 @@ public class Render {
   }
 
   public void cleanup() {
-    this.options = null;
     this.sceneRender.cleanup();
+    this.options = null;
   }
 
   public void render(Window window, GlScene scene) {

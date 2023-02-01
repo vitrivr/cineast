@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class Entity {
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private final String id;
   private final String modelId;
@@ -18,7 +21,7 @@ public class Entity {
     this.modelId = modelId;
     this.position = new Vector3f();
     this.rotation = new Quaternionf();
-    this.scale = 1;
+    this.scale = 1f;
     this.modelMatrix = new Matrix4f();
     this.updateModelMatrix();
   }
@@ -70,5 +73,13 @@ public class Entity {
   }
   public void updateModelMatrix() {
     this.modelMatrix.translationRotateScale(this.position, this.rotation, this.scale);
+  }
+
+  public void close() {
+    this.position.zero();
+    this.rotation.identity();
+    this.scale = 1;
+    this.updateModelMatrix();
+    LOGGER.trace("Entity {} closed", this.id);
   }
 }

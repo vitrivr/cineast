@@ -3,11 +3,13 @@ package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Material;
 import org.joml.Vector4f;
 
 public class GlMaterial {
-
+  private static final Logger LOGGER = LogManager.getLogger();
   private final List<GlMesh> meshes;
   private final GlTexture texture;
   private final Material material;
@@ -20,9 +22,16 @@ public class GlMaterial {
     this.texture = new GlTexture(this.material.getTexture());
   }
 
+
+  /**
+   * Cleans the GlMaterial
+   * Does not affect the underlying material
+   */
   public void cleanup() {
     this.meshes.stream().forEach(GlMesh::cleanup);
+    this.meshes.clear();
     this.texture.cleanup();
+    LOGGER.trace("Cleaned-up GlMaterial}");
   }
 
 
