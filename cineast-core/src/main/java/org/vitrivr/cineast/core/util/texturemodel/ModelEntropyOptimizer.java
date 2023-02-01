@@ -35,7 +35,6 @@ public final class ModelEntropyOptimizer {
     var normals = model.getAllNormals();
     var viewVector = options.initialViewVector;
     var maxEntropyViewVector = optimize(options, normals, viewVector);
-
     return maxEntropyViewVector;
   }
 

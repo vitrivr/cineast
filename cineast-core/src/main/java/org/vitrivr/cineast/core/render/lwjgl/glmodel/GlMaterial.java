@@ -31,7 +31,7 @@ public class GlMaterial {
     this.meshes.stream().forEach(GlMesh::cleanup);
     this.meshes.clear();
     this.texture.cleanup();
-    LOGGER.info("Cleaned-up GlMaterial}");
+    LOGGER.trace("Cleaned-up GlMaterial}");
   }
 
 

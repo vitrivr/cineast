@@ -317,7 +317,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedModel(IModel model) {
     //Options for window
     var windowOptions = new WindowOptions() {{
-      this.hideWindow = true;
+      this.hideWindow = false;
       this.width = 600;
       this.height = 600;
     }};
@@ -367,7 +367,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         var opts = new OptimizerOptions() {{
           this.iterations = 100;
           this.initialViewVector = new Vector3f(0, 0, 1);
-          this.method = EntopyCalculationMethod.RELATIVE_TO_PROJECTED_AREA;
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
           this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
         }};
         viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
@@ -403,7 +403,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
           camerapositions[ic][2] = viewVector.z;
         }
     );
-
+    LOGGER.info("Camera {} with strategy {}",camerapositions,viewpointStrategy);
     return camerapositions;
   }
 
