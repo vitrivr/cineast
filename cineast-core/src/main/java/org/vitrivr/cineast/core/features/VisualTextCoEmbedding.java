@@ -5,15 +5,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Vector;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bridj.cpp.com.VARIANT.__VARIANT_NAME_1_union.__tagVARIANT;
 import org.joml.Vector3f;
 import org.lwjgl.system.MathUtil;
 import org.tensorflow.SavedModelBundle;
@@ -47,6 +50,11 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.KMeansPP;
 import org.vitrivr.cineast.core.util.math.MathConstants;
+import org.vitrivr.cineast.core.util.texturemodel.EntopyCalculationMethod;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizerStrategy;
+import org.vitrivr.cineast.core.util.texturemodel.ModelEntropyOptimizer;
+import org.vitrivr.cineast.core.util.texturemodel.OptimizerOptions;
+import org.vitrivr.cottontail.grpc.CottontailGrpc.From;
 
 /**
  * A visual-text co-embedding mapping images and text descriptions to the same embedding space.
@@ -297,7 +305,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   /**
    * For benchmark purposes Since the Extractor does not support options, strategy should be implemented in a static way
    */
-  private enum ViewpointStrategy {
+  protected enum ViewpointStrategy {
     RANDOM,
     FRONT,
     UPPER_LEFT,
@@ -305,6 +313,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     MULTI_IMAGE_KMEANS,
     MULTI_IMAGE_FRAME
   }
+  protected ViewpointStrategy viewpointStrategy;
 
   private float[] embedModel(IModel model) {
     //Options for window
@@ -318,10 +327,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       this.showTextures = true;
     }};
 
-    // Choose a viewpoint strategy
-    var viewpointStrategy = ViewpointStrategy.UPPER_LEFT;
     // Get camera viewpoint for chhosen strategy
-    var camerapositions = getCameraPositions(viewpointStrategy);
+    var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
     var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
         model, camerapositions, windowOptions, renderOptions);
@@ -336,34 +343,69 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return embedMostRepresentativeImages(images, viewpointStrategy);
   }
 
-  public double[][] getCameraPositions(ViewpointStrategy viewpointStrategy) {
+  private static final float ZOOM = (float) Math.sqrt(3);
+
+  public double[][] getCameraPositions(ViewpointStrategy viewpointStrategy, IModel model) {
+    var viewVectors = new LinkedList<Vector3f>();
     switch (viewpointStrategy) {
       case RANDOM -> {
-        var camerapositions = new double[1][3];
-        var randomViewVector = new Vector3f((float) (Math.random() - 0.5) * 2f, (float) (Math.random() - 0.5) * 2f,
-            (float) (Math.random() - 0.5) * 2f);
-        randomViewVector.normalize();
-        camerapositions[0][0] = randomViewVector.x;
-        camerapositions[0][1] = randomViewVector.y;
-        camerapositions[0][2] = randomViewVector.z;
-        return camerapositions;
+        viewVectors.add(new Vector3f(
+            (float) (Math.random() - 0.5) * 2f,
+            (float) (Math.random() - 0.5) * 2f,
+            (float) (Math.random() - 0.5) * 2f)
+            .normalize().mul(ZOOM)
+        );
       }
       case UPPER_LEFT -> {
-        var camerapositions = new double[1][3];
-        camerapositions[0][0] = -1;
-        camerapositions[0][1] = 1;
-        camerapositions[0][2] = 1;
-        return camerapositions;
+        viewVectors.add(new Vector3f(
+            -1f,
+            1,
+            1)
+            .normalize().mul(ZOOM)
+        );
+      }
+      case VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED -> {
+        var opts = new OptimizerOptions() {{
+          this.iterations = 100;
+          this.initialViewVector = new Vector3f(0, 0, 1);
+          this.method = EntopyCalculationMethod.RELATIVE_TO_PROJECTED_AREA;
+          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+        }};
+        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
+      }
+      case MULTI_IMAGE_KMEANS, MULTI_IMAGE_FRAME -> {
+        var views = MathConstants.VERTICES_3D_DODECAHEDRON;
+        for (var view : views) {
+          viewVectors.add(new Vector3f(
+              (float) view[0],
+              (float) view[1],
+              (float) view[2])
+              .normalize().mul(ZOOM)
+          );
+        }
       }
       // Front and default
-      default ->{
-        var camerapositions = new double[1][3];
-        camerapositions[0][0] = 0;
-        camerapositions[0][1] = 0;
-        camerapositions[0][2] = 1;
-        return camerapositions;
+      case FRONT -> {
+        viewVectors.add(new Vector3f(
+            0f,
+            0f,
+            1)
+            .normalize().mul(ZOOM)
+        );
       }
     }
+    var camerapositions = new double[viewVectors.size()][3];
+
+    IntStream.range(0, viewVectors.size()).parallel().forEach(ic ->
+        {
+          var viewVector = viewVectors.get(ic);
+          camerapositions[ic][0] = viewVector.x;
+          camerapositions[ic][1] = viewVector.y;
+          camerapositions[ic][2] = viewVector.z;
+        }
+    );
+
+    return camerapositions;
   }
 
   private float[] embedVideo(List<MultiImage> frames) {

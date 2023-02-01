@@ -61,7 +61,7 @@ public class Model3DThumbnailExporter implements Extractor {
   /**
    * Distance of camera from object.
    */
-  private static final float DISTANCE = 2.0f;
+  private static final float DISTANCE = (float) Math.sqrt(3);
 
   /**
    * Destination path; can be set in the AudioWaveformExporter properties.
