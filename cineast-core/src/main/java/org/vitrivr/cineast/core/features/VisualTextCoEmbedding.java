@@ -325,7 +325,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-    var viewpointStrategy = ViewpointStrategy.VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED;
+    var viewpointStrategy = ViewpointStrategy.UPPER_LEFT;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
