@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.util.MinimalBoundingBox;
 
 public class Model implements IModel {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -36,14 +37,14 @@ public class Model implements IModel {
     this.entities.add(entity);
   }
   public void addEntityNorm(Entity entity) {
-      var minScale = Float.MAX_VALUE;
-      var maxPosition = new Vector3f(0, 0, 0);
-      for (var mesh:this.materials) {
-        minScale = Math.min(minScale,mesh.getMaxNormalizedScalingFactor());
-        maxPosition = maxPosition.length() > mesh.getMaxNormalizedPosition().length() ? maxPosition : mesh.getMaxNormalizedPosition();
+      var mbb = new MinimalBoundingBox();
+
+      for (var material :this.materials) {
+        mbb.merge(material.getMinimalBoundingBox());
       }
-    entity.setPosition(maxPosition.mul(-1));
-    entity.setScale(minScale);
+
+    entity.setPosition(mbb.getTranslationToNorm().mul(-1));
+    entity.setScale(mbb.getScalingFactorToNorm());
     this.entities.add(entity);
     }
 

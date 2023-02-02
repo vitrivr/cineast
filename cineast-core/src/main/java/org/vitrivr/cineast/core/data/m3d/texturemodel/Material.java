@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.util.MinimalBoundingBox;
 
 public class Material {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -23,6 +24,23 @@ public class Material {
     this.diffuseColor = DEFAULT_COLOR;
   }
 
+  /**
+   * @return A MinimalBoundingBox which enclose all MinimalBoundingBoxes
+   * from containing meshes
+   */
+  public MinimalBoundingBox getMinimalBoundingBox(){
+    var mmb = new MinimalBoundingBox();
+    for (var mesh : this.meshes) {
+      mmb.merge(mesh.getMinimalBoundingBox());
+    }
+    return mmb;
+  }
+
+  /**
+   * @return the scaling factor to norm 1 size from all containing meshes merged
+   * @deprecated use {@link #getMinimalBoundingBox()} instead
+   */
+  @Deprecated
   public float getMaxNormalizedScalingFactor() {
     var min = Float.MAX_VALUE;
     for (var mesh : this.meshes) {
@@ -31,6 +49,12 @@ public class Material {
     return min;
   }
 
+
+  /**
+   * @return the translation to origin (0,0,0) from all containing meshes merged
+   * @deprecated use {@link #getMinimalBoundingBox()} instead
+   */
+  @Deprecated
   public Vector3f getMaxNormalizedPosition() {
     var min = new Vector3f(0, 0, 0);
     for (var mesh : this.meshes) {

@@ -296,7 +296,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   List<MultiImage> frameFromImages(List<BufferedImage> images) {
     var frames = new ArrayList<MultiImage>();
     for (BufferedImage image : images) {
-      var factory = CachedDataFactory.getDefault();
+    var factory = CachedDataFactory.getDefault();
       frames.add(factory.newInMemoryMultiImage(image));
     }
     return frames;
@@ -317,7 +317,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedModel(IModel model) {
     //Options for window
     var windowOptions = new WindowOptions() {{
-      this.hideWindow = true;
+      this.hideWindow = false;
       this.width = 600;
       this.height = 600;
     }};
@@ -325,7 +325,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-    var viewpointStrategy = ViewpointStrategy.RANDOM;
+    var viewpointStrategy = ViewpointStrategy.VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
@@ -342,7 +342,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return embedMostRepresentativeImages(images, viewpointStrategy);
   }
 
-  private static final float ZOOM = (float) Math.sqrt(3);
+  private static final float ZOOM = 1f; // (float) Math.sqrt(3);
 
   public double[][] getCameraPositions(ViewpointStrategy viewpointStrategy, IModel model) {
     var viewVectors = new LinkedList<Vector3f>();
@@ -358,8 +358,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       case UPPER_LEFT -> {
         viewVectors.add(new Vector3f(
             -1f,
-            1,
-            1)
+            1f,
+            1f)
             .normalize().mul(ZOOM)
         );
       }
