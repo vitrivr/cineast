@@ -212,18 +212,17 @@ public final class ModelEntropyOptimizer {
    * @return Entropy of the model for the given view vector.
    */
   private static float calculateEntropyRelativeToTotalArea(List<Vector3f> normals, Vector3f viewVector) {
-
     var areas = new float[normals.size()];
     var projected = new float[normals.size()];
     var totalArea = 0f;
     IntStream.range(0, normals.size()).parallel().forEach(ic -> {
-      areas[ic] = viewVector.dot(normals.get(ic)) / 2f;
+      areas[ic] = viewVector.dot(normals.get(ic));
       projected[ic] = Math.max(areas[ic], 0f);
       areas[ic] = Math.abs(areas[ic]);
     });
 
     for (var ic = 0; ic < normals.size(); ic++) {
-      totalArea += areas[ic];
+      totalArea += normals.get(ic).length();
     }
 
     var entropy = 0f;

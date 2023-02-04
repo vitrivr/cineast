@@ -61,10 +61,8 @@ public final class ModelLoader {
    */
   public static Model loadModel(String modelId, String modelPath) {
     var model = loadModel(modelId, modelPath,
-        aiProcess_GenSmoothNormals |
-            aiProcess_JoinIdenticalVertices |
+        aiProcess_JoinIdenticalVertices |
             aiProcess_Triangulate |
-            aiProcess_FixInfacingNormals |
             aiProcess_CalcTangentSpace |
             aiProcess_LimitBoneWeights |
             aiProcess_PreTransformVertices);

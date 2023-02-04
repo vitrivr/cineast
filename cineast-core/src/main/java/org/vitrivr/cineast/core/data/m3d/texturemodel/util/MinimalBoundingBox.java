@@ -132,4 +132,8 @@ public class MinimalBoundingBox {
     }
     return changed;
   }
+
+  public void close(){
+
+  }
 }
