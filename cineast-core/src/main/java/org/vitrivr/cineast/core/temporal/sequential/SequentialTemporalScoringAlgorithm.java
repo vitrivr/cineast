@@ -77,7 +77,7 @@ public class SequentialTemporalScoringAlgorithm extends AbstractTemporalScoringA
 
     /* Return the sorted temporal objects. */
     return results.stream()
-        .sorted(Comparator.comparingDouble(TemporalObject::getScore).reversed())
+        .sorted(Comparator.comparingDouble(TemporalObject::score).reversed())
         .collect(Collectors.toList());
   }
 

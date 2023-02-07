@@ -50,15 +50,15 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
       set.forEach(segment -> {
         boolean lsc = segment.getEndAbs() == 0;
         TemporalObject best = getBestTemporalObject(segment, lsc);
-        resultMap.putIfAbsent(best.getObjectId(), new ResultStorage(best.getObjectId()));
-        List<String> bestSegmentIds = best.getSegments();
+        resultMap.putIfAbsent(best.objectId(), new ResultStorage(best.objectId()));
+        List<String> bestSegmentIds = best.segments();
         List<Integer> bestSequenceNumber = this.getSequenceNumbers(bestSegmentIds);
-        resultMap.get(best.getObjectId())
+        resultMap.get(best.objectId())
             .addSegmentsAndScore(
                 IntStream.range(0, bestSegmentIds.size())
                     .boxed()
                     .collect(Collectors.toMap(bestSequenceNumber::get, bestSegmentIds::get)),
-                best.getScore()
+                best.score()
             );
       });
     });
@@ -66,7 +66,7 @@ public class TimeDistanceTemporalScoringAlgorithm extends AbstractTemporalScorin
     resultStream = resultMap.values().stream().map(ResultStorage::toTemporalObject);
     /* Return the sorted temporal objects. */
     return resultStream
-        .sorted(Comparator.comparingDouble(TemporalObject::getScore).reversed())
+        .sorted(Comparator.comparingDouble(TemporalObject::score).reversed())
         .collect(Collectors.toList());
   }
 

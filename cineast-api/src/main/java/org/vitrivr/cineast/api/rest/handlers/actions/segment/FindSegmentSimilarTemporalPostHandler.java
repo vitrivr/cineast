@@ -6,6 +6,7 @@ import io.javalin.plugin.openapi.dsl.OpenApiDocumentation;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
 import org.vitrivr.cineast.api.messages.result.TemporalQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
+import org.vitrivr.cineast.api.util.QueryResultCache;
 import org.vitrivr.cineast.api.util.QueryUtil;
 import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
@@ -38,6 +39,8 @@ public class FindSegmentSimilarTemporalPostHandler implements ParsingPostRestHan
     ConstrainedQueryConfig config = ConstrainedQueryConfig.getApplyingConfig(query.config());
 
     var temporalResults = QueryUtil.findSegmentsSimilarTemporal(continuousRetrievalLogic, query, config);
+
+    QueryResultCache.cacheResult(config.getQueryId(), temporalResults);
 
     return new TemporalQueryResult(config.getQueryId(), temporalResults);
   }

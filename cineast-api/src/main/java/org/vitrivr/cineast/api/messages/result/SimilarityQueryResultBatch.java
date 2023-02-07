@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.api.messages.result;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 
@@ -19,7 +19,7 @@ public record SimilarityQueryResultBatch(List<String> categories, List<Similarit
    * @param map     Map of Strings mapped to Lists of {@link StringDoublePair} where categories are mapped to the results of the similarity query.
    * @param queryId String representing the ID of the query to which this part of the result message.
    */
-  public SimilarityQueryResultBatch(HashMap<String, List<StringDoublePair>> map, String queryId) {
+  public SimilarityQueryResultBatch(Map<String, List<StringDoublePair>> map, String queryId) {
     this(new ArrayList<>(map.keySet()), new ArrayList<>(map.size()));
     for (String category : this.categories()) {
       this.results.add(new SimilarityQueryResult(queryId, map.get(category), category, -1));

@@ -114,7 +114,7 @@ public class QueryUtil {
    * @param config                   The config to use for the execution of the query
    * @return The query results as a list of temporal objects.
    */
-  public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) {
+  public static List<TemporalObject> findSegmentsSimilarTemporal(ContinuousRetrievalLogic continuousRetrievalLogic, TemporalQuery query, QueryConfig config) { //FIXME this discards categories?!
     var stagedResults = query.queries().stream().map(stagedQuery -> findSegmentsSimilarStaged(continuousRetrievalLogic, stagedQuery.stages(), config)).toList();
 
     // TODO: New MediaSegmentReader for every request like FindSegmentByIdPostHandler or one persistent on per endpoint like AbstractQueryMessageHandler?

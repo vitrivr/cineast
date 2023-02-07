@@ -1,13 +1,11 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
+import org.vitrivr.cineast.api.util.QueryResultCache;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -37,6 +35,8 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
     final String queryId = qconf.getQueryId();
     final HashSet<String> categoryMap = new HashSet<>(message.categories());
 
+    final HashMap<String, List<StringDoublePair>> resultMap = new HashMap<>();
+
     List<Thread> threads = new ArrayList<>();
     List<CompletableFuture<Void>> futures = new ArrayList<>();
     /* Retrieve per-category results and return them. */
@@ -55,7 +55,11 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
       // TODO Possibly add metadata specification to mlt-handler
       List<Thread> _threads = this.submitMetadata(session, queryId, segmentIds, objectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
       threads.addAll(_threads);
+
+      resultMap.put(category, results);
+
     }
+    QueryResultCache.cacheResult(queryId, resultMap);
     futures.forEach(CompletableFuture::join);
     for (Thread thread : threads) {
       thread.join();

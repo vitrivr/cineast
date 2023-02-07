@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +18,9 @@ import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.QueryTermType;
 import org.vitrivr.cineast.api.messages.query.StagedSimilarityQuery;
 import org.vitrivr.cineast.api.messages.query.TemporalQuery;
+import org.vitrivr.cineast.api.util.QueryResultCache;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.TemporalObject;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -58,6 +61,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
     Set<String> sentSegmentIds = new HashSet<>();
     Set<String> sentObjectIds = new HashSet<>();
+
+    /* used for result cache */
+    ConcurrentLinkedQueue<Pair<String, List<StringDoublePair>>> rawCategoryResults = new ConcurrentLinkedQueue<>();
 
     /* Each container can be evaluated in parallel, provided resouces are available */
     List<Thread> ssqThreads = new ArrayList<>();
@@ -193,6 +199,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             Thread thread = new Thread(() -> {
               LOGGER.trace("Queuing finalization & result submission for stage {} and container {}", finalStageIndex, lambdaFinalContainerIdx);
               futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, lambdaFinalContainerIdx, results));
+              rawCategoryResults.add(new Pair<>(category, results));
             });
             thread.setName("finalization-stage" + finalStageIndex + "-" + category);
             thread.start();
@@ -215,6 +222,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     if (!message.config().computeTemporalObjects) {
       LOGGER.debug("Not computing temporal objects due to query config");
       finish(metadataRetrievalThreads, cleanupThreads);
+      QueryResultCache.cacheResult(qconf.getQueryId(), rawCategoryResults);
       return;
     }
 
@@ -239,7 +247,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     LOGGER.debug("Temporal scoring done in {} ms, {} results", System.currentTimeMillis() - start, finalResults.size());
 
     /* Retrieve the segment Ids of the newly scored segments */
-    List<String> segmentIds = finalResults.stream().map(TemporalObject::getSegments).flatMap(List::stream).collect(Collectors.toList());
+    List<String> segmentIds = finalResults.stream().map(TemporalObject::segments).flatMap(List::stream).collect(Collectors.toList());
 
     /* Send potential information not already sent  */
     /* Maybe change from list to set? */

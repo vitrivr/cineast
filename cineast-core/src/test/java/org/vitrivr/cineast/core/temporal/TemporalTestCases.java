@@ -267,11 +267,11 @@ public class TemporalTestCases {
       while (it1.hasNext() && it2.hasNext()) {
         TemporalObject temporalObject1 = it1.next();
         TemporalObject temporalObject2 = it2.next();
-        if (!(Math.round(temporalObject1.getScore() * 100000d) / 100000d == Math.round(temporalObject2.getScore() * 100000d) / 100000d && temporalObject1.getObjectId().equals(temporalObject2.getObjectId()) && temporalObject1.getSegments().size() == temporalObject2.getSegments().size())) {
+        if (!(Math.round(temporalObject1.score() * 100000d) / 100000d == Math.round(temporalObject2.score() * 100000d) / 100000d && temporalObject1.objectId().equals(temporalObject2.objectId()) && temporalObject1.segments().size() == temporalObject2.segments().size())) {
           return false;
         }
-        Iterator<String> innerIt1 = temporalObject1.getSegments().iterator();
-        Iterator<String> innerIt2 = temporalObject2.getSegments().iterator();
+        Iterator<String> innerIt1 = temporalObject1.segments().iterator();
+        Iterator<String> innerIt2 = temporalObject2.segments().iterator();
         while (innerIt1.hasNext() && innerIt2.hasNext()) {
           String string1 = innerIt1.next();
           String string2 = innerIt2.next();
