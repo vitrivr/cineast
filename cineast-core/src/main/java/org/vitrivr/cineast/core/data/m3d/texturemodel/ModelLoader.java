@@ -28,7 +28,7 @@ public final class ModelLoader {
    *        This is ignored if normals are already there at the time this flag
    *       is evaluated. Model importers try to load them from the source file, so
    *       they're usually already there.
-   *
+   * <p>
    *       This flag may not be specified together with
    *       #aiProcess_GenNormals. There's a configuration option,
    *       <tt>#AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE</tt> which allows you to specify
@@ -62,6 +62,8 @@ public final class ModelLoader {
   public static Model loadModel(String modelId, String modelPath) {
     var model = loadModel(modelId, modelPath,
         aiProcess_JoinIdenticalVertices |
+            aiProcess_GlobalScale |
+            aiProcess_FixInfacingNormals |
             aiProcess_Triangulate |
             aiProcess_CalcTangentSpace |
             aiProcess_LimitBoneWeights |

@@ -345,6 +345,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     FRONT,
     UPPER_LEFT,
     VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED,
+    VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED,
     MULTI_IMAGE_KMEANS,
     MULTI_IMAGE_PROJECTEDMEAN,
     MULTI_IMAGE_FRAME
@@ -361,7 +362,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_PROJECTEDMEAN;
+    var viewpointStrategy = ViewpointStrategy.VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
@@ -398,6 +399,17 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
             1f)
             .normalize().mul(ZOOM)
         );
+      }
+      case VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED -> {
+        var opts = new OptimizerOptions() {{
+          this.iterations = 100;
+          this.initialViewVector = new Vector3f(0, 0, 1);
+          this.yPosWeight = 0.8f;
+          this.yNegWeight = 0.7f;
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
+          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+        }};
+        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
       }
       case VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED -> {
         var opts = new OptimizerOptions() {{

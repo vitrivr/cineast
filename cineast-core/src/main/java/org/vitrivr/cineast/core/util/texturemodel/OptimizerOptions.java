@@ -11,5 +11,7 @@ public class OptimizerOptions {
   public EntopyCalculationMethod method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
   public int iterations = 1000;
   public Vector3f initialViewVector = new Vector3f(0f, 0f, 1f);
+  public float yPosWeight = 1;
+  public float yNegWeight = 1;
 
 }

@@ -120,8 +120,10 @@ public class Model3DThumbnailExporter implements Extractor {
         var opts = new OptimizerOptions() {{
           this.iterations = 100;
           this.initialViewVector = new Vector3f(0, 0, 1);
-          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
           this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+          this.yNegWeight = 0.7f;
+          this.yPosWeight = 0.8f;
         }};
         // Add a Random View, a front View an Upper Left View and an Entropy Optimized View
         var cameraPositions = new LinkedList<Vector3f>() {{

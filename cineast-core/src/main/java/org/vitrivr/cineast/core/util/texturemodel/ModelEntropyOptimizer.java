@@ -14,8 +14,7 @@ public final class ModelEntropyOptimizer {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Calculates the view vector with the maximum entropy of the model. Uses standard Options for optimizer and entropy
-   * calculation.
+   * Calculates the view vector with the maximum entropy of the model. Uses standard Options for optimizer and entropy calculation.
    *
    * @param model Model to calculate the view vector for.
    * @return View vector with the maximum entropy.
@@ -39,8 +38,7 @@ public final class ModelEntropyOptimizer {
   }
 
   /**
-   * Wrapper for the optimizer strategy. Optimizes the view vector for the given model with the chosen EntropyOptimizer
-   * Strategy.
+   * Wrapper for the optimizer strategy. Optimizes the view vector for the given model with the chosen EntropyOptimizer Strategy.
    *
    * @param options    Options for the optimizer and entropy calculation.
    * @param normals    List of normals of the model.
@@ -97,7 +95,7 @@ public final class ModelEntropyOptimizer {
     var t1 = System.currentTimeMillis();
     LOGGER.trace(
         "Optimization took {} ms with {} iterations for {} normals, getting a max. Entropy of {}. Resulting in {} us/normal",
-        t1 - t0, ic + 1, normals.size(), maxEntropy, (t1 - t0)*1000L / (long) normals.size());
+        t1 - t0, ic + 1, normals.size(), maxEntropy, (t1 - t0) * 1000L / (long) normals.size());
     return maxEntropyViewVector.mul(options.zoomOutFactor);
   }
 
@@ -128,6 +126,9 @@ public final class ModelEntropyOptimizer {
       case RELATIVE_TO_TOTAL_AREA -> {
         return ModelEntropyOptimizer.calculateEntropyRelativeToTotalArea(normals, viewVector);
       }
+      case RELATIVE_TO_TOTAL_AREA_WEIGHTED -> {
+        return ModelEntropyOptimizer.calculateEntropyRelativeToTotalAreaWeighted(normals, viewVector, options);
+      }
       case RELATIVE_TO_PROJECTED_AREA -> {
         return ModelEntropyOptimizer.calculateEntropyRelativeToProjectedArea(normals, viewVector);
       }
@@ -149,9 +150,7 @@ public final class ModelEntropyOptimizer {
   }
 
   /**
-   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
-   * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
-   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
    *
    * @param normals    List of normals of the model.
    * @param viewVector View vector.
@@ -173,10 +172,9 @@ public final class ModelEntropyOptimizer {
     var entropy = -result;
     return entropy;
   }
+
   /**
-   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
-   * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
-   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
    *
    * @param normals    List of normals of the model.
    * @param viewVector View vector.
@@ -203,15 +201,29 @@ public final class ModelEntropyOptimizer {
   }
 
   /**
-   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a
-   * href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google
-   * Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
    *
    * @param normals    List of normals of the model.
    * @param viewVector View vector.
    * @return Entropy of the model for the given view vector.
    */
+  private static float calculateEntropyRelativeToTotalAreaWeighted(List<Vector3f> normals, Vector3f viewVector, OptimizerOptions opts) {
+
+    var weightedNormals = new ArrayList<Vector3f>(normals.size());
+    normals.stream().parallel().forEach(
+        n -> {
+          if (n.y > 0) {
+            weightedNormals.add(new Vector3f(n.x, n.y * opts.yPosWeight, n.z));
+          } else {
+            weightedNormals.add(new Vector3f(n.x, n.y * opts.yNegWeight, n.z));
+          }
+        }
+    );
+    return calculateEntropyRelativeToTotalArea(weightedNormals,viewVector);
+  }
+
   private static float calculateEntropyRelativeToTotalArea(List<Vector3f> normals, Vector3f viewVector) {
+
     var areas = new float[normals.size()];
     var projected = new float[normals.size()];
     var totalArea = 0f;
@@ -238,7 +250,6 @@ public final class ModelEntropyOptimizer {
 
     return -entropy;
   }
-
 
 
   /**
