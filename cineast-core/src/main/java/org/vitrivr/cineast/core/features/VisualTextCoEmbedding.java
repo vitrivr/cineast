@@ -217,6 +217,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
+
   private float[] embedText(String text) {
     initializeTextEmbedding();
 
@@ -242,65 +243,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  private float[] embedMostRepresentativeImages(List<BufferedImage> images, ViewpointStrategy viewpointStrategy) {
-
-    var retVal = new float[EMBEDDING_SIZE];
-
-    float[] finalRetVal = retVal;
-    switch (viewpointStrategy) {
-      case MULTI_IMAGE_KMEANS -> {
-        var vectors = new ArrayList<FloatVectorImpl>();
-        for (BufferedImage image : images) {
-          float[] embeddingArray = embedImage(image);
-          vectors.add(new FloatVectorImpl(embeddingArray));
-        }
-        var kmeans = KMeansPP.bestOfkMeansPP(vectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, -1f, 5);
-        // Find the index of thr cluster with the most elements
-        int maxIndex = 0;
-        for (var ic = 0; ic < kmeans.getPoints().size(); ++ic) {
-          if (kmeans.getPoints().get(ic).size() > kmeans.getPoints().get(maxIndex).size()) {
-            maxIndex = ic;
-          }
-          if (kmeans.getPoints().get(ic).size() == kmeans.getPoints().get(maxIndex).size()) {
-            if (kmeans.getDistance(ic) < kmeans.getDistance(maxIndex)) {
-              maxIndex = ic;
-            }
-          }
-        }
-        ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
-        retVal = this.normalize(retVal);
-        return retVal;
-      }
-      case MULTI_IMAGE_PROJECTEDMEAN -> {
-        var vectorsMean = new float[EMBEDDING_SIZE];
-        for (BufferedImage image : images) {
-          float[] embeddedVectors = this.embedImage(image);
-          for (var ic = 0; ic < embeddedVectors.length; ++ic){
-            vectorsMean[ic] += embeddedVectors[ic]/images.size();
-          }
-        }
-        retVal = this.normalize(vectorsMean);
-        var check=0f;
-        for (float v : retVal) {
-          check += Math.pow(v, 2);
-        }
-        return retVal;
-      }
-    }
-    return retVal;
-  }
-
-  private float[] normalize(float[] vector){
-    var length = 0f;
-    for (float v : vector) {
-      length += Math.pow(v, 2);
-    }
-    length = (float) Math.sqrt(length);
-    for (var ic = 0; ic < vector.length; ++ic){
-      vector[ic] /= length;
-    }
-    return vector;
-  }
 
   private float[] embedImage(BufferedImage image) {
     initializeVisualEmbedding();
@@ -328,13 +270,98 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     }
   }
 
-  List<MultiImage> frameFromImages(List<BufferedImage> images) {
+  /**
+   * Helper to convert images to frames
+   * @param images are converted to frames
+   * @return List<MultiImage> for video embedding
+   */
+  private List<MultiImage> framesFromImages(List<BufferedImage> images) {
     var frames = new ArrayList<MultiImage>();
     for (BufferedImage image : images) {
       var factory = CachedDataFactory.getDefault();
       frames.add(factory.newInMemoryMultiImage(image));
     }
     return frames;
+  }
+
+  /**
+   * This method takes a list of images and determines, based on {@link ViewpointStrategy}, the embed vector
+   * which describes the images most precise.
+   *
+   * @param images the list of Images to embed
+   * @param viewpointStrategy the strategy to find the vector
+   * @return
+   */
+  private float[] embedMostRepresentativeImages(List<BufferedImage> images, ViewpointStrategy viewpointStrategy) {
+
+    var retVal = new float[EMBEDDING_SIZE];
+
+
+    switch (viewpointStrategy) {
+
+      case MULTI_IMAGE_KMEANS -> {
+        var floatvectors = new ArrayList<FloatVectorImpl>();
+        var vectors = embedMultipleImages(images);
+        vectors.forEach(v -> floatvectors.add(new FloatVectorImpl(v)));
+
+        var kmeans = KMeansPP.bestOfkMeansPP(floatvectors, new FloatVectorImpl(new float[EMBEDDING_SIZE]), 3, -1f, 5);
+        // Find the index of thr cluster with the most elements
+        int maxIndex = 0;
+        for (var ic = 0; ic < kmeans.getPoints().size(); ++ic) {
+          if (kmeans.getPoints().get(ic).size() > kmeans.getPoints().get(maxIndex).size()) {
+            maxIndex = ic;
+          }
+          if (kmeans.getPoints().get(ic).size() == kmeans.getPoints().get(maxIndex).size()) {
+            if (kmeans.getDistance(ic) < kmeans.getDistance(maxIndex)) {
+              maxIndex = ic;
+            }
+          }
+        }
+        ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
+        return this.normalize(retVal);
+      }
+      case MULTI_IMAGE_PROJECTEDMEAN -> {
+        var vectors = embedMultipleImages(images);
+        var vectorsMean = new float[EMBEDDING_SIZE];
+        for ( var vector : vectors) {
+          for (var ic = 0; ic < vector.length; ++ic){
+            vectorsMean[ic] += vector[ic]/vectors.size();
+          }
+        }
+        return this.normalize(vectorsMean);
+      }
+      case MULTI_IMAGE_FRAME -> {
+        var frames = framesFromImages(images);
+        return embedVideo(frames);
+      }
+    }
+    return retVal;
+  }
+
+  private List<float[]> embedMultipleImages(List<BufferedImage> images){
+    var vectors = new ArrayList<float[]>();
+    for (BufferedImage image : images) {
+      float[] embeddingArray = embedImage(image);
+      vectors.add(embeddingArray);
+    }
+    return vectors;
+  }
+
+  /**
+   * Normalizes a float vector to size 1
+   * @param vector
+   * @return
+   */
+  private float[] normalize(float[] vector){
+    var length = 0f;
+    for (float v : vector) {
+      length += Math.pow(v, 2);
+    }
+    length = (float) Math.sqrt(length);
+    for (var ic = 0; ic < vector.length; ++ic){
+      vector[ic] /= length;
+    }
+    return vector;
   }
 
   /**
@@ -362,7 +389,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
     }};
-    var viewpointStrategy = ViewpointStrategy.VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED;
+    // Select the strategy which will be used for model embedding
+    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_FRAME;
     // Get camera viewpoint for chhosen strategy
     var camerapositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
