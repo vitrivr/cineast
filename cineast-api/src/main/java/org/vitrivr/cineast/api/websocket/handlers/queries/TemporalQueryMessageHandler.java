@@ -167,6 +167,7 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                 sentObjectIds.addAll(limitedObjectIds);
                 LOGGER.trace("Queueing finalization and result submission for last stage, container {}", lambdaFinalContainerIdx);
                 futures.addAll(this.finalizeAndSubmitResults(session, uuid, category, lambdaFinalContainerIdx, limitedResults));
+                rawCategoryResults.add(new Pair<>(category, limitedResults));
                 List<Thread> _threads = this.submitMetadata(session, uuid, limitedSegmentIds, limitedObjectIds, segmentIdsForWhichMetadataIsFetched, objectIdsForWhichMetadataIsFetched, message.metadataAccessSpec());
                 metadataRetrievalThreads.addAll(_threads);
               }
@@ -270,7 +271,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.forEach(CompletableFuture::join);
     }
 
+    QueryResultCache.cacheResult(qconf.getQueryId(), rawCategoryResults);
     finish(metadataRetrievalThreads, cleanupThreads);
+
   }
 
   private void finish(List<Thread> metadataRetrievalThreads, List<Thread> cleanupThreads) throws InterruptedException {
