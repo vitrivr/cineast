@@ -51,6 +51,7 @@ public class QueryResultCache {
     }
 
     public static List<QueryCacheInfo> getQueryCacheInfoList() {
+        queryResultCache.cleanUp(); //trigger cleanup to avoid listing element that might not be available anymore shortly
         return cacheInfoMap.values().stream().toList();
     }
 
