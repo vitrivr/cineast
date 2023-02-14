@@ -7,6 +7,8 @@ import org.vitrivr.cineast.standalone.util.CLI;
 
 public class Main {
 
+  public static final String DEFAULT_PATH = "cineast.json";
+
   /**
    * Entrypoint for Cineast API application.
    *
@@ -15,8 +17,11 @@ public class Main {
   public static void main(String[] args) {
     /* (Force) load application config. */
     if (args.length == 0) {
-      System.out.println("No config path given, loading default config cineast.json");
-      Config.loadConfig("cineast.json");
+      System.out.println("No config path given, loading default config '" + DEFAULT_PATH + "'");
+      if (Config.loadConfig(DEFAULT_PATH) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + DEFAULT_PATH + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
     }
 
     /* (Force) load application config. */
