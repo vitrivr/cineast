@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 public class Engine {
 
   public static final int TARGET_UPS = 30;
-
   private final Window window;
   private boolean running;
   private final Render render;

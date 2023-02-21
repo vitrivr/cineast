@@ -17,7 +17,7 @@ public class GlMaterial {
   public GlMaterial(Material material) {
     this.meshes = new ArrayList<>();
     this.material = material;
-    this.material.getMeshes().stream().forEach(mesh -> this.meshes.add(new GlMesh(mesh)));
+    this.material.getMeshes().forEach(mesh -> this.meshes.add(new GlMesh(mesh)));
 
     this.texture = new GlTexture(this.material.getTexture());
   }
@@ -28,7 +28,7 @@ public class GlMaterial {
    * Does not affect the underlying material
    */
   public void cleanup() {
-    this.meshes.stream().forEach(GlMesh::cleanup);
+    this.meshes.forEach(GlMesh::cleanup);
     this.meshes.clear();
     this.texture.cleanup();
     LOGGER.trace("Cleaned-up GlMaterial}");

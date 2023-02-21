@@ -40,6 +40,7 @@ public class RenderWorker extends Worker<RenderJob> {
     return renderJobQueue;
   }
 
+
   public void run() {
     Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 17));
     this.renderer = new LWJGLOffscreenRenderer();
@@ -88,7 +89,6 @@ public class RenderWorker extends Worker<RenderJob> {
     return "Job failed";
   }
 
-
   @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)
   public void setWindowOptions(WindowOptions opt) {
     LOGGER.trace("INIT_WINDOW RenderWorker");
@@ -97,13 +97,12 @@ public class RenderWorker extends Worker<RenderJob> {
     renderer.setWindowOptions(opt);
     renderer.startEngine();
   }
+
   @StateEnter(state = RenderStates.INIT_RENDERER, data = RenderData.RENDER_OPTIONS)
   public void setRendererOptions(RenderOptions opt) {
     LOGGER.trace("INIT_RENDERER RenderWorker");
     this.renderer.setRenderOptions(opt);
   }
-
-
 
   @StateEnter(state = RenderStates.IDLE)
   public void idle() {

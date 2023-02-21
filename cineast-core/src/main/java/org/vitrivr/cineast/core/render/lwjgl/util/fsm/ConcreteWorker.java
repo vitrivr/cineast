@@ -47,7 +47,7 @@ public class ConcreteWorker extends Worker<ConcreteJob> {
     return "nothing cleaned";
   }
 
-  @StateEnter(state = "Startup")
+  @StateEnter(state = ConreteStates2.TEST)
   public void startup() {
     System.out.println("Startup");
   }

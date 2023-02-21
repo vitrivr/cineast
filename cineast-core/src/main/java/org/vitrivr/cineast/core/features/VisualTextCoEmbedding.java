@@ -483,6 +483,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     return camerapositions;
   }
 
+
   private float[] embedVideo(List<MultiImage> frames) {
     initializeVisualEmbedding();
 
