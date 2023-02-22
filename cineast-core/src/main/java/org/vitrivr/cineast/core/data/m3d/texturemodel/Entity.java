@@ -18,12 +18,12 @@ public class Entity {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Id of entety.
+   * ID of entity.
    */
   private final String id;
 
   /**
-   * Id of associated model.
+   * ID of associated model.
    */
   private final String modelId;
 
@@ -54,8 +54,8 @@ public class Entity {
    * Defines an associated model and an id.
    * With associated model one is able to add new transformations to the Scene {@link org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene#addEntity(Entity)}.
    *
-   * @param id Id of entity.
-   * @param modelId Id of associated model.
+   * @param id ID of entity.
+   * @param modelId ID of associated model.
    */
   public Entity(String id, String modelId) {
     this.id = id;
@@ -69,7 +69,7 @@ public class Entity {
 
   /**
    * Returns the id of the entity.
-   * @return Id of entity.
+   * @return ID of entity.
    */
   public String getId() {
     return this.id;
@@ -77,7 +77,7 @@ public class Entity {
 
   /**
    * Returns the id of the associated model.
-   * @return Id of associated model.
+   * @return ID of associated model.
    */
   public String getModelId() {
     return this.modelId;
@@ -121,6 +121,7 @@ public class Entity {
    * @param y Y coordinate of position.
    * @param z Z coordinate of position.
    */
+  @SuppressWarnings("unused")
   public void setPosition(float x, float y, float z) {
     this.position.x = x;
     this.position.y = y;

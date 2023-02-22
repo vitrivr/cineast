@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.nio.ByteBuffer;
-import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
-import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
 
 /**
  * The GlTexture class is a wrapper for the {@link Texture} class.
@@ -31,7 +30,7 @@ public class GlTexture {
    * Creates a new GlTexture from a texture.
    * <ol>
    *   <li>Load the texture from the file</li>
-   *   <li>Alocate the texture buffer</li>
+   *   <li>Allocate the texture buffer</li>
    *   <li>Load the texture into the buffer</li>
    * </ol>
    * @param texture The texture that is wrapped by this gl texture.

@@ -118,8 +118,8 @@ public class GlMesh {
   }
 
   /**
-   * Returns the Id of the wrapped generic mesh.
-   * @return The Id of the wrapped generic mesh.
+   * Returns the ID of the wrapped generic mesh.
+   * @return The ID of the wrapped generic mesh.
    */
   public String getId() {
     return this.mesh.getId();

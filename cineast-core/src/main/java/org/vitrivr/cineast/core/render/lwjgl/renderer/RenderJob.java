@@ -49,7 +49,7 @@ public class RenderJob extends Job {
   public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, LinkedList<Vector3f> cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
     // Create data bag for the job.
     var jobData = new Variant();
-    jobData.set(RenderData.WINDOWS_OPTIONS, windowOptions)
+    jobData.<WindowOptions>set(RenderData.WINDOWS_OPTIONS, windowOptions)
         .set(RenderData.RENDER_OPTIONS, renderOptions)
         .set(RenderData.MODEL, model);
 

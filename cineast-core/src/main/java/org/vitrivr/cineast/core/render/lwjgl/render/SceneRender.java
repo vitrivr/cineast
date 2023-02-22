@@ -9,9 +9,9 @@ import org.vitrivr.cineast.core.render.lwjgl.render.ShaderProgram.ShaderModuleDa
 /**
  * SceneRender
  * <ul>
- * <li> Renders the scene</li>
+ * <li>Renders the scene</li>
  * <li>Loads the scene shader</li>
- * <li> Creates the uniforms </li>
+ * <li>Creates the uniforms </li>
  * <li>Binds the  Model</li>
  * <li>Binds the Texture</li>
  * </ul>
@@ -86,7 +86,7 @@ public class SceneRender {
    *   <li>Binds view matrix</li>
    *   <li>Binds texture sampler</li>
    * </ul>
-   *   Further iterate over all models in the scene
+   *   Further, iterate over all models in the scene
  *   <ul>
  *     <li>Iterate over all materials in the model</li>
  *     <li>Sets texture or color function</li>
@@ -111,9 +111,9 @@ public class SceneRender {
     var textures = scene.getTextureCache();
 
     for (var model : models) {
-      var enteties = model.getEntities();
+      var entities = model.getEntities();
       for (var material : model.getMaterials()) {
-        GlTexture texture = null;
+        GlTexture texture;
         // Either draw texture or use color function
         if (opt.showTextures) {
           this.uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());
@@ -126,7 +126,7 @@ public class SceneRender {
         texture.bind();
         for (var mesh : material.getMeshes()) {
           GL30.glBindVertexArray(mesh.getVaoId());
-          for (var entity : enteties) {
+          for (var entity : entities) {
             this.uniformsMap.setUniform("modelMatrix", entity.getModelMatrix());
             GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getNumVertices(), GL30.GL_UNSIGNED_INT, 0);
           }

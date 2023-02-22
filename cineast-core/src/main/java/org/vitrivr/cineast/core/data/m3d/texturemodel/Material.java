@@ -89,7 +89,7 @@ public class Material {
   }
 
   /**
-   * @return a unmodifiable list of meshes
+   * @return an unmodifiable list of meshes
    */
   public List<Mesh> getMeshes() {
     return Collections.unmodifiableList(this.meshes);

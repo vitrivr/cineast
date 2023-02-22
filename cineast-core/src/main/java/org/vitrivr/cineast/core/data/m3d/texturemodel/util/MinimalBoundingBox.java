@@ -33,7 +33,9 @@ public class MinimalBoundingBox {
 
   /**
    * Norm to which the bounding box is scaled. Usually 1.
+   * TODO: include in scaling factor to norm calculation.
    */
+  @SuppressWarnings("unused")
   private final float norm = 1f;
 
   /**
@@ -66,6 +68,7 @@ public class MinimalBoundingBox {
    *
    * @param positions List of vertices.
    */
+  @SuppressWarnings("unused")
   public MinimalBoundingBox(List<Vector3f> positions) {
     this.update(positions);
   }
@@ -73,6 +76,7 @@ public class MinimalBoundingBox {
   /**
    * Crate list of vertices from bounding box. List contains the maximum and minimum vector of the bounding box.
    * TODO: A better approach would be to return the 8 vertices of the bounding box. But needs to be checked before.
+   *
    * @return List of vertices.
    */
   public List<Vector3f> toList() {
@@ -128,9 +132,7 @@ public class MinimalBoundingBox {
   }
 
   /**
-   * Helper method to add data to the bounding box and recalculate the bounding boxes values.
-   * Since the calculation of the bounding box is iterative, the calculation is split into several steps.
-   * The steps are:
+   * Helper method to add data to the bounding box and recalculate the bounding boxes values. Since the calculation of the bounding box is iterative, the calculation is split into several steps. The steps are:
    * <ul>
    * <li>1. Update the center of mass.</li>
    * <li>2. Update the scaling factor to norm.</li>
@@ -148,8 +150,8 @@ public class MinimalBoundingBox {
   }
 
   /**
-   * Checks if the bounding box is valid.
-   * A bounding box is valid if each component of the maximum vector is greater than the corresponding component of the minimum vector.
+   * Checks if the bounding box is valid. A bounding box is valid if each component of the maximum vector is greater than the corresponding component of the minimum vector.
+   *
    * @return True if the bounding box is valid, false otherwise.
    */
   private boolean isValidBoundingBox() {
@@ -157,24 +159,21 @@ public class MinimalBoundingBox {
   }
 
   /**
-   * Update the center of mass.
-   * The center of mass is the middle point of the bounding box.
+   * Update the center of mass. The center of mass is the middle point of the bounding box.
    */
   private void updateCom() {
     this.com.set(new Vector3f((this.vMax.x + this.vMin.x) / 2f, (this.vMax.y + this.vMin.y) / 2f, (this.vMax.z + this.vMin.z) / 2f));
   }
 
   /**
-   * Update the translation to norm.
-   * The translation is the vector to translate com of the bounding box to the origin. (0, 0, 0) for no translation.
+   * Update the translation to norm. The translation is the vector to translate com of the bounding box to the origin. (0, 0, 0) for no translation.
    */
   private void updateTranslationToNorm() {
     this.translationToNorm.set(new Vector3f(com.mul(this.scalingFactorToNorm)));
   }
 
   /**
-   * Update the scaling factor to norm.
-   * The scaling factor is the factor to scale longest vector in the bounding box to the norm. 1 for no scaling.
+   * Update the scaling factor to norm. The scaling factor is the factor to scale the longest vector in the bounding box to the norm. 1 for no scaling.
    */
   private void updateScalingFactorToNorm() {
     var farthest = new Vector3f(0, 0, 0);
@@ -189,6 +188,7 @@ public class MinimalBoundingBox {
 
   /**
    * Update the bounding box with a new vectors
+   *
    * @return True if the bounding box has changed, false otherwise.
    */
   private boolean updateBounds(List<Vector3f> positions) {
@@ -201,6 +201,7 @@ public class MinimalBoundingBox {
 
   /**
    * Update the bounding box with a new vector
+   *
    * @return True if the bounding box has changed, false otherwise.
    */
   private boolean updateBounds(Vector3f vec) {

@@ -21,7 +21,7 @@ public class Model implements IModel {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Id of the model.
+   * ID of the model.
    */
   private final String id;
 
@@ -46,7 +46,7 @@ public class Model implements IModel {
   /**
    * Constructor for Model.
    *
-   * @param id Id of the model.
+   * @param id ID of the model.
    * @param materials List of {@link Material} objects that define the appearance of the model.
    */
   public Model(String id, List<Material> materials) {
@@ -117,6 +117,7 @@ public class Model implements IModel {
    * Replaces the texture of all materials with a solid color.
    * @param color Color to be used.
    */
+  @Override
   public void replaceTextureWithColor(Vector4f color){
     for (var material:this.materials) {
       material.setTexture(new Texture());

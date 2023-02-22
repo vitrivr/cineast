@@ -22,13 +22,13 @@ public class Mesh {
   private final int numVertices;
 
   /**
-   * Id of the mesh
+   * ID of the mesh
    */
   private String id;
 
   /**
    * List of all vertices in the mesh
-   * The positions are flatterned vectors
+   * The positions are flattened vectors
    * positions[0] = x
    * positions[1] = y
    * positions[2] = z
@@ -62,13 +62,13 @@ public class Mesh {
    * List of all vertices normals in the mesh
    * TODO: not used yet, will be used for vertex shading
    */
-  @SuppressWarnings("FieldCanBeLocal")
+  @SuppressWarnings("all")
   private final float[] normals;
 
   /**
    * MinimalBoundingBox that encloses the mesh
    */
-  private final MinimalBoundingBox minimalBountingBox;
+  private final MinimalBoundingBox minimalBoundingBox;
 
   /**
    * Constructor for Mesh.
@@ -85,7 +85,7 @@ public class Mesh {
    * @param idx List of all vertices ids.
    */
   public Mesh(float[] positions, float[] normals, float[] textureCoordinates, int[] idx) {
-    //Stors all the data
+    //Stores all the data
     this.positions = positions;
     this.idx = idx;
     this.numVertices = idx.length;
@@ -96,7 +96,7 @@ public class Mesh {
     this.textureCoords = textureCoordinates;
 
     // Calculate face normals
-    // ic incerements by 3 because a face is defined by 3 vertices
+    // ic increments by 3 because a face is defined by 3 vertices
     for (var ic = 0; ic < this.idx.length; ic += 3) {
       if (normals == null) {
         // Add zero vector if there are no vertex normals
@@ -110,11 +110,11 @@ public class Mesh {
         var vn1 = new Vector3f(normals[idx[ic] * 3], normals[idx[ic] * 3 + 1], normals[idx[ic] * 3 + 2]);
         var vn2 = new Vector3f(normals[idx[ic + 1] * 3], normals[idx[ic + 1] * 3 + 1], normals[idx[ic + 1] * 3 + 2]);
         var vn3 = new Vector3f(normals[idx[ic + 2] * 3], normals[idx[ic + 2] * 3 + 1], normals[idx[ic + 2] * 3 + 2]);
-        // Instanciate the face normal
+        // Instance the face normal
         var fn = new Vector3f(0, 0, 0);
         // Calculate the direction of the face normal by averaging the three vertex normals
         fn.add(vn1).add(vn2).add(vn3).div(3).normalize();
-        // Instanciate the face area
+        // Instance the face area
         var fa = new Vector3f(0, 0, 0);
         // Calculate the area of the face by calculating the cross product of the two edges and dividing by 2
         v2.sub(v1).cross(v3.sub(v1),fa);
@@ -124,7 +124,7 @@ public class Mesh {
       }
     }
     // Calculate the minimal bounding box
-    this.minimalBountingBox = new MinimalBoundingBox(this.positions);
+    this.minimalBoundingBox = new MinimalBoundingBox(this.positions);
   }
 
   /**
@@ -171,7 +171,7 @@ public class Mesh {
    * @return the MinimalBoundingBox which contains the scaling factor to norm and the translation to origin (0,0,0)
    */
   public MinimalBoundingBox getMinimalBoundingBox() {
-    return this.minimalBountingBox;
+    return this.minimalBoundingBox;
   }
 
   /**
@@ -180,7 +180,7 @@ public class Mesh {
    */
   @Deprecated
   public float getNormalizedScalingFactor() {
-    return this.minimalBountingBox.getScalingFactorToNorm();
+    return this.minimalBoundingBox.getScalingFactorToNorm();
   }
 
   /**
@@ -189,7 +189,7 @@ public class Mesh {
    */
   @Deprecated
   public Vector3f getNormalizedPosition() {
-    return this.minimalBountingBox.getTranslationToNorm();
+    return this.minimalBoundingBox.getTranslationToNorm();
   }
 
   /**
@@ -213,7 +213,7 @@ public class Mesh {
    */
   public void close() {
     this.facenormals.clear();
-    this.minimalBountingBox.close();
+    this.minimalBoundingBox.close();
     this.id = null;
     LOGGER.trace("Closing Mesh");
   }

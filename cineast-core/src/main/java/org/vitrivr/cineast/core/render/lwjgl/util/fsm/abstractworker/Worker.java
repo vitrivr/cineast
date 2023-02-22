@@ -4,15 +4,32 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.BlockingDeque;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachine;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller.FiniteStateMachineException;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Graph;
 
+/**
+ * Worker is the abstract class for the worker thread.
+ * <b>The Abstract Worker provides:</b>
+ * <ul>
+ *   <li>Loading the {@link Graph} from concrete worker implementation</li>
+ *   <li>Creating a finite state machine {@link FiniteStateMachine}</li>
+ *   <li>Waiting on a {@link Job}</li>
+ *   <li>Performing a {@link Job}, by perform {@link Action} and walk with the {@link FiniteStateMachine} through the {@link Graph}</li>
+ *   <li>On each transition a {@link StateProviderAnnotationParser} to invoke the marked methods
+ *   (with {@link StateEnter}, {@link StateLeave}, {@link StateTransition}) from the concrete worker implementation</li>
+ *   <li>Handling exceptions {@link StateProviderException} or {@link FiniteStateMachine}</li>
+ * <p>
+ * This abstract worker has to be extended by a <b>concrete worker</b> implementation.
+ * <p>
+ * The concrete worker has to implement all methods to do the job
+ * If a method should be invoked on a state transition, the method has to be annotated with {@link StateEnter}, {@link StateLeave}, {@link StateTransition}
+ * The graph has to describe all legal transitions.
+ * @param <T> The type of the job
+ */
 @StateProvider
 public abstract class Worker<T extends Job> implements Runnable {
-
 
   private static final Logger LOGGER = LogManager.getLogger();
   private boolean shutdown;

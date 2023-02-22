@@ -63,7 +63,7 @@ public final class ModelLoader {
    *          </li>Ignore all point and line meshes when you process assimp's output</li>
    *        </ul>
    *   </li>
-   *   <li><b>aiProcess_FixInfacingNormals:</b>
+   *   <li><b>aiProcess_FixInf acingNormals:</b>
    *        This step tries to determine which meshes have normal vectors that are facing inwards and inverts them.
    *        The algorithm is simple but effective: the bounding box of all vertices + their normals is compared against
    *        the volume of the bounding box of all vertices without their normals. This works well for most objects, problems might occur with
@@ -71,7 +71,7 @@ public final class ModelLoader {
    *        The step inverts all in-facing normals. Generally it is recommended to enable this step, although the result is not always correct.
    *   </li>
    *   <li><b>aiProcess_CalcTangentSpace:</b>
-   *        Calculates the tangents and bitangents for the imported meshes
+   *        Calculates the tangents and bi tangents for the imported meshes
    *        Does nothing if a mesh does not have normals.
    *        You might want this post processing step to be executed if you plan to use tangent space calculations such as normal mapping applied to the meshes.
    *        There's an importer property, AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE, which allows you to specify a maximum smoothing angle for the algorithm.
@@ -80,7 +80,7 @@ public final class ModelLoader {
    *   <li><b>aiProcess_LimitBoneWeights:</b>
    *    Limits the number of bones simultaneously affecting a single vertex to a maximum value.
    *    If any vertex is affected by more than the maximum number of bones,
-   *    the least important vertex weights are removed and the remaining vertex weights are renormalized so that the weights still sum up to 1.
+   *    the least important vertex weights are removed and the remaining vertex weights are normalized so that the weights still sum up to 1.
    *    The default bone weight limit is 4 (defined as AI_LBW_MAX_WEIGHTS in config.h),
    *    but you can use the AI_CONFIG_PP_LBW_MAX_WEIGHTS importer property to supply your own limit to the post processing step.
    *    If you intend to perform the skinning in hardware, this post processing step might be of interest to you.
@@ -95,7 +95,7 @@ public final class ModelLoader {
    *    Animations are removed during this step
    *    This step is intended for applications without a scenegraph.
    *    The step CAN cause some problems: if e.g. a mesh of the asset contains normals and another, using the same material index,
-   *    does not, they will be brought together, but the first meshes's part of the normal list is zeroed. However, these artifacts are rare.
+   *    does not, they will be brought together, but the first mesh's part of the normal list is zeroed. However, these artifacts are rare.
    *   </li>
    * </ul>
    *
@@ -124,6 +124,7 @@ public final class ModelLoader {
    * @param flags     Flags for the model loading process.
    * @return Model object.
    */
+  @SuppressWarnings("NullAway")
   public static Model loadModel(String modelId, String modelPath, int flags) {
     LOGGER.trace("Try loading file {} from {}", modelId, modelPath);
 
@@ -135,7 +136,7 @@ public final class ModelLoader {
 
     LOGGER.trace("Loading aiScene");
 
-    // DO NOT USE AUTOCLOSEABLE TRY CATCH FOR AISCENE!!! THIS WILL CAUSE A FATAL ERROR ON NTH (199) ITERATION!
+    // DO NOT USE AUTOCLOSEABLE TRY CATCH FOR AI-SCENE!!! THIS WILL CAUSE A FATAL ERROR ON NTH (199) ITERATION!
     // RAPHAEL WALTENSPUEL 2023-01-20
     var aiScene = aiImportFile(modelPath, flags);
     if (aiScene == null) {
@@ -145,6 +146,7 @@ public final class ModelLoader {
     var numMaterials = aiScene.mNumMaterials();
     List<Material> materialList = new ArrayList<>();
     for (var ic = 0; ic < numMaterials; ic++) {
+      //TODO: Warning
       var aiMaterial = AIMaterial.create(aiScene.mMaterials().get(ic));
       LOGGER.trace("Try processing material {}", ic);
       materialList.add(ModelLoader.processMaterial(aiMaterial, modelDir));
@@ -155,6 +157,7 @@ public final class ModelLoader {
     var defaultMaterial = new Material();
     for (var ic = 0; ic < numMeshes; ic++) {
       LOGGER.trace("Try create AI Mesh {}", ic);
+      //TODO: Warning
       var aiMesh = AIMesh.create(aiMeshes.get(ic));
       var mesh = ModelLoader.processMesh(aiMesh);
       LOGGER.trace("Try get Material idx");
@@ -229,6 +232,7 @@ public final class ModelLoader {
       aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null,
           null, null, null, null, null);
       var texturePath = aiTexturePath.dataString();
+      //TODO: Warning
       if (texturePath != null && texturePath.length() > 0) {
         material.setTexture(new Texture(modelDir + File.separator + new File(texturePath).toPath()));
         material.setDiffuseColor(Material.DEFAULT_COLOR);

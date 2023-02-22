@@ -20,7 +20,7 @@ public interface IModel {
 
   /**
    * Returns the id of the model.
-   * @return Id of the model.
+   * @return ID of the model.
    */
   String getId();
 
@@ -29,6 +29,11 @@ public interface IModel {
    * @return List of {@link Material} objects.
    */
   List<Material> getMaterials();
+
+  /**
+   * Replace the texture of this model with a solid color (r,g,b,opacity).
+   */
+  @SuppressWarnings("unused")
   void replaceTextureWithColor(Vector4f color);
 
   /**

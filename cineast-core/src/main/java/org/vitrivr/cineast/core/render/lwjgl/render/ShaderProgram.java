@@ -84,7 +84,7 @@ public class ShaderProgram {
     GL30.glCompileShader(shaderId);
 
     if (GL30.glGetShaderi(shaderId, GL30.GL_COMPILE_STATUS) == 0) {
-      throw new RuntimeException("Error Comiling Shadert");
+      throw new RuntimeException("Error Compiling Shader");
     }
     GL30.glAttachShader(this.programId, shaderId);
     return shaderId;
@@ -107,7 +107,9 @@ public class ShaderProgram {
   /**
    * Validates the program
    * Throws an exception if the program is not valid
+   * TODO: add to link, has to be checked
    */
+  @SuppressWarnings("unused")
   public void validate() {
     GL30.glValidateProgram(this.programId);
     if (GL30.glGetProgrami(this.programId, GL30.GL_VALIDATE_STATUS) == 0) {

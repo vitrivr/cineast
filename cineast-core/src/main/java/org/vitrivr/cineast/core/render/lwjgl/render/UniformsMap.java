@@ -7,18 +7,15 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 /**
- * Holds a hashmap for used uniforms
- * Uniforms are global variables in the shader
- * e.g. projectionMatrix, modelMatrix, viewMatrix, txtSampler, material.diffuse
+ * Holds a hashmap for used uniforms are global variables in the shader e.g. projectionMatrix, modelMatrix, viewMatrix, txtSampler, material.diffuse
+ *
  * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.vert"</a>
  * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.frag"</a>
  */
 public class UniformsMap {
 
   /**
-   * HashMap for the uniforms
-   * Key: Uniform name
-   * Value: Uniform location in the shader
+   * HashMap for the uniforms Key: Uniform name Value: Uniform location in the shader
    */
   private final HashMap<String, Integer> uniforms;
   /**
@@ -28,6 +25,7 @@ public class UniformsMap {
 
   /**
    * Instantiate a new UniformsMap
+   *
    * @param programId Program id of the shader {@link ShaderProgram#getProgramId}
    */
   public UniformsMap(int programId) {
@@ -37,6 +35,7 @@ public class UniformsMap {
 
   /**
    * Creates a new uniform
+   *
    * @param uniformName Name of the uniform
    */
   public void createUniform(String uniformName) {
@@ -49,8 +48,9 @@ public class UniformsMap {
 
   /**
    * Sets the value of a uniform to gl context
+   *
    * @param uniformName Name of the uniform
-   * @param value Value of the uniform
+   * @param value       Value of the uniform
    */
   public void setUniform(String uniformName, int value) {
     GL30.glUniform1i(this.getUniformLocation(uniformName), value);
@@ -58,6 +58,7 @@ public class UniformsMap {
 
   /**
    * Returns the location of the uniform from the hashmap
+   *
    * @param uniformName name of the uniform
    * @return location of the uniform
    */
@@ -71,8 +72,9 @@ public class UniformsMap {
 
   /**
    * Sets the value 4 float vector of a uniform to gl context
+   *
    * @param uniformName Name of the uniform
-   * @param value Value of the uniform
+   * @param value       Value of the uniform
    */
   public void setUniform(String uniformName, Vector4f value) {
     GL30.glUniform4f(this.getUniformLocation(uniformName), value.x, value.y, value.z, value.w);
@@ -80,8 +82,9 @@ public class UniformsMap {
 
   /**
    * Sets the value 4*4 float matrix of a uniform to gl context
+   *
    * @param uniformName Name of the uniform
-   * @param value Value of the uniform
+   * @param value       Value of the uniform
    */
   public void setUniform(String uniformName, Matrix4f value) {
     try (var memoryStack = MemoryStack.stackPush()) {
@@ -89,7 +92,7 @@ public class UniformsMap {
       if (location == null) {
         throw new RuntimeException("Could not find uniform:" + uniformName);
       }
-      GL30.glUniformMatrix4fv(location.intValue(), false, value.get(memoryStack.mallocFloat(16)));
+      GL30.glUniformMatrix4fv(location, false, value.get(memoryStack.mallocFloat(16)));
     }
   }
 

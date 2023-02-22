@@ -11,7 +11,15 @@ import org.lwjgl.opengl.GL30;
  */
 public class Render {
 
+  /**
+   * Instance of the scene render
+   * @see SceneRender
+   */
   private final SceneRender sceneRender;
+  /**
+   * Instance of the render options
+   * @see RenderOptions
+   */
   private RenderOptions options;
 
   /**
