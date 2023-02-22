@@ -9,15 +9,41 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.util.MinimalBoundingBox;
 
+/**
+ * The Material contains all meshes and the texture that are drawn with on the meshes Further it contains the diffuse color of the material
+ */
 public class Material {
+
   private static final Logger LOGGER = LogManager.getLogger();
+
+  /**
+   * List of {@link Mesh} objects that define the appearance of the model.
+   */
   private final List<Mesh> meshes;
+
+  /**
+   * Texture that drawn on all meshes
+   */
   private Texture texture;
+
+  /**
+   * DEFAULT_COLOR is black and 100% opaque
+   */
   public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+  /**
+   * diffuseColor is the color that is drawn on the meshes when no texture is present
+   */
   private Vector4f diffuseColor;
 
+  /**
+   * Empty material that can be used as a placeholder.
+   */
   public static final Material EMPTY = new Material();
 
+  /**
+   * Constructor for Material.
+   */
   public Material() {
     this.meshes = new ArrayList<>();
     this.texture = new Texture();
@@ -25,10 +51,9 @@ public class Material {
   }
 
   /**
-   * @return A MinimalBoundingBox which enclose all MinimalBoundingBoxes
-   * from containing meshes
+   * @return A MinimalBoundingBox which enclose all MinimalBoundingBoxes from containing meshes
    */
-  public MinimalBoundingBox getMinimalBoundingBox(){
+  public MinimalBoundingBox getMinimalBoundingBox() {
     var mmb = new MinimalBoundingBox();
     for (var mesh : this.meshes) {
       mmb.merge(mesh.getMinimalBoundingBox());
@@ -63,32 +88,54 @@ public class Material {
     return min;
   }
 
+  /**
+   * @return a unmodifiable list of meshes
+   */
   public List<Mesh> getMeshes() {
     return Collections.unmodifiableList(this.meshes);
   }
 
+  /**
+   * @param mesh adds a mesh to the material
+   */
   public void addMesh(Mesh mesh) {
     this.meshes.add(mesh);
   }
 
+  /**
+   * @return the texture to this material
+   */
   public Texture getTexture() {
     return this.texture;
   }
 
+  /**
+   * @param texture sets the texture to this material
+   */
   public void setTexture(Texture texture) {
     this.texture = texture;
   }
 
+  /**
+   * @return the diffuse color of this material
+   */
   public Vector4f getDiffuseColor() {
     return this.diffuseColor;
   }
 
+  /**
+   * @param diffuseColor sets the diffuse color of this material
+   */
   public void setDiffuseColor(Vector4f diffuseColor) {
     this.diffuseColor = diffuseColor;
   }
 
+  /**
+   * closes all resources the material uses
+   * Calls close on all containing classes
+   */
   public void close() {
-    this.meshes.stream().forEach(Mesh::close);
+    this.meshes.forEach(Mesh::close);
     this.meshes.clear();
     this.texture.close();
     this.texture = null;
