@@ -8,41 +8,77 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
+/**
+ * The GLModel class is a wrapper for the {@link IModel} class.
+ * <ul>
+ * <li>IModel -> GLModel( IModel )</li>
+ * </ul>
+ * <p>
+ * The purpose is to bring the generic IModel in an OpenGl context
+ * {@link IModel} -> {@link GLModel}
+ */
 public class GLModel implements IGlModel {
   private static final Logger LOGGER = LogManager.getLogger();
+
+  /**
+   * The model that is wrapped by this gl model.
+   */
   private final IModel model;
 
+  /**
+   * The contained materials in gl context
+   */
   private final List<GlMaterial> materials;
 
-
+  /**
+   * Creates a new GLModel from a model.
+   *
+   * @param model The model that is wrapped by this gl model.
+   */
   public GLModel(IModel model) {
     this.model = model;
     this.materials = new ArrayList<>();
-    this.model.getMaterials().stream().forEach(material -> this.materials.add(new GlMaterial(material)));
+    this.model.getMaterials().forEach(material -> this.materials.add(new GlMaterial(material)));
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public List<Entity> getEntities() {
     return Collections.unmodifiableList(this.model.getEntities());
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void addEntity(Entity entity) {
     this.model.addEntity(entity);
   }
 
   /**
-   * Cleans the GLModel
-   * Does not affect the underlying model
+   * {@inheritDoc}
    */
+  @Override
   public void cleanup() {
-    this.materials.stream().forEach(GlMaterial::cleanup);
+    this.materials.forEach(GlMaterial::cleanup);
     this.materials.clear();
     LOGGER.debug("GLModel cleaned up");
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public String getId() {
     return this.model.getId();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public List<GlMaterial> getMaterials() {
     return Collections.unmodifiableList(this.materials);
   }
