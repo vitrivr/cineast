@@ -17,7 +17,7 @@ public enum JobControlCommand {
 
 
   /**
-   * Is used to shutdown the worker
+   * Is used to shut down the worker
    */
   SHUTDOWN_WORKER,
 }

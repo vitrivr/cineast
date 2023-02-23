@@ -10,31 +10,35 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Transition;
 /**
  * Implements a FiniteStateMachine
  *
- * <p>Implemented from Design pattern released on Stackoverflow
+ * <p>Inspired from Design pattern presented on Stackoverflow
  *
  * @see <a href="https://stackoverflow.com/questions/5923767/simple-state-machine-example-in-c">
- *     https://stackoverflow.com/questions/5923767/simple-state-machine-example-in-c/a>
+ * https://stackoverflow.com/questions/5923767/simple-state-machine-example-in-c/a>
  */
 public class FiniteStateMachine {
 
   Logger LOGGER = LogManager.getLogger(FiniteStateMachine.class);
-  // Hashtable for Unique State transitions
-  private Graph graph;
-  // The current State
+  /**
+   * Hashtable for Unique State transitions
+   */
+  private final Graph graph;
+  /**
+   * The current State
+   */
   private State currentState;
 
-  /** @return current State of FSM */
+  /**
+   * @return current State of FSM
+   */
   public State getCurrentState() {
     return this.currentState;
   }
 
   /**
-   * Constructs a FSM
-   *
-   * <p>Constructor defines initialState creates Transitios-Hashmap @<code>
-   * new StateTransition(ProcessState.Startup, Command.Begin), ProcessState.EvaluateGameNumber
-   * </code> StateTransition(ProcessState.Startup, Command.Begin), descripes the command given in
-   * the actual state ProcessState.EvaluateGameNumber, descripes the nect State after transition
+   * Constructs a {@link FiniteStateMachine}
+   * Sets the initial state
+   * @param graph the graph which contains all states and transitions
+   *              and the initial state
    */
   public FiniteStateMachine(Graph graph) {
     this.graph = graph;
@@ -43,17 +47,16 @@ public class FiniteStateMachine {
 
 
   /**
-   * Gives a preview on next state with comman
+   * Gives a preview on next state with a hypothetical command
    *
-   * @param command given
-   * @return NextState
-   * @throws Exception
+   * @param command given hypothetical command
+   * @return NextState resulting State
+   * @throws FiniteStateMachineException if transition is not valid
    */
   public State previewNextState(Action command) throws FiniteStateMachineException {
     Transition transition = new Transition(this.currentState, command);
     if (this.graph.containsTransition(transition)) {
-      State nextState = this.graph.getNextState(transition);
-      return nextState;
+      return this.graph.getNextState(transition);
     } else {
       LOGGER.error("FSM transition to next state failed!");
       throw new FiniteStateMachineException("Invalid transition: " + this.currentState.toString() + " -> " + command.toString());
@@ -61,11 +64,11 @@ public class FiniteStateMachine {
   }
 
   /**
-   * Change to next State
+   * Moves the FSM to the next state
    *
-   * @param command given
-   * @return new Current state
-   * @throws Exception
+   * @param command given command
+   * @return the resulting state after transition
+   * @throws FiniteStateMachineException if transition is not valid
    */
   public Transition moveNextState(Action command) throws FiniteStateMachineException {
     var performedTransition = new Transition(this.currentState, command);

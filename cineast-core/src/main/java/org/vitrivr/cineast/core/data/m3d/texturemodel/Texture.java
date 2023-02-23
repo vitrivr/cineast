@@ -40,7 +40,6 @@ public class Texture {
     this.texturePath = texturePath;
   }
 
-
   /**
    * @return Path to the texture file.
    */

@@ -21,15 +21,13 @@ public class RenderOptions {
   public boolean showTextures = true;
 
   /**
-   * Used to switch on or off the coloring rendering
-   * For future face coloring
+   * Used to switch on or off the coloring rendering For future face coloring
    */
   @SuppressWarnings("unused")
   public boolean showColor = false;
 
   /**
-   * Returns the color for the given value
-   * Can be used to colorize the model custom
+   * Returns the color for the given value Can be used to colorize the model custom
    */
   public Function<Float, Vector4f> colorfunction =
       (v) -> new Vector4f(v, v, v, 1f);

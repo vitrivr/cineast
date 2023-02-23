@@ -211,7 +211,7 @@ public final class ModelLoader {
    * Convert an AIMaterial to a Material. Loads the diffuse color and texture.
    *
    * @param aiMaterial aiMaterial to process.
-   * @param modelDir   Path to the model file.
+   * @param modelDir Path to the model file.
    * @return flattened float array of vertices.
    */
   private static Material processMaterial(AIMaterial aiMaterial, String modelDir) {

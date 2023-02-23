@@ -68,7 +68,7 @@ public abstract class Job {
   /**
    * Creates a new Response Job.
    * <p>
-   * RESPONSE: contains data wich the worker calculated
+   * RESPONSE: contains data which the worker calculated
    *
    * @param data The resulting data
    */

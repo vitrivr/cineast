@@ -5,6 +5,7 @@ package org.vitrivr.cineast.core.render.lwjgl.util.datatype;
  * Used to indicate that a value could not be converted to the requested type.
  * Used to indicate that a key is not valid.
  */
+@SuppressWarnings("unused")
 public class VariantException extends RuntimeException {
 
     public VariantException(String message) {

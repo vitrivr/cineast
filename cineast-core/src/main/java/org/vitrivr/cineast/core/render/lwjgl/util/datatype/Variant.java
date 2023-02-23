@@ -41,7 +41,7 @@ public class Variant {
    */
   public <T> T get(Class<T> clazz, String key) throws VariantException {
     var val = this.variants.get(key);
-    T result = null;
+    T result;
     try {
       result = clazz.cast(val);
     } catch (Exception ex) {
@@ -57,7 +57,7 @@ public class Variant {
    */
   public <T> T remove(Class<T> clazz, String key) throws VariantException {
     var val = this.variants.remove(key);
-    T result = null;
+    T result;
     try {
       result = clazz.cast(val);
     } catch (ClassCastException ex) {

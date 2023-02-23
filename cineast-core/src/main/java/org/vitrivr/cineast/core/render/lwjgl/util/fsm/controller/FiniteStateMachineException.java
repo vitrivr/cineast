@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.render.lwjgl.util.fsm.controller;
 
+/**
+ * Exception thrown by the FiniteStateMachine if an illegal state transition is attempted.
+ */
+@SuppressWarnings("unused")
 public class FiniteStateMachineException extends Exception {
 
     public FiniteStateMachineException(String message) {

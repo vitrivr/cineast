@@ -16,6 +16,7 @@ public class Render {
    * @see SceneRender
    */
   private final SceneRender sceneRender;
+
   /**
    * Instance of the render options
    * @see RenderOptions

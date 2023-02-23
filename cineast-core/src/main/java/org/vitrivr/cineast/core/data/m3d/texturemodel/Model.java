@@ -36,12 +36,12 @@ public class Model implements IModel {
    */
   private final List<Material> materials;
 
-
   /**
    * Empty model that can be used as a placeholder.
    */
-  public static final Model EMPTY = new Model("EmptyModel", new ArrayList<>() {{add(Material.EMPTY);}});
-
+  public static final Model EMPTY = new Model("EmptyModel", new ArrayList<>() {{
+    add(Material.EMPTY);
+  }});
 
   /**
    * Constructor for Model.
