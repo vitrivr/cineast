@@ -9,6 +9,9 @@ import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 
+/**
+ * Static class for optimizing the view vector of a model to maximize the viewpoint entropy on the model.
+ */
 public final class ModelEntropyOptimizer {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -205,6 +208,7 @@ public final class ModelEntropyOptimizer {
    *
    * @param normals    List of normals of the model.
    * @param viewVector View vector.
+   * @param opts       Optimizer options.
    * @return Entropy of the model for the given view vector.
    */
   private static float calculateEntropyRelativeToTotalAreaWeighted(List<Vector3f> normals, Vector3f viewVector, OptimizerOptions opts) {
@@ -219,9 +223,16 @@ public final class ModelEntropyOptimizer {
           }
         }
     );
-    return calculateEntropyRelativeToTotalArea(weightedNormals,viewVector);
+    return calculateEntropyRelativeToTotalArea(weightedNormals, viewVector);
   }
 
+  /**
+   * Calculates the entropy of the model for the given view vector relative to the projected area of the model. see: <a href="https://scholar.google.ch/scholar?hl=de&as_sdt=0%2C5&as_vis=1&q=Viewpoint+selection+using+viewpoint+entrop&btnG=">Google Scholar</a> see: <a> href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=b854422671e5469373fd49fb3a916910b49a6920">Paper</a>
+   *
+   * @param normals    List of normals of the model.
+   * @param viewVector View vector.
+   * @return Entropy of the model for the given view vector.
+   */
   private static float calculateEntropyRelativeToTotalArea(List<Vector3f> normals, Vector3f viewVector) {
 
     var areas = new float[normals.size()];
