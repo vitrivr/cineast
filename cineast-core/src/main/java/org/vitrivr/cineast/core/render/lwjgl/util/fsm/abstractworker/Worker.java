@@ -108,9 +108,9 @@ public abstract class Worker<T extends Job> implements Runnable {
     // While application is running
     while (!this.shutdown) {
       try {
-        LOGGER.debug("Waiting for job. In Queue:" + this.jobs.size());
+        //LOGGER.trace("Waiting for job. In Queue:" + this.jobs.size());
         this.currentJob = this.jobs.take();
-        LOGGER.trace("Perform Job. In Queue:" + this.jobs.size());
+        LOGGER.debug("Perform Job. In Queue:" + this.jobs.size());
         // Determine if job is an order or a control command
         switch (this.currentJob.getType()) {
           // If ordered, perform job
