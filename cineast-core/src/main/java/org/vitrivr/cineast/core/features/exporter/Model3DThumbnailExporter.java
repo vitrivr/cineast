@@ -81,7 +81,7 @@ public class Model3DThumbnailExporter implements Extractor {
   /**
    * Background color of the resulting image.
    */
-  private Color backgroundColor = Color.lightGray;
+  private final Color backgroundColor = Color.lightGray;
 
   /**
    * Default constructor. The AudioWaveformExporter can be configured via named properties in the provided HashMap. Supported parameters:
@@ -108,15 +108,17 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
+      // Get the model to generate a thumbnail for.
       IModel model = shot.getModel();
       if (model.getMaterials().size() > 0) {
-
+        // Set options for the renderer.
         var windowOptions = new WindowOptions(400, 400) {{
           this.hideWindow = false;
         }};
         var renderOptions = new RenderOptions() {{
           this.showTextures = true;
         }};
+        // Set options for the entropy optimizer.
         var opts = new OptimizerOptions() {{
           this.iterations = 100;
           this.initialViewVector = new Vector3f(0, 0, 1);
@@ -125,6 +127,7 @@ public class Model3DThumbnailExporter implements Extractor {
           this.yNegWeight = 0.7f;
           this.yPosWeight = 0.8f;
         }};
+
         // Add a Random View, a front View an Upper Left View and an Entropy Optimized View
         var cameraPositions = new LinkedList<Vector3f>() {{
           add(new Vector3f(
@@ -137,8 +140,10 @@ public class Model3DThumbnailExporter implements Extractor {
           add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
         }};
 
+        // Render the model.
         var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(), model, cameraPositions, windowOptions, renderOptions);
         assert images.size() == 4;
+        // Combine the images into a single image.
         var canvas = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         var graphics = canvas.getGraphics();
         graphics.setColor(this.backgroundColor);
@@ -157,6 +162,7 @@ public class Model3DThumbnailExporter implements Extractor {
     } catch (Exception exception) {
       LOGGER.error("Could not export thumbnail image for model {} because an unknown exception occurred ({}).", shot.getId(), LogHelper.getStackTrace(exception));
     } finally {
+      LOGGER.trace("Finished processing thumbnail {}.", shot.getId());
     }
   }
 
