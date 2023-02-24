@@ -18,25 +18,47 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 
+/**
+ * The RenderJob is a job which is responsible for rendering a model.
+ * <p>
+ * This job extends the abstract class Job.
+ * <p>
+ *   It provides constructors for the different types of jobs.
+ *   ORDER Job to render a model.
+ *   COMMAND Job signals caller that the job is done or an error occurred.
+ *   RESULT Job contains the result of the rendering.
+ */
 public class RenderJob extends Job {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-
+  /**
+   * Creates a new ORDER RenderJob with the given action sequence and data (containing the model to render).
+   */
   public RenderJob(BlockingDeque<Action> actions, Variant data) {
     super(actions, data);
-
   }
 
+  /**
+   * Creates a new RESPONSE RenderJob with the rendered image.
+   */
   public RenderJob(Variant data) {
     super(data);
   }
 
+  /**
+   * Creates a new CONTROL RenderJob with the given command.
+   */
   public RenderJob(JobControlCommand command) {
     super(command);
   }
 
 
+  /**
+   * Static method to create a standard render job.
+   * <p>
+   * @see RenderJob#performStandardRenderJob(BlockingDeque, IModel, LinkedList, WindowOptions, RenderOptions)
+   */
   public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, double[][] cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
     var cameraPositionVectors = new LinkedList<Vector3f>();
     for (double[] cameraPosition : cameraPositions) {
@@ -46,19 +68,41 @@ public class RenderJob extends Job {
     return performStandardRenderJob(renderJobQueue, model, cameraPositionVectors, windowOptions, renderOptions);
   }
 
+  /**
+   * Static method to create a standard render job.
+   * <p>
+   *   <ul>
+   *   <li>Creates a job for given model and each camera position.</li>
+   *   <li>Adds the data to the variant (data bag)</li>
+   *   <li>Generates the needed actions for the job.</li>
+   *   <li>Creates the job and adds it to the provided queue.</li>
+   *   <li>Waits for the job to finish. (or fail)</li>
+   *   <li>Returns the rendered images.</li>
+   *   <li>Cleans up the resources.</li>
+   *   <ul>
+   *   <p>
+   * @param renderJobQueue The queue to add the job to.
+   * @param model        The model to render.
+   * @param cameraPositions The camera positions to render the model from.
+   * @param windowOptions The window options to use for the rendering.
+   * @param renderOptions The render options to use for the rendering.
+   * @return The rendered images.
+   */
   public static List<BufferedImage> performStandardRenderJob(BlockingDeque<RenderJob> renderJobQueue, IModel model, LinkedList<Vector3f> cameraPositions, WindowOptions windowOptions, RenderOptions renderOptions) {
     // Create data bag for the job.
     var jobData = new Variant();
-    jobData.<WindowOptions>set(RenderData.WINDOWS_OPTIONS, windowOptions)
+    jobData.set(RenderData.WINDOWS_OPTIONS, windowOptions)
         .set(RenderData.RENDER_OPTIONS, renderOptions)
         .set(RenderData.MODEL, model);
 
     // Setup the action sequence to perform the jop
     // In standard jop, this is an image for each camera position
     var actions = new LinkedBlockingDeque<Action>();
+
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.SETUP));
     actions.add(new Action(RenderActions.SETUP));
+
     var vectors = new LinkedList<Vector3f>();
     for (var position : cameraPositions) {
       // Create a copy of the vector to avoid concurrent modification exceptions
@@ -97,7 +141,6 @@ public class RenderJob extends Job {
       LOGGER.error("Could not render model", ex);
     } finally {
       job.clean();
-      job = null;
     }
     return image;
   }

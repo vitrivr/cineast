@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
  * This interface defines methods that a renderer for 3D models (e.g. Meshes or Voxels must implement). It currently provides the following features:
  * <p>
  * - Rendering of single Mesh or VoxelGrid - Free positioning of the camera in terms of either cartesian or polar coordinate - Snapshot of the rendered image can be obtained at any time.
+ * @deprecated This interface is deprecated it can be simplified if the old JOGL renderer is removed.
  */
 public interface Renderer {
 

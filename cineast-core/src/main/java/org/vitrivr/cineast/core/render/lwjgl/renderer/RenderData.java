@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.render.lwjgl.renderer;
 
+/**
+ * Data used of the Render Workflow
+ * {@link RenderWorker}
+ */
 public final class RenderData {
 
   public static final String MODEL = "MODEL";

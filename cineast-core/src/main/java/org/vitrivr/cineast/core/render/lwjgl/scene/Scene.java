@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 public class Scene {
 
   /**
-   * Map of genric models in the scene.
+   * Map of generic models in the scene.
    */
   private final Map<String, IModel> models;
   /**
