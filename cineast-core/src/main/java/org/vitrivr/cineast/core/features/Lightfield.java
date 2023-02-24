@@ -82,18 +82,6 @@ public abstract class Lightfield extends StagedFeatureModule {
       }
     }
     this.camerapositions = camerapositions;
-
-    /*
-     * Instantiate JOGLOffscreenRenderer.
-     * Handle the case where it cannot be created due to missing OpenGL support.
-     */
-    try {
-      //renderer = new LWJGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
-    } catch (Exception exception) {
-      LOGGER.error("Could not instantiate JOGLOffscreenRenderer! This instance of {} will not create any results or features!", this.getClass().getSimpleName());
-    } finally {
-      //this.renderer = renderer;
-    }
   }
 
 
@@ -108,13 +96,6 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   @Override
   protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    /* Check if renderer could be initialised. */
-//    if (this.renderer == null) {
-//      LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
-//      return new ArrayList<>(0);
-//    }
-
-    /* Extract features from either the provided Mesh (1) or image (2). */
     IModel model = sc.getModel();
     List<float[]> features;
     if (model == null) {
@@ -123,7 +104,6 @@ public abstract class Lightfield extends StagedFeatureModule {
     } else {
       features = this.featureVectorsFromMesh(model);
     }
-
     return features;
   }
 
