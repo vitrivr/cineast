@@ -139,10 +139,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     // #353: Respect the given segmenter
     final Set<MediaType> segmenterTypes;
     final Segmenter<Object> segmenter = context.newSegmenter();
-    segmenterTypes = segmenter.getMediaTypes();
-    segmenterTypes.forEach(t -> {
-      handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
-    });
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+    }
 
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
