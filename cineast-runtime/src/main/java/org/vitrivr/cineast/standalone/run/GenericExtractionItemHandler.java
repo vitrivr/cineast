@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,10 +140,15 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     // #353: Respect the given segmenter
     final Set<MediaType> segmenterTypes;
     final Segmenter<Object> segmenter = context.newSegmenter();
-    segmenterTypes = segmenter.getMediaTypes();
-    segmenterTypes.forEach(t -> {
-      handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
-    });
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+      LOGGER.debug("Segmenter specified for media types {}, overwriting defaults", Arrays.toString(segmenterTypes.toArray()));
+    } else {
+      LOGGER.info("No segmenter specified, using default");
+    }
 
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
