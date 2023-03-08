@@ -123,7 +123,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    if (this.context.getType() == MediaType.IMAGE_SEQUENCE) {
+      handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    }
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
