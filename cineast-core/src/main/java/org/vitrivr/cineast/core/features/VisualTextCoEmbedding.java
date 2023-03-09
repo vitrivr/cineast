@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -44,7 +46,6 @@ import org.vitrivr.cineast.core.util.texturemodel.OptimizerOptions;
 /**
  * A visual-text co-embedding mapping images and text descriptions to the same embedding space.
  * <p>
- *
  */
 public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
@@ -259,6 +260,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   /**
    * Helper to convert images to frames
+   *
    * @param images are converted to frames
    * @return List<MultiImage> for video embedding
    */
@@ -272,10 +274,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   }
 
   /**
-   * This method takes a list of images and determines, based on {@link ViewpointStrategy}, the embed vector
-   * which describes the images most precise.
-   * This method can be simplified, once the best strategy is determined.
-   * @param images the list of Images to embed
+   * This method takes a list of images and determines, based on {@link ViewpointStrategy}, the embed vector which describes the images most precise. This method can be simplified, once the best strategy is determined.
+   *
+   * @param images            the list of Images to embed
    * @param viewpointStrategy the strategy to find the vector
    * @return the embedding vector
    */
@@ -309,9 +310,9 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       case MULTI_IMAGE_PROJECTEDMEAN -> {
         var vectors = embedMultipleImages(images);
         var vectorsMean = new float[EMBEDDING_SIZE];
-        for ( var vector : vectors) {
-          for (var ic = 0; ic < vector.length; ++ic){
-            vectorsMean[ic] += vector[ic]/vectors.size();
+        for (var vector : vectors) {
+          for (var ic = 0; ic < vector.length; ++ic) {
+            vectorsMean[ic] += vector[ic] / vectors.size();
           }
         }
         return this.normalize(vectorsMean);
@@ -321,16 +322,37 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         var frames = framesFromImages(images);
         return embedVideo(frames);
       }
+      case MULTI_IMAGE_2_2 -> {
+        assert images.size() == 4;
+        var sz = images.get(0).getWidth();
+        var size = sz * 2;
+        // Combine the images into a single image.
+        var canvas = new BufferedImage(
+            size,
+            size,
+            BufferedImage.TYPE_INT_RGB);
+        var graphics = canvas.getGraphics();
+        graphics.setColor(Color.BLACK);
+        var ic = 0;
+        for (var partialImage : images) {
+          int idx = ic % 2;
+          int idy = ic < 2 ? 0 : 1;
+          graphics.drawImage(partialImage, idx * sz, idy * sz, null);
+          ++ic;
+        }
+        retVal = embedImage(canvas);
+      }
     }
     return retVal;
   }
 
   /**
    * Embeds a list of images
+   *
    * @param images the list of images to embed
    * @return the list of embedding vectors
    */
-  private List<float[]> embedMultipleImages(List<BufferedImage> images){
+  private List<float[]> embedMultipleImages(List<BufferedImage> images) {
     var vectors = new ArrayList<float[]>();
     for (BufferedImage image : images) {
       float[] embeddingArray = embedImage(image);
@@ -341,24 +363,24 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
   /**
    * Normalizes a float vector of arbitrary many dimensions to a length of 1
+   *
    * @param vector the vector to normalize
    * @return the normalized vector
    */
-  private float[] normalize(float[] vector){
+  private float[] normalize(float[] vector) {
     var length = 0f;
     for (float v : vector) {
       length += Math.pow(v, 2);
     }
     length = (float) Math.sqrt(length);
-    for (var ic = 0; ic < vector.length; ++ic){
+    for (var ic = 0; ic < vector.length; ++ic) {
       vector[ic] /= length;
     }
     return vector;
   }
 
   /**
-   * For benchmark purposes.
-   * Since the Extractor does not support options, strategy should be implemented in a static way
+   * For benchmark purposes. Since the Extractor does not support options, strategy should be implemented in a static way
    */
   protected enum ViewpointStrategy {
     /**
@@ -392,7 +414,11 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     /**
      * Takes multiple images and embeds them as a video
      */
-    MULTI_IMAGE_FRAME
+    MULTI_IMAGE_FRAME,
+    /**
+     * Creates a 2x2 image
+     */
+    MULTI_IMAGE_2_2,
   }
 
   /**
@@ -410,7 +436,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       this.showTextures = true;
     }};
     // Select the strategy which will be used for model embedding
-    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_FRAME;
+    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_2_2;
     // Get camera viewpoint for chosen strategy
     var cameraPositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
@@ -476,7 +502,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         }};
         viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
       }
-      case MULTI_IMAGE_KMEANS, MULTI_IMAGE_FRAME, MULTI_IMAGE_PROJECTEDMEAN-> {
+      case MULTI_IMAGE_KMEANS, MULTI_IMAGE_FRAME, MULTI_IMAGE_PROJECTEDMEAN -> {
         var views = MathConstants.VERTICES_3D_DODECAHEDRON;
         for (var view : views) {
           viewVectors.add(new Vector3f(
@@ -496,9 +522,36 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
             .normalize().mul(ZOOM)
         );
       }
+      case MULTI_IMAGE_2_2 -> {
+        viewVectors.add(new Vector3f(
+            0f,
+            0f,
+            1)
+            .normalize().mul(ZOOM)
+        );
+        viewVectors.add(new Vector3f(
+            -1f,
+            1f,
+            1)
+            .normalize().mul(ZOOM)
+        );
+        var opts1 = new OptimizerOptions() {{
+          this.iterations = 100;
+          this.initialViewVector = new Vector3f(0, 0, 1);
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
+          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+        }};
+        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts1));
+        var opts2 = new OptimizerOptions() {{
+          this.iterations = 100;
+          this.initialViewVector = new Vector3f(0, 0, 1);
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
+          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+        }};
+        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts2));
+      }
     }
     var camerapositions = new double[viewVectors.size()][3];
-
     IntStream.range(0, viewVectors.size()).parallel().forEach(ic ->
         {
           var viewVector = viewVectors.get(ic);
