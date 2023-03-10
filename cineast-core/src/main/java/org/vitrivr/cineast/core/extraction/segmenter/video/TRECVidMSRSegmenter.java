@@ -7,18 +7,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -274,5 +273,13 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
     synchronized (this) {
       this.running = false;
     }
+  }
+
+  /**
+   * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
+   */
+  @Override
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.VIDEO);
   }
 }

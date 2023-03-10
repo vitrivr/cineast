@@ -1,16 +1,15 @@
 package org.vitrivr.cineast.core.extraction.segmenter.video;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.collect.Sets;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -268,5 +267,13 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
       }
     }
     return true;
+  }
+
+  /**
+   * Returns {@link MediaType#VIDEO}, as this {@link Segmenter} is for video
+   */
+  @Override
+  public Set<MediaType> getMediaTypes() {
+    return Sets.newHashSet(MediaType.VIDEO);
   }
 }

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.standalone;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
+
 import com.github.rvesse.airline.parser.ParseResult;
 import com.github.rvesse.airline.parser.errors.ParseException;
 import java.io.IOException;
@@ -18,11 +20,21 @@ public class Main {
    */
   public static void main(String[] args) {
     /* (Force) load application config. */
-    if (Config.loadConfig(args[0]) == null) {
-      System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
-      System.exit(1);
+    if (args.length == 0) {
+      System.out.println("No config path given, loading default config '" + DEFAULT_CONFIG_PATH + "'");
+      if (Config.loadConfig(DEFAULT_CONFIG_PATH) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + DEFAULT_CONFIG_PATH + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
     }
 
+    /* (Force) load application config. */
+    if (args.length != 0) {
+      if (Config.loadConfig(args[0]) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
+    }
     /* Initialize Monitoring */
     try {
       PrometheusServer.initialize();

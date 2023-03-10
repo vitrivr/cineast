@@ -32,4 +32,6 @@ public class CineastConstants {
   public static final String KEY_COL_NAME = "key";
   public static final String VAL_COL_NAME = "value";
 
+  public static final String DEFAULT_CONFIG_PATH = "cineast.json";
+
 }

@@ -12,10 +12,10 @@ Cineast is written in Java and uses [CottontailDB](https://github.com/vitrivr/co
 ## Building Cineast
 Cineast can be built using [Gradle](https://gradle.org/). It needs Java 17+. Building and running it is as easy as
 ```
-$> git clone https://github.com/vitrivr/cineast.git
-$> cd cineast
-$> ./gradlew cineast-runtime:shadowJar
-$> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
+git clone https://github.com/vitrivr/cineast.git
+cd cineast
+./gradlew getExternalFiles cineast-runtime:shadowJar
+java -jar cineast-runtime/build/libs/cineast-runtime-x.x-all.jar cineast.json
  ```
 
 For more setup information, consult our [Wiki](https://github.com/vitrivr/cineast/wiki)
@@ -27,13 +27,13 @@ Hub](https://hub.docker.com/r/vitrivr/cineast).
 
 You can run the CLI with:
 ```
-$> docker run vitrivr/cineast cli cineast.json help
+docker run vitrivr/cineast cli cineast.json help
 ```
 
 To change the configuration you can use a bind mount, e.g. to run the API
 server with custom configuration file cineast.json in the current directory:
 ```
-$> docker run -v "$PWD"/cineast.json:/opt/cineast/cineast.json:ro,Z vitrivr/cineast api cineast.json
+docker run -v "$PWD"/cineast.json:/opt/cineast/cineast.json:ro,Z vitrivr/cineast api cineast.json
 ```
 
 ## Generate OpenApi Specification
@@ -41,11 +41,11 @@ $> docker run -v "$PWD"/cineast.json:/opt/cineast/cineast.json:ro,Z vitrivr/cine
 If you need to rebuild the OpenApi Specification (OAS), there is a gradle task for this purpose:
 
 ```
-$> ./gradlew -PcineastConfig=<path/to/your/config> generateOpenApiSpecs
+./gradlew -PcineastConfig=<path/to/your/config> generateOpenApiSpecs
 ```
 
 You can omit `-PcineastConfig`, then the default config (`cineast.json`) is used.
-As a result, the OAS is stored at `docs/openapi.json`
+The generated OAS is stored at `docs/openapi.json`
 
 
 ## Prerequisites
@@ -78,10 +78,6 @@ For 3D rendering (required in order to support 3D models) you either need a vide
  
 The -3d option will perform a 3D test. If it succeeds, cineast should generate a PNG image depicting two coloured
 triangles on a black background.
-
-## Contribution
-
-> Contributions are always welcome.
 
 ### Versioning
 

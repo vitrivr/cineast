@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.standalone.run;
 
+import com.google.common.collect.Sets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -120,7 +123,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    if (this.context.getType() == MediaType.IMAGE_SEQUENCE) {
+      handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    }
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
@@ -128,11 +133,30 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
       }
+
+      @Override
+      public Set<MediaType> getMediaTypes() {
+        return Sets.newHashSet(MediaType.values());
+      }
     }));
+    // #353: Respect the given segmenter
+    final Set<MediaType> segmenterTypes;
+    final Segmenter<Object> segmenter = context.newSegmenter();
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+      LOGGER.debug("Segmenter specified for media types {}, overwriting defaults", Arrays.toString(segmenterTypes.toArray()));
+    } else {
+      LOGGER.info("No segmenter specified, using default");
+    }
+
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
       handlers.put(type, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), type), handlers.getOrDefault(type, null)).getRight());
     });
+
     //TODO Config should allow for multiple segmenters
 
     this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
@@ -155,11 +179,20 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             : item.getObject().getName();
     boolean exists = descriptor.exists();
     MediaType _type = type == null ? descriptor.getMediatype() : type;
-    String _id =
-        StringUtils.isEmpty(item.getObject().getObjectId()) ?
-            StringUtils.isEmpty(descriptor.getObjectId())
-                ? generator.next(_path, _type) : descriptor.getObjectId()
-            : item.getObject().getObjectId();
+    String _id;
+    if (StringUtils.isEmpty(item.getObject().getObjectId())) {
+      if (StringUtils.isEmpty(descriptor.getObjectId())) {
+        var generatedId = generator.next(_path, _type);
+        if (generatedId.isEmpty()) {
+          throw new IllegalStateException("Unable to generate id for " + _path);
+        }
+        _id = generatedId.get();
+      } else {
+        _id = descriptor.getObjectId();
+      }
+    } else {
+      _id = item.getObject().getObjectId();
+    }
     String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
         : item.getObject().getPath();
     return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
@@ -175,7 +208,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     final ObjectIdGenerator generator = this.context.objectIdGenerator();
     Pair<ExtractionItemContainer, MediaType> pair = null;
 
-    /* Initalize all Metadata Extractors */
+    /* Initialize all Metadata Extractors */
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {

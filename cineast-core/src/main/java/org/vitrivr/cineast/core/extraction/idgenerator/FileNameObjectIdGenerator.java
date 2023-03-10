@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.extraction.idgenerator;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 import org.vitrivr.cineast.core.data.MediaType;
 
@@ -24,18 +25,19 @@ public class FileNameObjectIdGenerator implements ObjectIdGenerator {
   }
 
   public FileNameObjectIdGenerator(Map<String, String> properties) {
-    String prefixProp = properties.get(PROPERTY_NAME_PREFIX);
-    prefix = prefixProp == null || prefixProp.equalsIgnoreCase("true");
+    String prefixProp = properties.getOrDefault(PROPERTY_NAME_PREFIX, "true");
+    prefix = prefixProp.equalsIgnoreCase("true");
   }
 
   @Override
-  public String next(Path path, MediaType type) {
+  public Optional<String> next(Path path, MediaType type) {
 
     if (path == null) {
-      return "null";
+      return Optional.empty();
     }
 
     String filename = FilenameUtils.removeExtension(path.toFile().getName());
-    return prefix ? MediaType.generateId(type, filename) : filename;
+    String id = prefix ? MediaType.generateId(type, filename) : filename;
+    return Optional.of(id);
   }
 }
