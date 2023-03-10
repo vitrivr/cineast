@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
@@ -102,8 +103,8 @@ public class CLIPImage extends AbstractFeatureModule {
     try (TFloat16 imageTensor = TFloat16.tensorOf(Shape.of(1, 3, IMAGE_SIZE, IMAGE_SIZE), DataBuffers.of(rgb))) {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(EMBEDDING_INPUT, imageTensor);
-      Map<String, Tensor> resultMap = model.call(inputMap);
-      try (TFloat16 encoding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+      Result resultMap = model.call(inputMap);
+      try (TFloat16 encoding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
         var embeddingArray = new float[EMBEDDING_SIZE];
         var floatBuffer = DataBuffers.of(embeddingArray);
         encoding.read(floatBuffer);

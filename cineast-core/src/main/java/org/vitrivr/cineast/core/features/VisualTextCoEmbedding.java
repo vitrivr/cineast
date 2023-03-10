@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -176,13 +177,13 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
 
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(TEXT_EMBEDDING_INPUT, textTensor);
-      Map<String, Tensor> resultMap = textEmbedding.call(inputMap);
-      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT)) {
+      var resultMap = textEmbedding.call(inputMap);
+      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(TEXT_EMBEDDING_OUTPUT).get()) {
 
         inputMap.clear();
         inputMap.put(TEXT_CO_EMBEDDING_INPUT, intermediaryEmbedding);
         resultMap = textCoEmbedding.call(inputMap);
-        try (TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT)) {
+        try (TFloat32 embedding = (TFloat32) resultMap.get(TEXT_CO_EMBEDDING_OUTPUT).get()) {
           var embeddingArray = new float[EMBEDDING_SIZE];
           var floatBuffer = DataBuffers.of(embeddingArray);
           // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
@@ -203,12 +204,12 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
       inputMap.put(InceptionResnetV2.INPUT, imageTensor);
 
-      Map<String, Tensor> resultMap = visualEmbedding.call(inputMap);
-      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(InceptionResnetV2.OUTPUT)) {
+      Result resultMap = visualEmbedding.call(inputMap);
+      try (TFloat32 intermediaryEmbedding = (TFloat32) resultMap.get(InceptionResnetV2.OUTPUT).get()) {
         inputMap.clear();
         inputMap.put(VISUAL_CO_EMBEDDING_INPUT, intermediaryEmbedding);
         resultMap = visualCoEmbedding.call(inputMap);
-        try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
+        try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT).get()) {
           var embeddingArray = new float[EMBEDDING_SIZE];
           var floatBuffer = DataBuffers.of(embeddingArray);
           // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
@@ -229,8 +230,8 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       HashMap<String, Tensor> inputMap = new HashMap<>();
 
       inputMap.put(VISUAL_CO_EMBEDDING_INPUT, encoding);
-      Map<String, Tensor> resultMap = visualCoEmbedding.call(inputMap);
-      try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT)) {
+      Result resultMap = visualCoEmbedding.call(inputMap);
+      try (TFloat32 embedding = (TFloat32) resultMap.get(VISUAL_CO_EMBEDDING_OUTPUT).get()) {
         var embeddingArray = new float[EMBEDDING_SIZE];
         var floatBuffer = DataBuffers.of(embeddingArray);
         // Beware TensorFlow allows tensor writing to buffers through the function read rather than write
