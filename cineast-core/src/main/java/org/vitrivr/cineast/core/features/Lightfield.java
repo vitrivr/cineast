@@ -179,64 +179,19 @@ public abstract class Lightfield extends StagedFeatureModule {
   protected List<float[]> featureVectorsFromMesh(IModel model) {
     /* Prepare empty list of features. */
     List<float[]> features = new ArrayList<>(20);
-
-    var jobData = new Variant();
-    var windowOpt = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
+    var windowOptions = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
       this.hideWindow = true;
     }};
-    jobData.set(RenderData.WINDOWS_OPTIONS, windowOpt);
-
-    var renderOpt = new RenderOptions() {{
+    var renderOptions = new RenderOptions() {{
       this.showTextures = false;
     }};
-    jobData.set(RenderData.RENDER_OPTIONS, renderOpt);
+    var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
+        model, this.camerapositions, windowOptions, renderOptions);
 
-    jobData.set(RenderData.MODEL, model);
-
-    var actions = new LinkedBlockingDeque<Action>();
-    actions.add(new Action(RenderActions.SETUP));
-    actions.add(new Action(RenderActions.SETUP));
-    actions.add(new Action(RenderActions.SETUP));
-
-    var vectors = new LinkedList<Vector3f>();
-    for (var position : this.camerapositions) {
-      vectors.add(new Vector3f((float) position[0], (float) position[1], (float) position[2]));
-      actions.add(new Action(RenderActions.LOOKAT_FROM));
-      actions.add(new Action(RenderActions.RENDER));
-    }
-    jobData.set(RenderData.VECTORS, vectors);
-    actions.add(new Action(RenderActions.SETUP));
-
-    var job = new RenderJob(actions, jobData);
-    RenderWorker.getRenderJobQueue().add(job);
-
-    var finishedJob = false;
-    try {
-      while (!finishedJob) {
-        var result = job.getResults();
-        if (result.getType() == JobType.RESPONSE) {
-          var image = result.getData().get(BufferedImage.class, RenderData.IMAGE);
-          if (image == null) {
-            LOGGER.error("Could not generate feature for {} because no image could be obtained from Renderer.", this.getClass().getSimpleName());
-            return features;
-          }
-          features.addAll(this.featureVectorsFromImage(image, -1));
-        } else if (result.getType() == JobType.CONTROL) {
-          if (result.getCommand() == JobControlCommand.JOB_DONE) {
-            finishedJob = true;
-          }
-          if (result.getCommand() == JobControlCommand.JOB_FAILURE) {
-            LOGGER.error("Job failed");
-            finishedJob = true;
-          }
-        }
-      }
-    } catch (InterruptedException ex) {
-      LOGGER.error("Could not generate feature for {} because the JOGOffscreenRenderer was interrupted.", this.getClass().getSimpleName());
-    } catch (Exception exception) {
-      LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
-    } finally {
-      /* Release the rendering context. */
+    var ic = 0;
+    for ( var image :images){
+      features.addAll(this.featureVectorsFromImage(image, ic));
+      ic++;
     }
     return features;
   }
