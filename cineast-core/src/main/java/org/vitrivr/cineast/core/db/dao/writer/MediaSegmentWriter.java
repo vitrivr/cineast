@@ -19,6 +19,6 @@ public class MediaSegmentWriter extends AbstractBatchedEntityWriter<MediaSegment
 
   @Override
   protected PersistentTuple generateTuple(MediaSegmentDescriptor entity) {
-    return this.writer.generateTuple(entity.getSegmentId(), entity.getObjectId(), entity.getSequenceNumber(), entity.getStart(), entity.getEnd(), entity.getStartabs(), entity.getEndabs());
+    return this.writer.generateTuple(entity.getSegmentId(), entity.getObjectId(), entity.getSequenceNumber(), entity.getStart(), entity.getEnd(), entity.getRepresentative(), entity.getStartabs(), entity.getEndabs(), entity.getRepresentativeabs());
   }
 }
