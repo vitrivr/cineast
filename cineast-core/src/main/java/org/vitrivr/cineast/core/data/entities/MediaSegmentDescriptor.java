@@ -32,6 +32,10 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
    */
   public static final String SEGMENT_END_COL_NAME = "segmentend";
   /**
+   * Name of the column with segmentend value
+   */
+  public static final String SEGMENT_REPRESENTATIVE_COL_NAME = "segmentrepresentative";
+  /**
    * Name of the column with segmetnstartabs value
    */
   public static final String SEGMENT_STARTABS_COL_NAME = "segmentstartabs";
@@ -39,6 +43,11 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
    * Name of the column with segmentendabs value
    */
   public static final String SEGMENT_ENDABS_COL_NAME = "segmentendabs";
+
+  /**
+   * Name of the column with representativeabs value
+   */
+  public static final String SEGMENT_REPRESENTATIVEABS_COL_NAME = "segmentrepresentativeabs";
 
   /**
    * Field names in the persistence layer.
@@ -51,39 +60,46 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
       SEGMENT_NO_COL_NAME,
       SEGMENT_START_COL_NAME,
       SEGMENT_END_COL_NAME,
+      SEGMENT_REPRESENTATIVE_COL_NAME,
       SEGMENT_STARTABS_COL_NAME,
-      SEGMENT_ENDABS_COL_NAME};
+      SEGMENT_ENDABS_COL_NAME,
+      SEGMENT_REPRESENTATIVEABS_COL_NAME
+  };
 
   private final String segmentId, objectId;
-  private final int start, end, number;
-  private final float startabs, endabs;
+  private final int start, end, representative, number;
+  private final float startabs, endabs, representativeabs;
   private final boolean exists;
 
   /**
    * Constructor for {@link MediaSegmentDescriptor}.
    *
-   * @param objectId      ID of the {@link MediaObjectDescriptor} this {@link MediaSegmentDescriptor} belongs to.
-   * @param segmentId     ID of the {@link MediaSegmentDescriptor}.
-   * @param segmentNumber Relative position of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} (starts with 1)
-   * @param start         Start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
-   * @param end           End of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
-   * @param startabs      Absolute start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
-   * @param endabs        Absolute end of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
-   * @param exists        Whether or not this {@link MediaSegmentDescriptor} exists in the underlying database.
+   * @param objectId            ID of the {@link MediaObjectDescriptor} this {@link MediaSegmentDescriptor} belongs to.
+   * @param segmentId           ID of the {@link MediaSegmentDescriptor}.
+   * @param segmentNumber       Relative position of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} (starts with 1)
+   * @param start               Start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
+   * @param end                 End of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in frames (e.g. for videos or audio).
+   * @param representative      Representative frame number (e.g. for videos or audio).
+   * @param startabs            Absolute start of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
+   * @param endabs              Absolute end of the {@link MediaSegmentDescriptor} within the {@link MediaObjectDescriptor} in seconds (e.g. for videos or audio).
+   * @param representativeabs   Absolute position for the representative frame in seconds (e.g. for videos or audio).
+   * @param exists              Whether or not this {@link MediaSegmentDescriptor} exists in the underlying database.
    */
-  public MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
+  public MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, int representative, float startabs, float endabs, float representativeabs, boolean exists) {
     this.segmentId = segmentId;
     this.objectId = objectId;
     this.number = segmentNumber;
     this.start = start;
     this.end = end;
+    this.representative = representative;
     this.startabs = startabs;
     this.endabs = endabs;
+    this.representativeabs = representativeabs;
     this.exists = exists;
   }
 
   public MediaSegmentDescriptor() {
-    this("", "", 0, 0, 0, 0.0f, 0.0f, false);
+    this("", "", 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, false);
   }
 
   @JsonProperty
@@ -120,6 +136,11 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
   }
 
   @JsonProperty
+  public int getRepresentative() {
+    return representative;
+  }
+
+  @JsonProperty
   public float getStartabs() {
     return this.startabs;
   }
@@ -127,6 +148,11 @@ public final class MediaSegmentDescriptor implements ExistenceCheck {
   @JsonProperty
   public float getEndabs() {
     return this.endabs;
+  }
+
+  @JsonProperty
+  public float getRepresentativeabs() {
+    return this.representativeabs;
   }
 
   @JsonIgnore

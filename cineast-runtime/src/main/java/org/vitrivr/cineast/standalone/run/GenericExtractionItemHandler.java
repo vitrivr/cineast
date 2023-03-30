@@ -275,9 +275,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
                 /* Create segment-descriptor and try to persist it. */
                 MediaSegmentDescriptor mediaSegmentDescriptor;
                 if (container.getId() != null) {
-                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, container.getId(), segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd()); /* Special case; segment ID is determined by container (image sequences only) */
+                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, container.getId(), segmentNumber, container.getStart(), container.getEnd(), container.getMostRepresentativeFrameNumber(), container.getAbsoluteStart(), container.getAbsoluteEnd(), container.getMostRepresentativeFrameTimestampSeconds()); /* Special case; segment ID is determined by container (image sequences only) */
                 } else {
-                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
+                  mediaSegmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getMostRepresentativeFrameNumber(), container.getAbsoluteStart(), container.getAbsoluteEnd(), container.getMostRepresentativeFrameTimestampSeconds());
                 }
                 container.setId(mediaSegmentDescriptor.getSegmentId());
                 container.setSuperId(mediaSegmentDescriptor.getObjectId());
@@ -535,9 +535,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    *
    * @return {@link MediaSegmentDescriptor}
    */
-  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
+  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, int representative, float startabs, float endabs, float representativeabs) {
     String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false));
+    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, representative, startabs, endabs, representativeabs, false));
   }
 
   /**
@@ -545,8 +545,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    *
    * @return {@link MediaSegmentDescriptor}
    */
-  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
-    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false));
+  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, int representative, float startabs, float endabs, float representativeabs) {
+    return this.segmentReader.lookUpSegment(segmentId).orElse(new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, representative, startabs, endabs, representativeabs, false));
   }
 
   protected void extractAndPersistMetadata(ExtractionItemContainer item, String objectId) {

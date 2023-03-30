@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -49,8 +51,8 @@ public class MediaSegmentReader extends AbstractEntityReader {
         && properties.containsKey(FIELDNAMES[2])
         && properties.containsKey(FIELDNAMES[3])
         && properties.containsKey(FIELDNAMES[4])
-        && properties.containsKey(FIELDNAMES[5])
-        && properties.containsKey(FIELDNAMES[6])) {
+        && properties.containsKey(FIELDNAMES[6])
+        && properties.containsKey(FIELDNAMES[7])) {
 
       return Optional.of(
           new MediaSegmentDescriptor(
@@ -59,8 +61,10 @@ public class MediaSegmentReader extends AbstractEntityReader {
               properties.get(FIELDNAMES[2]).getInt(),
               properties.get(FIELDNAMES[3]).getInt(),
               properties.get(FIELDNAMES[4]).getInt(),
-              properties.get(FIELDNAMES[5]).getFloat(),
+              properties.getOrDefault(FIELDNAMES[5], new IntTypeProvider(-1)).getInt(), /* Maintain backwards compatibility. */
               properties.get(FIELDNAMES[6]).getFloat(),
+              properties.get(FIELDNAMES[7]).getFloat(),
+              properties.getOrDefault(FIELDNAMES[8], new FloatTypeProvider(-1.0f)).getFloat(), /* Maintain backwards compatibility. */
               true));
 
     } else {

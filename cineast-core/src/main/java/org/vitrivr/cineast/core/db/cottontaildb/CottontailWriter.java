@@ -64,7 +64,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     long start = System.currentTimeMillis();
     int size = tuples.size();
     long txId = 0L;
-    if (useTransactions) {
+    if (this.useTransactions) {
       txId = this.cottontail.client.begin();
     }
     try {
