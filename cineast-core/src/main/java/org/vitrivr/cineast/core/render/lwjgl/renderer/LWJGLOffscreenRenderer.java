@@ -6,6 +6,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
@@ -13,7 +14,6 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.LightfieldCamera;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,7 +96,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * Is called once at the initialization of the engine. DO NOT CALL ENGINE METHODS IN THIS METHOD DO NOT CALL THIS METHOD FROM THIS CLASS
    */
   @Override
-  protected void init(Window window, GlScene scene, Render render) {
+  protected void init(Window window, GLScene scene, Render render) {
     scene.getCamera().setPosition(0, 0, 1);
   }
 
@@ -104,7 +104,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * Is called from the engine before the render method. DO NOT CALL ENGINE METHODS IN THIS METHOD DO NOT CALL THIS METHOD FROM THIS CLASS
    */
   @Override
-  protected void beforeRender(Window window, GlScene scene, Render render) {
+  protected void beforeRender(Window window, GLScene scene, Render render) {
     this.loadNextModelFromQueueToScene(window, scene);
   }
 
@@ -112,7 +112,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * Is called from the engine after the render method. DO NOT CALL ENGINE METHODS IN THIS METHOD DO NOT CALL THIS METHOD FROM THIS CLASS
    */
   @Override
-  protected void afterRender(Window window, GlScene scene, Render render) {
+  protected void afterRender(Window window, GLScene scene, Render render) {
     var lfc = new LightfieldCamera(this.windowOptions);
     this.imageQueue.add(lfc.takeLightfieldImage());
   }
@@ -130,7 +130,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * This method is called every frame. This is only used in continuous rendering. The purpose is to do some input handling. Could be use for optimize view  angles on a fast manner. DO NOT CALL ENGINE METHODS IN THIS METHOD DO NOT CALL THIS METHOD FROM THIS CLASS
    */
   @Override
-  protected void input(Window window, GlScene scene, long diffTimeMillis) {
+  protected void input(Window window, GLScene scene, long diffTimeMillis) {
     scene.getModels().forEach((k, v) -> v.getEntities().forEach(Entity::updateModelMatrix));
   }
 
@@ -138,7 +138,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * After Engine run This method is called every frame. This is only used in continuous rendering. The purpose is to process some life output. Could be use for optimize view  angles on a fast manner. DO NOT CALL ENGINE METHODS IN THIS METHOD DO NOT CALL THIS METHOD FROM THIS CLASS
    */
   @Override
-  protected void update(Window window, GlScene scene, long diffTimeMillis) {
+  protected void update(Window window, GLScene scene, long diffTimeMillis) {
   }
 
   /**
@@ -147,7 +147,7 @@ public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
    * @param scene The scene to put the model in.
    */
   @SuppressWarnings("unused")
-  private void loadNextModelFromQueueToScene(Window window, GlScene scene) {
+  private void loadNextModelFromQueueToScene(Window window, GLScene scene) {
     if (!this.modelQueue.isEmpty()) {
       var model = (Model) this.modelQueue.poll();
       if (model.getEntities().size() == 0) {

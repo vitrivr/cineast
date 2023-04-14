@@ -8,22 +8,22 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
  * A cache for textures
  * Prevents the same texture from being loaded multiple times
  */
-public class GlTextureCache {
+public class GLTextureCache {
 
   /**
    * The cache of textures
    */
-  private final Map<String, GlTexture> textures;
+  private final Map<String, GLTexture> textures;
 
   /**
    * Creates a new texture cache
    * Adds a default texture to the cache
    */
-  public GlTextureCache() {
+  public GLTextureCache() {
     this.textures = new HashMap<>();
     var texture = new Texture();
-    this.textures.put(texture.getTexturePath(), new GlTexture(texture));
-    this.textures.put("default", new GlTexture(texture));
+    this.textures.put(texture.getTexturePath(), new GLTexture(texture));
+    this.textures.put("default", new GLTexture(texture));
   }
 
   /**
@@ -32,7 +32,7 @@ public class GlTextureCache {
    * TODO: Check probably optimize by removing the mapped values
    */
   public void cleanup() {
-    this.textures.values().forEach(GlTexture::cleanup);
+    this.textures.values().forEach(GLTexture::cleanup);
   }
 
   /**
@@ -40,7 +40,7 @@ public class GlTextureCache {
    *
    * @param texture Texture to add
    */
-  public void addTextureIfAbsent(GlTexture texture) {
+  public void addTextureIfAbsent(GLTexture texture) {
     this.textures.putIfAbsent(texture.getTexturePath(), texture);
   }
 
@@ -50,7 +50,7 @@ public class GlTextureCache {
    * @param texturePath Path of the texture
    * @return The texture with the given texture path
    */
-  public GlTexture getTexture(String texturePath) {
+  public GLTexture getTexture(String texturePath) {
     return this.textures.get(texturePath);
   }
 }

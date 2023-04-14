@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
@@ -55,9 +55,9 @@ public class Render {
    * Renders a given Scene in a Given Window
    *
    * @param window GL (offscreen) window instance {@link Window}
-   * @param scene  GL Scene (containing all models) {@link GlScene}
+   * @param scene  GL Scene (containing all models) {@link GLScene}
    */
-  public void render(Window window, GlScene scene) {
+  public void render(Window window, GLScene scene) {
     GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
     GL30.glViewport(0, 0, window.getWidth(), window.getHeight());
     this.sceneRender.render(scene, this.options);

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 
 /**
  * An Entity in the context of a {@link Model} describes a position and scale of a model in the scene.
@@ -52,7 +53,7 @@ public class Entity {
   /**
    * Constructs a new Entity.
    * Defines an associated model and an id.
-   * With associated model one is able to add new transformations to the Scene {@link org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene#addEntity(Entity)}.
+   * With associated model one is able to add new transformations to the Scene {@link GLScene#addEntity(Entity)}.
    *
    * @param id ID of entity.
    * @param modelId ID of associated model.

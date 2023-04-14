@@ -9,22 +9,22 @@ import org.vitrivr.cineast.core.render.lwjgl.scene.Projection;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
 
 /**
- * The GlScene class ist the top most class of the gl model hierarchy.
+ * The GLScene class ist the top most class of the gl model hierarchy.
  * The gl model hierarchy is used as a wrapper for the model hierarchy.
  * Therefore, each gl class has a corresponding model class.
  * The generic class has to be provided in the constructor.
  * <ul>
- * <li>Scene -> GlScene( Scene )</li>
+ * <li>Scene -> GLScene( Scene )</li>
  * <li>Model -> GlModel( IModel )</li>
- * <li>Material -> GlMaterial( Material )</li>
- * <li>Mesh -> GlMesh( Mesh )</li>
- * <li>Texture -> GlTexture( Texture )</li>
+ * <li>Material -> GLMaterial( Material )</li>
+ * <li>Mesh -> GLMesh( Mesh )</li>
+ * <li>Texture -> GLTexture( Texture )</li>
  * </ul>
  *
  * The purpose is to bring the generic model in an OpenGl context
- * {@link Scene} -> {@link GlScene}
+ * {@link Scene} -> {@link GLScene}
  */
-public class GlScene {
+public class GLScene {
 
   /**
    * The scene that is wrapped by this gl scene.
@@ -33,23 +33,23 @@ public class GlScene {
   /**
    * The wrapped GlModels that are wrapped by this gl scene.
    */
-  private final Map<String, IGlModel> models;
+  private final Map<String, IGLModel> models;
 
   /**
    * The texture cache that is used by this gl scene.
    * Textures are cached to avoid loading the same texture multiple times.
    * Has no corresponding generic class.
    */
-  private final GlTextureCache textureCache;
+  private final GLTextureCache textureCache;
 
   /**
-   * Creates a new GlScene from a scene.
+   * Creates a new GLScene from a scene.
    *
    * @param scene The scene that is wrapped by this gl scene.
    */
-  public GlScene(Scene scene) {
+  public GLScene(Scene scene) {
     this.models = new HashMap<>();
-    this.textureCache = new GlTextureCache();
+    this.textureCache = new GLTextureCache();
     this.scene = scene;
     this.updateGlSceneFromScene();
   }
@@ -92,7 +92,7 @@ public class GlScene {
    * Returns the gl models of the gl scene.
    * @return The gl models of the gl scene.
    */
-  public Map<String, IGlModel> getModels() {
+  public Map<String, IGLModel> getModels() {
     return this.models;
   }
 
@@ -100,7 +100,7 @@ public class GlScene {
    * Returns the texture cache of the gl scene.
    * @return The texture cache of the gl scene.
    */
-  public GlTextureCache getTextureCache() {
+  public GLTextureCache getTextureCache() {
     return this.textureCache;
   }
 
@@ -138,7 +138,7 @@ public class GlScene {
    * Hence, the model could be used by another extraction task this method does not close the generic models or textures.
    */
   public void cleanup() {
-    this.models.values().forEach(IGlModel::cleanup);
+    this.models.values().forEach(IGLModel::cleanup);
     this.models.clear();
     this.textureCache.cleanup();
   }

@@ -5,15 +5,10 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 /**
- * The GLModel class is a wrapper for the {@link IModel} class.
- * <ul>
- * <li>IModel -> GLModel( IModel )</li>
- * </ul>
- * <p>
- * The purpose is to bring the generic IModel in an OpenGl context
- * {@link IModel} -> {@link GLModel}
+ * The Interface IGLModel provides functionality for a arbitrary model used in the OpenGl context.
+ * Itr is the context related counterpart to the {@link IModel} interface.
  */
-public interface IGlModel {
+public interface IGLModel{
 
   /**
    * Returns the entities of the wrapped generic model.
@@ -48,5 +43,5 @@ public interface IGlModel {
    *
    * @return The gl materials of the gl model.
    */
-  List<GlMaterial> getMaterials();
+  List<GLMaterial> getMaterials();
 }

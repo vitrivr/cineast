@@ -7,15 +7,15 @@ import org.lwjgl.system.MemoryStack;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
 
 /**
- * The GlTexture class is a wrapper for the {@link Texture} class.
+ * The GLTexture class is a wrapper for the {@link Texture} class.
  * <ul>
- * <li>Texture -> GlTexture( Texture )</li>
+ * <li>Texture -> GLTexture( Texture )</li>
  * </ul>
  * <p>
  * The purpose is to bring the generic Mesh in an OpenGl context
- * {@link Texture} -> {@link GlTexture}
+ * {@link Texture} -> {@link GLTexture}
  */
-public class GlTexture {
+public class GLTexture {
 
   /**
    * The id of the texture used to bind the texture to the Gl context
@@ -27,7 +27,7 @@ public class GlTexture {
   private final Texture texture;
 
   /**
-   * Creates a new GlTexture from a texture.
+   * Creates a new GLTexture from a texture.
    * <ol>
    *   <li>Load the texture from the file</li>
    *   <li>Allocate the texture buffer</li>
@@ -35,7 +35,7 @@ public class GlTexture {
    * </ol>
    * @param texture The texture that is wrapped by this gl texture.
    */
-  public GlTexture(Texture texture) {
+  public GLTexture(Texture texture) {
     this.texture = texture;
     try (var memoryStack = MemoryStack.stackPush()) {
       var w = memoryStack.mallocInt(1);
@@ -52,14 +52,14 @@ public class GlTexture {
   }
 
   /**
-   * Binds the GlTexture to the Gl context
+   * Binds the GLTexture to the Gl context
    */
   public void bind() {
     GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.textureId);
   }
 
   /**
-   * Cleans the GlTexture
+   * Cleans the GLTexture
    * Does not affect the underlying texture
    * Removes the texture from the GPU
    */

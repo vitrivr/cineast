@@ -34,7 +34,8 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
  * <p>
  * - Rendering of single Mesh or VoxelGrid - Free positioning of the camera in terms of either cartesian or polar coordinate - Snapshot of the rendered image can be obtained at any time.
  * <p>
- * The class supports offscreen rendering and can be accessed by multipled Threads. However, the multithreading model of JOGL requires a thread to retain() and release() the JOGLOffscreenRenderer before rendering anything by calling the respective function.
+ * The class supports offscreen rendering and can be accessed by multipled Threads.
+ * However, the multithreading model of JOGL requires a thread to retain() and release() the JOGLOffscreenRenderer before rendering anything by calling the respective function.
  *
  * @see Mesh
  * @see VoxelGrid
@@ -44,7 +45,7 @@ public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Default GLProfile to be used. Should be GL2. "The desktop OpenGL profile 1.x up to 3.0"
+   * Default GLProfile to be used. Should be GL2. "The desktop OpenGL profile 1.x up to 3.0".
    */
   private static final GLProfile GL_PROFILE = GLProfile.get(GLProfile.GL2);
 
@@ -63,7 +64,7 @@ public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
   }
 
   /**
-   * OpenGL Utility Library reference
+   * OpenGL Utility Library reference.
    */
   private final GLU glu;
   /**
@@ -473,12 +474,14 @@ public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
 
 
   JFrame jFrame;
+
   /**
    * Shows Image in a JFrame for Debug purpose
+   *
    * @param im BufferedImage to show
    */
   private void showImage(BufferedImage im) {
-    if(this.jFrame == null){
+    if (this.jFrame == null) {
       this.jFrame = new JFrame();
       this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

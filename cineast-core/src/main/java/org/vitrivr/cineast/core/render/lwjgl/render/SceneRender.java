@@ -2,8 +2,8 @@ package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import java.util.ArrayList;
 import org.lwjgl.opengl.GL30;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlTexture;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLTexture;
 import org.vitrivr.cineast.core.render.lwjgl.render.ShaderProgram.ShaderModuleData;
 
 /**
@@ -75,7 +75,7 @@ public class SceneRender {
    * Creates standard render options
    * @param scene Scene to render
    */
-  public void render(GlScene scene) {
+  public void render(GLScene scene) {
     this.render(scene, new RenderOptions());
   }
 
@@ -100,7 +100,7 @@ public class SceneRender {
    * @param scene Scene to render
    * @param opt Render options
    */
-  public void render(GlScene scene, RenderOptions opt) {
+  public void render(GLScene scene, RenderOptions opt) {
     this.shaderProgram.bind();
 
     this.uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
@@ -113,7 +113,7 @@ public class SceneRender {
     for (var model : models) {
       var entities = model.getEntities();
       for (var material : model.getMaterials()) {
-        GlTexture texture;
+        GLTexture texture;
         // Either draw texture or use color function
         if (opt.showTextures) {
           this.uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());

@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.render.lwjgl.engine;
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
@@ -29,7 +29,7 @@ public class Engine {
   /**
    * The scene object.
    */
-  private final GlScene scene;
+  private final GLScene scene;
   /**
    * The application logic. Connects the engine to the overlaying application.
    * The Engine calls the methods of the appLogic object depending on the engine state.
@@ -59,7 +59,7 @@ public class Engine {
     this.targetUps = opts.ups;
     this.appLogic = appLogic;
     this.render = new Render();
-    this.scene = new GlScene( new Scene(this.window.getWidth(), this.window.getHeight()));
+    this.scene = new GLScene( new Scene(this.window.getWidth(), this.window.getHeight()));
     this.appLogic.init(this.window, this.scene, this.render);
     this.running = true;
   }
@@ -203,7 +203,7 @@ public class Engine {
    * Returns the scene object.
    * @return The scene object.
    */
-  public GlScene getScene() {
+  public GLScene getScene() {
     return this.scene;
   }
 }

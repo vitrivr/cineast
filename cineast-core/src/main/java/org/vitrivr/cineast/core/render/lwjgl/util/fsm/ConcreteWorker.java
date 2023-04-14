@@ -29,7 +29,6 @@ import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Transition;
  * @see StateEnter
  * @see StateProvider
  * @see ConcreteJob
- *
  * @see Worker
  */
 @SuppressWarnings("unused")
@@ -66,6 +65,7 @@ public class ConcreteWorker extends Worker<ConcreteJob> {
 
   /**
    * Handle exceptions which occur during the execution of the job.
+   *
    * @param ex Exception which occurred.
    * @return handle message
    */

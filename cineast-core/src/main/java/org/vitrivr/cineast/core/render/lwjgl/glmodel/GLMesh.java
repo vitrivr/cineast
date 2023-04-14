@@ -10,15 +10,15 @@ import org.lwjgl.system.MemoryUtil;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Mesh;
 
 /**
- * The GlMesh class is a wrapper for the {@link Mesh} class.
+ * The GLMesh class is a wrapper for the {@link Mesh} class.
  * <ul>
- * <li>Mesh -> GlMesh( Mesh )</li>
+ * <li>Mesh -> GLMesh( Mesh )</li>
  * </ul>
  * <p>
  * The purpose is to bring the generic Mesh in an OpenGl context
- * {@link Mesh} -> {@link GlMesh}
+ * {@link Mesh} -> {@link GLMesh}
  */
-public class GlMesh {
+public class GLMesh {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -37,7 +37,7 @@ public class GlMesh {
 
 
   /**
-   * Creates a new GlMesh from a mesh.
+   * Creates a new GLMesh from a mesh.
    * <ol>
    *   <li>Bind Vertex Array Object</li>
    *   <li>Generate, allocate and initialize Vertex (Positions) Buffer</li>
@@ -47,7 +47,7 @@ public class GlMesh {
  *   </ol>
    * @param mesh The mesh that is wrapped by this gl mesh.
    */
-  public GlMesh(Mesh mesh) {
+  public GLMesh(Mesh mesh) {
     this.mesh = mesh;
     this.vboIdList = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class GlMesh {
     this.vboIdList.forEach(GL30::glDeleteBuffers);
     GL30.glDeleteVertexArrays(this.vaoId);
     this.vboIdList.clear();
-    LOGGER.trace("Cleaned-up GlMesh");
+    LOGGER.trace("Cleaned-up GLMesh");
   }
 
   /**

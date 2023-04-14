@@ -17,7 +17,7 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
  * The purpose is to bring the generic IModel in an OpenGl context
  * {@link IModel} -> {@link GLModel}
  */
-public class GLModel implements IGlModel {
+public class GLModel implements IGLModel {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
@@ -28,7 +28,7 @@ public class GLModel implements IGlModel {
   /**
    * The contained materials in gl context
    */
-  private final List<GlMaterial> materials;
+  private final List<GLMaterial> materials;
 
   /**
    * Creates a new GLModel from a model.
@@ -38,7 +38,7 @@ public class GLModel implements IGlModel {
   public GLModel(IModel model) {
     this.model = model;
     this.materials = new ArrayList<>();
-    this.model.getMaterials().forEach(material -> this.materials.add(new GlMaterial(material)));
+    this.model.getMaterials().forEach(material -> this.materials.add(new GLMaterial(material)));
   }
 
   /**
@@ -62,7 +62,7 @@ public class GLModel implements IGlModel {
    */
   @Override
   public void cleanup() {
-    this.materials.forEach(GlMaterial::cleanup);
+    this.materials.forEach(GLMaterial::cleanup);
     this.materials.clear();
     LOGGER.debug("GLModel cleaned up");
   }
@@ -79,7 +79,7 @@ public class GLModel implements IGlModel {
    * {@inheritDoc}
    */
   @Override
-  public List<GlMaterial> getMaterials() {
+  public List<GLMaterial> getMaterials() {
     return Collections.unmodifiableList(this.materials);
   }
 

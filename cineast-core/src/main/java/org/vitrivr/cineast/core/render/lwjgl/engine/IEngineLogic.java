@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.render.lwjgl.engine;
 
 
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
-import org.vitrivr.cineast.core.render.lwjgl.glmodel.GlScene;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 
 
@@ -23,21 +23,21 @@ public abstract class IEngineLogic {
    * DO NOT CALL ENGINE LOGIC METHODS IN THIS METHOD
    * DO NOT CALL THIS METHOD FROM EXTENDING CLASS
    */
-  protected abstract void init(Window window, GlScene scene, Render render);
+  protected abstract void init(Window window, GLScene scene, Render render);
 
   /**
    * Is called from the engine before the render method.
    * DO NOT CALL ENGINE LOGIC METHODS IN THIS METHOD
    * DO NOT CALL THIS METHOD FROM EXTENDING CLASS
    */
-  protected abstract void beforeRender(Window window, GlScene scene, Render render);
+  protected abstract void beforeRender(Window window, GLScene scene, Render render);
 
   /**
    * Is called from the engine after the render method.
    * DO NOT CALL ENGINE LOGIC METHODS IN THIS METHOD
    * DO NOT CALL THIS METHOD FROM EXTENDING CLASS
    */
-  protected abstract void afterRender(Window window, GlScene scene, Render render);
+  protected abstract void afterRender(Window window, GLScene scene, Render render);
 
   /**
    * This method is called every frame.
@@ -47,7 +47,7 @@ public abstract class IEngineLogic {
    * DO NOT CALL ENGINE LOGIC METHODS IN THIS METHOD
    * DO NOT CALL THIS METHOD FROM EXTENDING CLASS
    */
-  protected abstract void input(Window window, GlScene scene, long diffTimeMillis);
+  protected abstract void input(Window window, GLScene scene, long diffTimeMillis);
 
   /**
    * After Engine run This method is called every frame.
@@ -57,5 +57,5 @@ public abstract class IEngineLogic {
    * DO NOT CALL ENGINE LOGIC METHODS IN THIS METHOD
    * DO NOT CALL THIS METHOD FROM EXTENDING CLASS
    */
-  protected abstract void update(Window window, GlScene scene, long diffTimeMillis);
+  protected abstract void update(Window window, GLScene scene, long diffTimeMillis);
 }

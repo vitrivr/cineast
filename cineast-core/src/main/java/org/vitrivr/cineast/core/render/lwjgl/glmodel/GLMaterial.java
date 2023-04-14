@@ -10,40 +10,40 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.Material;
 
 
 /**
- * The GlMaterial class is a wrapper for the {@link Material} class.
+ * The GLMaterial class is a wrapper for the {@link Material} class.
  * <ul>
- * <li>Material -> GlMaterial( Material )</li>
+ * <li>Material -> GLMaterial( Material )</li>
  * </ul>
  * <p>
  * The purpose is to bring the generic Material in an OpenGl context
- * {@link Material} -> {@link GlMaterial}
+ * {@link Material} -> {@link GLMaterial}
  */
-public class GlMaterial {
+public class GLMaterial {
 
   private static final Logger LOGGER = LogManager.getLogger();
   /**
    * The contained meshes in gl context
    */
-  private final List<GlMesh> meshes;
+  private final List<GLMesh> meshes;
   /**
    * The contained texture in gl context
    */
-  private final GlTexture texture;
+  private final GLTexture texture;
   /**
    * The material that is wrapped by this gl material.
    */
   private final Material material;
 
   /**
-   * Creates a new GlMaterial from a material.
+   * Creates a new GLMaterial from a material.
    *
    * @param material The material that is wrapped by this gl material.
    */
-  public GlMaterial(Material material) {
+  public GLMaterial(Material material) {
     this.meshes = new ArrayList<>();
     this.material = material;
-    this.material.getMeshes().forEach(mesh -> this.meshes.add(new GlMesh(mesh)));
-    this.texture = new GlTexture(this.material.getTexture());
+    this.material.getMeshes().forEach(mesh -> this.meshes.add(new GLMesh(mesh)));
+    this.texture = new GLTexture(this.material.getTexture());
   }
 
   /**
@@ -52,10 +52,10 @@ public class GlMaterial {
    * Hence, the material could be used by another extraction task this method does not close the generic meshes or texture.
    */
   public void cleanup() {
-    this.meshes.forEach(GlMesh::cleanup);
+    this.meshes.forEach(GLMesh::cleanup);
     this.meshes.clear();
     this.texture.cleanup();
-    LOGGER.trace("Cleaned-up GlMaterial}");
+    LOGGER.trace("Cleaned-up GLMaterial}");
   }
 
   /**
@@ -63,7 +63,7 @@ public class GlMaterial {
    *
    * @return The unmodifiable list of gl meshes of this gl material.
    */
-  public List<GlMesh> getMeshes() {
+  public List<GLMesh> getMeshes() {
     return Collections.unmodifiableList(this.meshes);
   }
 
@@ -72,7 +72,7 @@ public class GlMaterial {
    *
    * @return The gl texture of this gl material.
    */
-  public GlTexture getTexture() {
+  public GLTexture getTexture() {
     return this.texture;
   }
 
