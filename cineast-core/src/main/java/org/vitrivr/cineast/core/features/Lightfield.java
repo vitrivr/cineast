@@ -188,7 +188,7 @@ public abstract class Lightfield extends StagedFeatureModule {
     var camerapositions = new LinkedList<Vector3f>();
     for (double[] cameraposition : this.camerapositions) {
       camerapositions.add(new Vector3f((float)
-          cameraposition[0], (float) cameraposition[1], (float) cameraposition[2]).normalize().mul(1f));
+          cameraposition[0], (float) cameraposition[1], (float) cameraposition[2]).normalize().mul(0.95f));
     }
     var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
         model, camerapositions, windowOptions, renderOptions);
