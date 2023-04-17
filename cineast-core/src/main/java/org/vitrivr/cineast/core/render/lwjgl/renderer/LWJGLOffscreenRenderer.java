@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedTransferQueue;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
-import org.vitrivr.cineast.core.render.lwjgl.engine.IEngineLogic;
+import org.vitrivr.cineast.core.render.lwjgl.engine.EngineLogic;
 import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
@@ -20,10 +20,10 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.render.Renderer;
 
 /**
- * This is the top most class of the LWJGL for Java 3D renderer. Its main function is to provide an interface between Engine and the outside world. It sets up the  {@link Engine} and provides the interface to the outside world. {@link Renderer} It extends the abstract class {@link IEngineLogic} which allows the instanced engine to call methods depending on the engine state.
+ * This is the top most class of the LWJGL for Java 3D renderer. Its main function is to provide an interface between Engine and the outside world. It sets up the  {@link Engine} and provides the interface to the outside world. {@link Renderer} It extends the abstract class {@link EngineLogic} which allows the instanced engine to call methods depending on the engine state.
  */
 @SuppressWarnings("deprecation")
-public class LWJGLOffscreenRenderer extends IEngineLogic implements Renderer {
+public class LWJGLOffscreenRenderer extends EngineLogic implements Renderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 

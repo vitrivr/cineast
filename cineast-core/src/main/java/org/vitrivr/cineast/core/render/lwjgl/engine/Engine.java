@@ -34,7 +34,7 @@ public class Engine {
    * The application logic. Connects the engine to the overlaying application.
    * The Engine calls the methods of the appLogic object depending on the engine state.
    */
-  private final IEngineLogic appLogic;
+  private final EngineLogic appLogic;
   /**
    * The target frames per second.
    */
@@ -50,7 +50,7 @@ public class Engine {
    * @param opts The window options.
    * @param appLogic The application logic.
    */
-  public Engine(String windowTitle, WindowOptions opts, IEngineLogic appLogic) {
+  public Engine(String windowTitle, WindowOptions opts, EngineLogic appLogic) {
     this.window = new Window(windowTitle, opts, () -> {
       this.resize();
       return null;

@@ -9,6 +9,7 @@ import org.lwjgl.system.MemoryStack;
 /**
  * Holds a hashmap for used uniforms are global variables in the shader e.g. projectionMatrix, modelMatrix, viewMatrix, txtSampler, material.diffuse
  *
+ * @see <a href="https://www.khronos.org/opengl/wiki/Uniform_(GLSL)">https://www.khronos.org/opengl/wiki/Uniform_(GLSL)</a>
  * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.vert"</a>
  * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.frag"</a>
  */
@@ -18,6 +19,7 @@ public class UniformsMap {
    * HashMap for the uniforms Key: Uniform name Value: Uniform location in the shader
    */
   private final HashMap<String, Integer> uniforms;
+
   /**
    * Program id of the shader
    */
