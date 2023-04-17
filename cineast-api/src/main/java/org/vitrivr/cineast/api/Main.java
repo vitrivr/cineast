@@ -4,6 +4,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Logger;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
+
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
@@ -19,8 +21,11 @@ public class Main {
   public static void main(String[] args) {
     /* (Force) load application config. */
     if (args.length == 0) {
-      System.out.println("No config path given, loading default config cineast.json");
-      Config.loadConfig("cineast.json");
+      System.out.println("No config path given, loading default config '" + DEFAULT_CONFIG_PATH + "'");
+      if (Config.loadConfig(DEFAULT_CONFIG_PATH) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + DEFAULT_CONFIG_PATH + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
     }
 
     /* (Force) load application config. */

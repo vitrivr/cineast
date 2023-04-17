@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.core.extraction.segmenter.general;
 
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+
+import java.util.Set;
 
 /**
  * {@link Segmenter}s split a media file into chunks (segments). The nature of that chunk is specific to the media type and the{@link Segmenter}s implementation. A segment could be anything from a shot of a video to an arbitrary part of song or just a single image.
@@ -39,4 +42,10 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
    */
   @Override
   void close();
+
+  /**
+   * Specifies for which media types this segmenter is
+   * @return The set of {@link MediaType}s this {@link Segmenter} is for.
+   */
+  Set<MediaType> getMediaTypes();
 }

@@ -47,6 +47,7 @@ public enum MediaType {
   private final int id;
   private final String prefix;
   private final String name;
+
   /**
    * Constructs a new media type given the id, the prefix and the name.
    *
