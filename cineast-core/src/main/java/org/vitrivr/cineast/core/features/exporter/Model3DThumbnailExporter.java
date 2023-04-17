@@ -40,16 +40,6 @@ public class Model3DThumbnailExporter implements Extractor {
   private static final String PROPERTY_NAME_SIZE = "size";
 
   /**
-   * List of perspective that should be rendered. Azimuth and polar angles in degree.
-   */
-  private static final float[][] PERSPECTIVES = {
-      {0.0f, 90.0f},
-      {45.0f, 135.0f},
-      {-135.0f, -225.0f},
-      {0.0f, -90.0f}
-  };
-
-  /**
    * Distance of camera from object.
    */
   private static final float DISTANCE = 1f; //(float) Math.sqrt(3);
