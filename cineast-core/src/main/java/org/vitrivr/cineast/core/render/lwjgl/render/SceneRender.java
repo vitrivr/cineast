@@ -19,6 +19,14 @@ import org.vitrivr.cineast.core.render.lwjgl.render.ShaderProgram.ShaderModuleDa
 public class SceneRender {
 
   /**
+   * Resource path to the scene shader program
+   */
+  private static final String VERTEX_SHADER_PATH = "./resources/renderer/lwjgl/shaders/scene.vert";
+  /**
+   * Resource path to the fragment shader program
+   */
+  private static final String FRAGMENT_SHADER_PATH = "./resources/renderer/lwjgl/shaders/scene.vert";
+  /**
    * Instance of the scene shader program
    */
   private final ShaderProgram shaderProgram;
@@ -32,8 +40,8 @@ public class SceneRender {
    */
   public SceneRender() {
     var shaderModuleDataList = new ArrayList<ShaderProgram.ShaderModuleData>();
-    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.vert", GL30.GL_VERTEX_SHADER));
-    shaderModuleDataList.add(new ShaderModuleData("./resources/renderer/lwjgl/shaders/scene.frag", GL30.GL_FRAGMENT_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData(VERTEX_SHADER_PATH, GL30.GL_VERTEX_SHADER));
+    shaderModuleDataList.add(new ShaderModuleData(FRAGMENT_SHADER_PATH, GL30.GL_FRAGMENT_SHADER));
     this.shaderProgram = new ShaderProgram(shaderModuleDataList);
     this.createUniforms();
   }
