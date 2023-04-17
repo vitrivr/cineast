@@ -10,8 +10,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
-import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 
 
 public class MediaObjectDescriptor implements ExistenceCheck {
@@ -64,26 +62,6 @@ public class MediaObjectDescriptor implements ExistenceCheck {
     this.exists = exists;
     this.contentURL = ""; //FIXME this probably need some kind of resolver to be constructed properly
     // Config.sharedConfig().getApi().getObjectLocation() + path;
-  }
-
-  /**
-   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
-   *
-   * @param generator ObjectIdGenerator used for ID generation.
-   * @param path      The Path that points to the file for which a new MediaObjectDescriptor should be created.
-   * @param type      MediaType of the new MediaObjectDescriptor
-   * @param lookup    MediaObjectReader to prevent the assignment of already used ids
-   * @return A new MediaObjectDescriptor
-   */
-  public static MediaObjectDescriptor newMultimediaObjectDescriptor(
-      ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
-    String objectId;
-    do {
-      objectId = generator.next(path, type);
-    } while (lookup != null && lookup.lookUpObjectById(objectId).exists());
-
-    return new MediaObjectDescriptor(objectId,
-        getFileName(path), path.toString(), type, false);
   }
 
   public static String cleanPath(Path path) {

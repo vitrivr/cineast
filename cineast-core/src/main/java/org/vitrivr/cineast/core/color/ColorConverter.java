@@ -291,7 +291,7 @@ public final class ColorConverter {
     return cachedRGBtoLab(rgb.toIntColor());
   }
 
-  public static ReadableLabContainer cachedRGBtoLab(int rgb) {
+  public static synchronized ReadableLabContainer cachedRGBtoLab(int rgb) {
 
     ReadableLabContainer _return = rgbToLabCache.get(rgb);
     if (_return == null) {
