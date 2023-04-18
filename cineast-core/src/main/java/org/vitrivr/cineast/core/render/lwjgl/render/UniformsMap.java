@@ -11,7 +11,7 @@ import org.lwjgl.system.MemoryStack;
  *
  * @see <a href="https://www.khronos.org/opengl/wiki/Uniform_(GLSL)">https://www.khronos.org/opengl/wiki/Uniform_(GLSL)</a>
  * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.vert"</a>
- * @see <a href= "./resources/renderer/lwjgl/shaders/scene.vert">"./resources/renderer/lwjgl/shaders/scene.frag"</a>
+ * @see <a href= "./resources/renderer/lwjgl/shaders/scene.frag">"./resources/renderer/lwjgl/shaders/scene.frag"</a>
  */
 public class UniformsMap {
 

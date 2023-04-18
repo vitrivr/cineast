@@ -55,7 +55,7 @@ public class GLMaterial {
     this.meshes.forEach(GLMesh::cleanup);
     this.meshes.clear();
     this.texture.cleanup();
-    LOGGER.trace("Cleaned-up GLMaterial}");
+    LOGGER.trace("Cleaned-up GLMaterial");
   }
 
   /**

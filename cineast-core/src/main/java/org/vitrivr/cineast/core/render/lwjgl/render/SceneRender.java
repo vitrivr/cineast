@@ -25,7 +25,7 @@ public class SceneRender {
   /**
    * Resource path to the fragment shader program
    */
-  private static final String FRAGMENT_SHADER_PATH = "./resources/renderer/lwjgl/shaders/scene.vert";
+  private static final String FRAGMENT_SHADER_PATH = "./resources/renderer/lwjgl/shaders/scene.frag";
   /**
    * Instance of the scene shader program
    */

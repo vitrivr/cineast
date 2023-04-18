@@ -306,7 +306,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
         return this.normalize(retVal);
       }
-
       case MULTI_IMAGE_PROJECTEDMEAN -> {
         var vectors = embedMultipleImages(images);
         var vectorsMean = new float[EMBEDDING_SIZE];
@@ -436,7 +435,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       this.showTextures = true;
     }};
     // Select the strategy which will be used for model embedding
-    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_2_2;
+    var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_KMEANS;
     // Get camera viewpoint for chosen strategy
     var cameraPositions = getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position

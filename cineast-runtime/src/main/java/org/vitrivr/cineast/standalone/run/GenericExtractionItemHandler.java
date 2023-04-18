@@ -136,6 +136,11 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       protected SegmentContainer getSegmentFromContent(Model content) {
         return new TextureModel3DSegment(content);
       }
+
+      @Override
+      public Set<MediaType> getMediaTypes() {
+        return Sets.newHashSet(MediaType.values());
+      }
     }));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
