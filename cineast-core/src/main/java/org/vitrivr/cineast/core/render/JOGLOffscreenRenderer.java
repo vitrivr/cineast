@@ -420,7 +420,7 @@ public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
     }
     AWTGLReadBufferUtil glReadBufferUtil = new AWTGLReadBufferUtil(gl.getGL2().getGLProfile(), false);
     var image = glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
-    this.showImage(image);
+    //this.showImage(image);
     return image;
   }
 
