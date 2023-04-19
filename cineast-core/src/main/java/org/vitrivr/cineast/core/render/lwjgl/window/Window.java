@@ -36,10 +36,6 @@ public class Window {
    * The function that is called when the window is resized.
    */
   private final Callable<Void> resizeFunc;
-  /**
-   * The mouse input handler.
-   */
-  private final MouseInput mouseInput;
 
   /**
    * Constructor for Window.
@@ -134,8 +130,6 @@ public class Window {
     this.width = arrWidth[0];
     this.height = arrHeight[0];
 
-    // Set mouse input
-    this.mouseInput = new MouseInput(this.windowHandle);
   }
 
   /**
@@ -183,7 +177,6 @@ public class Window {
    */
   public void pollEvents() {
     GLFW.glfwPollEvents();
-    this.mouseInput.input();
   }
 
   /**
@@ -216,12 +209,4 @@ public class Window {
     return GLFW.glfwWindowShouldClose(this.windowHandle);
   }
 
-  /**
-   * Returns the mouse input.
-   *
-   * @return Mouse input.
-   */
-  public MouseInput getMouseInput() {
-    return this.mouseInput;
-  }
 }
