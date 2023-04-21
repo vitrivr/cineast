@@ -5,6 +5,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +46,7 @@ public class RepresentativeFrameExporter implements Extractor {
    *
    * @param properties HashMap containing named properties
    */
-  public RepresentativeFrameExporter(HashMap<String, String> properties) {
+  public RepresentativeFrameExporter(Map<String, String> properties) {
     this.folder = new File(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "./representative_frames"));
   }
 
