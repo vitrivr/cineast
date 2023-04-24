@@ -90,7 +90,7 @@ public class Model3DThumbnailExporter implements Extractor {
       if (model.getMaterials().size() > 0) {
         // Set options for the renderer.
         var windowOptions = new WindowOptions(400, 400) {{
-          this.hideWindow = false;
+          this.hideWindow = true;
         }};
         var renderOptions = new RenderOptions() {{
           this.showTextures = true;
