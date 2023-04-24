@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.texturemodel;
+package org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer;
 
 /**
  * The method used to calculate the entropy.

@@ -23,10 +23,10 @@ import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.texturemodel.EntopyCalculationMethod;
-import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizerStrategy;
-import org.vitrivr.cineast.core.util.texturemodel.ModelEntropyOptimizer;
-import org.vitrivr.cineast.core.util.texturemodel.OptimizerOptions;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.EntopyCalculationMethod;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.EntropyOptimizerStrategy;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.ModelEntropyOptimizer;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.OptimizerOptions;
 
 
 public class Model3DThumbnailExporter implements Extractor {

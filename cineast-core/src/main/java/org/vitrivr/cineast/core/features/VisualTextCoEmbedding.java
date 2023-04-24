@@ -4,15 +4,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Vector3f;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
@@ -37,11 +34,10 @@ import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.KMeansPP;
-import org.vitrivr.cineast.core.util.math.MathConstants;
-import org.vitrivr.cineast.core.util.texturemodel.EntopyCalculationMethod;
-import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizerStrategy;
-import org.vitrivr.cineast.core.util.texturemodel.ModelEntropyOptimizer;
-import org.vitrivr.cineast.core.util.texturemodel.OptimizerOptions;
+import org.vitrivr.cineast.core.util.math.MathHelper;
+import org.vitrivr.cineast.core.util.texturemodel.Viewpoint.ViewpointHelper;
+import org.vitrivr.cineast.core.util.texturemodel.Viewpoint.ViewpointStrategy;
+;
 
 /**
  * A visual-text co-embedding mapping images and text descriptions to the same embedding space.
@@ -304,7 +300,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
           }
         }
         ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
-        return this.normalize(retVal);
+        return MathHelper.normalizeL2InPlace(retVal);
       }
       case MULTI_IMAGE_PROJECTEDMEAN -> {
         var vectors = embedMultipleImages(images);
@@ -314,7 +310,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
             vectorsMean[ic] += vector[ic] / vectors.size();
           }
         }
-        return this.normalize(vectorsMean);
+        return MathHelper.normalizeL2InPlace(vectorsMean);
       }
 
       case MULTI_IMAGE_FRAME -> {
@@ -361,66 +357,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   }
 
   /**
-   * Normalizes a float vector of arbitrary many dimensions to a length of 1
-   *
-   * @param vector the vector to normalize
-   * @return the normalized vector
-   */
-  private float[] normalize(float[] vector) {
-    var length = 0f;
-    for (float v : vector) {
-      length += Math.pow(v, 2);
-    }
-    length = (float) Math.sqrt(length);
-    for (var ic = 0; ic < vector.length; ++ic) {
-      vector[ic] /= length;
-    }
-    return vector;
-  }
-
-  /**
-   * For benchmark purposes. Since the Extractor does not support options, strategy should be implemented in a static way
-   */
-  protected enum ViewpointStrategy {
-    /**
-     * Randomly selects a viewpoint
-     */
-    RANDOM,
-    /**
-     * Selects the viewpoint from the front (0,0,1)
-     */
-    FRONT,
-    /**
-     * Selects the viewpoint from the upper left (-1,1,1)
-     */
-    UPPER_LEFT,
-    /**
-     * Runs the viewpoint entropy maximization algorithm to find the best viewpoint
-     */
-    VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED,
-    /**
-     * Runs the viewpoint entropy maximization algorithm with y plane attraction to find the best viewpoint
-     */
-    VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED,
-    /**
-     * Takes multiple images and aggregates the vectors using k-means
-     */
-    MULTI_IMAGE_KMEANS,
-    /**
-     * Takes multiple images and aggregates the vectors using the projected mean
-     */
-    MULTI_IMAGE_PROJECTEDMEAN,
-    /**
-     * Takes multiple images and embeds them as a video
-     */
-    MULTI_IMAGE_FRAME,
-    /**
-     * Creates a 2x2 image
-     */
-    MULTI_IMAGE_2_2,
-  }
-
-  /**
    * This method embeds a 3D model and returns the feature vector.
    */
   private float[] embedModel(IModel model) {
@@ -437,7 +373,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     // Select the strategy which will be used for model embedding
     var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_KMEANS;
     // Get camera viewpoint for chosen strategy
-    var cameraPositions = getCameraPositions(viewpointStrategy, model);
+    var cameraPositions = ViewpointHelper.getCameraPositions(viewpointStrategy, model);
     // Render an image for each camera position
     var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
         model, cameraPositions, windowOptions, renderOptions);
@@ -450,117 +386,6 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       return embedImage(images.get(0));
     }
     return embedMostRepresentativeImages(images, viewpointStrategy);
-  }
-
-  // Zoom factor for the camera
-  private static final float ZOOM = 1f;
-
-  /*
-   * Helper method returns a list of camera positions for a given model and strategy
-   * This method can be simplified once a good strategy is found
-   * Or the method can be refactored to ModelEntropyOptimizer
-   * @param viewpointStrategy the strategy to use the camera positions
-   * @return an array of camera positions
-   */
-  public double[][] getCameraPositions(ViewpointStrategy viewpointStrategy, IModel model) {
-    var viewVectors = new LinkedList<Vector3f>();
-    switch (viewpointStrategy) {
-      case RANDOM -> {
-        viewVectors.add(new Vector3f(
-            (float) (Math.random() - 0.5) * 2f,
-            (float) (Math.random() - 0.5) * 2f,
-            (float) (Math.random() - 0.5) * 2f)
-            .normalize().mul(ZOOM)
-        );
-      }
-      case UPPER_LEFT -> {
-        viewVectors.add(new Vector3f(
-            -1f,
-            1f,
-            1f)
-            .normalize().mul(ZOOM)
-        );
-      }
-      case VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED_WEIGHTED -> {
-        var opts = new OptimizerOptions() {{
-          this.iterations = 100;
-          this.initialViewVector = new Vector3f(0, 0, 1);
-          this.yPosWeight = 0.8f;
-          this.yNegWeight = 0.7f;
-          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
-          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
-        }};
-        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
-      }
-      case VIEWPOINT_ENTROPY_MAXIMIZATION_RANDOMIZED -> {
-        var opts = new OptimizerOptions() {{
-          this.iterations = 100;
-          this.initialViewVector = new Vector3f(0, 0, 1);
-          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
-          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
-        }};
-        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
-      }
-      case MULTI_IMAGE_KMEANS, MULTI_IMAGE_FRAME, MULTI_IMAGE_PROJECTEDMEAN -> {
-        var views = MathConstants.VERTICES_3D_DODECAHEDRON;
-        for (var view : views) {
-          viewVectors.add(new Vector3f(
-              (float) view[0],
-              (float) view[1],
-              (float) view[2])
-              .normalize().mul(ZOOM)
-          );
-        }
-      }
-      // Front and default
-      case FRONT -> {
-        viewVectors.add(new Vector3f(
-            0f,
-            0f,
-            1)
-            .normalize().mul(ZOOM)
-        );
-      }
-      case MULTI_IMAGE_2_2 -> {
-        viewVectors.add(new Vector3f(
-            0f,
-            0f,
-            1)
-            .normalize().mul(ZOOM)
-        );
-        viewVectors.add(new Vector3f(
-            -1f,
-            1f,
-            1)
-            .normalize().mul(ZOOM)
-        );
-        var opts1 = new OptimizerOptions() {{
-          this.iterations = 100;
-          this.initialViewVector = new Vector3f(0, 0, 1);
-          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA;
-          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
-        }};
-        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts1));
-        var opts2 = new OptimizerOptions() {{
-          this.iterations = 100;
-          this.initialViewVector = new Vector3f(0, 0, 1);
-          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
-          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
-        }};
-        viewVectors.add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts2));
-      }
-    }
-    var camerapositions = new double[viewVectors.size()][3];
-    IntStream.range(0, viewVectors.size()).parallel().forEach(ic ->
-        {
-          var viewVector = viewVectors.get(ic);
-          camerapositions[ic][0] = viewVector.x;
-          camerapositions[ic][1] = viewVector.y;
-          camerapositions[ic][2] = viewVector.z;
-        }
-    );
-    LOGGER.info("Camera {} with strategy {}", camerapositions, viewpointStrategy);
-    return camerapositions;
   }
 
 
