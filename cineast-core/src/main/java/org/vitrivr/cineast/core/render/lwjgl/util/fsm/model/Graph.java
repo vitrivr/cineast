@@ -45,7 +45,7 @@ public class Graph {
    * @param goalStates The set of goal states of the graph.
    */
   public Graph(Hashtable<Transition, State> transitions, State initialState, HashSet<State> goalStates) {
-    this(transitions, initialState, goalStates, true);
+    this(transitions, initialState, goalStates, false);
   }
 
   /**
@@ -101,7 +101,6 @@ public class Graph {
   /**
    * Generates a graph viz string representation of the graph.
    */
-  @SuppressWarnings("unused")
   public String toString(String flavour) {
 
     var sb = new StringBuilder();
