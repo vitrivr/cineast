@@ -1,25 +1,32 @@
 package org.vitrivr.cineast.core.features.exporter;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.m3d.WritableMesh;
+import org.joml.Vector3f;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.EntopyCalculationMethod;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.EntropyOptimizerStrategy;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.ModelEntropyOptimizer;
+import org.vitrivr.cineast.core.util.texturemodel.EntropyOptimizer.OptimizerOptions;
 
 
 public class Model3DThumbnailExporter implements Extractor {
@@ -33,19 +40,9 @@ public class Model3DThumbnailExporter implements Extractor {
   private static final String PROPERTY_NAME_SIZE = "size";
 
   /**
-   * List of perspective that should be rendered. Azimuth and polar angles in degree.
-   */
-  private static final float[][] PERSPECTIVES = {
-      {0.0f, 90.0f},
-      {45.0f, 135.0f},
-      {-135.0f, -225.0f},
-      {0.0f, -90.0f}
-  };
-
-  /**
    * Distance of camera from object.
    */
-  private static final float DISTANCE = 2.0f;
+  private static final float DISTANCE = 1f; //(float) Math.sqrt(3);
 
   /**
    * Destination path; can be set in the AudioWaveformExporter properties.
@@ -57,15 +54,11 @@ public class Model3DThumbnailExporter implements Extractor {
    */
   private final int size;
 
-  /**
-   * Offscreen rendering context.
-   */
-  private final JOGLOffscreenRenderer renderer;
 
   /**
    * Background color of the resulting image.
    */
-  private Color backgroundColor = Color.lightGray;
+  private final Color backgroundColor = Color.lightGray;
 
   /**
    * Default constructor. The AudioWaveformExporter can be configured via named properties in the provided HashMap. Supported parameters:
@@ -80,7 +73,6 @@ public class Model3DThumbnailExporter implements Extractor {
   public Model3DThumbnailExporter(Map<String, String> properties) {
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
-    this.renderer = new JOGLOffscreenRenderer(this.size / 2, this.size / 2);
   }
 
   /**
@@ -93,42 +85,61 @@ public class Model3DThumbnailExporter implements Extractor {
     Path directory = this.destination.resolve(shot.getSuperId());
     try {
       Files.createDirectories(directory);
-      WritableMesh mesh = shot.copyNormalizedMesh();
+      // Get the model to generate a thumbnail for.
+      IModel model = shot.getModel();
+      if (model.getMaterials().size() > 0) {
+        // Set options for the renderer.
+        var windowOptions = new WindowOptions(400, 400) {{
+          this.hideWindow = false;
+        }};
+        var renderOptions = new RenderOptions() {{
+          this.showTextures = true;
+        }};
+        // Set options for the entropy optimizer.
+        var opts = new OptimizerOptions() {{
+          this.iterations = 100;
+          this.initialViewVector = new Vector3f(0, 0, 1);
+          this.method = EntopyCalculationMethod.RELATIVE_TO_TOTAL_AREA_WEIGHTED;
+          this.optimizer = EntropyOptimizerStrategy.RANDOMIZED;
+          this.yNegWeight = 0.7f;
+          this.yPosWeight = 0.8f;
+        }};
 
-      if (!mesh.isEmpty()) {
-        /* Colors the mesh. */
-        MeshColoringUtil.normalColoring(mesh);
+        // Add a Random View, a front View an Upper Left View and an Entropy Optimized View
+        var cameraPositions = new LinkedList<Vector3f>() {{
+          add(new Vector3f(
+              (float) (Math.random() - 0.5) * 2f,
+              (float) (Math.random() - 0.5) * 2f,
+              (float) (Math.random() - 0.5) * 2f)
+              .normalize().mul(DISTANCE));
+          add(new Vector3f(0f, 0f, 1f).normalize().mul(DISTANCE));
+          add(new Vector3f(-1f, 1f, 1f).normalize().mul(DISTANCE));
+          add(ModelEntropyOptimizer.getViewVectorWithMaximizedEntropy(model, opts));
+        }};
 
-        BufferedImage buffer = null;
-        BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = image.getGraphics();
-
-        if (this.renderer.retain()) {
-          this.renderer.clear(this.backgroundColor);
-          this.renderer.assemble(mesh);
-
-          for (int i = 0; i < 4; i++) {
-            this.renderer.positionCameraPolar(DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
-            this.renderer.render();
-            buffer = this.renderer.obtain();
-
-            int idx = i % 2;
-            int idy = i < 2 ? 0 : 1;
-            int sz = this.size / 2;
-
-            graphics.drawImage(buffer, idx * sz, idy * sz, null);
-          }
-        } else {
-          LOGGER.error("Could not export thumbnail image for model {} because renderer could not be retained by current thread.", shot.getId());
+        // Render the model.
+        var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(), model, cameraPositions, windowOptions, renderOptions);
+        assert images.size() == 4;
+        // Combine the images into a single image.
+        var canvas = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
+        var graphics = canvas.getGraphics();
+        graphics.setColor(this.backgroundColor);
+        int sz = this.size / 2;
+        var ic = 0;
+        for (var partialImage : images) {
+          int idx = ic % 2;
+          int idy = ic < 2 ? 0 : 1;
+          graphics.drawImage(partialImage, idx * sz, idy * sz, null);
+          ++ic;
         }
-        ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+        ImageIO.write(canvas, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
       }
     } catch (IOException exception) {
       LOGGER.fatal("Could not export thumbnail image for model {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
     } catch (Exception exception) {
       LOGGER.error("Could not export thumbnail image for model {} because an unknown exception occurred ({}).", shot.getId(), LogHelper.getStackTrace(exception));
     } finally {
-      this.renderer.release();
+      LOGGER.trace("Finished processing thumbnail {}.", shot.getId());
     }
   }
 

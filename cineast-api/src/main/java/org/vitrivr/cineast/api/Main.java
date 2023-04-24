@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.api;
 
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Logger;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
 import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
 
 import org.vitrivr.cineast.standalone.cli.CineastCli;
@@ -62,6 +66,10 @@ public class Main {
       PrometheusServer.stopServer();
       System.out.println("Goodbye!");
     }));
+
+    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()));
+    renderThread.start();
+
     try {
       /* Start Cineast CLI in interactive mode (blocking). */
       if (Config.sharedConfig().getApi().getEnableCli()) {

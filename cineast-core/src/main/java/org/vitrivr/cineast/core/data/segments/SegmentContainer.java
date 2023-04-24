@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.data.providers.InstantProvider;
 import org.vitrivr.cineast.core.data.providers.LocationProvider;
 import org.vitrivr.cineast.core.data.providers.MedianImgProvider;
 import org.vitrivr.cineast.core.data.providers.MeshProvider;
+import org.vitrivr.cineast.core.data.providers.ModelProvider;
 import org.vitrivr.cineast.core.data.providers.MostRepresentativeFrameProvider;
 import org.vitrivr.cineast.core.data.providers.PathProvider;
 import org.vitrivr.cineast.core.data.providers.SemanticMapProvider;
@@ -40,6 +41,7 @@ public interface SegmentContainer
     AudioFrameProvider,
     AudioSTFTProvider,
     MeshProvider,
+    ModelProvider,
     VoxelGridProvider,
     LocationProvider,
     InstantProvider,
