@@ -202,6 +202,7 @@ public class LWJGLOffscreenRenderer extends EngineLogic implements Renderer {
      * @deprecated Old renderer implementation. Not needed. Use quaternion instead.
      */
     @Override
+    @Deprecated
     public void positionCamera(double ex, double ey, double ez,
                                double cx, double cy, double cz,
                                double upx, double upy, double upz) {
