@@ -70,7 +70,6 @@ public abstract class Lightfield extends StagedFeatureModule {
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
-  //private final Renderer renderer;
   protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
     super(tableName, maxDist, vectorLength);
     if (camerapositions.length == 0) {

@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.data.providers;
 
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
-import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 
 public interface ModelProvider {
 
