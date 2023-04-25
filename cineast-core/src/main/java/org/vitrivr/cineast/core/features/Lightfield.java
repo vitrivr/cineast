@@ -150,11 +150,6 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   @Override
   public void processSegment(SegmentContainer sc) {
-//    /* Check for renderer. */
-//    if (this.renderer == null) {
-//      LOGGER.error("No renderer found! {} does not create any features.", this.getClass().getSimpleName());
-//      return;
-//    }
 
     /* If Mesh is empty, no feature is persisted. */
     IModel model = sc.getModel();
