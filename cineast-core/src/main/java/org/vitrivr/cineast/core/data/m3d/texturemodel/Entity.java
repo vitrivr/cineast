@@ -69,48 +69,46 @@ public class Entity {
   }
 
   /**
-   * Returns the id of the entity.
-   * @return ID of entity.
+   * @return Unique ID of entity.
    */
   public String getId() {
     return this.id;
   }
 
   /**
-   * Returns the id of the associated model.
-   * @return ID of associated model.
+   * @return ID of the associated model.
    */
   public String getModelId() {
     return this.modelId;
   }
 
   /**
-   * Returns the model matrix of the entity.
-   * @return Model matrix of entity.
+   * @return Model matrix of entity, describes a rigid transformation of the Model.
    */
   public Matrix4f getModelMatrix() {
     return this.modelMatrix;
   }
 
   /**
-   * Returns the position of the entity.
-   * @return Position of entity.
+   * Translation values, contained in the ModelMatrix
+   * @return Translativ position of entity in x, y, z.
    */
   public Vector3f getPosition() {
     return this.position;
   }
 
   /**
-   * Returns the rotation of the entity.
-   * @return Rotation of entity.
+   * Rotation values, contained in the ModelMatrix
+   * @return Rotation around x,y,z axes as a quaternion.
    */
   public Quaternionf getRotation() {
     return this.rotation;
   }
 
   /**
-   * Returns the scale of the entity.
-   * @return Scale of entity.
+   * Scale value, contained in the ModelMatrix
+   * Scales the associated model. 1.0f is no scaling.
+   * @return Scale value.
    */
   public float getScale() {
     return this.scale;
@@ -130,7 +128,7 @@ public class Entity {
   }
 
   /**
-   * Sets the as a translation vector from the origin.
+   * Sets translation vector from the origin.
    * @param position Position of entity.
    */
   public void setPosition(Vector3f position) {
@@ -168,7 +166,7 @@ public class Entity {
 
   /**
    * Updates the model matrix of the entity.
-   * This has to be called after any transformation.
+   * @implSpec This has to be called after any transformation.
    */
   public void updateModelMatrix() {
     this.modelMatrix.translationRotateScale(this.position, this.rotation, this.scale);
@@ -176,7 +174,7 @@ public class Entity {
 
   /**
    * Closes the entity.
-   * Sets the position, rotation and scale to zero.
+   * Sets the position, rotation  to zero and scale to 1.
    */
   public void close() {
     this.position.zero();
