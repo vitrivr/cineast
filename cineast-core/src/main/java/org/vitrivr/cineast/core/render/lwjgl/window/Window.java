@@ -14,9 +14,7 @@ import org.lwjgl.system.MemoryUtil;
  * This class represents a window that can be used for rendering.
  * It is based on the LWJGL3 library.
  * It can be used for both headless and visible rendering.
- * TODO: Clean callbacks
  */
-@SuppressWarnings("all")
 public class Window {
 
   private static final Logger LOGGER = LogManager.getLogger();
