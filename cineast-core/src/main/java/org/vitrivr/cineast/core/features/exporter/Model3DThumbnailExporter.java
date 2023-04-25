@@ -125,6 +125,7 @@ public class Model3DThumbnailExporter implements Extractor {
         var graphics = canvas.getGraphics();
         graphics.setColor(this.backgroundColor);
         int sz = this.size / 2;
+        // ic: sub-image counter, idx: x-axis-index, idy: y-axis-index
         var ic = 0;
         for (var partialImage : images) {
           int idx = ic % 2;
