@@ -121,7 +121,12 @@ public abstract class Job {
   }
 
   /**
-   * Sets the data of the job
+   * Sets the data of the job as a variant.
+   * The key of the data has to match the data string in the annotation.
+   * @see StateEnter,
+   * @see StateLeave
+   * @see StateTransition
+   * On a transitions in the StateMachine, the parser search the data that has to be passed to the invoked method by its key and hand it over as a parameter.
    * @param data The data to set
    */
   public void setData(Variant data) {
@@ -129,31 +134,34 @@ public abstract class Job {
   }
 
   /**
-   * Returns the data of the job
-   * @return The data of the job
+   * @return The data of the job. Null if the job is a CONTROL job
    */
   public Variant getData() {
     return this.data;
   }
 
   /**
-   * Returns the actions queue of the job
-   * @return The actions queue of the job
+   * The queue contains the action sequence of the job that the worker has to perform.
+   * The actions can be added before registering the job to the worker or on the fly.
+   * @return The actions queue of the job.
    */
   public BlockingDeque<Action> getActions() {
     return this.actions;
   }
 
   /**
-   * Returns the type of the job
-   * @return The type of the job
+   * The type of the job is used to control the worker
+   * Order jobs are something the worker has to do.
+   * Response jobs is the result the worker has done.
+   * Control jobs are commands for the worker.
+   * @return The type of the job.
    */
   public JobType getType() {
     return this.type;
   }
 
   /**
-   * Returns the command of the job
+   * The command is the detailed information of a control job.
    * @return The command of the job
    */
   public JobControlCommand getCommand() {
