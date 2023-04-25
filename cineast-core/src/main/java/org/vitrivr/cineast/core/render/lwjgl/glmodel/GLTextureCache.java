@@ -28,11 +28,11 @@ public class GLTextureCache {
 
   /**
    * Cleans up the texture cache
-   * Removes only the references to wrapped cached
-   * TODO: Check probably optimize by removing the mapped values
+   * Cleans the registered textures and clears the cache
    */
   public void cleanup() {
     this.textures.values().forEach(GLTexture::cleanup);
+    this.textures.clear();
   }
 
   /**
