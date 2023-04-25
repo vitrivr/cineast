@@ -40,7 +40,10 @@ public class ModelParser extends DataURLParser {
       /* Create new Mesh. */
       Model model = Model.EMPTY;
 
-      // TODO: JLWGL Model for Web
+      // TODO: LWJGL Model for Web. The todo is to crate a model from the serialized api call.
+      //  This is needed if example based queries for e.g. similarity search is needed.
+      //  The functionality has to be implemented first into vitrivr NG and/or vitrivr VR.
+
       return model;
     } catch (IOException e) {
       LOGGER.error("Could not create 3d mesh from Base64 input because the file-format is not supported. {}", LogHelper.getStackTrace(e));
