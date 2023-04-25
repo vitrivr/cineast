@@ -56,6 +56,9 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmente
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -385,11 +388,11 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         LOGGER.debug("Closing metadata extractor {}", extractor.getClass().getSimpleName());
         extractor.finish();
       }
-      //TODO: shutdown renderers
       LOGGER.debug("Closing & flushing all writers");
       if (pathProvider != null) {
         pathProvider.close();
       }
+
       this.mediaSegmentWriter.close();
       this.objectWriter.close();
       this.metadataWriter.close();
