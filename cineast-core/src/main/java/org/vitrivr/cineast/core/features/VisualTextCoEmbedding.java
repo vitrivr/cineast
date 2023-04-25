@@ -162,7 +162,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
       LOGGER.error("Image was provided, but could not be decoded!");
     }
 
-    /* Added Model support {@author R. Waltenspül} */
+    // Case: segment contains model
     var model = sc.getModel();
     if (model != null) {
       LOGGER.debug("Retrieving with MODEL.");
