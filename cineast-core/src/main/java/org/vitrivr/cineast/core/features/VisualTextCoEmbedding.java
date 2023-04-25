@@ -281,7 +281,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     var retVal = new float[EMBEDDING_SIZE];
 
     switch (viewpointStrategy) {
-
+      // Strategy for embedding multiple images. Choose mean of the most contained cluster. Project mean to unit hypersphere.
       case MULTI_IMAGE_KMEANS -> {
         var floatvectors = new ArrayList<FloatVectorImpl>();
         var vectors = embedMultipleImages(images);
@@ -302,6 +302,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         ReadableFloatVector.toArray(kmeans.getCenters().get(maxIndex), retVal);
         return MathHelper.normalizeL2InPlace(retVal);
       }
+      // Strategy for embedding multiple images. Calculate mean over all. Project mean to unit hypersphere.
       case MULTI_IMAGE_PROJECTEDMEAN -> {
         var vectors = embedMultipleImages(images);
         var vectorsMean = new float[EMBEDDING_SIZE];
@@ -312,11 +313,12 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
         }
         return MathHelper.normalizeL2InPlace(vectorsMean);
       }
-
+      // Strategy for embedding multiple images. Create a video from the images and embed the video.
       case MULTI_IMAGE_FRAME -> {
         var frames = framesFromImages(images);
         return embedVideo(frames);
       }
+      // Strategy for embedding an image consisting out of four sub images.
       case MULTI_IMAGE_2_2 -> {
         assert images.size() == 4;
         var sz = images.get(0).getWidth();
@@ -328,6 +330,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
             BufferedImage.TYPE_INT_RGB);
         var graphics = canvas.getGraphics();
         graphics.setColor(Color.BLACK);
+        // ic: image counter, idx: x-axis-index, idy: yaxis-index
         var ic = 0;
         for (var partialImage : images) {
           int idx = ic % 2;
