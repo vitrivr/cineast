@@ -32,13 +32,6 @@ public class MinimalBoundingBox {
   private final Vector3f com = new Vector3f(0f, 0f, 0f);
 
   /**
-   * Norm to which the bounding box is scaled. Usually 1.
-   * TODO: include in scaling factor to norm calculation.
-   */
-  @SuppressWarnings("unused")
-  private final float norm = 1f;
-
-  /**
    * Scaling factor to norm. The scaling factor is the factor to scale the bounding box to the norm. 1 for no scaling.
    */
   private float scalingFactorToNorm = 1f;
