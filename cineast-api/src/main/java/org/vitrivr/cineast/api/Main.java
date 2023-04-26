@@ -70,7 +70,7 @@ public class Main {
     }));
 
     /* Initialize Renderer */
-    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()));
+    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
     renderThread.start();
 
     try {
