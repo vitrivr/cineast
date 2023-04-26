@@ -123,8 +123,7 @@ public class ViewpointHelper {
                     camerapositions[ic][2] = viewVector.z;
                 }
         );
-        LOGGER.info("Camera {} with strategy {}", camerapositions, viewpointStrategy);
+        LOGGER.debug("Camera {} with strategy {}", camerapositions, viewpointStrategy);
         return camerapositions;
     }
-
 }
