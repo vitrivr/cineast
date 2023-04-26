@@ -53,11 +53,11 @@ public final class MimeTypeHelper {
     FILETYPES.put("ogg", "audio/ogg");
     FILETYPES.put("flac", "audio/flac");
 
-    //3D Mime types (self-defimed)
+    //3D Mime types (self-defined Mime Types)
     FILETYPES.put("stl", "application/3d-stl");
     FILETYPES.put("off", "application/3d-off");
 
-    //3D TExture Mime types (self-defimed)
+    //3D Texture Mime types (self-defined Mime Types)
     FILETYPES.put("obj", "application/3dt-obj");
     FILETYPES.put("gltf", "application/3dt-gltf");
   }
