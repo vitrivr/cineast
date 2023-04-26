@@ -142,7 +142,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
       @Override
       public Set<MediaType> getMediaTypes() {
-        return Sets.newHashSet(MediaType.values());
+        return Sets.newHashSet(MediaType.TEXTUREMODEL3D);
       }
     }));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
@@ -153,7 +153,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
       @Override
       public Set<MediaType> getMediaTypes() {
-        return Sets.newHashSet(MediaType.values());
+        return Sets.newHashSet(MediaType.MODEL3D);
       }
     }));
     // #353: Respect the given segmenter
