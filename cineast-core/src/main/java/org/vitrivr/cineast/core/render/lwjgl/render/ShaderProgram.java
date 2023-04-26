@@ -102,14 +102,13 @@ public class ShaderProgram {
     }
     shaderModules.forEach(s -> GL30.glDetachShader(this.programId, s));
     shaderModules.forEach(GL30::glDeleteShader);
+    this.validate();
   }
 
   /**
    * Validates the program
    * Throws an exception if the program is not valid
-   * TODO: add to link, has to be checked
    */
-  @SuppressWarnings("unused")
   public void validate() {
     GL30.glValidateProgram(this.programId);
     if (GL30.glGetProgrami(this.programId, GL30.GL_VALIDATE_STATUS) == 0) {
