@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +123,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    if (this.context.getType() == MediaType.IMAGE_SEQUENCE) {
+      handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    }
     handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
@@ -139,10 +142,15 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     // #353: Respect the given segmenter
     final Set<MediaType> segmenterTypes;
     final Segmenter<Object> segmenter = context.newSegmenter();
-    segmenterTypes = segmenter.getMediaTypes();
-    segmenterTypes.forEach(t -> {
-      handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
-    });
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+      LOGGER.debug("Segmenter specified for media types {}, overwriting defaults", Arrays.toString(segmenterTypes.toArray()));
+    } else {
+      LOGGER.info("No segmenter specified, using default");
+    }
 
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {

@@ -68,7 +68,7 @@ public class ImageSequenceSegmenter implements Segmenter<ImageSequence> {
     if (context.objectIdGenerator() instanceof FileNameObjectIdGenerator) {
       this.idgenerator = (FileNameObjectIdGenerator) context.objectIdGenerator();
     } else {
-      throw new IllegalStateException("This segmenter is only intended to be used with id generation based on filenames");
+      throw new IllegalStateException("This image sequence segmenter is only intended to be used with id generation based on filenames");
     }
   }
 
