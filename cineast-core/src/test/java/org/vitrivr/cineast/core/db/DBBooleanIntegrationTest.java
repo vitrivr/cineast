@@ -196,7 +196,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(-idToCheck));
     values.add(PrimitiveTypeProvider.fromObject(-(idToCheck - 1)));
-    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(DATA_COL_NAME_2, RelationalOperator.BETWEEN, values, null);
     var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
     Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck)));
     Assertions.assertTrue(hasItem(list, String.valueOf(idToCheck - 1)));
@@ -212,7 +212,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     }
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.GREATER, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.GREATER, values, null);
     var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
     Assertions.assertTrue(hasItem(list, String.valueOf(TABLE_CARD - 1)));
   }
@@ -224,7 +224,7 @@ public abstract class DBBooleanIntegrationTest<R> {
     int idToCheck = 1;
     final List<PrimitiveTypeProvider> values = new ArrayList<>();
     values.add(PrimitiveTypeProvider.fromObject(idToCheck));
-    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.LESS, values);
+    final List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(ID_COL_NAME, RelationalOperator.LESS, values, null);
     var list = result.stream().map(el -> el.get(ID_COL_NAME).getString()).collect(Collectors.toList());
     Assertions.assertTrue(hasItem(list, String.valueOf(0)));
   }

@@ -187,8 +187,8 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
-    final Distance distance = config.getDistance().orElse(Distance.euclidean);
+  public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] vector, String column, Class<E> distanceElementClass, ReadableQueryConfig queryConfig) {
+    final Distance distance = queryConfig.getDistance().orElse(Distance.euclidean);
     try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id, distance(" + column + "," + toVectorString(vector) + ",'" + toName(distance) + "') as dist FROM " + this.fqn + " ORDER BY dist ASC LIMIT " + k)) {
       /* Execute query and return results. */
       try (final ResultSet rs = statement.executeQuery()) {
@@ -205,14 +205,14 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
+  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> queryConfigs) {
     LOGGER.warn("Error occurred during query execution in getBatchedNearestNeighbours(): Not supported");
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
-    final Distance distance = config.getDistance().orElse(Distance.euclidean);
+  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig queryConfig) {
+    final Distance distance = queryConfig.getDistance().orElse(Distance.euclidean);
 
     try (final PreparedStatement statement = this.wrapper.connection.prepareStatement("SELECT id, distance(" + column + "," + toVectorString(vector) + ",'" + toName(distance) + "') as dist FROM " + this.fqn + " ORDER BY dist ASC LIMIT " + k)) {
       /* Execute query and return results. */
@@ -226,8 +226,8 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    try (final PreparedStatement statement = this.prepareStatement(fieldName, RelationalOperator.EQ, List.of(value))) {
+  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
+    try (final PreparedStatement statement = this.prepareStatement(column, RelationalOperator.EQ, List.of(value))) {
       /* Execute query and return results. */
       final List<float[]> _return = new LinkedList<>();
       try (final ResultSet rs = statement.executeQuery()) {
@@ -246,12 +246,12 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryID) {
     final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
     if (mapped.length == 0) {
       return new ArrayList<>(0);
     }
-    try (final PreparedStatement statement = this.prepareInStatement(fieldName, values)) {
+    try (final PreparedStatement statement = this.prepareInStatement(column, values)) {
       /* Execute query and return results. */
       try (final ResultSet rs = statement.executeQuery()) {
         return processResults(rs);
@@ -263,14 +263,14 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
     LOGGER.warn("Error occurred during query execution in getFulltextRows(): Not supported");
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
-    try (final PreparedStatement statement = this.prepareStatement(fieldName, operator, values)) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values, ReadableQueryConfig queryConfig) {
+    try (final PreparedStatement statement = this.prepareStatement(column, operator, values)) {
       try (final ResultSet rs = statement.executeQuery()) {
         return processResults(rs);
       }
@@ -288,7 +288,7 @@ public final class PolyphenySelector implements DBSelector {
    * @param projection Which columns shall be selected
    */
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig qc) {
+  public List<Map<String, PrimitiveTypeProvider>> getRowsAND(List<Triple<String, RelationalOperator, List<PrimitiveTypeProvider>>> conditions, String identifier, List<String> projection, ReadableQueryConfig queryConfig) {
     final StringBuilder conditionBuilder = new StringBuilder();
     final LinkedList<PrimitiveTypeProvider> values = new LinkedList<>();
     int i = 0;
@@ -345,18 +345,6 @@ public final class PolyphenySelector implements DBSelector {
         try (final ResultSet rs = statement.executeQuery("SELECT " + String.join(",", columns) + " FROM " + this.fqn)) {
           return processResults(rs);
         }
-      }
-    } catch (SQLException e) {
-      LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
-      return new ArrayList<>(0);
-    }
-  }
-
-  @Override
-  public List<PrimitiveTypeProvider> getAll(String column) {
-    try (final Statement statement = this.wrapper.connection.createStatement()) {
-      try (final ResultSet rs = statement.executeQuery("SELECT " + column + " FROM " + this.fqn)) {
-        return processSingleColumnResult(rs);
       }
     } catch (SQLException e) {
       LOGGER.warn("Error occurred during query execution in getAll(): {}", e.getMessage());
