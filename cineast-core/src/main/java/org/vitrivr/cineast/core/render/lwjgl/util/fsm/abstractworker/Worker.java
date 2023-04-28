@@ -147,7 +147,7 @@ public abstract class Worker<T extends Job> implements Runnable {
      * <ul>
      * <li> Take action</li>
      * <li> Move to next state</li>
-     * <li> The StateProviderAnnotationParser will call all methods in the ConcreteWorker that were marked with a corresponding Annotation</li>
+     * <li> The StateProviderAnnotationParser will call all methods in the Worker that were marked with a corresponding Annotation</li>
      * </ul>
      *
      * @param job Job to be performed.
