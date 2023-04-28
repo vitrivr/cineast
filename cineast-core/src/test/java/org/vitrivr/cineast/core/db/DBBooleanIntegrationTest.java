@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -149,7 +150,7 @@ public abstract class DBBooleanIntegrationTest<R> {
   public void count() {
     selector.open(testTableName);
     Assertions.assertEquals(TABLE_CARD, selector.getAll().size());
-    Assertions.assertEquals(TABLE_CARD, selector.getAll(DATA_COL_NAME_1).size());
+    Assertions.assertEquals(TABLE_CARD, selector.getAll(Collections.singletonList(DATA_COL_NAME_1), -1).size());
   }
 
   @Test

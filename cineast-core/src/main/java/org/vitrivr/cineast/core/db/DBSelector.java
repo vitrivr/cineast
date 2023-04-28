@@ -202,24 +202,31 @@ public interface DBSelector extends Closeable {
     return Lists.newArrayList(uniques);
   }
 
+  /**
+   * counts how many times each element appears per value in a given column.
+   * This can be useful for example to debug duplicates or count occurences of tags
+   */
   default Map<String, Integer> countDistinctValues(String column) {
     Map<String, Integer> count = new HashMap<>();
-    this.getAll(column).forEach(el -> count.compute(el.getString(), (k, v) -> v == null ? 1 : v++));
+    this.getAll(Collections.singletonList(column), -1).forEach(el -> count.compute(el.get(column).getString(), (k, v) -> v == null ? 1 : v++));
     return count;
   }
 
   /**
-   * by default just calls the implementation with a null-list for ids
+   * Returns all available metadata based on the specification.
    */
   default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryID) {
     return this.getMetadataByIdAndSpec(null, spec, null, dbQueryID);
   }
 
-  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName) {
-    return getMetadataByIdAndSpec(ids, spec, idColName, null);
-  }
-
   /**
+   * Retrieves Metadata based on ids, access specification and other parameters
+   *
+   * @param ids ids for which to fetch metadata
+   * @param spec which metadata should be fetched
+   * @param idColName the name of the column which the id refers to. Can be null, in which case the default behavior is used
+   * @param dbQueryID query identifier. Can be null
+   *
    * Horribly slow default implementation which iterates over the whole table
    */
   default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID) {
@@ -265,16 +272,8 @@ public interface DBSelector extends Closeable {
     }).collect(Collectors.toList());
   }
 
-
   /**
-   * SELECT column from the table. Be careful with large entities
-   */
-  default List<PrimitiveTypeProvider> getAll(String column) {
-    return getAll().stream().map(el -> el.get(column)).collect(Collectors.toList());
-  }
-
-  /**
-   * SELECT columns from the table. Be careful with large entities
+   * SELECT columns from the table. Be careful with large entities (SELECT columns FROM table)
    *
    * @param limit if <= 0, parameter is ignored
    */
@@ -304,7 +303,7 @@ public interface DBSelector extends Closeable {
   }
 
   /**
-   * Get all rows from all tables
+   * Get all rows from the tables (SELECT * FROM table)
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
