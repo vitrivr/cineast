@@ -48,7 +48,6 @@ public class GLTexture {
       }
       this.generateTexture(w.get(), h.get(), imageBuffer);
       STBImage.stbi_image_free(imageBuffer);
-      memoryStack.close();
     }
   }
 
