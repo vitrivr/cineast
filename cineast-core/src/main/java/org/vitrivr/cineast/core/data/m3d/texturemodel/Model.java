@@ -114,18 +114,6 @@ public class Model implements IModel {
   }
 
   /**
-   * Replaces the texture of all materials with a solid color.
-   * @param color Color to be used.
-   */
-  @Override
-  public void replaceTextureWithColor(Vector4f color){
-    for (var material:this.materials) {
-      material.setTexture(new Texture());
-      material.setDiffuseColor(color);
-    }
-  }
-
-  /**
    * Closes the model and releases all resources.
    */
   public void close(){

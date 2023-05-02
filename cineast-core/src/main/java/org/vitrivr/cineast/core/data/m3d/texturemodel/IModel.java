@@ -31,12 +31,6 @@ public interface IModel {
   List<Material> getMaterials();
 
   /**
-   * Replace the texture of this model with a solid color (r,g,b,opacity).
-   */
-  @SuppressWarnings("unused")
-  void replaceTextureWithColor(Vector4f color);
-
-  /**
    * Returns a list of all vertices that are associated with this model.
    * @return List of {@link Vector3f} objects.
    */
