@@ -1,11 +1,20 @@
 package org.vitrivr.cineast.core.features;
 
+import com.jogamp.opengl.awt.GLCanvas;
 import com.twelvemonkeys.image.ImageUtil;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.LinkedBlockingDeque;
+import javax.imageio.ImageIO;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -13,11 +22,24 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.MeshOnlyRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
+import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.LWJGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderActions;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderData;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobType;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.model.Action;
+import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -44,11 +66,10 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   private final double[][] camerapositions;
 
+
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
-  private final Renderer renderer;
-
   protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
     super(tableName, maxDist, vectorLength);
     if (camerapositions.length == 0) {
@@ -60,19 +81,6 @@ public abstract class Lightfield extends StagedFeatureModule {
       }
     }
     this.camerapositions = camerapositions;
-
-    /*
-     * Instantiate JOGLOffscreenRenderer.
-     * Handle the case where it cannot be created due to missing OpenGL support.
-     */
-    JOGLOffscreenRenderer renderer = null;
-    try {
-      renderer = new JOGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
-    } catch (Exception exception) {
-      LOGGER.error("Could not instantiate JOGLOffscreenRenderer! This instance of {} will not create any results or features!", this.getClass().getSimpleName());
-    } finally {
-      this.renderer = renderer;
-    }
   }
 
 
@@ -87,22 +95,14 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   @Override
   protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    /* Check if renderer could be initialised. */
-    if (this.renderer == null) {
-      LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
-      return new ArrayList<>(0);
-    }
-
-    /* Extract features from either the provided Mesh (1) or image (2). */
-    ReadableMesh mesh = sc.getNormalizedMesh();
+    IModel model = sc.getModel();
     List<float[]> features;
-    if (mesh.isEmpty()) {
+    if (model == null) {
       BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), RENDERING_SIZE, RENDERING_SIZE, Image.SCALE_SMOOTH);
       features = this.featureVectorsFromImage(image, POSEIDX_UNKNOWN);
     } else {
-      features = this.featureVectorsFromMesh(mesh);
+      features = this.featureVectorsFromMesh(model);
     }
-
     return features;
   }
 
@@ -150,20 +150,15 @@ public abstract class Lightfield extends StagedFeatureModule {
    */
   @Override
   public void processSegment(SegmentContainer sc) {
-    /* Check for renderer. */
-    if (this.renderer == null) {
-      LOGGER.error("No renderer found! {} does not create any features.", this.getClass().getSimpleName());
-      return;
-    }
 
     /* If Mesh is empty, no feature is persisted. */
-    ReadableMesh mesh = sc.getNormalizedMesh();
-    if (mesh == null || mesh.isEmpty()) {
+    IModel model = sc.getModel();
+    if (model == null) {
       return;
     }
 
     /* Extract and persist all features. */
-    List<float[]> features = this.featureVectorsFromMesh(mesh);
+    List<float[]> features = this.featureVectorsFromMesh(model);
     for (float[] feature : features) {
       this.persist(sc.getId(), new FloatVectorImpl(feature));
     }
@@ -172,49 +167,34 @@ public abstract class Lightfield extends StagedFeatureModule {
   /**
    * Extracts the Lightfield Fourier descriptors from a provided Mesh. The returned list contains elements of which each holds a pose-index (relative to the camera-positions used by the feature module) and the associated feature-vector (s).
    *
-   * @param mesh Mesh for which to extract the Lightfield Fourier descriptors.
+   * @param model Model for which to extract the Lightfield Fourier descriptors.
    * @return List of descriptors for mesh.
    */
-  protected List<float[]> featureVectorsFromMesh(ReadableMesh mesh) {
+  protected List<float[]> featureVectorsFromMesh(IModel model) {
     /* Prepare empty list of features. */
     List<float[]> features = new ArrayList<>(20);
-
-    /* Retains the renderer and returns if retention fails. */
-    if (!this.renderer.retain()) {
-      return features;
+    var windowOptions = new WindowOptions(RENDERING_SIZE, RENDERING_SIZE) {{
+      this.hideWindow = true;
+    }};
+    var renderOptions = new RenderOptions() {{
+      this.showTextures = false;
+    }};
+    var camerapositions = new LinkedList<Vector3f>();
+    for (double[] cameraposition : this.camerapositions) {
+      camerapositions.add(new Vector3f((float)
+          cameraposition[0], (float) cameraposition[1], (float) cameraposition[2]).normalize().mul(0.95f));
     }
+    var images = RenderJob.performStandardRenderJob(RenderWorker.getRenderJobQueue(),
+        model, camerapositions, windowOptions, renderOptions);
 
-    /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
-     * the renderer is released again.
-     */
-    try {
-      /* Clears the renderer and assembles a new Mesh. */
-      this.renderer.clear();
-      this.renderer.assemble(mesh);
-
-      /* Obtains rendered image from configured perspective. */
-      for (int i = 0; i < this.camerapositions.length; i++) {
-        /* Adjust the camera and render the image. */
-        this.renderer.positionCamera((float) this.camerapositions[i][0], (float) this.camerapositions[i][1], (float) this.camerapositions[i][2]);
-        this.renderer.render();
-        BufferedImage image = this.renderer.obtain();
-        if (image == null) {
-          LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
-          return features;
-        }
-        features.addAll(this.featureVectorsFromImage(image, i));
-      }
-
-    } catch (Exception exception) {
-      LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
-    } finally {
-      /* Release the rendering context. */
-      this.renderer.release();
+    var ic = 0;
+    for ( var image :images){
+      features.addAll(this.featureVectorsFromImage(image, ic));
+      ic++;
     }
-
-    /* Extract and persist the feature descriptors. */
     return features;
   }
+
 
   protected abstract List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx);
 
