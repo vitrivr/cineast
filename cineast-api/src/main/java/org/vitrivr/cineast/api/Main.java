@@ -72,7 +72,7 @@ public class Main {
       System.out.println("Goodbye!");
     }));
 
-    if (Config.sharedConfig().getApi().getEnableRenderWorker()) {
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
       /* Initialize Renderer */
       var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
       renderThread.start();

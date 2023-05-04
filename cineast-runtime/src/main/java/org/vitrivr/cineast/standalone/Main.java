@@ -47,7 +47,7 @@ public class Main {
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
 
-    if (Config.sharedConfig().getApi().getEnableRenderWorker()) {
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
       /* Initialize Renderer */
       var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
       renderThread.start();

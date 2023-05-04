@@ -35,10 +35,6 @@ public final class APIConfig {
 
   private boolean allowExtraction = true;
 
-  /**
-   * Whether the RenderWorker for GLFW should be used
-   */
-  private boolean enableRenderWorker = false;
   private boolean enableCLI = false;
   private int threadPoolSize = 8;
 
@@ -75,11 +71,6 @@ public final class APIConfig {
   @JsonProperty
   public boolean getEnableWebsocket() {
     return this.enableWebsocket;
-  }
-
-  @JsonProperty
-  public boolean getEnableRenderWorker() {
-    return this.enableRenderWorker;
   }
 
   public void setEnableWebsocket(boolean enableWebsocket) {
