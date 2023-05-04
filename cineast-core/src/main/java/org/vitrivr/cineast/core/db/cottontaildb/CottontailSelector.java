@@ -313,7 +313,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
     if (dbQueryID == null) {
-      dbQueryID = "";
+      dbQueryID = generateQueryID("get-rows-help");
     }
     final Query query = new Query(this.fqn).select("*", null).where(new Expression(fieldName, op, mapped)).queryId(dbQueryID);
     try {
@@ -397,6 +397,9 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryID, ReadableQueryConfig queryConfig) {
+    if (dbQueryID == null) {
+      dbQueryID = generateQueryID("md-spec", queryConfig);
+    }
     final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     predicates.ifPresent(query::where);
@@ -409,7 +412,10 @@ public final class CottontailSelector implements DBSelector {
       LOGGER.trace("No ids specified, not fetching any metadata for query id {}", dbQueryID);
       return new ArrayList<>();
     }
-    final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID == null ? "md-id-spec" : dbQueryID);
+    if (dbQueryID == null) {
+      dbQueryID = generateQueryID("md-id-spec", queryConfig);
+    }
+    final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryID);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
     final Expression segmentIds = new Expression(idColName, "IN", ids.toArray());
     if (predicates.isPresent()) {
