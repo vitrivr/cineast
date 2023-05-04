@@ -312,6 +312,9 @@ public final class CottontailSelector implements DBSelector {
       LOGGER.debug("empty in-clause, not executing query {}", dbQueryID);
       return new ArrayList<>(0);
     }
+    if (dbQueryID == null) {
+      dbQueryID = "";
+    }
     final Query query = new Query(this.fqn).select("*", null).where(new Expression(fieldName, op, mapped)).queryId(dbQueryID);
     try {
       return processResults(this.cottontail.client.query(query));
