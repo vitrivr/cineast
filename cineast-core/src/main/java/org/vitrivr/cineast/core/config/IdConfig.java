@@ -35,7 +35,7 @@ public final class IdConfig {
    * Constructor for default {@link IdConfig}.
    */
   public IdConfig() {
-    this("UniqueObjectIdGenerator", ExistenceCheck.CHECK_SKIP, new HashMap<>());
+    this("UniqueObjectIdGenerator", ExistenceCheck.SKIP_IF_EXISTS, new HashMap<>());
   }
 
   /**
@@ -50,7 +50,7 @@ public final class IdConfig {
       @JsonProperty(value = "properties") Map<String, String> properties) {
 
     this.name = name;
-    this.existenceCheckMode = (existenceCheckMode == null ? ExistenceCheck.CHECK_SKIP : existenceCheckMode);
+    this.existenceCheckMode = (existenceCheckMode == null ? ExistenceCheck.PROCEED_IF_EXISTS : existenceCheckMode);
     this.properties = (properties == null ? new HashMap<>(0) : properties);
   }
 
@@ -77,7 +77,7 @@ public final class IdConfig {
   }
 
   public enum ExistenceCheck {
-    CHECK_SKIP,
-    CHECK_PROCEED
+    SKIP_IF_EXISTS,
+    PROCEED_IF_EXISTS
   }
 }
