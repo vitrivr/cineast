@@ -47,10 +47,11 @@ public class Main {
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
 
-    /* Initialize Renderer */
-    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
-    renderThread.start();
-
+    if (Config.sharedConfig().getApi().getEnableRenderWorker()) {
+      /* Initialize Renderer */
+      var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
+      renderThread.start();
+    }
 
     if (args.length == 1) {
       CLI.start(CineastCli.class);
