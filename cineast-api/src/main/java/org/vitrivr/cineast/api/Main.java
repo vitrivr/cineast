@@ -66,7 +66,9 @@ public class Main {
       APIEndpoint.stop();
       GRPCEndpoint.stop();
       PrometheusServer.stopServer();
-      RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      if (RenderWorker.getRenderJobQueue() != null) {
+        RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      }
       System.out.println("Goodbye!");
     }));
 
