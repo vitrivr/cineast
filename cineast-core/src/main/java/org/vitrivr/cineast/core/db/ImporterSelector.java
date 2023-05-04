@@ -184,7 +184,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryID) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId) {
     if (values == null) {
       return new ArrayList<>(0);
     }

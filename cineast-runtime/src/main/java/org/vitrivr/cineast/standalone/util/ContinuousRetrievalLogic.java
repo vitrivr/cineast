@@ -46,7 +46,7 @@ public class ContinuousRetrievalLogic {
     ObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
-      LOGGER.warn("Empty retriever list for segmentID {}, category {} and config {}, returning no results", segmentId, category, config);
+      LOGGER.warn("Empty retriever list for segmentId {}, category {} and config {}, returning no results", segmentId, category, config);
       return new ArrayList<>(0);
     }
     return ContinuousQueryDispatcher.retrieve(segmentId, retrievers, initializer, config, this.segmentReader);

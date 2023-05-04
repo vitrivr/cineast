@@ -116,7 +116,7 @@ public interface DBSelector extends Closeable {
   /**
    * SELECT * where column IN (values)
    */
-  List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryID);
+  List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId);
 
   /**
    * Conversion to PrimitiveTypeProviders is expensive so underlying classes should feel free to override if they wish to optimize for performance
@@ -132,7 +132,7 @@ public interface DBSelector extends Closeable {
    * <p>
    * {@link #getRows(String, Iterable, String)}
    */
-  default List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values, String dbQueryID) {
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values, String dbQueryId) {
     return getRows(column, values.stream().map(StringTypeProvider::new).collect(Collectors.toList()), null);
   }
 
@@ -222,8 +222,8 @@ public interface DBSelector extends Closeable {
   /**
    * Returns all available metadata based on the specification.
    */
-  default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryID, ReadableQueryConfig queryConfig) {
-    return this.getMetadataByIdAndSpec(null, spec, null, dbQueryID, queryConfig);
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataBySpec(List<MetadataAccessSpecification> spec, String dbQueryId, ReadableQueryConfig queryConfig) {
+    return this.getMetadataByIdAndSpec(null, spec, null, dbQueryId, queryConfig);
   }
 
   /**
@@ -232,11 +232,11 @@ public interface DBSelector extends Closeable {
    * @param ids         ids for which to fetch metadata
    * @param spec        which metadata should be fetched
    * @param idColName   the name of the column which the id refers to. Can be null, in which case the default behavior is used
-   * @param dbQueryID   query identifier. Can be null
+   * @param dbQueryId   query identifier. Can be null
    * @param queryConfig query config
    */
-  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryID, ReadableQueryConfig queryConfig) {
-    LOGGER.trace("fetching metadata with spec, dbQueryID {}", dbQueryID);
+  default List<Map<String, PrimitiveTypeProvider>> getMetadataByIdAndSpec(List<String> ids, List<MetadataAccessSpecification> spec, String idColName, String dbQueryId, ReadableQueryConfig queryConfig) {
+    LOGGER.trace("fetching metadata with spec, dbQueryId {}", dbQueryId);
     return getAll().stream().filter(tuple -> {
       // check if there are any elements of the specification which do not work
       if (spec.stream().noneMatch(el -> {
