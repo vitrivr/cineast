@@ -4,10 +4,13 @@
     <Property name="loggingPattern">[%d{MM-dd HH:mm:ss.SSS}][%-5level][%t] %C{1} - %msg%n</Property>
   </Properties>
   <Appenders>
+    <!-- Here one can set up which log level will be shown in console. Further one can configure the colors -->
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %p %c{1.} - %msg%n"/>
+      <PatternLayout disableAnsi="false"
+        pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %p %c{1.} - %-5level:%msg%n}{FATAL=Red, ERROR=Red, WARN=Yellow, INFO=Green, DEBUG=Blue, TRACE=White}"/>
       <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
     </Console>
+    <!-- Here one can set up which log level will be stores in a file. Further one can configure the colors -->
     <RollingFile name="File">
       <FileName>logs/cineast.log</FileName>
       <FilePattern>logs/%d{yyyy-MM-dd-hh}-%i.log.zip</FilePattern>
@@ -20,12 +23,14 @@
     </RollingFile>
   </Appenders>
   <Loggers>
+    <!-- Here one can set up, for each package individually, which level will be logged -->
     <logger name="io" level="ERROR">
     </logger>
     <logger name="org" level="INFO" additivity="true">
     </logger>
     <logger name="org.vitrivr.cineast" level="TRACE" additivity="true">
     </logger>
+    <!-- Root is fall back config if no matching logger is found -->
     <Root level="info">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>

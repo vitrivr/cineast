@@ -81,7 +81,7 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     ids = sanitizeIds(ids);
     spec = sanitizeSpec(spec);
     String dbQueryID = DBQueryIDGenerator.generateQueryID("find-md-spec-" + tableName, queryID);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName, dbQueryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName, dbQueryID, null);
     LOGGER.debug("Performed metadata lookup for {} ids in {} ms. {} results.", ids.size(), watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }
@@ -102,7 +102,7 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     StopWatch watch = StopWatch.createStarted();
     spec = sanitizeSpec(spec);
     String dbQueryID = DBQueryIDGenerator.generateQueryID("find-my-spec-" + tableName, queryID);
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec, dbQueryID);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec, dbQueryID, null);
     LOGGER.debug("Performed metadata lookup in {} ms. {} results.", watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
   }

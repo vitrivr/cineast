@@ -9,6 +9,7 @@ import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLDrawableFactory;
 import com.jogamp.opengl.GLOffscreenAutoDrawable;
 import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
@@ -17,29 +18,34 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 
 /**
  * This class can be used to render 3D models (Meshes or Voxel-models) using the JOGL rendering environment. It currently has the following features:
  * <p>
  * - Rendering of single Mesh or VoxelGrid - Free positioning of the camera in terms of either cartesian or polar coordinate - Snapshot of the rendered image can be obtained at any time.
  * <p>
- * The class supports offscreen rendering and can be accessed by multipled Threads. However, the multithreading model of JOGL requires a thread to retain() and release() the JOGLOffscreenRenderer before rendering anything by calling the respective function.
+ * The class supports offscreen rendering and can be accessed by multipled Threads.
+ * However, the multithreading model of JOGL requires a thread to retain() and release() the JOGLOffscreenRenderer before rendering anything by calling the respective function.
  *
  * @see Mesh
  * @see VoxelGrid
  */
-public class JOGLOffscreenRenderer implements Renderer {
+public class JOGLOffscreenRenderer implements MeshOnlyRenderer {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Default GLProfile to be used. Should be GL2.
+   * Default GLProfile to be used. Should be GL2. "The desktop OpenGL profile 1.x up to 3.0".
    */
   private static final GLProfile GL_PROFILE = GLProfile.get(GLProfile.GL2);
 
@@ -52,12 +58,13 @@ public class JOGLOffscreenRenderer implements Renderer {
    * This code-block can be used to configure the off-screen renderer's GL_CAPABILITIES.
    */
   static {
-    GL_CAPABILITIES.setOnscreen(false);
+    GL_CAPABILITIES.setOnscreen(true);
+    //GL_CAPABILITIES.setOnscreen(false);
     GL_CAPABILITIES.setHardwareAccelerated(true);
   }
 
   /**
-   * OpenGL Utility Library reference
+   * OpenGL Utility Library reference.
    */
   private final GLU glu;
   /**
@@ -108,7 +115,9 @@ public class JOGLOffscreenRenderer implements Renderer {
     /* Initialize GLOffscreenAutoDrawable. */
     GLDrawableFactory factory = GLDrawableFactory.getFactory(GL_PROFILE);
     this.drawable = factory.createOffscreenAutoDrawable(null, GL_CAPABILITIES, null, width, height);
+
     this.drawable.display();
+
 
     /* Initialize GLU and GL2. */
     this.glu = new GLU();
@@ -116,7 +125,10 @@ public class JOGLOffscreenRenderer implements Renderer {
 
     /* Set default color. */
     gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+
   }
+
 
   /**
    * Getter for width.
@@ -186,6 +198,12 @@ public class JOGLOffscreenRenderer implements Renderer {
     }
   }
 
+  @Override
+  public void assemble(IModel model) {
+    this.assemble(Mesh.EMPTY);
+  }
+
+
   /**
    * Renders a new Mesh object and thereby removes any previously rendered object
    *
@@ -229,6 +247,7 @@ public class JOGLOffscreenRenderer implements Renderer {
    */
   @Override
   public void assemble(VoxelGrid grid) {
+
     int meshList = gl.glGenLists(1);
     this.objects.add(meshList);
     gl.glNewList(meshList, GL2.GL_COMPILE);
@@ -400,7 +419,9 @@ public class JOGLOffscreenRenderer implements Renderer {
       return null;
     }
     AWTGLReadBufferUtil glReadBufferUtil = new AWTGLReadBufferUtil(gl.getGL2().getGLProfile(), false);
-    return glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
+    var image = glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
+    //this.showImage(image);
+    return image;
   }
 
   /**
@@ -449,5 +470,28 @@ public class JOGLOffscreenRenderer implements Renderer {
     } else {
       return true;
     }
+  }
+
+
+  JFrame jFrame;
+
+  /**
+   * Shows Image in a JFrame for Debug purpose
+   *
+   * @param im BufferedImage to show
+   */
+  private void showImage(BufferedImage im) {
+    if (this.jFrame == null) {
+      this.jFrame = new JFrame();
+      this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    this.jFrame.setVisible(false);
+    this.jFrame.getContentPane().removeAll();
+    this.jFrame.getContentPane().add(new JLabel(new ImageIcon(im)));
+    this.jFrame.getContentPane().setBackground(Color.black);
+    ;
+    this.jFrame.pack();
+    this.jFrame.toFront();
+    this.jFrame.setVisible(true);
   }
 }

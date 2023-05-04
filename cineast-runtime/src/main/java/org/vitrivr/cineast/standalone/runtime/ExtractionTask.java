@@ -36,5 +36,4 @@ class ExtractionTask implements Runnable {
     LOGGER.debug("Finished {} on segmentID {} in {} ms", feature.getClass().getSimpleName(), shot.getId(), (stop - start));
     LOGGER.traceExit();
   }
-
 }
