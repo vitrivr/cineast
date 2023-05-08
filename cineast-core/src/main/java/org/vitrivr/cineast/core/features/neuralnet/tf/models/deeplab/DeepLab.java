@@ -88,8 +88,8 @@ public class DeepLab implements AutoCloseable {
 
     TInt64 result = (TInt64) session.runner().feed("ImageTensor", input).fetch("SemanticPredictions").run().get(0);
 
-    int w = (int) result.shape().size(2);
-    int h = (int) result.shape().size(1);
+    int w = (int) result.shape().get(2);
+    int h = (int) result.shape().get(1);
 
     int[][] resultMatrix = new int[w][h];
 

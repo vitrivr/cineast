@@ -21,22 +21,18 @@ public final class ExtractionPipelineConfig {
    */
   public static final int DEFAULT_SEGMENTQUEUE_SIZE = 10;
 
-  /**
-   *
-   */
   private Integer shotQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
 
-  /**
-   *
-   */
   private Integer threadPoolSize = DEFAULT_THREADPOOL_SIZE;
 
-  /**
-   *
-   */
   private Integer taskQueueSize = DEFAULT_TASKQUEUE_SIZE;
 
   private File outputLocation = new File(".");
+
+  /**
+   * Whether the RenderWorker for GLFW should be used
+   */
+  private boolean enableRenderWorker = false;
 
   @JsonCreator
   public ExtractionPipelineConfig() {
@@ -67,6 +63,11 @@ public final class ExtractionPipelineConfig {
 
   public void setTaskQueueSize(int taskQueueSize) {
     this.taskQueueSize = taskQueueSize;
+  }
+
+  @JsonProperty
+  public boolean getEnableRenderWorker() {
+    return this.enableRenderWorker;
   }
 
   @JsonProperty

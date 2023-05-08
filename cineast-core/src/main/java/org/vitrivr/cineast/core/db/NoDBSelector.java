@@ -42,7 +42,7 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryID) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId) {
     return new ArrayList<>(0);
   }
 

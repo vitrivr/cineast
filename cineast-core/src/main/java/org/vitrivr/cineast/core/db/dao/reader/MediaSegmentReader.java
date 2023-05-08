@@ -22,7 +22,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
+import org.vitrivr.cineast.core.util.DBQueryIdGenerator;
 
 public class MediaSegmentReader extends AbstractEntityReader {
 
@@ -84,7 +84,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
     return lookUpSegments(segmentIds, null);
   }
 
-  public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds, String queryID) {
+  public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds, String queryId) {
 
     ArrayList<String> notCached = new ArrayList<>();
     //this implicitly deduplicates the stream
@@ -100,7 +100,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
     });
 
     if (!notCached.isEmpty()) {
-      Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], notCached, queryID);
+      Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], notCached, queryId);
 
       descriptors.forEach(msd -> {
         _return.put(msd.getSegmentId(), msd);
@@ -138,8 +138,8 @@ public class MediaSegmentReader extends AbstractEntityReader {
     return lookUpSegmentsByField(fieldName, fieldValues, null);
   }
 
-  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, Iterable<String> fieldValues, String queryID) {
-    String dbQueryID = DBQueryIDGenerator.generateQueryID("seg-lookup", queryID);
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, Iterable<String> fieldValues, String queryId) {
+    String dbQueryID = DBQueryIdGenerator.generateQueryId("seg-lookup", queryId);
     Set<PrimitiveTypeProvider> uniqueFieldValues = new HashSet<>();
     fieldValues.forEach(el -> uniqueFieldValues.add(new StringTypeProvider(el)));
 

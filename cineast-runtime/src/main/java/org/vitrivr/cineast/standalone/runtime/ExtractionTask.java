@@ -27,13 +27,13 @@ class ExtractionTask implements Runnable {
     try {
       feature.processSegment(shot);
     } catch (Exception e) {
-      LOGGER.fatal("EXTRACTION ERROR in {}: for segmentID {} \n{}", feature.getClass().getSimpleName(), shot.getId(), LogHelper.getStackTrace(e));
+      LOGGER.fatal("EXTRACTION ERROR in {}: for segmentId {} \n{}", feature.getClass().getSimpleName(), shot.getId(), LogHelper.getStackTrace(e));
     }
     long stop = System.currentTimeMillis();
     if (this.etc != null) {
       this.etc.reportExecutionTime(this.feature.getClass().getSimpleName(), (stop - start));
     }
-    LOGGER.debug("Finished {} on segmentID {} in {} ms", feature.getClass().getSimpleName(), shot.getId(), (stop - start));
+    LOGGER.debug("Finished {} on segmentId {} in {} ms", feature.getClass().getSimpleName(), shot.getId(), (stop - start));
     LOGGER.traceExit();
   }
 }

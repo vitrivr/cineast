@@ -47,10 +47,11 @@ public class Main {
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
     }
 
-    /* Initialize Renderer */
-    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
-    renderThread.start();
-
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
+      /* Initialize Renderer */
+      var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
+      renderThread.start();
+    }
 
     if (args.length == 1) {
       CLI.start(CineastCli.class);
@@ -87,7 +88,9 @@ public class Main {
         }
       }
       PrometheusServer.stopServer();
-      RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      if (RenderWorker.getRenderJobQueue() != null) {
+        RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      }
     }
   }
 }

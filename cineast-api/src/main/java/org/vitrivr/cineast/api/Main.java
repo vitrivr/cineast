@@ -4,6 +4,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Logger;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+
 import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
 
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
@@ -65,13 +66,17 @@ public class Main {
       APIEndpoint.stop();
       GRPCEndpoint.stop();
       PrometheusServer.stopServer();
-      RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      if (RenderWorker.getRenderJobQueue() != null) {
+        RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      }
       System.out.println("Goodbye!");
     }));
 
-    /* Initialize Renderer */
-    var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
-    renderThread.start();
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
+      /* Initialize Renderer */
+      var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
+      renderThread.start();
+    }
 
     try {
       /* Start Cineast CLI in interactive mode (blocking). */

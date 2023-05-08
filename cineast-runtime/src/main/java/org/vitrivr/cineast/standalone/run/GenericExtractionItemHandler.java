@@ -56,9 +56,6 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmente
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
-import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
-import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
-import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -495,20 +492,14 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * @return true if object should be processed further or false if it should be skipped.
    */
   protected boolean checkAndPersistMultimediaObject(MediaObjectDescriptor descriptor) {
-    if (descriptor.exists() && this.context.existenceCheck()
-        == IdConfig.ExistenceCheck.CHECK_SKIP) {//this is true when a descriptor is used which has previously been retrieved from the database
-      LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.",
-          descriptor.getObjectId(), descriptor.getName());
+    if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.SKIP_IF_EXISTS) {//this is true when a descriptor is used which has previously been retrieved from the database
+      LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.", descriptor.getObjectId(), descriptor.getName());
       return false;
-    } else if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
-      LOGGER.info("MultimediaObject {} (name: {}) already exists. Proceeding anyway...",
-          descriptor.getObjectId(), descriptor.getName());
+    } else if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.PROCEED_IF_EXISTS) {
+      LOGGER.info("MultimediaObject {} (name: {}) already exists. Proceeding anyway...", descriptor.getObjectId(), descriptor.getName());
       return true;
     } else if (descriptor.getObjectId() == null) {
-      LOGGER.warn(
-          "The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.",
-          descriptor.getPath());
+      LOGGER.warn("The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.", descriptor.getPath());
       return false;
     } else {
       this.objectWriter.write(descriptor);
@@ -524,12 +515,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    */
   protected boolean checkAndPersistSegment(MediaSegmentDescriptor descriptor) {
     if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
+        && this.context.existenceCheck() == IdConfig.ExistenceCheck.SKIP_IF_EXISTS) {
       LOGGER.info("Segment {} already exists. This segment will be skipped.",
           descriptor.getSegmentId());
       return false;
     } else if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
+        && this.context.existenceCheck() == IdConfig.ExistenceCheck.PROCEED_IF_EXISTS) {
       LOGGER.info("Segment {} already exists. Proceeding anyway...", descriptor.getSegmentId());
       return true;
     } else {
