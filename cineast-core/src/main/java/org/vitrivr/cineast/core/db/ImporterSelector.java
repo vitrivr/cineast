@@ -32,6 +32,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   private static final Logger LOGGER = LogManager.getLogger();
   private final File baseDirectory;
   private File file;
+
   protected ImporterSelector(File baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
@@ -159,8 +160,8 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    ArrayList<float[]> _return = new ArrayList<>(1);
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
+    ArrayList<PrimitiveTypeProvider> _return = new ArrayList<>(1);
 
     if (value == null || value.getString().isEmpty()) {
       return _return;
@@ -172,11 +173,11 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       if (!map.containsKey(column)) {
         continue;
       }
-      if (!map.containsKey(vectorName)) {
+      if (!map.containsKey(featureColName)) {
         continue;
       }
       if (value.equals(map.get(column).getString())) {
-        _return.add(PrimitiveTypeProvider.getSafeFloatArray(map.get(vectorName)));
+        _return.add(map.get(featureColName));
       }
     }
 

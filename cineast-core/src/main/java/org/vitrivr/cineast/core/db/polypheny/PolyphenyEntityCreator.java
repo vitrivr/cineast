@@ -103,10 +103,10 @@ public final class PolyphenyEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity(String tableName) {
-    final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + tableName;
+  public boolean createMetadataEntity(String entityName) {
+    var fullEntityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + entityName;
     try (final Statement stmt = this.wrapper.connection.createStatement()) {
-      stmt.execute("CREATE TABLE " + entityName + " (" +
+      stmt.execute("CREATE TABLE " + fullEntityName + " (" +
           MediaObjectMetadataDescriptor.FIELDNAMES[0] + " VARCHAR(255) NOT NULL," + /* object_id */
           MediaObjectMetadataDescriptor.FIELDNAMES[1] + " VARCHAR(255) NOT NULL," + /* domain */
           MediaObjectMetadataDescriptor.FIELDNAMES[2] + " VARCHAR(255) NOT NULL," + /* key */
@@ -117,16 +117,16 @@ public final class PolyphenyEntityCreator implements EntityCreator {
       /* TODO: Create index on object_id and domain. */
       return true;
     } catch (SQLException e) {
-      LOGGER.error("Error occurred while creating entity {}: {}", entityName, e);
+      LOGGER.error("Error occurred while creating entity {}: {}", fullEntityName, e);
       return false;
     }
   }
 
   @Override
-  public boolean createSegmentMetadataEntity(String tableName) {
-    final String entityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + tableName;
+  public boolean createSegmentMetadataEntity(String entityName) {
+    final String fullEntityName = PolyphenyWrapper.CINEAST_SCHEMA + "." + entityName;
     try (final Statement stmt = this.wrapper.connection.createStatement()) {
-      stmt.execute("CREATE TABLE " + entityName + " (" +
+      stmt.execute("CREATE TABLE " + fullEntityName + " (" +
           MediaSegmentMetadataDescriptor.FIELDNAMES[0] + " VARCHAR(255) NOT NULL," + /* segment_id */
           MediaSegmentMetadataDescriptor.FIELDNAMES[1] + " VARCHAR(255) NOT NULL," + /* domain */
           MediaSegmentMetadataDescriptor.FIELDNAMES[2] + " VARCHAR(255) NOT NULL ," + /* key */
@@ -137,7 +137,7 @@ public final class PolyphenyEntityCreator implements EntityCreator {
       /* TODO: Create index on object_id and domain. */
       return true;
     } catch (SQLException e) {
-      LOGGER.error("Error occurred while creating entity {}: {}", entityName, e);
+      LOGGER.error("Error occurred while creating entity {}: {}", fullEntityName, e);
       return false;
     }
   }

@@ -249,28 +249,10 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv", queryConfig));
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
+    final Query query = new Query(this.fqn).select(featureColName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv-gen", queryConfig));
     try {
-      final TupleIterator results = this.cottontail.client.query(query);
-      final List<float[]> _return = new LinkedList<>();
-      while (results.hasNext()) {
-        final Tuple t = results.next();
-        _return.add(t.asFloatVector(vectorName));
-      }
-      return _return;
-    } catch (StatusRuntimeException e) {
-      LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
-      return new ArrayList<>(0);
-    }
-  }
-
-
-  @Override
-  public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv-gen", qc));
-    try {
-      return toSingleCol(this.cottontail.client.query(query), vectorName);
+      return toSingleCol(this.cottontail.client.query(query), featureColName);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getFeatureVectorsGeneric(): {}", e.getMessage());
       return new ArrayList<>(0);

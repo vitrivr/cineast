@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.db.polypheny;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
+import boofcv.core.image.GConvertImage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -25,6 +26,8 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.ByteProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.DoubleProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.IntProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.LongProviderImpl;
@@ -226,15 +229,17 @@ public final class PolyphenySelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
     try (final PreparedStatement statement = this.prepareStatement(column, RelationalOperator.EQ, List.of(value))) {
       /* Execute query and return results. */
-      final List<float[]> _return = new LinkedList<>();
+      final List<PrimitiveTypeProvider> _return = new LinkedList<>();
       try (final ResultSet rs = statement.executeQuery()) {
         while (rs.next()) {
-          final Object converted = rs.getArray(vectorName).getArray();
+          final Object converted = rs.getArray(featureColName).getArray();
           if (converted instanceof float[]) {
-            _return.add((float[]) converted);
+            _return.add(new FloatArrayTypeProvider((float[]) converted));
+          } else {
+            LOGGER.warn("unsupported type {}", converted.getClass().getSimpleName());
           }
         }
       }

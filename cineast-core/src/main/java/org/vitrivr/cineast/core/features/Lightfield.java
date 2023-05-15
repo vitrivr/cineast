@@ -70,8 +70,8 @@ public abstract class Lightfield extends StagedFeatureModule {
   /**
    * Offscreen rendering environment used to create Lightfield images.
    */
-  protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
-    super(tableName, maxDist, vectorLength);
+  protected Lightfield(String entityName, float maxDist, int vectorLength, double[][] camerapositions) {
+    super(entityName, maxDist, vectorLength);
     if (camerapositions.length == 0) {
       throw new IllegalArgumentException("You must specify at least one camera position!");
     }

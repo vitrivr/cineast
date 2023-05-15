@@ -86,18 +86,9 @@ public interface DBSelector extends Closeable {
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig queryConfig);
 
   /**
-   * SELECT 'vectorname' from entity where 'column' = 'value'
+   * SELECT 'featureColName' from entity where 'column' = 'value'
    */
-  List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig);
-
-  /**
-   * Conversion to PrimitiveTypeProviders is expensive so underlying classes should feel free to override if they wish to optimize for performance
-   * <p>
-   * takes the float[] method by default
-   */
-  default List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
-    return getFeatureVectors(column, value, vectorName, qc).stream().map(FloatArrayTypeProvider::new).collect(Collectors.toList());
-  }
+  List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig);
 
   /**
    * {@link #getRows(String, Iterable, String)}
@@ -309,7 +300,7 @@ public interface DBSelector extends Closeable {
   }
 
   /**
-   * Get all rows from the tables (SELECT * FROM table)
+   * Get all rows from the entities (SELECT * FROM table)
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
 

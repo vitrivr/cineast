@@ -38,39 +38,39 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   private static final Logger LOGGER = LogManager.getLogger();
   protected final float maxDist;
   protected final int vectorLength;
-  protected final String tableName;
+  protected final String entityName;
   protected SimpleFeatureDescriptorWriter writer;
   protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
   protected DBSelector selector;
   protected PersistencyWriter<?> phandler;
   protected CorrespondenceFunction correspondence;
 
-  protected AbstractFeatureModule(String tableName, float maxDist, int vectorLength) {
-    this.tableName = tableName;
+  protected AbstractFeatureModule(String entityName, float maxDist, int vectorLength) {
+    this.entityName = entityName;
     this.maxDist = maxDist;
     this.vectorLength = vectorLength;
     this.correspondence = CorrespondenceFunction.linear(maxDist);
   }
 
   @Override
-  public List<String> getTableNames() {
-    if (this.tableName == null) {
+  public List<String> getEntityNames() {
+    if (this.entityName == null) {
       return new ArrayList<>();
     }
-    return Collections.singletonList(this.tableName);
+    return Collections.singletonList(this.entityName);
   }
 
   @Override
   public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName);
-    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName);
+    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.entityName);
+    this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.entityName);
   }
 
   @Override
   public void init(DBSelectorSupplier selectorSupply) {
     this.selector = selectorSupply.get();
-    this.selector.open(this.tableName);
+    this.selector.open(this.entityName);
   }
 
   protected void persist(String shotId, ReadableFloatVector fv) {
@@ -94,7 +94,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
+    List<PrimitiveTypeProvider> list = this.selector.getFeatures(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
     if (list.isEmpty()) {
       LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
       return new ArrayList<>(0);
@@ -165,11 +165,11 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, true, this.vectorLength);
+    supply.get().createFeatureEntity(this.entityName, true, this.vectorLength);
   }
 
   @Override
   public void dropPersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().dropEntity(this.tableName);
+    supply.get().dropEntity(this.entityName);
   }
 }

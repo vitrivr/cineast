@@ -125,7 +125,7 @@ public class DCTImageHash extends AbstractFeatureModule {
   @Override
   public void init(PersistencyWriterSupplier phandlerSupply) {
     this.phandler = phandlerSupply.get();
-    this.writer = new SimpleBitSetWriter(this.phandler, this.tableName);
+    this.writer = new SimpleBitSetWriter(this.phandler, this.entityName);
   }
 
   @Override
@@ -145,7 +145,7 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createEntity(this.tableName,
+    supply.get().createEntity(this.entityName,
         new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING),
         new AttributeDefinition(FEATURE_COLUMN_QUALIFIER, AttributeType.BITSET, 64)
     );

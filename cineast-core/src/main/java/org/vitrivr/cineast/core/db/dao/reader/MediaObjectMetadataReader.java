@@ -11,8 +11,8 @@ public class MediaObjectMetadataReader extends AbstractMetadataReader<MediaObjec
     this(selector, MediaObjectMetadataDescriptor.ENTITY);
   }
 
-  public MediaObjectMetadataReader(DBSelector selector, String tableName) {
-    super(selector, tableName, MediaObjectMetadataDescriptor.FIELDNAMES[0]);
+  public MediaObjectMetadataReader(DBSelector selector, String entityName) {
+    super(selector, entityName, MediaObjectMetadataDescriptor.FIELDNAMES[0]);
   }
 
   @Override
