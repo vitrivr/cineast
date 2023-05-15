@@ -235,7 +235,7 @@ public abstract class DBIntegrationTest<R> {
   @DisplayName("get multiple feature vectors")
   void getFeatureVectors() {
     this.selector.open(testVectorTableName);
-    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatureVectorsGeneric(ID_COL_NAME, new StringTypeProvider(toId(0)), FEATURE_VECTOR_COL_NAME, queryConfig);
+    final List<PrimitiveTypeProvider> vectors = this.selector.getFeatures(ID_COL_NAME, new StringTypeProvider(toId(0)), FEATURE_VECTOR_COL_NAME, queryConfig);
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(0)), new float[]{0, 1, 0})));
     Assertions.assertTrue((Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 0, 0}) | Arrays.equals(PrimitiveTypeProvider.getSafeFloatArray(vectors.get(1)), new float[]{0, 1, 0})));
   }

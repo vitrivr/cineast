@@ -26,8 +26,8 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
 
   private static QueryConfig.Distance DEFAULT_DISTANCE = QueryConfig.Distance.chisquared;
 
-  protected SURF(String tableName, int vectorLength) {
-    super(tableName, 2.0f, vectorLength);
+  protected SURF(String entityName, int vectorLength) {
+    super(entityName, 2.0f, vectorLength);
   }
 
   @Override

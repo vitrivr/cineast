@@ -8,17 +8,17 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<MediaObjectMetadataDescriptor> {
 
-  private final String tableName;
+  private final String entityName;
 
   public MediaObjectMetadataWriter(PersistencyWriter<?> writer) {
     this(writer, MediaObjectMetadataDescriptor.ENTITY);
   }
 
-  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, String tableName) {
+  public MediaObjectMetadataWriter(PersistencyWriter<?> writer, String entityName) {
     super(writer);
-    this.tableName = tableName;
+    this.entityName = entityName;
     this.writer.setFieldNames(MediaObjectMetadataDescriptor.FIELDNAMES);
-    this.writer.open(tableName);
+    this.writer.open(entityName);
   }
 
   @Override

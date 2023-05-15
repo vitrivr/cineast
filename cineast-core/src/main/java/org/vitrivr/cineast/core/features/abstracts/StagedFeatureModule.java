@@ -5,10 +5,12 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -25,12 +27,12 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
   /**
    * Constructor
    *
-   * @param tableName    Name of the entity / table to persist data with and read data from.
+   * @param entityName    Name of the entity / table to persist data with and read data from.
    * @param maxDist      Maximum distance value (for normalization).
    * @param vectorLength Dimensionality of the feature vector.
    */
-  protected StagedFeatureModule(String tableName, float maxDist, int vectorLength) {
-    super(tableName, maxDist, vectorLength);
+  protected StagedFeatureModule(String entityName, float maxDist, int vectorLength) {
+    super(entityName, maxDist, vectorLength);
   }
 
   /**
@@ -95,7 +97,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     QueryConfig qcc = this.defaultQueryConfig(qc);
 
     /* Lookup features. */
-    List<float[]> features = this.selector.getFeatureVectors(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
+    List<float[]> features = this.selector.getFeatures(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc).stream().map(FloatArrayProvider::getFloatArray).collect(Collectors.toList());
     if (features.isEmpty()) {
       LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
       return new ArrayList<>(0);

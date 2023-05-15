@@ -28,6 +28,7 @@ public class CineastConstants {
   public static final String DB_DISTANCE_VALUE_QUALIFIER = "distance";
 
 
+  public static final String ENTITY_NAME_KEY = "entity";
   public static final String DOMAIN_COL_NAME = "domain";
   public static final String KEY_COL_NAME = "key";
   public static final String VAL_COL_NAME = "value";

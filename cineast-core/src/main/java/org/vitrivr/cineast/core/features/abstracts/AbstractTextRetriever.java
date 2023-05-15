@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
+import static org.vitrivr.cineast.core.util.CineastConstants.ENTITY_NAME_KEY;
 import static org.vitrivr.cineast.core.util.CineastConstants.FEATURE_COLUMN_QUALIFIER;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
@@ -46,7 +47,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Name of the table/entity used to store the data.
    */
-  private final String tableName;
+  private final String entityName;
 
   /**
    * decorator for lucene queries
@@ -65,27 +66,27 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
   /**
    * Constructor for {@link AbstractTextRetriever}
    *
-   * @param tableName Name of the table/entity used to store the data
+   * @param entityName Name of the table/entity used to store the data
    */
-  public AbstractTextRetriever(String tableName) {
-    this(tableName, new HashMap<>());
+  public AbstractTextRetriever(String entityName) {
+    this(entityName, new HashMap<>());
   }
 
-  public AbstractTextRetriever(String defaultTableName, Map<String, String> properties) {
-    if (defaultTableName == null) {
+  public AbstractTextRetriever(String defaultEntityName, Map<String, String> properties) {
+    if (defaultEntityName == null) {
       throw new IllegalStateException("If no entity is provided by the underlying feature, it needs to be specified in properties");
     }
-    this.tableName = properties.getOrDefault("entity", defaultTableName);
+    this.entityName = properties.getOrDefault(ENTITY_NAME_KEY, defaultEntityName);
     this.decorator = properties.getOrDefault("decorator", "");
   }
 
   public AbstractTextRetriever(Map<String, String> properties) {
-    this(properties.get("entity"), properties);
+    this(properties.get(ENTITY_NAME_KEY), properties);
   }
 
   @Override
-  public List<String> getTableNames() {
-    return Collections.singletonList(tableName);
+  public List<String> getEntityNames() {
+    return Collections.singletonList(entityName);
   }
 
   @Override
@@ -96,7 +97,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   @Override
   public void init(PersistencyWriterSupplier phandlerSupply) {
-    this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName);
+    this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.entityName);
     writer.init();
   }
 
@@ -119,12 +120,12 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
         AttributeDefinition.AttributeType.STRING, hints);
     fields[1] = new AttributeDefinition(SimpleFulltextFeatureDescriptor.FIELDNAMES[1],
         AttributeDefinition.AttributeType.TEXT, hints);
-    supply.get().createEntity(this.tableName, fields);
+    supply.get().createEntity(this.entityName, fields);
   }
 
   @Override
   public void dropPersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().dropEntity(this.tableName);
+    supply.get().dropEntity(this.entityName);
   }
 
   /**
@@ -133,7 +134,7 @@ public abstract class AbstractTextRetriever implements Retriever, Extractor {
    * @return Name of the entity.
    */
   public String getEntityName() {
-    return this.tableName;
+    return this.entityName;
   }
 
   @Override
