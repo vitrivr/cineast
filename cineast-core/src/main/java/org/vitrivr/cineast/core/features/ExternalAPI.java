@@ -16,13 +16,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -49,18 +52,36 @@ import org.vitrivr.cineast.core.util.web.ImageParser;
 
 public class ExternalAPI implements Extractor, Retriever {
 
+  /**
+   * TODO only for developing purposes
+   */
+  public static void main(String[] args) throws IOException, InterruptedException {
+    var properties = new HashMap<String, String>();
+    properties.put(ENTITY_NAME_KEY, "dev-feature");
+    properties.put(FEATURE_KEY, "text");
+    properties.put(MODEL_KEY, "clipcap");
+    properties.put(ENDPOINT_KEY, "localhost:8099");
+    var extractor = new ExternalAPI(properties);
+    // TODO Extract
+    BufferedImage img = null;
+    var feature = extractor.extractImageFeature(img);
+    System.out.println(feature);
+  }
+
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private static final String ENDPOINT_KEY = "endpoint";
   private static final String FEATURE_KEY = "featuretype";
+  private static final String MODEL_KEY = "model";
+  private static final String ENDPOINT_KEY = "endpoint";
   private static final String DISTANCE_KEY = "distance";
   private static final String CORRESPONDENCE_FUN_KEY = "correspondence";
   private static final String CORRESPONDENCE_PARAM_1_KEY = "correspondence_p1";
   private static final String VECTOR_LEN_KEY = "vectorlen";
 
   private String entityName;
-  private String endpoint;
   private FeatureType featureType;
+  private String model;
+  private String endpoint;
   private Distance distance;
   private CorrespondenceFunction correspondence;
   private int vectorLen;
@@ -83,17 +104,16 @@ public class ExternalAPI implements Extractor, Retriever {
   }
 
   protected ExternalAPI(Map<String, String> properties) {
-    if (!properties.containsKey(ENTITY_NAME_KEY) || !properties.containsKey(FEATURE_KEY)) {
-      throw new RuntimeException("Both entity and featuretype are mandatory properties");
+    if (!properties.containsKey(ENTITY_NAME_KEY) || !properties.containsKey(FEATURE_KEY) || !properties.containsKey(MODEL_KEY)) {
+      throw new RuntimeException(ENTITY_NAME_KEY + " " + FEATURE_KEY + " " + MODEL_KEY + " are mandatory properties");
     }
     this.entityName = properties.get(ENTITY_NAME_KEY);
-    this.endpoint = properties.getOrDefault(ENDPOINT_KEY, null);
     this.featureType = FeatureType.valueOf(properties.get(FEATURE_KEY));
+    this.model = properties.get(MODEL_KEY);
+    // endpoint can be null if the feature only relies on an external API during extraction but not during retrieval
+    this.endpoint = properties.getOrDefault(ENDPOINT_KEY, null);
     if (properties.containsKey(DISTANCE_KEY)) {
       this.distance = Distance.valueOf(properties.get(DISTANCE_KEY));
-    }
-    if (this.featureType == FeatureType.VECTOR && properties.containsKey(VECTOR_LEN_KEY)) {
-      this.vectorLen = Integer.parseInt(properties.getOrDefault(VECTOR_LEN_KEY, null));
     }
     if (properties.containsKey(CORRESPONDENCE_FUN_KEY)) {
       String param = properties.getOrDefault(CORRESPONDENCE_PARAM_1_KEY, null);
@@ -118,6 +138,9 @@ public class ExternalAPI implements Extractor, Retriever {
           this.correspondence = CorrespondenceFunction.hyperbolic(Double.parseDouble(param));
         }
       }
+    }
+    if (this.featureType == FeatureType.VECTOR && properties.containsKey(VECTOR_LEN_KEY)) {
+      this.vectorLen = Integer.parseInt(properties.getOrDefault(VECTOR_LEN_KEY, null));
     }
   }
 
@@ -147,52 +170,34 @@ public class ExternalAPI implements Extractor, Retriever {
     try {
       var bufImg = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
 
-      var feature = extractImageFeature(bufImg);
+      var features = extractImageFeature(bufImg).stream().map(e -> new SimplePrimitiveTypeProviderFeatureDescriptor(shot.getId(), e)).toList();
 
-      SimplePrimitiveTypeProviderFeatureDescriptor descriptor = new SimplePrimitiveTypeProviderFeatureDescriptor(shot.getId(), feature);
-      this.primitiveWriter.write(descriptor);
+      this.primitiveWriter.write(features);
     } catch (Exception e) {
       LOGGER.error("Error during extraction", e);
     }
   }
 
-  private PrimitiveTypeProvider extractImageFeature(BufferedImage bufImg) throws IOException, InterruptedException {
+  List<PrimitiveTypeProvider> extractImageFeature(BufferedImage bufImg) throws IOException, InterruptedException {
     var query = ImageParser.bufferedImageToDataURL(bufImg, "png");
-    String builder = URLEncoder.encode("query", StandardCharsets.UTF_8)
-        + "="
-        + URLEncoder.encode(query, StandardCharsets.UTF_8);
+    // TODO build
+    String body = "";
 
-    HttpRequest request = HttpRequest.newBuilder()
-        .POST(HttpRequest.BodyPublishers.ofString(builder))
-        .uri(URI.create(endpoint + "/extract/image/"))
-        .header("Content-Type", "application/x-www-form-urlencoded")
-        .build();
-
-    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-    if (response.statusCode() != 200) {
-      throw new IllegalStateException("received response code " + response.statusCode());
-    }
-
-    switch (featureType) {
-      case TEXT -> {
-        return new StringTypeProvider(mapper.readValue(response.body(), String.class));
-      }
-      case VECTOR -> {
-        return new FloatArrayTypeProvider(mapper.readValue(response.body(), float[].class));
-      }
-      default -> throw new IllegalStateException("Unexpected value: " + featureType);
-    }
+    return performPost(body);
   }
 
-  private PrimitiveTypeProvider extractTextFeature(String txt) throws IOException, InterruptedException {
-    String builder = URLEncoder.encode("query", StandardCharsets.UTF_8)
-        + "="
-        + URLEncoder.encode(txt, StandardCharsets.UTF_8);
 
+  List<PrimitiveTypeProvider> extractTextFeature(String txt) throws IOException, InterruptedException {
+    // TODO build
+    String body = "";
+
+    return performPost(body);
+  }
+
+  private List<PrimitiveTypeProvider> performPost(String body) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
-        .POST(HttpRequest.BodyPublishers.ofString(builder))
-        .uri(URI.create(endpoint + "/extract/text/"))
+        .POST(HttpRequest.BodyPublishers.ofString(body))
+        .uri(URI.create(endpoint + "/extract/"))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .build();
 
@@ -204,10 +209,10 @@ public class ExternalAPI implements Extractor, Retriever {
 
     switch (featureType) {
       case TEXT -> {
-        return new StringTypeProvider(mapper.readValue(response.body(), String.class));
+        return Arrays.stream(mapper.readValue(response.body(), String[].class)).map(StringTypeProvider::new).collect(Collectors.toList());
       }
       case VECTOR -> {
-        return new FloatArrayTypeProvider(mapper.readValue(response.body(), float[].class));
+        return Arrays.stream(mapper.readValue(response.body(), float[][].class)).map(FloatArrayTypeProvider::new).collect(Collectors.toList());
       }
       default -> throw new IllegalStateException("Unexpected value: " + featureType);
     }
@@ -224,13 +229,15 @@ public class ExternalAPI implements Extractor, Retriever {
     try {
       ReadableQueryConfig qcc = setQueryConfig(qc);
       if (!sc.getText().isEmpty()) {
-        var feature = extractTextFeature(sc.getText());
-        return getSimilar(feature, qc);
+        // there is not really a case where one string returns multiple vectors in our scenario
+        var feature = extractTextFeature(sc.getText()).get(0);
+        return getSimilar(feature, qcc);
       }
       // default = image
       PrimitiveTypeProvider feature = null;
-      feature = extractImageFeature(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
-      return getSimilar(feature, qc);
+      // possibly handle cases more gracefully where multiple vectors are generated
+      feature = extractImageFeature(sc.getMostRepresentativeFrame().getImage().getBufferedImage()).get(0);
+      return getSimilar(feature, qcc);
     } catch (Exception e) {
       LOGGER.error("Error during retrieval", e);
       return new ArrayList<>(0);
