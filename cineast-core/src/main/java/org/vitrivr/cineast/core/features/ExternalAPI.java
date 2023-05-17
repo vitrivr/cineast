@@ -65,8 +65,8 @@ public class ExternalAPI implements Extractor, Retriever {
     properties.put(MODEL_KEY, "clipcap");
     properties.put(ENDPOINT_KEY, "http://localhost:5000");
     var extractor = new ExternalAPI(properties);
-    var file = new File("../PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png");
-    BufferedImage img = ImageIO.read(new File("../PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png")); //google how to load a file into this  PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png
+    var file = new File("../test.png");
+    BufferedImage img = ImageIO.read(file); //google how to load a file into this  PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png
     var feature = extractor.extractImageFeature(img);
     System.out.println(feature);
   }
@@ -205,7 +205,7 @@ public class ExternalAPI implements Extractor, Retriever {
   private List<PrimitiveTypeProvider> performPost(String body) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .POST(HttpRequest.BodyPublishers.ofString(body))
-        .uri(URI.create(endpoint + "/extract/"))
+        .uri(URI.create(endpoint + "/extract"))
         .header("Content-Type", "application/json")
         .build();
 
