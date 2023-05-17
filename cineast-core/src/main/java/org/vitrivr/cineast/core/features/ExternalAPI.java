@@ -49,6 +49,9 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.web.ImageParser;
+import com.google.gson.Gson;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 public class ExternalAPI implements Extractor, Retriever {
 
@@ -58,12 +61,12 @@ public class ExternalAPI implements Extractor, Retriever {
   public static void main(String[] args) throws IOException, InterruptedException {
     var properties = new HashMap<String, String>();
     properties.put(ENTITY_NAME_KEY, "dev-feature");
-    properties.put(FEATURE_KEY, "text");
+    properties.put(FEATURE_KEY, "TEXT");
     properties.put(MODEL_KEY, "clipcap");
-    properties.put(ENDPOINT_KEY, "localhost:8099");
+    properties.put(ENDPOINT_KEY, "http://localhost:5000");
     var extractor = new ExternalAPI(properties);
-    // TODO Extract
-    BufferedImage img = null;
+    var file = new File("../PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png");
+    BufferedImage img = ImageIO.read(new File("../PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png")); //google how to load a file into this  PTT/objects/PTT-Archiv/Poststellenchroniken/Post-199_A_0003_Affoltern_im_Emmental/Post-199_A_0003_Affoltern_im_Emmental_001.png
     var feature = extractor.extractImageFeature(img);
     System.out.println(feature);
   }
@@ -181,7 +184,12 @@ public class ExternalAPI implements Extractor, Retriever {
   List<PrimitiveTypeProvider> extractImageFeature(BufferedImage bufImg) throws IOException, InterruptedException {
     var query = ImageParser.bufferedImageToDataURL(bufImg, "png");
     // TODO build
-    String body = "";
+    Gson gson = new Gson();
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("image", query);
+
+    String body = gson.toJson(map);
 
     return performPost(body);
   }
@@ -198,7 +206,7 @@ public class ExternalAPI implements Extractor, Retriever {
     HttpRequest request = HttpRequest.newBuilder()
         .POST(HttpRequest.BodyPublishers.ofString(body))
         .uri(URI.create(endpoint + "/extract/"))
-        .header("Content-Type", "application/x-www-form-urlencoded")
+        .header("Content-Type", "application/json")
         .build();
 
     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
