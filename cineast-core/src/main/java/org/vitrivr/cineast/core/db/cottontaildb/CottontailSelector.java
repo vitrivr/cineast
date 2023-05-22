@@ -229,7 +229,7 @@ public final class CottontailSelector implements DBSelector {
       return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
-      LOGGER.warn("Query: {}", query.getBuilder().toString());
+      LOGGER.trace("Query: {}", query.getBuilder().toString());
       return new ArrayList<>(0);
     }
   }
