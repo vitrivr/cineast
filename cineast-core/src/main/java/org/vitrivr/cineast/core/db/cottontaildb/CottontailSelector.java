@@ -6,6 +6,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
 import static org.vitrivr.cineast.core.util.DBQueryIdGenerator.generateQueryId;
 
+import com.google.protobuf.TextFormat;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
@@ -228,7 +229,7 @@ public final class CottontailSelector implements DBSelector {
       return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
-      LOGGER.warn("Query: {}", query);
+      LOGGER.warn("Query: {}", query.getBuilder().toString());
       return new ArrayList<>(0);
     }
   }
