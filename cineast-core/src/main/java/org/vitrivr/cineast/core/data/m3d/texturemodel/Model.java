@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.util.MinimalBoundingBox;
 
 /**
@@ -109,7 +108,7 @@ public class Model implements IModel {
   @Override
   public List<Vector3f> getAllNormals() {
     var normals = new ArrayList<Vector3f>();
-    this.materials.forEach(m -> m.getMeshes().forEach(mesh -> normals.addAll(mesh.getNormals())));
+    this.materials.forEach(m -> m.getMeshes().forEach(mesh -> normals.addAll(mesh.getFaceNormals())));
     return normals;
   }
 

@@ -1,12 +1,18 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_AMBIENT;
 import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_SHININESS;
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_SHININESS_STRENGTH;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
+import static org.lwjgl.assimp.Assimp.aiGetMaterialFloatArray;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialTexture;
 import static org.lwjgl.assimp.Assimp.aiImportFile;
 import static org.lwjgl.assimp.Assimp.aiProcess_CalcTangentSpace;
 import static org.lwjgl.assimp.Assimp.aiProcess_FixInfacingNormals;
+import static org.lwjgl.assimp.Assimp.aiProcess_GenNormals;
+import static org.lwjgl.assimp.Assimp.aiProcess_GenSmoothNormals;
 import static org.lwjgl.assimp.Assimp.aiProcess_GlobalScale;
 import static org.lwjgl.assimp.Assimp.aiProcess_JoinIdenticalVertices;
 import static org.lwjgl.assimp.Assimp.aiProcess_LimitBoneWeights;
@@ -16,6 +22,7 @@ import static org.lwjgl.assimp.Assimp.aiReleaseImport;
 import static org.lwjgl.assimp.Assimp.aiReturn_SUCCESS;
 import static org.lwjgl.assimp.Assimp.aiTextureType_DIFFUSE;
 import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
+import static org.lwjgl.assimp.Assimp.aiTextureType_NORMALS;
 
 import java.io.File;
 import java.nio.IntBuffer;
@@ -30,6 +37,7 @@ import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
+import org.lwjgl.assimp.Assimp;
 import org.lwjgl.system.MemoryStack;
 
 public final class ModelLoader {
@@ -37,7 +45,8 @@ public final class ModelLoader {
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Loads a model from a file. Generates all the standard flags for Assimp. For more details see <a href="https://javadoc.lwjgl.org/org/lwjgl/assimp/Assimp.html">Assimp</a>.
+   * Loads a model from a file. Generates all the standard flags for Assimp. For more details see <a
+   * href="https://javadoc.lwjgl.org/org/lwjgl/assimp/Assimp.html">Assimp</a>.
    * <ul>
    *   <li><b>aiProcess_GenSmoothNormals:</b>
    *        This is ignored if normals are already there at the time this flag
@@ -111,13 +120,16 @@ public final class ModelLoader {
             aiProcess_Triangulate |
             aiProcess_CalcTangentSpace |
             aiProcess_LimitBoneWeights |
-            aiProcess_PreTransformVertices);
+            aiProcess_PreTransformVertices |
+            aiProcess_GenSmoothNormals
+    );
     LOGGER.trace("Try return Model 2");
     return model;
   }
 
   /**
-   * Loads a model from a file. 1. Loads the model file to an aiScene. 2. Process all Materials. 3. Process all Meshes. 3.1 Process all Vertices. 3.2 Process all Normals. 3.3 Process all Textures. 3.4 Process all Indices.
+   * Loads a model from a file. 1. Loads the model file to an aiScene. 2. Process all Materials. 3. Process all Meshes.
+   * 3.1 Process all Vertices. 3.2 Process all Normals. 3.3 Process all Textures. 3.4 Process all Indices.
    *
    * @param modelId   Arbitrary unique ID of the model.
    * @param modelPath Path to the model file.
@@ -211,24 +223,40 @@ public final class ModelLoader {
    * Convert an AIMaterial to a Material. Loads the diffuse color and texture.
    *
    * @param aiMaterial aiMaterial to process.
-   * @param modelDir Path to the model file.
+   * @param modelDir   Path to the model file.
    * @return flattened float array of vertices.
    */
   private static Material processMaterial(AIMaterial aiMaterial, String modelDir) {
     LOGGER.trace("Start processing material");
     var material = new Material();
-    try (MemoryStack stack = MemoryStack.stackPush()) {
-      AIColor4D color = AIColor4D.create();
+    try (var stack = MemoryStack.stackPush()) {
+      var color = AIColor4D.create();
 
-      //** Diffuse color if no texture is present
-      int result = aiGetMaterialColor(
-          aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
+      var result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, color);
+      if (result == aiReturn_SUCCESS) {
+        material.setAmbientColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+      }
+      result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
       if (result == aiReturn_SUCCESS) {
         material.setDiffuseColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
       }
+      result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
+      if (result == aiReturn_SUCCESS) {
+        material.setSpecularColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+      }
+
+      var reflectance = 0.0f;
+      var shininess = new float[]{0.0f};
+      var pMax = new int[]{1};
+      result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE, 0, shininess,
+          pMax);
+      if (result == aiReturn_SUCCESS) {
+        reflectance = shininess[0];
+      }
+      material.setReflectance(reflectance);
 
       //** Try load texture
-      AIString aiTexturePath = AIString.calloc(stack);
+      var aiTexturePath = AIString.calloc(stack);
       aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null,
           null, null, null, null, null);
       var texturePath = aiTexturePath.dataString();
@@ -238,13 +266,22 @@ public final class ModelLoader {
         material.setDiffuseColor(Material.DEFAULT_COLOR);
       }
 
+      // Try Load NormalMap
+      var aiNormalMapPath = AIString.calloc(stack);
+      aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null,
+          null, null, null, null, null);
+      var normalMapPath = aiNormalMapPath.dataString();
+      if (normalMapPath != null && normalMapPath.length() > 0) {
+        material.setNormalTexture(new Texture(modelDir + File.separator + new File(normalMapPath).toPath()));
+      }
       return material;
     }
   }
 
   /**
-   * Convert aiMesh to a Mesh. Loads the vertices, normals, texture coordinates and indices.
-   * Instantiates a new Mesh object.
+   * Convert aiMesh to a Mesh. Loads the vertices, normals, texture coordinates and indices. Instantiates a new Mesh
+   * object.
+   *
    * @param aiMesh aiMesh to process.
    * @return flattened float array of normals.
    */
@@ -254,6 +291,9 @@ public final class ModelLoader {
     var normals = processNormals(aiMesh);
     var textCoords = processTextCoords(aiMesh);
     var indices = processIndices(aiMesh);
+    var tangents = processTangents(aiMesh, normals);
+    var bitangents = processBitangents(aiMesh, normals);
+
 
     // Texture coordinates may not have been populated. We need at least the empty slots
     if (textCoords.length == 0) {
@@ -261,7 +301,7 @@ public final class ModelLoader {
       textCoords = new float[numElements];
     }
     LOGGER.trace("End processing mesh");
-    return new Mesh(vertices, normals, textCoords, indices);
+    return new Mesh(vertices, normals, tangents, bitangents, textCoords, indices);
   }
 
   /**
@@ -274,7 +314,7 @@ public final class ModelLoader {
     LOGGER.trace("Start processing Normals");
     var buffer = aiMesh.mNormals();
     if (buffer == null) {
-      return null;
+      return new float[]{};
     }
     var data = new float[buffer.remaining() * 3];
     var pos = 0;
@@ -289,6 +329,7 @@ public final class ModelLoader {
 
   /**
    * Convert texture coordinates from aiMesh to float array.
+   *
    * @param aiMesh aiMesh to process.
    * @return flattened float array of texture coordinates.
    */
@@ -326,6 +367,44 @@ public final class ModelLoader {
       data[pos++] = textCoord.z();
     }
 
+    return data;
+  }
+
+  private static  float[] processBitangents(AIMesh aiMesh, float[] normals){
+    var buffer = aiMesh.mBitangents();
+    if (buffer == null) {
+      return new float[normals.length];
+    }
+    var data = new float[buffer.remaining() * 3];
+    var pos = 0;
+    while (buffer.remaining() > 0) {
+      var bitangent = buffer.get();
+      data[pos++] = bitangent.x();
+      data[pos++] = bitangent.y();
+      data[pos++] = bitangent.z();
+    }
+
+    if (data.length == 0) {
+      data = new float[normals.length];
+    }
+    return data;
+  }
+  private static  float[] processTangents(AIMesh aiMesh, float[] normals){
+    var buffer = aiMesh.mTangents();
+    if (buffer == null) {
+      return new float[normals.length];
+    }
+    var data = new float[buffer.remaining() * 3];
+    var pos = 0;
+    while (buffer.remaining() > 0) {
+      var tangent = buffer.get();
+      data[pos++] = tangent.x();
+      data[pos++] = tangent.y();
+      data[pos++] = tangent.z();
+    }
+    if (data.length == 0) {
+      data = new float[normals.length];
+    }
     return data;
   }
 }

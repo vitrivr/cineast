@@ -60,10 +60,20 @@ public class Mesh {
 
   /**
    * List of all vertices normals in the mesh
-   * TODO: not used yet, will be used for vertex shading
    */
-  @SuppressWarnings("all")
   private final float[] normals;
+
+
+  /**
+   * List of all vertices normals in the mesh
+   */
+  private final float[] tangents;
+
+  /**
+   * List of all vertices normals in the mesh
+   */
+  private final float[] bitangents;
+
 
   /**
    * MinimalBoundingBox that encloses the mesh
@@ -84,12 +94,15 @@ public class Mesh {
    * @param textureCoordinates List of all texture coordinates in the mesh
    * @param idx List of all vertices ids.
    */
-  public Mesh(float[] positions, float[] normals, float[] textureCoordinates, int[] idx) {
+  public Mesh(float[] positions, float[] normals, float[] tangents, float[] bitangents, float[] textureCoordinates, int[] idx) {
     //Stores all the data
     this.positions = positions;
     this.idx = idx;
     this.numVertices = idx.length;
     this.normals = normals;
+    this.tangents = tangents;
+    this.bitangents = bitangents;
+
     // List to store results of face normals calculation
     this.facenormals = new ArrayList<>(this.numVertices / 3);
     //this.areas = new ArrayList<>(positions.length / 3);
@@ -98,7 +111,7 @@ public class Mesh {
     // Calculate face normals
     // ic increments by 3 because a face is defined by 3 vertices
     for (var ic = 0; ic < this.idx.length; ic += 3) {
-      if (normals == null) {
+      if (normals == null || normals.length == 0) {
         // Add zero vector if there are no vertex normals
         this.facenormals.add(new Vector3f(0f, 0f, 0f));
       } else {
@@ -111,7 +124,7 @@ public class Mesh {
         var vn2 = new Vector3f(normals[idx[ic + 1] * 3], normals[idx[ic + 1] * 3 + 1], normals[idx[ic + 1] * 3 + 2]);
         var vn3 = new Vector3f(normals[idx[ic + 2] * 3], normals[idx[ic + 2] * 3 + 1], normals[idx[ic + 2] * 3 + 2]);
         // Instance the face normal
-        var fn = new Vector3f(0, 0, 0);
+        var fn = new Vector3f(0.0F, 0.0F, 0.0F);
         // Calculate the direction of the face normal by averaging the three vertex normals
         fn.add(vn1).add(vn2).add(vn3).div(3).normalize();
         // Instance the face area
@@ -163,8 +176,18 @@ public class Mesh {
   /**
    * @return list containing all face normals
    */
-  public List<Vector3f> getNormals() {
+  public List<Vector3f> getFaceNormals() {
     return this.facenormals;
+  }
+
+  public float[] getVerticesNormals() {
+    return this.normals;
+  }
+  public float[] getTangents() {
+    return this.tangents;
+  }
+  public float[] getBitangents() {
+    return this.bitangents;
   }
 
   /**

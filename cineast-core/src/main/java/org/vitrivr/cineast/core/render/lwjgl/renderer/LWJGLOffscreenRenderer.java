@@ -9,6 +9,8 @@ import org.vitrivr.cineast.core.render.lwjgl.engine.Engine;
 import org.vitrivr.cineast.core.render.lwjgl.engine.EngineLogic;
 import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightColor;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.SceneLights;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.Entity;
@@ -98,7 +100,11 @@ public class LWJGLOffscreenRenderer extends EngineLogic implements Renderer {
      */
     @Override
     protected void init(Window window, GLScene scene, Render render) {
-        scene.getCamera().setPosition(0, 0, 1);
+        var sceneLights = new SceneLights();
+        //sceneLights.addLight(LightColor.WHITE, new Vector3f(0.0f, 1.0f, 1.0f), 0.5f);
+        //sceneLights.addLight(LightColor.WHITE, new Vector3f(0f, 0f, 1f), 0.5f);
+        scene.setSceneLights(sceneLights);
+        scene.getCamera().setPosition(0.0f, 0.0f, 1.0f);
     }
 
     /**
