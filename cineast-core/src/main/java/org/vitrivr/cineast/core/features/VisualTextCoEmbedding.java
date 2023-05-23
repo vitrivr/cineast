@@ -373,6 +373,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
     // Options for renderer
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
+      this.lightingOptions.hasNonDefaultTexture = model.usesNonDefaultTexture();
     }};
     // Select the strategy which will be used for model embedding
     var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_KMEANS;

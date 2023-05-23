@@ -9,7 +9,9 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.system.Configuration;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
+import org.vitrivr.cineast.core.render.lwjgl.glmodel.IGLModel;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightingOptions;
 import org.vitrivr.cineast.core.render.lwjgl.util.datatype.Variant;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.StateEnter;
@@ -29,8 +31,8 @@ import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
  * <p>
  * It constructs a Graph which describes the states and transitions which a render worker can do.
  * <p>
- * If a job throws an exception the worker will send a JobControlCommand. ERROR to the caller.
- * Furthermore, the worker will unload the model.
+ * If a job throws an exception the worker will send a JobControlCommand. ERROR to the caller. Furthermore, the worker
+ * will unload the model.
  * <p>
  * Each rendered image will be sent to the caller.
  * <p>
@@ -136,15 +138,14 @@ public class RenderWorker extends Worker<RenderJob> {
    * @return The handler message.
    */
   @Override
-  protected String onJobException(Exception ex){
+  protected String onJobException(Exception ex) {
     this.unload();
     this.currentJob.putResultQueue(new RenderJob(JobControlCommand.JOB_FAILURE));
     return "Job failed";
   }
 
   /**
-   * Initializes the renderer.
-   * Sets the window options and starts the engine.
+   * Initializes the renderer. Sets the window options and starts the engine.
    */
   @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)
   public void setWindowOptions(WindowOptions opt) {
@@ -162,6 +163,9 @@ public class RenderWorker extends Worker<RenderJob> {
   public void setRendererOptions(RenderOptions opt) {
     LOGGER.trace("INIT_RENDERER RenderWorker");
     this.renderer.setRenderOptions(opt);
+    if (opt.lightingOptions != null) {
+      this.renderer.setLighting(opt.lightingOptions);
+    }
   }
 
   /**
@@ -174,6 +178,7 @@ public class RenderWorker extends Worker<RenderJob> {
 
   /**
    * Register a model to the renderer.
+   *
    * @param model The model to register and to be rendered.
    */
   @StateEnter(state = RenderStates.LOAD_MODEL, data = RenderData.MODEL)
@@ -183,8 +188,7 @@ public class RenderWorker extends Worker<RenderJob> {
   }
 
   /**
-   * Renders the model.
-   * Sends the rendered image to the caller.
+   * Renders the model. Sends the rendered image to the caller.
    */
   @StateEnter(state = RenderStates.RENDER)
   public void renderModel() {
@@ -198,6 +202,7 @@ public class RenderWorker extends Worker<RenderJob> {
 
   /**
    * Rotates the camera.
+   *
    * @param rotation The rotation vector (x,y,z)
    */
   @StateEnter(state = RenderStates.ROTATE, data = RenderData.VECTOR)
@@ -207,9 +212,9 @@ public class RenderWorker extends Worker<RenderJob> {
   }
 
   /**
-   * Looks at the origin from a specific position.
-   * The rotation is not affected.
-   * Removes the processed position vector from the list.
+   * Looks at the origin from a specific position. The rotation is not affected. Removes the processed position vector
+   * from the list.
+   *
    * @param vectors The list of position vectors
    */
   @StateEnter(state = RenderStates.LOOKAT, data = RenderData.VECTORS)
@@ -221,8 +226,8 @@ public class RenderWorker extends Worker<RenderJob> {
   }
 
   /**
-   * Looks from a specific position at the origin.
-   * Removes the processed position vector from the list.
+   * Looks from a specific position at the origin. Removes the processed position vector from the list.
+   *
    * @param vectors The list of position vectors
    */
   @StateEnter(state = RenderStates.LOOK_FROM_AT_O, data = RenderData.VECTORS)
