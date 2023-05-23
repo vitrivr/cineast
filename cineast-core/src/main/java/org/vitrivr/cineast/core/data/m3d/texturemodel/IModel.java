@@ -36,4 +36,6 @@ public interface IModel {
    */
   List<Vector3f> getAllNormals();
 
+  boolean usesNonDefaultTexture();
+
 }

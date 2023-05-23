@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Projection;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightingOptions;
 import org.vitrivr.cineast.core.render.lwjgl.scene.lights.SceneLights;
 
 /**
@@ -172,5 +173,12 @@ public class GLScene {
    */
   public void setSceneLights(SceneLights sceneLights) {
     this.scene.setSceneLights(sceneLights);
+  }
+
+  /**
+   * Get the scene lights.
+   */
+  public void setSceneLights(LightingOptions options) {
+    this.scene.setSceneLights(options.getSceneLigths(this.scene));
   }
 }

@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.core.render.lwjgl.scene.lights;
 
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import org.joml.Vector3f;
 
 public class SceneLights {
@@ -16,7 +18,15 @@ public class SceneLights {
   public SceneLights() {
     // Default settings as no lights are set
     this.ambientLight = new AmbientLight(LightColor.WHITE, 1.0F);
-    this.directionalLight = new DirectionalLight(LightColor.WHITE, new Vector3f(0.0F, 1.0F, 0.0F), 0.0f);
+    this.directionalLight = new DirectionalLight(LightColor.WHITE, new Vector3f(0.0F, 0.0F, 0.0F), 0.0f);
+    this.pointLights = new ArrayList<>();
+    this.spotLights = new ArrayList<>();
+  }
+
+  public SceneLights(Supplier<Vector3f> position) {
+    // Default settings as no lights are set
+    this.ambientLight = new AmbientLight(LightColor.WHITE, 0.0F);
+    this.directionalLight = new DirectionalLight(LightColor.WHITE, position, 0.5f);
     this.pointLights = new ArrayList<>();
     this.spotLights = new ArrayList<>();
   }
@@ -52,13 +62,13 @@ public class SceneLights {
 
 
   public SceneLights addLight(LightColor lightColor, Vector3f position, float intensity) {
-    this.pointLights.add(new PointLight(lightColor.getRGB(), position, intensity));
+    this.pointLights.add(new PointLight(lightColor.getUnitRGB(), position, intensity));
     return this;
   }
 
   public SceneLights addLight(LightColor lightColor, Vector3f position, float intensity, Vector3f coneDirection,
       float cutOff) {
-    this.spotLights.add(new SpotLight(lightColor.getRGB(), position, intensity, coneDirection, cutOff));
+    this.spotLights.add(new SpotLight(lightColor.getUnitRGB(), position, intensity, coneDirection, cutOff));
     return this;
   }
 }

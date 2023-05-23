@@ -122,4 +122,12 @@ public class Model implements IModel {
     this.entities.clear();
     LOGGER.trace("Closed model {}", this.id);
   }
+
+  public boolean usesNonDefaultTexture() {
+    var nonDefaultTexture = false;
+    for (var material : this.materials) {
+      nonDefaultTexture |= material.hasNonDefaultTexture();
+    }
+    return nonDefaultTexture;
+  }
 }

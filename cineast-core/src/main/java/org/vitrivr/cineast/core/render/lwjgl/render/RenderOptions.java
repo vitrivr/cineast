@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import java.util.function.Function;
 import org.joml.Vector4f;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightingOptions;
 
 /**
  * RenderOptions
@@ -25,6 +26,9 @@ public class RenderOptions {
    */
   @SuppressWarnings("unused")
   public boolean showColor = false;
+
+
+  public LightingOptions lightingOptions = LightingOptions.LIGHTING_ON_NO_TEXTURE;
 
   /**
    * Returns the color for the given value Can be used to colorize the model custom

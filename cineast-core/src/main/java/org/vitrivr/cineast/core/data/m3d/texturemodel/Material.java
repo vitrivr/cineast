@@ -125,6 +125,11 @@ public class Material {
     this.texture = texture;
   }
 
+
+  public boolean hasNonDefaultTexture(){
+    return !this.texture.isDefault();
+  }
+
   /**
    * @param texture sets the texture to this material
    */
