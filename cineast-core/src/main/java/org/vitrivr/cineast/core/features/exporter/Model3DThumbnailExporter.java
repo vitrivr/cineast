@@ -94,6 +94,7 @@ public class Model3DThumbnailExporter implements Extractor {
         }};
         var renderOptions = new RenderOptions() {{
           this.showTextures = true;
+          this.lightingOptions.hasNonDefaultTexture = model.usesNonDefaultTexture();
         }};
         // Set options for the entropy optimizer.
         var opts = new OptimizerOptions() {{
