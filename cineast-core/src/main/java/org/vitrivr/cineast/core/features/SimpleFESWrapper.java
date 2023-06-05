@@ -3,17 +3,16 @@ package org.vitrivr.cineast.core.features;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import org.vitrivr.cineast.core.util.web.FeatureClient;
 import org.vitrivr.cineast.core.util.web.ImageParser;
 
-public class SimpleFESWrapper extends  AbstractFeatureClientWrapper{
+public class SimpleFESWrapper extends AbstractFeatureClientWrapper {
 
   private final JsonMapper mapper = new JsonMapper();
   private final JsonNode config;
+
   public SimpleFESWrapper(FeatureClient client, JsonNode config) throws Exception {
     super(client);
     this.config = config;
@@ -42,7 +41,7 @@ public class SimpleFESWrapper extends  AbstractFeatureClientWrapper{
 //    String body = gson.toJson(map);
 
     String responseBody = this.client.getResponse(requestBody);
-    return mapper.readValue(responseBody,String[].class)[0]; // change this
+    return mapper.readValue(responseBody, String[].class)[0]; // change this
   }
 
   @Override
