@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.features;
+package org.vitrivr.cineast.core.util.web;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,9 +9,9 @@ import java.net.http.HttpResponse;
 
 public class FeatureClient {
 
-  private String endpoint;
+  private final String endpoint;
 
-  public FeatureClient(String endpoint){
+  public FeatureClient(String endpoint) {
     this.endpoint = endpoint;
   }
 

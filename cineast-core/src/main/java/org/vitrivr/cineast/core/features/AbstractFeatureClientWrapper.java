@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.web.FeatureClient;
 
 public abstract class AbstractFeatureClientWrapper {
   protected final FeatureClient client;
@@ -18,7 +19,7 @@ public abstract class AbstractFeatureClientWrapper {
 
   private static FeatureClient buildFeatureClient(Map<String,String> properties){
     if(!properties.containsKey("endpoint")){
-      throw new IllegalStateException("No endpoint specified for external client"); //throw better exception
+      throw new IllegalArgumentException("No endpoint specified for external client"); //throw better exception
     }
     String endpoint = properties.get("endpoint");
     return new FeatureClient(endpoint);
