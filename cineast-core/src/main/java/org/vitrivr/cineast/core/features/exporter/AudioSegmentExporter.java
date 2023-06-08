@@ -19,23 +19,14 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.abstracts.AbstractSegmentExporter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * Exports the audio in a given segment as mono WAV file.
  */
-public class AudioSegmentExporter implements Extractor {
-
-
-  private static final Logger LOGGER = LogManager.getLogger();
-
-  private static final String PROPERTY_NAME_DESTINATION = "destination";
-
-  /**
-   * Destination path for the audio-segment.
-   */
-  private Path destination;
+public class AudioSegmentExporter extends AbstractSegmentExporter {
 
   /**
    * Default constructor
@@ -56,7 +47,9 @@ public class AudioSegmentExporter implements Extractor {
    * @param properties HashMap containing named properties
    */
   public AudioSegmentExporter(HashMap<String, String> properties) {
-    this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
+    super(properties);
+    this.fileExtension = ".wav";
+    this.dataUrlPrefix = "data:audio/wav;base64,";
   }
 
   /**
@@ -65,12 +58,8 @@ public class AudioSegmentExporter implements Extractor {
    * @param shot SegmentContainer to process.
    */
   @Override
-  public void processSegment(SegmentContainer shot) {
+  public void exportToStream(SegmentContainer shot, OutputStream stream) {
     try {
-      /* Prepare folder and OutputStream. */
-      Path directory = this.destination.resolve(shot.getSuperId());
-      Files.createDirectories(directory);
-      OutputStream stream = Files.newOutputStream(directory.resolve(shot.getId() + ".wav"), CREATE, TRUNCATE_EXISTING);
 
       /* Extract mean samples and perpare byte buffer. */
       short[] data = shot.getMeanSamplesAsShort();
@@ -85,7 +74,6 @@ public class AudioSegmentExporter implements Extractor {
       }
 
       stream.write(buffer.array());
-      stream.close();
     } catch (IOException | BufferOverflowException e) {
       LOGGER.fatal("Could not export audio segment {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(e));
     }
@@ -123,16 +111,4 @@ public class AudioSegmentExporter implements Extractor {
     buffer.putInt(subChunk2Length); /* Length of the data chunk. */
   }
 
-
-  @Override
-  public void init(PersistencyWriterSupplier phandlerSupply) { /* Nothing to init. */ }
-
-  @Override
-  public void finish() {  /* Nothing to finish. */}
-
-  @Override
-  public void initalizePersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to init. */ }
-
-  @Override
-  public void dropPersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to drop. */}
 }
