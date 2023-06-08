@@ -7,11 +7,11 @@ import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class FeatureClient {
+public class WebClient {
 
   private final String endpoint;
 
-  public FeatureClient(String endpoint) {
+  public WebClient(String endpoint) {
     this.endpoint = endpoint;
   }
 
@@ -19,10 +19,10 @@ public class FeatureClient {
       .version(Version.HTTP_1_1)
       .build();
 
-  public String getResponse(String body) throws IOException, InterruptedException {
+  public String postJsonString(String body) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .POST(HttpRequest.BodyPublishers.ofString(body))
-        .uri(URI.create(endpoint + "/extract"))
+        .uri(URI.create(endpoint))
         .header("Content-Type", "application/json")
         .build();
 
@@ -34,4 +34,18 @@ public class FeatureClient {
     return response.body();
   }
 
+  public String postRawBinary(byte[] body) throws IOException, InterruptedException {
+    HttpRequest request = HttpRequest.newBuilder()
+        .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+        .uri(URI.create(endpoint))
+        .header("Content-Type", "application/octet-stream")
+        .build();
+
+    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+    if (response.statusCode() != 200) {
+      throw new IllegalStateException("received response code " + response.statusCode());
+    }
+    return response.body();
+  }
 }
