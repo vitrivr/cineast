@@ -43,7 +43,7 @@ public class AudioSpectogramExporter extends AbstractSegmentExporter {
   private final int height;
 
   /**
-   * Output format for thumbnails. Defaults to PNG.
+   * Output format for thumbnails. Defaults to JPG.
    */
   private final String format;
 
@@ -72,6 +72,8 @@ public class AudioSpectogramExporter extends AbstractSegmentExporter {
     this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "800"));
     this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "600"));
     this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
+    this.fileExtension = "." + format.toLowerCase();
+    this.dataUrlPrefix = "data:image/" + format.toLowerCase() + ";base64,";
   }
 
   @Override
