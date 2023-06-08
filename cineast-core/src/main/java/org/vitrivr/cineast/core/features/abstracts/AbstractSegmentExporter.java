@@ -25,7 +25,7 @@ abstract public class AbstractSegmentExporter implements Extractor {
   /**
    * Destination path for the audio-segment.
    */
-  private Path destination;
+  private final Path destination;
 
   protected String fileExtension;
 
@@ -55,8 +55,13 @@ abstract public class AbstractSegmentExporter implements Extractor {
 
   abstract public void exportToStream(SegmentContainer sc, OutputStream stream);
 
+  abstract public boolean isExportable(SegmentContainer sc);
+
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (!isExportable(shot)) {
+      return;
+    }
     try {
       /* Prepare folder and OutputStream. */
       Path folder = this.destination.resolve(shot.getSuperId());
@@ -72,11 +77,11 @@ abstract public class AbstractSegmentExporter implements Extractor {
       /* Close OutputStream. */
       os.close();
     } catch (Exception e) {
-      LOGGER.error("Could not write audio data to file for segment {} due to {}.", shot.getId(), LogHelper.getStackTrace(e));
+      LOGGER.error("Could not data to file for segment {} due to {}.", shot.getId(), LogHelper.getStackTrace(e));
     }
   }
 
-  public String exportToDataUrl(SegmentContainer shot) throws IOException {
+  public String exportToDataUrl(SegmentContainer shot) {
     // create a ByteArrayOutputStream
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -93,7 +98,7 @@ abstract public class AbstractSegmentExporter implements Extractor {
     return this.dataUrlPrefix + base64;
   }
 
-  public byte[] exportToBinary(SegmentContainer shot) throws IOException {
+  public byte[] exportToBinary(SegmentContainer shot) {
     // create a ByteArrayOutputStream
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -101,9 +106,7 @@ abstract public class AbstractSegmentExporter implements Extractor {
     exportToStream(shot, baos);
 
     // convert the ByteArrayOutputStream's data to a byte array
-    byte[] bytes = baos.toByteArray();
-
-    return bytes;
+    return baos.toByteArray();
   }
 
   @Override
