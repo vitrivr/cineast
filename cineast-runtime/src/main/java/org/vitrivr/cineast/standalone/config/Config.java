@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.standalone.config;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.File;
@@ -38,7 +40,7 @@ public class Config {
    */
   public synchronized static Config sharedConfig() {
     if (sharedConfig == null) {
-      loadConfig("cineast.json");
+      loadConfig(DEFAULT_CONFIG_PATH);
     }
     return sharedConfig;
   }

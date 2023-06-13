@@ -1,16 +1,21 @@
 package org.vitrivr.cineast.standalone.run;
 
+import com.google.common.collect.Sets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,6 +30,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.TextureModel3DSegment;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
@@ -38,6 +44,7 @@ import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.image.DefaultImageDecoder;
 import org.vitrivr.cineast.core.extraction.decode.image.ImageSequenceDecoder;
 import org.vitrivr.cineast.core.extraction.decode.m3d.ModularMeshDecoder;
+import org.vitrivr.cineast.core.extraction.decode.m3d.ModularTextureModelDecoder;
 import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
@@ -48,6 +55,7 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -116,14 +124,25 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context);
     this.metadataExtractors = context.metadataExtractors();
 
-
-
     //Reasonable Defaults
-    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () ->  new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () ->  new ImageSequenceSegmenter(context)));
-    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () ->  new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () ->  new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () ->  new PassthroughSegmenter<Mesh>() {
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
+    if (this.context.getType() == MediaType.IMAGE_SEQUENCE) {
+      handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    }
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.TEXTUREMODEL3D, new ImmutablePair<>(ModularTextureModelDecoder::new, () -> new PassthroughSegmenter<Model>() {
+      @Override
+      protected SegmentContainer getSegmentFromContent(Model content) {
+        return new TextureModel3DSegment(content);
+      }
+
+      @Override
+      public Set<MediaType> getMediaTypes() {
+        return Sets.newHashSet(MediaType.TEXTUREMODEL3D);
+      }
+    }));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
@@ -131,16 +150,21 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
       @Override
       public Set<MediaType> getMediaTypes() {
-        return Sets.newHashSet(MediaType.values());
+        return Sets.newHashSet(MediaType.MODEL3D);
       }
     }));
     // #353: Respect the given segmenter
     final Set<MediaType> segmenterTypes;
     final Segmenter<Object> segmenter = context.newSegmenter();
-    segmenterTypes = segmenter.getMediaTypes();
-    segmenterTypes.forEach(t -> {
-      handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
-    });
+    if (segmenter != null) {
+      segmenterTypes = segmenter.getMediaTypes();
+      segmenterTypes.forEach(t -> {
+        handlers.put(t, new ImmutablePair<>(handlers.get(t).getLeft(), () -> segmenter));
+      });
+      LOGGER.debug("Segmenter specified for media types {}, overwriting defaults", Arrays.toString(segmenterTypes.toArray()));
+    } else {
+      LOGGER.info("No segmenter specified, using default");
+    }
 
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
@@ -170,11 +194,20 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             : item.getObject().getName();
     boolean exists = descriptor.exists();
     MediaType _type = type == null ? descriptor.getMediatype() : type;
-    String _id =
-        StringUtils.isEmpty(item.getObject().getObjectId()) ?
-            StringUtils.isEmpty(descriptor.getObjectId())
-                ? generator.next(_path, _type) : descriptor.getObjectId()
-            : item.getObject().getObjectId();
+    String _id;
+    if (StringUtils.isEmpty(item.getObject().getObjectId())) {
+      if (StringUtils.isEmpty(descriptor.getObjectId())) {
+        var generatedId = generator.next(_path, _type);
+        if (generatedId.isEmpty()) {
+          throw new IllegalStateException("Unable to generate id for " + _path);
+        }
+        _id = generatedId.get();
+      } else {
+        _id = descriptor.getObjectId();
+      }
+    } else {
+      _id = item.getObject().getObjectId();
+    }
     String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
         : item.getObject().getPath();
     return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
@@ -190,7 +223,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     final ObjectIdGenerator generator = this.context.objectIdGenerator();
     Pair<ExtractionItemContainer, MediaType> pair = null;
 
-    /* Initalize all Metadata Extractors */
+    /* Initialize all Metadata Extractors */
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
@@ -319,11 +352,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         /*
          * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
          */
-        if (this.count_processed % 50 == 0) {
+        if (this.count_processed % 10 == 0) {
           System.gc();
         }
       } catch (Throwable t) {
         LOGGER.error("Exception while processing path {}, {}", pair.getLeft(), t.getMessage());
+        System.gc();
         t.printStackTrace();
       }
     }
@@ -354,6 +388,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       if (pathProvider != null) {
         pathProvider.close();
       }
+
       this.mediaSegmentWriter.close();
       this.objectWriter.close();
       this.metadataWriter.close();
@@ -457,20 +492,14 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * @return true if object should be processed further or false if it should be skipped.
    */
   protected boolean checkAndPersistMultimediaObject(MediaObjectDescriptor descriptor) {
-    if (descriptor.exists() && this.context.existenceCheck()
-        == IdConfig.ExistenceCheck.CHECK_SKIP) {//this is true when a descriptor is used which has previously been retrieved from the database
-      LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.",
-          descriptor.getObjectId(), descriptor.getName());
+    if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.SKIP_IF_EXISTS) {//this is true when a descriptor is used which has previously been retrieved from the database
+      LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.", descriptor.getObjectId(), descriptor.getName());
       return false;
-    } else if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
-      LOGGER.info("MultimediaObject {} (name: {}) already exists. Proceeding anyway...",
-          descriptor.getObjectId(), descriptor.getName());
+    } else if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.PROCEED_IF_EXISTS) {
+      LOGGER.info("MultimediaObject {} (name: {}) already exists. Proceeding anyway...", descriptor.getObjectId(), descriptor.getName());
       return true;
     } else if (descriptor.getObjectId() == null) {
-      LOGGER.warn(
-          "The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.",
-          descriptor.getPath());
+      LOGGER.warn("The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.", descriptor.getPath());
       return false;
     } else {
       this.objectWriter.write(descriptor);
@@ -486,12 +515,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    */
   protected boolean checkAndPersistSegment(MediaSegmentDescriptor descriptor) {
     if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
+        && this.context.existenceCheck() == IdConfig.ExistenceCheck.SKIP_IF_EXISTS) {
       LOGGER.info("Segment {} already exists. This segment will be skipped.",
           descriptor.getSegmentId());
       return false;
     } else if (descriptor.exists()
-        && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
+        && this.context.existenceCheck() == IdConfig.ExistenceCheck.PROCEED_IF_EXISTS) {
       LOGGER.info("Segment {} already exists. Proceeding anyway...", descriptor.getSegmentId());
       return true;
     } else {

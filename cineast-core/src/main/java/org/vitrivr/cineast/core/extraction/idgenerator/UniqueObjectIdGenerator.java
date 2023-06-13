@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.extraction.idgenerator;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.vitrivr.cineast.core.data.MediaType;
 
@@ -49,14 +50,15 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
    *
    * @param path Path to the file for which an ID should be generated.
    * @param type MediaType of the file for which an ID should be generated.
+   * @return
    */
   @Override
-  public String next(Path path, MediaType type) {
+  public Optional<String> next(Path path, MediaType type) {
     String rawId;
     do {
       rawId = RandomStringUtils.randomAlphanumeric(this.length);
     } while (this.usedIds.contains(rawId));
     this.usedIds.add(rawId);
-    return MediaType.generateId(type, rawId);
+    return Optional.of(MediaType.generateId(type, rawId));
   }
 }

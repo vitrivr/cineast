@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.json.JsonReader;
@@ -25,11 +26,11 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
   /**
    * Map that maps filenames to ID's. Only used in MAP mode.
    */
-  private final HashMap<String, Object> pathIdMap;
+  private HashMap<String, Object> pathIdMap;
   /**
    * List of ID's. Only used in CONTINUOUS mode.
    */
-  private final LinkedList<String> idList;
+  private LinkedList<String> idList;
   /**
    * The mode of assignment for ID's.
    */
@@ -42,20 +43,19 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
    */
   @SuppressWarnings("unchecked")
   public JSONProvidedObjectIdGenerator(Map<String, String> properties) {
-    String assignment = properties.get(PROPERTY_NAME_ASSIGNMENT);
-    if (assignment != null) {
-      this.mode = AssignmentMode.valueOf(assignment.toUpperCase());
-    } else {
-      this.mode = AssignmentMode.MAP;
-    }
+    String assignment = properties.getOrDefault(PROPERTY_NAME_ASSIGNMENT, AssignmentMode.MAP.name());
+    this.mode = AssignmentMode.valueOf(assignment.toUpperCase());
     final String source = properties.get(PROPERTY_NAME_SOURCE);
     final JsonReader reader = new JacksonJsonProvider();
-    if (mode == AssignmentMode.MAP) {
-      this.pathIdMap = reader.toObject(new File(source), HashMap.class);
-      this.idList = null;
-    } else {
-      this.idList = reader.toObject(new File(source), LinkedList.class);
-      this.pathIdMap = null;
+    switch (mode) {
+      case MAP -> {
+        this.pathIdMap = reader.toObject(new File(source), HashMap.class);
+        this.idList = null;
+      }
+      case CONTINUOUS -> {
+        this.idList = reader.toObject(new File(source), LinkedList.class);
+        this.pathIdMap = null;
+      }
     }
   }
 
@@ -67,11 +67,19 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
    * @return Next ID in the sequence.
    */
   @Override
-  public String next(Path path, MediaType type) {
-    if (mode == AssignmentMode.MAP) {
-      return this.pathIdMap.get(path.getFileName().toString()).toString();
-    } else {
-      return this.idList.poll();
+  public Optional<String> next(Path path, MediaType type) {
+    switch (mode) {
+      case MAP -> {
+        return Optional.of(this.pathIdMap.get(path.getFileName().toString()).toString());
+      }
+      case CONTINUOUS -> {
+        String id = this.idList.poll();
+        if (id == null) {
+          return Optional.empty();
+        }
+        return Optional.of(id);
+      }
+      default -> throw new IllegalArgumentException("Mode " + mode + "not implemented");
     }
   }
 

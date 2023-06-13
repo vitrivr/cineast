@@ -1,9 +1,16 @@
 package org.vitrivr.cineast.standalone;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.DEFAULT_CONFIG_PATH;
+
 import com.github.rvesse.airline.parser.ParseResult;
 import com.github.rvesse.airline.parser.errors.ParseException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
@@ -18,16 +25,32 @@ public class Main {
    */
   public static void main(String[] args) {
     /* (Force) load application config. */
-    if (Config.loadConfig(args[0]) == null) {
-      System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
-      System.exit(1);
+    if (args.length == 0) {
+      System.out.println("No config path given, loading default config '" + DEFAULT_CONFIG_PATH + "'");
+      if (Config.loadConfig(DEFAULT_CONFIG_PATH) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + DEFAULT_CONFIG_PATH + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
     }
 
+    /* (Force) load application config. */
+    if (args.length != 0) {
+      if (Config.loadConfig(args[0]) == null) {
+        System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast API will shutdown...");
+        System.exit(1);
+      }
+    }
     /* Initialize Monitoring */
     try {
       PrometheusServer.initialize();
     } catch (Throwable e) {
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
+    }
+
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
+      /* Initialize Renderer */
+      var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
+      renderThread.start();
     }
 
     if (args.length == 1) {
@@ -65,6 +88,9 @@ public class Main {
         }
       }
       PrometheusServer.stopServer();
+      if (RenderWorker.getRenderJobQueue() != null) {
+        RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      }
     }
   }
 }

@@ -32,7 +32,9 @@ public final class CottontailWrapper implements AutoCloseable {
     this.client = new SimpleClient(sharedChannel(host, port));
     boolean pingSuccessful = this.client.ping();
     watch.stop();
-    if (!pingSuccessful) {
+    if (pingSuccessful) {
+      LOGGER.debug("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
+    } else {
       LOGGER.warn("Could not ping Cottontail DB instance at {}:{}", host, port);
     }
   }
@@ -72,7 +74,6 @@ public final class CottontailWrapper implements AutoCloseable {
    * @return {@link ManagedChannel}
    */
   private static ManagedChannel createChannel(String host, int port) {
-    final StopWatch watch = StopWatch.createStarted();
     LOGGER.debug("Starting to connect to Cottontail DB at {}:{}", host, port);
     final NettyChannelBuilder builder = NettyChannelBuilder.forAddress(host, port).usePlaintext();
     final ManagedChannel channel = builder.build();
@@ -80,8 +81,6 @@ public final class CottontailWrapper implements AutoCloseable {
       LOGGER.info("Closing connection to Cottontail DB.");
       channel.shutdownNow();
     }));
-    watch.stop();
-    LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
     return channel;
   }
 

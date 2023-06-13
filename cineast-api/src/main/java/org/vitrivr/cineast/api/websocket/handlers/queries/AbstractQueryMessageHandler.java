@@ -134,14 +134,14 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param segmentIds List of segment IDs that should be looked up.
    * @return List of found {@link MediaSegmentDescriptor}
    */
-  protected List<MediaSegmentDescriptor> loadSegments(List<String> segmentIds, String queryID) {
-    LOGGER.trace("Loading segment information for {} segmentIDs, qid {}", segmentIds.size(), queryID);
+  protected List<MediaSegmentDescriptor> loadSegments(List<String> segmentIds, String queryId) {
+    LOGGER.trace("Loading segment information for {} segmentIds, qId {}", segmentIds.size(), queryId);
     return TimeHelper.timeCall(() -> {
-      final Map<String, MediaSegmentDescriptor> map = this.mediaSegmentReader.lookUpSegments(segmentIds, queryID);
+      final Map<String, MediaSegmentDescriptor> map = this.mediaSegmentReader.lookUpSegments(segmentIds, queryId);
       final ArrayList<MediaSegmentDescriptor> sdList = new ArrayList<>(map.size());
       segmentIds.stream().filter(map::containsKey).forEach(s -> sdList.add(map.get(s)));
       return sdList;
-    }, "loading segment information, qid " + queryID, Level.TRACE);
+    }, "loading segment information, qid " + queryId, Level.TRACE);
   }
 
 
@@ -151,14 +151,14 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    * @param objectIds List of object IDs that should be looked up.
    * @return List of found {@link MediaObjectDescriptor}
    */
-  protected List<MediaObjectDescriptor> loadObjects(List<String> objectIds, String queryID) {
-    LOGGER.trace("Loading object information for {} segmentIDs, qid {}", objectIds.size(), queryID);
+  protected List<MediaObjectDescriptor> loadObjects(List<String> objectIds, String queryId) {
+    LOGGER.trace("Loading object information for {} segmentIds, qid {}", objectIds.size(), queryId);
     return TimeHelper.timeCall(() -> {
-      final Map<String, MediaObjectDescriptor> map = this.mediaObjectReader.lookUpObjects(objectIds, queryID);
+      final Map<String, MediaObjectDescriptor> map = this.mediaObjectReader.lookUpObjects(objectIds, queryId);
       final ArrayList<MediaObjectDescriptor> vdList = new ArrayList<>(map.size());
       objectIds.stream().filter(map::containsKey).forEach(s -> vdList.add(map.get(s)));
       return vdList;
-    }, "loading object information, qid " + queryID, Level.TRACE);
+    }, "loading object information, qid " + queryId, Level.TRACE);
   }
 
   /**
@@ -247,21 +247,21 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    *
    * @return objectIds retrieved for the segmentIds
    */
-  protected List<String> submitSegmentAndObjectInformation(Session session, String queryID, List<String> segmentIds) {
+  protected List<String> submitSegmentAndObjectInformation(Session session, String queryId, List<String> segmentIds) {
     /* Load segment & object information. */
-    LOGGER.trace("Loading segment and object information for submission, {} segments, qid {}", segmentIds.size(), queryID);
-    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryID);
-    return submitPrefetchedSegmentAndObjectInformation(session, queryID, segments);
+    LOGGER.trace("Loading segment and object information for submission, {} segments, qid {}", segmentIds.size(), queryId);
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds, queryId);
+    return submitPrefetchedSegmentAndObjectInformation(session, queryId, segments);
   }
 
-  protected List<String> submitPrefetchedSegmentAndObjectInformation(Session session, String queryID, List<MediaSegmentDescriptor> segments) {
+  protected List<String> submitPrefetchedSegmentAndObjectInformation(Session session, String queryId, List<MediaSegmentDescriptor> segments) {
     final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
-    return submitPrefetchedSegmentandObjectInformationfromIDs(session, queryID, segments, objectIds);
+    return submitPrefetchedSegmentandObjectInformationfromIDs(session, queryId, segments, objectIds);
   }
 
-  List<String> submitPrefetchedSegmentandObjectInformationfromIDs(Session session, String queryID, List<MediaSegmentDescriptor> segments, List<String> objectIds) {
+  List<String> submitPrefetchedSegmentandObjectInformationfromIDs(Session session, String queryId, List<MediaSegmentDescriptor> segments, List<String> objectIds) {
     LOGGER.trace("Loading object information");
-    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds, queryID);
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds, queryId);
 
     if (segments.isEmpty() || objects.isEmpty()) {
       LOGGER.traceEntry("Segment / Objectlist is Empty, ignoring this iteration");
@@ -270,8 +270,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
     LOGGER.trace("Writing results to the websocket");
 
     /* Write segments, objects and similarity search data to stream. */
-    this.write(session, new MediaObjectQueryResult(queryID, objects));
-    this.write(session, new MediaSegmentQueryResult(queryID, segments));
+    this.write(session, new MediaObjectQueryResult(queryId, objects));
+    this.write(session, new MediaSegmentQueryResult(queryId, segments));
     return objectIds;
   }
 
