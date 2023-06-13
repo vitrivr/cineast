@@ -47,6 +47,16 @@ public class AudioSpectogramExporter extends AbstractSegmentExporter {
    */
   private final String format;
 
+  @Override
+  protected String getFileExtension() {
+    return this.format.toLowerCase();
+  }
+
+  @Override
+  protected String getDataUrlPrefix() {
+    return "data:image/" + format.toLowerCase() + ";base64,";
+  }
+
   /**
    * Default constructor
    */
@@ -72,8 +82,6 @@ public class AudioSpectogramExporter extends AbstractSegmentExporter {
     this.width = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_WIDTH, "800"));
     this.height = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_HEIGHT, "600"));
     this.format = properties.getOrDefault(PROPERTY_NAME_FORMAT, "JPG");
-    this.fileExtension = "." + format.toLowerCase();
-    this.dataUrlPrefix = "data:image/" + format.toLowerCase() + ";base64,";
   }
 
   @Override

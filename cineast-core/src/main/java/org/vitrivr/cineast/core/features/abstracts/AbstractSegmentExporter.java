@@ -27,9 +27,19 @@ abstract public class AbstractSegmentExporter implements Extractor {
    */
   private final Path destination;
 
-  protected String fileExtension;
+  /**
+   * Returns the file extension for the exported data.
+   *
+   * @return String containing the file extension without the dot.
+   */
+  protected abstract String getFileExtension();
 
-  protected String dataUrlPrefix;
+  /**
+   * Returns the data-url prefix for the exported data.
+   *
+   * @return String containing the data-url prefix.
+   */
+  protected abstract String getDataUrlPrefix();
 
   /**
    * Default constructor
@@ -39,7 +49,7 @@ abstract public class AbstractSegmentExporter implements Extractor {
   }
 
   /**
-   * Default constructor. The AudioSegmentExport can be configured via named properties in the provided HashMap.
+   * Default constructor. A segment exporter can be configured via named properties in the provided HashMap.
    * <p>
    * Supported parameters:
    *
@@ -50,11 +60,23 @@ abstract public class AbstractSegmentExporter implements Extractor {
    * @param properties HashMap containing named properties
    */
   public AbstractSegmentExporter(HashMap<String, String> properties) {
-    this.destination = Path.of(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
+    this.destination = Path.of(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "./export"));
   }
 
+
+  /**
+   * Exports the data of a segment container to an output stream.
+   *
+   * @param sc  SegmentContainer to export.
+   * @param stream OutputStream to write to.
+   */
   abstract public void exportToStream(SegmentContainer sc, OutputStream stream);
 
+  /**
+   * Determines whether a segment can be exported or not, i.e. if there is enough data to create an export. For example, a segment without audio cannot be exported as audio. Does not check if the segment is already exported.
+   *
+   * @param sc The segment to be checked.
+   */
   abstract public boolean isExportable(SegmentContainer sc);
 
   @Override
@@ -68,36 +90,39 @@ abstract public class AbstractSegmentExporter implements Extractor {
       if (!folder.toFile().exists()) {
         folder.toFile().mkdirs();
       }
-      Path path = folder.resolve(shot.getId() + this.fileExtension);
+      Path path = folder.resolve(shot.getId() +'.' + this.getFileExtension());
       OutputStream os = Files.newOutputStream(path);
 
-      /* Write audio data to OutputStream. */
       exportToStream(shot, os);
 
       /* Close OutputStream. */
       os.close();
     } catch (Exception e) {
-      LOGGER.error("Could not data to file for segment {} due to {}.", shot.getId(), LogHelper.getStackTrace(e));
+      LOGGER.error("Could not write data to file for segment {} due to {}.", shot.getId(), LogHelper.getStackTrace(e));
     }
   }
 
-  public String exportToDataUrl(SegmentContainer shot) {
-    // create a ByteArrayOutputStream
+  /**
+   * Exports a segment to a data-url.
+   *
+   * @param shot The segment to be exported.
+   * @return A String containing the data-url.
+   */
+  public String exportToDataUrl(SegmentContainer shot) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    // call the exportToStream method with the ByteArrayOutputStream
     exportToStream(shot, baos);
-
-    // convert the ByteArrayOutputStream's data to a byte array
     byte[] bytes = baos.toByteArray();
-
-    // encode the byte array to a Base64 string
+    baos.close();
     String base64 = Base64.getEncoder().encodeToString(bytes);
-
-    // concatenate the data URL prefix and the Base64 string
-    return this.dataUrlPrefix + base64;
+    return this.getDataUrlPrefix() + base64;
   }
 
+  /**
+   * Exports a segment to a byte array.
+   *
+   * @param shot The segment to be exported.
+   * @return A byte array containing the exported data.
+   */
   public byte[] exportToBinary(SegmentContainer shot) {
     // create a ByteArrayOutputStream
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

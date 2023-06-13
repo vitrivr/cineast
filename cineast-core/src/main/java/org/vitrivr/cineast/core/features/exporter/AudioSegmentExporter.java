@@ -16,6 +16,16 @@ import org.vitrivr.cineast.core.util.LogHelper;
  */
 public class AudioSegmentExporter extends AbstractSegmentExporter {
 
+  @Override
+  protected String getFileExtension() {
+    return "wav";
+  }
+
+  @Override
+  protected String getDataUrlPrefix() {
+    return "data:audio/wav;base64,";
+  }
+
   /**
    * Default constructor
    */
@@ -36,9 +46,9 @@ public class AudioSegmentExporter extends AbstractSegmentExporter {
    */
   public AudioSegmentExporter(HashMap<String, String> properties) {
     super(properties);
-    this.fileExtension = ".wav";
-    this.dataUrlPrefix = "data:audio/wav;base64,";
   }
+
+
 
   /**
    * Processes a SegmentContainer: Extract audio-data and writes to a WAVE file.
