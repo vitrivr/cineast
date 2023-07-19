@@ -8,7 +8,7 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout disableAnsi="false"
         pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %p %c{0} - %msg%n}{FATAL=Red, ERROR=Red, WARN=Yellow, INFO=Green, DEBUG=Blue, TRACE=White}"/>
-      <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+      <ThresholdFilter level="${env:CINEAST_LOG_LEVEL:-INFO}" onMatch="ACCEPT" onMismatch="DENY"/>
     </Console>
     <!-- Here one can set up which log level will be stores in a file. Further one can configure the colors -->
     <RollingFile name="File">
