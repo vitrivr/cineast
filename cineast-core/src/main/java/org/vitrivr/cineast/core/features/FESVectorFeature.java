@@ -414,6 +414,7 @@ public class FESVectorFeature extends AbstractFeatureModule {
 
   private float[] embedVideo(List<MultiImage> frames) throws IOException, InterruptedException {
     var images = frames.stream().map(image -> image.getBufferedImage()).collect(Collectors.toList());
+    images = images.stream().map(img -> new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB)).collect(Collectors.toList());
     var encodings = embedMultipleImages(images);
 
     // Sum
