@@ -21,7 +21,7 @@ public class MessageTemplate {
   private static final Pattern KEY_PATTERN = Pattern.compile("\\$\\{(.*?)\\}");
 
   public MessageTemplate(String path) throws IOException {
-    this.template = Files.readString(Paths.get(path));
+    this.template = Files.readString(Paths.get(path)).strip();
   }
 
   public List<String> getKeys() {
