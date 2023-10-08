@@ -324,6 +324,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
   }
+  
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
