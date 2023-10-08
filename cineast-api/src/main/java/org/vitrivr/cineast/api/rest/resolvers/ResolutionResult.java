@@ -22,5 +22,4 @@ public class ResolutionResult {
         new FileInputStream(file)
     );
   }
-
 }

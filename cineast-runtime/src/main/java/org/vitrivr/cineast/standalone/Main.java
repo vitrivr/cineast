@@ -6,6 +6,11 @@ import com.github.rvesse.airline.parser.ParseResult;
 import com.github.rvesse.airline.parser.errors.ParseException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
+import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
+import org.vitrivr.cineast.core.render.lwjgl.util.fsm.abstractworker.JobControlCommand;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
@@ -40,6 +45,12 @@ public class Main {
       PrometheusServer.initialize();
     } catch (Throwable e) {
       System.err.println("Failed to initialize Monitoring due to an exception: " + e.getMessage());
+    }
+
+    if (Config.sharedConfig().getExtractor().getEnableRenderWorker()) {
+      /* Initialize Renderer */
+      var renderThread = new Thread(new RenderWorker(new LinkedBlockingDeque<>()), "RenderWorker");
+      renderThread.start();
     }
 
     if (args.length == 1) {
@@ -77,6 +88,9 @@ public class Main {
         }
       }
       PrometheusServer.stopServer();
+      if (RenderWorker.getRenderJobQueue() != null) {
+        RenderWorker.getRenderJobQueue().add(new RenderJob(JobControlCommand.SHUTDOWN_WORKER));
+      }
     }
   }
 }

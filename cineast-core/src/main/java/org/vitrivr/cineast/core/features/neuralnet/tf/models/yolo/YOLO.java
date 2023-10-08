@@ -120,7 +120,7 @@ public class YOLO implements AutoCloseable {
    * @return the number of classes
    */
   private int getOutputSizeByShape(TFloat32 result) {
-    return (int) (result.shape().size(3) * Math.pow(SIZE, 2));
+    return (int) (result.shape().get(3) * Math.pow(SIZE, 2));
   }
 
   /**

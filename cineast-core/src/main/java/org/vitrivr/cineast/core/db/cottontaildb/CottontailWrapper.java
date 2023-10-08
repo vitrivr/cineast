@@ -33,7 +33,7 @@ public final class CottontailWrapper implements AutoCloseable {
     boolean pingSuccessful = this.client.ping();
     watch.stop();
     if (pingSuccessful) {
-      LOGGER.info("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
+      LOGGER.debug("Connected to Cottontail DB in {} ms at {}:{}", watch.getTime(TimeUnit.MILLISECONDS), host, port);
     } else {
       LOGGER.warn("Could not ping Cottontail DB instance at {}:{}", host, port);
     }

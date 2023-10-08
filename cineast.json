@@ -28,11 +28,8 @@
         {"feature": "EHD", "weight": 0.7},
         {"feature": "DominantEdgeGrid16", "weight": 1.4}
       ],
-      "localfeatures": [
-        {"feature": "HOGMirflickr25K512", "weight": 1.0}
-      ],
-      "localfeatures_fast": [
-        {"feature": "HOGMirflickr25K256", "weight": 1.0}
+      "mlt": [
+        {"feature": "InceptionResnetV2", "weight": 1.0}
       ],
       "audiofingerprint": [
         {"feature": "HPCP12Shingle", "weight": 1.0}

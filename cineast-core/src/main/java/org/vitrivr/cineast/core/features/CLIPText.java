@@ -117,7 +117,7 @@ public class CLIPText implements Retriever {
   private static float[] exec(HashMap<String, Tensor> inputMap) {
    var resultMap = bundle.call(inputMap);
 
-    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT)) {
+    try (TFloat16 embedding = (TFloat16) resultMap.get(EMBEDDING_OUTPUT).get()) {
       var embeddingArray = new float[EMBEDDING_SIZE];
       var floatBuffer = DataBuffers.of(embeddingArray);
       embedding.read(floatBuffer);

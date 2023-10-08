@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.util.DBQueryIDGenerator;
+import org.vitrivr.cineast.core.util.DBQueryIdGenerator;
 
 public class MediaObjectReader extends AbstractEntityReader {
 
@@ -113,7 +113,7 @@ public class MediaObjectReader extends AbstractEntityReader {
     return mapToDescriptor(result.get(0));
   }
 
-  public Map<String, MediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds, String queryID) {
+  public Map<String, MediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds, String queryId) {
     if (videoIds == null) {
       return new HashMap<>();
     }
@@ -132,7 +132,7 @@ public class MediaObjectReader extends AbstractEntityReader {
 
     if (!notCached.isEmpty()) {
 
-      String dbQueryID = DBQueryIDGenerator.generateQueryID("load-obj", queryID);
+      String dbQueryID = DBQueryIdGenerator.generateQueryId("load-obj", queryId);
 
       List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MediaObjectDescriptor.FIELDNAMES[0], Lists.newArrayList(videoIds), dbQueryID);
       results.forEach(el -> {

@@ -22,27 +22,27 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
+  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> queryConfigs) {
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
+  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig queryConfig) {
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String fieldName, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
+  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, ReadableQueryConfig queryConfig, String... terms) {
+  public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
     return new ArrayList<>(0);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<PrimitiveTypeProvider> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId) {
     return new ArrayList<>(0);
   }
 
@@ -62,7 +62,7 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values) {
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values, ReadableQueryConfig queryConfig) {
     return new ArrayList<>(0);
   }
 }

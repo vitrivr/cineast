@@ -25,12 +25,14 @@ COPY --from=build \
   /cineast-src/resources \
   /opt/cineast/resources
 
+WORKDIR /opt/cineast
+
 RUN printf '#!/bin/bash\n\
 if [ "$1" != "api" ] && [ "$1" != "cli" ]; then\n\
     echo "Usage: $0 api|cli" >&2\n\
     exit 1\n\
 fi\n\
-cd /opt/cineast/ && java -jar cineast-$1.jar ${@:2}'\
+java -jar "cineast-$1.jar" "${@:2}"'\
 > /opt/cineast/bootstrap.sh
 RUN chmod +x /opt/cineast/bootstrap.sh
 
