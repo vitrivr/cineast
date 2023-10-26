@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--device', type=str, help='Device to use for feature extraction.', default='cpu')
     parser.add_argument('--port', type=int, help='Port to listen on.', default=8888)
-    parser.add_argument('--ip', type=str, help='Ip to serve on.', default='localhost')
+    parser.add_argument('--ip', type=str, help='Ip to serve on.', default='127.0.0.1')
     args = parser.parse_args()
 
     main(args)
