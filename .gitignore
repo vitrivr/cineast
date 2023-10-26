@@ -69,3 +69,5 @@ resources/
 
 #IIIF
 iiif-media-*/
+
+cineast-api/src/main/python/__pycache__/
