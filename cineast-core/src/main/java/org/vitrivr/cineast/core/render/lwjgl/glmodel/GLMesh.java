@@ -44,7 +44,8 @@ public class GLMesh {
    *   <li>Generate, allocate and initialize Texture Coordinates Buffer</li>
    *   <li>Generate, allocate and initialize Index Buffer</li>
    *   <li>Unbind Vertex Array Object</li>
- *   </ol>
+   *   </ol>
+   *
    * @param mesh The mesh that is wrapped by this gl mesh.
    */
   public GLMesh(Mesh mesh) {
@@ -66,6 +67,36 @@ public class GLMesh {
       GL30.glEnableVertexAttribArray(0);
       GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 0, 0);
 
+      // Normals VBO
+      vboId = GL30.glGenBuffers();
+      this.vboIdList.add(vboId);
+      var normalsBuffer = memoryStack.callocFloat(this.mesh.getVerticesNormals().length);
+      normalsBuffer.put(0, this.mesh.getVerticesNormals());
+      GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
+      GL30.glBufferData(GL30.GL_ARRAY_BUFFER, normalsBuffer, GL30.GL_STATIC_DRAW);
+      GL30.glEnableVertexAttribArray(1);
+      GL30.glVertexAttribPointer(1, 3, GL30.GL_FLOAT, false, 0, 0);
+
+      // Tangents VBO
+      vboId = GL30.glGenBuffers();
+      this.vboIdList.add(vboId);
+      var tangentsBuffer = memoryStack.callocFloat(this.mesh.getTangents().length);
+      tangentsBuffer.put(0, this.mesh.getTangents());
+      GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
+      GL30.glBufferData(GL30.GL_ARRAY_BUFFER, tangentsBuffer, GL30.GL_STATIC_DRAW);
+      GL30.glEnableVertexAttribArray(2);
+      GL30.glVertexAttribPointer(2, 3, GL30.GL_FLOAT, false, 0, 0);
+
+      // Bitangents VBO
+      vboId = GL30.glGenBuffers();
+      this.vboIdList.add(vboId);
+      var bitangentsBuffer = memoryStack.callocFloat(this.mesh.getBitangents().length);
+      bitangentsBuffer.put(0, this.mesh.getBitangents());
+      GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
+      GL30.glBufferData(GL30.GL_ARRAY_BUFFER, bitangentsBuffer, GL30.GL_STATIC_DRAW);
+      GL30.glEnableVertexAttribArray(3);
+      GL30.glVertexAttribPointer(3, 3, GL30.GL_FLOAT, false, 0, 0);
+
       // Textures VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
       this.vboIdList.add(vboId);
@@ -73,8 +104,8 @@ public class GLMesh {
       textureCoordinatesBuffer.put(0, this.mesh.getTextureCoords());
       GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
       GL30.glBufferData(GL30.GL_ARRAY_BUFFER, textureCoordinatesBuffer, GL30.GL_STATIC_DRAW);
-      GL30.glEnableVertexAttribArray(1);
-      GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 0, 0);
+      GL30.glEnableVertexAttribArray(4);
+      GL30.glVertexAttribPointer(4, 2, GL30.GL_FLOAT, false, 0, 0);
 
       // Index VBO (Vertex Buffer Object)
       vboId = GL30.glGenBuffers();
@@ -90,8 +121,7 @@ public class GLMesh {
   }
 
   /**
-   * Cleans up the gl mesh and calls all underlying cleanup methods.
-   * Removes only the references to VBOs and VAOs.
+   * Cleans up the gl mesh and calls all underlying cleanup methods. Removes only the references to VBOs and VAOs.
    * Removes the <i>Vertex Array Object</i> (VAO) and all <i>Vertex Buffer Object</i> (VBO) ids.
    */
   public void cleanup() {
@@ -103,6 +133,7 @@ public class GLMesh {
 
   /**
    * Returns the number of vertices of the wrapped generic mesh.
+   *
    * @return The number of vertices of the wrapped generic mesh.
    */
   public int getNumVertices() {
@@ -111,6 +142,7 @@ public class GLMesh {
 
   /**
    * Returns the <i>Vertex Array Object</i> (VAO) id.
+   *
    * @return The <i>Vertex Array Object</i> (VAO) id.
    */
   public final int getVaoId() {
@@ -119,6 +151,7 @@ public class GLMesh {
 
   /**
    * Returns the ID of the wrapped generic mesh.
+   *
    * @return The ID of the wrapped generic mesh.
    */
   public String getId() {
