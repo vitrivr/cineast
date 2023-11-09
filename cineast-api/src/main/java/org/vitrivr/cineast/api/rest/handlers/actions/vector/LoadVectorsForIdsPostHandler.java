@@ -40,8 +40,8 @@ public class LoadVectorsForIdsPostHandler implements ParsingPostRestHandler<Vect
   public IdVectorList performPost(VectorLookup input, Context ctx) {
 
     DBSelector selector = this.selectorSupply.get();
-    selector.open("feature_" + input.feature());
-    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("feature", input.ids().ids(), "vector_lookup");
+    selector.open("features_" + input.feature());
+    List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", input.ids().ids(), "vector_lookup");
 
     List<String> ids = new ArrayList<>(input.ids().ids().size());
     List<float[]> vectors = new ArrayList<>(input.ids().ids().size());
