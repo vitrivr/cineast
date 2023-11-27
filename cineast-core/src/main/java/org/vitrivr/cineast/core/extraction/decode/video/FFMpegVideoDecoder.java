@@ -395,6 +395,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     this.factory = cacheConfig.sharedCachedDataFactory();
 
     /* Initialize the AVFormatContext. */
+    this.pFormatCtx = null;
     this.pFormatCtx = avformat.avformat_alloc_context();
 
     /* Open video file. */

@@ -308,6 +308,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
   }
+  
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
@@ -316,7 +317,7 @@ public final class CottontailSelector implements DBSelector {
 
     /* TODO Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
     final Query query = new Query(this.fqn)
-        .select("id", null)
+        .select("*", null)
         .fulltext(column, predicate, DB_DISTANCE_VALUE_QUALIFIER)
         .queryId(generateQueryId("ft-rows", queryConfig))
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.DESC)
