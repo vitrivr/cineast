@@ -136,7 +136,7 @@ public class ExternalOpenClipText extends AbstractFeatureModule {
 
     private float[] apiRequest(BufferedImage image) throws IOException, InterruptedException {
         // Image encode to base64
-        var imageData = ImageParser.BufferedImageToDataURL(image, "png");
+        var imageData = ImageParser.bufferedImageToDataURL(image, "png");
 
         var builder = new StringBuilder()
                 .append(URLEncoder.encode("image", StandardCharsets.UTF_8))
@@ -196,7 +196,7 @@ public class ExternalOpenClipText extends AbstractFeatureModule {
     }
 
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-        List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
+        List<PrimitiveTypeProvider> list = this.selector.getFeatures(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId), FEATURE_COLUMN_QUALIFIER, qc);
         if (list.isEmpty()) {
             LOGGER.warn("No feature vector for shotId {} found, returning empty result-list", segmentId);
             return Collections.emptyList();
