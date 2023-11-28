@@ -74,6 +74,12 @@ public class LoadVectorsForIdsPostHandler implements ParsingPostRestHandler<Vect
             )
         );
 
+        umap.setMinDist(
+            Float.parseFloat(
+                input.properties().getOrDefault("minDist", "0.1")
+            )
+        );
+
         umap.setThreads(
             Integer.parseInt(
                 input.properties().getOrDefault("threads", Runtime.getRuntime().availableProcessors() + "")
