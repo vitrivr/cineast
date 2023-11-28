@@ -10,6 +10,8 @@ public enum LightingOptions {
   STATIC,
   LIGHTING_ON_NO_TEXTURE;
 
+
+
   public boolean hasNonDefaultTexture = true;
 
   public SceneLights getSceneLigths(Scene scene) {

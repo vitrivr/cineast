@@ -12,7 +12,9 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.joml.Vector3f;
+import org.tensorflow.op.DtypesOps;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -71,9 +73,14 @@ public class Model3DThumbnailExporter implements Extractor {
    * @param properties HashMap containing named properties
    */
   public Model3DThumbnailExporter(Map<String, String> properties) {
+
+
+
     this.destination = Paths.get(properties.getOrDefault(PROPERTY_NAME_DESTINATION, "."));
     this.size = Integer.parseInt(properties.getOrDefault(PROPERTY_NAME_SIZE, "800"));
   }
+
+
 
   /**
    * Processes a SegmentContainer: Extracts audio-data and visualizes its waveform.
