@@ -30,7 +30,8 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
     File[] candidates = new File[]{
         new File(baseFolder, segmentId + ".jpg"),
-        new File(baseFolder, split[0] + "/" + split[1] + ".jpg")
+        new File(baseFolder, split[0] + "/" + split[1] + ".jpg"),
+        new File(baseFolder, split[0] + "/" + segmentId + ".jpg")
     };
 
     // If there are 3 or more elements in the split array, include appropriate candidates
