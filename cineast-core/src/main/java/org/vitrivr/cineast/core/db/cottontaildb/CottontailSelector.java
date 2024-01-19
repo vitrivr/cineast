@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.util.CineastConstants.DB_DISTANCE_VALUE_QUALIFIER;
-import static org.vitrivr.cineast.core.util.CineastConstants.DOMAIN_COL_NAME;
-import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
-import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
+import static org.vitrivr.cineast.core.util.CineastConstants.*;
 import static org.vitrivr.cineast.core.util.DBQueryIdGenerator.generateQueryId;
 
 import io.grpc.Status;
@@ -28,20 +25,25 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.db.dao.MetadataAccessSpecification;
-import org.vitrivr.cineast.core.util.DBQueryIdGenerator;
-import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Direction;
 import org.vitrivr.cottontail.client.language.basics.Distances;
+import org.vitrivr.cottontail.client.language.basics.expression.Column;
+import org.vitrivr.cottontail.client.language.basics.expression.Function;
+import org.vitrivr.cottontail.client.language.basics.expression.Literal;
+import org.vitrivr.cottontail.client.language.basics.expression.ValueList;
 import org.vitrivr.cottontail.client.language.basics.predicate.And;
-import org.vitrivr.cottontail.client.language.basics.predicate.Expression;
+import org.vitrivr.cottontail.client.language.basics.predicate.Compare;
 import org.vitrivr.cottontail.client.language.basics.predicate.Or;
 import org.vitrivr.cottontail.client.language.basics.predicate.Predicate;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
+import org.vitrivr.cottontail.core.database.Name;
+import org.vitrivr.cottontail.core.tuple.Tuple;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -64,7 +66,7 @@ public final class CottontailSelector implements DBSelector {
   private static List<Map<String, PrimitiveTypeProvider>> processResults(TupleIterator results, Map<String, String> mappings) {
     final List<Map<String, PrimitiveTypeProvider>> _return = new LinkedList<>();
     final StopWatch watch = StopWatch.createStarted();
-    final Collection<String> columns = results.getSimpleNames();
+    final Collection<String> columns = Arrays.stream(results.getColumns()).map(it -> it.getName().getSimple()).toList();
     while (results.hasNext()) {
       final Tuple t = results.next();
       final Map<String, PrimitiveTypeProvider> map = new HashMap<>(results.getNumberOfColumns());
@@ -102,33 +104,30 @@ public final class CottontailSelector implements DBSelector {
         final String id = t.asString(GENERIC_ID_COLUMN_QUALIFIER);
 
         double distance = Double.POSITIVE_INFINITY;
-
-        switch (t.type(DB_DISTANCE_VALUE_QUALIFIER)) {
-
-          case BOOLEAN: {
+        switch (t.type(DB_DISTANCE_VALUE_QUALIFIER).getName()) {
+          case "BOOLEAN":
             distance = Boolean.TRUE.equals(t.asBoolean(DB_DISTANCE_VALUE_QUALIFIER)) ? 1d : 0d;
             break;
-          }
-          case BYTE: {
+          case "BYTE":
             distance = t.asByte(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-          }
-          case SHORT:
+          case "SHORT":
             distance = t.asShort(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-          case INTEGER:
+          case "INTEGER":
             distance = t.asInt(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-          case LONG:
+          case "LONG":
             distance = t.asLong(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-          case FLOAT:
+          case "FLOAT":
             distance = t.asFloat(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-          case DOUBLE:
+          case "DOUBLE":
             distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER);
             break;
-
+          default:
+            break;
         }
 
         T e = DistanceElement.create(distanceElementClass, id, distance);
@@ -147,62 +146,64 @@ public final class CottontailSelector implements DBSelector {
    * @return {@link String} Name of Cottontail DB distance.
    */
   private static Distances toDistance(Distance distance) {
-    switch (distance) {
-      case manhattan:
-        return Distances.L1;
-      case euclidean:
-        return Distances.L2;
-      case squaredeuclidean:
-        return Distances.L2SQUARED;
-      case chisquared:
-        return Distances.CHISQUARED;
-      case cosine:
-        return Distances.COSINE;
-      case haversine:
-        return Distances.HAVERSINE;
-      default:
-        LOGGER.error("distance '{}' not supported by cottontail", distance);
-        throw new IllegalArgumentException("Distance '" + distance + "' not supported by Cottontail DB.");
-    }
+      return switch (distance) {
+          case manhattan -> Distances.L1;
+          case euclidean -> Distances.L2;
+          case squaredeuclidean -> Distances.L2SQUARED;
+          case chisquared -> Distances.CHISQUARED;
+          case cosine -> Distances.COSINE;
+          case haversine -> Distances.HAVERSINE;
+          default -> {
+              LOGGER.error("distance '{}' not supported by cottontail", distance);
+              throw new IllegalArgumentException("Distance '" + distance + "' not supported by Cottontail DB.");
+          }
+      };
   }
 
   /**
-   * Converts a Cineast {@link RelationalOperator} into the corresponding Cottontail DB representation.
+   * Converts a Cineast {@link PrimitiveTypeProvider} into the corresponding Cottontail DB {@link Literal} representation.
+
+   * @param typeProvider  {@link PrimitiveTypeProvider} to convert.
+   * @return {@link Literal}
+   */
+  private static Literal toLiteral(PrimitiveTypeProvider typeProvider) {
+    final ProviderDataType type = typeProvider.getType();
+    return switch (type) {
+      case BOOLEAN -> new Literal(typeProvider.getBoolean());
+      case BYTE -> new Literal(typeProvider.getByte());
+      case SHORT -> new Literal(typeProvider.getShort());
+      case INT -> new Literal(typeProvider.getInt());
+      case INT_ARRAY -> new Literal(typeProvider.getIntArray());
+      case FLOAT -> new Literal(typeProvider.getFloat());
+      case FLOAT_ARRAY -> new Literal(typeProvider.getFloatArray());
+      case LONG -> new Literal(typeProvider.getLong());
+      case DOUBLE ->  new Literal(typeProvider.getDouble());
+      case STRING ->  new Literal(typeProvider.getString());
+      case UNKNOWN -> null;
+      case BITSET -> null;
+    };
+  }
+
+  /**
+   * Converts a Cineast {@link RelationalOperator} into the corresponding Cottontail DB {@link Compare.Operator}.
    *
    * @param op {@link RelationalOperator} to convert.
-   * @return {@link String} Name of Cottontail DB distance.
+   * @return {@link Compare.Operator
    */
-  private static String toOperator(RelationalOperator op) {
-    switch (op) {
-      case EQ:
-        return "=";
-      case NEQ:
-        return "!=";
-      case GEQ:
-        return ">=";
-      case LEQ:
-        return "<=";
-      case GREATER:
-        return ">";
-      case LESS:
-        return "<";
-      case BETWEEN:
-        return "BETWEEN";
-      case LIKE:
-        return "LIKE";
-      case NLIKE:
-        return "NOT LIKE";
-      case MATCH:
-        return "MATCH";
-      case ISNULL:
-        return "IS NULL";
-      case ISNOTNULL:
-        return "IS NOT NULL";
-      case IN:
-        return "IN";
-      default:
-        throw new IllegalArgumentException("Operator '" + op + "' not supported by Cottontail DB.");
-    }
+  private static Compare.Operator toOperator(RelationalOperator op) {
+      return switch (op) {
+          case EQ -> Compare.Operator.EQUAL;
+          case NEQ -> Compare.Operator.NOTEQUAL;
+          case GEQ -> Compare.Operator.GEQUAL;
+          case LEQ -> Compare.Operator.LEQUAL;
+          case GREATER -> Compare.Operator.GREATER;
+          case LESS -> Compare.Operator.LESS;
+          case BETWEEN -> Compare.Operator.BETWEEN;
+          case LIKE -> Compare.Operator.LIKE;
+          case MATCH -> Compare.Operator.MATCH;
+          case IN -> Compare.Operator.IN;
+          default -> throw new IllegalArgumentException("Operator '" + op + "' not supported by Cottontail DB.");
+      };
   }
 
   @Override
@@ -250,7 +251,11 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv", queryConfig));
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Compare(
+        new Column(column),
+        Compare.Operator.EQUAL,
+        toLiteral(value)
+    )).queryId(generateQueryId("get-fv", queryConfig));
     try {
       final TupleIterator results = this.cottontail.client.query(query);
       final List<float[]> _return = new LinkedList<>();
@@ -268,7 +273,11 @@ public final class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv-gen", qc));
+    final Query query = new Query(this.fqn).select(vectorName, null).where(new Compare(
+        new Column(column),
+        Compare.Operator.EQUAL,
+        toLiteral(value)
+    )).queryId(generateQueryId("get-fv-gen", qc));
     try {
       return toSingleCol(this.cottontail.client.query(query), vectorName);
     } catch (StatusRuntimeException e) {
@@ -278,45 +287,52 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values) {
-    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-    return getRowsHelper(column, "IN", mapped, "get-rows-in-iterable");
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values) {
+    return getRows(column, values, "get-rows-stringlist");
+  }
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values, String dbQueryId) {
+    final List<PrimitiveTypeProvider> mapped = values.stream().map(PrimitiveTypeProvider::fromObject).toList();
+    return getRowsHelper(column, Compare.Operator.IN, mapped, dbQueryId);
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values) {
-    final Object[] mapped = values.toArray();
-    return getRowsHelper(column, "IN", mapped, "get-rows-stringlist");
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values) {
+    return getRows(column, values, "get-rows-in-iterable");
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId) {
-    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-    return getRowsHelper(column, "IN", mapped, dbQueryId);
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String column, List<String> values, String dbQueryId) {
-    final Object[] mapped = values.toArray();
-    return getRowsHelper(column, "IN", mapped, dbQueryId);
+    final List<PrimitiveTypeProvider> mapped = StreamSupport.stream(values.spliterator(), false).toList();
+    return getRowsHelper(column, Compare.Operator.IN, mapped, dbQueryId);
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String column, RelationalOperator operator, Iterable<PrimitiveTypeProvider> values, ReadableQueryConfig queryConfig) {
-    final Object[] mapped = StreamSupport.stream(values.spliterator(), false).map(PrimitiveTypeProvider::toObject).toArray();
-    final String op = toOperator(operator);
-    return getRowsHelper(column, op, mapped, "get-rows-" + op + "-iterable");
+    final Compare.Operator op = toOperator(operator);
+    return getRowsHelper(column, op, StreamSupport.stream(values.spliterator(), false).toList(), "get-rows-" + op + "-iterable");
   }
 
-  private List<Map<String, PrimitiveTypeProvider>> getRowsHelper(String fieldName, String op, Object[] mapped, String dbQueryID) {
-    if (op.equals("IN") && mapped.length == 0) {
-      LOGGER.debug("empty in-clause, not executing query {}", dbQueryID);
-      return new ArrayList<>(0);
+  private List<Map<String, PrimitiveTypeProvider>> getRowsHelper(String fieldName, Compare.Operator op, List<PrimitiveTypeProvider> values, String dbQueryID) {
+    /* Sanity check. */
+    if (values.isEmpty()) {
+      LOGGER.debug("Empty comparison-clause, not executing query {}", dbQueryID);
+      return new ArrayList<>();
+    }
+
+    /* Prepare comparison operator. */
+    Compare compare = null;
+    if (op == Compare.Operator.IN) {
+      compare = new Compare(new Column(fieldName), op, new ValueList(values.stream().map(PrimitiveTypeProvider::toObject).toList()));
+    } else {
+      compare = new Compare(new Column(fieldName), op, toLiteral(values.get(0)));
     }
     if (dbQueryID == null) {
-      dbQueryID = DBQueryIdGenerator.generateQueryId("get-rows-help");
+      dbQueryID = generateQueryId("get-rows-help");
     }
-    final Query query = new Query(this.fqn).select("*", null).where(new Expression(fieldName, op, mapped)).queryId(dbQueryID);
+
+    /* Return query. */
+    final Query query = new Query(this.fqn).select("*", null).where(compare).queryId(dbQueryID);
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -331,7 +347,7 @@ public final class CottontailSelector implements DBSelector {
     /* Prepare plain query. */
     final String predicate = Arrays.stream(terms).map(String::trim).collect(Collectors.joining(" OR "));
 
-    /* TODO Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
+    /* Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
     final Query query = new Query(this.fqn)
         .select("*", null)
         .fulltext(column, predicate, DB_DISTANCE_VALUE_QUALIFIER)
@@ -339,14 +355,25 @@ public final class CottontailSelector implements DBSelector {
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.DESC)
         .limit(rows);
 
-
     /* Process predicates. */
     if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = queryConfig.getRelevantSegmentIds();
-      final Expression segmentIds = new Expression(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
-      query.where(new And(segmentIds, new Expression(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0)));
+      final Compare segmentIds = new Compare(
+          new Column(GENERIC_ID_COLUMN_QUALIFIER),
+          Compare.Operator.IN,
+          new ValueList(relevant.stream().toList())
+      );
+      query.where(new And(segmentIds, new Compare(
+          new Column(GENERIC_ID_COLUMN_QUALIFIER),
+          Compare.Operator.GREATER,
+          new Literal(0.0)
+      )));
     } else {
-      query.where(new Expression(DB_DISTANCE_VALUE_QUALIFIER, ">", 0.0));
+      query.where(new Compare(
+          new Column(DB_DISTANCE_VALUE_QUALIFIER),
+          Compare.Operator.GREATER,
+          new Literal(0.0)
+      ));
     }
 
     try {
@@ -371,15 +398,23 @@ public final class CottontailSelector implements DBSelector {
 
     /* Process predicates. */
     final List<Predicate> atomics = conditions.stream().map(c -> {
-      final String op = toOperator(c.getMiddle());
-      return new Expression(c.getLeft(), op, c.getRight().stream().map(PrimitiveTypeProvider::toObject).toArray());
+      final Compare.Operator op = toOperator(c.getMiddle());
+      if (op == Compare.Operator.IN) {
+        return new Compare(new Column(c.getLeft()), op, new ValueList(c.getRight().stream().map(PrimitiveTypeProvider::toObject).toList()));
+      } else {
+        return new Compare(new Column(c.getLeft()), op, toLiteral(c.getRight().get(0)));
+      }
     }).collect(Collectors.toList());
 
     /*  */
     final Optional<Predicate> predicates = atomics.stream().reduce(And::new);
     if (queryConfig != null && !queryConfig.getRelevantSegmentIds().isEmpty()) {
       final Set<String> relevant = queryConfig.getRelevantSegmentIds();
-      final Expression segmentIds = new Expression(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray());
+      final Compare segmentIds = new Compare(
+          new Column(GENERIC_ID_COLUMN_QUALIFIER),
+          Compare.Operator.IN,
+          new ValueList(relevant.stream().toList())
+      );
       if (predicates.isPresent()) {
         query.where(new And(segmentIds, predicates.get()));
       } else {
@@ -419,7 +454,11 @@ public final class CottontailSelector implements DBSelector {
     }
     final Query query = new Query(this.fqn).select("*", null).queryId(dbQueryId);
     final Optional<Predicate> predicates = generateQueryFromMetadataSpec(spec);
-    final Expression segmentIds = new Expression(idColName, "IN", ids.toArray());
+    final Compare segmentIds = new Compare(
+        new Column(idColName),
+        Compare.Operator.IN,
+        new ValueList(ids)
+    );
     if (predicates.isPresent()) {
       query.where(new And(segmentIds, predicates.get()));
     } else {
@@ -432,13 +471,21 @@ public final class CottontailSelector implements DBSelector {
     final List<Optional<Predicate>> atomics = spec.stream().map(s -> {
       List<Predicate> singleSpecPredicates = new ArrayList<>();
       if (!s.domain().isEmpty() && !s.domain().equals("*")) {
-        singleSpecPredicates.add(new Expression(DOMAIN_COL_NAME, "=", s.domain()));
+        singleSpecPredicates.add(new Compare(
+          new Column(DOMAIN_COL_NAME),
+          Compare.Operator.EQUAL,
+          new Literal(s.domain())
+        ));
       }
       if (!s.key().isEmpty() && !s.key().equals("*")) {
-        singleSpecPredicates.add(new Expression(KEY_COL_NAME, "=", s.key()));
+        singleSpecPredicates.add(new Compare(
+                new Column(KEY_COL_NAME),
+                Compare.Operator.EQUAL,
+                new Literal(s.key())
+        ));
       }
       return singleSpecPredicates.stream().reduce(And::new);
-    }).collect(Collectors.toList());
+    }).toList();
 
     final Optional<Optional<Predicate>> reduce = atomics.stream().reduce((res, el) -> {
       if (res.isEmpty() && el.isEmpty()) {
@@ -458,7 +505,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(List<String> columns, int limit) {
     final Query query = new Query(this.fqn);
-    query.queryId(DBQueryIdGenerator.generateQueryId("all-cols-limit-" + limit));
+    query.queryId(generateQueryId("all-cols-limit-" + limit));
     for (String c : columns) {
       query.select(c, null);
     }
@@ -476,7 +523,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<PrimitiveTypeProvider> getUniqueValues(String column) {
     final Query query = new Query(this.fqn).distinct(column, null).
-        queryId(DBQueryIdGenerator.generateQueryId("unique-" + column));
+        queryId(generateQueryId("unique-" + column));
     try {
       return toSingleCol(this.cottontail.client.query(query), column);
     } catch (StatusRuntimeException e) {
@@ -487,7 +534,7 @@ public final class CottontailSelector implements DBSelector {
 
   public Map<String, Integer> countDistinctValues(String column) {
     final Query query = new Query(this.fqn).select(column, null)
-        .queryId(DBQueryIdGenerator.generateQueryId("count-distinct-" + column));
+        .queryId(generateQueryId("count-distinct-" + column));
     final Map<String, Integer> count = new HashMap<>();
     try {
       final TupleIterator results = this.cottontail.client.query(query);
@@ -505,7 +552,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     final Query query = new Query(this.fqn).select("*", null)
-        .queryId(DBQueryIdGenerator.generateQueryId("get-all-" + this.fqn));
+        .queryId(generateQueryId("get-all-" + this.fqn));
     try {
       return processResults(this.cottontail.client.query(query));
     } catch (StatusRuntimeException e) {
@@ -517,7 +564,7 @@ public final class CottontailSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll(String order, int skip, int limit) {
     final Query query = new Query(this.fqn).select("*", null)
-        .queryId(DBQueryIdGenerator.generateQueryId("get-all-order-skip-limit-" + this.fqn))
+        .queryId(generateQueryId("get-all-order-skip-limit-" + this.fqn))
         .order(order, Direction.ASC)
         .skip(skip)
         .limit(limit);
@@ -595,9 +642,10 @@ public final class CottontailSelector implements DBSelector {
    */
   private Query kn(int k, float[] vector, String column, ReadableQueryConfig config, Direction direction, String... select) {
     final Set<String> relevant = config.getRelevantSegmentIds();
-    final Distances distance = toDistance(config.getDistance().orElse(Distance.manhattan));
-    final Query query = new Query(this.fqn)
-        .distance(column, vector, distance, DB_DISTANCE_VALUE_QUALIFIER)
+    final String distance = toDistance(config.getDistance().orElse(Distance.manhattan)).getFunctionName();
+  final Query query = new Query(this.fqn)
+        .select(new Column(SEGMENT_ID_COLUMN_QUALIFIER), null)
+        .select(new Function(distance, new Column(column), new Literal(vector)), DB_DISTANCE_VALUE_QUALIFIER)
         .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
         .limit(k)
         .queryId(generateQueryId(direction == Direction.ASC ? "knn" : "kfn", config));
@@ -609,7 +657,11 @@ public final class CottontailSelector implements DBSelector {
 
     /* Add relevant segments (optional). */
     if (!relevant.isEmpty()) {
-      query.where(new Expression(GENERIC_ID_COLUMN_QUALIFIER, "IN", relevant.toArray()));
+      query.where(new Compare(
+          new Column(GENERIC_ID_COLUMN_QUALIFIER),
+          Compare.Operator.IN,
+          new ValueList(relevant.stream().toList())
+      ));
     }
 
     return query;
@@ -631,3 +683,5 @@ public final class CottontailSelector implements DBSelector {
     return _return;
   }
 }
+
+

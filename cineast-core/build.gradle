@@ -105,7 +105,7 @@ switch (OperatingSystem.current()) {
 dependencies {
 
     /** THE Cottontail DB proto dependency */
-    api group: 'org.vitrivr', name: 'cottontaildb-proto', version: version_cottontaildb_proto
+    api group: 'org.vitrivr', name: 'cottontaildb-client', version: version_cottontaildb_client
     api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: version_kotlin_stdlib
 
     /** THE Polypheny dependency */

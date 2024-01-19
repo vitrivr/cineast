@@ -7,8 +7,9 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
-import org.vitrivr.cottontail.client.language.basics.Constants;
-import org.vitrivr.cottontail.client.language.basics.predicate.Expression;
+import org.vitrivr.cottontail.client.language.basics.expression.Column;
+import org.vitrivr.cottontail.client.language.basics.expression.Literal;
+import org.vitrivr.cottontail.client.language.basics.predicate.Compare;
 import org.vitrivr.cottontail.client.language.dml.BatchInsert;
 import org.vitrivr.cottontail.client.language.dml.Insert;
 import org.vitrivr.cottontail.client.language.dql.Query;
@@ -46,7 +47,7 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
 
   @Override
   public boolean exists(String key, String value) {
-    final Query query = new Query(this.fqn).exists().where(new Expression(key, "=", value));
+    final Query query = new Query(this.fqn).exists().where(new Compare(new Column(key), Compare.Operator.EQUAL, new Literal(value)));
     final TupleIterator results = this.cottontail.client.query(query);
     final Boolean b = results.next().asBoolean("exists");
     if (b != null) {
@@ -65,10 +66,10 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     int size = tuples.size();
     long txId = 0L;
     if (useTransactions) {
-      txId = this.cottontail.client.begin();
+      txId = this.cottontail.client.begin(false);
     }
     try {
-      BatchInsert insert = new BatchInsert().into(this.fqn).columns(this.names);
+      BatchInsert insert = new BatchInsert(this.fqn).columns(this.names);
       if (useTransactions) {
         insert.txId(txId);
       }
@@ -81,21 +82,18 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
             return o;
           }
         }).toArray();
-        if (insert.serializedSize() >= Constants.MAX_PAGE_SIZE_BYTES - 10_000) { // cottontail sometimes acts up which is why we don't fully trust the max size
-          LOGGER.trace("Inserting msg of size {} with {} elements into {}", insert.serializedSize(), insert.count(), this.fqn);
+        if (insert.any(values)) { // cottontail sometimes acts up which is why we don't fully trust the max size
+          LOGGER.trace("Inserting {} elements into {}.", insert.count(), this.fqn);
           this.cottontail.client.insert(insert);
-          insert = new BatchInsert().into(this.fqn).columns(this.names);
+          insert = new BatchInsert(this.fqn).columns(this.names);
           if (useTransactions) {
             insert.txId(txId);
           }
-        }
-        boolean append = insert.append(values);
-        if (!append) {
-          LOGGER.error("Value could not be appended to batch-insert");
+          insert.any(values);
         }
       }
       if (insert.count() > 0) {
-        LOGGER.trace("Finalizing: Inserting msg of size {} with {} elements into {}", insert.serializedSize(), insert.count(), this.fqn);
+        LOGGER.trace("Finalizing: Inserting {} elements into {}.", insert.count(), this.fqn);
         this.cottontail.client.insert(insert);
       }
       if (useTransactions) {
@@ -120,9 +118,9 @@ public final class CottontailWriter extends AbstractPersistencyWriter<Insert> {
     int index = 0;
     for (Object o : tuple.getElements()) {
       if (o instanceof ReadableFloatVector) {
-        insert.value(this.names[index++], ReadableFloatVector.toArray((ReadableFloatVector) o));
+        insert.any(this.names[index++], ReadableFloatVector.toArray((ReadableFloatVector) o));
       } else {
-        insert.value(this.names[index++], o);
+        insert.any(this.names[index++], o);
       }
     }
     return insert;

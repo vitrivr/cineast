@@ -8,11 +8,9 @@ import com.carrotsearch.hppc.ObjectDoubleHashMap;
 import com.carrotsearch.hppc.cursors.ObjectCursor;
 import georegression.struct.point.Point2D_F32;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -37,8 +35,8 @@ import org.vitrivr.cineast.core.util.HungarianAlgorithm;
 import org.vitrivr.cineast.core.util.pose.MergingPoseDetector;
 import org.vitrivr.cineast.core.util.pose.PoseDetector;
 import org.vitrivr.cottontail.client.SimpleClient;
-import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
+import org.vitrivr.cottontail.core.tuple.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.ColumnName;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.EntityName;
@@ -71,7 +69,7 @@ public class SkeletonPose extends AbstractFeatureModule {
   }
 
   private static Expression expression(float[] f) {
-    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloatVector(
+    return Expression.newBuilder().setLiteral(CottontailGrpc.Literal.newBuilder().setVectorData(CottontailGrpc.Vector.newBuilder().setFloat(
         CottontailGrpc.FloatVector.newBuilder().addAllVector(new FloatArrayIterable(f))
     ))).build();
   }

@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
+
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -20,16 +21,15 @@ import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.EntityDefinition.EntityDefinitionBuilder;
-import org.vitrivr.cottontail.client.iterators.Tuple;
 import org.vitrivr.cottontail.client.iterators.TupleIterator;
 import org.vitrivr.cottontail.client.language.basics.Constants;
-import org.vitrivr.cottontail.client.language.basics.Type;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.ddl.CreateEntity;
 import org.vitrivr.cottontail.client.language.ddl.CreateIndex;
 import org.vitrivr.cottontail.client.language.ddl.CreateSchema;
 import org.vitrivr.cottontail.client.language.ddl.DropEntity;
 import org.vitrivr.cottontail.client.language.ddl.ListSchemas;
+import org.vitrivr.cottontail.core.tuple.Tuple;
 import org.vitrivr.cottontail.grpc.CottontailGrpc.IndexType;
 
 public final class CottontailEntityCreator implements EntityCreator {
@@ -47,39 +47,25 @@ public final class CottontailEntityCreator implements EntityCreator {
     init();
   }
 
-  public static Type mapAttributeType(AttributeDefinition.AttributeType type) {
-    switch (type) {
-      case BOOLEAN:
-        return Type.BOOLEAN;
-      case DOUBLE:
-        return Type.DOUBLE;
-      case VECTOR:
-        return Type.FLOAT_VECTOR;
-      case BITSET:
-        return Type.BOOLEAN_VECTOR;
-      case FLOAT:
-        return Type.FLOAT;
-      /*case GEOGRAPHY:
-        return Type.GEOGRAPHY;
-      case GEOMETRY:
-        return Type.GEOMETRY;*/
-      case INT:
-        return Type.INTEGER;
-      case LONG:
-        return Type.LONG;
-      case STRING:
-      case TEXT:
-        return Type.STRING;
-      default:
-        throw new RuntimeException("type " + type + " has no matching analogue in Cottontail DB");
-    }
+  public static String mapAttributeType(AttributeDefinition.AttributeType type) {
+      return switch (type) {
+          case BOOLEAN -> "BOOLEAN";
+          case DOUBLE -> "DOUBLE";
+          case VECTOR -> "FLOAT_VECTOR";
+          case BITSET -> "BOOLEAN_VECTOR";
+          case FLOAT -> "FLOAT";
+          case INT -> "INTEGER";
+          case LONG -> "LONG";
+          case STRING, TEXT -> "STRING";
+          default -> throw new RuntimeException("type " + type + " has no matching analogue in Cottontail DB");
+      };
   }
 
   /**
    * Makes sure that schema 'cineast' is available.
    */
   private void init() {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       final ListSchemas list = new ListSchemas().txId(txId);
       final TupleIterator iterator = this.cottontail.client.list(list);
@@ -103,14 +89,14 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createTagEntity() {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + TagReader.TAG_ENTITY_NAME;
       final CreateEntity create = new CreateEntity(fqn)
-          .column(TagReader.TAG_ID_COLUMNNAME, Type.STRING, -1, false)
-          .column(TagReader.TAG_NAME_COLUMNNAME, Type.STRING, -1, false)
-          .column(TagReader.TAG_DESCRIPTION_COLUMNNAME, Type.STRING, -1, false)
+          .column(TagReader.TAG_ID_COLUMNNAME, "STRING", -1, false, true, false)
+          .column(TagReader.TAG_NAME_COLUMNNAME, "STRING", -1, false, false, false)
+          .column(TagReader.TAG_DESCRIPTION_COLUMNNAME, "STRING", -1, false, false, false)
           .txId(txId);
       this.cottontail.client.create(create);
 
@@ -131,15 +117,15 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createMultiMediaObjectsEntity() {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + MediaObjectDescriptor.ENTITY;
       final CreateEntity entity = new CreateEntity(fqn)
-          .column(MediaObjectDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
-          .column(MediaObjectDescriptor.FIELDNAMES[1], Type.INTEGER, -1, false)
-          .column(MediaObjectDescriptor.FIELDNAMES[2], Type.STRING, -1, false)
-          .column(MediaObjectDescriptor.FIELDNAMES[3], Type.STRING, -1, false)
+          .column(MediaObjectDescriptor.FIELDNAMES[0], "STRING", -1, false, true, false)
+          .column(MediaObjectDescriptor.FIELDNAMES[1],"INTEGER", -1, false, false, false)
+          .column(MediaObjectDescriptor.FIELDNAMES[2], "STRING", -1, false, false, false)
+          .column(MediaObjectDescriptor.FIELDNAMES[3], "STRING", -1, false, false, false)
           .txId(txId);
       this.cottontail.client.create(entity);
 
@@ -155,18 +141,18 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createSegmentEntity() {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + MediaSegmentDescriptor.ENTITY;
       final CreateEntity entity = new CreateEntity(fqn)
-          .column(MediaSegmentDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[2], Type.INTEGER, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[3], Type.INTEGER, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[4], Type.INTEGER, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[5], Type.DOUBLE, -1, false)
-          .column(MediaSegmentDescriptor.FIELDNAMES[6], Type.DOUBLE, -1, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[0], "STRING", -1, false, true, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[1], "STRING", -1, false, false, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[2], "INTEGER", -1, false, false, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[3], "INTEGER", -1, false, false, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[4], "INTEGER", -1, false, false, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[5], "DOUBLE", -1, false, false, false)
+          .column(MediaSegmentDescriptor.FIELDNAMES[6], "DOUBLE", -1, false, false, false)
           .txId(txId);
       this.cottontail.client.create(entity);
 
@@ -183,15 +169,15 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createMetadataEntity(String tableName) {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
       final CreateEntity entity = new CreateEntity(fqn)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[2], Type.STRING, -1, false)
-          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, false)
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], "STRING", -1, false, true, false)
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], "STRING", -1, false, false, false)
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[2], "STRING", -1, false, false, false)
+          .column(MediaObjectMetadataDescriptor.FIELDNAMES[3], "STRING", -1, false, false, false)
           .txId(txId);
       this.cottontail.client.create(entity);
 
@@ -208,15 +194,15 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createSegmentMetadataEntity(String tableName) {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
       final CreateEntity entity = new CreateEntity(fqn)
-          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
-          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
-          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[2], Type.STRING, -1, false)
-          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[3], Type.STRING, -1, false)
+          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[0], "STRING", -1, false, true, false)
+          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[1], "STRING", -1, false, false, false)
+          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[2], "STRING", -1, false, false, false)
+          .column(MediaSegmentMetadataDescriptor.FIELDNAMES[3], "STRING", -1, false, false, false)
           .txId(txId);
       this.cottontail.client.create(entity);
 
@@ -246,7 +232,7 @@ public final class CottontailEntityCreator implements EntityCreator {
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
     var ent = this.createEntity(featureEntityName, extended);
-    long txId = this.cottontail.client.begin();
+    long txId = this.cottontail.client.begin(false);
     boolean success = this.createIndex(featureEntityName, GENERIC_ID_COLUMN_QUALIFIER, IndexType.BTREE, txId);
     if (success) {
       this.cottontail.client.commit(txId);
@@ -262,7 +248,7 @@ public final class CottontailEntityCreator implements EntityCreator {
     extended[0] = new AttributeDefinition(GENERIC_ID_COLUMN_QUALIFIER, AttributeDefinition.AttributeType.STRING);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
     var ent = this.createEntity(entityName, extended);
-    long txId = this.cottontail.client.begin();
+    long txId = this.cottontail.client.begin(false);
     boolean success = this.createIndex(entityName, GENERIC_ID_COLUMN_QUALIFIER, IndexType.BTREE, txId);
     if (success) {
       this.cottontail.client.commit(txId);
@@ -279,7 +265,7 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createEntity(org.vitrivr.cineast.core.db.setup.EntityDefinition def) {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       /* Create entity. */
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + def.getEntityName();
@@ -289,7 +275,7 @@ public final class CottontailEntityCreator implements EntityCreator {
         if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
           length = attribute.getLength();
         }
-        entity.column(attribute.getName(), mapAttributeType(attribute.getType()), length, false);
+        entity.column(attribute.getName(), mapAttributeType(attribute.getType()), length, false, false, false);
       }
       this.cottontail.client.create(entity);
 
@@ -315,7 +301,7 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean createHashNonUniqueIndex(String entityName, String column) {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       this.createIndex(entityName, column, IndexType.BTREE, txId);
       this.cottontail.client.commit(txId);
@@ -339,7 +325,7 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean dropEntity(String entityName) {
-    final long txId = this.cottontail.client.begin();
+    final long txId = this.cottontail.client.begin(false);
     try {
       final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
       this.cottontail.client.drop(new DropEntity(fqn).txId(txId));
@@ -358,7 +344,7 @@ public final class CottontailEntityCreator implements EntityCreator {
 
   private boolean createIndex(String entityName, String attribute, IndexType type, long txId) {
     var fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
-    final CreateIndex index = new CreateIndex(fqn, attribute, type).txId(txId);
+    final CreateIndex index = new CreateIndex(fqn, type).column(attribute).txId(txId);
     try {
       this.cottontail.client.create(index);
     } catch (StatusRuntimeException e) {
