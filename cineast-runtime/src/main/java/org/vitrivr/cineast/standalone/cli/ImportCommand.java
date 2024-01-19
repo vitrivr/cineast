@@ -64,11 +64,6 @@ public class ImportCommand extends AbstractCineastCommand {
       handler.waitForCompletion();
     }
 
-    /* Only attempt to optimize Cottontail entities if we were importing into Cottontail, otherwise an unavoidable error message would be displayed when importing elsewhere. */
-    if (!doNotFinalize && Config.sharedConfig().getDatabase().getSelector() == DataSource.COTTONTAIL && Config.sharedConfig().getDatabase().getWriter() == DataSource.COTTONTAIL) {
-      OptimizeEntitiesCommand.optimizeAllCottontailEntities();
-    }
-
     System.out.printf("Completed import of type %s for '%s'.%n", this.type, this.input);
   }
 

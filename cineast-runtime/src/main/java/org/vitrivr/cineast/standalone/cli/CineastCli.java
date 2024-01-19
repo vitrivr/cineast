@@ -9,7 +9,7 @@ import org.vitrivr.cineast.standalone.cli.db.PolyphenyBenchmarkCommand;
 
 
 @Cli(name = "cineast-api", description = "The CLI provided by the Cineast API.", commands = {
-        DropTableCommand.class, TagRetrievalCommand.class, OptimizeEntitiesCommand.class,
+        DropTableCommand.class, TagRetrievalCommand.class,
         CodebookCommand.class, DatabaseSetupCommand.class, ExtractionCommand.class, ImportCommand.class,
         ThreeDeeTestCommand.class, ThreeDeeTextureTestCommand.class, RetrieveCommand.class, Help.class, SingleObjRetrievalCommand.class,
         TextRetrievalCommand.class, DistinctColumnApiCommand.class,
