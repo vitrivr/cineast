@@ -130,8 +130,10 @@ public class ExternalOpenClipText implements Retriever {
 
   private List<ScoreElement> getSimilar(PrimitiveTypeProvider queryProvider, ReadableQueryConfig qc) {
     ReadableQueryConfig qcc = QueryConfig.clone(qc).setDistance(DISTANCE);
-    List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), queryProvider, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, qcc);
-    CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(CORRESPONDENCE);
+    final List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), queryProvider, FEATURE_COLUMN_QUALIFIER, SegmentDistanceElement.class, qcc);
+    final CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(
+      CorrespondenceFunction.linear(distances.stream().map(SegmentDistanceElement::getDistance).max(Double::compare).orElse(1d))
+    );
     return DistanceElement.toScore(distances, function);
   }
 
