@@ -42,8 +42,19 @@ import org.vitrivr.cottontail.client.language.basics.predicate.Or;
 import org.vitrivr.cottontail.client.language.basics.predicate.Predicate;
 import org.vitrivr.cottontail.client.language.ddl.AboutEntity;
 import org.vitrivr.cottontail.client.language.dql.Query;
-import org.vitrivr.cottontail.core.database.Name;
 import org.vitrivr.cottontail.core.tuple.Tuple;
+import org.vitrivr.cottontail.core.types.Value;
+import org.vitrivr.cottontail.core.values.BooleanValue;
+import org.vitrivr.cottontail.core.values.BooleanVectorValue;
+import org.vitrivr.cottontail.core.values.ByteValue;
+import org.vitrivr.cottontail.core.values.DoubleValue;
+import org.vitrivr.cottontail.core.values.FloatValue;
+import org.vitrivr.cottontail.core.values.FloatVectorValue;
+import org.vitrivr.cottontail.core.values.IntValue;
+import org.vitrivr.cottontail.core.values.IntVectorValue;
+import org.vitrivr.cottontail.core.values.LongValue;
+import org.vitrivr.cottontail.core.values.ShortValue;
+import org.vitrivr.cottontail.core.values.StringValue;
 
 public final class CottontailSelector implements DBSelector {
 
@@ -102,35 +113,26 @@ public final class CottontailSelector implements DBSelector {
       try {
         final Tuple t = response.next();
         final String id = t.asString(GENERIC_ID_COLUMN_QUALIFIER);
+        final Value distance = t.get(DB_DISTANCE_VALUE_QUALIFIER);
+        double distanceValue = Double.POSITIVE_INFINITY;
 
-        double distance = Double.POSITIVE_INFINITY;
-        switch (t.type(DB_DISTANCE_VALUE_QUALIFIER).getName()) {
-          case "BOOLEAN":
-            distance = Boolean.TRUE.equals(t.asBoolean(DB_DISTANCE_VALUE_QUALIFIER)) ? 1d : 0d;
-            break;
-          case "BYTE":
-            distance = t.asByte(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          case "SHORT":
-            distance = t.asShort(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          case "INTEGER":
-            distance = t.asInt(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          case "LONG":
-            distance = t.asLong(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          case "FLOAT":
-            distance = t.asFloat(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          case "DOUBLE":
-            distance = t.asDouble(DB_DISTANCE_VALUE_QUALIFIER);
-            break;
-          default:
-            break;
+        if (distance instanceof BooleanValue) {
+          distanceValue = ((BooleanValue) distance).getValue() ? 1d : 0d;
+        } else if (distance instanceof ByteValue) {
+          distanceValue = ((ByteValue) distance).getValue();
+        } else if (distance instanceof ShortValue) {
+          distanceValue = ((ShortValue) distance).getValue();
+        } else if (distance instanceof IntValue) {
+          distanceValue = ((IntValue) distance).getValue();
+        } else if (distance instanceof LongValue) {
+          distanceValue = ((LongValue) distance).getValue();
+        }  else if (distance instanceof FloatValue) {
+          distanceValue = ((FloatValue) distance).getValue();
+        } else if (distance instanceof DoubleValue) {
+          distanceValue = ((DoubleValue) distance).getValue();
         }
 
-        T e = DistanceElement.create(distanceElementClass, id, distance);
+        T e = DistanceElement.create(distanceElementClass, id, distanceValue);
         result.add(e);
       } catch (NullPointerException e) {
         LOGGER.warn("Encountered null entry (id, distance) is nearest neighbor search response!");
@@ -138,6 +140,41 @@ public final class CottontailSelector implements DBSelector {
     }
     return result;
   }
+
+  /**
+   * Converts a {@link Value} to a primitive {@link Object}.
+   *
+   * @param value The @link Value} to convert.
+   * @return Primitive {@link Object}
+   */
+  private static <T extends Value> Object toObject(T value) {
+    if (value instanceof BooleanValue) {
+      return (((BooleanValue) value).getValue());
+    } else if (value instanceof ByteValue) {
+      return ((ByteValue) value).getValue();
+    } else if (value instanceof ShortValue) {
+      return ((ShortValue) value).getValue();
+    } else if (value instanceof IntValue) {
+      return ((IntValue) value).getValue();
+    } else if (value instanceof LongValue) {
+      return( (LongValue) value).getValue();
+    } else if (value instanceof FloatValue) {
+      return ((FloatValue) value).getValue();
+    } else if (value instanceof DoubleValue) {
+      return ((DoubleValue) value).getValue();
+    } else if (value instanceof StringValue) {
+      return ((StringValue) value).getValue();
+    } else if (value instanceof FloatVectorValue) {
+      return ((FloatVectorValue) value).getData();
+    } else if (value instanceof IntVectorValue) {
+      return ((IntVectorValue) value).getData();
+    } else if (value instanceof BooleanVectorValue) {
+      return ((BooleanVectorValue) value).getData();
+    } else {
+      return PrimitiveTypeProvider.fromObject(value);
+    }
+  }
+
 
   /**
    * Converts a Cineast {@link Distance} into the corresponding Cottontail DB representation.
@@ -643,16 +680,15 @@ public final class CottontailSelector implements DBSelector {
   private Query kn(int k, float[] vector, String column, ReadableQueryConfig config, Direction direction, String... select) {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final String distance = toDistance(config.getDistance().orElse(Distance.manhattan)).getFunctionName();
-  final Query query = new Query(this.fqn)
-        .select(new Column(GENERIC_ID_COLUMN_QUALIFIER), null)
-        .select(new Function(distance, new Column(column), new Literal(vector)), DB_DISTANCE_VALUE_QUALIFIER)
-        .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
-        .limit(k)
-        .queryId(generateQueryId(direction == Direction.ASC ? "knn" : "kfn", config));
+    final Query query = new Query(this.fqn)
+          .select(new Function(distance, new Column(column), new Literal(vector)), DB_DISTANCE_VALUE_QUALIFIER)
+          .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
+          .limit(k)
+          .queryId(generateQueryId(direction == Direction.ASC ? "knn" : "kfn", config));
 
-    for (String s : select) {
-      query.select(s, null);
-    }
+      for (String s : select) {
+        query.select(s, null);
+      }
 
 
     /* Add relevant segments (optional). */
@@ -678,7 +714,10 @@ public final class CottontailSelector implements DBSelector {
     final List<PrimitiveTypeProvider> _return = new LinkedList<>();
     while (results.hasNext()) {
       final Tuple t = results.next();
-      _return.add(PrimitiveTypeProvider.fromObject(t.get(colName)));
+      final Value v = t.get(colName);
+      if (v != null) {
+        _return.add(PrimitiveTypeProvider.fromObject(toObject(v)));
+      }
     }
     return _return;
   }
