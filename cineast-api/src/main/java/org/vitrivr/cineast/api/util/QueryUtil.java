@@ -191,7 +191,7 @@ public class QueryUtil {
     }
     final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
     scoreBySegmentId.forEach((ObjectDoublePredicate<? super String>) (segmentId, score) -> {
-      if (score > 0) {
+      if (score >= 0) {
         list.add(new StringDoublePair(segmentId, score));
       }
       return true;
