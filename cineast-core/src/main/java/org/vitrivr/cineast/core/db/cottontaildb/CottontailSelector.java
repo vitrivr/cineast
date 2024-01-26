@@ -644,7 +644,7 @@ public final class CottontailSelector implements DBSelector {
     final Set<String> relevant = config.getRelevantSegmentIds();
     final String distance = toDistance(config.getDistance().orElse(Distance.manhattan)).getFunctionName();
   final Query query = new Query(this.fqn)
-        .select(new Column(SEGMENT_ID_COLUMN_QUALIFIER), null)
+        .select(new Column(GENERIC_ID_COLUMN_QUALIFIER), null)
         .select(new Function(distance, new Column(column), new Literal(vector)), DB_DISTANCE_VALUE_QUALIFIER)
         .order(DB_DISTANCE_VALUE_QUALIFIER, direction)
         .limit(k)
