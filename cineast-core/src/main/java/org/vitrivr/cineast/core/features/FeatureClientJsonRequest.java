@@ -29,6 +29,9 @@ public class FeatureClientJsonRequest extends FeatureClientRequest {
           var wavExport = new AudioSegmentExporter();
           keys.put(key, wavExport.exportToDataUrl(sc));
           break;
+        case "text":
+          keys.put(key, sc.getText());
+          break;
         default:
           LOGGER.warn("Unknown key: {}", key);
           break;

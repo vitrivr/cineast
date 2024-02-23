@@ -7,8 +7,6 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.exporter.AudioSegmentExporter;
-import org.vitrivr.cineast.core.util.web.ImageParser;
 import org.vitrivr.cineast.core.util.web.WebClient;
 import org.vitrivr.cineast.core.util.web.MessageTemplate;
 
@@ -55,10 +53,28 @@ public class FeatureClient {
 
     HashMap<String, Object> result = new HashMap<>();
     for (var key : responseKeys.keySet()) {
-      switch (key) {
+      int dotIndex = key.indexOf('.');
+      if (dotIndex == -1) {
+        LOGGER.warn("No prefix found in key: {}", key);
+        continue;
+      }
+      String prefix = key.substring(0, dotIndex);
+      String suffix = key.substring(dotIndex + 1);
+      switch (suffix) {
         case "raw_text":
-          result.put(key, responseKeys.get(key));
+          result.put(prefix, responseKeys.get(key));
           break;
+        case "float_vector":
+          String responsePart = responseKeys.get(key);
+          responsePart = responsePart.trim().replaceAll("^\\[|\\]$", "");
+          String[] parts = responsePart.split(",");
+
+          float[] vector = new float[parts.length];
+          for (int i = 0; i < parts.length; i++) {
+            // Trim each part to remove any leading or trailing spaces before parsing
+            vector[i] = Float.parseFloat(parts[i].trim());
+          }
+          result.put(key, vector);
         default:
           LOGGER.warn("Unknown key: {}", key);
           break;

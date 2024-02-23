@@ -38,7 +38,7 @@ public class ExternalTextFeature extends AbstractTextRetriever {
     }
     try {
       Map<String,Object> extractions = client.extract(sc);
-      String feature = (String) extractions.getOrDefault("raw_text", "");
+      String feature = (String) extractions.getOrDefault("feature", "");
       var descriptor = new SimpleFulltextFeatureDescriptor(sc.getId(), feature);
       this.writer.write(descriptor);
     } catch (Exception e) {
