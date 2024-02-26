@@ -12,7 +12,7 @@ public enum MediaType {
   VIDEO(0, "v", "video"),
   IMAGE(1, "i", "image"),
   AUDIO(2, "a", "audio"),
-  MODEL3D(3, "m", "3dmodel"),
+  MODEL3D(3, "m", "m3d"),
   TEXTUREMODEL3D(5, "mt", "3dtexturemodel"),
   IMAGE_SEQUENCE(4, "is", "imagesequence"),
   UNKNOWN(99, "u", "unknown");
