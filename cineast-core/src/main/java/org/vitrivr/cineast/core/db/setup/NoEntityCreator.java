@@ -14,7 +14,7 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity(String tableName) {
+  public boolean createMetadataEntity(String entityName) {
     return false;
   }
 
@@ -24,7 +24,7 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createSegmentMetadataEntity(String tableName) {
+  public boolean createSegmentMetadataEntity(String entityName) {
     return false;
   }
 

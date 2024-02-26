@@ -279,7 +279,7 @@ public class QueryUtil {
     final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     List<Object> _return = new ArrayList<>();
     retrievalRuntimeConfig.getRetrieversByCategory(category).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
-      retriever.getTableNames().forEach(tableName -> {
+      retriever.getEntityNames().forEach(tableName -> {
         selector.open(tableName);
         List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows(GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(id));
         rows.stream().map(row -> row.get(FEATURE_COLUMN_QUALIFIER).toObject()).forEach(_return::add);
@@ -346,7 +346,7 @@ public class QueryUtil {
     Map<String, ArrayList<HashMap<String, Object>>> _return = new HashMap<>();
 
     retrievalRuntimeConfig.getRetrieversByCategory(category).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
-      retriever.getTableNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
+      retriever.getEntityNames().forEach(tableName -> _return.put(tableName, getFeaturesFromEntity(tableName, ids)));
     });
 
     return _return;

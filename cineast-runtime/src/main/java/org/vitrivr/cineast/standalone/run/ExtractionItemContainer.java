@@ -3,12 +3,14 @@ package org.vitrivr.cineast.standalone.run;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
@@ -35,7 +37,27 @@ public class ExtractionItemContainer {
       @JsonProperty("metadata") List<MediaObjectMetadataDescriptor> metadata,
       @JsonProperty("uri") String uri)
       throws URISyntaxException {
-    this(object, metadata, Paths.get(new URI(uri)));
+
+    this(object, metadata, convertUriToPathWindowsSafe(uri));
+  }
+
+  /**
+   * Annoying hack to also handle windows file URIs with a drive letter
+   */
+  private static Path convertUriToPathWindowsSafe(String uri) throws URISyntaxException {
+    Path path;
+    try{
+      path = new File(new URI(uri)).toPath();
+    }catch(IllegalArgumentException ex){
+      final URI parsedURI = new URI(uri);
+      if(StringUtils.isNotBlank(parsedURI.getAuthority())){
+        path = new File(parsedURI.getAuthority()+parsedURI.getPath()).toPath();
+      }else{
+        // If for some unknown reasons we land here with a unix path, this should do the trick
+        path = new File(parsedURI.getPath()).toPath();
+      }
+    }
+    return path;
   }
 
   @JsonIgnore

@@ -6,6 +6,7 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 import static org.vitrivr.cineast.core.util.CineastConstants.KEY_COL_NAME;
 import static org.vitrivr.cineast.core.util.DBQueryIdGenerator.generateQueryId;
 
+import com.google.protobuf.TextFormat;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
@@ -228,6 +229,7 @@ public final class CottontailSelector implements DBSelector {
       return handleNearestNeighbourResponse(this.cottontail.client.query(query), distanceElementClass);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getNearestNeighboursGeneric(): {}", e.getMessage());
+      LOGGER.trace("Query: {}", query.getBuilder().toString());
       return new ArrayList<>(0);
     }
   }
@@ -249,28 +251,10 @@ public final class CottontailSelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv", queryConfig));
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
+    final Query query = new Query(this.fqn).select(featureColName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv-gen", queryConfig));
     try {
-      final TupleIterator results = this.cottontail.client.query(query);
-      final List<float[]> _return = new LinkedList<>();
-      while (results.hasNext()) {
-        final Tuple t = results.next();
-        _return.add(t.asFloatVector(vectorName));
-      }
-      return _return;
-    } catch (StatusRuntimeException e) {
-      LOGGER.warn("Error occurred during query execution in getFeatureVectors(): {}", e.getMessage());
-      return new ArrayList<>(0);
-    }
-  }
-
-
-  @Override
-  public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig qc) {
-    final Query query = new Query(this.fqn).select(vectorName, null).where(new Expression(column, "==", value.toObject())).queryId(generateQueryId("get-fv-gen", qc));
-    try {
-      return toSingleCol(this.cottontail.client.query(query), vectorName);
+      return toSingleCol(this.cottontail.client.query(query), featureColName);
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getFeatureVectorsGeneric(): {}", e.getMessage());
       return new ArrayList<>(0);
@@ -324,6 +308,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
   }
+  
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
@@ -332,7 +317,7 @@ public final class CottontailSelector implements DBSelector {
 
     /* TODO Cottontail calls this a distance in its documentation, but it's actually a score. See the tests - that's why we order DESC and not ASC */
     final Query query = new Query(this.fqn)
-        .select("id", null)
+        .select("*", null)
         .fulltext(column, predicate, DB_DISTANCE_VALUE_QUALIFIER)
         .queryId(generateQueryId("ft-rows", queryConfig))
         .order(DB_DISTANCE_VALUE_QUALIFIER, Direction.DESC)

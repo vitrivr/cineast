@@ -30,7 +30,7 @@ public class AbstractTextRetrieverTest {
   }
 
   public void testMatch(String input, String... output) {
-    org.junit.jupiter.api.Assertions.assertArrayEquals(output, retriever.generateQuery(new TextQueryTermContainer(input), new QueryConfig(null)));
+    org.junit.jupiter.api.Assertions.assertArrayEquals(output, retriever.generateQuery(input));
   }
 
   public SegmentContainer generateSegmentContainerFromText(String text) {

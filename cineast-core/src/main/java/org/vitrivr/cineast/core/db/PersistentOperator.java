@@ -22,7 +22,7 @@ public interface PersistentOperator {
    *
    * @return Tables which this {@link PersistentOperator} uses to store/access its data.
    */
-  default List<String> getTableNames() {
+  default List<String> getEntityNames() {
     return new ArrayList<>(0);
   }
 }

@@ -30,8 +30,8 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity(String tableName) {
-    return this.store.createEntity(tableName,
+  public boolean createMetadataEntity(String entityName) {
+    return this.store.createEntity(entityName,
         MediaObjectMetadataDescriptor.FIELDNAMES[0],
         MediaObjectMetadataDescriptor.FIELDNAMES[1],
         MediaObjectMetadataDescriptor.FIELDNAMES[2],
@@ -40,8 +40,8 @@ public class InMemoryEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createSegmentMetadataEntity(String tableName) {
-    return this.store.createEntity(tableName,
+  public boolean createSegmentMetadataEntity(String entityName) {
+    return this.store.createEntity(entityName,
         MediaSegmentMetadataDescriptor.FIELDNAMES[0],
         MediaSegmentMetadataDescriptor.FIELDNAMES[1],
         MediaSegmentMetadataDescriptor.FIELDNAMES[2],

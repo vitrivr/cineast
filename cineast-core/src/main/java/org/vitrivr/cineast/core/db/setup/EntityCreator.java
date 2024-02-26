@@ -38,7 +38,7 @@ public interface EntityCreator extends Closeable {
    * <br>
    * Do not use unless you know what you are doing, usage of {@link #createMetadataEntity()} is heavily recommended
    */
-  boolean createMetadataEntity(String tableName);
+  boolean createMetadataEntity(String entityName);
 
 
   /**
@@ -53,7 +53,7 @@ public interface EntityCreator extends Closeable {
    * <br>
    * Do not use unless you know what you are doing, usage of {@link #createSegmentMetadataEntity()} is heavily recommended
    */
-  boolean createSegmentMetadataEntity(String tableName);
+  boolean createSegmentMetadataEntity(String entityName);
 
 
   /**
