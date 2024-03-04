@@ -18,7 +18,6 @@ import argparse
 # parser.add_argument('--port', type=int, help='Port to listen on.', default=8888)
 #
 # args = parser.parse_args()
-
 model, preprocess_train , preprocess_val = open_clip.create_model_and_transforms('xlm-roberta-base-ViT-B-32', pretrained='laion5b_s13b_b90k')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
