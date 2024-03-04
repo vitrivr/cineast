@@ -2,8 +2,10 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import org.joml.Vector3f;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Model;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.ModelLoader;
 
+import org.vitrivr.cineast.core.data.m3d.texturemodel.util.TextureLoadException;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderJob;
 import org.vitrivr.cineast.core.render.lwjgl.renderer.RenderWorker;
@@ -19,11 +21,15 @@ public class ThreeDeeTextureTestCommand extends AbstractCineastCommand {
   @Override
   public void execute() {
     System.out.println("Performing 3D test on texture model...");
+      Model model = null;
+      try {
+          model = ModelLoader.loadModel("unit-cube",
+                  "./resources/renderer/lwjgl/models/unit-cube/Cube_Text.gltf");
+      } catch (TextureLoadException e) {
+          throw new RuntimeException(e);
+      }
 
-    var model = ModelLoader.loadModel("unit-cube",
-            "./resources/renderer/lwjgl/models/unit-cube/Cube_Text.gltf");
-
-    // Options for window
+      // Options for window
     var windowOptions = new WindowOptions() {{
       this.hideWindow = true;
       this.width = 600;
