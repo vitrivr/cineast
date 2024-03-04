@@ -85,7 +85,7 @@ public class RenderWorker extends Worker<RenderJob> {
    * The render worker main thread.
    */
   public void run() {
-    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 17));
+    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 19));
     this.renderer = new LWJGLOffscreenRenderer();
     var defaultOptions = new WindowOptions();
     renderer.setWindowOptions(defaultOptions);

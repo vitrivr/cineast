@@ -39,6 +39,7 @@ import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 import org.lwjgl.system.MemoryStack;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.util.TextureLoadException;
 
 public final class ModelLoader {
 
@@ -112,7 +113,7 @@ public final class ModelLoader {
    * @param modelPath Path to the model file.
    * @return Model object.
    */
-  public static Model loadModel(String modelId, String modelPath) {
+  public static Model loadModel(String modelId, String modelPath) throws TextureLoadException {
     var model = loadModel(modelId, modelPath,
         aiProcess_JoinIdenticalVertices |
             aiProcess_GlobalScale |
@@ -137,7 +138,7 @@ public final class ModelLoader {
    * @return Model object.
    */
   @SuppressWarnings("NullAway")
-  public static Model loadModel(String modelId, String modelPath, int flags) {
+  public static Model loadModel(String modelId, String modelPath, int flags) throws TextureLoadException {
     LOGGER.trace("Try loading file {} from {}", modelId, modelPath);
 
     var file = new File(modelPath);
@@ -152,7 +153,7 @@ public final class ModelLoader {
     // RAPHAEL WALTENSPUEL 2023-01-20
     var aiScene = aiImportFile(modelPath, flags);
     if (aiScene == null) {
-      throw new RuntimeException("Error loading model [modelPath: " + modelPath + "]");
+      throw new TextureLoadException("Error loading model [modelPath: " + modelPath + "]");
     }
 
     var numMaterials = aiScene.mNumMaterials();
