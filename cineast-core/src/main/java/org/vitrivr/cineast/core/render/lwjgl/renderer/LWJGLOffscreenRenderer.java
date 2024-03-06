@@ -262,7 +262,12 @@ public class LWJGLOffscreenRenderer extends EngineLogic implements Renderer {
    */
   @Override
   public BufferedImage obtain() {
-    return this.imageQueue.poll();
+    try {
+      return this.imageQueue.poll(60, java.util.concurrent.TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      LOGGER.error("Timeout on rendering", e);
+      throw new RuntimeException("Timeout on rendering", e);
+    }
   }
 
   /**

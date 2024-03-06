@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingDeque;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -45,57 +46,58 @@ import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 @StateProvider
 public class RenderWorker extends Worker<RenderJob> {
 
-  private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
-  /**
-   * The Lightweight Java Game Library (LWJGL) Offscreen Renderer instance.
-   */
-  private LWJGLOffscreenRenderer renderer;
+    /**
+     * The Lightweight Java Game Library (LWJGL) Offscreen Renderer instance.
+     */
+    private LWJGLOffscreenRenderer renderer;
 
-  /**
-   * Since only one OpenGl renderer can be instanced
-   * use Static queue
-   * The queue can be accessed by the caller wit {@link RenderWorker#getRenderJobQueue()}
-   * On this queue the caller will provide new render jobs.
-   */
-  private static BlockingDeque<RenderJob> renderJobQueue;
+    /**
+     * Since only one OpenGl renderer can be instanced
+     * use Static queue
+     * The queue can be accessed by the caller wit {@link RenderWorker#getRenderJobQueue()}
+     * On this queue the caller will provide new render jobs.
+     */
+    private static BlockingDeque<RenderJob> renderJobQueue;
 
-  /**
-   * Instantiates a new RenderWorker.
-   * <p>
-   * The queue is stores in a static variable.
-   */
-  public RenderWorker(BlockingDeque<RenderJob> jobs) {
-    super(jobs);
-    RenderWorker.renderJobQueue = jobs;
-    LOGGER.trace("Initialized RenderWorker");
-  }
+    /**
+     * Instantiates a new RenderWorker.
+     * <p>
+     * The queue is stores in a static variable.
+     */
+    public RenderWorker(BlockingDeque<RenderJob> jobs) {
+        super(jobs);
+        RenderWorker.renderJobQueue = jobs;
+        LOGGER.trace("Initialized RenderWorker");
+    }
 
-  /**
-   * static getter for the renderJobQueue
-   * A caller can use get the queue submit new jobs to the render worker.
-   * @return the render job queue
-   */
-  public static BlockingDeque<RenderJob> getRenderJobQueue() {
-    return renderJobQueue;
-  }
-
-
-  /**
-   * The render worker main thread.
-   */
-  public void run() {
-    Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 19));
-    this.renderer = new LWJGLOffscreenRenderer();
-    var defaultOptions = new WindowOptions();
-    renderer.setWindowOptions(defaultOptions);
-    renderer.startEngine();
-    super.run();
-    LOGGER.trace("Running RenderWorker");
-  }
+    /**
+     * static getter for the renderJobQueue
+     * A caller can use get the queue submit new jobs to the render worker.
+     *
+     * @return the render job queue
+     */
+    public static BlockingDeque<RenderJob> getRenderJobQueue() {
+        return renderJobQueue;
+    }
 
 
-  // @formatter:off
+    /**
+     * The render worker main thread.
+     */
+    public void run() {
+        Configuration.STACK_SIZE.set((int) java.lang.Math.pow(2, 19));
+        this.renderer = new LWJGLOffscreenRenderer();
+        var defaultOptions = new WindowOptions();
+        renderer.setWindowOptions(defaultOptions);
+        renderer.startEngine();
+        super.run();
+        LOGGER.trace("Running RenderWorker");
+    }
+
+
+    // @formatter:off
 
   /**
    * Creates the graph for the RenderWorker.
@@ -131,122 +133,127 @@ public class RenderWorker extends Worker<RenderJob> {
   }
   // @formatter:on
 
-  /**
-   * Handler for render exceptions.
-   * Unloads the model and sends a JobControlCommand. ERROR to the caller.
-   * @param ex The exception that was thrown.
-   * @return The handler message.
-   */
-  @Override
-  protected String onJobException(Exception ex) {
-    this.unload();
-    this.currentJob.putResultQueue(new RenderJob(JobControlCommand.JOB_FAILURE));
-    return "Job failed";
-  }
-
-  /**
-   * Initializes the renderer. Sets the window options and starts the engine.
-   */
-  @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)
-  public void setWindowOptions(WindowOptions opt) {
-    LOGGER.trace("INIT_WINDOW RenderWorker");
-    this.renderer = new LWJGLOffscreenRenderer();
-
-    renderer.setWindowOptions(opt);
-    renderer.startEngine();
-  }
-
-  /**
-   * Sets specific render options.
-   */
-  @StateEnter(state = RenderStates.INIT_RENDERER, data = RenderData.RENDER_OPTIONS)
-  public void setRendererOptions(RenderOptions opt) {
-    LOGGER.trace("INIT_RENDERER RenderWorker");
-    this.renderer.setRenderOptions(opt);
-    if (opt.lightingOptions != null) {
-      this.renderer.setLighting(opt.lightingOptions);
+    /**
+     * Handler for render exceptions.
+     * Unloads the model and sends a JobControlCommand. ERROR to the caller.
+     *
+     * @param ex The exception that was thrown.
+     * @return The handler message.
+     */
+    @Override
+    protected String onJobException(Exception ex) {
+        this.unload();
+        this.currentJob.putResultQueue(new RenderJob(JobControlCommand.JOB_FAILURE));
+        return "Job failed";
     }
-  }
 
-  /**
-   * State to wait for new jobs.
-   */
-  @StateEnter(state = RenderStates.IDLE)
-  public void idle() {
-    LOGGER.trace("IDLE RenderWorker");
-  }
+    /**
+     * Initializes the renderer. Sets the window options and starts the engine.
+     */
+    @StateEnter(state = RenderStates.INIT_WINDOW, data = RenderData.WINDOWS_OPTIONS)
+    public void setWindowOptions(WindowOptions opt) {
+        LOGGER.trace("INIT_WINDOW RenderWorker");
+        this.renderer = new LWJGLOffscreenRenderer();
 
-  /**
-   * Register a model to the renderer.
-   *
-   * @param model The model to register and to be rendered.
-   */
-  @StateEnter(state = RenderStates.LOAD_MODEL, data = RenderData.MODEL)
-  public void registerModel(IModel model) {
-    LOGGER.trace("LOAD_MODEL RenderWorker");
-    this.renderer.assemble(model);
-  }
+        renderer.setWindowOptions(opt);
+        renderer.startEngine();
+    }
 
-  /**
-   * Renders the model. Sends the rendered image to the caller.
-   */
-  @StateEnter(state = RenderStates.RENDER)
-  public void renderModel() {
-    LOGGER.trace("RENDER RenderWorker");
-    this.renderer.render();
-    var pic = this.renderer.obtain();
-    var data = new Variant().set(RenderData.IMAGE, pic);
-    var responseJob = new RenderJob(data);
-    this.currentJob.putResultQueue(responseJob);
-  }
+    /**
+     * Sets specific render options.
+     */
+    @StateEnter(state = RenderStates.INIT_RENDERER, data = RenderData.RENDER_OPTIONS)
+    public void setRendererOptions(RenderOptions opt) {
+        LOGGER.trace("INIT_RENDERER RenderWorker");
+        this.renderer.setRenderOptions(opt);
+        if (opt.lightingOptions != null) {
+            this.renderer.setLighting(opt.lightingOptions);
+        }
+    }
 
-  /**
-   * Rotates the camera.
-   *
-   * @param rotation The rotation vector (x,y,z)
-   */
-  @StateEnter(state = RenderStates.ROTATE, data = RenderData.VECTOR)
-  public void rotate(Vector3f rotation) {
-    LOGGER.trace("ROTATE RenderWorker");
-    this.renderer.moveCameraOrbit(rotation.x, rotation.y, rotation.z);
-  }
+    /**
+     * State to wait for new jobs.
+     */
+    @StateEnter(state = RenderStates.IDLE)
+    public void idle() {
+        LOGGER.trace("IDLE RenderWorker");
+    }
 
-  /**
-   * Looks at the origin from a specific position. The rotation is not affected. Removes the processed position vector
-   * from the list.
-   *
-   * @param vectors The list of position vectors
-   */
-  @StateEnter(state = RenderStates.LOOKAT, data = RenderData.VECTORS)
-  public void lookAt(LinkedList<Vector3f> vectors) {
-    LOGGER.trace("Look at RenderWorker");
-    var vec = vectors.poll();
-    assert vec != null;
-    this.renderer.setCameraOrbit(vec.x, vec.y, vec.z);
-  }
+    /**
+     * Register a model to the renderer.
+     *
+     * @param model The model to register and to be rendered.
+     */
+    @StateEnter(state = RenderStates.LOAD_MODEL, data = RenderData.MODEL)
+    public void registerModel(IModel model) {
+        LOGGER.trace("LOAD_MODEL RenderWorker");
+        this.renderer.assemble(model);
+    }
 
-  /**
-   * Looks from a specific position at the origin. Removes the processed position vector from the list.
-   *
-   * @param vectors The list of position vectors
-   */
-  @StateEnter(state = RenderStates.LOOK_FROM_AT_O, data = RenderData.VECTORS)
-  public void lookFromAtO(LinkedList<Vector3f> vectors) {
-    LOGGER.trace("LOOK_FROM_AT_O RenderWorker");
-    var vec = vectors.poll();
-    assert vec != null;
-    this.renderer.lookFromAtO(vec.x, vec.y, vec.z);
-  }
+    /**
+     * Renders the model. Sends the rendered image to the caller.
+     */
+    @StateEnter(state = RenderStates.RENDER)
+    public void renderModel() {
+        try {
+            LOGGER.trace("RENDER RenderWorker");
+            this.renderer.render();
+            var pic = this.renderer.obtain();
+            var data = new Variant().set(RenderData.IMAGE, pic);
+            var responseJob = new RenderJob(data);
+            this.currentJob.putResultQueue(responseJob);
+        } catch (Exception e) {
+            this.onJobException(e);
+        }
+    }
 
-  /**
-   * Unloads the model and sends a JobControlCommand.JOB_DONE to the caller.
-   */
-  @StateEnter(state = RenderStates.UNLOAD_MODEL)
-  public void unload() {
-    LOGGER.trace("UNLOAD_MODEL RenderWorker");
-    this.renderer.clear();
-    this.renderer = null;
-    var responseJob = new RenderJob(JobControlCommand.JOB_DONE);
-    this.currentJob.putResultQueue(responseJob);
-  }
+    /**
+     * Rotates the camera.
+     *
+     * @param rotation The rotation vector (x,y,z)
+     */
+    @StateEnter(state = RenderStates.ROTATE, data = RenderData.VECTOR)
+    public void rotate(Vector3f rotation) {
+        LOGGER.trace("ROTATE RenderWorker");
+        this.renderer.moveCameraOrbit(rotation.x, rotation.y, rotation.z);
+    }
+
+    /**
+     * Looks at the origin from a specific position. The rotation is not affected. Removes the processed position vector
+     * from the list.
+     *
+     * @param vectors The list of position vectors
+     */
+    @StateEnter(state = RenderStates.LOOKAT, data = RenderData.VECTORS)
+    public void lookAt(LinkedList<Vector3f> vectors) {
+        LOGGER.trace("Look at RenderWorker");
+        var vec = vectors.poll();
+        assert vec != null;
+        this.renderer.setCameraOrbit(vec.x, vec.y, vec.z);
+    }
+
+    /**
+     * Looks from a specific position at the origin. Removes the processed position vector from the list.
+     *
+     * @param vectors The list of position vectors
+     */
+    @StateEnter(state = RenderStates.LOOK_FROM_AT_O, data = RenderData.VECTORS)
+    public void lookFromAtO(LinkedList<Vector3f> vectors) {
+        LOGGER.trace("LOOK_FROM_AT_O RenderWorker");
+        var vec = vectors.poll();
+        assert vec != null;
+        this.renderer.lookFromAtO(vec.x, vec.y, vec.z);
+    }
+
+    /**
+     * Unloads the model and sends a JobControlCommand.JOB_DONE to the caller.
+     */
+    @StateEnter(state = RenderStates.UNLOAD_MODEL)
+    public void unload() {
+        LOGGER.trace("UNLOAD_MODEL RenderWorker");
+        this.renderer.clear();
+        this.renderer = null;
+        var responseJob = new RenderJob(JobControlCommand.JOB_DONE);
+        this.currentJob.putResultQueue(responseJob);
+    }
 }

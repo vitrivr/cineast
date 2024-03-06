@@ -150,7 +150,7 @@ public interface Renderer {
    *
    * @return BufferedImage containing a snapshot of the current render-buffer.
    */
-  BufferedImage obtain();
+  BufferedImage obtain() throws InterruptedException;
 
   /**
    * Clears buffers to preset-values and applies a user-defined background colour.
