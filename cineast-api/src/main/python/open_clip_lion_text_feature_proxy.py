@@ -52,6 +52,8 @@ def handle_image_request():
     dateTimeObj = datetime.now()
     file_name_for_base64_data = dateTimeObj.strftime("%d-%b-%Y--(%H-%M-%S)")
 
+    print("try to embed image :" + file_name_for_base64_data)
+
     # File naming process for directory form <file_name.jpg> data.
     # We are taken the last 8 characters from the url string.
     # file_name_for_regular_data = url[-10:-4]
@@ -92,6 +94,7 @@ def handle_image_request():
         status = "Image has been succesfully sent to the server."
     except Exception as ex:
         status = "Error! = " + str(ex)
+        print("Error! = " + str(ex))
         return status
 
 
