@@ -12,19 +12,36 @@ public class  TimeLimitedFunc <T> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** Time limit in seconds */
     private final long timeLimit;
+
+    /** Supplier of T, which is the function to be executed and timed */
     private final Supplier<T> sup;
 
+    /** Executor service to run the task */
     final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    /**
+     *  Return value
+     */
     T value = null;
 
 
+    /**
+     * Constructor for TimeLimitedFunc
+     * @param timeLimit time limit in seconds
+     * @param sup Supplier of T
+     */
     public TimeLimitedFunc(long timeLimit, Supplier<T> sup) {
         this.timeLimit = timeLimit;
         this.sup = sup;
     }
 
+    /**
+     * Run the function with a time limit
+     * @return T
+     * @throws TimeoutException if the function takes longer than the time limit
+     */
     public T runWithTimeout() throws TimeoutException {
         Runnable task = () -> {
             this.value = sup.get();
@@ -37,7 +54,7 @@ public class  TimeLimitedFunc <T> {
             if (!executor.isTerminated()) {
                 executor.shutdownNow();
             }
-            throw new TimeoutException("Timeout");
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }
