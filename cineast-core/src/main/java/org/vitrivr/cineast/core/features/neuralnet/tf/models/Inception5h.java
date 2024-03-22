@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.Session.Runner;
 import org.tensorflow.Tensor;
@@ -287,7 +288,7 @@ public class Inception5h implements AutoCloseable {
       runner.fetch(operation);
     }
 
-    List<Tensor> results = runner.run();
+    Result results = runner.run();
 
     HashMap<String, float[]> _return = new HashMap<>();
 
