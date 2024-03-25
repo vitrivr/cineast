@@ -5,7 +5,6 @@ import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_Q
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +31,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   private static final Logger LOGGER = LogManager.getLogger();
   private final File baseDirectory;
   private File file;
+
   protected ImporterSelector(File baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
@@ -159,8 +159,8 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
-    ArrayList<float[]> _return = new ArrayList<>(1);
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
+    ArrayList<PrimitiveTypeProvider> _return = new ArrayList<>(1);
 
     if (value == null || value.getString().isEmpty()) {
       return _return;
@@ -172,11 +172,11 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       if (!map.containsKey(column)) {
         continue;
       }
-      if (!map.containsKey(vectorName)) {
+      if (!map.containsKey(featureColName)) {
         continue;
       }
       if (value.equals(map.get(column).getString())) {
-        _return.add(PrimitiveTypeProvider.getSafeFloatArray(map.get(vectorName)));
+        _return.add(map.get(featureColName));
       }
     }
 
@@ -185,19 +185,33 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String column, Iterable<PrimitiveTypeProvider> values, String dbQueryId) {
-    if (values == null) {
-      return new ArrayList<>(0);
+    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(1);
+
+    if (values == null || !values.iterator().hasNext()) {
+      return _return;
     }
 
-    ArrayList<PrimitiveTypeProvider> tmp = new ArrayList<>();
+    ArrayList<PrimitiveTypeProvider> valueList = new ArrayList<>();
     for (PrimitiveTypeProvider value : values) {
-      tmp.add(value);
+      valueList.add(value);
     }
 
-    PrimitiveTypeProvider[] valueArr = new PrimitiveTypeProvider[tmp.size()];
-    tmp.toArray(valueArr);
+    Importer<?> importer = newImporter(this.file);
+    Map<String, PrimitiveTypeProvider> map;
+    while ((map = importer.readNextAsMap()) != null) {
+      if (!map.containsKey(column)) {
+        continue;
+      }
+      for (var primitiveTypeProvider : valueList) {
+        if (primitiveTypeProvider.equals(map.get(column))) {
+          _return.add(map);
+          break;
+        }
+      }
 
-    return this.getRows(column, Arrays.asList(valueArr));
+    }
+
+    return _return;
   }
 
   @Override

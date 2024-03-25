@@ -40,6 +40,12 @@
       "visualtextcoembedding": [
         {"feature": "VisualTextCoEmbedding", "weight": 1.0}
       ],
+      "clip": [
+        {"feature": "CLIPText", "weight": 1.0}
+      ],
+      "mlclip": [
+        {"feature": "ExternalOpenClipText", "weight": 1.0}
+      ],
       "boolean": [
         {
           "feature": "CollectionBooleanRetriever", "weight": 1.0,

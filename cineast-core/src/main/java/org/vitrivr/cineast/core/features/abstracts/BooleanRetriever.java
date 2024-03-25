@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import static org.vitrivr.cineast.core.util.CineastConstants.ENTITY_NAME_KEY;
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.MultipleInstantiatableRetriever;
 
 /**
- * BooleanRetrievers operate on tables which are created externally. Therefore, both initializing and dropping the entity are managed externally.
+ * BooleanRetrievers operate on entities which are created externally. Therefore, both initializing and dropping the entity are managed externally.
  */
 public abstract class BooleanRetriever implements MultipleInstantiatableRetriever {
 
@@ -46,10 +47,10 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   }
 
   protected BooleanRetriever(Map<String, String> properties) {
-    if (!properties.containsKey("entity")) {
-      throw new RuntimeException("no entity specified in properties map of BooleanRetriever");
+    if (!properties.containsKey(ENTITY_NAME_KEY)) {
+      throw new RuntimeException("no entity specified in properties map");
     }
-    this.entity = properties.get("entity");
+    this.entity = properties.get(ENTITY_NAME_KEY);
 
     if (properties.containsKey("attribute")) {
       List<String> attrs = Arrays.stream(properties.get("attribute").split(",")).map(String::trim)
@@ -62,7 +63,7 @@ public abstract class BooleanRetriever implements MultipleInstantiatableRetrieve
   }
 
   @Override
-  public List<String> getTableNames() {
+  public List<String> getEntityNames() {
     return Collections.singletonList(entity);
   }
 

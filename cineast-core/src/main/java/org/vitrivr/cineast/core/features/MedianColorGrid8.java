@@ -30,8 +30,8 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
     super("features_MedianColorGrid8", 12595f / 4f, 192);
   }
 
-  protected MedianColorGrid8(String tableName, float maxDist) {
-    super(tableName, maxDist, 192);
+  protected MedianColorGrid8(String entityName, float maxDist) {
+    super(entityName, maxDist, 192);
   }
 
   protected static Pair<FloatVector, float[]> partition(MultiImage img) {

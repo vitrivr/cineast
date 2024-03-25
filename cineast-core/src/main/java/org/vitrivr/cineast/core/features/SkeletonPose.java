@@ -8,11 +8,9 @@ import com.carrotsearch.hppc.ObjectDoubleHashMap;
 import com.carrotsearch.hppc.cursors.ObjectCursor;
 import georegression.struct.point.Point2D_F32;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -112,7 +110,7 @@ public class SkeletonPose extends AbstractFeatureModule {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, false,
+    supply.get().createFeatureEntity(this.entityName, false,
         new AttributeDefinition(PERSON_ID_COL, AttributeDefinition.AttributeType.INT),
         new AttributeDefinition(FEATURE_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength),
         new AttributeDefinition(WEIGHT_COL, AttributeDefinition.AttributeType.VECTOR, this.vectorLength)
@@ -364,7 +362,7 @@ public class SkeletonPose extends AbstractFeatureModule {
     return QueryMessage.newBuilder().setQuery(
         Query.newBuilder().setFrom(
             From.newBuilder().setScan(Scan.newBuilder().setEntity(EntityName.newBuilder()
-                .setName(this.tableName).setSchema(SchemaName.newBuilder().setName("cineast"))))
+                .setName(this.entityName).setSchema(SchemaName.newBuilder().setName("cineast"))))
         ).setProjection(
             Projection.newBuilder()
                 .addElements(projectionElement(GENERIC_ID_COLUMN_QUALIFIER))

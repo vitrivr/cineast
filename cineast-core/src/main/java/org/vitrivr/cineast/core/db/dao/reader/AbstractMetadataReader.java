@@ -26,14 +26,14 @@ import org.vitrivr.cineast.core.util.DBQueryIdGenerator;
 public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private final String tableName;
+  private final String entityName;
   private final String idColName;
 
-  public AbstractMetadataReader(DBSelector selector, String tableName, String idColName) {
+  public AbstractMetadataReader(DBSelector selector, String entityName, String idColName) {
     super(selector);
-    this.tableName = tableName;
+    this.entityName = entityName;
     this.idColName = idColName;
-    this.selector.open(tableName);
+    this.selector.open(entityName);
   }
 
   public static List<String> sanitizeIds(List<String> ids) {
@@ -80,7 +80,7 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     StopWatch watch = StopWatch.createStarted();
     ids = sanitizeIds(ids);
     spec = sanitizeSpec(spec);
-    String dbQueryId = DBQueryIdGenerator.generateQueryId("find-md-spec-" + tableName, queryId);
+    String dbQueryId = DBQueryIdGenerator.generateQueryId("find-md-spec-" + entityName, queryId);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataByIdAndSpec(ids, spec, idColName, dbQueryId, null);
     LOGGER.debug("Performed metadata lookup for {} ids in {} ms. {} results.", ids.size(), watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
@@ -101,7 +101,7 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
     }
     StopWatch watch = StopWatch.createStarted();
     spec = sanitizeSpec(spec);
-    String dbQueryId = DBQueryIdGenerator.generateQueryId("find-my-spec-" + tableName, queryId);
+    String dbQueryId = DBQueryIdGenerator.generateQueryId("find-my-spec-" + entityName, queryId);
     List<Map<String, PrimitiveTypeProvider>> results = selector.getMetadataBySpec(spec, dbQueryId, null);
     LOGGER.debug("Performed metadata lookup in {} ms. {} results.", watch.getTime(TimeUnit.MILLISECONDS), results.size());
     return mapToResultList(results);
@@ -144,12 +144,12 @@ public abstract class AbstractMetadataReader<R> extends AbstractEntityReader {
       spec = spec.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
     // filter non-object specs if this is an object reader
-    if (Objects.equals(this.tableName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.OBJECT)) {
+    if (Objects.equals(this.entityName, MediaObjectMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.OBJECT)) {
       LOGGER.trace("provided spec-list includes non-object tuples, but this is an object reader. These will be ignored.");
       spec = spec.stream().filter(el -> el.type() == MetadataType.OBJECT).collect(Collectors.toList());
     }
     // filter non-segment specs if this is a segment reader
-    if (Objects.equals(this.tableName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.SEGMENT)) {
+    if (Objects.equals(this.entityName, MediaSegmentMetadataDescriptor.ENTITY) && spec.stream().anyMatch(el -> el.type() != MetadataType.SEGMENT)) {
       LOGGER.trace("provided spec-list includes non-segment tuples, but this is a segment reader. These will be ignored.");
       spec = spec.stream().filter(el -> el.type() == MetadataType.SEGMENT).collect(Collectors.toList());
     }
