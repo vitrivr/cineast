@@ -198,8 +198,7 @@ public class SceneRender {
           GL30.glBindVertexArray(mesh.getVaoId());
           for (var entity : entities) {
             this.uniformsMap.setUniform("modelMatrix", entity.getModelMatrix());
-              GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getNumVertices(), GL30.GL_INT, 0);
-
+              GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getNumVertices(), GL30.GL_UNSIGNED_INT, 0);
           }
         }
       }
