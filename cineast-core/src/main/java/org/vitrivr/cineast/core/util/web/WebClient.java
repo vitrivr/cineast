@@ -26,12 +26,20 @@ public class WebClient {
         .header("Content-Type", "application/json")
         .build();
 
-    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-    if (response.statusCode() != 200) {
-      throw new IllegalStateException("received response code " + response.statusCode());
+    while(true){
+      try {
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+          throw new IllegalStateException("received response code " + response.statusCode());
+        }
+        return response.body();
+      } catch (IOException e) {
+        System.out.println("Retrying due to exception: " + e);
+      }
+      // wait for 1 second before retrying
+        Thread.sleep(1000);
     }
-    return response.body();
+
   }
 
   public String postRawBinary(byte[] body) throws IOException, InterruptedException {
