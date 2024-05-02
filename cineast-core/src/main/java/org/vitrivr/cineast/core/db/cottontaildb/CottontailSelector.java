@@ -82,7 +82,7 @@ public final class CottontailSelector implements DBSelector {
       final Tuple t = results.next();
       final Map<String, PrimitiveTypeProvider> map = new HashMap<>(results.getNumberOfColumns());
       for (String c : columns) {
-        map.put(mappings.getOrDefault(c, c), PrimitiveTypeProvider.fromObject(t.get(c)));
+        map.put(mappings.getOrDefault(c, c), PrimitiveTypeProvider.fromObject(toObject(t.get(c))));
       }
       _return.add(map);
     }
