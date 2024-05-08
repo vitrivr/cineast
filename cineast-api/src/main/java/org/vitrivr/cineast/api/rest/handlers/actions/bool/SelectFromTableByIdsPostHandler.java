@@ -73,7 +73,7 @@ public class SelectFromTableByIdsPostHandler implements ParsingPostRestHandler<S
         .operation(op -> {
           op.summary("Find all elements of given columns with given ids");
           op.description("Find all elements of given columns with given ids");
-          op.operationId("SelectFromTable");
+          op.operationId("SelectFromTableByIds");
           op.addTagsItem("Misc");
         })
         .body(inClass())
