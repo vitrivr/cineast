@@ -7,9 +7,9 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.messages.lookup.SelectByIdsSpecification;
-import org.vitrivr.cineast.api.messages.lookup.SelectSpecification;
 import org.vitrivr.cineast.api.messages.result.SelectResult;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ParsingPostRestHandler;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class SelectFromTableByIdsPostHandler implements ParsingPostRestHandler<S
       var stringified = _result.stream().map(el -> {
         Map<String, String> m = new HashMap<>();
         input.columns().forEach(col -> {
-          if (el.containsKey(col)) {
+          if (el.containsKey(col) && el.get(col).getClass() != NothingProvider.class) {
             m.put(col, el.get(col).getString());
           }
         });
