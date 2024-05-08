@@ -436,7 +436,7 @@ public final class CottontailSelector implements DBSelector {
     /* Process predicates. */
     final List<Predicate> atomics = conditions.stream().map(c -> {
       final Compare.Operator op = toOperator(c.getMiddle());
-      if (op == Compare.Operator.IN) {
+      if (op == Compare.Operator.IN || op == Compare.Operator.BETWEEN) {
         return new Compare(new Column(c.getLeft()), op, new ValueList(c.getRight().stream().map(PrimitiveTypeProvider::toObject).toList()));
       } else {
         return new Compare(new Column(c.getLeft()), op, toLiteral(c.getRight().get(0)));
