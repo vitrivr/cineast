@@ -20,6 +20,7 @@ import org.vitrivr.cineast.api.rest.OpenApiCompatHelper;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvocationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.CountRowsGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnPostHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.bool.FindDistinctElementsByColumnsPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.SelectFromTableByIdsPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.bool.SelectFromTablePostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.feature.FindFeaturesByCategoryPostHandler;
@@ -426,6 +427,7 @@ public class APIEndpoint {
         new StopExtractionPostHandler(),
         /* Boolean */
         new FindDistinctElementsByColumnPostHandler(),
+        new FindDistinctElementsByColumnsPostHandler(),
         new SelectFromTablePostHandler(),
         new SelectFromTableByIdsPostHandler(),
         new CountRowsGetHandler(),

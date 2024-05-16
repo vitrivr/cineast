@@ -377,7 +377,7 @@ public final class CottontailSelector implements DBSelector {
       return new ArrayList<>(0);
     }
   }
-  
+
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String column, ReadableQueryConfig queryConfig, String... terms) {
@@ -563,6 +563,27 @@ public final class CottontailSelector implements DBSelector {
         queryId(generateQueryId("unique-" + column));
     try {
       return toSingleCol(this.cottontail.client.query(query), column);
+    } catch (StatusRuntimeException e) {
+      LOGGER.warn("Error occurred during query execution in getUniqueValues(): {}", e.getMessage());
+      return new ArrayList<>(0);
+    }
+  }
+
+  @Override
+  public List<List<PrimitiveTypeProvider>> getUniqueValues(List<String> columns) {
+    Query query = new Query(this.fqn);
+    for (String column : columns) {
+      query = query.distinct(column, null);
+    }
+    query.queryId(generateQueryId("unique-" + columns));
+    try {
+      TupleIterator tupleResults = this.cottontail.client.query(query);
+      List<List<PrimitiveTypeProvider>> results = new ArrayList<>();
+      while (tupleResults.hasNext()) {
+        Tuple t = tupleResults.next();
+        results.add(columns.stream().map(c -> PrimitiveTypeProvider.fromObject(toObject(t.get(c)))).toList());
+      }
+      return results;
     } catch (StatusRuntimeException e) {
       LOGGER.warn("Error occurred during query execution in getUniqueValues(): {}", e.getMessage());
       return new ArrayList<>(0);

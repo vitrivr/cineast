@@ -33,7 +33,7 @@ public class FindDistinctElementsByColumnPostHandler implements ParsingPostRestH
 
   private static final DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
-  private static final Map<String, List<String>> cache = new HashMap<String, List<String>>();
+  private static final Map<String, List<String>> cache = new HashMap<>();
 
 
   @Override

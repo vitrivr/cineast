@@ -211,6 +211,19 @@ public interface DBSelector extends Closeable {
   }
 
   /**
+   * SELECT DISTINCT column from table
+   */
+  default List<List<PrimitiveTypeProvider>> getUniqueValues(List<String> columns) {
+    Set<List<PrimitiveTypeProvider>> uniques = new HashSet<>();
+    getAll().forEach(row -> {
+      if (row.keySet().containsAll(columns)) {
+        uniques.add(columns.stream().map(row::get).collect(Collectors.toList()));
+      }
+    });
+    return Lists.newArrayList(uniques);
+  }
+
+  /**
    * counts how many times each element appears per value in a given column. This can be useful for example to debug duplicates or count occurences of tags
    */
   default Map<String, Integer> countDistinctValues(String column) {
