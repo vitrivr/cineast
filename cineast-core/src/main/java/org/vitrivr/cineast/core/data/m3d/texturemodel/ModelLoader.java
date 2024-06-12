@@ -1,29 +1,6 @@
 package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_AMBIENT;
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_SHININESS;
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_SHININESS_STRENGTH;
-import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
-import static org.lwjgl.assimp.Assimp.aiGetMaterialFloatArray;
-import static org.lwjgl.assimp.Assimp.aiGetMaterialTexture;
-import static org.lwjgl.assimp.Assimp.aiImportFile;
-import static org.lwjgl.assimp.Assimp.aiProcess_CalcTangentSpace;
-import static org.lwjgl.assimp.Assimp.aiProcess_FixInfacingNormals;
-import static org.lwjgl.assimp.Assimp.aiProcess_GenNormals;
-import static org.lwjgl.assimp.Assimp.aiProcess_GenSmoothNormals;
-import static org.lwjgl.assimp.Assimp.aiProcess_GlobalScale;
-import static org.lwjgl.assimp.Assimp.aiProcess_JoinIdenticalVertices;
-import static org.lwjgl.assimp.Assimp.aiProcess_LimitBoneWeights;
-import static org.lwjgl.assimp.Assimp.aiProcess_PreTransformVertices;
-import static org.lwjgl.assimp.Assimp.aiProcess_Triangulate;
-import static org.lwjgl.assimp.Assimp.aiReleaseImport;
-import static org.lwjgl.assimp.Assimp.aiReturn_SUCCESS;
-import static org.lwjgl.assimp.Assimp.aiTextureType_DIFFUSE;
-import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
-import static org.lwjgl.assimp.Assimp.aiTextureType_NORMALS;
-
 import java.io.File;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -37,6 +14,8 @@ import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryStack;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.util.TextureLoadException;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.util.TimeLimitedFunc;
+
+import static org.lwjgl.assimp.Assimp.*;
 
 public final class ModelLoader {
 
@@ -119,7 +98,11 @@ public final class ModelLoader {
                         aiProcess_CalcTangentSpace |
                         aiProcess_LimitBoneWeights |
                         aiProcess_PreTransformVertices |
-                        aiProcess_GenSmoothNormals
+                        aiProcess_GenSmoothNormals |
+                        aiProcess_FindInvalidData |
+                        aiProcess_FindDegenerates |
+                        aiProcess_ValidateDataStructure
+
         );
         LOGGER.trace("Try return Model 2");
         return model;

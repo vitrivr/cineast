@@ -169,6 +169,7 @@ public class SceneRender {
     for (var model : models) {
       var entities = model.getEntities();
       for (var material : model.getMaterials()) {
+
         GLTexture texture;
 
         // Either draw texture or use color function
@@ -204,7 +205,6 @@ public class SceneRender {
       }
     }
     GL30.glBindVertexArray(0);
-
     this.shaderProgram.unbind();
   }
 
