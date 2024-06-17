@@ -366,7 +366,7 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedModel(IModel model) {
     //Options for window
     var windowOptions = new WindowOptions() {{
-      this.hideWindow = true;
+      this.hideWindow = false;
       this.width = 600;
       this.height = 600;
     }};

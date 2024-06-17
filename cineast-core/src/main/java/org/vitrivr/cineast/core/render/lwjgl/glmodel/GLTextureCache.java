@@ -33,6 +33,7 @@ public class GLTextureCache {
   public void cleanup() {
     this.textures.values().forEach(GLTexture::cleanup);
     this.textures.clear();
+    this.textures.put("default", new GLTexture(new Texture()));
   }
 
   /**

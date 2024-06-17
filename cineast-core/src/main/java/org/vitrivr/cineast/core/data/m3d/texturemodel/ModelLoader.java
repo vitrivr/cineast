@@ -301,7 +301,7 @@ public final class ModelLoader {
         LOGGER.trace("Start processing Normals");
         var buffer = aiMesh.mNormals();
         if (buffer == null) {
-            return new float[]{};
+            return new float[aiMesh.mNumVertices() * 3];
         }
         var data = new float[buffer.remaining() * 3];
         var pos = 0;

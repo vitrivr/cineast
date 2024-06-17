@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.render.lwjgl.scene;
 
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import jdk.jfr.Unsigned;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
@@ -37,6 +40,7 @@ public class LightfieldCamera {
     this.opts = opts;
     this.lightfieldImage = new BufferedImage(opts.width, opts.height, BufferedImage.TYPE_INT_RGB);
     this.imageData = BufferUtils.createFloatBuffer(opts.width * opts.height * 3);
+
     GL30.glReadPixels(0, 0, opts.width, opts.height, GL30.GL_RGB, GL30.GL_FLOAT, this.imageData);
     this.imageData.rewind();
   }
