@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
@@ -18,6 +19,10 @@ public class ProvidedOcrSearch extends AbstractTextRetriever {
   }
 
   public ProvidedOcrSearch(Map<String, String> properties) {
+    super(ProvidedOcrSearch.PROVIDED_OCR_SEARCH_TABLE_NAME, properties);
+  }
+
+  public ProvidedOcrSearch(LinkedHashMap<String, String> properties) {
     super(ProvidedOcrSearch.PROVIDED_OCR_SEARCH_TABLE_NAME, properties);
   }
 
