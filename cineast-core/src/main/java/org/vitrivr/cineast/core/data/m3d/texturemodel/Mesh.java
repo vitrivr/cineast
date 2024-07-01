@@ -110,7 +110,7 @@ public class Mesh {
 
     // Calculate face normals
     // ic increments by 3 because a face is defined by 3 vertices
-    for (var ic = 0; ic < this.idx.length; ic += 3) {
+    for (var ic = 0; ic < this.idx.length-2; ic += 3) {
       if (normals == null || normals.length == 0) {
         // Add zero vector if there are no vertex normals
         this.facenormals.add(new Vector3f(0f, 0f, 0f));

@@ -71,16 +71,16 @@ public class TextureModelDecoder implements Decoder<Model> {
         try {
             model = ModelLoader.loadModel(this.inputFile.toString(), this.inputFile.toString());
         } catch (NumberFormatException e) {
-            LOGGER.error("Could not decode OBJ file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString());
+            LOGGER.error("Could not decode file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString());
             model = null;
         } catch (ArrayIndexOutOfBoundsException e) {
-            LOGGER.error("Could not decode OBJ file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString());
+            LOGGER.error("Could not decode file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString());
             model = null;
         } catch (TextureLoadException e) {
-            LOGGER.error("Could not decode OBJ file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString());
+            LOGGER.error("Could not decode file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString());
             model = null;
         } catch (Exception e) {
-            LOGGER.error("Could not decode OBJ file {} because an unexpected error occurred.", this.inputFile.toString(), e);
+            LOGGER.error("Could not decode file {} because an unexpected error occurred.", this.inputFile.toString(), e);
             model = null;
 
         } finally {
