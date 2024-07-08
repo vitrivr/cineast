@@ -69,6 +69,11 @@ public final class ExtractionPipelineConfig {
   public boolean getEnableRenderWorker() {
     return this.enableRenderWorker;
   }
+  @JsonProperty
+  public void  setEnableRenderWorker(boolean enableRenderWorker){
+    this.enableRenderWorker = enableRenderWorker;
+  }
+
 
   @JsonProperty
   public File getOutputLocation() {

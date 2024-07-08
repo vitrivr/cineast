@@ -1,0 +1,57 @@
+{
+  "input": {
+    "path": "data/",
+    "depth": 3,
+    "skip": 0,
+    "id": {
+      "name": "SequentialObjectIdGenerator",
+      "properties": {}
+    }
+  },
+  "extractors": [
+    {
+      "name": "ExternalAPI",
+      "properties": {
+        "tablename": "test_external",
+        "type": "vector",
+        "correspondence": "linear",
+        "correspondencep1": 5,
+        "distance": "cosine",
+        "vectorlen": 512,
+        "endpoint": "localhost:8999"
+      }
+    },
+    {
+      "name": "ExternalAPI",
+      "properties": {
+        "tablename": "test_external2",
+        "type": "vector",
+        "correspondence": "hyperbolic",
+        "correspondencep1": 1,
+        "distance": "manhattan",
+        "vectorlen": 512,
+        "endpoint": "localhost:8999/"
+      }
+    }
+  ],
+  "metadata": [
+    {
+      "name": "TechnicalVideoMetadataExtractor"
+    },
+    {
+      "name": "EXIFMetadataExtractor"
+    }
+  ],
+  "exporters": [
+    {
+      "name": "ShotThumbnailsExporter",
+      "properties": {
+        "destination": "thumbnails/"
+      }
+    }
+  ],
+  "database": {
+    "writer": "COTTONTAIL",
+    "selector": "COTTONTAIL"
+  }
+}

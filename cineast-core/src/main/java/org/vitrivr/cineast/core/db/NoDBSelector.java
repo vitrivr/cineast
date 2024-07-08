@@ -32,7 +32,7 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public List<float[]> getFeatureVectors(String column, PrimitiveTypeProvider value, String vectorName, ReadableQueryConfig queryConfig) {
+  public List<PrimitiveTypeProvider> getFeatures(String column, PrimitiveTypeProvider value, String featureColName, ReadableQueryConfig queryConfig) {
     return new ArrayList<>(0);
   }
 

@@ -197,7 +197,13 @@ public abstract class Worker<T extends Job> implements Runnable {
                 this.onJobException(ex);
                 LOGGER.error("Error in concrete Worker. Abort: ", ex);
                 performed = true;
-            } finally {
+            } catch (Exception ex) {
+                // This exception is thrown if an exception is thrown during the job
+                this.onJobException(ex);
+                LOGGER.error("Error in job. Abort: ", ex);
+                performed = true;
+            }
+            finally {
                 LOGGER.trace("Job Sequence ended");
             }
         }

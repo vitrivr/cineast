@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.core.render.lwjgl.render;
 
 import java.util.HashMap;
+import java.util.Vector;
 import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -96,6 +99,13 @@ public class UniformsMap {
       }
       GL30.glUniformMatrix4fv(location, false, value.get(memoryStack.mallocFloat(16)));
     }
+  }
+
+  public void setUniform(String uniformName, float value) {
+    GL30.glUniform1f(this.getUniformLocation(uniformName), value);
+  }
+  public void setUniform(String uniformName, Vector3f value) {
+    GL30.glUniform3f(this.getUniformLocation(uniformName), value.x, value.y, value.z);
   }
 
   /**

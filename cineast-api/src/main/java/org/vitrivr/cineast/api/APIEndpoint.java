@@ -50,6 +50,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionPost
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsAllGetHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsByIdsPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.tag.FindTagsGetHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.vector.LoadVectorsForIdsPostHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DeleteRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.GetRestHandler;
@@ -427,7 +428,9 @@ public class APIEndpoint {
         new SelectFromTablePostHandler(),
         new CountRowsGetHandler(),
         /* Status */
-        new StatusInvocationHandler()
+        new StatusInvocationHandler(),
+        /* Vector */
+        new LoadVectorsForIdsPostHandler(Config.sharedConfig().getDatabase().getSelectorSupplier())
     ));
   }
 

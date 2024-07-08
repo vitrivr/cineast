@@ -7,12 +7,13 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Projection;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightingOptions;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.SceneLights;
 
 /**
- * The GLScene class ist the top most class of the gl model hierarchy.
- * The gl model hierarchy is used as a wrapper for the model hierarchy.
- * Therefore, each gl class has a corresponding model class.
- * The generic class has to be provided in the constructor.
+ * The GLScene class ist the top most class of the gl model hierarchy. The gl model hierarchy is used as a wrapper for
+ * the model hierarchy. Therefore, each gl class has a corresponding model class. The generic class has to be provided
+ * in the constructor.
  * <ul>
  * <li>Scene -> GLScene( Scene )</li>
  * <li>Model -> GlModel( IModel )</li>
@@ -20,7 +21,7 @@ import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
  * <li>Mesh -> GLMesh( Mesh )</li>
  * <li>Texture -> GLTexture( Texture )</li>
  * </ul>
- *
+ * <p>
  * The purpose is to bring the generic model in an OpenGl context
  * {@link Scene} -> {@link GLScene}
  */
@@ -36,9 +37,8 @@ public class GLScene {
   private final Map<String, IGLModel> models;
 
   /**
-   * The texture cache that is used by this gl scene.
-   * Textures are cached to avoid loading the same texture multiple times.
-   * Has no corresponding generic class.
+   * The texture cache that is used by this gl scene. Textures are cached to avoid loading the same texture multiple
+   * times. Has no corresponding generic class.
    */
   private final GLTextureCache textureCache;
 
@@ -65,18 +65,23 @@ public class GLScene {
   }
 
   /**
-   * Updates the gl scene from the scene.
-   * It updates the gl scene content to match the scene content.
+   * Updates the gl scene from the scene. It updates the gl scene content to match the scene content.
    */
   private void updateGlSceneFromScene() {
     this.scene.getModels().forEach((k, v) -> this.models.putIfAbsent(k, new GLModel(v)));
     this.models.forEach(
         (k, v) -> this.models.get(k).getMaterials()
-            .forEach(mat -> this.textureCache.addTextureIfAbsent(mat.getTexture())));
+            .forEach(mat -> {
+              this.textureCache.addTextureIfAbsent(mat.getTexture());
+              if (mat.hasNormalMapTexture()) {
+                this.textureCache.addTextureIfAbsent(mat.getNormalMapTexture());
+              }
+            }));
   }
 
   /**
    * Adds an entity to the corresponding model.
+   *
    * @param entity The entity that is added to the model.
    */
   public void addEntity(Entity entity) {
@@ -90,6 +95,7 @@ public class GLScene {
 
   /**
    * Returns the gl models of the gl scene.
+   *
    * @return The gl models of the gl scene.
    */
   public Map<String, IGLModel> getModels() {
@@ -98,6 +104,7 @@ public class GLScene {
 
   /**
    * Returns the texture cache of the gl scene.
+   *
    * @return The texture cache of the gl scene.
    */
   public GLTextureCache getTextureCache() {
@@ -106,6 +113,7 @@ public class GLScene {
 
   /**
    * Returns the projection of the wrapped generic scene.
+   *
    * @return The projection of the wrapped generic scene.
    */
   public Projection getProjection() {
@@ -114,6 +122,7 @@ public class GLScene {
 
   /**
    * Returns the camera of the wrapped generic scene.
+   *
    * @return The camera of the wrapped generic scene.
    */
   public Camera getCamera() {
@@ -121,10 +130,9 @@ public class GLScene {
   }
 
   /**
-   * Clears the models of the gl scene but not containing resources.
-   * Removes the references to the wrapped generic models and textures.
-   * Hence, the models could be used by another extraction task this method does not close the models or textures.
-   * Can be used to only remove Models temporarily from gl scene.
+   * Clears the models of the gl scene but not containing resources. Removes the references to the wrapped generic
+   * models and textures. Hence, the models could be used by another extraction task this method does not close the
+   * models or textures. Can be used to only remove Models temporarily from gl scene.
    */
   @SuppressWarnings("unused")
   public void clearModels() {
@@ -133,9 +141,9 @@ public class GLScene {
   }
 
   /**
-   * Cleans up the gl scene and calls all underlying cleanup methods.
-   * Removes only the references to wrapped generic models and textures.
-   * Hence, the model could be used by another extraction task this method does not close the generic models or textures.
+   * Cleans up the gl scene and calls all underlying cleanup methods. Removes only the references to wrapped generic
+   * models and textures. Hence, the model could be used by another extraction task this method does not close the
+   * generic models or textures.
    */
   public void cleanup() {
     this.models.values().forEach(IGLModel::cleanup);
@@ -145,11 +153,32 @@ public class GLScene {
 
   /**
    * Resizes the projection of the wrapped generic scene.
-   * @param width The new width of the projection.
+   *
+   * @param width  The new width of the projection.
    * @param height The new height of the projection.
    */
   public void resize(int width, int height) {
     this.scene.getProjection().updateProjMatrix(width, height);
   }
 
+  /**
+   * Get the scene lights.
+   */
+  public SceneLights getSceneLights() {
+    return this.scene.getSceneLights();
+  }
+
+  /**
+   * Get the scene lights.
+   */
+  public void setSceneLights(SceneLights sceneLights) {
+    this.scene.setSceneLights(sceneLights);
+  }
+
+  /**
+   * Get the scene lights.
+   */
+  public void setSceneLights(LightingOptions options) {
+    this.scene.setSceneLights(options.getSceneLigths(this.scene));
+  }
 }

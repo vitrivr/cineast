@@ -68,7 +68,7 @@ public class QueryImageExporter implements Retriever {
   }
 
   @Override
-  public List<String> getTableNames() {
+  public List<String> getEntityNames() {
     return new ArrayList<>();
   }
 

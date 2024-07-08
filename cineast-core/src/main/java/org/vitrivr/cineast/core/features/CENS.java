@@ -62,12 +62,12 @@ public abstract class CENS extends StagedFeatureModule {
   /**
    * Default constructor.
    *
-   * @param tableName    Name of the entity (for persistence writer).
+   * @param entityName    Name of the entity (for persistence writer).
    * @param minFrequency Minimum frequency to consider during HPCP analysis.
    * @param maxFrequency Maximum frequency to consider during HPCP analysis.
    */
-  public CENS(String tableName, float minFrequency, float maxFrequency) {
-    super(tableName, 2.0f, SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins);
+  public CENS(String entityName, float minFrequency, float maxFrequency) {
+    super(entityName, 2.0f, SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins);
 
     /* Apply fields. */
     this.minFrequency = minFrequency;

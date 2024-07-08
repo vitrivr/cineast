@@ -10,7 +10,8 @@ import org.joml.Vector4f;
 import org.vitrivr.cineast.core.data.m3d.texturemodel.util.MinimalBoundingBox;
 
 /**
- * The Material contains all meshes and the texture that are drawn with on the meshes Further it contains the diffuse color of the material
+ * The Material contains all meshes and the texture that are drawn with on the meshes Further it contains the diffuse
+ * color of the material
  */
 public class Material {
 
@@ -25,6 +26,7 @@ public class Material {
    * Texture that drawn on all meshes
    */
   private Texture texture;
+  private Texture normalMapTexture;
 
   /**
    * DEFAULT_COLOR is black and 100% opaque
@@ -34,7 +36,11 @@ public class Material {
   /**
    * diffuseColor is the color that is drawn on the meshes when no texture is present
    */
-  private Vector4f diffuseColor;
+  private final Vector4f diffuseColor;
+
+  private final Vector4f ambientColor;
+  private float reflectance;
+  private final Vector4f specularColor;
 
   /**
    * Empty material that can be used as a placeholder.
@@ -47,7 +53,10 @@ public class Material {
   public Material() {
     this.meshes = new ArrayList<>();
     this.texture = new Texture();
+    this.normalMapTexture = null;
     this.diffuseColor = DEFAULT_COLOR;
+    this.ambientColor = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);;
+    this.specularColor = DEFAULT_COLOR;
   }
 
   /**
@@ -116,6 +125,26 @@ public class Material {
     this.texture = texture;
   }
 
+
+  public boolean hasNonDefaultTexture(){
+    return !this.texture.isDefault();
+  }
+
+  /**
+   * @param texture sets the texture to this material
+   */
+  public void setNormalTexture(Texture texture) {
+    this.normalMapTexture = texture;
+  }
+
+  public Texture getNormalMapTexture() {
+    return this.normalMapTexture;
+  }
+
+  public boolean hasNormalMapTexture() {
+    return this.normalMapTexture != null;
+  }
+
   /**
    * @return the diffuse color of this material
    */
@@ -127,19 +156,42 @@ public class Material {
    * @param diffuseColor sets the diffuse color of this material
    */
   public void setDiffuseColor(Vector4f diffuseColor) {
-    this.diffuseColor = diffuseColor;
+    this.diffuseColor.set(diffuseColor);
+  }
+
+
+  public Vector4f getAmbientColor() {
+    return this.ambientColor;
+  }
+
+  public void setAmbientColor(Vector4f ambientColor) {
+    this.ambientColor.set(ambientColor);
+  }
+
+  public float getReflectance() {
+    return this.reflectance;
+  }
+
+  public void setReflectance(float reflectance) {
+    this.reflectance = reflectance;
+  }
+
+  public Vector4f getSpecularColor() {
+    return this.specularColor;
+  }
+
+  public void setSpecularColor(Vector4f specularColor) {
+    this.specularColor.set(specularColor);
   }
 
   /**
-   * closes all resources the material uses
-   * Calls close on all containing classes
+   * closes all resources the material uses Calls close on all containing classes
    */
   public void close() {
     this.meshes.forEach(Mesh::close);
     this.meshes.clear();
     this.texture.close();
     this.texture = null;
-    this.diffuseColor = null;
     LOGGER.trace("Closed Material");
   }
 }

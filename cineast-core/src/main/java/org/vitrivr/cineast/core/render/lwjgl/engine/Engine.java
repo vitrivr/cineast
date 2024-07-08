@@ -1,10 +1,12 @@
 package org.vitrivr.cineast.core.render.lwjgl.engine;
 
+
 import org.vitrivr.cineast.core.render.lwjgl.render.Render;
 import org.vitrivr.cineast.core.render.lwjgl.render.RenderOptions;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Camera;
 import org.vitrivr.cineast.core.render.lwjgl.glmodel.GLScene;
 import org.vitrivr.cineast.core.render.lwjgl.scene.Scene;
+import org.vitrivr.cineast.core.render.lwjgl.scene.lights.LightingOptions;
 import org.vitrivr.cineast.core.render.lwjgl.window.Window;
 import org.vitrivr.cineast.core.render.lwjgl.window.WindowOptions;
 
@@ -73,6 +75,9 @@ public class Engine {
     this.render.setOptions(options);
   }
 
+  public void setLightingOptions(LightingOptions options){
+    this.scene.setSceneLights(options);
+  }
 
 /**
    * Refreshes the engine.

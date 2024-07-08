@@ -43,7 +43,7 @@ public class ExtractorConfig {
 
   @JsonIgnore
   public Extractor getExtractor() {
-    return ReflectionHelper.newExtractor(this.name);
+    return ReflectionHelper.newExtractor(this.name, this.properties);
   }
 
   @JsonIgnore

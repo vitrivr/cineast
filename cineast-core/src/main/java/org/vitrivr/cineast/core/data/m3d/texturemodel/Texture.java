@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.m3d.texturemodel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.vulkan.video.StdVideoEncodeH264SliceHeader;
 
 /**
  * This class represents a texture.
@@ -45,6 +46,10 @@ public class Texture {
    */
   public String getTexturePath() {
     return this.texturePath;
+  }
+
+  public boolean isDefault(){
+    return this.texturePath.equals(DEFAULT_TEXTURE);
   }
 
   /**

@@ -145,7 +145,37 @@ public class ReflectionHelper {
       }
       return instantiate(c);
     } catch (ClassNotFoundException | InstantiationException e) {
-      LOGGER.fatal("Failed to create Exporter. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
+      LOGGER.fatal("Failed to create Extractor. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
+      return null;
+    }
+  }
+
+
+  /**
+   * Tries to instantiate a new, named Extractor object. If the methods succeeds to do so, that instance is returned by the method.
+   * <p>
+   * If the name contains dots (.), that name is treated as FQN. Otherwise, the FEATURE_MODULE_PACKAGE is assumed and the name is treated as simple name.
+   *
+   * @param name Name of the Exporter.
+   * @param configuration Configuration
+   * @return Instance of Exporter or null, if instantiation fails.
+   */
+  @SuppressWarnings("unchecked")
+  public static Extractor newExtractor(String name, Map<String, String> configuration) {
+    Class<Extractor> c = null;
+    try {
+      if (name.contains(".")) {
+        c = (Class<Extractor>) Class.forName(name);
+      } else {
+        c = getClassFromName(name, Extractor.class, FEATURE_MODULE_PACKAGE);
+      }
+      if (configuration == null || configuration.isEmpty()) {
+        return instantiate(c);
+      } else {
+        return instantiate(c, configuration);
+      }
+    } catch (ClassNotFoundException | InstantiationException e) {
+      LOGGER.fatal("Failed to create Extractor. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
       return null;
     }
   }
@@ -174,7 +204,7 @@ public class ReflectionHelper {
         return instantiate(c, configuration);
       }
     } catch (ClassNotFoundException | InstantiationException e) {
-      LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
+      LOGGER.fatal("Failed to create Extractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
       return null;
     }
   }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -23,6 +25,8 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
    * {@link PersistencyWriter} instance used to persist changes to the underlying persistence layer.
    */
   protected PersistencyWriter<?> writer;
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer) {
     this.batch = writer.supportedBatchSize() > 1;
@@ -79,15 +83,18 @@ public abstract class AbstractBatchedEntityWriter<T> implements Closeable {
    */
   @Override
   public final void close() {
-    if (this.writer != null) {
-      if (this.batch && this.buffer.size() > 0) {
-        this.flush();
-      }
+    if (this.writer == null) {
+      LOGGER.trace("Underlying writer is null, not doing anything upon close");
+      return;
+    }
+    if (this.batch && this.buffer.size() > 0) {
+      LOGGER.debug("Flushing writer upon close");
+      this.flush();
+    }
 
-      if (this.writer != null) {
-        this.writer.close();
-        this.writer = null;
-      }
+    if (this.writer != null) {
+      this.writer.close();
+      this.writer = null;
     }
   }
 

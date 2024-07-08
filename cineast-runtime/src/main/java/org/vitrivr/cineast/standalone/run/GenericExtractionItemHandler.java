@@ -460,8 +460,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
           /* for ImageSequenceDecoders, it is expected that there might be images arriving which are not supported. The decoder reads folders and hands the images within to the extractors. */
           continue;
         }
-        /* if not, log an  error and move on */
-        LOGGER.error("Media Type {} does not support file type {} for file {}", mediaType, type, item.getPathForExtraction().toString());
+        /* if not, log an  warn and move on */
+        LOGGER.warn("Media Type {} does not support file type {} for file {}", mediaType, type, item.getPathForExtraction().toString());
         continue;
       }
 

@@ -44,4 +44,6 @@ public interface IGLModel{
    * @return The gl materials of the gl model.
    */
   List<GLMaterial> getMaterials();
+
+  boolean usesNonDefaultTexture();
 }

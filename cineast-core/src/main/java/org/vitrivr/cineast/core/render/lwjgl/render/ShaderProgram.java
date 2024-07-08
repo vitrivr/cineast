@@ -134,7 +134,7 @@ public class ShaderProgram {
     try {
       str = new String(Files.readAllBytes(Paths.get(filePath)));
     } catch (IOException ex) {
-      throw new RuntimeException("Error reading file");
+      throw new RuntimeException("Error reading file: " + filePath, ex);
     }
     return str;
   }

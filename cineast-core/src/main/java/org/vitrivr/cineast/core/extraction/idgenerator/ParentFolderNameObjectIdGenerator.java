@@ -21,16 +21,23 @@ public class ParentFolderNameObjectIdGenerator implements ObjectIdGenerator {
    * Prefix property name. Can be set to false to prevent type prefix in object ID.
    */
   private static final String PROPERTY_NAME_PREFIX = "prefix";
+  private static final String PROPERTY_NAME_DEPTH = "depth";
 
   private final boolean prefix;
+  private final int depth;
 
   public ParentFolderNameObjectIdGenerator() {
     prefix = true;
+    depth = 0;
   }
 
   public ParentFolderNameObjectIdGenerator(Map<String, String> properties) {
     String prefixProp = properties.get(PROPERTY_NAME_PREFIX);
-    prefix = prefixProp == null || prefixProp.equalsIgnoreCase("true");
+    this.prefix = prefixProp == null || prefixProp.equalsIgnoreCase("true");
+
+    String  depthProp = properties.get(PROPERTY_NAME_DEPTH);
+    this.depth = depthProp == null ? 0 : Integer.parseInt(depthProp);
+    assert depth >= 0 && depth < 10;
   }
 
   @Override
@@ -40,8 +47,15 @@ public class ParentFolderNameObjectIdGenerator implements ObjectIdGenerator {
       return Optional.empty();
     }
 
-    String filename = FilenameUtils.getBaseName(path.toFile().getParentFile().getName());
+    String filename = FilenameUtils.getBaseName(getFolderName(path, this.depth));
     String id = prefix ? MediaType.generateId(type, filename) : filename;
     return Optional.of(id);
+  }
+
+  private String getFolderName(Path path, int depth) {
+    if (depth == 0) {
+      return path.toFile().getParentFile().getName();
+    }
+    return getFolderName(path.getParent(), depth - 1);
   }
 }

@@ -38,7 +38,7 @@ public class ImageParser extends DataURLParser {
     return bimg;
   }
 
-  public static String BufferedImageToDataURL(BufferedImage img, String format) {
+  public static String bufferedImageToDataURL(BufferedImage img, String format) {
     ByteArrayOutputStream bouts = new ByteArrayOutputStream();
     try {
       ImageIO.write(img, format, bouts);

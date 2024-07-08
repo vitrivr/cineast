@@ -27,8 +27,8 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
   /**
    *
    */
-  protected HOG(String tableName, float maxDist, int vectorLength) {
-    super(tableName, maxDist, vectorLength);
+  protected HOG(String entityName, float maxDist, int vectorLength) {
+    super(entityName, maxDist, vectorLength);
   }
 
   /**

@@ -13,286 +13,302 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class APIConfig {
 
-  private boolean enableWebsocket = true;
-  private boolean enableWebsocketSecure = true;
-  private boolean enableExtractionServer = true;
-  private boolean enableRest = false;
-  private boolean enableRestSecure = false;
+    private boolean enableWebsocket = true;
+    private boolean enableWebsocketSecure = true;
+    private boolean enableExtractionServer = true;
+    private boolean enableRest = false;
+    private boolean enableRestSecure = false;
 
-  private boolean enableGRPC = true;
-  private String keystore;
-  private String keystorePassword;
+    private boolean enableCLI = false;
+    private boolean enableExternalClip = false;
 
-  private boolean enableRestLiveDoc = false; // Defaults to same result as enableRest
-  private String apiAddress = "http://localhost:4567/";
+    private boolean enableGRPC = true;
+    private String keystore;
+    private String keystorePassword;
 
-  private int httpPort = 4567;
-  private int httpsPort = 4568;
+    private boolean enableRestLiveDoc = false; // Defaults to same result as enableRest
+    private String apiAddress = "http://localhost:4567/";
+
+    private int httpPort = 4567;
+    private int httpsPort = 4568;
 
 
-  private int grpcPort = 4570;
-  private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
+    private int grpcPort = 4570;
+    private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
-  private boolean allowExtraction = true;
+    private boolean allowExtraction = true;
 
-  private boolean enableCLI = false;
-  private int threadPoolSize = 8;
+    private int threadPoolSize = 8;
 
-  private boolean serveContent = false;
+    private boolean serveContent = false;
 
-  /**
-   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
-   */
-  private boolean objectsFilesAreIDed = false;
-  /**
-   * A hack to use mp4 for object servings
-   */
-  private String videoExtension = "mp4";
-  private boolean serveUI = false;
-  private String sessionExtractionConfigLocation = "extraction_config.json";
-  private String thumbnailLocation = "";
-  private String objectLocation = "";
-  private String uiLocation = "";
+    /**
+     * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
+     */
+    private boolean objectsFilesAreIDed = false;
+    /**
+     * A hack to use mp4 for object servings
+     */
+    private String videoExtension = "mp4";
+    private boolean serveUI = false;
+    private String sessionExtractionConfigLocation = "extraction_config.json";
+    private String thumbnailLocation = "";
+    private String objectLocation = "";
+    private String uiLocation = "";
 
-  @JsonCreator
-  public APIConfig() {
-  }
 
-  @JsonProperty
-  public String getVideoExtension() {
-    return videoExtension;
-  }
 
-  @JsonProperty
-  public void setVideoExtension(String videoExtension) {
-    this.videoExtension = videoExtension;
-  }
 
-  @JsonProperty
-  public boolean getEnableWebsocket() {
-    return this.enableWebsocket;
-  }
-
-  public void setEnableWebsocket(boolean enableWebsocket) {
-    this.enableWebsocket = enableWebsocket;
-  }
-
-  @JsonProperty
-  public boolean getEnableWebsocketSecure() {
-    return this.enableWebsocketSecure;
-  }
-
-  public void setEnableWebsocketSecure(boolean enableWebsocket) {
-    this.enableWebsocketSecure = enableWebsocket;
-  }
-
-  @JsonProperty
-  public boolean getEnableRest() {
-    return this.enableRest;
-  }
-
-  public void setEnableRest(boolean enableRest) {
-    this.enableRest = enableRest;
-  }
-
-  @JsonProperty
-  public boolean getEnableRestSecure() {
-    return this.enableRestSecure;
-  }
-
-  public void setEnableRestSecure(boolean enableRest) {
-    this.enableRestSecure = enableRest;
-  }
-
-  @JsonProperty
-  public boolean getEnableLiveDoc() {
-    return this.enableRestLiveDoc;
-  }
-
-  public void setEnableRestLiveDoc(boolean enableRestLiveDoc) {
-    this.enableRestLiveDoc = enableRestLiveDoc;
-  }
-
-  @JsonProperty
-  public String getKeystore() {
-    return keystore;
-  }
-
-  public void setKeystore(String keystore) {
-    this.keystore = keystore;
-  }
-
-  @JsonProperty
-  public String getKeystorePassword() {
-    return keystorePassword;
-  }
-
-  public void setKeystorePassword(String keystorePassword) {
-    this.keystorePassword = keystorePassword;
-  }
-
-  @JsonProperty
-  public String getApiAddress() {
-    return apiAddress;
-  }
-
-  public void setApiAddress(String apiAddress) {
-    this.apiAddress = apiAddress;
-  }
-
-  @JsonProperty
-  public int getHttpPort() {
-    return httpPort;
-  }
-
-  public void setHttpPort(int httpPort) {
-    if (httpPort < 1) {
-      throw new IllegalArgumentException("httpPort must be > 0");
+    @JsonCreator
+    public APIConfig() {
     }
-    this.httpPort = httpPort;
-  }
 
-  @JsonProperty
-  public int getHttpsPort() {
-    return httpsPort;
-  }
-
-  public void setHttpsPort(int httpsPort) {
-    if (httpsPort < 1) {
-      throw new IllegalArgumentException("httpPort must be > 0");
+    @JsonProperty
+    public String getVideoExtension() {
+        return videoExtension;
     }
-    this.httpsPort = httpsPort;
-  }
 
-  @JsonProperty
-  public int getMaxMessageSize() {
-    return this.maxMessageSize;
-  }
+    @JsonProperty
+    public void setVideoExtension(String videoExtension) {
+        this.videoExtension = videoExtension;
+    }
 
-  public void setMaxMessageSize(int maxTextMessageSize) {
-    this.maxMessageSize = maxTextMessageSize;
-  }
+    @JsonProperty
+    public boolean getEnableWebsocket() {
+        return this.enableWebsocket;
+    }
 
-  @JsonProperty
-  public boolean getAllowExtraction() {
-    return this.allowExtraction;
-  }
+    public void setEnableWebsocket(boolean enableWebsocket) {
+        this.enableWebsocket = enableWebsocket;
+    }
 
-  public void setAllowExtraction(boolean allowExtraction) {
-    this.allowExtraction = allowExtraction;
-  }
+    @JsonProperty
+    public boolean getEnableWebsocketSecure() {
+        return this.enableWebsocketSecure;
+    }
 
-  @JsonProperty
-  public boolean getEnableCli() {
-    return this.enableCLI;
-  }
+    public void setEnableWebsocketSecure(boolean enableWebsocket) {
+        this.enableWebsocketSecure = enableWebsocket;
+    }
 
-  public void setEnableCLI(boolean enableCLI) {
-    this.enableCLI = enableCLI;
-  }
+    @JsonProperty
+    public boolean getEnableRest() {
+        return this.enableRest;
+    }
 
-  @JsonProperty
-  public int getThreadPoolSize() {
-    return threadPoolSize;
-  }
+    public void setEnableRest(boolean enableRest) {
+        this.enableRest = enableRest;
+    }
 
-  public void setThreadPoolSize(int threadPoolSize) {
-    this.threadPoolSize = threadPoolSize;
-  }
+    @JsonProperty
+    public boolean getEnableRestSecure() {
+        return this.enableRestSecure;
+    }
 
-  @JsonProperty
-  public String getThumbnailLocation() {
-    return thumbnailLocation;
-  }
+    public void setEnableRestSecure(boolean enableRest) {
+        this.enableRestSecure = enableRest;
+    }
 
-  public void setThumbnailLocation(String thumbnailLocation) {
-    this.thumbnailLocation = thumbnailLocation;
-  }
+    @JsonProperty
+    public boolean getEnableLiveDoc() {
+        return this.enableRestLiveDoc;
+    }
 
-  @JsonProperty
-  public String getObjectLocation() {
-    return objectLocation;
-  }
+    public void setEnableRestLiveDoc(boolean enableRestLiveDoc) {
+        this.enableRestLiveDoc = enableRestLiveDoc;
+    }
 
-  public void setObjectLocation(String objectLocation) {
-    this.objectLocation = objectLocation;
-  }
+    @JsonProperty
+    public String getKeystore() {
+        return keystore;
+    }
 
-  @JsonProperty
-  public String getUiLocation() {
-    return uiLocation;
-  }
+    public void setKeystore(String keystore) {
+        this.keystore = keystore;
+    }
 
-  public void setUiLocation(String uiLocation) {
-    this.uiLocation = uiLocation;
-  }
+    @JsonProperty
+    public String getKeystorePassword() {
+        return keystorePassword;
+    }
 
-  @JsonProperty
-  public boolean getServeContent() {
-    return this.serveContent;
-  }
+    public void setKeystorePassword(String keystorePassword) {
+        this.keystorePassword = keystorePassword;
+    }
 
-  public void setServeContent(boolean serveContent) {
-    this.serveContent = serveContent;
-  }
+    @JsonProperty
+    public String getApiAddress() {
+        return apiAddress;
+    }
 
-  @JsonProperty
-  public boolean getServeUI() {
-    return this.serveUI;
-  }
+    public void setApiAddress(String apiAddress) {
+        this.apiAddress = apiAddress;
+    }
 
-  public void setServeUI(boolean serveUI) {
-    this.serveUI = serveUI;
-  }
+    @JsonProperty
+    public int getHttpPort() {
+        return httpPort;
+    }
 
-  @JsonProperty
-  public String getSessionExtractionConfigLocation() {
-    return this.sessionExtractionConfigLocation;
-  }
+    public void setHttpPort(int httpPort) {
+        if (httpPort < 1) {
+            throw new IllegalArgumentException("httpPort must be > 0");
+        }
+        this.httpPort = httpPort;
+    }
 
-  public void setSessionExtractionConfigLocation(String sessionExtractionConfigLocation) {
-    this.sessionExtractionConfigLocation = sessionExtractionConfigLocation;
-  }
+    @JsonProperty
+    public int getHttpsPort() {
+        return httpsPort;
+    }
 
-  @JsonProperty
-  public boolean getEnableExtractionServer() {
-    return enableExtractionServer;
-  }
+    public void setHttpsPort(int httpsPort) {
+        if (httpsPort < 1) {
+            throw new IllegalArgumentException("httpPort must be > 0");
+        }
+        this.httpsPort = httpsPort;
+    }
 
-  public void setEnableExtractionServer(boolean enableExtractionServer) {
-    this.enableExtractionServer = enableExtractionServer;
-  }
+    @JsonProperty
+    public int getMaxMessageSize() {
+        return this.maxMessageSize;
+    }
 
-  @JsonProperty
-  public boolean getEnableGRPC() {
-    return enableGRPC;
-  }
+    public void setMaxMessageSize(int maxTextMessageSize) {
+        this.maxMessageSize = maxTextMessageSize;
+    }
 
-  @JsonProperty
-  public void setEnableGRPC(boolean enableGRPC) {
-    this.enableGRPC = enableGRPC;
-  }
+    @JsonProperty
+    public boolean getAllowExtraction() {
+        return this.allowExtraction;
+    }
 
-  @JsonProperty
-  public int getGrpcPort() {
-    return grpcPort;
-  }
+    public void setAllowExtraction(boolean allowExtraction) {
+        this.allowExtraction = allowExtraction;
+    }
 
-  @JsonProperty
-  public void setGrpcPort(int grpcPort) {
-    this.grpcPort = grpcPort;
-  }
+    @JsonProperty
+    public boolean getEnableCli() {
+        return this.enableCLI;
+    }
 
-  /**
-   * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
-   */
-  @JsonProperty
-  public boolean isObjectsFilesAreIDed() {
-    return objectsFilesAreIDed;
-  }
+    public void setEnableCLI(boolean enableCLI) {
+        this.enableCLI = enableCLI;
+    }
 
-  @JsonProperty
-  public void setObjectsFilesAreIDed(boolean b) {
-    objectsFilesAreIDed = b;
-  }
+    @JsonProperty
+    public int getThreadPoolSize() {
+        return threadPoolSize;
+    }
+
+    public void setThreadPoolSize(int threadPoolSize) {
+        this.threadPoolSize = threadPoolSize;
+    }
+
+    @JsonProperty
+    public String getThumbnailLocation() {
+        return thumbnailLocation;
+    }
+
+    public void setThumbnailLocation(String thumbnailLocation) {
+        this.thumbnailLocation = thumbnailLocation;
+    }
+
+    @JsonProperty
+    public String getObjectLocation() {
+        return objectLocation;
+    }
+
+    public void setObjectLocation(String objectLocation) {
+        this.objectLocation = objectLocation;
+    }
+
+    @JsonProperty
+    public String getUiLocation() {
+        return uiLocation;
+    }
+
+    public void setUiLocation(String uiLocation) {
+        this.uiLocation = uiLocation;
+    }
+
+    @JsonProperty
+    public boolean getServeContent() {
+        return this.serveContent;
+    }
+
+    public void setServeContent(boolean serveContent) {
+        this.serveContent = serveContent;
+    }
+
+    @JsonProperty
+    public boolean getServeUI() {
+        return this.serveUI;
+    }
+
+    public void setServeUI(boolean serveUI) {
+        this.serveUI = serveUI;
+    }
+
+    @JsonProperty
+    public String getSessionExtractionConfigLocation() {
+        return this.sessionExtractionConfigLocation;
+    }
+
+    public void setSessionExtractionConfigLocation(String sessionExtractionConfigLocation) {
+        this.sessionExtractionConfigLocation = sessionExtractionConfigLocation;
+    }
+
+    @JsonProperty
+    public boolean getEnableExtractionServer() {
+        return enableExtractionServer;
+    }
+
+    public void setEnableExtractionServer(boolean enableExtractionServer) {
+        this.enableExtractionServer = enableExtractionServer;
+    }
+
+    @JsonProperty
+    public boolean getEnableGRPC() {
+        return enableGRPC;
+    }
+
+    @JsonProperty
+    public void setEnableGRPC(boolean enableGRPC) {
+        this.enableGRPC = enableGRPC;
+    }
+
+    @JsonProperty
+    public int getGrpcPort() {
+        return grpcPort;
+    }
+
+    @JsonProperty
+    public void setGrpcPort(int grpcPort) {
+        this.grpcPort = grpcPort;
+    }
+
+    /**
+     * A hack-flag to prevent the object serving using {@link MediaObjectDescriptor#getPath()} to find the actual media file. If this is true, the {@link MediaObjectDescriptor#getPath()}'s extension is appendet to {@link MediaObjectDescriptor#getObjectId()} and this is resolved to be directly under {@link #objectLocation}.
+     */
+    @JsonProperty
+    public boolean isObjectsFilesAreIDed() {
+        return objectsFilesAreIDed;
+    }
+
+    @JsonProperty
+    public void setObjectsFilesAreIDed(boolean b) {
+        objectsFilesAreIDed = b;
+    }
+
+    @JsonProperty
+    public boolean getEnableExternalClip() {
+        return this.enableExternalClip;
+    }
+
+    @JsonProperty
+    public boolean setEnableExternalClip(boolean enableExternalClip) {
+        return this.enableExternalClip = enableExternalClip;
+    }
+
 }

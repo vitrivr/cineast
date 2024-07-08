@@ -182,11 +182,11 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createMetadataEntity(String tableName) {
+  public boolean createMetadataEntity(String entityName) {
     final long txId = this.cottontail.client.begin();
     try {
       /* Create entity. */
-      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
+      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
       final CreateEntity entity = new CreateEntity(fqn)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaObjectMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
@@ -196,8 +196,8 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create Index. */
-      this.createIndex(tableName, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.BTREE, txId);
-      this.createIndex(tableName, MediaObjectMetadataDescriptor.FIELDNAMES[2], IndexType.BTREE, txId);
+      this.createIndex(entityName, MediaObjectMetadataDescriptor.FIELDNAMES[0], IndexType.BTREE, txId);
+      this.createIndex(entityName, MediaObjectMetadataDescriptor.FIELDNAMES[2], IndexType.BTREE, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {
@@ -207,11 +207,11 @@ public final class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createSegmentMetadataEntity(String tableName) {
+  public boolean createSegmentMetadataEntity(String entityName) {
     final long txId = this.cottontail.client.begin();
     try {
       /* Create entity. */
-      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + tableName;
+      final String fqn = CottontailWrapper.CINEAST_SCHEMA + "." + entityName;
       final CreateEntity entity = new CreateEntity(fqn)
           .column(MediaSegmentMetadataDescriptor.FIELDNAMES[0], Type.STRING, -1, false)
           .column(MediaSegmentMetadataDescriptor.FIELDNAMES[1], Type.STRING, -1, false)
@@ -221,8 +221,8 @@ public final class CottontailEntityCreator implements EntityCreator {
       this.cottontail.client.create(entity);
 
       /* Create Index. */
-      this.createIndex(tableName, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.BTREE, txId);
-      this.createIndex(tableName, MediaSegmentMetadataDescriptor.FIELDNAMES[2], IndexType.BTREE, txId);
+      this.createIndex(entityName, MediaSegmentMetadataDescriptor.FIELDNAMES[0], IndexType.BTREE, txId);
+      this.createIndex(entityName, MediaSegmentMetadataDescriptor.FIELDNAMES[2], IndexType.BTREE, txId);
       this.cottontail.client.commit(txId);
       return true;
     } catch (StatusRuntimeException e) {

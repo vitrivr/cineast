@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.data.m3d.texturemodel.IModel;
  * {@link IModel} -> {@link GLModel}
  */
 public class GLModel implements IGLModel {
+
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
@@ -83,4 +84,8 @@ public class GLModel implements IGLModel {
     return Collections.unmodifiableList(this.materials);
   }
 
+  @Override
+  public boolean usesNonDefaultTexture() {
+    return this.model.usesNonDefaultTexture();
+  }
 }

@@ -46,7 +46,7 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public List<String> getTableNames() {
+  public List<String> getEntityNames() {
     return Collections.singletonList(SEGMENT_TAGS_TABLE_NAME);
   }
 

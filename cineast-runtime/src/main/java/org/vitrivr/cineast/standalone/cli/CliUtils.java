@@ -69,7 +69,7 @@ public class CliUtils {
       }
       retrievalRuntimeConfig.getRetrieversByCategory(cat).forEach((ObjectDoubleProcedure<? super Retriever>) (retriever, weight) -> {
         System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
-        retriever.getTableNames().forEach(tableName -> {
+        retriever.getEntityNames().forEach(tableName -> {
           selector.open(tableName);
           List<Map<String, PrimitiveTypeProvider>> rows = selector.getRows("id", new StringTypeProvider(segmentId));
           if (retriever.getClass() == RangeBooleanRetriever.class) {
@@ -91,7 +91,7 @@ public class CliUtils {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     retrievers.forEach(retriever -> {
       AtomicBoolean entityExists = new AtomicBoolean(true);
-      retriever.getTableNames().forEach(table -> {
+      retriever.getEntityNames().forEach(table -> {
         if (!selector.existsEntity(table)) {
           System.out.println("Entity " + table + " does not exist");
           entityExists.set(false);

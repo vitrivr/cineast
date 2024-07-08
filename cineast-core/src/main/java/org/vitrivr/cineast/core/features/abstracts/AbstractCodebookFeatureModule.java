@@ -33,8 +33,8 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
    */
   private AssignCluster<double[]> assignment;
 
-  protected AbstractCodebookFeatureModule(String tableName, float maxDist, int vectorLength) {
-    super(tableName, maxDist, vectorLength);
+  protected AbstractCodebookFeatureModule(String entityName, float maxDist, int vectorLength) {
+    super(entityName, maxDist, vectorLength);
   }
 
   /**

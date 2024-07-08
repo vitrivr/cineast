@@ -366,13 +366,14 @@ public class VisualTextCoEmbedding extends AbstractFeatureModule {
   private float[] embedModel(IModel model) {
     //Options for window
     var windowOptions = new WindowOptions() {{
-      this.hideWindow = true;
+      this.hideWindow = false;
       this.width = 600;
       this.height = 600;
     }};
     // Options for renderer
     var renderOptions = new RenderOptions() {{
       this.showTextures = true;
+      this.lightingOptions.hasNonDefaultTexture = model.usesNonDefaultTexture();
     }};
     // Select the strategy which will be used for model embedding
     var viewpointStrategy = ViewpointStrategy.MULTI_IMAGE_KMEANS;

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.render.lwjgl.glmodel;
 
 import java.nio.ByteBuffer;
+import org.vitrivr.cineast.core.data.m3d.texturemodel.Texture;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;

@@ -29,6 +29,12 @@ public class GLMaterial {
    * The contained texture in gl context
    */
   private final GLTexture texture;
+
+  /**
+   * The contained texture in gl context
+   */
+  private final GLTexture normalMapTexture;
+
   /**
    * The material that is wrapped by this gl material.
    */
@@ -44,6 +50,11 @@ public class GLMaterial {
     this.material = material;
     this.material.getMeshes().forEach(mesh -> this.meshes.add(new GLMesh(mesh)));
     this.texture = new GLTexture(this.material.getTexture());
+    if (this.material.hasNormalMapTexture()){
+      this.normalMapTexture = new GLTexture(this.material.getNormalMapTexture());
+    } else {
+      this.normalMapTexture = null;
+    }
   }
 
   /**
@@ -77,11 +88,48 @@ public class GLMaterial {
   }
 
   /**
+   * Returns the gl texture of this gl material.
+   *
+   * @return The gl texture of this gl material.
+   */
+  public GLTexture getNormalMapTexture() {
+    return this.normalMapTexture;
+  }
+
+  public boolean hasNormalMapTexture() {
+    return this.normalMapTexture != null;
+  }
+
+  /**
    * Returns the color from wrapped generic material.
    *
    * @return The color from wrapped generic material. (r,g,b,opacity)
    */
   public Vector4f getDiffuseColor() {
     return this.material.getDiffuseColor();
+  }
+  /**
+   * Returns the color from wrapped generic material.
+   *
+   * @return The color from wrapped generic material. (r,g,b,opacity)
+   */
+  public Vector4f getAmbientColor() {
+    return this.material.getAmbientColor();
+  }
+  /**
+   * Returns the color from wrapped generic material.
+   *
+   * @return The color from wrapped generic material. (r,g,b,opacity)
+   */
+  public Vector4f getSpecularColor() {
+    return this.material.getSpecularColor();
+  }
+  /**
+   * Returns the color from wrapped generic material.
+   *
+   * @return The color from wrapped generic material. (r,g,b,opacity)
+   */
+  public float getReflectance() {
+    return this.material.getReflectance();
   }
 }

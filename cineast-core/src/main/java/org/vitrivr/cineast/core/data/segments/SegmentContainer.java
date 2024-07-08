@@ -26,7 +26,7 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 /**
  * A {@link SegmentContainer} mainly serves two purposes:
  * <p>
- * During the offline phase, it is passed to an {@link Extractor}, and during the online phase, it is passed to a {@link Retriever}.
+ * During the offline phase, it is passed to an {@link Extractor} (and represents the media from which features are supposed to be extracted), and during the online phase, it is passed to a {@link Retriever} (and represents the query of a user).
  */
 public interface SegmentContainer
     extends IdProvider,

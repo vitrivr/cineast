@@ -10,7 +10,7 @@ import org.joml.Vector3f;
  * <p>
  * This class is responsible for the camera position and orientation. It is used to calculate the view matrix for the renderer. It provides methods to move and rotate the camera.
  */
-public class Camera {
+public class Camera implements ILocateable {
 
   /**
    * Helper Vector for X-Axis translation.

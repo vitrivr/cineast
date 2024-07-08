@@ -24,14 +24,14 @@
   </Appenders>
   <Loggers>
     <!-- Here one can set up, for each package individually, which level will be logged -->
-    <logger name="io" level="ERROR">
+    <logger name="io" level="TRACE">extract --extraction ../Class/bsc-raphael-waltenspuel/setup/black01/3dm/config/extraction.json
     </logger>
-    <logger name="org" level="INFO" additivity="true">
+    <logger name="org" level="TRACE" additivity="true">
     </logger>
     <logger name="org.vitrivr.cineast" level="TRACE" additivity="true">
     </logger>
     <!-- Root is fall back config if no matching logger is found -->
-    <Root level="info">
+    <Root level="TRACE">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Root>
