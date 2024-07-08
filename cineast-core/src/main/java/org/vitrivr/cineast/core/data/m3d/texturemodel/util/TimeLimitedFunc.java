@@ -43,6 +43,7 @@ public class  TimeLimitedFunc <T> {
      * @throws TimeoutException if the function takes longer than the time limit
      */
     public T runWithTimeout() throws TimeoutException {
+        LOGGER.trace("Start running function with time limit of " + this.timeLimit + " seconds.");
         Runnable task = () -> {
             this.value = sup.get();
         };
@@ -56,8 +57,10 @@ public class  TimeLimitedFunc <T> {
             }
             throw e;
         } catch (Exception e) {
+            LOGGER.error("Error Timeout ", e);
             e.printStackTrace();
         }
+        LOGGER.trace("Function completed within time limit.");
         return this.value;
     }
 }
